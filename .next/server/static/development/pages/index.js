@@ -121,7 +121,7 @@ var Index = function Index() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\clement.le.bars\OneDrive - Accenture\Documents\Next.js\logrocket-next\pages\index.js */"./pages/index.js");
+module.exports = __webpack_require__(/*! C:\Users\clement.le.bars\OneDrive - Accenture\Documents\Next.js\clb-node-test-deploy\pages\index.js */"./pages/index.js");
 
 
 /***/ }),
