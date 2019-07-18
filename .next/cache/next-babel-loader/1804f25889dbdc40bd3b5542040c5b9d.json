@@ -1,0 +1,1 @@
+{"ast":null,"code":"import React from \"react\";\n\nvar Index = function Index() {\n  return React.createElement(\"div\", null, React.createElement(\"p\", null, \"Hello Next.js, this is your friend Brian from logrocket\"));\n};\n\nexport default Index;","map":null,"metadata":{},"sourceType":"module"}
