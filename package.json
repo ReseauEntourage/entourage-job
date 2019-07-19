@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node -r dotenv/config ssr-server.js",
+    "test": "mocha",
     "build": "next build",
     "start": "node ssr-server.js"
   },
@@ -17,5 +18,8 @@
     "next": "^9.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.0"
   }
 }
