@@ -15,7 +15,7 @@
       "quantity": 1
     }
   },
-  "name": "clb-node-test-deploy",
+  "name": "entourage-job",
   "scripts": {
   },
   "stack": "heroku-18"

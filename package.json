@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node -r dotenv/config ssr-server.js",
+    "dev": "node -r dotenv/config serveur-express.js",
     "test": "mocha",
     "build": "next build",
-    "start": "node ssr-server.js"
+    "start": "node -r dotenv/config serveur-express.js"
   },
   "keywords": [],
   "author": "",
