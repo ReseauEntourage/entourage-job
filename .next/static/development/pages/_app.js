@@ -1,5 +1,28 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["static\\development\\pages\\_app.js"],{
 
+/***/ "./components/utils/buttons/ButtonShare.js":
+/*!*************************************************!*\
+  !*** ./components/utils/buttons/ButtonShare.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var ButtonShare = function ButtonShare() {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "uk-button uk-button-default"
+  }, "Partager l'op\xE9ration");
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (ButtonShare);
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime-corejs2/core-js/array/from.js":
 /*!*******************************************************************!*\
   !*** ./node_modules/@babel/runtime-corejs2/core-js/array/from.js ***!
@@ -10950,8 +10973,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(next_app__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var uikit_dist_css_uikit_css__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! uikit/dist/css/uikit.css */ "./node_modules/uikit/dist/css/uikit.css");
-/* harmony import */ var uikit_dist_css_uikit_css__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(uikit_dist_css_uikit_css__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _components_utils_buttons_ButtonShare_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../components/utils/buttons/ButtonShare.js */ "./components/utils/buttons/ButtonShare.js");
+/* harmony import */ var uikit_dist_css_uikit_css__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! uikit/dist/css/uikit.css */ "./node_modules/uikit/dist/css/uikit.css");
+/* harmony import */ var uikit_dist_css_uikit_css__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(uikit_dist_css_uikit_css__WEBPACK_IMPORTED_MODULE_12__);
+
 
 
 
@@ -11002,9 +11027,7 @@ function (_App) {
         as: "je-veux-recruter"
       }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("a", {
         title: "test"
-      }, "Je veux recruter")))), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("button", {
-        className: "uk-button uk-button-default"
-      }, "Partager l'op\xE9ration"))), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(Component, pageProps));
+      }, "Je veux recruter")))), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_components_utils_buttons_ButtonShare_js__WEBPACK_IMPORTED_MODULE_11__["default"], null))), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(Component, pageProps));
     }
   }], [{
     key: "getInitialProps",

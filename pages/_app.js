@@ -2,6 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import App, { Container } from 'next/app';
 import Link from 'next/link';
+import ButtonShare from "../components/utils/buttons/ButtonShare.js";
 import "uikit/dist/css/uikit.css";
 
 class MyApp extends App {
@@ -30,7 +31,7 @@ class MyApp extends App {
               <li><Link href="/jeveuxtravailler" as="je-veux-travailler"><a title="Je veux travailler">Je veux travailler</a></Link></li>
               <li><Link href="/jeveuxrecruter" as="je-veux-recruter"><a title="test">Je veux recruter</a></Link></li>
             </ul>
-            <button className="uk-button uk-button-default">Partager l'opération</button>
+            <ButtonShare />
           </div>
         </nav>
         <Component {...pageProps} />
