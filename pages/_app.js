@@ -24,17 +24,36 @@ class MyApp extends App {
         <Head>
           <title>Entourage Jobs</title>
         </Head>
-        <nav className="uk-navbar-container" data-uk-navbar>
-          <div className="uk-navbar-right">
-            <ul className="uk-navbar-nav">
-              <li><Link href="/jeveuxaider" as="je-veux-aider"><a>Je veux aider</a></Link></li>
-              <li><Link href="/jeveuxtravailler" as="je-veux-travailler"><a title="Je veux travailler">Je veux travailler</a></Link></li>
-              <li><Link href="/jeveuxrecruter" as="je-veux-recruter"><a title="test">Je veux recruter</a></Link></li>
-            </ul>
-            <ButtonShare />
+        <nav className="uk-navbar-container" data-uk-navbar id="header">
+          <div className="uk-navbar-left">
+            <a className="uk-navbar-item uk-logo" href="#">
+              <img src="/static/img/logo-linkedout-dark.png" alt="Linkedout" width="100px"/>
+              <span className="uk-margin-small-left">by Entourage</span>
+            </a>
           </div>
+          <div className="uk-navbar-right">
+            <ul className="uk-navbar-nav uk-visible@m">
+              <li><Link href="/jeveuxaider" as="je-veux-aider"><a title="Je veux aider">Je veux aider</a></Link></li>
+              <li><Link href="/jeveuxtravailler" as="je-veux-travailler"><a title="Je veux travailler">Je veux travailler</a></Link></li>
+              <li><Link href="/jeveuxrecruter" as="je-veux-recruter"><a title="Je veux recruter">Je veux recruter</a></Link></li>
+            </ul>
+            <div className="uk-navbar-item uk-visible@m"><button className="uk-button uk-button-primary">Partager l'opération</button></div>
+          </div>
+          <a className="uk-navbar-toggle uk-hidden@m" data-uk-navbar-toggle-icon href="#offcanvas"></a>
         </nav>
+        <div id="offcanvas" data-uk-offcanvas="mode: push; overlay: true">
+          <div className="uk-offcanvas-bar">
+            <ul className="uk-nav uk-nav-default">
+              <li><Link href="/jeveuxaider" as="je-veux-aider"><a title="Je veux aider">Je veux aider</a></Link></li>
+              <li><Link href="/jeveuxtravailler" as="je-veux-travailler"><a title="Je veux travailler">Je veux travailler</a></Link></li>
+              <li><Link href="/jeveuxrecruter" as="je-veux-recruter"><a title="Je veux recruter">Je veux recruter</a></Link></li>
+            </ul>
+          </div>
+        </div>
         <Component {...pageProps} />
+        <div className="uk-section uk-section-secondary" id="footer">
+          <div className="uk-container"></div>
+        </div>
       </Container>
     );
   }
