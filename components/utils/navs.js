@@ -6,10 +6,10 @@ import React from 'react';
  * className: str
  * items: Array<any>
  */
-export const Nav = props => (
-  <ul className={props.navbar ? 'uk-navbar-nav' : 'uk-nav uk-nav-default'}>
-    {props.items.map((value, key) => (
-      <li key={key}>{value}</li>
+export const Nav = ({ navbar, items }) => (
+  <ul className={navbar ? 'uk-navbar-nav' : 'uk-nav uk-nav-default'}>
+    {items.map(value => (
+      <li>{value}</li>
     ))}
   </ul>
 );
@@ -21,10 +21,10 @@ export const Nav = props => (
  * right: any
  * id: str
  */
-export const Navbar = props => (
-  <nav className="uk-navbar-container" data-uk-navbar id={props.id}>
-    <div className="uk-navbar-left">{props.left}</div>
-    <div className="uk-navbar-center">{props.center}</div>
-    <div className="uk-navbar-right">{props.right}</div>
+export const Navbar = ({ id, left, center, right }) => (
+  <nav className="uk-navbar-container" data-uk-navbar id={id}>
+    <div className="uk-navbar-left">{left}</div>
+    <div className="uk-navbar-center">{center}</div>
+    <div className="uk-navbar-right">{right}</div>
   </nav>
 );
