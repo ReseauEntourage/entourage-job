@@ -1,3 +1,5 @@
+import React from 'react';
+
 const JeVeuxTravailler = () => (
   <div className="uk-text-lead uk-text-center">Je veux travailler</div>
 );
