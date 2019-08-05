@@ -44,7 +44,8 @@
     "no-console": "off",
     "strict": ["error", "global"],
     "curly": "warn",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "jsx-a11y/anchor-is-valid": 0
   },
   "extends": [
     "airbnb",
