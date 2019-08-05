@@ -21,6 +21,7 @@
     "codeFrame": false
   },
   "plugins": ["react", "prettier"],
+  "root": true,
   "rules": {
     "max-len": [
       "error",
@@ -29,6 +30,7 @@
       }
     ],
     "prefer-promise-reject-errors": ["off"],
+    // "prettier/prettier": "warn",
     "no-return-assign": ["off"],
     "no-underscore-dangle": 0,
     "react/prop-types": ["warn"],
@@ -42,13 +44,15 @@
     "import/newline-after-import": "error",
     "no-console": "off",
     "strict": ["error", "global"],
-    "curly": "warn"
+    "curly": "warn",
+    "no-unused-vars": "warn"
   },
   "extends": [
     "airbnb",
     "prettier",
     "prettier/react",
-    "plugin:react/recommended",
+    // "plugin:react/recommended",
+    // "plugin:prettier/recommended",
     "eslint:recommended"
   ]
 }
