@@ -1,17 +1,38 @@
 {
-  "name": "logrocket-next",
-  "version": "1.0.0",
+  "name": "entourage-jobs",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node -r dotenv/config serveur-express.js",
+    "dev": "node -r dotenv/config start.js",
     "test": "mocha",
     "build": "next build",
-    "start": "node -r dotenv/config serveur-express.js"
+    "start": "node -r dotenv/config start.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ReseauEntourage/entourage-job.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "precommit": "NODE_ENV=production lint-staged",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,md,css,html}": [
+      "prettier --trailing-comma es5 --single-quote --write",
+      "echo 'pretty-quick -- staged'",
+      "eslint pages/ --fix",
+      "git add"
+    ],
+    "yarn.lock": [
+      "git rm --cached"
+    ]
+  },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
     "dotenv": "^8.0.0",
@@ -19,11 +40,15 @@
     "next": "^9.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "uikit": "^3.1.6"
+    "uikit": "^3.1.7"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
     "eslint": "^6.1.0",
     "eslint-plugin-react": "^7.14.3",
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.0",
+    "prettier": "^1.18.2"
   }
 }
