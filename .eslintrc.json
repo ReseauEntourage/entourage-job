@@ -32,7 +32,6 @@
     "prefer-promise-reject-errors": ["off"],
     // "prettier/prettier": "warn",
     "no-return-assign": ["off"],
-    "no-underscore-dangle": 0,
     "react/prop-types": ["warn"],
     "react/jsx-filename-extension": [
       1,
