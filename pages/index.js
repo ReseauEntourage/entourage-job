@@ -1,5 +1,5 @@
-import { Fragment } from "react";
-import Accueil from "../components/Accueil";
+import React, { Fragment } from 'react';
+import Accueil from '../components/Accueil';
 
 const Index = () => (
   <Fragment>

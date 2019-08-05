@@ -1,7 +1,5 @@
 {
-  "addons": [
-
-  ],
+  "addons": [],
   "buildpacks": [
     {
       "url": "heroku/nodejs"
@@ -16,7 +14,6 @@
     }
   },
   "name": "entourage-job",
-  "scripts": {
-  },
+  "scripts": {},
   "stack": "heroku-18"
 }
