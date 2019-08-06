@@ -23,36 +23,46 @@
   "plugins": ["react", "prettier"],
   "root": true,
   "rules": {
+    "curly": "warn",
+    "strict": ["error", "global"],
+    "prefer-promise-reject-errors": "off",
+    "no-return-assign": "off",
+    "no-console": "off",
+    "no-unused-vars": "warn",
     "max-len": [
-      "error",
+      "warn",
       {
         "code": 100
       }
     ],
-    "prefer-promise-reject-errors": ["off"],
-    // "prettier/prettier": "warn",
-    "no-return-assign": ["off"],
-    "react/prop-types": ["warn"],
+    "jsx-a11y/anchor-is-valid": "off",
+    // "import/imports-first": ["error", "absolute-first"],
+    // "import/newline-after-import": "error",
+    // "import/prefer-default-export": "warn",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/prop-types": "error",
+    "react/style-prop-object": "off",
+    "react/forbid-prop-types": "warn",
     "react/jsx-filename-extension": [
-      1,
+      "warn",
       {
         "extensions": [".js", ".jsx"]
       }
     ],
-    "import/imports-first": ["error", "absolute-first"],
-    "import/newline-after-import": "error",
-    "no-console": "off",
-    "strict": ["error", "global"],
-    "curly": "warn",
-    "no-unused-vars": "warn",
-    "jsx-a11y/anchor-is-valid": 0
+    "prettier/prettier": [
+      "off",
+      {
+        "endOfLine": "auto"
+      }
+    ]
   },
   "extends": [
     "airbnb",
     "prettier",
-    "prettier/react",
     // "plugin:react/recommended",
     // "plugin:prettier/recommended",
+    "prettier/react",
     "eslint:recommended"
   ]
 }
