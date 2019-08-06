@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from'prop-types';
 import { Nav, Navbar } from './utils/navs';
 import { SimpleLink, Button, Hamburger, NavbarLogo } from './utils/links';
 
@@ -10,8 +11,14 @@ const Offcanvas = ({ id, children }) => (
     </div>
   </div>
 );
+Offcanvas.propTypes = {
+  id: PropTypes.string.isRequired,
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired
+};
+
 
 const Header = ({ items }) => {
+  console.log(items)
   const basicItems = items.map(value => (
     <SimpleLink href={value.href} visible="m">
       {value.name}
@@ -19,7 +26,7 @@ const Header = ({ items }) => {
   ));
   const specItems = [
     <div className="uk-navbar-item">
-      <Button href="#" visible="m">
+      <Button href="#" visible="m" style="primary" >
         Partager l&apos;opération
       </Button>
     </div>,
@@ -37,6 +44,9 @@ const Header = ({ items }) => {
       </Offcanvas>
     </header>
   );
+};
+Header.propTypes = {
+  items: PropTypes.array.isRequired
 };
 
 export default Header;

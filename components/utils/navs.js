@@ -8,7 +8,7 @@ import React from 'react';
  */
 export const Nav = ({ navbar, items }) => (
   <ul className={navbar ? 'uk-navbar-nav' : 'uk-nav uk-nav-default'}>
-    {items.map(value => (
+    {items.map((value) => (
       <li>{value}</li>
     ))}
   </ul>

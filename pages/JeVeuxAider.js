@@ -1,5 +1,6 @@
-import { HelpingCard } from '../components/utils/card';
 import React from 'react';
+
+import { HelpingCard, Button } from '../components/utils';
 
 const JeVeuxAider = () => (
   <div>
@@ -91,7 +92,8 @@ const JeVeuxAider = () => (
               </div>
             </div>
           </div>
-          <button className="uk-button uk-button-default uk-text-uppercase">écrivez-nous</button>
+          <Button style="default">écrivez-nous</Button>
+          {/* uk-text-uppercase */}
         </div>
       </div>
     </div>

@@ -1,11 +1,61 @@
-export const HelpingCard = (props) => (
-    <div className="uk-card uk-card-default uk-card-body" data-uk-grid>
+import React from 'react';
+import PropTypes from 'prop-types';
+
+export const HelpingCard = ({
+  titleHead,
+  titleMiddle,
+  titleTail,
+  description,
+  img,
+  alt,
+}) => (
+  <div className="uk-card uk-card-default uk-card-body" data-uk-grid>
     <div className="uk-width-2-3">
-      <h3 className="uk-text-bold">{props.titleHead}<span className="uk-text-primary">{props.titleMiddle}</span>{props.titleTail}</h3>
-      <p>{props.description}</p>
+      <h3 className="uk-text-bold">
+        {titleHead}
+        <span className="uk-text-primary">{titleMiddle}</span>
+        {titleTail}
+      </h3>
+      <p>{description}</p>
     </div>
     <div className="uk-width-1-3">
-      <img src={props.img} width="100%"/>
+      <img src={img} alt={alt} width="100%" />
     </div>
   </div>
-)
+);
+HelpingCard.propTypes = {
+  titleHead: PropTypes.string.isRequired,
+  titleMiddle: PropTypes.string.isRequired,
+  titleTail: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  img: PropTypes.string.isRequired,
+  alt: PropTypes.string,
+};
+HelpingCard.defaultProps = {
+  alt: undefined,
+};
+
+export const PresentationCard = ({ imgSrc, imgAlt, text }) => {
+  const splited = text.split(' ');
+  return (
+    <div className="uk-card uk-card-default uk-card-body">
+      <div data-uk-grid>
+        <div className="uk-width-small">
+          <img src={imgSrc} alt={imgAlt} data-uk-img />
+        </div>
+        <div className="uk-width-expand">
+          <p className="uk-text-uppercase">
+            <span className="uk-text-primary">{splited[0]} </span>
+            <span className="uk-text-bold">{splited[1]} </span>
+            <span>{splited.slice(1).join(' ')}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+PresentationCard.propTypes = {
+  text: PropTypes.string.isRequired,
+  imgSrc: PropTypes.string.isRequired,
+  imgAlt: PropTypes.string.isRequired,
+};
