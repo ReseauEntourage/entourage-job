@@ -40,7 +40,7 @@ export const PresentationCard = ({ imgSrc, imgAlt, text }) => {
   return (
     <div className="uk-card uk-card-default uk-card-body">
       <div data-uk-grid>
-        <div className="uk-width-small@s uk-width-1-1 uk-width-small@m uk-flex uk-flex-center">
+        <div className="uk-width-1-1@s uk-width-small@m uk-flex uk-flex-center ">
           <img
             className="uk-height-max-small"
             src={imgSrc}

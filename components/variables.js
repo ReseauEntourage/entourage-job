@@ -47,6 +47,20 @@ export const UIKIT_TRANSFORM = ['uppercase', 'capitalize', 'lowercase'];
 
 export const UIKIT_TEXT_TAG = ['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
-// export const UIKIT_TEXT_STYLES_SPEC = {
-//     "": ""
-// };
+export const UIKIT_BLENDS = [
+  'multiply',
+  'screen',
+  'overlay',
+  'darken',
+  'lighten',
+  'color-dodge',
+  'color-burn',
+  'hard-light',
+  'soft-light',
+  'difference',
+  'exclusion',
+  'hue',
+  'saturation',
+  'color',
+  'luminosity',
+];
