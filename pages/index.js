@@ -164,14 +164,10 @@ const Index = () => (
       </div>
     </Section>
     <Section style="muted" size="large">
-      <div className="uk-text-center">
-        <h3 className="uk-h6 uk-text-uppercase uk-margin-remove-bottom">
-          Les chiffres
-        </h3>
-        <h2 className="uk-margin-remove-top">
-          Un programme <span className="uk-text-primary">efficace</span>
-        </h2>
-      </div>
+      <h2 className="uk-text-center">
+        Gardons contact,{' '}
+        <span className="uk-text-primary">le programme évolue</span> !
+      </h2>
       <div className="uk-margin-medium-top uk-flex uk-flex-center">
         <form>
           <div className="uk-button-group">
