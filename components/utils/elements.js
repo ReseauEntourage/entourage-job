@@ -8,7 +8,7 @@ import {
   UIKIT_TEXT_TAG,
 } from '../variables';
 
-export const Text = ({
+const Text = ({
   tag,
   color,
   alignment,
@@ -63,3 +63,5 @@ Text.defaultProps = {
   transform: undefined,
   alignmentResponsive: undefined,
 };
+
+export { Text as default };
