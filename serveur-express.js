@@ -16,12 +16,12 @@ app
       return handle(req, res);
     });
 
-    server.listen(PORT, err => {
+    server.listen(PORT, (err) => {
       if (err) throw err;
-      console.log('> Ready on http://localhost:' + process.env.PORT);
+      console.log(`> Ready on http://localhost:${process.env.PORT}`);
     });
   })
-  .catch(ex => {
+  .catch((ex) => {
     console.error(ex.stack);
     process.exit(1);
   });
