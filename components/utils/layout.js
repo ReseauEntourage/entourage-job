@@ -23,19 +23,21 @@ Grid.propTypes = {
   parallax: PropTypes.number,
   match: PropTypes.bool,
   center: PropTypes.bool,
-  childWidths: PropTypes.arrayOf(PropTypes.string).isRequired,
+  childWidths: PropTypes.arrayOf(PropTypes.string),
   items: PropTypes.arrayOf(PropTypes.element).isRequired,
 };
 Grid.defaultProps = {
   match: false,
   center: false,
   parallax: undefined,
+  childWidths: [],
 };
 
-export const Background = ({ src, position, blend, children }) => {
+export const Background = ({ src, position, blend, fixed, children }) => {
   let classBuffer = 'uk-background-cover';
   if (position) classBuffer += ` uk-background-${position}`;
   if (blend.mode) classBuffer += ` uk-background-blend-${blend.mode}`;
+  if (fixed) classBuffer += ` uk-background-fixed`;
   const styleBuffer = {
     backgroundImage: `url(${src})`,
   };
@@ -59,10 +61,12 @@ Background.propTypes = {
     colorHex: PropTypes.string,
     mode: PropTypes.oneOf(UIKIT_BLENDS).isRequired,
   }),
+  fixed: PropTypes.bool,
 };
 Background.defaultProps = {
   position: undefined,
   blend: {},
+  fixed: false,
 };
 export const Section = ({ style, size, id, children }) => {
   let classBuffer = 'uk-section';

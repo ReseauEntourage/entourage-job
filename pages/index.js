@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Button,
   PresentationCard,
@@ -8,29 +9,37 @@ import {
   Background,
 } from '../components/utils';
 
+const Padding = ({ size, center, children }) => {
+  let classBuffer = 'uk-padding';
+  if (center) classBuffer += ' uk-flex uk-flex-center';
+  if (size) classBuffer += ` uk-padding-${size}`;
+  return <div className={classBuffer}>{children}</div>;
+};
+Padding.propTypes = {
+  center: PropTypes.bool,
+  size: PropTypes.string,
+  children: PropTypes.element.isRequired,
+};
+Padding.defaultProps = {
+  center: false,
+  size: undefined,
+};
 const Index = () => (
-  <div className="uk-cover-container">
-    <Background
-      src="/static/img/background.jpg"
-      position="top-center"
-      blend={{ colorHex: '#999', mode: 'screen' }}
-    >
+  <div>
+    <Background src="/static/img/background_1.png" position="top-right">
       <Section>
         <div data-uk-grid>
-          <div className="uk-width-1-1">
-            <img
-              className="uk-width-medium"
-              src="/static/img/linkedout_by_entourage.png"
-              alt="linkedout by Entourage"
-            />
-            <h1 className="uk-heading- uk-text-bold uk-margin-large">
+          <div className="uk-width-1-3@m uk-width-1-2@s">
+            <h1 className="uk-margin-large-bottom uk-heading-small uk-text-bold uk-margin-large uk-text-center uk-text-left@s">
               <span>Partagez votre </span>
               <span className="uk-text-primary">réseau</span>
               <span> avec ceux qui n&apos;en ont pas</span>
             </h1>
-            <Button href="#" size="" style="primary">
-              partager l&apos;opération
-            </Button>
+            <div className="uk-margin-large-top uk-margin-large-bottom uk-text-center uk-text-left@s">
+              <Button href="#" size="large" style="primary">
+                partager l&apos;opération
+              </Button>
+            </div>
           </div>
         </div>
         <Grid
@@ -55,7 +64,7 @@ const Index = () => (
             />,
           ]}
         />
-        <div className="uk-flex uk-flex-center uk-padding-large uk-padding-remove-bottom">
+        <div className="uk-light uk-flex uk-flex-center uk-padding-large uk-padding-remove-bottom">
           <p>Découvrez les candidats</p>
         </div>
         <div className="uk-flex uk-flex-center">
@@ -76,8 +85,8 @@ const Index = () => (
         <span className="uk-text-primary">Un partage</span> peut tout changer.
       </p>
     </Section>
-    <Section style="default" id="profiles">
-      <div className="uk-text-center">
+    <Section style="default" size="large" id="profiles">
+      <div className="uk-text-center uk-margin-large">
         <h3 className="uk-heading-small">
           <span className="uk-text-primary">Eux</span> cherchent un travail,
           <br />
@@ -93,7 +102,7 @@ const Index = () => (
       <Grid
         childWidths={['1-1', '1-2@s', '1-3@m']}
         parallax="500"
-        items={Array(12).fill([
+        items={Array(6).fill([
           <CandidatCard
             imgSrc="static/img/arthur.png"
             imgAlt="arthur"
@@ -108,6 +117,79 @@ const Index = () => (
       />
       <div className="uk-with-1-1 uk-text-center uk-padding uk-padding-remove-bottom">
         <Button style="default">Voir plus</Button>
+      </div>
+    </Section>
+    <Section style="primary" size="large">
+      <div className="uk-text-center">
+        <p className="uk-text-lead">
+          Vous sentez que vous pouvez{' '}
+          <span className="uk-text-primary">faire la différence ?</span> À vous
+          de jouer !
+        </p>
+        <div className="uk-button-group">
+          <Button style="primary">je veux aider</Button>
+          <Button style="default">je veux recruter</Button>
+        </div>
+      </div>
+    </Section>
+    <Section style="default" size="large">
+      <div className="uk-text-center">
+        <h3 className="uk-h6 uk-text-uppercase uk-margin-remove-bottom">
+          Les chiffres
+        </h3>
+        <h2 className="uk-margin-remove-top">
+          Un programme <span className="uk-text-primary">efficace</span>
+        </h2>
+      </div>
+      <div className="uk-margin-large-top">
+        <Grid
+          childWidths={['1-1', '1-3@s']}
+          items={Array(3).fill([
+            <div
+              className="uk-grid-collapse uk-grid-small uk-grid-divider"
+              data-uk-grid
+            >
+              <div className="uk-width-1-3">
+                <div className="uk-text-center uk-text-primary">
+                  <div className="uk-text-large">15</div>
+                  <span uk-icon="icon: bolt" />
+                </div>
+              </div>
+              <div className="uk-width-2-3">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
+              </div>
+            </div>,
+          ])}
+        />
+      </div>
+    </Section>
+    <Section style="muted" size="large">
+      <div className="uk-text-center">
+        <h3 className="uk-h6 uk-text-uppercase uk-margin-remove-bottom">
+          Les chiffres
+        </h3>
+        <h2 className="uk-margin-remove-top">
+          Un programme <span className="uk-text-primary">efficace</span>
+        </h2>
+      </div>
+      <div className="uk-margin-medium-top uk-flex uk-flex-center">
+        <form>
+          <div className="uk-button-group">
+            <div data-uk-form-custom="target: true">
+              <a className="uk-form-icon" href="#">
+                <span uk-icon="icon: mail" />
+              </a>
+              <input
+                className="uk-input"
+                type="text"
+                placeholder="Votre adresse mail"
+              />
+            </div>
+            <button type="button" className="uk-button uk-button-default">
+              Ecrivez-nous
+            </button>
+          </div>
+        </form>
       </div>
     </Section>
   </div>

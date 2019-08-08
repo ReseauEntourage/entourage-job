@@ -50,8 +50,9 @@ export const PresentationCard = ({ imgSrc, imgAlt, text }) => {
         </div>
         <div className="uk-width-expand">
           <p className="uk-text-uppercase uk-text-center uk-text-left@m">
-            <span className="uk-text-primary">{splited[0]} </span>
+            <span className="uk-text-bold uk-text-primary">{splited[0]} </span>
             <span className="uk-text-bold">{splited[1]} </span>
+            <br />
             <span>{splited.slice(2).join(' ')}</span>
           </p>
         </div>
