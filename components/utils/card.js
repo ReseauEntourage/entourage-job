@@ -40,14 +40,19 @@ export const PresentationCard = ({ imgSrc, imgAlt, text }) => {
   return (
     <div className="uk-card uk-card-default uk-card-body">
       <div data-uk-grid>
-        <div className="uk-width-small">
-          <img src={imgSrc} alt={imgAlt} data-uk-img />
+        <div className="uk-width-small@s uk-width-1-1 uk-width-small@m uk-flex uk-flex-center">
+          <img
+            className="uk-height-max-small"
+            src={imgSrc}
+            alt={imgAlt}
+            data-uk-img
+          />
         </div>
         <div className="uk-width-expand">
-          <p className="uk-text-uppercase">
+          <p className="uk-text-uppercase uk-text-center uk-text-left@m">
             <span className="uk-text-primary">{splited[0]} </span>
             <span className="uk-text-bold">{splited[1]} </span>
-            <span>{splited.slice(1).join(' ')}</span>
+            <span>{splited.slice(2).join(' ')}</span>
           </p>
         </div>
       </div>
@@ -56,6 +61,50 @@ export const PresentationCard = ({ imgSrc, imgAlt, text }) => {
 };
 PresentationCard.propTypes = {
   text: PropTypes.string.isRequired,
+  imgSrc: PropTypes.string.isRequired,
+  imgAlt: PropTypes.string.isRequired,
+};
+
+export const CandidatCard = ({
+  imgSrc,
+  imgAlt,
+  title,
+  description,
+  goods,
+  ambitions,
+}) => (
+  <a className="uk-link-toggle" href="#">
+    <div className="uk-card uk-card-hover uk-card-default">
+      <div className="uk-card-media-top">
+        <img src={imgSrc} alt={imgAlt} />
+      </div>
+      <div className="uk-card-body">
+        {/* <span className="uk-card-badge uk-label uk-label-warning">78</span> */}
+        <h3 className="uk-card-title uk-link-heading">{title}</h3>
+        <p>
+          {description}
+          <br />
+          {goods.map((g) => [
+            <span className="uk-text-primary">{g}</span>,
+            <span> - </span>,
+          ])}
+        </p>
+        <p>
+          Je souhaite travailler dans: <br />
+          {ambitions.map((a) => [
+            <span className="uk-label">{a}</span>,
+            <span> </span>,
+          ])}
+        </p>
+      </div>
+    </div>
+  </a>
+);
+CandidatCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  goods: PropTypes.arrayOf(PropTypes.string).isRequired,
+  ambitions: PropTypes.arrayOf(PropTypes.string).isRequired,
   imgSrc: PropTypes.string.isRequired,
   imgAlt: PropTypes.string.isRequired,
 };

@@ -2,23 +2,22 @@ import React from 'react';
 import {
   Button,
   PresentationCard,
+  CandidatCard,
   Grid,
   Section,
-  Text,
 } from '../components/utils';
 
 const Index = () => (
   <div className="uk-cover-container">
-    {/* style={{ backgroundImage: "url('/static/img/background.jpg')" }} */}
     <img
       src="/static/img/background.jpg"
-      alt=""
+      alt="background"
       data-uk-cover
-      style={{ opacity: 0.1, zIndex: -1 }}
+      style={{ opacity: 0.1 }}
     />
     <Section>
       <div data-uk-grid>
-        <div className="uk-width-1-3">
+        <div className="uk-width-1-1">
           <img
             className="uk-width-medium"
             src="/static/img/linkedout_by_entourage.png"
@@ -33,13 +32,11 @@ const Index = () => (
             partager l&apos;opération
           </Button>
         </div>
-        {/* <div className="uk-width-2-3" /> */}
       </div>
-    </Section>
-    <Section>
       <Grid
         match
-        size="3"
+        center
+        childWidths={['1-3@s', '1-2']}
         items={[
           <PresentationCard
             imgSrc="/static/img/illustrations/helping_process.png"
@@ -58,9 +55,7 @@ const Index = () => (
           />,
         ]}
       />
-    </Section>
-    <Section>
-      <div className="uk-flex uk-flex-center">
+      <div className="uk-flex uk-flex-center uk-padding-large uk-padding-remove-bottom">
         <p>Découvrez les candidats</p>
       </div>
       <div className="uk-flex uk-flex-center">
@@ -69,7 +64,51 @@ const Index = () => (
         </a>
       </div>
     </Section>
-    <div id="candidat" />
+    <Section style="secondary" size="large" id="candidat">
+      <p className="uk-text-lead">
+        Lorsqu&apos;on est désocialisé, on devient invisible. <br /> Les chance
+        de retrouver du travail sont très faibles.
+      </p>
+      <p className="uk-text-lead">
+        L&apos;association Entourage vous propose de faire un don de visibilité.
+        <br />
+        <span className="uk-text-primary">Un partage</span> peut tout changer.
+      </p>
+    </Section>
+    <Section style="default" id="profiles">
+      <div className="uk-text-center">
+        <h3 className="uk-heading-small">
+          <span className="uk-text-primary">Eux</span> cherchent un travail,
+          <br />
+          <span className="uk-text-primary">Vous</span> avez un réseau.
+        </h3>
+        <p>
+          Nos candidats sont des gens en situation de précarité financière et
+          professionnellle. Toutes accompagnées par des travailleurs sociaux,
+          motivées pour se réinsérer, elles dévoilent leurs talents et leurs
+          aspirations. Réseau, amis, recruteurs, à vos partages!
+        </p>
+      </div>
+      <Grid
+        childWidths={['1-1', '1-2@s', '1-3@m']}
+        parallax="500"
+        items={Array(12).fill([
+          <CandidatCard
+            imgSrc="static/img/arthur.png"
+            imgAlt="arthur"
+            title="Arthur"
+            description="série télévisée d'animation américano-canadienne, basée sur
+            Les Aventures d'Arthur de Marc Brown et diffusée depuis le
+            7 octobre 1996 sur le réseau PBS."
+            goods={['volontaire', "esprit d'équipe"]}
+            ambitions={['la vente', 'la restauration']}
+          />,
+        ])}
+      />
+      <div className="uk-with-1-1 uk-text-center uk-padding uk-padding-remove-bottom">
+        <Button style="default">Voir plus</Button>
+      </div>
+    </Section>
   </div>
 );
 
