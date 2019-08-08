@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 /**
  *
  * navbar: bool
@@ -13,6 +13,13 @@ export const Nav = ({ navbar, items }) => (
     ))}
   </ul>
 );
+Nav.propTypes = {
+  navbar: PropTypes.bool,
+  items: PropTypes.arrayOf(PropTypes.element).isRequired,
+};
+Nav.defaultProps = {
+  navbar: false,
+};
 
 /**
  *
@@ -28,3 +35,15 @@ export const Navbar = ({ id, left, center, right }) => (
     <div className="uk-navbar-right">{right}</div>
   </nav>
 );
+Navbar.propTypes = {
+  id: PropTypes.number,
+  left: PropTypes.element,
+  center: PropTypes.element,
+  right: PropTypes.element,
+};
+Navbar.defaultProps = {
+  id: undefined,
+  left: undefined,
+  center: undefined,
+  right: undefined,
+};
