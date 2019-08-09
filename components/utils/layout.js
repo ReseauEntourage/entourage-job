@@ -2,7 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { UIKIT_STYLES, UIKIT_SECTION_SIZES, UIKIT_BLENDS } from '../variables';
 
-export const Grid = ({ items, childWidths, match, center, parallax }) => {
+export const Grid = ({
+  items,
+  childWidths,
+  match,
+  divider,
+  center,
+  parallax,
+}) => {
   let classBuffer = '';
   let gridBuffer = '';
   if (parallax) gridBuffer += `parallax: ${parallax}`;
@@ -10,7 +17,9 @@ export const Grid = ({ items, childWidths, match, center, parallax }) => {
     .map((childWidth) => ` uk-child-width-${childWidth}`)
     .join(' ');
   if (match) classBuffer += ' uk-grid-match';
+  if (divider) classBuffer += ' uk-grid-divider';
   if (center) classBuffer += ' uk-flex-center';
+
   return (
     <div className={classBuffer} data-uk-grid={gridBuffer}>
       {items.map((item) => (
@@ -25,10 +34,12 @@ Grid.propTypes = {
   center: PropTypes.bool,
   childWidths: PropTypes.arrayOf(PropTypes.string),
   items: PropTypes.arrayOf(PropTypes.element).isRequired,
+  divider: PropTypes.bool,
 };
 Grid.defaultProps = {
   match: false,
   center: false,
+  divider: false,
   parallax: undefined,
   childWidths: [],
 };
@@ -59,7 +70,7 @@ Background.propTypes = {
   blend: PropTypes.shape({
     color: PropTypes.oneOf(UIKIT_STYLES),
     colorHex: PropTypes.string,
-    mode: PropTypes.oneOf(UIKIT_BLENDS).isRequired,
+    mode: PropTypes.oneOf(UIKIT_BLENDS),
   }),
   fixed: PropTypes.bool,
 };
@@ -68,13 +79,16 @@ Background.defaultProps = {
   blend: {},
   fixed: false,
 };
+
 export const Section = ({ style, size, id, children }) => {
   let classBuffer = 'uk-section';
   if (style) classBuffer += ` uk-section-${style}`;
   if (size) classBuffer += ` uk-section-${size}`;
   return (
-    <div className={classBuffer} id={id}>
-      <div className="uk-container">{children}</div>
+    <div className={classBuffer}>
+      <div className="uk-container" id={id}>
+        {children}
+      </div>
     </div>
   );
 };
@@ -87,9 +101,24 @@ Section.propTypes = {
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
 };
-
 Section.defaultProps = {
   style: undefined,
   size: undefined,
   id: undefined,
+};
+
+export const Padding = ({ size, center, children }) => {
+  let classBuffer = 'uk-padding';
+  if (center) classBuffer += ' uk-flex uk-flex-center';
+  if (size) classBuffer += ` uk-padding-${size}`;
+  return <div className={classBuffer}>{children}</div>;
+};
+Padding.propTypes = {
+  center: PropTypes.bool,
+  size: PropTypes.string,
+  children: PropTypes.element.isRequired,
+};
+Padding.defaultProps = {
+  center: false,
+  size: undefined,
 };

@@ -1,4 +1,5 @@
-import 'uikit/dist/css/uikit.css';
+// import '../assets/uikit/dist/css/uikit.css';
+import '../dist/css/uikit.css';
 
 import React from 'react';
 import Head from 'next/head';

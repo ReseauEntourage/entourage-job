@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Grid } from './layout';
+
 export const HelpingCard = ({
   titleHead,
   titleMiddle,
@@ -108,4 +110,24 @@ CandidatCard.propTypes = {
   ambitions: PropTypes.arrayOf(PropTypes.string).isRequired,
   imgSrc: PropTypes.string.isRequired,
   imgAlt: PropTypes.string.isRequired,
+};
+
+export const NumberCard = ({ value, description }) => (
+  <div className="uk-card uk-card-body uk-card-small">
+    <Grid
+      childWidths={['1-2']}
+      divider
+      items={[
+        <div className="uk-text-right uk-text-primary">
+          <div className="uk-text-large">{value}</div>
+          <span uk-icon="icon: bolt" />
+        </div>,
+        <p>{description}</p>,
+      ]}
+    />
+  </div>
+);
+NumberCard.propTypes = {
+  value: PropTypes.number.isRequired,
+  description: PropTypes.string.isRequired,
 };

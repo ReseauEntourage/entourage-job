@@ -19,49 +19,45 @@ Offcanvas.propTypes = {
   ]).isRequired,
 };
 
-const Header = ({ items }) => {
-  console.log(items);
-  //   visible="m"
-  return (
-    <header>
-      <Navbar
-        left={
-          <NavbarLogo
-            href="/"
-            src="/static/img/linkedout_by_entourage.png"
-            alt="Linkedout"
-          />
-        }
-        right={
-          <Nav
-            navbar
-            items={[
-              ...items.map((value) => (
-                <SimpleLink href={value.href} visible="m">
-                  {value.name}
-                </SimpleLink>
-              )),
-              <div className="uk-navbar-item">
-                <Button href="#" visible="m" style="primary">
-                  Partager l&apos;opération
-                </Button>
-              </div>,
-              <Hamburger href="#offcanvas" hidden="m" />,
-            ]}
-          />
-        }
-      />
-      <Offcanvas id="offcanvas">
-        <Nav
-          navbar={false}
-          items={items.map((value) => (
-            <SimpleLink href={value.href}>{value.name}</SimpleLink>
-          ))}
+const Header = ({ items }) => (
+  <header>
+    <Navbar
+      left={
+        <NavbarLogo
+          href="/"
+          src="/static/img/linkedout_by_entourage.png"
+          alt="Linkedout"
         />
-      </Offcanvas>
-    </header>
-  );
-};
+      }
+      right={
+        <Nav
+          navbar
+          items={[
+            ...items.map((value) => (
+              <SimpleLink href={value.href} visible="m">
+                {value.name}
+              </SimpleLink>
+            )),
+            <div className="uk-navbar-item">
+              <Button href="#" visible="m" style="primary">
+                Partager l&apos;opération
+              </Button>
+            </div>,
+            <Hamburger href="#offcanvas" hidden="m" />,
+          ]}
+        />
+      }
+    />
+    <Offcanvas id="offcanvas">
+      <Nav
+        navbar={false}
+        items={items.map((value) => (
+          <SimpleLink href={value.href}>{value.name}</SimpleLink>
+        ))}
+      />
+    </Offcanvas>
+  </header>
+);
 Header.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({

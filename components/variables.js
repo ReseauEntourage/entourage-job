@@ -30,8 +30,15 @@ export const UIKIT_SECTION_SIZES = [
   'large',
   'xlarge',
 ];
-export const UIKIT_STYLES = ['default', 'primary', 'secondary', 'danger'];
-export const UIKIT_BUTTON_STYLES_SPEC = ['text', 'link', ...UIKIT_STYLES];
+export const UIKIT_STYLES = ['default', 'primary', 'secondary', 'muted'];
+export const UIKIT_BUTTON_STYLES_SPEC = [
+  'default',
+  'primary',
+  'secondary',
+  'danger',
+  'text',
+  'link',
+];
 export const UIKIT_BUTTON_SIZES = ['small', 'large'];
 export const UIKIT_COLORS = [
   'muted',
