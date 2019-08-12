@@ -80,13 +80,17 @@ Background.defaultProps = {
   fixed: false,
 };
 
-export const Section = ({ style, size, id, children }) => {
+export const Section = ({ style, size, id, containerLarge, children }) => {
   let classBuffer = 'uk-section';
   if (style) classBuffer += ` uk-section-${style}`;
   if (size) classBuffer += ` uk-section-${size}`;
+
+  let classBuffer2 = 'uk-container';
+  if (containerLarge) classBuffer2 += ` uk-container-large`;
+
   return (
     <div className={classBuffer}>
-      <div className="uk-container" id={id}>
+      <div className={classBuffer2} id={id}>
         {children}
       </div>
     </div>
@@ -100,11 +104,13 @@ Section.propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
+  containerLarge: PropTypes.bool,
 };
 Section.defaultProps = {
   style: undefined,
   size: undefined,
   id: undefined,
+  containerLarge: false,
 };
 
 export const Padding = ({ size, center, children }) => {

@@ -78,8 +78,11 @@ export const CandidatCard = ({
 }) => (
   <a className="uk-link-toggle" href="#">
     <div className="uk-card uk-card-hover uk-card-default">
-      <div className="uk-card-media-top">
-        <img src={imgSrc} alt={imgAlt} />
+      <div
+        className="uk-card-media-top uk-height-max-medium"
+        style={{ overflow: 'hidden' }}
+      >
+        <img src={imgSrc} alt={imgAlt} data-uk-img />
       </div>
       <div className="uk-card-body">
         {/* <span className="uk-card-badge uk-label uk-label-warning">78</span> */}

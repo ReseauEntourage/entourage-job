@@ -14,7 +14,7 @@ import {
 // Home page partials
 export const LandingPagePartial = ({ presentations }) => (
   <Background src="/static/img/background_1.png" position="top-right">
-    <Section>
+    <Section containerLarge>
       <div data-uk-grid>
         <div className="uk-width-1-3@m uk-width-1-2@s">
           <h1 className="uk-heading-small uk-text-bold uk-text-center uk-text-left@s">
@@ -114,7 +114,7 @@ export const CandidatListPartial = () => (
 export const ContactPartial = () => (
   <Section style="muted" size="large" id="contact">
     <h2 className="uk-text-center">
-      Gardons contact,{' '}
+      <span>Gardons contact, </span>
       <span className="uk-text-primary">le programme évolue</span> !
     </h2>
     <div className="uk-margin-medium-top uk-flex uk-flex-center">
@@ -186,3 +186,31 @@ NumberPartial.propTypes = {
     })
   ).isRequired,
 };
+
+export const DiscovertPartial = () => (
+  <Section id="discover">
+    <div className="uk-text-center">
+      <h2>
+        Découvres les <span className="uk-text-primary">candidats</span>
+      </h2>
+      <a href="#">Voir tous les candidats -&gt;</a>
+    </div>
+    <div className="uk-margin-large">
+      <Grid
+        childWidths={['1-1', '1-2@s']}
+        items={Array(2).fill([
+          <CandidatCard
+            imgSrc="static/img/arthur.png"
+            imgAlt="arthur"
+            title="Arthur"
+            description="série télévisée d'animation américano-canadienne, basée sur
+        Les Aventures d'Arthur de Marc Brown et diffusée depuis le
+        7 octobre 1996 sur le réseau PBS."
+            goods={['volontaire', "esprit d'équipe"]}
+            ambitions={['la vente', 'la restauration']}
+          />,
+        ])}
+      />
+    </div>
+  </Section>
+);

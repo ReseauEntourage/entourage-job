@@ -31,28 +31,30 @@ const Footer = ({ items }) => {
               </li>
             </ul>,
             <div className="uk-height-1-1 uk-flex uk-flex-center uk-flex-middle">
-              <img
-                src="static/img/logo-entourage.svg"
-                alt="logo-entourage"
-                className="uk-heigh-small"
-                data-uk-img
-              />
+              <SimpleLink href="/">
+                <img
+                  src="static/img/logo-entourage.svg"
+                  alt="logo-entourage"
+                  className="uk-heigh-small"
+                  data-uk-img
+                />
+              </SimpleLink>
             </div>,
             <div className="uk-height-1-1 uk-flex uk-flex-right uk-flex-middle">
               <ul className="uk-iconnav uk-iconnav-vertical uk-text-center uk-margin-large-left">
                 <li>
-                  <a href="">
-                    <span uk-icon="linkedin" />
+                  <a href="#">
+                    <span data-uk-icon="linkedin" />
                   </a>
                 </li>
                 <li>
-                  <a href="">
-                    <span uk-icon="facebook" />
+                  <a href="#">
+                    <span data-uk-icon="facebook" />
                   </a>
                 </li>
                 <li>
-                  <a href="">
-                    <span uk-icon="twitter" />
+                  <a href="#">
+                    <span data-uk-icon="twitter" />
                   </a>
                 </li>
               </ul>
