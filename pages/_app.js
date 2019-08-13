@@ -9,9 +9,9 @@ import Footer from '../components/Footer';
 
 class MyApp extends App {
   links = [
-    { href: '/jeveuxaider', name: 'Je veux aider' },
-    { href: '/jeveuxtravailler', name: 'Je veux travailler' },
-    { href: '/jeveuxrecruter', name: 'Je veux recruter' },
+    { href: '/jeveuxaider', name: 'aider' },
+    { href: '/jeveuxtravailler', name: 'travailler' },
+    { href: '/jeveuxrecruter', name: 'recruter' },
   ];
 
   static async getInitialProps({ Component, ctx }) {
