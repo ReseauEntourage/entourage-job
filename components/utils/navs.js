@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 export const Nav = ({ navbar, items }) => (
   <ul className={navbar ? 'uk-navbar-nav' : 'uk-nav uk-nav-default'}>
     {items.map((value) => (
-      <li>{value}</li>
+      <li key={value.toString()}>{value}</li>
     ))}
   </ul>
 );

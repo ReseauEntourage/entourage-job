@@ -16,9 +16,8 @@ const JeVeuxAider = () => (
       <h1 className="uk-text-center">
         Vous souhaitez <span className="uk-text-primary">aider</span> ?
       </h1>
-      <Slider
+      <Grid
         childWidths={['1-1', '1-3@m']}
-        auto
         grid="small"
         items={[
           <HelpingCard
