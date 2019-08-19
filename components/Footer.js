@@ -33,10 +33,9 @@ const Footer = ({ items }) => {
             <div className="uk-height-1-1 uk-flex uk-flex-center uk-flex-middle">
               <SimpleLink href="/">
                 <img
-                  src="static/img/logo-entourage.svg"
+                  src="/static/img/logo-entourage.svg"
                   alt="logo-entourage"
                   className="uk-heigh-small"
-                  data-uk-img
                 />
               </SimpleLink>
             </div>,
