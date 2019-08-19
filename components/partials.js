@@ -198,7 +198,7 @@ export const DiscovertPartial = () => (
     <div className="uk-margin-large">
       <Grid
         childWidths={['1-1', '1-2@s']}
-        items={Array(2).fill([
+        items={Array(2).fill(
           <CandidatCard
             imgSrc="static/img/arthur.png"
             imgAlt="arthur"
@@ -208,8 +208,8 @@ export const DiscovertPartial = () => (
         7 octobre 1996 sur le réseau PBS."
             goods={['volontaire', "esprit d'équipe"]}
             ambitions={['la vente', 'la restauration']}
-          />,
-        ])}
+          />
+        )}
       />
     </div>
   </Section>
