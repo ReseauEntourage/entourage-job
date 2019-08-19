@@ -40,6 +40,7 @@
     // "import/imports-first": ["error", "absolute-first"],
     // "import/newline-after-import": "error",
     // "import/prefer-default-export": "warn",
+    "react/no-array-index-key": "off",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "react/prop-types": "error",
