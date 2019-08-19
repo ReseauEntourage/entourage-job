@@ -11,26 +11,26 @@ export const HelpingCard = ({
   img,
   alt,
 }) => (
-  <div className="uk-card uk-card-default uk-card-body">
-    <Grid
-      center
-      childWidths={['1-1']}
-      items={[
-        <div className="uk-height-small uk-text-center">
-          <img className="uk-height-1-1" src={img} alt={alt} data-uk-img />
-        </div>,
-        <div>
-          <h3 className="uk-text-bold">
-            {titleHead}
-            <span className="uk-text-primary">{titleMiddle}</span>
-            {titleTail}
-          </h3>
-        </div>,
-      ]}
-    />
-    <p>{description}</p>
-  </div>
-);
+    <div className="uk-card uk-card-default uk-card-body">
+      <Grid
+        center
+        childWidths={['1-1']}
+        items={[
+          <div className="uk-height-small uk-text-center">
+            <img className="uk-height-1-1" src={img} alt={alt} data-uk-img />
+          </div>,
+          <div>
+            <h3 className="uk-text-bold">
+              {titleHead}
+              <span className="uk-text-primary">{titleMiddle}</span>
+              {titleTail}
+            </h3>
+          </div>,
+        ]}
+      />
+      <p>{description}</p>
+    </div>
+  );
 HelpingCard.propTypes = {
   titleHead: PropTypes.string.isRequired,
   titleMiddle: PropTypes.string.isRequired,
@@ -82,36 +82,44 @@ export const CandidatCard = ({
   goods,
   ambitions,
 }) => (
-  <a className="uk-link-toggle" href="#">
-    <div className="uk-card uk-card-hover uk-card-default">
-      <div
-        className="uk-card-media-top uk-height-max-medium"
-        style={{ overflow: 'hidden' }}
-      >
-        <img src={imgSrc} alt={imgAlt} data-uk-img />
+    <a className="uk-link-toggle" href="#">
+      <div className="uk-card uk-card-hover uk-card-default">
+        <div
+          className="uk-card-media-top uk-height-max-medium"
+          style={{ overflow: 'hidden' }}
+        >
+          <img src={imgSrc} alt={imgAlt} data-uk-img />
+        </div>
+        <div className="uk-card-body">
+          {/* <span className="uk-card-badge uk-label uk-label-warning">78</span> */}
+          <h3 className="uk-card-title uk-link-heading">{title}</h3>
+          <p>
+            {description}
+            <br />
+            {goods.map((g, index) => {
+              return (
+                <span key={index}>
+                  <span className="uk-text-primary">{g}</span>
+                  {goods.length > index + 1 && <span> - </span>}
+                </span>
+              );
+            })}
+          </p>
+          <p>
+            Je souhaite travailler dans: <br />
+            {ambitions.map((a, index) => {
+              return (
+                <span key={index}>
+                  <span className="uk-label">{a}</span>
+                  {ambitions.length > index + 1 && <span> </span>}
+                </span>
+              );
+            })}
+          </p>
+        </div>
       </div>
-      <div className="uk-card-body">
-        {/* <span className="uk-card-badge uk-label uk-label-warning">78</span> */}
-        <h3 className="uk-card-title uk-link-heading">{title}</h3>
-        <p>
-          {description}
-          <br />
-          {goods.map((g) => [
-            <span className="uk-text-primary">{g}</span>,
-            <span> - </span>,
-          ])}
-        </p>
-        <p>
-          Je souhaite travailler dans: <br />
-          {ambitions.map((a) => [
-            <span className="uk-label">{a}</span>,
-            <span> </span>,
-          ])}
-        </p>
-      </div>
-    </div>
-  </a>
-);
+    </a>
+  );
 CandidatCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,

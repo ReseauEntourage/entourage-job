@@ -8,8 +8,8 @@ import PropTypes from 'prop-types';
  */
 export const Nav = ({ navbar, items }) => (
   <ul className={navbar ? 'uk-navbar-nav' : 'uk-nav uk-nav-default'}>
-    {items.map((value) => (
-      <li key={value.toString()}>{value}</li>
+    {items.map((value, index) => (
+      <li key={index}>{value}</li>
     ))}
   </ul>
 );
