@@ -18,7 +18,7 @@ app
 
     server.listen(PORT, (err) => {
       if (err) throw err;
-      console.log(`> Ready on http://localhost:${process.env.PORT}`);
+      console.log(`> Ready on http://localhost:${PORT}`);
     });
   })
   .catch((ex) => {

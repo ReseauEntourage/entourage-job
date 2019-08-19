@@ -14,8 +14,8 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <script src="static/dist/js/uikit.min.js" />
-          <script src="static/dist/js/uikit-icons.min.js" />
+          <script src="/static/dist/js/uikit.js" />
+          <script src="/static/dist/js/uikit-icons.js" />
         </body>
       </html>
     );
