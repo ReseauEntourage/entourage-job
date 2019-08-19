@@ -92,7 +92,7 @@ export const CandidatListPartial = () => (
     <Grid
       childWidths={['1-1', '1-2@s', '1-3@m']}
       parallax={500}
-      items={Array(6).fill([
+      items={Array(6).fill(
         <CandidatCard
           imgSrc="static/img/arthur.png"
           imgAlt="arthur"
@@ -103,7 +103,7 @@ export const CandidatListPartial = () => (
           goods={['volontaire', "esprit d'équipe"]}
           ambitions={['la vente', 'la restauration']}
         />,
-      ])}
+      )}
     />
     <div className="uk-with-1-1 uk-text-center uk-padding uk-padding-remove-bottom">
       <Button style="default">Voir plus</Button>

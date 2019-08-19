@@ -22,8 +22,8 @@ export const Grid = ({
 
   return (
     <div className={classBuffer} data-uk-grid={gridBuffer}>
-      {items.map((item) => (
-        <div>{item}</div>
+      {items.map((item, index) => (
+        <div key={index}>{item}</div>
       ))}
     </div>
   );
