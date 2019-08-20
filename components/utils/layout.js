@@ -140,8 +140,8 @@ export const Slider = ({ grid, items, childWidths, finite, autoplay }) => {
       data-uk-slider={`finite: ${finite}; autoplay: ${autoplay}`}
     >
       <ul className={classBuffer2} data-uk-grid>
-        {items.map((item) => (
-          <li>{item}</li>
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
         ))}
       </ul>
       <a

@@ -165,6 +165,6 @@ export const ScaleCard = ({ title, titleEmphaseStart, description }) => {
 };
 ScaleCard.propTypes = {
   title: PropTypes.string.isRequired,
-  titleEmphaseStart: PropTypes.arrayOf(PropTypes.string).isRequired,
+  titleEmphaseStart: PropTypes.number.isRequired,
   description: PropTypes.string.isRequired,
 };
