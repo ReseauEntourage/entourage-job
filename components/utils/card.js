@@ -133,7 +133,7 @@ export const NumberCard = ({ value, description }) => (
       items={[
         <div className="uk-text-right uk-text-primary">
           <div className="uk-text-large">{value}</div>
-          <IconNoSSR name="icon: bolt" />
+          <IconNoSSR name="bolt" />
         </div>,
         <p>{description}</p>,
       ]}
