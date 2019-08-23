@@ -1,14 +1,9 @@
 import React from 'react';
 
-import {
-  HelpingCard,
-  ScaleCard,
-  Button,
-  Section,
-  Grid,
-  Slider,
-} from '../components/utils';
-import { DiscovertPartial, EmphasePartial } from '../components/partials';
+import { HelpingCard, ScaleCard, Button, Section } from '../components/utils';
+import { SliderNoSSR } from '../components/utils/Slider';
+import { DiscovertPartial } from '../components/partials';
+import { GridNoSSR } from '../components/utils/Grid';
 
 const JeVeuxAider = () => (
   <div>
@@ -16,7 +11,7 @@ const JeVeuxAider = () => (
       <h1 className="uk-text-center">
         Vous souhaitez <span className="uk-text-primary">aider</span> ?
       </h1>
-      <Grid
+      <GridNoSSR
         childWidths={['1-1', '1-3@m']}
         grid="small"
         items={[
@@ -49,7 +44,7 @@ const JeVeuxAider = () => (
         <h2>
           Aider <span className="uk-text-primary">à votre échelle</span>
         </h2>
-        <Slider
+        <SliderNoSSR
           auto
           finite={false}
           childWidths={['1-1', '1-2@s', '1-4@m']}

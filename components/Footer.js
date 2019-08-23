@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Section, SimpleLink } from './utils';
-
+import { Section, SimpleLink } from './utils';
+import { GridNoSSR } from './utils/Grid';
+import { IconNoSSR } from './utils/Icon';
 /**
  *
  * links: Array<{href: str, name: str}>
@@ -11,7 +12,7 @@ const Footer = ({ items }) => {
     <footer id="footer">
       {/* className="uk-section uk-section-secondary" */}
       <Section style="secondary" size="large">
-        <Grid
+        <GridNoSSR
           childWidths={['1-3']}
           items={[
             <ul className="uk-nav uk-text-uppercase">
@@ -33,10 +34,9 @@ const Footer = ({ items }) => {
             <div className="uk-height-1-1 uk-flex uk-flex-center uk-flex-middle">
               <SimpleLink href="/">
                 <img
-                  src="static/img/logo-entourage.svg"
+                  src="/static/img/logo-entourage.svg"
                   alt="logo-entourage"
                   className="uk-heigh-small"
-                  data-uk-img
                 />
               </SimpleLink>
             </div>,
@@ -44,17 +44,17 @@ const Footer = ({ items }) => {
               <ul className="uk-iconnav uk-iconnav-vertical uk-text-center uk-margin-large-left">
                 <li>
                   <a href="#">
-                    <span data-uk-icon="linkedin" />
+                    <IconNoSSR name="linkedin" />
                   </a>
                 </li>
                 <li>
                   <a href="#">
-                    <span data-uk-icon="facebook" />
+                    <IconNoSSR name="facebook" />
                   </a>
                 </li>
                 <li>
                   <a href="#">
-                    <span data-uk-icon="twitter" />
+                    <IconNoSSR name="twitter" />
                   </a>
                 </li>
               </ul>

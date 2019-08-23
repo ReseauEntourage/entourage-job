@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { IconNoSSR } from './utils/Icon';
+import { GridNoSSR } from './utils/Grid';
 
 import {
   Button,
   PresentationCard,
   CandidatCard,
   NumberCard,
-  Grid,
   Section,
   Background,
 } from './utils';
@@ -15,21 +16,24 @@ import {
 export const LandingPagePartial = ({ presentations }) => (
   <Background src="/static/img/background_1.png" position="top-right">
     <Section containerLarge>
-      <div data-uk-grid>
-        <div className="uk-width-1-3@m uk-width-1-2@s">
-          <h1 className="uk-heading-small uk-text-bold uk-text-center uk-text-left@s">
-            <span>Partagez votre </span>
-            <span className="uk-text-primary">réseau</span>
-            <span> avec ceux qui n&apos;en ont pas</span>
-          </h1>
-          <div className="uk-margin-large-top uk-margin-large-bottom uk-text-center uk-text-left@s">
-            <Button href="#" size="large" style="primary">
-              partager l&apos;opération
-            </Button>
-          </div>
-        </div>
-      </div>
-      <Grid
+      <GridNoSSR
+        childWidths={['1-3@m', '1-2@s']}
+        items={[
+          <div>
+            <h1 className="uk-heading-small uk-text-bold uk-text-center uk-text-left@s">
+              <span>Partagez votre </span>
+              <span className="uk-text-primary">réseau</span>
+              <span> avec ceux qui n&apos;en ont pas</span>
+            </h1>
+            <div className="uk-margin-large-top uk-margin-large-bottom uk-text-center uk-text-left@s">
+              <Button href="#" size="large" style="primary">
+                partager l&apos;opération
+              </Button>
+            </div>
+          </div>,
+        ]}
+      />
+      <GridNoSSR
         match
         center
         childWidths={['1-3@s', '1-2']}
@@ -42,7 +46,7 @@ export const LandingPagePartial = ({ presentations }) => (
       </div>
       <div className="uk-flex uk-flex-center">
         <a className="uk-icon-button" href="#profiles" data-uk-scroll>
-          <span data-uk-icon="chevron-down" />
+          <IconNoSSR name="chevron-down" />
         </a>
       </div>
     </Section>
@@ -89,10 +93,10 @@ export const CandidatListPartial = () => (
         aspirations. Réseau, amis, recruteurs, à vos partages!
       </p>
     </div>
-    <Grid
+    <GridNoSSR
       childWidths={['1-1', '1-2@s', '1-3@m']}
       parallax={500}
-      items={Array(6).fill([
+      items={Array(6).fill(
         <CandidatCard
           imgSrc="static/img/arthur.png"
           imgAlt="arthur"
@@ -102,8 +106,8 @@ export const CandidatListPartial = () => (
           7 octobre 1996 sur le réseau PBS."
           goods={['volontaire', "esprit d'équipe"]}
           ambitions={['la vente', 'la restauration']}
-        />,
-      ])}
+        />
+      )}
     />
     <div className="uk-with-1-1 uk-text-center uk-padding uk-padding-remove-bottom">
       <Button style="default">Voir plus</Button>
@@ -122,7 +126,7 @@ export const ContactPartial = () => (
         <div className="uk-button-group">
           <div data-uk-form-custom="target: true">
             <a className="uk-form-icon" href="#">
-              <span uk-icon="icon: mail" />
+              <IconNoSSR name="mail" />
             </a>
             <input
               className="uk-input"
@@ -164,7 +168,7 @@ export const NumberPartial = ({ numbers }) => (
       </h2>
     </div>
     <div className="uk-margin-large-top">
-      <Grid
+      <GridNoSSR
         childWidths={['1-1', '1-3@m']}
         items={numbers.map((content) => (
           <div className="  uk-flex uk-flex-center uk-flex-center">
@@ -196,9 +200,9 @@ export const DiscovertPartial = () => (
       <a href="#">Voir tous les candidats -&gt;</a>
     </div>
     <div className="uk-margin-large">
-      <Grid
+      <GridNoSSR
         childWidths={['1-1', '1-2@s']}
-        items={Array(2).fill([
+        items={Array(2).fill(
           <CandidatCard
             imgSrc="static/img/arthur.png"
             imgAlt="arthur"
@@ -208,8 +212,8 @@ export const DiscovertPartial = () => (
         7 octobre 1996 sur le réseau PBS."
             goods={['volontaire', "esprit d'équipe"]}
             ambitions={['la vente', 'la restauration']}
-          />,
-        ])}
+          />
+        )}
       />
     </div>
   </Section>

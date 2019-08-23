@@ -1,27 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Nav, Navbar } from './utils/navs';
-import { SimpleLink, Button, Hamburger, NavbarLogo } from './utils/links';
-
-const Offcanvas = ({ id, children }) => (
-  <div data-uk-offcanvas="mode: push; overlay: true" id={id}>
-    <div className="uk-offcanvas-bar">
-      <button className="uk-offcanvas-close" type="button" data-uk-close />
-      {children}
-    </div>
-  </div>
-);
-Offcanvas.propTypes = {
-  id: PropTypes.string.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]).isRequired,
-};
+import Nav from './utils/Nav';
+import { NavbarNoSSR } from './utils/Navbar';
+import { SimpleLink, Button, NavbarLogo } from './utils';
+import { HamburgerNoSSR } from './utils/Hamburger';
+import { OffcanvasNoSSR } from './utils/Offcanvas';
 
 const Header = ({ items }) => (
   <header>
-    <Navbar
+    <NavbarNoSSR
       left={
         <NavbarLogo
           href="/"
@@ -43,19 +30,19 @@ const Header = ({ items }) => (
                 Partager l&apos;opération
               </Button>
             </div>,
-            <Hamburger href="#offcanvas" hidden="m" />,
+            <HamburgerNoSSR href="#offcanvas" hidden="m" />,
           ]}
         />
       }
     />
-    <Offcanvas id="offcanvas">
+    <OffcanvasNoSSR id="offcanvas">
       <Nav
         navbar={false}
         items={items.map((value) => (
           <SimpleLink href={value.href}>{value.name}</SimpleLink>
         ))}
       />
-    </Offcanvas>
+    </OffcanvasNoSSR>
   </header>
 );
 Header.propTypes = {
