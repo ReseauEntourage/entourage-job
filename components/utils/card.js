@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { GridNoSSR } from './Grid';
 
-import { Grid } from './layout';
+import { IconNoSSR } from './Icon';
 
 export const HelpingCard = ({
   titleHead,
@@ -12,7 +13,7 @@ export const HelpingCard = ({
   alt,
 }) => (
   <div className="uk-card uk-card-default uk-card-body">
-    <Grid
+    <GridNoSSR
       center
       childWidths={['1-1']}
       items={[
@@ -126,13 +127,13 @@ CandidatCard.propTypes = {
 
 export const NumberCard = ({ value, description }) => (
   <div className="uk-card uk-card-body uk-card-small">
-    <Grid
+    <GridNoSSR
       childWidths={['1-2']}
       divider
       items={[
         <div className="uk-text-right uk-text-primary">
           <div className="uk-text-large">{value}</div>
-          <span uk-icon="icon: bolt" />
+          <IconNoSSR name="bolt" />
         </div>,
         <p>{description}</p>,
       ]}

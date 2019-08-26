@@ -1,0 +1,28 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
+import { UIKIT_SCREENS } from '../variables';
+
+export const HamburgerNoSSR = dynamic(() => import('./Hamburger'), {
+  ssr: false,
+});
+
+const Hamburger = ({ hidden, visible }) => {
+  let classBuffer = '';
+  if (hidden) classBuffer += `uk-hidden@${hidden}`;
+  if (visible) classBuffer += `uk-visible@${visible}`;
+  return (
+    <button
+      type="button"
+      className={`uk-navbar-toggle ${classBuffer}`}
+      data-uk-toggle="target: #offcanvas"
+      data-uk-navbar-toggle-icon
+    />
+  );
+};
+Hamburger.propTypes = {
+  hidden: PropTypes.oneOf(UIKIT_SCREENS),
+  visible: PropTypes.oneOf(UIKIT_SCREENS),
+};
+Hamburger.defaultProps = { hidden: undefined, visible: undefined };
+export default Hamburger;

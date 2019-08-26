@@ -1,6 +1,8 @@
 import React from 'react';
 import { DiscovertPartial } from '../components/partials';
-import { Section, Grid } from '../components/utils';
+import { Section, SimpleLink } from '../components/utils';
+import { IconNoSSR } from '../components/utils/Icon';
+import { GridNoSSR } from '../components/utils/Grid';
 
 const Profile = () => (
   <div>
@@ -14,10 +16,9 @@ const Profile = () => (
           <span className="uk-text-primary">Zulfuye</span> a besoin d'un coup de
           pouce et si votre partage faisait la différence?
         </h1>
-        <span
-          className="uk-text-primary"
-          uk-icon="icon: quote-right; ratio: 2"
-        />
+        <span className="uk-text-primary">
+          <IconNoSSR name="quote-right" ratio={2} />
+        </span>
         <p>
           Motivée et curieuse, j&apos;aimerais beaucoup travailler dans
           <span className="uk-text-primary"> la gestion </span>ou
@@ -26,54 +27,60 @@ const Profile = () => (
         </p>
         <p>partagez le CV de Zulfuye sur vos réseaux</p>
         <div>
-          <a
-            href=""
-            className="uk-icon-button uk-margin-right"
-            uk-icon="linkedin"
-          />
-          <a
-            href=""
-            className="uk-icon-button uk-margin-right"
-            uk-icon="facebook"
-          />
-          <a href="" className="uk-icon-button" uk-icon="twitter" />
+          <SimpleLink href="#">
+            <div className="uk-icon-button uk-margin-right">
+              <IconNoSSR name="linkedin" />
+            </div>
+          </SimpleLink>
+          <SimpleLink href="#">
+            <div className="uk-icon-button uk-margin-right">
+              <IconNoSSR name="facebook" />
+            </div>
+          </SimpleLink>
+          <SimpleLink href="#">
+            <div className="uk-icon-button">
+              <IconNoSSR name="twitter" />
+            </div>
+          </SimpleLink>
         </div>
       </div>
-      <Grid
+      <GridNoSSR
         childWidths={['1-2']}
         match
         items={[
           <div className="uk-card uk-card-secondary uk-card-body">
             <h3 className="uk-card-title">
-              <span className="uk-margin-small-right" uk-icon="info" />
+              <span className="uk-margin-small-right">
+                <IconNoSSR name="info" />
+              </span>
               Infos pratiques
             </h3>
             <ul className="uk-list">
               <li>
-                <span uk-icon="file-text" /> CDI/CDD
+                <IconNoSSR name="file-text" /> CDI/CDD
               </li>
               <li>
-                <span uk-icon="location" /> Paris et proche
+                <IconNoSSR name="location" /> Paris et proche
               </li>
               <li>
-                <span uk-icon="calendar" /> Semaine - Week-end (jour et nuit)
+                <IconNoSSR name="calendar" /> Semaine - Week-end (jour et nuit)
               </li>
               <li>
-                <span uk-icon="users" /> Français - Anglais(notions) - Arabe
+                <IconNoSSR name="users" /> Français - Anglais(notions) - Arabe
                 (notions)
               </li>
               <li>
-                <span uk-icon="cart" /> Pas de permis
+                <IconNoSSR name="cart" /> Pas de permis
               </li>
             </ul>
           </div>,
-          <Grid
+          <GridNoSSR
             childWidths={['1-2']}
             match
             items={[
               <div className="uk-card uk-card-default uk-card-body">
                 <h3 className="uk-card-title">
-                  <span uk-icon="skills" />
+                  <IconNoSSR name="skills" />
                   Mes atouts
                 </h3>
                 <ul className="uk-list">
@@ -87,7 +94,7 @@ const Profile = () => (
               </div>,
               <div className="uk-card uk-card-default uk-card-body">
                 <h3 className="uk-card-title">
-                  <span uk-icon="love" />
+                  <IconNoSSR name="love" />
                   Mes passions
                 </h3>
                 <ul className="uk-list">

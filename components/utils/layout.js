@@ -2,48 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { UIKIT_STYLES, UIKIT_SECTION_SIZES, UIKIT_BLENDS } from '../variables';
 
-export const Grid = ({
-  items,
-  childWidths,
-  match,
-  divider,
-  center,
-  parallax,
-}) => {
-  let classBuffer = '';
-  let gridBuffer = '';
-  if (parallax) gridBuffer += `parallax: ${parallax}`;
-  classBuffer += childWidths
-    .map((childWidth) => ` uk-child-width-${childWidth}`)
-    .join(' ');
-  if (match) classBuffer += ' uk-grid-match';
-  if (divider) classBuffer += ' uk-grid-divider';
-  if (center) classBuffer += ' uk-flex-center';
-
-  return (
-    <div className={classBuffer} data-uk-grid={gridBuffer}>
-      {items.map((item, index) => (
-        <div key={index}>{item}</div>
-      ))}
-    </div>
-  );
-};
-Grid.propTypes = {
-  parallax: PropTypes.number,
-  match: PropTypes.bool,
-  center: PropTypes.bool,
-  childWidths: PropTypes.arrayOf(PropTypes.string),
-  items: PropTypes.arrayOf(PropTypes.element).isRequired,
-  divider: PropTypes.bool,
-};
-Grid.defaultProps = {
-  match: false,
-  center: false,
-  divider: false,
-  parallax: undefined,
-  childWidths: [],
-};
-
 export const Background = ({ src, position, blend, fixed, children }) => {
   let classBuffer = 'uk-background-cover';
   if (position) classBuffer += ` uk-background-${position}`;
@@ -127,48 +85,4 @@ Padding.propTypes = {
 Padding.defaultProps = {
   center: false,
   size: undefined,
-};
-
-export const Slider = ({ grid, items, childWidths, finite, autoplay }) => {
-  let classBuffer2 = 'uk-slider-items';
-  if (grid) classBuffer2 += ` uk-grid-small`;
-  childWidths.forEach((size) => (classBuffer2 += ` uk-child-width-${size}`));
-  return (
-    <div
-      className="uk-position-relative uk-visible-toggle uk-padding"
-      tabIndex="-1"
-      data-uk-slider={`finite: ${finite}; autoplay: ${autoplay}`}
-    >
-      <ul className={classBuffer2} data-uk-grid>
-        {items.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
-      <a
-        className="uk-position-center-left uk-position-small uk-hidden-hover"
-        href="#"
-        data-uk-slidenav-previous
-        data-uk-slider-item="previous"
-      />
-      <a
-        className="uk-position-center-right uk-position-small uk-hidden-hover"
-        href="#"
-        data-uk-slidenav-next
-        data-uk-slider-item="next"
-      />
-    </div>
-  );
-};
-Slider.propTypes = {
-  grid: PropTypes.string,
-  items: PropTypes.arrayOf(PropTypes.element).isRequired,
-  childWidths: PropTypes.arrayOf(PropTypes.string),
-  finite: PropTypes.bool,
-  autoplay: PropTypes.bool,
-};
-Slider.defaultProps = {
-  grid: undefined,
-  childWidths: [],
-  finite: undefined,
-  autoplay: undefined,
 };

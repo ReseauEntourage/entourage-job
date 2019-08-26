@@ -1,5 +1,3 @@
-/** @format */
-
 import React from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
@@ -7,7 +5,6 @@ import {
   UIKIT_SCREENS,
   UIKIT_BUTTON_STYLES_SPEC,
   UIKIT_BUTTON_SIZES,
-  // UIKIT_WIDTH_SCREENS,
 } from '../variables';
 
 export const Button = ({
@@ -68,25 +65,6 @@ NavbarLogo.propTypes = {
   alt: PropTypes.string,
 };
 NavbarLogo.defaultProps = { alt: 'navbar logo' };
-
-export const Hamburger = ({ hidden, visible }) => {
-  let classBuffer = '';
-  if (hidden) classBuffer += `uk-hidden@${hidden}`;
-  if (visible) classBuffer += `uk-visible@${visible}`;
-  return (
-    <button
-      type="button"
-      className={`uk-navbar-toggle ${classBuffer}`}
-      data-uk-toggle="target: #offcanvas"
-      data-uk-navbar-toggle-icon
-    />
-  );
-};
-Hamburger.propTypes = {
-  hidden: PropTypes.oneOf(UIKIT_SCREENS),
-  visible: PropTypes.oneOf(UIKIT_SCREENS),
-};
-Hamburger.defaultProps = { hidden: undefined, visible: undefined };
 
 export const SimpleLink = ({ visible, href, children }) => {
   let classBuffer = '';
