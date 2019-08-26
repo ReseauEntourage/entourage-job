@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
-import { HelpingCard, ReviewCard, Button, Section } from '../components/utils';
-import { GridNoSSR } from '../components/utils/Grid';
-import { IconNoSSR } from '../components/utils/Icon';
+import { ReviewCard, Button, Section } from '../components/utils';
+import { DiscovertPartial } from '../components/partials';
 
 
 
@@ -170,6 +169,7 @@ const JeVeuxRecruter = () => {
           </ul>
         </div>
       </Section>
+      <DiscovertPartial />
     </Fragment>
   );
 };
