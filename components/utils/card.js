@@ -12,26 +12,26 @@ export const HelpingCard = ({
   img,
   alt,
 }) => (
-  <div className="uk-card uk-card-default uk-card-body">
-    <GridNoSSR
-      center
-      childWidths={['1-1']}
-      items={[
-        <div className="uk-height-small uk-text-center">
-          <img src={img} alt={alt} className="uk-height-1-1" />
-        </div>,
-        <div>
-          <h3 className="uk-text-bold">
-            {titleHead}
-            <span className="uk-text-primary">{titleMiddle}</span>
-            {titleTail}
-          </h3>
-        </div>,
-      ]}
-    />
-    <p>{description}</p>
-  </div>
-);
+    <div className="uk-card uk-card-default uk-card-body">
+      <GridNoSSR
+        center
+        childWidths={['1-1']}
+        items={[
+          <div className="uk-height-small uk-text-center">
+            <img src={img} alt={alt} className="uk-height-1-1" />
+          </div>,
+          <div>
+            <h3 className="uk-text-bold">
+              {titleHead}
+              <span className="uk-text-primary">{titleMiddle}</span>
+              {titleTail}
+            </h3>
+          </div>,
+        ]}
+      />
+      <p>{description}</p>
+    </div>
+  );
 HelpingCard.propTypes = {
   titleHead: PropTypes.string.isRequired,
   titleMiddle: PropTypes.string.isRequired,
@@ -78,44 +78,44 @@ export const CandidatCard = ({
   goods,
   ambitions,
 }) => (
-  <a className="uk-link-toggle" href="/profile">
-    <div className="uk-card uk-card-hover uk-card-default">
-      <div
-        className="uk-card-media-top uk-height-max-medium"
-        style={{ overflow: 'hidden' }}
-      >
-        <img alt={imgAlt} src={imgSrc} />
+    <a className="uk-link-toggle" href="/profile">
+      <div className="uk-card uk-card-hover uk-card-default">
+        <div
+          className="uk-card-media-top uk-height-max-medium"
+          style={{ overflow: 'hidden' }}
+        >
+          <img alt={imgAlt} src={imgSrc} />
+        </div>
+        <div className="uk-card-body">
+          {/* <span className="uk-card-badge uk-label uk-label-warning">78</span> */}
+          <h3 className="uk-card-title uk-link-heading">{title}</h3>
+          <p>
+            {description}
+            <br />
+            {goods.map((g, index) => {
+              return (
+                <span key={index}>
+                  <span className="uk-text-primary">{g}</span>
+                  {goods.length > index + 1 && <span> - </span>}
+                </span>
+              );
+            })}
+          </p>
+          <p>
+            Je souhaite travailler dans: <br />
+            {ambitions.map((a, index) => {
+              return (
+                <span key={index}>
+                  <span className="uk-label">{a}</span>
+                  {ambitions.length > index + 1 && <span> </span>}
+                </span>
+              );
+            })}
+          </p>
+        </div>
       </div>
-      <div className="uk-card-body">
-        {/* <span className="uk-card-badge uk-label uk-label-warning">78</span> */}
-        <h3 className="uk-card-title uk-link-heading">{title}</h3>
-        <p>
-          {description}
-          <br />
-          {goods.map((g, index) => {
-            return (
-              <span key={index}>
-                <span className="uk-text-primary">{g}</span>
-                {goods.length > index + 1 && <span> - </span>}
-              </span>
-            );
-          })}
-        </p>
-        <p>
-          Je souhaite travailler dans: <br />
-          {ambitions.map((a, index) => {
-            return (
-              <span key={index}>
-                <span className="uk-label">{a}</span>
-                {ambitions.length > index + 1 && <span> </span>}
-              </span>
-            );
-          })}
-        </p>
-      </div>
-    </div>
-  </a>
-);
+    </a>
+  );
 CandidatCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
@@ -143,6 +143,38 @@ export const NumberCard = ({ value, description }) => (
 NumberCard.propTypes = {
   value: PropTypes.number.isRequired,
   description: PropTypes.string.isRequired,
+};
+
+export const ReviewCard = ({ author, role, review, picture, colorClass }) => (
+  <div className="uk-card uk-card-default uk-card-body uk-margin-medium">
+    <div data-uk-grid>
+      <div className={"uk-width-auto " + colorClass}>
+        <IconNoSSR name="quote-right" />
+      </div>
+      <div className="uk-width-expand">
+        <p className="uk-text-small uk-margin-small">{review}</p>
+        <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">{author}</p>
+        <p className="uk-margin-remove">{role}</p>
+      </div>
+      <div className="uk-width-auto uk-text-bottom" style={{ alignSelf: "flex-end" }}>
+        <img src={picture} alt={author} style={{ width: "80px", height: "80px", borderRadius: "50%" }} />
+      </div>
+    </div>
+  </div>
+);
+ReviewCard.defaultProps = {
+  author: "",
+  colorClass: "",
+  picture: "/static/img/arthur.png",
+  review: "",
+  role: "",
+}
+ReviewCard.propTypes = {
+  author: PropTypes.string.isRequired,
+  colorClass: PropTypes.string,
+  picture: PropTypes.string.isRequired,
+  review: PropTypes.string.isRequired,
+  role: PropTypes.string.isRequired,
 };
 
 export const ScaleCard = ({ title, titleEmphaseStart, description }) => {
