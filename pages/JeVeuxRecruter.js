@@ -121,13 +121,53 @@ const JeVeuxRecruter = () => {
           </div>
         </div>
       </Section>
-      <Section id="recruter3" style="default">
+      <Section id="recruter4" style="default">
         <h2 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5">
           Vous avez des opportunités d'emplois ? <span className="uk-text-primary">Discutons</span>
         </h2>
         <div className="uk-align-center uk-text-center uk-margin-large-top" data-uk-grid>
-          <div class="uk-inline uk-padding-remove"><Button style="primary">écrivez-nous</Button></div>
-          <div class="uk-inline"><Button>Rappelez-moi</Button></div>
+          <div className="uk-inline uk-padding-remove"><Button style="primary">écrivez-nous</Button></div>
+          <div className="uk-inline"><Button>Rappelez-moi</Button></div>
+        </div>
+      </Section>
+      <Section id="recruter5" style="default">
+        <h3 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5">
+          Foire Aux <span className="uk-text-primary">Questions</span>
+        </h3>
+        <div className="uk-width-4-5 uk-align-center">
+          <hr className="uk-margin-large-bottom" />
+          <ul data-uk-accordion>
+            <li className="uk-open">
+              <a className="uk-accordion-title" href="#">Quels sont les types de contrat recherchés par les candidats ?</a>
+              <div className="uk-accordion-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              </div>
+            </li>
+            <li>
+              <a className="uk-accordion-title" href="#">Question 2</a>
+              <div className="uk-accordion-content">
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor reprehenderit.</p>
+              </div>
+            </li>
+            <li>
+              <a className="uk-accordion-title" href="#">Question 3</a>
+              <div className="uk-accordion-content">
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat proident.</p>
+              </div>
+            </li>
+            <li>
+              <a className="uk-accordion-title" href="#">Question 4</a>
+              <div className="uk-accordion-content">
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat proident.</p>
+              </div>
+            </li>
+            <li>
+              <a className="uk-accordion-title" href="#">Question 5</a>
+              <div className="uk-accordion-content">
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat proident.</p>
+              </div>
+            </li>
+          </ul>
         </div>
       </Section>
     </Fragment>
