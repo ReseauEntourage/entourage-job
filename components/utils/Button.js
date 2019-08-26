@@ -7,15 +7,7 @@ import {
   UIKIT_BUTTON_SIZES,
 } from '../variables';
 
-export const Button = ({
-  visible,
-  style,
-  size,
-  href,
-  disabled,
-  widths,
-  children,
-}) => {
+const Button = ({ visible, style, size, href, disabled, widths, children }) => {
   let classBuffer = 'uk-button';
   if (visible) classBuffer += ` uk-visible@${visible}`;
   if (style) classBuffer += ` uk-button-${style}`;
@@ -52,35 +44,4 @@ Button.defaultProps = {
   widths: [],
 };
 
-export const NavbarLogo = ({ href, src, alt }) => (
-  <Link href={href}>
-    <a className="uk-navbar-item uk-logo">
-      <img src={src} alt={alt} />
-    </a>
-  </Link>
-);
-NavbarLogo.propTypes = {
-  src: PropTypes.string.isRequired,
-  href: PropTypes.string.isRequired,
-  alt: PropTypes.string,
-};
-NavbarLogo.defaultProps = { alt: 'navbar logo' };
-
-export const SimpleLink = ({ visible, href, children }) => {
-  let classBuffer = '';
-  if (visible) classBuffer += ` uk-visible@${visible}`;
-  return (
-    <Link href={href}>
-      <a className={classBuffer}>{children}</a>
-    </Link>
-  );
-};
-SimpleLink.propTypes = {
-  href: PropTypes.string.isRequired,
-  visible: PropTypes.oneOf(UIKIT_SCREENS),
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]).isRequired,
-};
-SimpleLink.defaultProps = { visible: undefined };
+export default Button;

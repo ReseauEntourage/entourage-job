@@ -1,10 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Nav from './utils/Nav';
-import { NavbarNoSSR } from './utils/Navbar';
-import { SimpleLink, Button, NavbarLogo } from './utils';
-import { HamburgerNoSSR } from './utils/Hamburger';
-import { OffcanvasNoSSR } from './utils/Offcanvas';
+import {
+  Nav,
+  NavbarNoSSR,
+  OffcanvasNoSSR,
+  HamburgerNoSSR,
+  SimpleLink,
+  Button,
+  NavbarLogo,
+} from './utils';
 
 const Header = ({ items }) => (
   <header>

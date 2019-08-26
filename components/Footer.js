@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Section, SimpleLink } from './utils';
-import { GridNoSSR } from './utils/Grid';
-import { IconNoSSR } from './utils/Icon';
+import { GridNoSSR, IconNoSSR, Section, SimpleLink } from './utils';
 /**
  *
  * links: Array<{href: str, name: str}>

@@ -1,9 +1,7 @@
 import React from 'react';
-
-import { HelpingCard, ScaleCard, Button, Section } from '../components/utils';
-import { SliderNoSSR } from '../components/utils/Slider';
+import { HelpingCard, ScaleCard } from '../components/cards';
+import { Button, Section, GridNoSSR, SliderNoSSR } from '../components/utils';
 import { DiscovertPartial } from '../components/partials';
-import { GridNoSSR } from '../components/utils/Grid';
 
 const JeVeuxAider = () => (
   <div>
