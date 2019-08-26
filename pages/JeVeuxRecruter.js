@@ -58,15 +58,76 @@ const JeVeuxRecruter = () => {
             </div>
           </div>
           <div>
-            {reviews.map((review) => (
+            {reviews.map((review, index) => (
               <ReviewCard
                 author={review.author}
-                colorClass={review.colorClass}
+                colorclassName={review.colorClass}
+                key={index}
                 picture={review.picture}
                 review={review.review}
                 role={review.role} />
             ))}
           </div>
+        </div>
+      </Section>
+      <Section id="recruter3" style="default">
+        <h3 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5">
+          Du premier contact à l'intégration en entreprise, <span className="uk-text-primary">comment ça marche</span>
+        </h3>
+        <div className="uk-child-width-1-4@m uk-child-width-1-2@s uk-grid-match" data-uk-grid>
+          <div className="uk-card">
+            <div className="uk-card-media-top">
+              <img src="/static/img/illustrations/entourage_phone.png" alt="1" />
+            </div>
+            <div className="uk-card-body">
+              <div className="uk-flex">
+                <div className="uk-width-1-6 uk-text-lead uk-text-primary uk-text-bold">1</div>
+                <div className="uk-width-5-6">Lorem ipsum lorem ipsum</div>
+              </div>
+            </div>
+          </div>
+          <div className="uk-card">
+            <div className="uk-card-media-top">
+              <img src="/static/img/illustrations/entourage_papers.png" alt="2" />
+            </div>
+            <div className="uk-card-body">
+              <div className="uk-flex">
+                <div className="uk-width-1-6 uk-text-lead uk-text-primary uk-text-bold">2</div>
+                <div className="uk-width-5-6">Lorem ipsum lorem ipsum</div>
+              </div>
+            </div>
+          </div>
+          <div className="uk-card">
+            <div className="uk-card-media-top">
+              <img src="/static/img/illustrations/entourage_meet.png" alt="3" />
+            </div>
+            <div className="uk-card-body">
+              <div className="uk-flex">
+                <div className="uk-width-1-6 uk-text-lead uk-text-primary uk-text-bold">3</div>
+                <div className="uk-width-5-6">Lorem ipsum lorem ipsum</div>
+              </div>
+            </div>
+          </div>
+          <div className="uk-card">
+            <div className="uk-card-media-top">
+              <img src="/static/img/illustrations/entourage_phone.png" alt="4" />
+            </div>
+            <div className="uk-card-body">
+              <div className="uk-flex">
+                <div className="uk-width-1-6 uk-text-lead uk-text-primary uk-text-bold">4</div>
+                <div className="uk-width-5-6">Lorem ipsum lorem ipsum</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
+      <Section id="recruter3" style="default">
+        <h2 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5">
+          Vous avez des opportunités d'emplois ? <span className="uk-text-primary">Discutons</span>
+        </h2>
+        <div className="uk-align-center uk-text-center uk-margin-large-top" data-uk-grid>
+          <div class="uk-inline uk-padding-remove"><Button style="primary">écrivez-nous</Button></div>
+          <div class="uk-inline"><Button>Rappelez-moi</Button></div>
         </div>
       </Section>
     </Fragment>
