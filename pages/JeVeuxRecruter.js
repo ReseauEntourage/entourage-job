@@ -2,8 +2,23 @@ import React, { Fragment } from 'react';
 import { Button, Section } from '../components/utils';
 import { DiscovertPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
+import HowTo from '../components/partials/HowTo';
 
 const JeVeuxRecruter = () => {
+  const ccm = [{
+    description: "Lorem ipsum lorem ipsum",
+    imgSrc: "/static/img/illustrations/entourage_phone.png"
+  }, {
+    description: "Lorem ipsum lorem ipsum",
+    imgSrc: "/static/img/illustrations/entourage_papers.png"
+  }, {
+    description: "Lorem ipsum lorem ipsum",
+    imgSrc: "/static/img/illustrations/entourage_meet.png"
+  }, {
+    description: "Lorem ipsum lorem ipsum",
+    imgSrc: "/static/img/illustrations/entourage_phone.png"
+  }];
+
   const reviews = [
     {
       author: 'Paul Jean',
@@ -30,6 +45,23 @@ const JeVeuxRecruter = () => {
       role: 'Directrice RH chez Le grand Breguet',
     },
   ];
+
+  const faq = [{
+    question: "Quels sont les types de contrat recherchés par les candidats ?",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  }, {
+    question: "Question 2",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  }, {
+    question: "Question 3",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  }, {
+    question: "Question 4",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  }, {
+    question: "Question 5",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  }];
 
   return (
     <Fragment>
@@ -87,72 +119,7 @@ const JeVeuxRecruter = () => {
           Du premier contact à l'intégration en entreprise,{' '}
           <span className="uk-text-primary">comment ça marche</span>
         </h3>
-        <div
-          className="uk-child-width-1-4@m uk-child-width-1-2@s uk-grid-match"
-          data-uk-grid
-        >
-          <div className="uk-card">
-            <div className="uk-card-media-top">
-              <img
-                src="/static/img/illustrations/entourage_phone.png"
-                alt="1"
-              />
-            </div>
-            <div className="uk-card-body">
-              <div className="uk-flex">
-                <div className="uk-width-1-6 uk-text-lead uk-text-primary uk-text-bold">
-                  1
-                </div>
-                <div className="uk-width-5-6">Lorem ipsum lorem ipsum</div>
-              </div>
-            </div>
-          </div>
-          <div className="uk-card">
-            <div className="uk-card-media-top">
-              <img
-                src="/static/img/illustrations/entourage_papers.png"
-                alt="2"
-              />
-            </div>
-            <div className="uk-card-body">
-              <div className="uk-flex">
-                <div className="uk-width-1-6 uk-text-lead uk-text-primary uk-text-bold">
-                  2
-                </div>
-                <div className="uk-width-5-6">Lorem ipsum lorem ipsum</div>
-              </div>
-            </div>
-          </div>
-          <div className="uk-card">
-            <div className="uk-card-media-top">
-              <img src="/static/img/illustrations/entourage_meet.png" alt="3" />
-            </div>
-            <div className="uk-card-body">
-              <div className="uk-flex">
-                <div className="uk-width-1-6 uk-text-lead uk-text-primary uk-text-bold">
-                  3
-                </div>
-                <div className="uk-width-5-6">Lorem ipsum lorem ipsum</div>
-              </div>
-            </div>
-          </div>
-          <div className="uk-card">
-            <div className="uk-card-media-top">
-              <img
-                src="/static/img/illustrations/entourage_phone.png"
-                alt="4"
-              />
-            </div>
-            <div className="uk-card-body">
-              <div className="uk-flex">
-                <div className="uk-width-1-6 uk-text-lead uk-text-primary uk-text-bold">
-                  4
-                </div>
-                <div className="uk-width-5-6">Lorem ipsum lorem ipsum</div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <HowTo ccm={ccm} />
       </Section>
       <Section id="recruter4" style="default">
         <h2 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5">
@@ -178,65 +145,14 @@ const JeVeuxRecruter = () => {
         <div className="uk-width-4-5 uk-align-center">
           <hr className="uk-margin-large-bottom" />
           <ul data-uk-accordion>
-            <li className="uk-open">
-              <a className="uk-accordion-title" href="#">
-                Quels sont les types de contrat recherchés par les candidats ?
-              </a>
-              <div className="uk-accordion-content">
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-            </li>
-            <li>
-              <a className="uk-accordion-title" href="#">
-                Question 2
-              </a>
-              <div className="uk-accordion-content">
-                <p>
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor reprehenderit.
-                </p>
-              </div>
-            </li>
-            <li>
-              <a className="uk-accordion-title" href="#">
-                Question 3
-              </a>
-              <div className="uk-accordion-content">
-                <p>
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                  occaecat cupidatat proident.
-                </p>
-              </div>
-            </li>
-            <li>
-              <a className="uk-accordion-title" href="#">
-                Question 4
-              </a>
-              <div className="uk-accordion-content">
-                <p>
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                  occaecat cupidatat proident.
-                </p>
-              </div>
-            </li>
-            <li>
-              <a className="uk-accordion-title" href="#">
-                Question 5
-              </a>
-              <div className="uk-accordion-content">
-                <p>
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                  occaecat cupidatat proident.
-                </p>
-              </div>
-            </li>
+            {faq.map((question, index) => (
+              <li className={index === 0 ? "uk-open" : undefined} key={index}>
+                <a className="uk-accordion-title" href="#">{question.question}</a>
+                <div className="uk-accordion-content">
+                  <p>{question.answer}</p>
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
       </Section>
