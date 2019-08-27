@@ -9,7 +9,7 @@ const JeVeuxTravailler = () => {
     imgSrc: "/static/img/illustrations/entourage_meet.png"
   }, {
     description: "Vous êtes coachés pour retrouver un poste.",
-    imgSrc: "/static/img/illustrations/entourage_phone.png"
+    imgSrc: "/static/img/illustrations/entourage_coaching.png"
   }, {
     description: "Nous vous aidons à créer un CV clair et convaincant.",
     imgSrc: "/static/img/illustrations/entourage_papers.png"
@@ -45,7 +45,7 @@ const JeVeuxTravailler = () => {
             <div className="uk-card uk-card-large uk-card-default uk-card-body">
               <div data-uk-grid>
                 <div className="uk-width-1-1@s uk-width-small@m uk-flex uk-flex-center ">
-                  <img src="/static/img/illustrations/entourage_meet.png" alt="1" className="uk-height-max-small" />
+                  <img src="/static/img/illustrations/friendship.png" alt="1" className="uk-height-max-small" />
                 </div>
                 <div className="uk-width-expand">
                   <p className="uk-text-center uk-text-left@m">
@@ -66,7 +66,7 @@ const JeVeuxTravailler = () => {
                   <Button style="default">J'ai besoin d'aide</Button>
                 </div>
                 <div className="uk-width-1-1@s uk-width-small@m uk-flex uk-flex-center ">
-                  <img src="/static/img/illustrations/entourage_meet.png" alt="1" className="uk-height-max-small" />
+                  <img src="/static/img/illustrations/entourage_help.png" alt="2" className="uk-height-max-small" />
                 </div>
               </div>
             </div>
