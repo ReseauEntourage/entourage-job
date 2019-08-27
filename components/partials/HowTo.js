@@ -1,4 +1,6 @@
+import React from 'react';
 import PropTypes from 'prop-types';
+import { ImgNoSSR } from '../utils';
 
 const HowTo = ({ ccm }) => (
   <div
@@ -8,7 +10,7 @@ const HowTo = ({ ccm }) => (
     {ccm.map((etape, index) => (
       <div className="uk-card" key={index}>
         <div className="uk-card-media-top">
-          <img src={etape.imgSrc} alt={index + 1} />
+          <ImgNoSSR src={etape.imgSrc} alt={index + 1} />
         </div>
         <div className="uk-card-body">
           <div className="uk-flex">
@@ -24,10 +26,12 @@ const HowTo = ({ ccm }) => (
 );
 
 HowTo.propTypes = {
-  ccm: PropTypes.arrayOf(PropTypes.shape({
-    imgSrc: PropTypes.string,
-    description: PropTypes.string
-  })).isRequired,
+  ccm: PropTypes.arrayOf(
+    PropTypes.shape({
+      imgSrc: PropTypes.string,
+      description: PropTypes.string,
+    })
+  ).isRequired,
 };
 HowTo.defaultProps = {
   ccm: {

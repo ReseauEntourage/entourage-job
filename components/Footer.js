@@ -1,5 +1,5 @@
 import React from 'react';
-import { GridNoSSR, IconNoSSR, Section, SimpleLink } from './utils';
+import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
 
 const Footer = () => {
   return (
@@ -26,7 +26,7 @@ const Footer = () => {
             </ul>,
             <div className="uk-height-1-1 uk-flex uk-flex-center uk-flex-middle">
               <SimpleLink href="/">
-                <img
+                <ImgNoSSR
                   src="/static/img/logo-entourage.svg"
                   alt="logo-entourage"
                   className="uk-heigh-small"
