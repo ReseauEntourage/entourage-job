@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-export const GridNoSSR = dynamic(import('./Grid'), { ssr: false });
+export const GridNoSSR = dynamic(() => import('./Grid'), { ssr: false });
 
 const Grid = ({ items, childWidths, match, divider, center, parallax }) => {
   let classBuffer = '';
