@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Button, Section } from '../components/utils';
 import { DiscovertPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
-import HowTo from '../components/utils/HowTo';
+import HowTo from '../components/partials/HowTo';
 
 const JeVeuxRecruter = () => {
   const ccm = [{
