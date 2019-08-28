@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 const ImgProfile = ({ src, alt, width, height, border }) => (
-  <div className={("uk-cover-container uk-border-") + border + (" uk-height-small uk-width-small")}
+  <div className={("uk-cover-container uk-border-") + border}
     style={{ "width": width, "height": height }}>
     <img data-uk-cover
       src={src}
