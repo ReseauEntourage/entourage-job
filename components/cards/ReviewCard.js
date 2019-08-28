@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils';
+import ImgProfile from '../utils/ImgProfile';
 
 const ReviewCard = ({ author, role, review, picture, colorClass }) => (
   <div className="uk-card uk-card-default uk-card-body uk-margin-medium">
@@ -16,14 +17,10 @@ const ReviewCard = ({ author, role, review, picture, colorClass }) => (
         <p className="uk-margin-remove">{role}</p>
       </div>
       <div
-        className="uk-width-auto uk-text-bottom"
+        className="uk-width-1-4 uk-text-bottom"
         style={{ alignSelf: 'flex-end' }}
       >
-        <img
-          src={picture}
-          alt={author}
-          style={{ width: '80px', height: '80px', borderRadius: '50%' }}
-        />
+        <ImgProfile src={picture} alt={author} width="80px" height="80px" border="circle" />
       </div>
     </div>
   </div>
