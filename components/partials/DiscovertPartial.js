@@ -18,9 +18,7 @@ const DiscovertPartial = () => (
             imgSrc="static/img/arthur.png"
             imgAlt="arthur"
             title="Arthur"
-            description="série télévisée d'animation américano-canadienne, basée sur
-        Les Aventures d'Arthur de Marc Brown et diffusée depuis le
-        7 octobre 1996 sur le réseau PBS."
+            description="série télévisée d'animation américano-canadienne."
             goods={['volontaire', "esprit d'équipe"]}
             ambitions={['la vente', 'la restauration']}
           />
