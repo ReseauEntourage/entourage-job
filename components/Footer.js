@@ -1,14 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { GridNoSSR, IconNoSSR, Section, SimpleLink } from './utils';
-/**
- *
- * links: Array<{href: str, name: str}>
- */
-const Footer = ({ items }) => {
+import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
+
+const Footer = () => {
   return (
     <footer id="footer">
-      {/* className="uk-section uk-section-secondary" */}
       <Section style="secondary" size="large">
         <GridNoSSR
           childWidths={['1-3']}
@@ -31,7 +26,7 @@ const Footer = ({ items }) => {
             </ul>,
             <div className="uk-height-1-1 uk-flex uk-flex-center uk-flex-middle">
               <SimpleLink href="/">
-                <img
+                <ImgNoSSR
                   src="/static/img/logo-entourage.svg"
                   alt="logo-entourage"
                   className="uk-heigh-small"
@@ -62,15 +57,6 @@ const Footer = ({ items }) => {
       </Section>
     </footer>
   );
-};
-Footer.propTypes = {
-  items: PropTypes.arrayOf(
-    PropTypes.shape({
-      href: PropTypes.string,
-      key: PropTypes.string,
-      name: PropTypes.string,
-    })
-  ).isRequired,
 };
 
 export default Footer;

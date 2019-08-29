@@ -1,4 +1,3 @@
-// import '../assets/uikit/dist/css/uikit.css';
 import '../static/dist/css/uikit.css';
 
 import React from 'react';
@@ -7,13 +6,7 @@ import App, { Container } from 'next/app';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-class MyApp extends App {
-  links = [
-    { href: '/jeveuxaider', name: 'aider' },
-    { href: '/jeveuxtravailler', name: 'travailler' },
-    { href: '/jeveuxrecruter', name: 'recruter' },
-  ];
-
+class EntourageApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     return (
@@ -21,12 +14,12 @@ class MyApp extends App {
         <Head>
           <title>Entourage Jobs</title>
         </Head>
-        <Header items={this.links} />
+        <Header />
         <Component {...pageProps} />
-        <Footer items={this.links} />
+        <Footer />
       </Container>
     );
   }
 }
 
-export default MyApp;
+export default EntourageApp;

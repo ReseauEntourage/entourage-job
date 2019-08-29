@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ImgNoSSR } from '../utils';
 
 const CandidatCard = ({
   imgSrc,
@@ -15,7 +16,7 @@ const CandidatCard = ({
         className="uk-card-media-top uk-height-max-medium"
         style={{ overflow: 'hidden' }}
       >
-        <img alt={imgAlt} src={imgSrc} />
+        <ImgNoSSR src={imgSrc} alt={imgAlt} />
       </div>
       <div className="uk-card-body">
         {/* <span className="uk-card-badge uk-label uk-label-warning">78</span> */}

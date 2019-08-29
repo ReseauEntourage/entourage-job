@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ImgNoSSR } from '../utils';
 
 const PresentationCard = ({ imgSrc, imgAlt, text }) => {
   const splited = text.split(' ');
@@ -7,7 +8,7 @@ const PresentationCard = ({ imgSrc, imgAlt, text }) => {
     <div className="uk-card uk-card-default uk-card-body">
       <div data-uk-grid>
         <div className="uk-width-1-1@s uk-width-small@m uk-flex uk-flex-center ">
-          <img src={imgSrc} alt={imgAlt} className="uk-height-max-small" />
+          <ImgNoSSR src={imgSrc} alt={imgAlt} className="uk-height-max-small" />
         </div>
         <div className="uk-width-expand">
           <p className="uk-text-uppercase uk-text-center uk-text-left@m">

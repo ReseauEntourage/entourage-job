@@ -13,3 +13,4 @@ export { default as Section } from './Section';
 export { default as SimpleLink } from './SimpleLink';
 export * from './Slider';
 export { default as Text } from './Text';
+export { ImgNoSSR } from './Img';
