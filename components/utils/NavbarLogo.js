@@ -1,11 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
+import { ImgNoSSR } from './Img';
 
 const NavbarLogo = ({ href, src, alt }) => (
   <Link href={href}>
     <a className="uk-navbar-item uk-logo">
-      <img src={src} alt={alt} />
+      <ImgNoSSR src={src} alt={alt} />
     </a>
   </Link>
 );

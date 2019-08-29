@@ -1,22 +1,27 @@
 import React, { Fragment } from 'react';
-import { Button, Section } from '../components/utils';
+import { Button, Section, ImgNoSSR } from '../components/utils';
 import HowTo from '../components/partials/HowTo';
 import { DiscovertPartial } from '../components/partials';
 
 const JeVeuxTravailler = () => {
-  const ccm = [{
-    description: "Contactez-nous et recevez de l'aide.",
-    imgSrc: "/static/img/illustrations/entourage_meet.png"
-  }, {
-    description: "Vous êtes coachés pour retrouver un poste.",
-    imgSrc: "/static/img/illustrations/entourage_coaching.png"
-  }, {
-    description: "Nous vous aidons à créer un CV clair et convaincant.",
-    imgSrc: "/static/img/illustrations/entourage_papers.png"
-  }, {
-    description: "Vous augmentez les chances de vous faire repérer.",
-    imgSrc: "/static/img/illustrations/entourage_phone.png"
-  }];
+  const ccm = [
+    {
+      description: "Contactez-nous et recevez de l'aide.",
+      imgSrc: '/static/img/illustrations/entourage_meet.png',
+    },
+    {
+      description: 'Vous êtes coachés pour retrouver un poste.',
+      imgSrc: '/static/img/illustrations/entourage_coaching.png',
+    },
+    {
+      description: 'Nous vous aidons à créer un CV clair et convaincant.',
+      imgSrc: '/static/img/illustrations/entourage_papers.png',
+    },
+    {
+      description: 'Vous augmentez les chances de vous faire repérer.',
+      imgSrc: '/static/img/illustrations/entourage_phone.png',
+    },
+  ];
 
   return (
     <Fragment>
@@ -24,7 +29,9 @@ const JeVeuxTravailler = () => {
         <h1 className="uk-h1 uk-text-bold uk-text-center">
           Vous souhaitez <span className="uk-text-primary">travailler</span> ?
         </h1>
-        <p className="uk-text-lead uk-text-center">En quoi LinkedOut peut-il m'aider ? À quoi cela m'engage t-il ?</p>
+        <p className="uk-text-lead uk-text-center">
+          En quoi LinkedOut peut-il m'aider ? À quoi cela m'engage t-il ?
+        </p>
       </Section>
       <Section id="travailler2">
         <HowTo ccm={ccm} />

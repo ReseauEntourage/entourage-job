@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-export const SliderNoSSR = dynamic(import('./Slider'), { ssr: false });
+export const SliderNoSSR = dynamic(() => import('./Slider'), { ssr: false });
 
 const Slider = ({ grid, items, childWidths, finite, autoplay }) => {
   let classBuffer2 = 'uk-slider-items';
