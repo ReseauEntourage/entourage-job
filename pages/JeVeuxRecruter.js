@@ -65,12 +65,12 @@ const JeVeuxRecruter = () => {
 
   return (
     <Fragment>
-      <Section id="recruter1" style="default">
+      <Section id="recruter1">
         <h1 className="uk-text-bold uk-text-center">
           Vous souhaitez <span className="uk-text-primary">recruter</span> un
           candidat ?
         </h1>
-        <div className="uk-width-1-2 uk-align-center uk-text-center">
+        <div className="uk-align-center uk-text-center uk-width-1-2@m uk-width-2-3@s">
           <p>
             Recruteurs, plus que quiconque, faîtes la différence ! Soyez acteur
             essentiel de l'opération LinkedOut par Entourage en publiant vos
@@ -80,13 +80,13 @@ const JeVeuxRecruter = () => {
           <Button style="primary">Découvrir les candidats</Button>
         </div>
       </Section>
-      <Section id="recruter2" style="default">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-width-1-2 uk-margin-large-bottom">
+      <Section id="recruter2">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m uk-width-2-3@s">
           Une opportunité <span className="uk-text-primary">et</span> une bonne
           action,
           <span className="uk-text-primary"> ne passez pas à côté !</span>
         </h2>
-        <div data-uk-grid className="uk-child-width-expand@s">
+        <div data-uk-grid className="uk-child-width-1-2@m uk-child-width-2-3@s">
           <div>
             <div className="uk-width-5-6">
               <h3 className="uk-text-bold">
@@ -115,14 +115,14 @@ const JeVeuxRecruter = () => {
         </div>
       </Section>
       <Section id="recruter3" style="default">
-        <h3 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5">
+        <h3 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
           Du premier contact à l'intégration en entreprise,{' '}
           <span className="uk-text-primary">comment ça marche</span>
         </h3>
         <HowTo ccm={ccm} />
       </Section>
       <Section id="recruter4" style="default">
-        <h2 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5">
+        <h2 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
           Vous avez des opportunités d'emplois ?{' '}
           <span className="uk-text-primary">Discutons</span>
         </h2>
@@ -130,11 +130,11 @@ const JeVeuxRecruter = () => {
           className="uk-align-center uk-text-center uk-margin-large-top"
           data-uk-grid
         >
-          <div className="uk-inline uk-padding-remove">
+          <div className="uk-inline uk-padding-small">
             <Button style="primary">écrivez-nous</Button>
           </div>
-          <div className="uk-inline">
-            <Button>Rappelez-moi</Button>
+          <div className="uk-inline uk-padding-small uk-margin-remove">
+            <Button style="default">Rappelez-moi</Button>
           </div>
         </div>
       </Section>
