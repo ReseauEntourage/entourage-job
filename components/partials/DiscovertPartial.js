@@ -1,14 +1,14 @@
 import React from 'react';
-import { GridNoSSR, Section } from '../utils';
+import { GridNoSSR, Section, IconNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 
 const DiscovertPartial = () => (
   <Section id="discover">
     <div className="uk-text-center">
-      <h2>
-        Découvres les <span className="uk-text-primary">candidats</span>
+      <h2 className="uk-text-bold">
+        Découvrez les <span className="uk-text-primary">candidats</span>
       </h2>
-      <a href="#">Voir tous les candidats -&gt;</a>
+      <a href="#">Voir tous les candidats <IconNoSSR name="arrow-right" /></a>
     </div>
     <div className="uk-margin-large">
       <GridNoSSR
