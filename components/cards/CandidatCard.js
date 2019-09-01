@@ -1,53 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ImgNoSSR } from '../utils';
+import Link from 'next/link';
 
 const CandidatCard = ({
   imgSrc,
   imgAlt,
   title,
   description,
-  goods,
   ambitions,
 }) => (
-  <a className="uk-link-toggle" href="/profile">
-    <div className="uk-card uk-card-hover uk-card-default">
-      <div
-        className="uk-card-media-top uk-height-max-medium"
-        style={{ overflow: 'hidden' }}
-      >
-        <ImgNoSSR src={imgSrc} alt={imgAlt} />
-      </div>
-      <div className="uk-card-body">
-        {/* <span className="uk-card-badge uk-label uk-label-warning">78</span> */}
-        <h3 className="uk-card-title uk-link-heading">{title}</h3>
-        <p>
-          {description}
-          <br />
-          {goods.map((g, index) => {
-            return (
-              <span key={index}>
-                <span className="uk-text-primary">{g}</span>
-                {goods.length > index + 1 && <span> - </span>}
-              </span>
-            );
-          })}
-        </p>
-        <p>
-          Je souhaite travailler dans: <br />
-          {ambitions.map((a, index) => {
-            return (
-              <span key={index}>
-                <span className="uk-label">{a}</span>
-                {ambitions.length > index + 1 && <span> </span>}
-              </span>
-            );
-          })}
-        </p>
-      </div>
-    </div>
-  </a>
-);
+    <Link href="/profile">
+      <a className="uk-link-toggle" href="/profile">
+        <div className="uk-cover-container uk-height-large uk-card uk-card-hover">
+          <img src={imgSrc} alt={imgAlt} data-uk-cover />
+          <div className="uk-overlay uk-overlay-primary uk-position-bottom uk-padding-small uk-text-center">
+            <h3 className="uk-text-uppercase uk-margin-remove">{title}</h3>
+            <p className="uk-margin-small-top">
+              {description}
+              <br />
+              {ambitions.map((a, index) => {
+                return (
+                  <span key={index}>
+                    <span className="uk-text-uppercase uk-text-bold">{a}.</span>
+                    {ambitions.length > index + 1 && <span> </span>}
+                  </span>
+                );
+              })}
+            </p>
+            <p>
+              <u>Voir le CV</u>
+            </p>
+          </div>
+        </div>
+      </a>
+    </Link>
+  );
 CandidatCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,

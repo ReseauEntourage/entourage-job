@@ -1,4 +1,4 @@
-import '../static/dist/css/uikit.css';
+import '../static/dist/css/uikit.entourage.css';
 
 import React from 'react';
 import Head from 'next/head';
