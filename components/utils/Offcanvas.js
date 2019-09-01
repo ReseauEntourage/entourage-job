@@ -4,7 +4,9 @@ import dynamic from 'next/dynamic';
 
 import { CloseButtonNoSSR } from './CloseButton';
 
-export const OffcanvasNoSSR = dynamic(import('./Offcanvas'), { ssr: false });
+export const OffcanvasNoSSR = dynamic(() => import('./Offcanvas'), {
+  ssr: false,
+});
 
 const Offcanvas = ({ id, children }) => (
   <div data-uk-offcanvas="mode: push; overlay: true" id={id}>

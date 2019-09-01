@@ -1,6 +1,5 @@
 import React from 'react';
-import Document, { Html, Head, Main, Body, NextScript } from 'next/document';
-import { FeaturePolyfills } from '@engineerapart/nextscript';
+import Document, { Head, Main, NextScript } from 'next/document';
 
 // const features = [
 //   FeaturePolyfills.FETCH,
@@ -44,24 +43,9 @@ export default class MyDocument extends Document {
         <Head />
         <body>
           <Main />
-          <NextScript
-          // allowUserMonitoring={false}
-          // preloadPolyfills={false}
-          // features={features}
-          // preLoadScripts={[
-          //   { src: '/static/dist/js/uikit.js' },
-          //   { src: '/static/dist/js/uikit-icons.js' },
-          // ]}
-          />
+          <NextScript />
           <script src="/static/dist/js/uikit.js" />
           <script src="/static/dist/js/uikit-icons.js" />
-          {/*
-           <link
-            rel="preload"
-            href="/static/dist/js/uikit-icons.js"
-            as="script"
-          />
-          <link rel="preload" href="/static/dist/js/uikit.js" as="script" /> */}
         </body>
       </html>
     );

@@ -1,12 +1,10 @@
-import React from 'react';
-
-import { HelpingCard, ScaleCard, Button, Section } from '../components/utils';
-import { SliderNoSSR } from '../components/utils/Slider';
+import React, { Fragment } from 'react';
+import { HelpingCard, ScaleCard } from '../components/cards';
+import { Button, Section, GridNoSSR, SliderNoSSR } from '../components/utils';
 import { DiscovertPartial } from '../components/partials';
-import { GridNoSSR } from '../components/utils/Grid';
 
 const JeVeuxAider = () => (
-  <div>
+  <Fragment>
     <Section id="help" style="default">
       <h1 className="uk-text-center">
         Vous souhaitez <span className="uk-text-primary">aider</span> ?
@@ -21,6 +19,7 @@ const JeVeuxAider = () => (
             titleTail=" dans les démarches"
             description="Vous n'êtes pas seul! Entourage vous donne les outils pour soutenir efficacement une personne danssa recherche professionnelle et dans sa prise de poste"
             img="/static/img/help_1.png"
+            alt="help_1"
           />,
           <HelpingCard
             titleHead="Vous connaissez une personne en difficulté ? "
@@ -28,6 +27,7 @@ const JeVeuxAider = () => (
             titleTail=" dans les démarches"
             description="Vous n'êtes pas seul! Entourage vous donne les outils pour soutenir efficacement une personne danssa recherche professionnelle et dans sa prise de poste"
             img="/static/img/help_2.png"
+            alt="help_2"
           />,
           <HelpingCard
             titleHead="Vous connaissez une personne en difficulté ? "
@@ -35,6 +35,7 @@ const JeVeuxAider = () => (
             titleTail=" dans les démarches"
             description="Vous n'êtes pas seul! Entourage vous donne les outils pour soutenir efficacement une personne danssa recherche professionnelle et dans sa prise de poste"
             img="/static/img/help_3.png"
+            alt="help_3"
           />,
         ]}
       />
@@ -84,7 +85,7 @@ const JeVeuxAider = () => (
       </div>
     </Section>
     <DiscovertPartial />
-  </div>
+  </Fragment>
 );
 
 export default JeVeuxAider;

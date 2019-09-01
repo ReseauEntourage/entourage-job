@@ -1,0 +1,31 @@
+// Import UIkit default theme (or uikit.less with only core styles)
+@import "../src/less/uikit.theme.less";
+
+// Your custom code goes here, e.g. mixins, variables.
+// See "how to create a theme" below for more info.
+
+// overlay
+@overlay-primary-background: fade(#F55F24, 70%);
+
+
+//Button
+.hook-button() {
+  border-radius: 5px;
+}
+
+.hook-button-primary(){
+  background-color: #F55F24;
+  background-image: linear-gradient( #F58F00,#F55F24);
+}
+
+.hook-button-primary-hover(){
+  background-image: none;
+  background-color: #F55F24;
+}
+
+//Link
+@global-link-color: #F55F24;
+@global-link-color-hover: #D53F00;
+
+//Text
+@text-primary-color: #F55F24;
