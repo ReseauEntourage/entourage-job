@@ -1,5 +1,6 @@
 import React from 'react';
 import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
+import { FacebookShareButton, LinkedinShareButton, TwitterShareButton } from 'react-share';
 
 const Footer = () => {
   return (
@@ -32,23 +33,24 @@ const Footer = () => {
                   className="uk-heigh-small"
                 />
               </SimpleLink>
+              <LinkedinShareButton />
             </div>,
             <div className="uk-height-1-1 uk-flex uk-flex-right uk-flex-middle">
               <ul className="uk-iconnav uk-iconnav-vertical uk-text-center uk-margin-large-left">
                 <li>
-                  <a href="#">
+                  <LinkedinShareButton url="https://www.linkedout.fr" className="uk-link-muted" style={{ cursor: "pointer" }}>
                     <IconNoSSR name="linkedin" />
-                  </a>
+                  </LinkedinShareButton>
                 </li>
                 <li>
-                  <a href="#">
+                  <FacebookShareButton url="https://www.linkedout.fr" className="uk-link-muted" style={{ cursor: "pointer" }}>
                     <IconNoSSR name="facebook" />
-                  </a>
+                  </FacebookShareButton>
                 </li>
                 <li>
-                  <a href="#">
+                  <TwitterShareButton url="https://www.linkedout.fr" className="uk-link-muted" style={{ cursor: "pointer" }}>
                     <IconNoSSR name="twitter" />
-                  </a>
+                  </TwitterShareButton>
                 </li>
               </ul>
             </div>,
