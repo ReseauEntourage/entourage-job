@@ -9,7 +9,7 @@ const NumberPartial = ({ numbers }) => (
       <h3 className="uk-h6 uk-text-uppercase uk-margin-remove-bottom">
         Les chiffres
       </h3>
-      <h2 className="uk-margin-remove-top">
+      <h2 className="uk-margin-remove-top uk-text-bold">
         Un programme <span className="uk-text-primary">efficace</span>
       </h2>
     </div>

@@ -3,23 +3,23 @@ import { GridNoSSR, Button, Section } from '../utils';
 import { CandidatCard } from '../cards';
 
 const CandidatListPartial = () => (
-  <Section style="default" size="large" id="profiles">
+  <Section style="default" id="profiles">
     <div className="uk-text-center uk-margin-large">
-      <h3 className="uk-heading-small">
+      <h2 className="uk-text-bold">
         <span className="uk-text-primary">Eux</span> cherchent un travail,
         <br />
         <span className="uk-text-primary">Vous</span> avez un réseau.
-      </h3>
-      <p>
+      </h2>
+      <p className="uk-align-center uk-width-1-2@m uk-width-2-3@s">
         Nos candidats sont des gens en situation de précarité financière et
         professionnellle. Toutes accompagnées par des travailleurs sociaux,
         motivées pour se réinsérer, elles dévoilent leurs talents et leurs
-        aspirations. Réseau, amis, recruteurs, à vos partages!
+        aspirations. Réseau, amis, recruteurs, à vos partages !
       </p>
     </div>
     <GridNoSSR
-      childWidths={['1-1', '1-2@s', '1-3@m']}
-      parallax={500}
+      childWidths={['1-1', '1-2@s']}
+      /* parallax={500} */
       items={Array(6).fill(
         <CandidatCard
           imgSrc="static/img/arthur.png"
