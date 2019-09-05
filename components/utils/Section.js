@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { UIKIT_STYLES, UIKIT_SECTION_SIZES } from '../variables';
 
-const Section = ({ style, size, id, containerLarge, children }) => {
+const Section = ({ style, size, id, containerLarge, children, className }) => {
   let classBuffer = 'uk-section';
   if (style) classBuffer += ` uk-section-${style}`;
   if (size) classBuffer += ` uk-section-${size}`;
+  if (className) classBuffer += ` ${className}`;
 
   let classBuffer2 = 'uk-container';
   if (containerLarge) classBuffer2 += ` uk-container-large`;
+
 
   return (
     <div className={classBuffer}>
