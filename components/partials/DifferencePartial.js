@@ -3,7 +3,7 @@ import { Button, Section } from '../utils';
 
 const DifferencePartial = () => (
   <Section style="default" >
-    <h4 className="uk-text-bold uk-text-center uk-align-center uk-width-2-3@s">
+    <h4 className="uk-margin-large-top uk-text-bold uk-text-center uk-align-center uk-width-2-3@s">
       Vous sentez que vous pouvez{' '}
       <span className="uk-text-primary">faire la différence ?</span> À vous de
       jouer !

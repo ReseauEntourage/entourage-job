@@ -4,7 +4,7 @@ import { GridNoSSR, Section } from '../utils';
 import { NumberCard } from '../cards';
 
 const NumberPartial = ({ numbers }) => (
-  <Section style="default" size="large">
+  <Section style="default">
     <div className="uk-text-center">
       <h3 className="uk-h6 uk-text-uppercase uk-margin-remove-bottom">
         Les chiffres

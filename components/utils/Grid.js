@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 
 export const GridNoSSR = dynamic(() => import('./Grid'), { ssr: false });
 
-const Grid = ({ items, childWidths, match, divider, center, parallax }) => {
+const Grid = ({ items, childWidths, match, divider, center, parallax, className }) => {
   let classBuffer = '';
   let gridBuffer = '';
   if (parallax) gridBuffer += `parallax: ${parallax}`;
@@ -14,6 +14,7 @@ const Grid = ({ items, childWidths, match, divider, center, parallax }) => {
   if (match) classBuffer += ' uk-grid-match';
   if (divider) classBuffer += ' uk-grid-divider';
   if (center) classBuffer += ' uk-flex-center';
+  if (className) classBuffer += ` ${className}`;
 
   return (
     <div className={classBuffer} data-uk-grid={gridBuffer}>
