@@ -12344,3 +12344,6 @@ iframe.uk-cover {
     page-break-after: avoid;
   }
 }
+.uk-open .uk-accordion-title {
+  color: #F55F24;
+}
