@@ -7,11 +7,12 @@ import {
   UIKIT_BUTTON_SIZES,
 } from '../variables';
 
-const Button = ({ visible, style, size, href, disabled, widths, children }) => {
+const Button = ({ visible, style, size, href, disabled, widths, children, className }) => {
   let classBuffer = 'uk-button';
   if (visible) classBuffer += ` uk-visible@${visible}`;
   if (style) classBuffer += ` uk-button-${style}`;
   if (size) classBuffer += ` uk-button-${size}`;
+  if (className) classBuffer += ` ${className}`;
   widths.forEach((width) => {
     classBuffer += ` uk-width-${width}`;
   });

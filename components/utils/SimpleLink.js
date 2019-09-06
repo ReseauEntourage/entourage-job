@@ -3,9 +3,10 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { UIKIT_SCREENS } from '../variables';
 
-const SimpleLink = ({ visible, href, children }) => {
+const SimpleLink = ({ visible, href, children, className }) => {
   let classBuffer = '';
   if (visible) classBuffer += ` uk-visible@${visible}`;
+  if (className) classBuffer += ` ${className}`;
   return (
     <Link href={href}>
       <a className={classBuffer}>{children}</a>

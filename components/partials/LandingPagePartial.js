@@ -27,13 +27,13 @@ const LandingPagePartial = ({ presentations }) => (
       <GridNoSSR
         match
         center
-        childWidths={['1-3@s', '1-2']}
+        childWidths={['1-3@m', '1-2@s']}
         items={presentations.map(({ imgSrc, imgAlt, text }) => (
           <PresentationCard imgSrc={imgSrc} imgAlt={imgAlt} text={text} />
         ))}
       />
       <div className="uk-light uk-flex uk-flex-center uk-padding-large uk-padding-remove-bottom">
-        <p>Découvrez les candidats</p>
+        <p className="uk-text-bold">Découvrez les candidats</p>
       </div>
       <div className="uk-flex uk-flex-center">
         <a className="uk-icon-button" href="#profiles" data-uk-scroll>
