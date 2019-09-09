@@ -18,7 +18,10 @@ const items = Array(11).fill(
 items.push(
   <div className="uk-flex uk-flex-column uk-flex-middle">
     <SimpleLink href="/contact">
-      <span className="uk-icon-button" style={{ color: "white", backgroundColor: "#F55F24" }}>
+      <span
+        className="uk-icon-button"
+        style={{ color: 'white', backgroundColor: '#F55F24' }}
+      >
         <IconNoSSR name="plus" />
       </span>
     </SimpleLink>
@@ -29,14 +32,14 @@ items.push(
 );
 
 const CandidatListPartial = () => (
-  <Section style="default" id="profiles">
+  <Section style="default" container="small" id="profiles">
     <div className="uk-text-center uk-margin-large">
       <h2 className="uk-text-bold">
         <span className="uk-text-primary">Eux</span> cherchent un travail,
         <br />
         <span className="uk-text-primary">Vous</span> avez un réseau.
       </h2>
-      <p className="uk-align-center uk-width-1-2@m uk-width-2-3@s">
+      <p className="uk-align-center uk-width-2-3@s">
         Nos candidats sont des gens en situation de précarité financière et
         professionnellle. Toutes accompagnées par des travailleurs sociaux,
         motivées pour se réinsérer, elles dévoilent leurs talents et leurs

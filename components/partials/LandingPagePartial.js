@@ -6,7 +6,7 @@ import { PresentationCard } from '../cards';
 // Home page partials
 const LandingPagePartial = ({ presentations }) => (
   <Background src="/static/img/background_1.png" position="top-right">
-    <Section containerLarge>
+    <Section container="large">
       <GridNoSSR
         childWidths={['1-3@m', '1-2@s']}
         items={[
