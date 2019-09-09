@@ -11,9 +11,9 @@ import {
 
 const Header = () => {
   const LINKS = [
-    { href: '/jeveuxaider', name: 'aider' },
-    { href: '/jeveuxtravailler', name: 'travailler' },
-    { href: '/jeveuxrecruter', name: 'recruter' },
+    { href: '/jeveuxaider', name: 'je veux aider' },
+    { href: '/jeveuxtravailler', name: 'je veux travailler' },
+    { href: '/jeveuxrecruter', name: 'je veux recruter' },
   ];
   return (
     <header>
