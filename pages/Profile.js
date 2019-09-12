@@ -10,6 +10,7 @@ import {
   StoryProfileCard,
   ExperiencesProfileCard,
   CommentProfileCard,
+  ReviewCard,
 } from '../components/cards';
 
 const Profile = () => (
@@ -93,17 +94,17 @@ const Profile = () => (
           <GridNoSSR
             items={[
               <StoryProfileCard description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris. Integer lacinia diam quam, a auctor eros egestas vitae. Aliquam at ante convallis, gravida diam porttitor, ultricies metus. Integer in est urna. Maecenas ullamcorper, lorem id euismod malesuada, arcu orci suscipit nulla, sed rhoncus orci nibh vitae leo. Nulla ut nibh quis lacus tempor pretium." />,
-              <CommentProfileCard
-                imgSrc="/static/img/arthur.png"
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
-                name="Hervé"
-                title="Assistant social"
+              <ReviewCard
+                picture="/static/img/arthur.png"
+                review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
+                author="Hervé"
+                role="Assistant social"
               />,
-              <CommentProfileCard
-                imgSrc="/static/img/arthur.png"
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
-                name="Hervé"
-                title="Assistant social"
+              <ReviewCard
+                picture="/static/img/arthur.png"
+                review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
+                author="Hervé"
+                role="Assistant social"
               />,
             ]}
           />,
