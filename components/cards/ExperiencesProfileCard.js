@@ -7,7 +7,7 @@ const ExperiencesProfileCard = ({ experiences }) => {
       <h3 className="uk-card-title">
         Mon <span className="uk-text-primary">expérience</span>
       </h3>
-      <ul className="uk-list">
+      <ul className="uk-list ent-list">
         {experiences.map((item, i) => (
           <li id={i}>
             <p className="uk-text-muted uk-margin-small">
