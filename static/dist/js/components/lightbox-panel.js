@@ -1,4 +1,4 @@
-/*! UIkit 3.1.8 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.1.7 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -456,17 +456,22 @@
 
                     active = this;
 
-                    if (!prev) {
+                    if (prev) {
+                        if (this.stack) {
+                            this.prev = prev;
+                        } else {
+
+                            active = prev;
+                            prev.hide().then(this.show);
+                            e.preventDefault();
+
+                        }
+
                         return;
                     }
 
-                    if (this.stack) {
-                        this.prev = prev;
-                    } else {
-                        active = prev;
-                        prev.hide().then(this.show);
-                        e.preventDefault();
-                    }
+                    registerEvents();
+
                 }
 
             },
@@ -479,8 +484,6 @@
 
                 handler: function() {
 
-                    registerEvents();
-
                     if (!uikitUtil.hasClass(document.documentElement, this.clsPage)) {
                         this.scrollbarWidth = uikitUtil.width(window) - uikitUtil.width(document);
                         uikitUtil.css(document.body, 'overflowY', this.scrollbarWidth && this.overlay ? 'scroll' : '');
@@ -488,6 +491,20 @@
 
                     uikitUtil.addClass(document.documentElement, this.clsPage);
 
+                }
+
+            },
+
+            {
+
+                name: 'hide',
+
+                self: true,
+
+                handler: function() {
+                    if (!active || active === this && !this.prev) {
+                        deregisterEvents();
+                    }
                 }
 
             },
@@ -567,36 +584,35 @@
 
     };
 
-    var registered;
+    var events;
 
     function registerEvents() {
 
-        if (registered) {
+        if (events) {
             return;
         }
 
-        registered = true;
-        uikitUtil.on(document, 'click', function (ref) {
-            var defaultPrevented = ref.defaultPrevented;
-            var target = ref.target;
+        events = [
+            uikitUtil.on(document, uikitUtil.pointerUp, function (ref) {
+                var target = ref.target;
+                var defaultPrevented = ref.defaultPrevented;
 
-            if (!defaultPrevented
-                && active
-                && active.bgClose
-                && (!active.overlay || uikitUtil.within(target, active.$el))
-                && !uikitUtil.within(target, active.panel)
-            ) {
-                active.hide();
-            }
-        });
+                if (active && active.bgClose && !defaultPrevented && (!active.overlay || uikitUtil.within(target, active.$el)) && !uikitUtil.within(target, active.panel)) {
+                    active.hide();
+                }
+            }),
+            uikitUtil.on(document, 'keydown', function (e) {
+                if (e.keyCode === 27 && active && active.escClose) {
+                    e.preventDefault();
+                    active.hide();
+                }
+            })
+        ];
+    }
 
-        uikitUtil.on(document, 'keydown', function (e) {
-            if (e.keyCode === 27 && active && active.escClose) {
-                e.preventDefault();
-                active.hide();
-            }
-        });
-
+    function deregisterEvents() {
+        events && events.forEach(function (unbind) { return unbind(); });
+        events = null;
     }
 
     function animate(ref) {
@@ -610,9 +626,9 @@
                     _toggle(el, show);
 
                     var off = uikitUtil.once(transitionElement, 'transitionstart', function () {
-                        uikitUtil.once(transitionElement, 'transitionend transitioncancel', resolve, {self: true});
+                        uikitUtil.once(transitionElement, 'transitionend transitioncancel', resolve, false, function (e) { return e.target === transitionElement; });
                         clearTimeout(timer);
-                    }, {self: true});
+                    }, false, function (e) { return e.target === transitionElement; });
 
                     var timer = setTimeout(function () {
                         off();
@@ -1333,7 +1349,7 @@
             },
 
             _getDistance: function(prev, next) {
-                return this._getTransitioner(prev, prev !== next && next).getDistance();
+                return new this._getTransitioner(prev, prev !== next && next).getDistance();
             },
 
             _translate: function(percent, prev, next) {

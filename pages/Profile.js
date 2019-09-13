@@ -1,132 +1,208 @@
 import React from 'react';
+import {
+  FacebookShareButton,
+  LinkedinShareButton,
+  TwitterShareButton,
+} from 'react-share';
 import { DiscovertPartial } from '../components/partials';
-import { Section, SimpleLink } from '../components/utils';
+import { Section, Button } from '../components/utils';
 import { IconNoSSR } from '../components/utils/Icon';
 import { GridNoSSR } from '../components/utils/Grid';
+import {
+  SkillsCard,
+  PassionsCard,
+  InfoProfileCard,
+  StoryProfileCard,
+  ExperiencesProfileCard,
+  ReviewCard,
+} from '../components/cards';
 
+const link = 'http://www.entouragejobs.fr/cv/zulfuye';
 const Profile = () => (
-  <div>
-    <div className="uk-flex uk-flex-center uk-flex-middle uk-background-primary uk-height-large uk-light">
-      {/* <img data-src="" alt="" data-uk-img/> */}
-      <h1 className="uk-heading-large">Zulfuye</h1>
-    </div>
+  <div style={{ position: 'relative' }}>
+    <div
+      className="uk-background-primary "
+      style={{
+        position: 'absolute',
+        display: 'block',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '500px',
+      }}
+    />
     <Section>
-      <div className="uk-card uk-card-default uk-card-body uk-text-center uk-margin-medium">
-        <h1>
-          <span className="uk-text-primary">Zulfuye</span> a besoin d'un coup de
-          pouce et si votre partage faisait la différence?
+      <div
+        className="uk-card uk-card-default uk-card-body uk-text-center uk-margin-medium "
+        style={{ marginTop: '300px' }}
+      >
+        <h1 className="uk-width-xxlarge uk-margin-auto">
+          <span className="uk-text-primary">Zulfuye</span>
+          <br /> a besoin d'un coup de pouce et si votre partage faisait la
+          différence?
         </h1>
         <span className="uk-text-primary">
           <IconNoSSR name="quote-right" ratio={2} />
         </span>
-        <p>
+        <p className="uk-width-xlarge uk-margin-auto">
           Motivée et curieuse, j&apos;aimerais beaucoup travailler dans
           <span className="uk-text-primary"> la gestion </span>ou
           <span className="uk-text-primary"> l&apos;administration </span>mais
           reste ouverte à toutes autres propositions.
         </p>
+        <Button href="#" style="primary">
+          J'écris à ZulFuye
+        </Button>
         <p>partagez le CV de Zulfuye sur vos réseaux</p>
-        <div>
-          <SimpleLink href="#">
-            <div className="uk-icon-button uk-margin-right">
-              <IconNoSSR name="linkedin" />
-            </div>
-          </SimpleLink>
-          <SimpleLink href="#">
-            <div className="uk-icon-button uk-margin-right">
-              <IconNoSSR name="facebook" />
-            </div>
-          </SimpleLink>
-          <SimpleLink href="#">
-            <div className="uk-icon-button">
-              <IconNoSSR name="twitter" />
-            </div>
-          </SimpleLink>
+        <div className="uk-flex uk-flex-row uk-flex-center">
+          <LinkedinShareButton
+            url={link}
+            className="uk-icon-link uk-text-primary uk-margin-right"
+          >
+            <IconNoSSR name="linkedin" ratio={1.5} />
+          </LinkedinShareButton>
+          <FacebookShareButton
+            url={link}
+            className="uk-icon-link uk-text-primary uk-margin-right"
+          >
+            <IconNoSSR name="facebook" ratio={1.5} />
+          </FacebookShareButton>
+          <TwitterShareButton
+            url={link}
+            className="uk-icon-link uk-text-primary"
+          >
+            <IconNoSSR name="twitter" ratio={1.5} />
+          </TwitterShareButton>
         </div>
       </div>
       <GridNoSSR
-        childWidths={['1-2']}
+        childWidths={['1-2@s']}
         match
         items={[
-          <div className="uk-card uk-card-secondary uk-card-body">
-            <h3 className="uk-card-title">
-              <span className="uk-margin-small-right">
-                <IconNoSSR name="info" />
-              </span>
-              Infos pratiques
-            </h3>
-            <ul className="uk-list">
-              <li>
-                <IconNoSSR name="file-text" /> CDI/CDD
-              </li>
-              <li>
-                <IconNoSSR name="location" /> Paris et proche
-              </li>
-              <li>
-                <IconNoSSR name="calendar" /> Semaine - Week-end (jour et nuit)
-              </li>
-              <li>
-                <IconNoSSR name="users" /> Français - Anglais(notions) - Arabe
-                (notions)
-              </li>
-              <li>
-                <IconNoSSR name="cart" /> Pas de permis
-              </li>
-            </ul>
-          </div>,
+          <InfoProfileCard
+            contrat="CDI/CDD"
+            location="Paris et proche"
+            period="Semaine - Week-end (jour et nuit)"
+            language="Français - Anglais(notions) - Arabe (notions)"
+            car="Pas de permis"
+          />,
           <GridNoSSR
-            childWidths={['1-2']}
+            childWidths={['1-2@m']}
             match
             items={[
-              <div className="uk-card uk-card-default uk-card-body">
-                <h3 className="uk-card-title">
-                  <IconNoSSR name="skills" />
-                  Mes atouts
-                </h3>
-                <ul className="uk-list">
-                  <li>à l'écoute</li>
-                  <li>emphatique</li>
-                  <li>sociable</li>
-                  <li>optimiste</li>
-                  <li>ponctuelle</li>
-                  <li>motivée</li>
-                </ul>
-              </div>,
-              <div className="uk-card uk-card-default uk-card-body">
-                <h3 className="uk-card-title">
-                  <IconNoSSR name="love" />
-                  Mes passions
-                </h3>
-                <ul className="uk-list">
-                  <li>Cinéma</li>
-                  <li>Histoire / Géopolitique</li>
-                  <li>Sport</li>
-                </ul>
-              </div>,
+              <SkillsCard
+                list={[
+                  "à l'écoute",
+                  'emphatique',
+                  'sociable',
+                  'optimiste',
+                  'ponctuelle',
+                  'motivée',
+                ]}
+              />,
+              <PassionsCard
+                list={['Cinéma', 'Histoire / Géopolitique', 'Sport']}
+              />,
             ]}
           />,
         ]}
       />
-      {/* <article class="uk-comment">
-    <div class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
-        <div class="uk-width-auto">
-            <img class="uk-comment-avatar" src="images/avatar.jpg" width="80" height="80" alt="">
-        </div>
-        <div class="uk-width-expand">
-            <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#">Author</a></h4>
-            <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
-                <li><a href="#">12 days ago</a></li>
-                <li><a href="#">Reply</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="uk-comment-body">
-        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-    </div>
-      </article> */}
+      <GridNoSSR
+        childWidths={['1-2@s']}
+        items={[
+          <GridNoSSR
+            items={[
+              <StoryProfileCard description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris. Integer lacinia diam quam, a auctor eros egestas vitae. Aliquam at ante convallis, gravida diam porttitor, ultricies metus. Integer in est urna. Maecenas ullamcorper, lorem id euismod malesuada, arcu orci suscipit nulla, sed rhoncus orci nibh vitae leo. Nulla ut nibh quis lacus tempor pretium." />,
+              <ReviewCard
+                picture="/static/img/arthur.png"
+                review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
+                author="Hervé"
+                role="Assistant social"
+              />,
+              <ReviewCard
+                picture="/static/img/arthur.png"
+                review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
+                author="Hervé"
+                role="Assistant social"
+              />,
+            ]}
+          />,
+          <ExperiencesProfileCard
+            experiences={[
+              {
+                dateStart: 'Mai 2018',
+                dateEnd: 'Janvier 2019',
+                title: 'Secretaire comptable et chagée de recouvrement',
+                description:
+                  'Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris.',
+              },
+              {
+                dateStart: 'Mai 2018',
+                dateEnd: 'Janvier 2019',
+                title: 'Secretaire comptable et chagée de recouvrement',
+                description:
+                  'Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris.',
+              },
+              {
+                dateStart: 'Mai 2018',
+                dateEnd: 'Janvier 2019',
+                title: 'Secretaire comptable et chagée de recouvrement',
+                description:
+                  'Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris.',
+              },
+              {
+                dateStart: 'Mai 2018',
+                dateEnd: 'Janvier 2019',
+                title: 'Secretaire comptable et chagée de recouvrement',
+                description:
+                  'Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris.',
+              },
+              {
+                dateStart: 'Mai 2018',
+                dateEnd: 'Janvier 2019',
+                title: 'Secretaire comptable et chagée de recouvrement',
+                description:
+                  'Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris.',
+              },
+              {
+                dateStart: 'Mai 2018',
+                dateEnd: 'Janvier 2019',
+                title: 'Secretaire comptable et chagée de recouvrement',
+                description:
+                  'Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris.',
+              },
+            ]}
+          />,
+        ]}
+      />
     </Section>
+
+    {/* <Section style="muted" size="large" id="contact">
+      <h3 className="uk-text-center uk-text-bold">
+        <span>Gardons contact, </span>
+        <span className="uk-text-primary">le programme évolue</span> !
+      </h3>
+      <div className="uk-margin-medium-top">
+        <form>
+          <div className="uk-align-center uk-text-center" data-uk-grid>
+            <div className="uk-padding-remove">
+              <div data-uk-form-custom="target: true">
+                <a className="uk-form-icon" disabled>
+                  <IconNoSSR name="mail" />
+                </a>
+                <input
+                  className="uk-input uk-margin-small"
+                  type="text"
+                  placeholder="Votre adresse mail..."
+                />
+              </div>
+              <Button style="primary">Ecrivez-nous</Button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </Section> */}
     <DiscovertPartial />
   </div>
 );
-
 export default Profile;
