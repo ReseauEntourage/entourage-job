@@ -6,7 +6,9 @@ const PassionsCard = ({ list }) => {
   return (
     <div className="uk-card uk-card-default uk-card-body">
       <h3 className="uk-card-title">
-        <IconNoSSR name="love" />
+        <span className="uk-margin-small-right">
+          <IconNoSSR name="heart" />
+        </span>
         Mes passions
       </h3>
       <ul className="uk-list">

@@ -1,6 +1,11 @@
 import React from 'react';
+import {
+  FacebookShareButton,
+  LinkedinShareButton,
+  TwitterShareButton,
+} from 'react-share';
 import { DiscovertPartial } from '../components/partials';
-import { Section, SimpleLink, Button } from '../components/utils';
+import { Section, Button } from '../components/utils';
 import { IconNoSSR } from '../components/utils/Icon';
 import { GridNoSSR } from '../components/utils/Grid';
 import {
@@ -9,17 +14,28 @@ import {
   InfoProfileCard,
   StoryProfileCard,
   ExperiencesProfileCard,
-  CommentProfileCard,
   ReviewCard,
 } from '../components/cards';
 
+const link = 'http://www.entouragejobs.fr/cv/zulfuye';
 const Profile = () => (
-  <div>
-    <div className="uk-flex uk-flex-center uk-flex-middle uk-background-primary uk-height-large uk-light">
-      <h1 className="uk-heading-large">Zulfuye</h1>
-    </div>
+  <div style={{ position: 'relative' }}>
+    <div
+      className="uk-background-primary "
+      style={{
+        position: 'absolute',
+        display: 'block',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '500px',
+      }}
+    />
     <Section>
-      <div className="uk-card uk-card-default uk-card-body uk-text-center uk-margin-medium">
+      <div
+        className="uk-card uk-card-default uk-card-body uk-text-center uk-margin-medium "
+        style={{ marginTop: '300px' }}
+      >
         <h1 className="uk-width-xxlarge uk-margin-auto">
           <span className="uk-text-primary">Zulfuye</span>
           <br /> a besoin d'un coup de pouce et si votre partage faisait la
@@ -38,22 +54,25 @@ const Profile = () => (
           J'écris à ZulFuye
         </Button>
         <p>partagez le CV de Zulfuye sur vos réseaux</p>
-        <div>
-          <SimpleLink href="#">
-            <div className="uk-icon-button uk-margin-right">
-              <IconNoSSR name="linkedin" />
-            </div>
-          </SimpleLink>
-          <SimpleLink href="#">
-            <div className="uk-icon-button uk-margin-right">
-              <IconNoSSR name="facebook" />
-            </div>
-          </SimpleLink>
-          <SimpleLink href="#">
-            <div className="uk-icon-button">
-              <IconNoSSR name="twitter" />
-            </div>
-          </SimpleLink>
+        <div className="uk-flex uk-flex-row uk-flex-center">
+          <LinkedinShareButton
+            url={link}
+            className="uk-icon-link uk-text-primary uk-margin-right"
+          >
+            <IconNoSSR name="linkedin" ratio={1.5} />
+          </LinkedinShareButton>
+          <FacebookShareButton
+            url={link}
+            className="uk-icon-link uk-text-primary uk-margin-right"
+          >
+            <IconNoSSR name="facebook" ratio={1.5} />
+          </FacebookShareButton>
+          <TwitterShareButton
+            url={link}
+            className="uk-icon-link uk-text-primary"
+          >
+            <IconNoSSR name="twitter" ratio={1.5} />
+          </TwitterShareButton>
         </div>
       </div>
       <GridNoSSR
@@ -157,6 +176,32 @@ const Profile = () => (
         ]}
       />
     </Section>
+
+    {/* <Section style="muted" size="large" id="contact">
+      <h3 className="uk-text-center uk-text-bold">
+        <span>Gardons contact, </span>
+        <span className="uk-text-primary">le programme évolue</span> !
+      </h3>
+      <div className="uk-margin-medium-top">
+        <form>
+          <div className="uk-align-center uk-text-center" data-uk-grid>
+            <div className="uk-padding-remove">
+              <div data-uk-form-custom="target: true">
+                <a className="uk-form-icon" disabled>
+                  <IconNoSSR name="mail" />
+                </a>
+                <input
+                  className="uk-input uk-margin-small"
+                  type="text"
+                  placeholder="Votre adresse mail..."
+                />
+              </div>
+              <Button style="primary">Ecrivez-nous</Button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </Section> */}
     <DiscovertPartial />
   </div>
 );

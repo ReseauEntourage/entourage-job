@@ -6,7 +6,9 @@ const SkillCard = ({ list }) => {
   return (
     <div className="uk-card uk-card-secondary uk-card-body">
       <h3 className="uk-card-title">
-        <IconNoSSR name="skills" />
+        <span className="uk-margin-small-right">
+          <IconNoSSR name="bolt" />
+        </span>
         Mes atouts
       </h3>
       <ul className="uk-list">
