@@ -8,14 +8,16 @@ const DiscovertPartial = () => (
       <h2 className="uk-text-bold">
         Découvrez les <span className="uk-text-primary">candidats</span>
       </h2>
-      <a href="#">Voir tous les candidats <IconNoSSR name="arrow-right" /></a>
+      <a href="#">
+        Voir tous les candidats <IconNoSSR name="arrow-right" />
+      </a>
     </div>
     <div className="uk-margin-large">
       <GridNoSSR
         childWidths={['1-1', '1-2@s']}
         items={Array(2).fill(
           <CandidatCard
-            imgSrc="static/img/arthur.png"
+            imgSrc="/static/img/arthur.png"
             imgAlt="arthur"
             title="Arthur"
             description="série télévisée d'animation américano-canadienne."
