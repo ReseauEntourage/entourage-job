@@ -1,4 +1,5 @@
 import React from 'react';
+import { LinkedinShareButton } from 'react-share';
 import {
   Nav,
   NavbarNoSSR,
@@ -35,9 +36,11 @@ const Header = () => {
                 </SimpleLink>
               )),
               <div className="uk-navbar-item">
-                <Button href="#" visible="m" style="primary">
-                  Partager l&apos;opération
-                </Button>
+                <LinkedinShareButton url="www.linkedout.fr">
+                  <Button href="#" visible="m" style="primary">
+                    Partager l&apos;opération
+                  </Button>
+                </LinkedinShareButton>
               </div>,
               <HamburgerNoSSR href="#offcanvas" hidden="m" />,
             ]}
