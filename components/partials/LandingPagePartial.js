@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { LinkedinShareButton } from 'react-share';
 import { GridNoSSR, IconNoSSR, Button, Section, Background } from '../utils';
 import { PresentationCard } from '../cards';
 
@@ -17,9 +18,11 @@ const LandingPagePartial = ({ presentations }) => (
               <span> avec ceux qui n&apos;en ont pas</span>
             </h1>
             <div className="uk-margin-large-top uk-margin-large-bottom uk-text-center uk-text-left@s">
-              <Button href="#" size="large" style="primary">
-                partager l&apos;opération
-              </Button>
+              <LinkedinShareButton url="www.linkedout.fr">
+                <Button size="large" style="primary">
+                  partager l&apos;opération
+                </Button>
+              </LinkedinShareButton>
             </div>
           </div>,
         ]}
