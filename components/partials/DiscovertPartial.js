@@ -20,6 +20,7 @@ const DiscovertPartial = () => (
             imgSrc="/static/img/arthur.png"
             imgAlt="arthur"
             title="Arthur"
+            id="arthur"
             description="série télévisée d'animation américano-canadienne."
             goods={['volontaire', "esprit d'équipe"]}
             ambitions={['la vente', 'la restauration']}

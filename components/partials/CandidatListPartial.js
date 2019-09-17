@@ -4,6 +4,7 @@ import { CandidatCard } from '../cards';
 
 const items = Array(11).fill(
   <CandidatCard
+    id="arthur"
     imgSrc="static/img/arthur.png"
     imgAlt="arthur"
     title="Arthur"
@@ -17,14 +18,29 @@ const items = Array(11).fill(
 </div>); */
 items.push(
   <div className="uk-flex uk-flex-column uk-flex-middle">
-    <SimpleLink href="/contact">
-      <span
-        className="uk-icon-button"
-        style={{ color: 'white', backgroundColor: '#F55F24' }}
-      >
-        <IconNoSSR name="plus" />
-      </span>
-    </SimpleLink>
+    <button
+      onClick={() => {}}
+      onKeyPress={() =>
+        Array(3).forEach(() =>
+          items.push(
+            <CandidatCard
+              id="arthur"
+              imgSrc="static/img/arthur.png"
+              imgAlt="arthur"
+              title="Arthur"
+              description="série télévisée d'animation américano-canadienne."
+              goods={['volontaire', "esprit d'équipe"]}
+              ambitions={['la vente', 'la restauration']}
+            />
+          )
+        )
+      }
+      type="button"
+      className="uk-icon-button"
+      style={{ color: 'white', backgroundColor: '#F55F24' }}
+    >
+      <IconNoSSR name="plus" />
+    </button>
     <SimpleLink href="/contact" className="uk-link-muted uk-padding-small">
       <span className="uk-text-bold">Voir plus</span>
     </SimpleLink>

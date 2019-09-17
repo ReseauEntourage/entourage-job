@@ -11,41 +11,24 @@ import {
   ExperiencesProfileCard,
   ReviewCard,
   CVPresentationCard,
+  CVBackground,
 } from '../../components/cards';
 
 const CV = () => {
   const router = useRouter();
   const { id } = router.query;
-  // const link = `http://www.entouragejobs.fr${router.asPath}`;
+  const email = `${id}@gmail.com`;
   const link = `http://www.linkedout.fr`;
-
+  const backgroundUrl =
+    'https://www.telegraph.co.uk/content/dam/Travel/2018/October/bear%20standing.jpg?imwidth=1400';
   return (
     <div style={{ position: 'relative' }}>
-      <div
-        style={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          left: 0,
-        }}
-      >
-        <div
-          className="uk-background-cover uk-background-top-center"
-          style={{
-            backgroundImage:
-              'url("https://www.telegraph.co.uk/content/dam/Travel/2018/October/bear%20standing.jpg?imwidth=1400")',
-            position: 'absolute',
-            display: 'block',
-            width: '100%',
-            height: '70vw',
-            minHeight: '600px',
-            maxHeight: 'calc(100vh - 80px)',
-          }}
-        />
-      </div>
+      <CVBackground url={backgroundUrl} />
       <Section>
         <CVPresentationCard
           name={id}
+          link={link}
+          email={email}
           description={
             <span>
               Motivée et curieuse, j&apos;aimerais beaucoup travailler dans
@@ -54,7 +37,6 @@ const CV = () => {
               mais reste ouverte à toutes autres propositions.
             </span>
           }
-          link={link}
         />
         <GridNoSSR
           childWidths={['1-2@s']}

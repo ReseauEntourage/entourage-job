@@ -8,11 +8,8 @@ import {
 import { IconNoSSR } from '../utils/Icon';
 import { Button } from '../utils';
 
-const CVPresentationCard = ({ name, description, link }) => (
-  <div
-    className="uk-card uk-card-default uk-card-body uk-text-center uk-margin-medium "
-    style={{ marginTop: '400px' }}
-  >
+const CVPresentationCard = ({ name, description, link, email }) => (
+  <div className="uk-card uk-card-default uk-card-body uk-text-center uk-margin-medium ">
     <h1 className="uk-width-xxlarge uk-margin-auto">
       <span className="uk-text-uppercase uk-text-primary">{name}</span>
       <br /> a besoin d'un coup de pouce et si votre partage faisait la
@@ -22,7 +19,12 @@ const CVPresentationCard = ({ name, description, link }) => (
       <IconNoSSR name="quote-right" ratio={2} />
     </span>
     <p className="uk-width-xlarge uk-margin-auto">{description}</p>
-    <Button href="#" style="primary">
+    <Button
+      href={`mailto:${email}`}
+      style="primary"
+      disabled={email === undefined}
+      isExternal
+    >
       J'écris à {name}
     </Button>
     <p>partagez le CV de {name} sur vos réseaux</p>
@@ -49,6 +51,10 @@ CVPresentationCard.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.element.isRequired,
   link: PropTypes.string.isRequired,
+  email: PropTypes.string,
+};
+CVPresentationCard.defaultProps = {
+  email: undefined,
 };
 
 export default CVPresentationCard;

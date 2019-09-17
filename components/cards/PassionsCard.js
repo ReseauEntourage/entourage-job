@@ -13,7 +13,9 @@ const PassionsCard = ({ list }) => {
       </h3>
       <ul className="uk-list">
         {list.map((item, i) => (
-          <li id={i}>{item}</li>
+          <li id={i} key={i}>
+            {item}
+          </li>
         ))}
       </ul>
     </div>

@@ -9,7 +9,7 @@ const ExperiencesProfileCard = ({ experiences }) => {
       </h3>
       <ul className="uk-list ent-list">
         {experiences.map((item, i) => (
-          <li id={i}>
+          <li id={i} key={i}>
             <p className="uk-text-muted uk-margin-small">
               {item.dateStart} - {item.dateEnd}
             </p>
