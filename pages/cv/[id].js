@@ -18,7 +18,7 @@ const CV = () => {
   const router = useRouter();
   const { id } = router.query;
   const email = `${id}@gmail.com`;
-  const link = `http://www.linkedout.fr`;
+  const link = `https://entourage-job-preprod.herokuapp.com/cv/${id}`;
   const backgroundUrl =
     'https://www.telegraph.co.uk/content/dam/Travel/2018/October/bear%20standing.jpg?imwidth=1400';
   return (
