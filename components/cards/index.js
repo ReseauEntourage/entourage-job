@@ -10,3 +10,4 @@ export { default as InfoProfileCard } from './InfoProfileCard';
 export { default as StoryProfileCard } from './StoryProfileCard';
 export { default as ExperiencesProfileCard } from './ExperiencesProfileCard';
 export { default as CommentProfileCard } from './CommentProfileCard';
+export { default as CVPresentationCard } from './CVPresentationCard';
