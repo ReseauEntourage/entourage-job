@@ -12,6 +12,11 @@ app
   .then(() => {
     const server = express();
 
+    server.use(express.json())
+
+    server.use("/api/v1/cv", require("./api/v1/CV"));
+    server.use("/api/v1/cv_skill", require("./api/v1/CV_Skill"));
+
     server.get('*', (req, res) => {
       return handle(req, res);
     });

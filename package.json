@@ -40,10 +40,14 @@
     "express": "^4.17.1",
     "less": "^3.10.2",
     "next": "^9.0.1",
+    "pg": "^7.12.1",
+    "pg-hstore": "^2.3.3",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-share": "^3.0.1",
+    "sequelize": "^5.18.4",
+    "sequelize-cli": "^5.5.1",
     "uikit": "^3.1.7"
   },
   "devDependencies": {
