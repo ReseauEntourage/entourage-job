@@ -5,27 +5,58 @@
 // See "how to create a theme" below for more info.
 
 // overlay
-@overlay-primary-background: fade(#F55F24, 70%);
 
+@global-primary-background: #F55F24;
+
+@overlay-primary-background: fade(@global-primary-background, 70%);
+//Link
+@global-link-color: #F55F24;
+@global-link-color-hover: #D53F00;
 
 //Button
 .hook-button() {
   border-radius: 5px;
 }
 
-.hook-button-primary(){
+.hook-button-primary() {
   background-color: #F55F24;
-  background-image: linear-gradient( #F58F00,#F55F24);
+  background-image: linear-gradient(#F58F00, #F55F24);
 }
 
-.hook-button-primary-hover(){
+.hook-button-primary-hover() {
   background-image: none;
   background-color: #F55F24;
 }
 
-//Link
-@global-link-color: #F55F24;
-@global-link-color-hover: #D53F00;
+.ent-list {
+  margin-left: 30px !important;
+}
 
-//Text
-@text-primary-color: #F55F24;
+.ent-list>li,
+.ent-list {
+  display: block;
+  position: relative
+}
+
+.ent-list::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -24px;
+  width: 2px;
+  background-color: #F55F24;
+  content: '';
+}
+
+.ent-list>li::after {
+  position: absolute;
+  top: 5px;
+  left: -30px;
+  height: 10px;
+  width: 10px;
+  border-radius: 150%;
+  border: 2px solid #F55F24;
+  background: #fff;
+  content: '';
+  z-index: 1;
+}

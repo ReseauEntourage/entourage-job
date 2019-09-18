@@ -7,7 +7,17 @@ import {
   UIKIT_BUTTON_SIZES,
 } from '../variables';
 
-const Button = ({ visible, style, size, href, disabled, widths, children, className }) => {
+const Button = ({
+  visible,
+  style,
+  size,
+  href,
+  disabled,
+  widths,
+  children,
+  className,
+  isExternal,
+}) => {
   let classBuffer = 'uk-button';
   if (visible) classBuffer += ` uk-visible@${visible}`;
   if (style) classBuffer += ` uk-button-${style}`;
@@ -16,12 +26,17 @@ const Button = ({ visible, style, size, href, disabled, widths, children, classN
   widths.forEach((width) => {
     classBuffer += ` uk-width-${width}`;
   });
-  return (
-    <Link href={href}>
-      <button className={classBuffer} disabled={disabled} type="button">
-        {children}
-      </button>
-    </Link>
+
+  const buttonComponent = (
+    <button className={classBuffer} disabled={disabled} type="button">
+      {children}
+    </button>
+  );
+
+  return isExternal ? (
+    <a href={href}>{buttonComponent}</a>
+  ) : (
+    <Link href={href}>{buttonComponent}</Link>
   );
 };
 Button.propTypes = {
@@ -35,6 +50,8 @@ Button.propTypes = {
   style: PropTypes.oneOf(UIKIT_BUTTON_STYLES_SPEC),
   size: PropTypes.oneOf(UIKIT_BUTTON_SIZES),
   widths: PropTypes.arrayOf(PropTypes.string), // UIKIT_WIDTH_SCREENS
+  isExternal: PropTypes.bool,
+  className: PropTypes.string,
 };
 Button.defaultProps = {
   disabled: false,
@@ -43,6 +60,8 @@ Button.defaultProps = {
   size: undefined,
   href: '#',
   widths: [],
+  isExternal: false,
+  className: undefined,
 };
 
 export default Button;

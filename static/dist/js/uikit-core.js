@@ -1,10 +1,17 @@
-/*! UIkit 3.1.8 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.1.7 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define('uikit', factory) :
     (global = global || self, global.UIkit = factory());
 }(this, function () { 'use strict';
+
+    function bind(fn, context) {
+        return function (a) {
+            var l = arguments.length;
+            return l ? l > 1 ? fn.apply(context, arguments) : fn.call(context, a) : fn.call(context);
+        };
+    }
 
     var objPrototype = Object.prototype;
     var hasOwnProperty = objPrototype.hasOwnProperty;
@@ -379,24 +386,6 @@
         }
     }
 
-    /* global DocumentTouch */
-
-    var isIE = /msie|trident/i.test(window.navigator.userAgent);
-    var isRtl = attr(document.documentElement, 'dir') === 'rtl';
-
-    var hasTouchEvents = 'ontouchstart' in window;
-    var hasPointerEvents = window.PointerEvent;
-    var hasTouch = hasTouchEvents
-        || window.DocumentTouch && document instanceof DocumentTouch
-        || navigator.maxTouchPoints; // IE >=11
-
-    var pointerDown = hasPointerEvents ? 'pointerdown' : hasTouchEvents ? 'touchstart' : 'mousedown';
-    var pointerMove = hasPointerEvents ? 'pointermove' : hasTouchEvents ? 'touchmove' : 'mousemove';
-    var pointerUp = hasPointerEvents ? 'pointerup' : hasTouchEvents ? 'touchend' : 'mouseup';
-    var pointerEnter = hasPointerEvents ? 'pointerenter' : hasTouchEvents ? '' : 'mouseenter';
-    var pointerLeave = hasPointerEvents ? 'pointerleave' : hasTouchEvents ? '' : 'mouseleave';
-    var pointerCancel = hasPointerEvents ? 'pointercancel' : 'touchcancel';
-
     function query(selector, context) {
         return toNode(selector) || find(selector, getContext(selector, context));
     }
@@ -521,9 +510,9 @@
                 return ancestor;
             }
 
-            ancestor = ancestor.parentNode;
+            ancestor = ancestor.parentElement;
 
-        } while (ancestor && ancestor.nodeType === 1);
+        } while (ancestor);
     };
 
     function closest(element, selector) {
@@ -541,7 +530,7 @@
         var elements = [];
         element = toNode(element);
 
-        while ((element = element.parentNode) && element.nodeType === 1) {
+        while ((element = element.parentElement)) {
             if (matches(element, selector)) {
                 elements.push(element);
             }
@@ -612,19 +601,13 @@
 
         targets = toEventTargets(targets);
 
-        if (listener.length > 1) {
-            listener = detail(listener);
-        }
-
         if (selector) {
             listener = delegate(targets, selector, listener);
         }
 
-        if (useCapture && useCapture.self) {
-            listener = selfFilter(listener);
+        if (listener.length > 1) {
+            listener = detail(listener);
         }
-
-        useCapture = useCaptureFilter(useCapture);
 
         type.split(' ').forEach(function (type) { return targets.forEach(function (target) { return target.addEventListener(type, listener, useCapture); }
             ); }
@@ -635,7 +618,6 @@
     function off(targets, type, listener, useCapture) {
         if ( useCapture === void 0 ) useCapture = false;
 
-        useCapture = useCaptureFilter(useCapture);
         targets = toEventTargets(targets);
         type.split(' ').forEach(function (type) { return targets.forEach(function (target) { return target.removeEventListener(type, listener, useCapture); }
             ); }
@@ -717,20 +699,6 @@
         return function (e) { return isArray(e.detail) ? listener.apply(void 0, [e].concat(e.detail)) : listener(e); };
     }
 
-    function selfFilter(listener) {
-        return function (e) {
-            if (e.target === e.currentTarget || e.target === e.current) {
-                return listener.call(null, e);
-            }
-        };
-    }
-
-    function useCaptureFilter(options) {
-        return options && isIE && !isBoolean(options)
-            ? !!options.capture
-            : options;
-    }
-
     function isEventTarget(target) {
         return target && 'addEventListener' in target;
     }
@@ -750,7 +718,7 @@
     }
 
     function isTouch(e) {
-        return e.pointerType === 'touch' || !!e.touches;
+        return e.pointerType === 'touch' || e.touches;
     }
 
     function getEventPos(e, prop) {
@@ -1029,6 +997,24 @@
         });
 
     }
+
+    /* global DocumentTouch */
+
+    var isIE = /msie|trident/i.test(window.navigator.userAgent);
+    var isRtl = attr(document.documentElement, 'dir') === 'rtl';
+
+    var hasTouchEvents = 'ontouchstart' in window;
+    var hasPointerEvents = window.PointerEvent;
+    var hasTouch = hasTouchEvents
+        || window.DocumentTouch && document instanceof DocumentTouch
+        || navigator.maxTouchPoints; // IE >=11
+
+    var pointerDown = hasPointerEvents ? 'pointerdown' : hasTouchEvents ? 'touchstart' : 'mousedown';
+    var pointerMove = hasPointerEvents ? 'pointermove' : hasTouchEvents ? 'touchmove' : 'mousemove';
+    var pointerUp = hasPointerEvents ? 'pointerup' : hasTouchEvents ? 'touchend' : 'mouseup';
+    var pointerEnter = hasPointerEvents ? 'pointerenter' : hasTouchEvents ? '' : 'mouseenter';
+    var pointerLeave = hasPointerEvents ? 'pointerleave' : hasTouchEvents ? '' : 'mouseleave';
+    var pointerCancel = hasPointerEvents ? 'pointercancel' : 'touchcancel';
 
     function ready(fn) {
 
@@ -1465,7 +1451,11 @@
                         'transition-timing-function': ''
                     });
                     type === 'transitioncanceled' ? reject() : resolve();
-                }, {self: true});
+                }, false, function (ref) {
+                    var target = ref.target;
+
+                    return element === target;
+                });
 
                 addClass(element, 'uk-transition');
                 css(element, assign({
@@ -1556,7 +1546,11 @@
                         }
                     });
 
-                }, {self: true});
+                }, false, function (ref) {
+                    var target = ref.target;
+
+                    return element === target;
+                });
 
                 css(element, 'animationDuration', (duration + "ms"));
                 addClass(element, cls);
@@ -1727,10 +1721,6 @@
     function getDimensions(element) {
 
         element = toNode(element);
-
-        if (!element) {
-            return {};
-        }
 
         var ref = getWindow(element);
         var top = ref.pageYOffset;
@@ -2632,6 +2622,7 @@
         Transition: Transition,
         animate: animate,
         Animation: Animation,
+        bind: bind,
         hasOwn: hasOwn,
         hyphenate: hyphenate,
         camelize: camelize,
@@ -2930,7 +2921,7 @@
 
             if (methods) {
                 for (var key in methods) {
-                    this[key] = methods[key].bind(this);
+                    this[key] = bind(methods[key], this);
                 }
             }
         };
@@ -3147,6 +3138,12 @@
                 return;
             }
 
+            handler = detail(isString(handler) ? component[handler] : bind(handler, component));
+
+            if (self) {
+                handler = selfFilter(handler);
+            }
+
             component._events.push(
                 on(
                     el,
@@ -3156,15 +3153,29 @@
                         : isString(delegate)
                             ? delegate
                             : delegate.call(component),
-                    isString(handler) ? component[handler] : handler.bind(component),
-                    {passive: passive, capture: capture, self: self}
+                    handler,
+                    isBoolean(passive)
+                        ? {passive: passive, capture: capture}
+                        : capture
                 )
             );
 
         }
 
+        function selfFilter(handler) {
+            return function selfHandler(e) {
+                if (e.target === e.currentTarget || e.target === e.current) {
+                    return handler.call(null, e);
+                }
+            };
+        }
+
         function notIn(options, key) {
             return options.every(function (arr) { return !arr || !hasOwn(arr, key); });
+        }
+
+        function detail(listener) {
+            return function (e) { return isArray(e.detail) ? listener.apply(void 0, [e].concat(e.detail)) : listener(e); };
         }
 
         function coerce(type, value) {
@@ -3906,7 +3917,6 @@
                     return;
                 }
 
-                // Handle Swipe Gesture
                 var pos = getEventPos(e);
                 var target = 'tagName' in e.target ? e.target : e.target.parentNode;
                 off = once(document, (pointerUp + " " + pointerCancel), function (e) {
@@ -3926,15 +3936,6 @@
                     }
 
                 });
-
-                // Force click event anywhere on iOS < 13
-                if (pointerDown === 'touchstart') {
-                    css(document.body, 'cursor', 'pointer');
-                    once(document, (pointerUp + " " + pointerCancel), function () { return setTimeout(function () { return css(document.body, 'cursor', ''); }
-                        , 50); }
-                    );
-                }
-
             }, {passive: true});
 
         });
@@ -4259,11 +4260,15 @@
                     return 'a[href^="#"]';
                 },
 
-                handler: function(ref) {
-                    var defaultPrevented = ref.defaultPrevented;
-                    var hash = ref.current.hash;
+                handler: function(e) {
 
-                    if (!defaultPrevented && hash && !within(hash, this.$el)) {
+                    var id = e.target.hash;
+
+                    if (!id) {
+                        e.preventDefault();
+                    }
+
+                    if (!id || !within(id, this.$el)) {
                         this.hide(false);
                     }
                 }
@@ -4385,22 +4390,9 @@
                 self: true,
 
                 handler: function() {
-                    var this$1 = this;
-
                     this.tracker.init();
                     trigger(this.$el, 'updatearia');
-
-                    // If triggered from an click event handler, delay adding the click handler
-                    var off = delayOn(document, 'click', function (ref) {
-                        var defaultPrevented = ref.defaultPrevented;
-                        var target = ref.target;
-
-                        if (!defaultPrevented && !within(target, this$1.$el) && !(this$1.toggle && within(target, this$1.toggle.$el))) {
-                            this$1.hide(false);
-                        }
-                    });
-
-                    once(this.$el, 'hide', off, {self: true});
+                    registerEvent();
                 }
 
             },
@@ -4450,7 +4442,7 @@
                     this.updateAria(this.$el);
 
                     if (toggle || this.toggle) {
-                        attr((toggle || this.toggle).$el, 'aria-expanded', this.isToggled());
+                        attr((toggle || this.toggle).$el, 'aria-expanded', this.isToggled() ? 'true' : 'false');
                         toggleClass(this.toggle.$el, this.cls, this.isToggled());
                     }
                 }
@@ -4499,7 +4491,7 @@
                             return;
                         }
 
-                    } else if (this$1.isChildOf(active)) {
+                    } else if (active && this$1.isChildOf(active)) {
 
                         active.clearTimers();
 
@@ -4598,10 +4590,30 @@
 
     };
 
-    function delayOn(el, type, fn) {
-        var off = once(el, type, function () { return off = on(el, type, fn); }
-        , true);
-        return function () { return off(); };
+    var registered;
+
+    function registerEvent() {
+
+        if (registered) {
+            return;
+        }
+
+        registered = true;
+        on(document, pointerUp, function (ref) {
+            var target = ref.target;
+            var defaultPrevented = ref.defaultPrevented;
+
+            var prev;
+
+            if (defaultPrevented) {
+                return;
+            }
+
+            while (active && active !== prev && !within(target, active.$el) && !(active.toggle && within(target, active.toggle.$el))) {
+                prev = active;
+                active.hide(false);
+            }
+        });
     }
 
     var Dropdown = {
@@ -4923,21 +4935,18 @@
 
                     }
 
-                    var padding = this.parallax && getPaddingBottom(this.parallax, rows, translates);
-
-                    return {padding: padding, rows: rows, translates: translates, height: !transitionInProgress ? elHeight : false};
+                    return {rows: rows, translates: translates, height: !transitionInProgress ? elHeight : false};
 
                 },
 
                 write: function(ref) {
                     var stacks = ref.stacks;
                     var height = ref.height;
-                    var padding = ref.padding;
 
 
                     toggleClass(this.$el, this.clsStack, stacks);
 
-                    css(this.$el, 'paddingBottom', padding);
+                    css(this.$el, 'paddingBottom', this.parallax);
                     height !== false && css(this.$el, 'height', height);
 
                 },
@@ -4982,22 +4991,6 @@
 
     };
 
-    function getPaddingBottom(distance, rows, translates) {
-        var column = 0;
-        var max = 0;
-        var maxScrolled = 0;
-        for (var i = rows.length - 1; i >= 0; i--) {
-            for (var j = column; j < rows[i].length; j++) {
-                var el = rows[i][j];
-                var bottom = el.offsetTop + height(el) + (translates && -translates[i][j]);
-                max = Math.max(max, bottom);
-                maxScrolled = Math.max(maxScrolled, bottom + (j % 2 ? distance : distance / 8));
-                column++;
-            }
-        }
-        return maxScrolled - max;
-    }
-
     function getMarginTop(root, cls) {
 
         var nodes = toNodes(root.children);
@@ -5018,10 +5011,6 @@
 
     // IE 11 fix (min-height on a flex container won't apply to its flex items)
     var FlexBug = isIE ? {
-
-        props: {
-            selMinHeight: String
-        },
 
         data: {
             selMinHeight: false,
@@ -6198,17 +6187,22 @@
 
                     active$1 = this;
 
-                    if (!prev) {
+                    if (prev) {
+                        if (this.stack) {
+                            this.prev = prev;
+                        } else {
+
+                            active$1 = prev;
+                            prev.hide().then(this.show);
+                            e.preventDefault();
+
+                        }
+
                         return;
                     }
 
-                    if (this.stack) {
-                        this.prev = prev;
-                    } else {
-                        active$1 = prev;
-                        prev.hide().then(this.show);
-                        e.preventDefault();
-                    }
+                    registerEvents();
+
                 }
 
             },
@@ -6221,8 +6215,6 @@
 
                 handler: function() {
 
-                    registerEvents();
-
                     if (!hasClass(document.documentElement, this.clsPage)) {
                         this.scrollbarWidth = width(window) - width(document);
                         css(document.body, 'overflowY', this.scrollbarWidth && this.overlay ? 'scroll' : '');
@@ -6230,6 +6222,20 @@
 
                     addClass(document.documentElement, this.clsPage);
 
+                }
+
+            },
+
+            {
+
+                name: 'hide',
+
+                self: true,
+
+                handler: function() {
+                    if (!active$1 || active$1 === this && !this.prev) {
+                        deregisterEvents();
+                    }
                 }
 
             },
@@ -6309,36 +6315,35 @@
 
     };
 
-    var registered;
+    var events;
 
     function registerEvents() {
 
-        if (registered) {
+        if (events) {
             return;
         }
 
-        registered = true;
-        on(document, 'click', function (ref) {
-            var defaultPrevented = ref.defaultPrevented;
-            var target = ref.target;
+        events = [
+            on(document, pointerUp, function (ref) {
+                var target = ref.target;
+                var defaultPrevented = ref.defaultPrevented;
 
-            if (!defaultPrevented
-                && active$1
-                && active$1.bgClose
-                && (!active$1.overlay || within(target, active$1.$el))
-                && !within(target, active$1.panel)
-            ) {
-                active$1.hide();
-            }
-        });
+                if (active$1 && active$1.bgClose && !defaultPrevented && (!active$1.overlay || within(target, active$1.$el)) && !within(target, active$1.panel)) {
+                    active$1.hide();
+                }
+            }),
+            on(document, 'keydown', function (e) {
+                if (e.keyCode === 27 && active$1 && active$1.escClose) {
+                    e.preventDefault();
+                    active$1.hide();
+                }
+            })
+        ];
+    }
 
-        on(document, 'keydown', function (e) {
-            if (e.keyCode === 27 && active$1 && active$1.escClose) {
-                e.preventDefault();
-                active$1.hide();
-            }
-        });
-
+    function deregisterEvents() {
+        events && events.forEach(function (unbind) { return unbind(); });
+        events = null;
     }
 
     function animate$1(ref) {
@@ -6352,9 +6357,9 @@
                     _toggle(el, show);
 
                     var off = once(transitionElement, 'transitionstart', function () {
-                        once(transitionElement, 'transitionend transitioncancel', resolve, {self: true});
+                        once(transitionElement, 'transitionend transitioncancel', resolve, false, function (e) { return e.target === transitionElement; });
                         clearTimeout(timer);
-                    }, {self: true});
+                    }, false, function (e) { return e.target === transitionElement; });
 
                     var timer = setTimeout(function () {
                         off();
@@ -6421,7 +6426,14 @@
 
             dialog.show();
 
-            on(dialog.$el, 'hidden', function () { return Promise.resolve(function () { return dialog.$destroy(true); }); }, {self: true});
+            on(dialog.$el, 'hidden', function (ref) {
+                var target = ref.target;
+                var currentTarget = ref.currentTarget;
+
+                if (target === currentTarget) {
+                    Promise.resolve(function () { return dialog.$destroy(true); });
+                }
+            });
 
             return dialog;
         };
@@ -6852,10 +6864,9 @@
                 },
 
                 handler: function(ref) {
-                    var hash = ref.current.hash;
-                    var defaultPrevented = ref.defaultPrevented;
+                    var current = ref.current;
 
-                    if (!defaultPrevented && hash && $(hash, document.body)) {
+                    if (current.hash && $(current.hash, document.body)) {
                         this.hide();
                     }
                 }
@@ -7808,13 +7819,21 @@
             return;
         }
 
-        if (isNumeric(value) && isString(value) && value.match(/^-?\d/)) {
+        if (isNumeric(value)) {
 
-            return propOffset + toPx(value);
+            return propOffset + toFloat(value);
+
+        } else if (isString(value) && value.match(/^-?\d/)) {
+
+            return toPx(value);
 
         } else {
 
-            return offset(value === true ? $el.parentNode : query(value, $el)).bottom;
+            var el = value === true ? $el.parentNode : query(value, $el);
+
+            if (el) {
+                return offset(el).top + el.offsetHeight;
+            }
 
         }
     }
@@ -8292,7 +8311,7 @@
 
     }
 
-    UIkit.version = '3.1.8';
+    UIkit.version = '3.1.7';
 
     core(UIkit);
 
