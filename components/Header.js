@@ -36,7 +36,7 @@ const Header = () => {
                 </SimpleLink>
               )),
               <div className="uk-navbar-item">
-                <LinkedinShareButton url="www.linkedout.fr">
+                <LinkedinShareButton url="https://entourage-job-preprod.herokuapp.com/">
                   <Button href="#" visible="m" style="primary">
                     Partager l&apos;opération
                   </Button>

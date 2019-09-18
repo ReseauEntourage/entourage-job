@@ -7,7 +7,7 @@ import {
 import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
 
 const Footer = () => {
-  const sharedURL = 'https://www.linkedout.fr/';
+  const sharedURL = 'https://entourage-job-preprod.herokuapp.com/';
   const sharedText =
     "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau.";
   return (

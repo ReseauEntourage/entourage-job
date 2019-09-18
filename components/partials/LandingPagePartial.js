@@ -18,7 +18,7 @@ const LandingPagePartial = ({ presentations }) => (
               <span> avec ceux qui n&apos;en ont pas</span>
             </h1>
             <div className="uk-margin-large-top uk-margin-large-bottom uk-text-center uk-text-left@s">
-              <LinkedinShareButton url="www.linkedout.fr">
+              <LinkedinShareButton url="https://entourage-job-preprod.herokuapp.com/">
                 <Button size="large" style="primary">
                   partager l&apos;opération
                 </Button>
