@@ -16,13 +16,13 @@ class EntourageApp extends App {
           <meta name="twitter:card" content="summary_large_image" />
           <meta
             name="twitter:image"
-            content="/static/img/entouragejobs-preview.jpg"
+            content="https://entourage-job-preprod.herokuapp.com/static/img/entouragejobs-preview.jpg"
           />
           <meta name="twitter:title" content="Entourage Jobs" />
           <meta property="og:title" content="Entourage Jobs" />
           <meta
             property="og:image"
-            content="/static/img/entouragejobs-preview.jpg"
+            content="https://entourage-job-preprod.herokuapp.com/static/img/entouragejobs-preview.jpg"
           />
           <meta
             property="og:description"

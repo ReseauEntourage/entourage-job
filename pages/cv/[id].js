@@ -30,7 +30,14 @@ const CV = () => {
       <Head>
         <title>{pageTitle}</title>
         <meta property="og:title" content={pageTitle} />
-        <meta property="og:image" content="/static/img/arthur-preview.jpg" />
+        <meta
+          name="twitter:image"
+          content="https://entourage-job-preprod.herokuapp.com/static/img/arthur-preview.jpg"
+        />
+        <meta
+          property="og:image"
+          content="https://entourage-job-preprod.herokuapp.com/static/img/arthur-preview.jpg"
+        />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={link} />
       </Head>
