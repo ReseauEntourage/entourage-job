@@ -13,6 +13,25 @@ class EntourageApp extends App {
       <Container>
         <Head>
           <title>Entourage Jobs</title>
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta
+            name="twitter:image"
+            content="/static/img/entouragejobs-preview.jpg"
+          />
+          <meta name="twitter:title" content="Entourage Jobs" />
+          <meta property="og:title" content="Entourage Jobs" />
+          <meta
+            property="og:image"
+            content="/static/img/entouragejobs-preview.jpg"
+          />
+          <meta
+            property="og:description"
+            content="Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau."
+          />
+          <meta
+            property="og:url"
+            content="https://entourage-job-preprod.herokuapp.com/"
+          />
         </Head>
         <Header />
         <Component {...pageProps} />

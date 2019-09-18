@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { DocumentMeta } from 'react';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { DiscovertPartial, ContactPartial } from '../../components/partials';
 import { Section } from '../../components/utils';
@@ -18,11 +19,21 @@ const CV = () => {
   const router = useRouter();
   const { id } = router.query;
   const email = `${id}@gmail.com`;
+  const pageTitle = `${id} - Entourage Jobs`;
   const link = `https://entourage-job-preprod.herokuapp.com/cv/${id}`;
   const backgroundUrl =
     'https://www.telegraph.co.uk/content/dam/Travel/2018/October/bear%20standing.jpg?imwidth=1400';
+  const description =
+    'Motivée et curieuse, j&apos;aimerais beaucoup travailler dans la gestion ou l&apos;administration mais reste ouverte à toutes autres propositions.';
   return (
     <div style={{ position: 'relative' }}>
+      <Head>
+        <title>{pageTitle}</title>
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:image" content="/static/img/arthur-preview.jpg" />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={link} />
+      </Head>
       <CVBackground url={backgroundUrl} />
       <Section>
         <CVPresentationCard
