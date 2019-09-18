@@ -12,3 +12,10 @@ Architecture en place :
 - _.travis.yml_ : Configuration de **Travis CI** (Changement de clé encrypt à effectuer pour Entourage. Voir [la documentation](https://docs.travis-ci.com/user/deployment/heroku/)
 - _app.json_ : Fichier de configuration d'**Heroku** (Permet d'indiquer des variables d'environnement)
 - _srv-express.js_ : Partie **Express.js**
+
+
+
+Pour la base de données :
+- Si elle n'existe pas : sequelize db:create
+- Migrations de la structure : sequelize db:migrate:all
+- Intégration de données de test : sequelize db:seed:all
