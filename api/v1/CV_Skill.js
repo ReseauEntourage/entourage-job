@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const sequelize = require("sequelize");
-const db = require("../../db/config/database");
+const db = require("../../db/config/databaseConnect");
 const CV_Skill = require("../../db/models/cv_skill")(db, sequelize.DataTypes);
 const moment = require("moment");
 
