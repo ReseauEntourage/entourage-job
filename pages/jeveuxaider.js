@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { HelpingCard, ScaleCard } from '../components/cards';
 import { Button, Section, GridNoSSR, SliderNoSSR } from '../components/utils';
 import { DiscovertPartial } from '../components/partials';
+import Layout from '../components/Layout';
 
 const cardsCoupsDePouce = [
   [
@@ -116,7 +117,7 @@ const coupsDePouce = [
 ];
 
 const JeVeuxAider = () => (
-  <Fragment>
+  <Layout title="Je veux aider - Entourage Jobs">
     <Section id="help" style="default">
       <h1 className="uk-text-center">
         Vous souhaitez <span className="uk-text-primary">aider</span> ?
@@ -259,7 +260,7 @@ const JeVeuxAider = () => (
       </div>
     </Section>
     <DiscovertPartial />
-  </Fragment>
+  </Layout>
 );
 
 export default JeVeuxAider;
