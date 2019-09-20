@@ -6,7 +6,6 @@ export const CloseButtonNoSSR = dynamic(() => import('./CloseButton'), {
 });
 const CloseButton = ({ className }) => {
   className = className !== undefined ? className : "uk-offcanvas-close";
-  console.log("Hello ", className);
   return (
     <button className={className} type="button" data-uk-close />
   );
