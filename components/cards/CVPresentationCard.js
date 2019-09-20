@@ -12,6 +12,8 @@ import { Button } from '../utils';
 const CVPresentationCard = ({ name, description, link, email }) => {
   // const sharedText =
   //   "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau.";
+  const sharedDescription = `Donnons un coup de pouce à ${name} en partageant son CV`;
+  const sharedTitle = `${name} - Entourage Jobs`;
   return (
     <div className="uk-card uk-card-default uk-card-body uk-text-center uk-margin-medium ">
       <h1 className="uk-width-xxlarge uk-margin-auto">
@@ -35,6 +37,8 @@ const CVPresentationCard = ({ name, description, link, email }) => {
       <div className="uk-flex uk-flex-row uk-flex-center">
         <LinkedinShareButton
           url={link}
+          title={sharedTitle}
+          description={sharedDescription}
           style={{ cursor: 'pointer' }}
           className="uk-icon-link uk-text-primary uk-margin-right"
         >
@@ -42,6 +46,7 @@ const CVPresentationCard = ({ name, description, link, email }) => {
         </LinkedinShareButton>
         <FacebookShareButton
           url={link}
+          quote={sharedDescription}
           style={{ cursor: 'pointer' }}
           className="uk-icon-link uk-text-primary uk-margin-right"
         >
@@ -49,6 +54,7 @@ const CVPresentationCard = ({ name, description, link, email }) => {
         </FacebookShareButton>
         <TwitterShareButton
           url={link}
+          quote={sharedDescription}
           style={{ cursor: 'pointer' }}
           className="uk-icon-link uk-text-primary primary uk-margin-right"
         >
@@ -56,8 +62,8 @@ const CVPresentationCard = ({ name, description, link, email }) => {
         </TwitterShareButton>
         <WhatsappShareButton
           url={link}
+          title={sharedDescription}
           style={{ cursor: 'pointer' }}
-          // title={sharedText}
           className="uk-icon-link uk-text-primary"
         >
           <IconNoSSR name="whatsapp" ratio={1.5} />

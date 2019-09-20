@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Section } from '../utils';
 import { GridNoSSR } from '../utils/Grid';
 import {
@@ -94,6 +95,9 @@ const CVFiche = ({ id }) => {
       />
     </Section>
   );
+};
+CVFiche.propTypes = {
+  id: PropTypes.number.isRequired,
 };
 
 export default CVFiche;

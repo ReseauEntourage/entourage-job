@@ -10,9 +10,10 @@ const CV = () => {
   return (
     <Layout
       title={`${id} - Entourage Jobs`}
-      metaUrl={`https://entourage-job-preprod.herokuapp.com/cv/${id}`}
+      metaTitle={`${id} - Entourage Jobs`}
+      metaUrl={`https://localhost:5001/cv/${id}`}
       metaDescription="Motivée et curieuse, j'aimerais beaucoup travailler dans la gestion ou l'administration mais reste ouverte à toutes autres propositions."
-      metaImage="https://entourage-job-preprod.herokuapp.com/static/img/arthur-preview.jpg"
+      metaImage="https://localhost:5001/static/img/arthur.png"
     >
       <div style={{ position: 'relative' }}>
         <CVBackground url="https://www.telegraph.co.uk/content/dam/Travel/2018/October/bear%20standing.jpg?imwidth=1400" />
