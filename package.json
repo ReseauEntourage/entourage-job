@@ -48,7 +48,8 @@
     "react-share": "^3.0.1",
     "sequelize": "^5.18.4",
     "sequelize-cli": "^5.5.1",
-    "uikit": "^3.1.7"
+    "uikit": "^3.1.7",
+    "validator": "^11.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

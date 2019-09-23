@@ -1,6 +1,11 @@
 import React, { Component } from "react";
+import FormValidator from "./FormValidator";
+import rulesContactCandidat from "./rulesContactCandidat";
+import FormValidatorErrorMessage from "./FormValidatorErrorMessage";
 
 export default class FormContactCandidat extends Component {
+
+  validator = new FormValidator(rulesContactCandidat);
 
   constructor(props) {
     super(props);
@@ -10,7 +15,7 @@ export default class FormContactCandidat extends Component {
       email: "",
       phone: "",
       job: "",
-      sectorActivity: "",
+      businessLine: "",
       company: "",
       localization: "",
       text: "",
@@ -29,9 +34,20 @@ export default class FormContactCandidat extends Component {
   }
 
   handleChange(event) {
-    console.log(event.target);
-    console.log(event.target.name + ": " + event.target.value);
-    this.setState({ [event.target.name]: event.target.value });
+    const key = event.target.name;
+    const content = event.target.value;
+
+    /* Validators start */
+    const state = {};
+    state[key] = content;
+    const validation = this.validator.validate(state);
+    if (validation[key] !== undefined) {
+      const stateValidation = {};
+      stateValidation["valid_" + key] = validation[key];
+      this.setState(stateValidation);
+    }
+    /* Validators end */
+    this.setState({ [key]: content });
   };
 
   handleSubmit(event) {
@@ -39,7 +55,18 @@ export default class FormContactCandidat extends Component {
   };
 
   render() {
-    console.log(this.state);
+    const {
+      valid_firstName,
+      valid_lastName,
+      valid_email,
+      valid_phone,
+      valid_job,
+      valid_businessLine,
+      valid_company,
+      valid_localization,
+      valid_message
+    } = this.state ? this.state : "";
+
     return (
       <form className="uk-form-stacked uk-grid-small" data-uk-grid>
         <div className="uk-width-1-4">
@@ -49,9 +76,10 @@ export default class FormContactCandidat extends Component {
               type="text"
               id="form-stacked-text"
               name="firstName"
-              className="uk-input"
+              className={"uk-input " + (valid_firstName !== undefined ? !valid_firstName.isInvalid ? "uk-form-success" : "uk-form-danger" : "")}
               placeholder="Votre prénom"
               onChange={this.handleChange.bind(this)} />
+            <FormValidatorErrorMessage valid_obj={valid_firstName} />
           </div>
         </div>
         <div className="uk-width-1-4">
@@ -61,21 +89,23 @@ export default class FormContactCandidat extends Component {
               type="text"
               id="form-stacked-text"
               name="lastName"
-              className="uk-input"
+              className={"uk-input " + (valid_lastName !== undefined ? !valid_lastName.isInvalid ? "uk-form-success" : "uk-form-danger" : "")}
               placeholder="Votre nom"
               onChange={this.handleChange.bind(this)} />
+            <FormValidatorErrorMessage valid_obj={valid_lastName} />
           </div>
         </div>
         <div className="uk-width-1-4">
-          <label className="uk-form-label" htmlFor="form-stacked-text">email</label>
+          <label className="uk-form-label" htmlFor="form-stacked-text">E-mail</label>
           <div className="uk-form-controls">
             <input
               type="email"
               id="form-stacked-text"
               name="email"
-              className="uk-input"
+              className={"uk-input " + (valid_email !== undefined ? !valid_email.isInvalid ? "uk-form-success" : "uk-form-danger" : "")}
               placeholder="E-mail de contact"
               onChange={this.handleChange.bind(this)} />
+            <FormValidatorErrorMessage valid_obj={valid_email} />
           </div>
         </div>
         <div className="uk-width-1-4">
@@ -85,9 +115,10 @@ export default class FormContactCandidat extends Component {
               type="text"
               id="form-stacked-text"
               name="phone"
-              className="uk-input"
+              className={"uk-input " + (valid_phone !== undefined ? !valid_phone.isInvalid ? "uk-form-success" : "uk-form-danger" : "")}
               placeholder="Votre numéro de téléphone"
               onChange={this.handleChange.bind(this)} />
+            <FormValidatorErrorMessage valid_obj={valid_phone} />
           </div>
         </div>
         <div className="uk-width-1-4">
@@ -97,23 +128,25 @@ export default class FormContactCandidat extends Component {
               type="text"
               id="form-stacked-text"
               name="job"
-              className="uk-input"
+              className={"uk-input " + (valid_job !== undefined ? !valid_job.isInvalid ? "uk-form-success" : "uk-form-danger" : "")}
               placeholder="Poste proposé"
               onChange={this.handleChange.bind(this)} />
+            <FormValidatorErrorMessage valid_obj={valid_job} />
           </div>
         </div>
         <div className="uk-width-1-4">
           <label className="uk-form-label" htmlFor="form-stacked-text">Secteur d'activité</label>
           <div className="uk-form-controls">
             <select
-              name="sectorActivity"
-              className="uk-select"
+              name="businessLine"
+              className={"uk-select " + (valid_businessLine !== undefined ? !valid_businessLine.isInvalid ? "uk-form-success" : "uk-form-danger" : "")}
               onChange={this.handleChange.bind(this)}
             >
               <option value="">Sélectionnez un secteur d'activité</option>
               <option value="Informatique">Informatique</option>
               <option value="Restauration">Restauration</option>
             </select>
+            <FormValidatorErrorMessage valid_obj={valid_businessLine} />
           </div>
         </div>
         <div className="uk-width-1-4">
@@ -123,9 +156,10 @@ export default class FormContactCandidat extends Component {
               type="text"
               id="form-stacked-text"
               name="company"
-              className="uk-input"
+              className={"uk-input " + (valid_company !== undefined ? !valid_company.isInvalid ? "uk-form-success" : "uk-form-danger" : "")}
               placeholder="Votre entreprise"
               onChange={this.handleChange.bind(this)} />
+            <FormValidatorErrorMessage valid_obj={valid_company} />
           </div>
         </div>
         <div className="uk-width-1-4">
@@ -135,9 +169,10 @@ export default class FormContactCandidat extends Component {
               type="text"
               id="form-stacked-text"
               name="localization"
-              className="uk-input"
+              className={"uk-input " + (valid_localization !== undefined ? !valid_localization.isInvalid ? "uk-form-success" : "uk-form-danger" : "")}
               placeholder="Localisation"
               onChange={this.handleChange.bind(this)} />
+            <FormValidatorErrorMessage valid_obj={valid_localization} />
           </div>
         </div>
         <div className="uk-width-1-1">
@@ -145,11 +180,12 @@ export default class FormContactCandidat extends Component {
           <div className="uk-form-controls">
             <textarea
               name="message"
-              className="uk-textarea"
+              className={"uk-textarea " + (valid_message !== undefined ? !valid_message.isInvalid ? "uk-form-success" : "uk-form-danger" : "")}
               rows="7"
               style={{ width: "100%" }}
               placeholder={"Votre message pour " + this.props.candidat.firstName}
               onChange={this.handleChange.bind(this)}></textarea>
+            <FormValidatorErrorMessage valid_obj={valid_message} />
           </div>
         </div>
         <div className="uk-flex uk-flex-right uk-width-1-1">
