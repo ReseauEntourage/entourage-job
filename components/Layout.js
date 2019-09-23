@@ -43,7 +43,7 @@ Layout.defaultProps = {
   metaImage:
     'https://entourage-job-preprod.herokuapp.com/static/img/entouragejobs-preview.jpg',
   metaDescription:
-    "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau.",
+    "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer. @Réseau Entourage",
   metaUrl: 'https://entourage-job-preprod.herokuapp.com/',
 };
 export default Layout;
