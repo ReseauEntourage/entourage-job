@@ -21,8 +21,11 @@ const Layout = ({
       <meta property="og:image" content={metaImage} />
       <meta property="og:url" content={metaUrl} />
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
+      <meta name="twitter:title" content={metaTitle} />
+      <meta name="twitter:description" content={metaDescription} />
+      <meta name="twitter:site" content="@R_Entourage" />
       <meta name="twitter:image" content={metaImage} />
+      {/* <meta name="fb:app_id" content="" /> */}
     </Head>
     <Header />
     {children}

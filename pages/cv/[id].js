@@ -26,6 +26,7 @@ const CV = ({ query: { id }, asPath }) => {
       metaImage={`${hostname}/static/img/arthur.png`}
     >
       <Head>
+        {/* <meta name="og:type" content="profile" /> */}
         <meta property="profile:username" content={id} />
       </Head>
       <div style={{ position: 'relative' }}>

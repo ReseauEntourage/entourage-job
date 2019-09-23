@@ -55,6 +55,7 @@ const CVPresentationCard = ({ name, description, link, email }) => {
         <TwitterShareButton
           url={link}
           quote={sharedDescription}
+          via="R_Entourage"
           style={{ cursor: 'pointer' }}
           className="uk-icon-link uk-text-primary primary uk-margin-right"
         >
