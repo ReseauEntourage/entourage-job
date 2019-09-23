@@ -97,7 +97,7 @@ const CVFiche = ({ id }) => {
   );
 };
 CVFiche.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default CVFiche;

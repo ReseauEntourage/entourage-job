@@ -30,7 +30,10 @@ const Layout = ({
   </Container>
 );
 Layout.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]).isRequired,
   title: PropTypes.string,
   metaTitle: PropTypes.string,
   metaImage: PropTypes.string,
