@@ -2,6 +2,8 @@ import React from 'react';
 import Head from 'next/head';
 import { Container } from 'next/app';
 import PropTypes from 'prop-types';
+import Footer from './Footer';
+import Header from './Header';
 
 const Layout = ({
   children,
@@ -22,7 +24,9 @@ const Layout = ({
       <meta property="og:url" content={metaUrl} />
       <meta name="twitter:card" content="summary_large_image" />
     </Head>
+    <Header />
     {children}
+    <Footer />
   </Container>
 );
 Layout.propTypes = {
