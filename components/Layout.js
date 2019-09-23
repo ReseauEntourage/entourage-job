@@ -16,13 +16,13 @@ const Layout = ({
   <Container>
     <Head>
       <title>{title}</title>
-      <meta name="twitter:title" content={title} />
       <meta property="og:title" content={metaTitle} />
       <meta property="og:description" content={metaDescription} />
       <meta property="og:image" content={metaImage} />
-      <meta name="twitter:image" content={metaImage} />
       <meta property="og:url" content={metaUrl} />
       <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:image" content={metaImage} />
     </Head>
     <Header />
     {children}
