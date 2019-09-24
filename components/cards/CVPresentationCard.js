@@ -9,11 +9,15 @@ import {
 import { IconNoSSR } from '../utils/Icon';
 import { Button } from '../utils';
 
-const CVPresentationCard = ({ name, description, link, email }) => {
-  // const sharedText =
-  //   "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau.";
-  const sharedDescription = `Donnons un coup de pouce à ${name} en partageant son CV`;
-  const sharedTitle = `${name} - Entourage Jobs`;
+const CVPresentationCard = ({
+  name,
+  description,
+  link,
+  email,
+  hashtags,
+  sharedTitle,
+  sharedDescription,
+}) => {
   return (
     <div className="uk-card uk-card-default uk-card-body uk-text-center uk-margin-medium ">
       <h1 className="uk-width-xxlarge uk-margin-auto">
@@ -47,6 +51,7 @@ const CVPresentationCard = ({ name, description, link, email }) => {
         <FacebookShareButton
           url={link}
           quote={sharedDescription}
+          hashtags={hashtags}
           style={{ cursor: 'pointer' }}
           className="uk-icon-link uk-text-primary uk-margin-right"
         >
@@ -54,7 +59,8 @@ const CVPresentationCard = ({ name, description, link, email }) => {
         </FacebookShareButton>
         <TwitterShareButton
           url={link}
-          quote={sharedDescription}
+          title={sharedDescription}
+          hashtags={hashtags}
           via="R_Entourage"
           style={{ cursor: 'pointer' }}
           className="uk-icon-link uk-text-primary primary uk-margin-right"
@@ -78,9 +84,15 @@ CVPresentationCard.propTypes = {
   description: PropTypes.element.isRequired,
   link: PropTypes.string.isRequired,
   email: PropTypes.string,
+  hashtags: PropTypes.arrayOf(PropTypes.string),
+  sharedTitle: PropTypes.string,
+  sharedDescription: PropTypes.string,
 };
 CVPresentationCard.defaultProps = {
   email: undefined,
+  hashtags: [],
+  sharedTitle: undefined,
+  sharedDescription: undefined,
 };
 
 export default CVPresentationCard;
