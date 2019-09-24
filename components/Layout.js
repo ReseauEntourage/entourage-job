@@ -17,6 +17,7 @@ const Layout = ({
   <Container>
     <Head>
       <title>{title}</title>
+      <link rel="icon" type="image/png" href="/static/img/fav.png" />
       <meta property="og:title" content={metaTitle} />
       <meta property="og:description" content={metaDescription} />
       <meta property="og:image" content={metaImage} />

@@ -45,34 +45,27 @@ const Footer = () => {
           </SimpleLink>
           <hr className="uk-divider-vertical uk-margin-small-right uk-margin-small-left" />
           <div className="uk-flex-center uk-flex uk-flex-middle">
-            <LinkedinShareButton
+            <SimpleLink
               className="uk-link-muted uk-padding-small"
-              url={sharedURL}
-              title={sharedTitle}
-              description={sharedDescription}
-              style={{ cursor: 'pointer' }}
+              href="https://www.linkedin.com/company/association-entourage/"
+              target="_blank"
             >
               <IconNoSSR name="linkedin" ratio={2} />
-            </LinkedinShareButton>
-            <FacebookShareButton
+            </SimpleLink>
+            <SimpleLink
               className="uk-link-muted uk-padding-small"
-              url={sharedURL}
-              quote={sharedDescription}
-              hashtags={hashtags}
-              style={{ cursor: 'pointer' }}
+              href="https://www.facebook.com/EntourageReseauCivique/"
+              target="_blank"
             >
               <IconNoSSR name="facebook" ratio={2} />
-            </FacebookShareButton>
-            <TwitterShareButton
+            </SimpleLink>
+            <SimpleLink
               className="uk-link-muted uk-padding-small"
-              url={sharedURL}
-              title={sharedDescription}
-              hashtags={hashtags}
-              via={viaTwitter}
-              style={{ cursor: 'pointer' }}
+              href="https://twitter.com/r_entourage/"
+              target="_blank"
             >
               <IconNoSSR name="twitter" ratio={2} />
-            </TwitterShareButton>
+            </SimpleLink>
           </div>
         </div>
       </Section>
