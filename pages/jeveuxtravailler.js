@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react';
-import { Button, Section, ImgNoSSR } from '../components/utils';
+import React from 'react';
+import Layout from '../components/Layout';
+import { Button, Section } from '../components/utils';
 import HowTo from '../components/partials/HowTo';
 import { DiscovertPartial } from '../components/partials';
 
@@ -24,7 +25,7 @@ const JeVeuxTravailler = () => {
   ];
 
   return (
-    <Fragment>
+    <Layout title="Je veux travailler - Entourage Jobs">
       <Section id="travailler1">
         <h1 className="uk-h1 uk-text-bold uk-text-center">
           Vous souhaitez <span className="uk-text-primary">travailler</span> ?
@@ -38,31 +39,39 @@ const JeVeuxTravailler = () => {
       </Section>
       <Section id="travailler3" style="secondary" size="small">
         <p className="uk-text-lead uk-text-center uk-align-center uk-width-2-3@s">
-          Nos candidats ont des papiers d'identités, une autorisation de travail sur le territoire français, un compte bancaire et une domiciliation.<br />
-          <span className="uk-text-bold">Nous vous aidons à réunir les mêmes conditions.</span>
+          Nos candidats ont des papiers d'identités, une autorisation de travail
+          sur le territoire français, un compte bancaire et une domiciliation.
+          <br />
+          <span className="uk-text-bold">
+            Nous vous aidons à réunir les mêmes conditions.
+          </span>
         </p>
       </Section>
       <Section id="travailler4">
         <h2 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
-          Là pour vous,<br />
-          <span className="uk-text-primary">qu'elle que soit votre situation</span>
+          Là pour vous,
+          <br />
+          <span className="uk-text-primary">
+            qu'elle que soit votre situation
+          </span>
         </h2>
-        <div className="uk-margin-large-top uk-child-width-1-2@m uk-child-width-1-1 uk-grid-match uk-grid-small" data-uk-grid>
+        <div
+          className="uk-margin-large-top uk-child-width-1-2@m uk-child-width-1-1 uk-grid-match uk-grid-small"
+          data-uk-grid
+        >
           <div>
             <div className="uk-card uk-card-large uk-card-default uk-card-body">
               <div className="uk-panel uk-flex uk-flex-middle" data-uk-grid>
                 <div className="uk-width-auto@s uk-width-1-1 uk-text-center">
                   <img
                     src="/static/img/illustrations/friendship.png"
-                    style={{ width: "150px", height: "150px" }}
+                    style={{ width: '150px', height: '150px' }}
                     alt="1"
                     className="uk-margin-remove-bottom uk-margin-small-right"
                   />
                 </div>
                 <div className="uk-width-expand@s uk-width-1-1 uk-text-left@m uk-text-center">
-                  <p>
-                    Je suis prêt à intégrer le dispositif
-                  </p>
+                  <p>Je suis prêt à intégrer le dispositif</p>
                   <Button style="primary">Je postule</Button>
                 </div>
               </div>
@@ -74,15 +83,13 @@ const JeVeuxTravailler = () => {
                 <div className="uk-width-auto@s uk-width-1-1 uk-text-center">
                   <img
                     src="/static/img/illustrations/entourage_help.png"
-                    style={{ width: "150px", height: "150px" }}
+                    style={{ width: '150px', height: '150px' }}
                     alt="2"
                     className="uk-margin-remove-bottom uk-margin-small-left"
                   />
                 </div>
                 <div className="uk-width-expand uk-text-left@m uk-text-center uk-flex-first@s">
-                  <p >
-                    Je me fais aider dans les démarches
-                  </p>
+                  <p>Je me fais aider dans les démarches</p>
                   <Button style="default">J'ai besoin d'aide</Button>
                 </div>
               </div>
@@ -92,7 +99,8 @@ const JeVeuxTravailler = () => {
       </Section>
       <Section id="travailler5" style="default">
         <h4 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
-          Vous souhaitez <span className="uk-text-primary">nous contacter et discuter ?</span>
+          Vous souhaitez{' '}
+          <span className="uk-text-primary">nous contacter et discuter ?</span>
         </h4>
         <div
           className="uk-align-center uk-text-center uk-margin-large-top"
@@ -107,7 +115,7 @@ const JeVeuxTravailler = () => {
         </div>
       </Section>
       <DiscovertPartial />
-    </Fragment>
+    </Layout>
   );
 };
 

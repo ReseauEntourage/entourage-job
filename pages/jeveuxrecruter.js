@@ -1,23 +1,29 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import Layout from '../components/Layout';
 import { Button, Section } from '../components/utils';
 import { DiscovertPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
 import HowTo from '../components/partials/HowTo';
 
 const JeVeuxRecruter = () => {
-  const ccm = [{
-    description: "Lorem ipsum lorem ipsum",
-    imgSrc: "/static/img/illustrations/entourage_phone.png"
-  }, {
-    description: "Lorem ipsum lorem ipsum",
-    imgSrc: "/static/img/illustrations/entourage_papers.png"
-  }, {
-    description: "Lorem ipsum lorem ipsum",
-    imgSrc: "/static/img/illustrations/entourage_meet.png"
-  }, {
-    description: "Lorem ipsum lorem ipsum",
-    imgSrc: "/static/img/illustrations/entourage_phone.png"
-  }];
+  const ccm = [
+    {
+      description: 'Lorem ipsum lorem ipsum',
+      imgSrc: '/static/img/illustrations/entourage_phone.png',
+    },
+    {
+      description: 'Lorem ipsum lorem ipsum',
+      imgSrc: '/static/img/illustrations/entourage_papers.png',
+    },
+    {
+      description: 'Lorem ipsum lorem ipsum',
+      imgSrc: '/static/img/illustrations/entourage_meet.png',
+    },
+    {
+      description: 'Lorem ipsum lorem ipsum',
+      imgSrc: '/static/img/illustrations/entourage_phone.png',
+    },
+  ];
 
   const reviews = [
     {
@@ -46,25 +52,37 @@ const JeVeuxRecruter = () => {
     },
   ];
 
-  const faq = [{
-    question: "Quels sont les types de contrat recherchés par les candidats ?",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  }, {
-    question: "Question 2",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  }, {
-    question: "Question 3",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  }, {
-    question: "Question 4",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  }, {
-    question: "Question 5",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  }];
+  const faq = [
+    {
+      question:
+        'Quels sont les types de contrat recherchés par les candidats ?',
+      answer:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    },
+    {
+      question: 'Question 2',
+      answer:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    },
+    {
+      question: 'Question 3',
+      answer:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    },
+    {
+      question: 'Question 4',
+      answer:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    },
+    {
+      question: 'Question 5',
+      answer:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    },
+  ];
 
   return (
-    <Fragment>
+    <Layout title="Je veux recruter - Entourage Jobs">
       <Section id="recruter1">
         <h1 className="uk-text-bold uk-text-center">
           Vous souhaitez <span className="uk-text-primary">recruter</span> un
@@ -146,8 +164,10 @@ const JeVeuxRecruter = () => {
           <hr className="uk-margin-large-bottom" />
           <ul data-uk-accordion>
             {faq.map((question, index) => (
-              <li className={index === 0 ? "uk-open" : undefined} key={index}>
-                <a className="uk-accordion-title" href="#">{question.question}</a>
+              <li className={index === 0 ? 'uk-open' : undefined} key={index}>
+                <a className="uk-accordion-title" href="#">
+                  {question.question}
+                </a>
                 <div className="uk-accordion-content">
                   <p>{question.answer}</p>
                 </div>
@@ -157,7 +177,7 @@ const JeVeuxRecruter = () => {
         </div>
       </Section>
       <DiscovertPartial />
-    </Fragment>
+    </Layout>
   );
 };
 

@@ -1,129 +1,52 @@
-import React, { DocumentMeta } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+// import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
+// import Link from 'next/link';
 import { DiscovertPartial, ContactPartial } from '../../components/partials';
-import { Section } from '../../components/utils';
-import { GridNoSSR } from '../../components/utils/Grid';
-import {
-  SkillsCard,
-  PassionsCard,
-  InfoProfileCard,
-  StoryProfileCard,
-  ExperiencesProfileCard,
-  ReviewCard,
-  CVPresentationCard,
-  CVBackground,
-} from '../../components/cards';
+import { CVBackground, CVFiche } from '../../components/cards';
+import Layout from '../../components/Layout';
 
-const CV = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const email = `${id}@gmail.com`;
-  const pageTitle = `${id} - Entourage Jobs`;
-  const link = `https://entourage-job-preprod.herokuapp.com/cv/${id}`;
-  const backgroundUrl =
-    'https://www.telegraph.co.uk/content/dam/Travel/2018/October/bear%20standing.jpg?imwidth=1400';
-  const description =
-    'Motivée et curieuse, j&apos;aimerais beaucoup travailler dans la gestion ou l&apos;administration mais reste ouverte à toutes autres propositions.';
+const CV = ({ query: { id }, asPath }) => {
+  // const router = useRouter();
+  // Probleme: Je n'utilise pas ça car il y a un probleme avec l'appel de query
+  // Lors de l'affichage, il appel 2 fois la page. La premiere ne contient pas d'information: id = undefined
+  // La seconde est correct. Cela créé un probleme pour la recuperation de la page par le partage (exemple pour linkedin qui recupere id = undefined)
+  // Objectif: const { id } = router.query;
+  // Bidouille: recupération de l'id selon le format "/cv/[id]"
+  // const id = 'arthur';
+  const hostname = 'https://entourage-job-preprod.herokuapp.com';
+  const backgroundCV = '/static/img/arthur-background.jpg';
   return (
-    <div style={{ position: 'relative' }}>
+    <Layout
+      title={`${id} - Entourage Jobs`}
+      metaTitle={`${id} - Entourage Jobs`}
+      metaUrl={`${hostname}${asPath}`}
+      metaDescription="Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer. @Réseau Entourage"
+      metaImage={`${hostname}/static/img/arthur.png`}
+    >
       <Head>
-        <title>{pageTitle}</title>
-        <meta property="og:title" content={pageTitle} />
-        <meta
-          name="twitter:image"
-          content="https://entourage-job-preprod.herokuapp.com/static/img/arthur-preview.jpg"
-        />
-        <meta
-          property="og:image"
-          content="https://entourage-job-preprod.herokuapp.com/static/img/arthur-preview.jpg"
-        />
-        <meta property="og:description" content={description} />
-        <meta property="og:url" content={link} />
+        {/* <meta name="og:type" content="profile" /> */}
+        <meta property="profile:username" content={id} />
       </Head>
-      <CVBackground url={backgroundUrl} />
-      <Section>
-        <CVPresentationCard
-          name={id}
-          link={link}
-          email={email}
-          description={
-            <span>
-              Motivée et curieuse, j&apos;aimerais beaucoup travailler dans
-              <span className="uk-text-primary"> la gestion </span>ou
-              <span className="uk-text-primary"> l&apos;administration </span>
-              mais reste ouverte à toutes autres propositions.
-            </span>
-          }
-        />
-        <GridNoSSR
-          childWidths={['1-2@s']}
-          match
-          items={[
-            <InfoProfileCard
-              contrat="CDI/CDD"
-              location="Paris et proche"
-              period="Semaine - Week-end (jour et nuit)"
-              language="Français - Anglais(notions) - Arabe (notions)"
-              car="Pas de permis"
-            />,
-            <GridNoSSR
-              childWidths={['1-2@m']}
-              match
-              items={[
-                <SkillsCard
-                  list={[
-                    "à l'écoute",
-                    'emphatique',
-                    'sociable',
-                    'optimiste',
-                    'ponctuelle',
-                    'motivée',
-                  ]}
-                />,
-                <PassionsCard
-                  list={['Cinéma', 'Histoire / Géopolitique', 'Sport']}
-                />,
-              ]}
-            />,
-          ]}
-        />
-        <GridNoSSR
-          childWidths={['1-2@s']}
-          items={[
-            <GridNoSSR
-              items={[
-                <StoryProfileCard description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris. Integer lacinia diam quam, a auctor eros egestas vitae. Aliquam at ante convallis, gravida diam porttitor, ultricies metus. Integer in est urna. Maecenas ullamcorper, lorem id euismod malesuada, arcu orci suscipit nulla, sed rhoncus orci nibh vitae leo. Nulla ut nibh quis lacus tempor pretium." />,
-                <ReviewCard
-                  picture="/static/img/arthur.png"
-                  review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
-                  author="Hervé"
-                  role="Assistant social"
-                />,
-                <ReviewCard
-                  picture="/static/img/arthur.png"
-                  review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
-                  author="Hervé"
-                  role="Assistant social"
-                />,
-              ]}
-            />,
-            <ExperiencesProfileCard
-              experiences={Array(6).fill({
-                dateStart: 'Mai 2018',
-                dateEnd: 'Janvier 2019',
-                title: 'Secretaire comptable et chagée de recouvrement',
-                description:
-                  'Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris.',
-              })}
-            />,
-          ]}
-        />
-      </Section>
-      <ContactPartial />
-      <DiscovertPartial />
-    </div>
+      <div style={{ position: 'relative' }}>
+        <CVBackground url={backgroundCV} />
+        <CVFiche id={id} />
+        <ContactPartial />
+        <DiscovertPartial />
+      </div>
+    </Layout>
   );
 };
 
+CV.getInitialProps = ({ query, asPath }) => {
+  return { query, asPath };
+};
+
+CV.propTypes = {
+  query: PropTypes.shape({
+    id: PropTypes.string,
+  }).isRequired,
+  asPath: PropTypes.string.isRequired,
+};
 export default CV;

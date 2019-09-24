@@ -12,3 +12,4 @@ export { default as ExperiencesProfileCard } from './ExperiencesProfileCard';
 export { default as CommentProfileCard } from './CommentProfileCard';
 export { default as CVPresentationCard } from './CVPresentationCard';
 export { default as CVBackground } from './CVBackground';
+export { default as CVFiche } from './CVFiche';

@@ -19,6 +19,7 @@ const Header = () => {
   return (
     <header>
       <NavbarNoSSR
+        sticky
         left={
           <NavbarLogo
             href="/"

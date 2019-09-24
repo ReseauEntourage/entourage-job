@@ -1,4 +1,5 @@
 import React from 'react';
+import Layout from '../components/Layout';
 import {
   LandingPagePartial,
   EmphasePartial,
@@ -34,14 +35,14 @@ const Index = () => {
   ];
 
   return (
-    <div>
+    <Layout>
       <LandingPagePartial presentations={presentations} />
       <EmphasePartial />
       <CandidatListPartial />
       <DifferencePartial />
       <NumberPartial numbers={numbers} />
       <ContactPartial />
-    </div>
+    </Layout>
   );
 };
 export default Index;
