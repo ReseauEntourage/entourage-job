@@ -15,7 +15,9 @@ const CV = ({ query: { id }, asPath }) => {
   const name = id.charAt(0).toUpperCase() + id.slice(1).toLowerCase();
   const title = `${name} - Entourage Jobs`;
   const sharedTitle = `Aidez ${name} en partageant son CV.`;
-  const sharedDescription = `Donnons un coup de pouce à ${name} en partageant son CV.`;
+  // `Donnons un coup de pouce à ${name} en partageant son CV.`;
+  const sharedDescription =
+    'Motivée et curieuse, j&apos;aimerais beaucoup travailler dans la gestion ou l&apos;administration mais reste ouverte à toutes autres propositions.';
   const quote =
     "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer. @Réseau Entourage";
 
