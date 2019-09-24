@@ -5,7 +5,7 @@ import { CVBackground, CVFiche } from '../../components/cards';
 import Layout from '../../components/Layout';
 
 const CV = ({ query: { id }, asPath }) => {
-  const hashtags = [];
+  const hashtags = ['LinkedOut'];
   const hostname = 'https://entourage-job-preprod.herokuapp.com';
   const backgroundCV = '/static/img/arthur-background.jpg';
 
@@ -13,15 +13,18 @@ const CV = ({ query: { id }, asPath }) => {
   const link = `https://entourage-job-preprod.herokuapp.com/cv/${id}`;
 
   const name = id.charAt(0).toUpperCase() + id.slice(1).toLowerCase();
-  const sharedDescription = `Donnons un coup de pouce à ${name} en partageant son CV`;
   const title = `${name} - Entourage Jobs`;
+  const sharedTitle = `Aidez ${name} en partageant son CV.`;
+  const sharedDescription = `Donnons un coup de pouce à ${name} en partageant son CV.`;
+  const quote =
+    "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer. @Réseau Entourage";
 
   return (
     <Layout
       title={title}
-      metaTitle={title}
+      metaTitle={sharedTitle}
       metaUrl={`${hostname}${asPath}`}
-      metaDescription="Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer. @Réseau Entourage"
+      metaDescription={sharedDescription}
       metaImage={`${hostname}/static/img/arthur.png`}
       metaType="profile"
     >
@@ -32,8 +35,8 @@ const CV = ({ query: { id }, asPath }) => {
           email={email}
           link={link}
           hashtags={hashtags}
-          sharedDescription={sharedDescription}
-          sharedTitle={title}
+          sharedDescription={quote}
+          sharedTitle={sharedTitle}
         />
         <ContactPartial />
         <DiscovertPartial />

@@ -48,9 +48,9 @@ Layout.propTypes = {
 };
 Layout.defaultProps = {
   title: 'Entourage Jobs',
-  metaTitle: 'Entourage Jobs',
-  metaImage:
-    'https://entourage-job-preprod.herokuapp.com/static/img/entouragejobs-preview.jpg',
+  metaTitle:
+    'Faites don de votre visibilité avec LinkedOut. Un partage peut tout changer.',
+  metaImage: '/static/img/entouragejobs-preview.jpg',
   metaDescription:
     "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer. @Réseau Entourage",
   metaUrl: 'https://entourage-job-preprod.herokuapp.com/',
