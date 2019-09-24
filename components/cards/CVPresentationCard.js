@@ -8,6 +8,7 @@ import {
 } from 'react-share';
 import { IconNoSSR } from '../utils/Icon';
 import { Button } from '../utils';
+import ModalContactCandidat from '../modals/ModalContactCandidat';
 
 const CVPresentationCard = ({
   name,
@@ -29,14 +30,13 @@ const CVPresentationCard = ({
         <IconNoSSR name="quote-right" ratio={2} />
       </span>
       <p className="uk-width-xlarge uk-margin-auto">{description}</p>
-      <Button
-        href={`mailto:${email}`}
-        style="primary"
-        disabled={email === undefined}
-        isExternal
+      <button
+        className="uk-button uk-button-primary"
+        data-uk-toggle="target: #modalContactCandidat"
       >
         J'écris à {name}
-      </Button>
+      </button>
+      <ModalContactCandidat />
       <p>partagez le CV de {name} sur vos réseaux</p>
       <div className="uk-flex uk-flex-row uk-flex-center">
         <LinkedinShareButton
