@@ -8,8 +8,11 @@ import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
 
 const Footer = () => {
   const sharedURL = 'https://entourage-job-preprod.herokuapp.com/';
-  const sharedText =
+  const sharedTitle = 'Entourage Jobs';
+  const sharedDescription =
     "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau.";
+  const hashtags = [];
+  const viaTwitter = 'R_Entourage';
   return (
     <footer id="footer">
       <Section style="secondary" size="medium">
@@ -45,14 +48,17 @@ const Footer = () => {
             <LinkedinShareButton
               className="uk-link-muted uk-padding-small"
               url={sharedURL}
-              style={{ cursor: 'pointedr' }}
+              title={sharedTitle}
+              description={sharedDescription}
+              style={{ cursor: 'pointer' }}
             >
               <IconNoSSR name="linkedin" ratio={2} />
             </LinkedinShareButton>
             <FacebookShareButton
               className="uk-link-muted uk-padding-small"
               url={sharedURL}
-              quote={sharedText}
+              quote={sharedDescription}
+              hashtags={hashtags}
               style={{ cursor: 'pointer' }}
             >
               <IconNoSSR name="facebook" ratio={2} />
@@ -60,7 +66,9 @@ const Footer = () => {
             <TwitterShareButton
               className="uk-link-muted uk-padding-small"
               url={sharedURL}
-              title={sharedText}
+              title={sharedDescription}
+              hashtags={hashtags}
+              via={viaTwitter}
               style={{ cursor: 'pointer' }}
             >
               <IconNoSSR name="twitter" ratio={2} />
