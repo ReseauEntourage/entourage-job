@@ -16,6 +16,9 @@ Architecture en place :
 
 
 Pour la base de données :
-- Si elle n'existe pas : sequelize db:create
-- Migrations de la structure : sequelize db:migrate:all
-- Intégration de données de test : sequelize db:seed:all
+(Initialisation)
+- Si elle n'existe pas : npx sequelize-cli db:create
+- Migrations de la structure : npx sequelize-cli db:migrate:all
+- Intégration de données de test : npx sequelize-cli db:seed:all
+(Par la suite)
+- npx sequelize-cli db:migrate
