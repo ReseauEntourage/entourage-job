@@ -12,15 +12,23 @@ import {
   CVPresentationCard,
 } from '.';
 
-const CVFiche = ({ id }) => {
-  const email = `${id}@gmail.com`;
-  const link = `https://entourage-job-preprod.herokuapp.com/cv/${id}`;
+const CVFiche = ({
+  name,
+  email,
+  link,
+  hashtags,
+  sharedDescription,
+  sharedTitle,
+}) => {
   return (
     <Section>
       <CVPresentationCard
-        name={id}
+        name={name}
         link={link}
         email={email}
+        hashtags={hashtags}
+        sharedTitle={sharedTitle}
+        sharedDescription={sharedDescription}
         description={
           <span>
             Motivée et curieuse, j&apos;aimerais beaucoup travailler dans
@@ -96,8 +104,18 @@ const CVFiche = ({ id }) => {
     </Section>
   );
 };
+
 CVFiche.propTypes = {
-  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired,
+  sharedDescription: PropTypes.string.isRequired,
+  sharedTitle: PropTypes.string.isRequired,
+  hashtags: PropTypes.arrayOf(PropTypes.string),
+};
+
+CVFiche.defaultProps = {
+  hashtags: [],
 };
 
 export default CVFiche;
