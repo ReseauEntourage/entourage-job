@@ -73,9 +73,14 @@
   },
   {
     "field": "phone",
-    "method": "isNumeric",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 50
+      }
+    ],
     "validWhen": true,
-    "message": "Format non valide"
+    "message": "30 caractères maximum"
   },
   {
     "field": "job",
