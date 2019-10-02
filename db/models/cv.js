@@ -96,6 +96,12 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'CVId',
       otherKey: 'SkillId',
     });
+    CV.belongsToMany(models.Language, {
+      through: 'CV_Language',
+      as: 'Languages',
+      foreignKey: 'CVId',
+      otherKey: 'LanguageId',
+    });
   };
   return CV;
 };
