@@ -1,23 +1,101 @@
-'use strict';
-
-const uuid = require("uuid/v4");
+const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
-  const CV = sequelize.define('CV', {
-    firstname: DataTypes.STRING,
-    lastname: DataTypes.STRING,
-    intro: DataTypes.TEXT,
-    contract: DataTypes.STRING,
-    location: DataTypes.STRING,
-    story: DataTypes.TEXT,
-    status: DataTypes.STRING,
-    transport: DataTypes.STRING
-  }, {});
+  const CV = sequelize.define(
+    'CV',
+    {
+      firstName: {
+        type: DataTypes.STRING,
+        validate: {
+          len: {
+            args: [1, 30],
+            msg: '30 caractères maximum pour le prénom',
+          },
+          notEmpty: {
+            args: true,
+            msg: 'Un prénom est requis',
+          },
+        },
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        /* validate: {
+          len: {
+            args: [1, 30],
+            msg: '30 caractères maximum pour le nom',
+          },
+          notEmpty: {
+            args: true,
+            msg: 'Un nom est requis',
+          },
+        }, */
+      },
+      intro: {
+        type: DataTypes.TEXT,
+        /* validate: {
+          len: {
+            args: [1, 2000],
+            msg: "2000 caractères maximum pour l'introduction",
+          },
+          notEmpty: {
+            args: true,
+            msg: "L'introduction est requise",
+          },
+        }, */
+      },
+      location: {
+        type: DataTypes.STRING,
+        /* validate: {
+          len: {
+            args: [1, 100],
+            msg: '100 caractères maximum pour la localisation',
+          },
+          notEmpty: {
+            args: true,
+            msg: 'La localisation est requise',
+          },
+        }, */
+      },
+      story: {
+        type: DataTypes.TEXT,
+        /* validate: {
+          len: {
+            args: [1, 8000],
+            msg: '8000 caractères maximum pour la story',
+          },
+          notEmpty: {
+            args: true,
+            msg: 'La story est requise',
+          },
+        }, */
+      },
+      status: DataTypes.STRING,
+      transport: {
+        type: DataTypes.STRING,
+        /* validate: {
+          len: {
+            args: [1, 100],
+            msg: '100 caractères maximum pour le transport',
+          },
+          notEmpty: {
+            args: true,
+            msg: 'Transport est requis',
+          },
+        }, */
+      },
+    },
+    {}
+  );
   CV.beforeCreate((cv, _) => {
-    return cv.id = uuid();
+    return (cv.id = uuid());
   });
-  CV.associate = function (models) {
-    CV.hasMany(models.CV_skill, { as: "Skills" })
+  CV.associate = function(models) {
+    CV.belongsToMany(models.Skill, {
+      through: 'CV_Skill',
+      as: 'Skills',
+      foreignKey: 'CVId',
+      otherKey: 'SkillId',
+    });
   };
   return CV;
 };
