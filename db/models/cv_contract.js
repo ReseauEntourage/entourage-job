@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
-      contractId: {
+      ContractId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {

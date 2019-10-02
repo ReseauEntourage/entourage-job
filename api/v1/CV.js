@@ -5,9 +5,11 @@ const router = express.Router();
 const sequelize = require('sequelize');
 const db = require('../../db/config/databaseConnect');
 const CV = require('../../db/models/cv')(db, sequelize.DataTypes);
+const Contract = require('../../db/models/contract')(db, sequelize.DataTypes);
 const Language = require('../../db/models/language')(db, sequelize.DataTypes);
 const Skill = require('../../db/models/skill')(db, sequelize.DataTypes);
 
+CV.belongsToMany(Contract, { through: 'CV_Contracts' });
 CV.belongsToMany(Language, { through: 'CV_Languages' });
 CV.belongsToMany(Skill, { through: 'CV_Skills' });
 
@@ -19,12 +21,17 @@ router.get('/', (req, res) => {
   CV.findAll({
     include: [
       {
-        model: Skill,
+        model: Contract,
         through: { attributes: [] },
         attributes: ['id', 'name'],
       },
       {
         model: Language,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
+      {
+        model: Skill,
         through: { attributes: [] },
         attributes: ['id', 'name'],
       },
@@ -119,16 +126,41 @@ router.post('/', (req, res) => {
       }
     })
     .then(() => {
+      if (req.body.contracts) {
+        const contractsPromise = req.body.contracts.map((contract) => {
+          return Contract.findOrCreate({ where: { name: contract } });
+        });
+        return Promise.all(contractsPromise);
+      } else {
+        return Promise.resolve([]);
+      }
+    })
+    .then((contracts) => {
+      if (contracts) {
+        const listContracts = contracts.map((contract) => {
+          return contract[0];
+        });
+        return cvCreated.addContracts(listContracts);
+      } else {
+        return Promise.resolve();
+      }
+    })
+    .then(() => {
       console.log('Etape 6 - Reprendre le CV complet :');
       return CV.findByPk(cvCreated.dataValues.id, {
         include: [
           {
-            model: Skill,
+            model: Contract,
             through: { attributes: [] },
             attributes: ['id', 'name'],
           },
           {
             model: Language,
+            through: { attributes: [] },
+            attributes: ['id', 'name'],
+          },
+          {
+            model: Skill,
             through: { attributes: [] },
             attributes: ['id', 'name'],
           },
