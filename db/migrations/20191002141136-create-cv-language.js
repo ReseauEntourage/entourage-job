@@ -7,7 +7,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      CVid: {
+      CVId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {

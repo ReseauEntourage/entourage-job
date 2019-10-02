@@ -5,8 +5,10 @@ const router = express.Router();
 const sequelize = require('sequelize');
 const db = require('../../db/config/databaseConnect');
 const CV = require('../../db/models/cv')(db, sequelize.DataTypes);
+const Language = require('../../db/models/language')(db, sequelize.DataTypes);
 const Skill = require('../../db/models/skill')(db, sequelize.DataTypes);
 
+CV.belongsToMany(Language, { through: 'CV_Languages' });
 CV.belongsToMany(Skill, { through: 'CV_Skills' });
 
 /**
@@ -18,6 +20,11 @@ router.get('/', (req, res) => {
     include: [
       {
         model: Skill,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
+      {
+        model: Language,
         through: { attributes: [] },
         attributes: ['id', 'name'],
       },
@@ -40,7 +47,7 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   let cvCreated;
 
-  console.log('Etape 1 :');
+  console.log('Etape 1 - Création du CV de base :');
   CV.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName || '',
@@ -51,8 +58,8 @@ router.post('/', (req, res) => {
     transport: req.body.transport || '',
   })
     .then((cv) => {
-      console.log('Etape 2 :');
       cvCreated = cv;
+      console.log('Etape 2 - Skills:');
       if (req.body.skills) {
         console.log("j'ai des skills");
         const skillsPromise = req.body.skills.map((skill) => {
@@ -65,7 +72,7 @@ router.post('/', (req, res) => {
       }
     })
     .then((skills) => {
-      console.log('Etape 3 :');
+      console.log('Etape 3 - Relation CV / Skills:');
       console.log(skills);
       if (skills) {
         console.log('Skills trouvés ou créé');
@@ -82,11 +89,46 @@ router.post('/', (req, res) => {
       }
     })
     .then(() => {
-      console.log('Etape 4 :');
+      console.log('Etape 4 - Langues :');
+      if (req.body.languages) {
+        console.log("j'ai des langues");
+        const languagesPromise = req.body.languages.map((language) => {
+          return Language.findOrCreate({ where: { name: language } });
+        });
+        console.log('languagesPromise créée');
+        return Promise.all(languagesPromise);
+      } else {
+        return Promise.resolve([]);
+      }
+    })
+    .then((languages) => {
+      console.log('Etape 5 - Relation CV / Langues :');
+      console.log(languages);
+      if (languages) {
+        console.log('Skills trouvés ou créé');
+        console.log(languages);
+        const listLanguages = languages.map((language) => {
+          return language[0];
+        });
+        console.log('Skills propres');
+        console.log(listLanguages);
+        console.log('listLanguages a ', listLanguages.length, ' emplacements');
+        return cvCreated.addLanguages(listLanguages);
+      } else {
+        return Promise.resolve();
+      }
+    })
+    .then(() => {
+      console.log('Etape 6 - Reprendre le CV complet :');
       return CV.findByPk(cvCreated.dataValues.id, {
         include: [
           {
             model: Skill,
+            through: { attributes: [] },
+            attributes: ['id', 'name'],
+          },
+          {
+            model: Language,
             through: { attributes: [] },
             attributes: ['id', 'name'],
           },
