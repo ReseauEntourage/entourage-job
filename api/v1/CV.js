@@ -7,10 +7,12 @@ const db = require('../../db/config/databaseConnect');
 const CV = require('../../db/models/cv')(db, sequelize.DataTypes);
 const Contract = require('../../db/models/contract')(db, sequelize.DataTypes);
 const Language = require('../../db/models/language')(db, sequelize.DataTypes);
+const Passion = require('../../db/models/passion')(db, sequelize.DataTypes);
 const Skill = require('../../db/models/skill')(db, sequelize.DataTypes);
 
 CV.belongsToMany(Contract, { through: 'CV_Contracts' });
 CV.belongsToMany(Language, { through: 'CV_Languages' });
+CV.belongsToMany(Passion, { through: 'CV_Passions' });
 CV.belongsToMany(Skill, { through: 'CV_Skills' });
 
 /**
@@ -27,6 +29,11 @@ router.get('/', (req, res) => {
       },
       {
         model: Language,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
+      {
+        model: Passion,
         through: { attributes: [] },
         attributes: ['id', 'name'],
       },
@@ -146,6 +153,26 @@ router.post('/', (req, res) => {
       }
     })
     .then(() => {
+      if (req.body.passions) {
+        const passionsPromise = req.body.passions.map((passion) => {
+          return Passion.findOrCreate({ where: { name: passion } });
+        });
+        return Promise.all(passionsPromise);
+      } else {
+        return Promise.resolve([]);
+      }
+    })
+    .then((passions) => {
+      if (passions) {
+        const listPassions = passions.map((passion) => {
+          return passion[0];
+        });
+        return cvCreated.addPassions(listPassions);
+      } else {
+        return Promise.resolve();
+      }
+    })
+    .then(() => {
       console.log('Etape 6 - Reprendre le CV complet :');
       return CV.findByPk(cvCreated.dataValues.id, {
         include: [
@@ -156,6 +183,11 @@ router.post('/', (req, res) => {
           },
           {
             model: Language,
+            through: { attributes: [] },
+            attributes: ['id', 'name'],
+          },
+          {
+            model: Passion,
             through: { attributes: [] },
             attributes: ['id', 'name'],
           },

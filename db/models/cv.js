@@ -108,6 +108,12 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'CVId',
       otherKey: 'ContractId',
     });
+    CV.belongsToMany(models.Passion, {
+      through: 'CV_Passion',
+      as: 'Passions',
+      foreignKey: 'CVId',
+      otherKey: 'PassionId',
+    });
   };
   return CV;
 };
