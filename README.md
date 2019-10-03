@@ -14,12 +14,12 @@ Architecture en place :
 - _srv-express.js_ : Partie **Express.js**
 
 Pour la base de données :
-(Initialisation)
+( Initialisation )
 
 - Si elle n'existe pas : sequelize db:create
 - Migrations de la structure : sequelize db:migrate
 - Intégration de données de test : sequelize db:seed:all
 
-(Par la suite)
+( Par la suite )
 
 - sequelize db:migrate
