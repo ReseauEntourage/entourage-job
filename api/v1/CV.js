@@ -6,6 +6,10 @@ const sequelize = require('sequelize');
 const db = require('../../db/config/databaseConnect');
 const CV = require('../../db/models/cv')(db, sequelize.DataTypes);
 const Contract = require('../../db/models/contract')(db, sequelize.DataTypes);
+const Experience = require('../../db/models/experience')(
+  db,
+  sequelize.DataTypes
+);
 const Language = require('../../db/models/language')(db, sequelize.DataTypes);
 const Passion = require('../../db/models/passion')(db, sequelize.DataTypes);
 const Skill = require('../../db/models/skill')(db, sequelize.DataTypes);
@@ -14,6 +18,8 @@ CV.belongsToMany(Contract, { through: 'CV_Contracts' });
 CV.belongsToMany(Language, { through: 'CV_Languages' });
 CV.belongsToMany(Passion, { through: 'CV_Passions' });
 CV.belongsToMany(Skill, { through: 'CV_Skills' });
+CV.hasMany(Experience);
+Experience.belongsTo(CV);
 
 /**
  * Titre : Find all CVs
@@ -26,6 +32,10 @@ router.get('/', (req, res) => {
         model: Contract,
         through: { attributes: [] },
         attributes: ['id', 'name'],
+      },
+      {
+        model: Experience,
+        attributes: ['id', 'dateStart', 'dateEnd', 'title', 'description'],
       },
       {
         model: Language,
@@ -173,6 +183,24 @@ router.post('/', (req, res) => {
       }
     })
     .then(() => {
+      if (req.body.experiences) {
+        const experiencesPromise = req.body.experiences.map((experience) => {
+          return Experience.findOrCreate({
+            where: {
+              CVId: cvCreated.dataValues.id,
+              dateStart: experience.dateStart,
+              dateEnd: experience.dateEnd,
+              title: experience.title,
+              description: experience.description,
+            },
+          });
+        });
+        return Promise.all(experiencesPromise);
+      } else {
+        return Promise.resolve([]);
+      }
+    })
+    .then(() => {
       console.log('Etape 6 - Reprendre le CV complet :');
       return CV.findByPk(cvCreated.dataValues.id, {
         include: [
@@ -180,6 +208,10 @@ router.post('/', (req, res) => {
             model: Contract,
             through: { attributes: [] },
             attributes: ['id', 'name'],
+          },
+          {
+            model: Experience,
+            attributes: ['id', 'dateStart', 'dateEnd', 'title', 'description'],
           },
           {
             model: Language,
