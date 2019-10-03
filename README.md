@@ -13,12 +13,13 @@ Architecture en place :
 - _app.json_ : Fichier de configuration d'**Heroku** (Permet d'indiquer des variables d'environnement)
 - _srv-express.js_ : Partie **Express.js**
 
-
-
 Pour la base de données :
 (Initialisation)
-- Si elle n'existe pas : npx sequelize-cli db:create
-- Migrations de la structure : npx sequelize-cli db:migrate:all
-- Intégration de données de test : npx sequelize-cli db:seed:all
+
+- Si elle n'existe pas : sequelize db:create
+- Migrations de la structure : sequelize db:migrate
+- Intégration de données de test : sequelize db:seed:all
+
 (Par la suite)
-- npx sequelize-cli db:migrate
+
+- sequelize db:migrate
