@@ -1,11 +1,10 @@
 /* eslint-disable camelcase */
-const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
-  const CV_Skill = sequelize.define(
-    'CV_Skill',
+  const CV_Language = sequelize.define(
+    'CV_Language',
     {
-      CVId: {
+      CVid: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
@@ -13,22 +12,19 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
-      SkillId: {
+      LanguageId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'Skills',
+          model: 'Languages',
           key: 'id',
         },
       },
     },
     {}
   );
-  CV_Skill.beforeCreate((cvSkill, _) => {
-    return (cvSkill.id = uuid());
-  });
-  CV_Skill.associate = function(models) {
+  CV_Language.associate = function(models) {
     // associations can be defined here
   };
-  return CV_Skill;
+  return CV_Language;
 };

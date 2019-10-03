@@ -1,6 +1,9 @@
 const express = require('express');
 const next = require('next');
 
+const routeCV = require('./api/v1/CV');
+const routeMessage = require('./api/v1/Message');
+
 const PORT = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -12,12 +15,9 @@ app
   .then(() => {
     const server = express();
 
-    server.use(express.json())
-
-    server.use("/api/v1/cv", require("./api/v1/CV"));
-    server.use("/api/v1/cv_skill", require("./api/v1/CV_Skill"));
-    server.use("/api/v1/message", require("./api/v1/Message"));
-
+    server.use(express.json());
+    server.use('/api/v1/cv', routeCV);
+    server.use('/api/v1/message', routeMessage);
     server.get('*', (req, res) => {
       return handle(req, res);
     });
