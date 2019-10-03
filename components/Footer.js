@@ -1,18 +1,7 @@
 import React from 'react';
-import {
-  FacebookShareButton,
-  LinkedinShareButton,
-  TwitterShareButton,
-} from 'react-share';
 import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
 
 const Footer = () => {
-  const sharedURL = 'https://entourage-job-preprod.herokuapp.com/';
-  const sharedTitle = 'Entourage Jobs';
-  const sharedDescription =
-    "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau.";
-  const hashtags = [];
-  const viaTwitter = 'R_Entourage';
   return (
     <footer id="footer">
       <Section style="secondary" size="medium">
@@ -28,7 +17,9 @@ const Footer = () => {
               <SimpleLink href="/contact">Contact</SimpleLink>
             </div>,
             <div className="uk-h4 uk-text-center">
-              <SimpleLink href="/entourage-social">Entourage social</SimpleLink>
+              <SimpleLink href="https://www.entourage.social">
+                Entourage social
+              </SimpleLink>
             </div>,
             <div className="uk-h4 uk-text-center">
               <SimpleLink href="/about">À propos d&apos;Entourage</SimpleLink>
@@ -36,7 +27,7 @@ const Footer = () => {
           ]}
         />
         <div className="uk-flex-center uk-flex uk-flex-middle uk-margin-top">
-          <SimpleLink href="/">
+          <SimpleLink href="https://www.entourage.social">
             <ImgNoSSR
               src="/static/img/logo-entourage.svg"
               alt="logo-entourage"
