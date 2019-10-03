@@ -15,11 +15,11 @@
     "method": "isLength",
     "args": [
       {
-        "max": 30
+        "max": 40
       }
     ],
     "validWhen": true,
-    "message": "30 caractères maximum"
+    "message": "40 caractères maximum"
   },
   {
     "field": "lastName",
@@ -37,11 +37,11 @@
     "method": "isLength",
     "args": [
       {
-        "max": 30
+        "max": 40
       }
     ],
     "validWhen": true,
-    "message": "30 caractères maximum"
+    "message": "40 caractères maximum"
   },
   {
     "field": "email",
@@ -62,36 +62,14 @@
   },
   {
     "field": "phone",
-    "method": "isEmpty",
-    "args": [
-      {
-        "ignore_whitespace": true
-      }
-    ],
-    "validWhen": false,
-    "message": "Obligatoire"
-  },
-  {
-    "field": "phone",
     "method": "isLength",
     "args": [
       {
-        "max": 50
+        "max": 30
       }
     ],
     "validWhen": true,
     "message": "30 caractères maximum"
-  },
-  {
-    "field": "job",
-    "method": "isEmpty",
-    "args": [
-      {
-        "ignore_whitespace": true
-      }
-    ],
-    "validWhen": false,
-    "message": "Obligatoire"
   },
   {
     "field": "job",
@@ -103,28 +81,6 @@
     ],
     "validWhen": true,
     "message": "60 caractères maximum"
-  },
-  {
-    "field": "businessLine",
-    "method": "isLength",
-    "args": [
-      {
-        "min": 1
-      }
-    ],
-    "validWhen": true,
-    "message": "Saisissez 1 secteur d'activité"
-  },
-  {
-    "field": "company",
-    "method": "isEmpty",
-    "args": [
-      {
-        "ignore_whitespace": true
-      }
-    ],
-    "validWhen": false,
-    "message": "Obligatoire"
   },
   {
     "field": "company",
@@ -158,17 +114,6 @@
     ],
     "validWhen": true,
     "message": "100 caractères maximum"
-  },
-  {
-    "field": "message",
-    "method": "isEmpty",
-    "args": [
-      {
-        "ignore_whitespace": true
-      }
-    ],
-    "validWhen": false,
-    "message": "Obligatoire"
   },
   {
     "field": "message",
