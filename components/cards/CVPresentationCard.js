@@ -31,12 +31,13 @@ const CVPresentationCard = ({
       </span>
       <p className="uk-width-xlarge uk-margin-auto">{description}</p>
       <button
+        type="button"
         className="uk-button uk-button-primary"
         data-uk-toggle="target: #modalContactCandidat"
       >
-        J'écris à {name}
+        J&apos;écris à {name}
       </button>
-      <ModalContactCandidat />
+      <ModalContactCandidat candidat={{ id: '222', firstName: name }} />
       <p>partagez le CV de {name} sur vos réseaux</p>
       <div className="uk-flex uk-flex-row uk-flex-center">
         <LinkedinShareButton
