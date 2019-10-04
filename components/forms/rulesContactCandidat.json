@@ -73,6 +73,17 @@
   },
   {
     "field": "job",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "job",
     "method": "isLength",
     "args": [
       {
@@ -114,6 +125,17 @@
     ],
     "validWhen": true,
     "message": "100 caractères maximum"
+  },
+  {
+    "field": "message",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
   },
   {
     "field": "message",

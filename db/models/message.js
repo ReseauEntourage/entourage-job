@@ -1,5 +1,3 @@
-
-
 const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
@@ -10,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           len: {
-            args: [1, 40],
+            args: [0, 40],
             msg: '40 caractères maximum pour le prénom',
           },
           notEmpty: {
@@ -23,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           len: {
-            args: [1, 40],
+            args: [0, 40],
             msg: '40 caractères maximum pour le nom',
           },
           notEmpty: {
@@ -49,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           len: {
-            args: [1, 30],
+            args: [0, 30],
             msg: '30 caractères maximum pour le numéro de téléphone',
           },
         },
@@ -58,13 +56,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           len: {
-            args: [1, 60],
+            args: [0, 60],
             msg: '60 caractères maximum pour le métier',
-          } /* ,
-        notEmpty: {
-          args: true,
-          msg: "Le métier proposé est requis"
-        } */,
+          },
+          notEmpty: {
+            args: true,
+            msg: 'Le métier proposé est requis',
+          },
         },
       },
       businessLine: {
@@ -74,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           len: {
-            args: [1, 60],
+            args: [0, 60],
             msg: "60 caractères maximum pour le nom d'entreprise",
           },
         },
@@ -83,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           len: {
-            args: [1, 100],
+            args: [0, 100],
             msg: '100 caractères maximum pour la localisation',
           },
           notEmpty: {
@@ -96,13 +94,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         validate: {
           len: {
-            args: [1, 4000],
+            args: [0, 4000],
             msg: '4000 caractères maximum pour le message',
-          } /* ,
-        notEmpty: {
-          args: true,
-          msg: "Le message au candidat est requis"
-        } */,
+          },
+          notEmpty: {
+            args: true,
+            msg: 'Le message au candidat est requis',
+          },
         },
       },
     },

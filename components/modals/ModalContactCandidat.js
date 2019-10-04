@@ -11,7 +11,7 @@ export default class ModalContactCandidat extends Component {
     this.state = {
       messageSent: false,
     };
-
+    this.confirmMessageSent = this.confirmMessageSent.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
 
@@ -83,7 +83,7 @@ export default class ModalContactCandidat extends Component {
                 <FormContactCandidat
                   candidat={candidat}
                   closeModal={this.closeModal}
-                  messageSent={this.messageSent}
+                  confirmMessageSent={this.confirmMessageSent}
                 />
                 <CloseButtonNoSSR className="uk-modal-close-default" />
               </>
