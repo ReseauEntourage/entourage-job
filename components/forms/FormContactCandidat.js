@@ -86,7 +86,6 @@ export default class FormContactCandidat extends Component {
     event.preventDefault();
     const { message } = this.state;
     const { confirmMessageSent } = this.props;
-    console.log('message : ', message);
     /* Validators control before submit */
     const validation = this.validator.validate(message);
     if (validation.isValid) {
@@ -96,7 +95,6 @@ export default class FormContactCandidat extends Component {
           confirmMessageSent();
         })
         .catch((error) => {
-          console.log(error.response);
           let errorToDisplay = "Une erreur s'est produite";
           if (error.response.status === 403) {
             errorToDisplay = error.response.data;
@@ -223,7 +221,7 @@ export default class FormContactCandidat extends Component {
           <div className="uk-width-1-4">
             <div className="uk-form-controls">
               <label className="uk-form-label" htmlFor="input-job">
-                Nom du poste proposé
+                Nom du poste proposé*
                 <input
                   type="text"
                   id="input-job"
