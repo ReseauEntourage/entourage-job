@@ -100,7 +100,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   CV.beforeValidate((cv) => {
     const cvToCreate = cv;
-    cvToCreate.url = `${cvToCreate.firstName}-${cvToCreate.userId.substring(
+    cvToCreate.url = `${cvToCreate.firstName.toLowerCase()}-${cvToCreate.userId.substring(
       0,
       8
     )}`;
