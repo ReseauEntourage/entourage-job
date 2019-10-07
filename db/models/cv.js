@@ -4,6 +4,18 @@ module.exports = (sequelize, DataTypes) => {
   const CV = sequelize.define(
     'CV',
     {
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+      },
+      url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       firstName: {
         type: DataTypes.STRING,
         validate: {
@@ -86,8 +98,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  CV.beforeCreate((cv, _) => {
-    return (cv.id = uuid());
+  CV.beforeValidate((cv) => {
+    const cvToCreate = cv;
+    cvToCreate.url = `${cvToCreate.firstName}-${cvToCreate.userId.substring(
+      0,
+      8
+    )}`;
+    return cvToCreate;
+  });
+  CV.beforeCreate((cv) => {
+    const cvToCreate = cv;
+    cvToCreate.id = uuid();
+    return cvToCreate;
   });
   CV.associate = function(models) {
     CV.belongsToMany(models.Skill, {

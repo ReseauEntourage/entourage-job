@@ -73,6 +73,7 @@ router.post('/', (req, res) => {
 
   console.log('Etape 1 - Création du CV de base :');
   CV.create({
+    userId: req.body.userId,
     firstName: req.body.firstName,
     lastName: req.body.lastName || '',
     intro: req.body.intro || '',
