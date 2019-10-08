@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 const CandidatCard = ({
-  id,
+  url,
   imgSrc,
   imgAlt,
   title,
   description,
   ambitions,
 }) => (
-  <Link href={`/cv/${id}`}>
+  <Link href={`/cv/${url}`}>
     <a className="uk-link-toggle" href="/profile">
       <div className="uk-cover-container uk-height-large uk-card uk-card-hover">
         <img src={imgSrc} alt={imgAlt} data-uk-cover />
@@ -37,7 +37,7 @@ const CandidatCard = ({
   </Link>
 );
 CandidatCard.propTypes = {
-  id: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   ambitions: PropTypes.arrayOf(PropTypes.string).isRequired,

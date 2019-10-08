@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-const url = process.env.SERVER_URL;
-
 const Axios = axios.create({
-  baseURL: url,
+  baseURL: `${process.env.SERVER_URL}:${process.env.PORT}`,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
