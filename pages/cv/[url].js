@@ -6,105 +6,70 @@ import { CVBackground, CVFiche } from '../../components/cards';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
 
-const hashtags = ['LinkedOut'];
-const hostname = 'https://entourage-job-preprod.herokuapp.com';
-const backgroundCV = '/static/img/arthur-background.jpg';
-
-/* const email = `${id}@gmail.com`;
-const link = `https://entourage-job-preprod.herokuapp.com/cv/${id}`; */
-const email = `TEST@gmail.com`;
-const link = `https://entourage-job-preprod.herokuapp.com/cv/TEST`;
-
-/* const name = id.charAt(0).toUpperCase() + id.slice(1).toLowerCase(); */
-const name = 'Test';
-const title = `${name} - Entourage Jobs`;
-const sharedTitle = `Aidez ${name} en partageant son CV.`;
-// `Donnons un coup de pouce à ${name} en partageant son CV.`;
-const sharedDescription =
-  'Motivée et curieuse, j&apos;aimerais beaucoup travailler dans la gestion ou l&apos;administration mais reste ouverte à toutes autres propositions.';
-const quote =
-  "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer. @Réseau Entourage";
-
 class CVPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      CV: undefined,
-      loading: true,
+  static get defaultProps() {
+    return {
+      cv: {
+        firstName: '',
+        intro: '',
+      },
+      router: {
+        asPath: '',
+      },
     };
   }
 
   static get propTypes() {
     return {
-      // eslint-disable-next-line react/forbid-prop-types
-      /* router: PropTypes.object.isRequired, */
-      /* asPath: PropTypes.string.isRequired, */
+      cv: PropTypes.shape({
+        firstName: PropTypes.string.isRequired,
+        intro: PropTypes.string.isRequired,
+      }),
+      router: PropTypes.shape({
+        asPath: PropTypes.string.isRequired,
+      }),
     };
   }
 
-  static async getInitialProps({ req, query }) {
-    const userAgent = req ? req.headers['user-agent'] : navigator.userAgent;
-    console.log('OOOOOK');
-    console.log(userAgent);
-    console.log(query);
-
-    Api.get(`/api/v1/cv/${query.url}`)
+  static async getInitialProps({ query }) {
+    return Api.get(`/api/v1/cv/${query.url}`)
       .then((res) => {
-        console.log(res);
-        // res.data.map((project) => {
-        //	return listProjects.push(project);
-        //	});
-        //  this.setState({listProjects, loading: false});
+        return { cv: res.data };
       })
       .catch((error) => {
+        console.log(
+          `CVPage - getInitialProps error : ${error.response.status}`
+        );
         console.log(error);
-        console.log(error.response.status);
-
-        /* this.setState({ loading: false }); */
+        return { cv: {} };
       });
-    return { userAgent };
   }
 
-  /*   componentDidMount() {
-    const { router } = this.props;
-    console.log(router);
-    const { url } = router.query;
-    console.log(url);
-    this.setState({ loading: true });
-    Api.get(`/api/v1/cv/${url}`)
-      .then((res) => {
-        console.log(res);
-        // res.data.map((project) => {
-			//	return listProjects.push(project);
-		//	});
-    //  this.setState({listProjects, loading: false});
-      })
-      .catch((error) => {
-        console.log(error);
-        this.setState({ loading: false });
-      });
-  } */
-
   render() {
-    const { asPath } = this.props;
+    const { cv, router } = this.props;
+    const hostname = process.env.SERVER_URL;
+    const firstName =
+      cv.firstName.charAt(0).toUpperCase() +
+      cv.firstName.slice(1).toLowerCase();
+    const title = `${firstName} - Entourage Jobs`;
     return (
       <Layout
         title={title}
-        metaTitle={sharedTitle}
-        metaUrl={`${hostname}${asPath}`}
-        metaDescription={sharedDescription}
+        metaTitle={`Aidez ${firstName} en partageant son CV.`}
+        metaUrl={`${hostname}${router.asPath}`}
+        metaDescription={cv.intro}
         metaImage={`${hostname}/static/img/arthur.png`}
         metaType="profile"
       >
         <div style={{ position: 'relative' }}>
-          <CVBackground url={backgroundCV} />
+          <CVBackground url="/static/img/arthur-background.jpg" />
           <CVFiche
-            name={name}
-            email={email}
-            link={link}
-            hashtags={hashtags}
-            sharedDescription={quote}
-            sharedTitle={sharedTitle}
+            name={firstName}
+            email="INUTILE?"
+            link={`${hostname}${router.asPath}`}
+            hashtags={['LinkedOut']}
+            sharedDescription="Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
+            sharedTitle={title}
           />
           <ContactPartial />
           <DiscovertPartial />

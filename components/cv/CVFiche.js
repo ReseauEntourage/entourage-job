@@ -10,7 +10,7 @@ import {
   ExperiencesProfileCard,
   ReviewCard,
   CVPresentationCard,
-} from '.';
+} from '../cards';
 
 const CVFiche = ({
   name,
