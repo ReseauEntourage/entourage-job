@@ -18,6 +18,7 @@ app
     server.use(express.json());
     server.use('/api/v1/cv', routeCV);
     server.use('/api/v1/message', routeMessage);
+
     server.get('*', (req, res) => {
       return handle(req, res);
     });

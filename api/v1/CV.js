@@ -73,6 +73,7 @@ router.post('/', (req, res) => {
 
   console.log('Etape 1 - Création du CV de base :');
   CV.create({
+    userId: req.body.userId,
     firstName: req.body.firstName,
     lastName: req.body.lastName || '',
     intro: req.body.intro || '',
@@ -239,9 +240,33 @@ router.post('/', (req, res) => {
 });
 
 // Find 1 CV  req.params.id
-router.get('/:id', (req, res) => {
-  CV.findByPk(req.params.id, {
+router.get('/:url', (req, res) => {
+  const infoLog = 'GET 1 CV -';
+  console.log(`${infoLog} Recherche d'un CV`);
+  console.log(`${infoLog} ${typeof req.params.url}`);
+  console.log(`${infoLog} ${req.params.url}`);
+  CV.findOne({
+    where: { url: req.params.url },
     include: [
+      {
+        model: Contract,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
+      {
+        model: Experience,
+        attributes: ['id', 'dateStart', 'dateEnd', 'title', 'description'],
+      },
+      {
+        model: Language,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
+      {
+        model: Passion,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
       {
         model: Skill,
         through: { attributes: [] },
@@ -250,12 +275,13 @@ router.get('/:id', (req, res) => {
     ],
   })
     .then((cv) => {
-      console.log('CV trouvé: ', JSON.stringify(cv, null, 4));
-      res.status(200).send(JSON.stringify(cv, null, 4));
+      console.log(`${infoLog} CV trouvé`);
+      // res.status(200).send(JSON.stringify(cv, null, 4));
+      res.status(200).send(cv);
     })
     .catch((err) => {
-      console.log(err);
-      res.sendStatus(401);
+      console.log(`${infoLog} Aucun CV trouvé`);
+      res.status(401).send(err);
     });
 });
 
