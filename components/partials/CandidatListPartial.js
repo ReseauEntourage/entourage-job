@@ -13,16 +13,16 @@ export default class CandidatListPartial extends Component {
   }
 
   componentDidMount() {
-    /* Api.get('/api/v1/cv/random?nb=11') */
-    Api.get('/api/v1/cv')
+    Api.get('/api/v1/cv/random?nb=11')
+      /* Api.get('/api/v1/cv') */
       .then((res) => {
-        console.log(res.data);
-        console.log(res.data.slice(0, 11));
-        /** Liste de CVs limitée à 11 profils */
-        const CVs = res.data.slice(0, 11);
-        console.log('TEST');
-        console.log(CVs);
-        this.setState({ listCVs: CVs });
+        if (res.data) {
+          /** Liste de CVs limitée à 11 profils */
+          const CVs = res.data.slice(0, 11);
+          this.setState({ listCVs: CVs });
+        } else {
+          this.setState({ listCVs: [] });
+        }
       })
       .catch(() => {
         return console.log('Impossible de récupérer les CVs.');
@@ -32,7 +32,6 @@ export default class CandidatListPartial extends Component {
   prepareItems() {
     const { listCVs } = this.state;
     const items = listCVs.map((cv) => {
-      console.log(cv);
       return (
         <CandidatCard
           url={cv.url}
@@ -57,13 +56,15 @@ export default class CandidatListPartial extends Component {
         </SimpleLink>
       </div>
     );
-    console.log(items);
     return items;
   }
 
   render() {
+    const { listCVs } = this.state;
     const items = this.prepareItems();
-
+    if (listCVs.length === 0) {
+      return null;
+    }
     return (
       <Section style="default" container="small" id="profiles">
         <div className="uk-text-center uk-margin-large">
