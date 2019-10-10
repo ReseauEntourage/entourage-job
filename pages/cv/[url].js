@@ -48,6 +48,7 @@ class CVPage extends Component {
   render() {
     const { cv, router } = this.props;
     const hostname = process.env.SERVER_URL;
+    console.log(process);
     const firstName =
       cv.firstName.charAt(0).toUpperCase() +
       cv.firstName.slice(1).toLowerCase();
@@ -63,14 +64,7 @@ class CVPage extends Component {
       >
         <div style={{ position: 'relative' }}>
           <CVBackground url="/static/img/arthur-background.jpg" />
-          <CVFiche
-            name={firstName}
-            email="INUTILE?"
-            link={`${hostname}${router.asPath}`}
-            hashtags={['LinkedOut']}
-            sharedDescription="Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
-            sharedTitle={title}
-          />
+          <CVFiche cv={cv} />
           <ContactPartial />
           <DiscovertPartial />
         </div>

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/aria-role */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Section } from '../utils';
@@ -12,60 +13,51 @@ import {
   CVPresentationCard,
 } from '../cards';
 
-const CVFiche = ({
-  name,
-  email,
-  link,
-  hashtags,
-  sharedDescription,
-  sharedTitle,
-}) => {
+const CVFiche = ({ cv }) => {
+  const arrayContracts = cv.Contracts.map((contract) => {
+    return contract.name;
+  });
+  const arrayLanguages = cv.Languages.map((language) => {
+    return (
+      language.name.charAt(0).toUpperCase() +
+      language.name.slice(1).toLowerCase()
+    );
+  });
+  const arraySkills = cv.Skills.map((skill) => {
+    return (
+      skill.name.charAt(0).toUpperCase() + skill.name.slice(1).toLowerCase()
+    );
+  });
+  const arrayPassions = cv.Passions.map((passion) => {
+    return (
+      passion.name.charAt(0).toUpperCase() + passion.name.slice(1).toLowerCase()
+    );
+  });
+
   return (
     <Section>
       <CVPresentationCard
-        name={name}
-        link={link}
-        email={email}
-        hashtags={hashtags}
-        sharedTitle={sharedTitle}
-        sharedDescription={sharedDescription}
-        description={
-          <span>
-            Motivée et curieuse, j&apos;aimerais beaucoup travailler dans
-            <span className="uk-text-primary"> la gestion </span>ou
-            <span className="uk-text-primary"> l&apos;administration </span>
-            mais reste ouverte à toutes autres propositions.
-          </span>
-        }
+        firstName={cv.firstName}
+        userId={cv.userId}
+        intro={cv.intro}
       />
       <GridNoSSR
         childWidths={['1-2@s']}
         match
         items={[
           <InfoProfileCard
-            contrat="CDI/CDD"
-            location="Paris et proche"
-            period="Semaine - Week-end (jour et nuit)"
-            language="Français - Anglais(notions) - Arabe (notions)"
-            car="Pas de permis"
+            contract={arrayContracts}
+            location={cv.location}
+            availability={cv.availability}
+            language={arrayLanguages}
+            transport={cv.transport}
           />,
           <GridNoSSR
             childWidths={['1-2@m']}
             match
             items={[
-              <SkillsCard
-                list={[
-                  "à l'écoute",
-                  'emphatique',
-                  'sociable',
-                  'optimiste',
-                  'ponctuelle',
-                  'motivée',
-                ]}
-              />,
-              <PassionsCard
-                list={['Cinéma', 'Histoire / Géopolitique', 'Sport']}
-              />,
+              <SkillsCard list={arraySkills} />,
+              <PassionsCard list={arrayPassions} />,
             ]}
           />,
         ]}
@@ -75,7 +67,7 @@ const CVFiche = ({
         items={[
           <GridNoSSR
             items={[
-              <StoryProfileCard description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris. Integer lacinia diam quam, a auctor eros egestas vitae. Aliquam at ante convallis, gravida diam porttitor, ultricies metus. Integer in est urna. Maecenas ullamcorper, lorem id euismod malesuada, arcu orci suscipit nulla, sed rhoncus orci nibh vitae leo. Nulla ut nibh quis lacus tempor pretium." />,
+              <StoryProfileCard description={cv.story} />,
               <ReviewCard
                 picture="/static/img/arthur.png"
                 review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
@@ -90,15 +82,7 @@ const CVFiche = ({
               />,
             ]}
           />,
-          <ExperiencesProfileCard
-            experiences={Array(6).fill({
-              dateStart: 'Mai 2018',
-              dateEnd: 'Janvier 2019',
-              title: 'Secretaire comptable et chagée de recouvrement',
-              description:
-                'Duis fermentum sed diam eu pulvinar. Suspendisse tellus enim, sagittis sed odio bibendum, malesuada aliquet mauris.',
-            })}
-          />,
+          <ExperiencesProfileCard experiences={cv.Experiences} />,
         ]}
       />
     </Section>
@@ -106,16 +90,9 @@ const CVFiche = ({
 };
 
 CVFiche.propTypes = {
-  name: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired,
-  sharedDescription: PropTypes.string.isRequired,
-  sharedTitle: PropTypes.string.isRequired,
-  hashtags: PropTypes.arrayOf(PropTypes.string),
+  cv: PropTypes.shape().isRequired,
 };
 
-CVFiche.defaultProps = {
-  hashtags: [],
-};
+CVFiche.defaultProps = {};
 
 export default CVFiche;
