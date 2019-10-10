@@ -1,74 +1,91 @@
-import React from 'react';
-import { GridNoSSR, Button, IconNoSSR, Section, SimpleLink } from '../utils';
+import React, { Component } from 'react';
+import { GridNoSSR, IconNoSSR, Section, SimpleLink } from '../utils';
 import { CandidatCard } from '../cards';
+import Api from '../../Axios';
 
-const items = Array(11).fill(
-  <CandidatCard
-    id="arthur"
-    imgSrc="static/img/arthur.png"
-    imgAlt="arthur"
-    title="Arthur"
-    description="série télévisée d'animation américano-canadienne."
-    goods={['volontaire', "esprit d'équipe"]}
-    ambitions={['la vente', 'la restauration']}
-  />
-);
-/* items.push(<div className="uk-text-center uk-padding uk-padding-remove-bottom">
-  <Button style="default">Voir plus</Button>
-</div>); */
-items.push(
-  <div className="uk-flex uk-flex-column uk-flex-middle">
-    <button
-      onClick={() => {}}
-      onKeyPress={() =>
-        Array(3).forEach(() =>
-          items.push(
-            <CandidatCard
-              id="arthur"
-              imgSrc="static/img/arthur.png"
-              imgAlt="arthur"
-              title="Arthur"
-              description="série télévisée d'animation américano-canadienne."
-              goods={['volontaire', "esprit d'équipe"]}
-              ambitions={['la vente', 'la restauration']}
-            />
-          )
-        )
-      }
-      type="button"
-      className="uk-icon-button"
-      style={{ color: 'white', backgroundColor: '#F55F24' }}
-    >
-      <IconNoSSR name="plus" />
-    </button>
-    <SimpleLink href="/contact" className="uk-link-muted uk-padding-small">
-      <span className="uk-text-bold">Voir plus</span>
-    </SimpleLink>
-  </div>
-);
+export default class CandidatListPartial extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      listCVs: [],
+    };
+    this.prepareItems = this.prepareItems.bind(this);
+  }
 
-const CandidatListPartial = () => (
-  <Section style="default" container="small" id="profiles">
-    <div className="uk-text-center uk-margin-large">
-      <h2 className="uk-text-bold">
-        <span className="uk-text-primary">Eux</span> cherchent un travail,
-        <br />
-        <span className="uk-text-primary">Vous</span> avez un réseau.
-      </h2>
-      <p className="uk-align-center uk-width-2-3@s">
-        Nos candidats sont des gens en situation de précarité financière et
-        professionnellle. Toutes accompagnées par des travailleurs sociaux,
-        motivées pour se réinsérer, elles dévoilent leurs talents et leurs
-        aspirations. Réseau, amis, recruteurs, à vos partages !
-      </p>
-    </div>
-    <GridNoSSR
-      childWidths={['1-1', '1-2@s']}
-      parallax={400}
-      items={items}
-      className="uk-padding-remove-bottom"
-    />
-  </Section>
-);
+  componentDidMount() {
+    /* Api.get('/api/v1/cv/random?nb=11') */
+    Api.get('/api/v1/cv')
+      .then((res) => {
+        console.log(res.data);
+        console.log(res.data.slice(0, 11));
+        /** Liste de CVs limitée à 11 profils */
+        const CVs = res.data.slice(0, 11);
+        console.log('TEST');
+        console.log(CVs);
+        this.setState({ listCVs: CVs });
+      })
+      .catch(() => {
+        return console.log('Impossible de récupérer les CVs.');
+      });
+  }
 
-export default CandidatListPartial;
+  prepareItems() {
+    const { listCVs } = this.state;
+    const items = listCVs.map((cv) => {
+      console.log(cv);
+      return (
+        <CandidatCard
+          url={cv.url}
+          imgSrc="static/img/arthur.png"
+          imgAlt={cv.firstName}
+          firstName={cv.firstName}
+          ambitions={cv.Skills.slice(0, 2)}
+        />
+      );
+    });
+    items.push(
+      <div className="uk-flex uk-flex-column uk-flex-middle">
+        <button
+          type="button"
+          className="uk-icon-button"
+          style={{ color: 'white', backgroundColor: '#F55F24' }}
+        >
+          <IconNoSSR name="plus" />
+        </button>
+        <SimpleLink href="/contact" className="uk-link-muted uk-padding-small">
+          <span className="uk-text-bold">Voir plus</span>
+        </SimpleLink>
+      </div>
+    );
+    console.log(items);
+    return items;
+  }
+
+  render() {
+    const items = this.prepareItems();
+
+    return (
+      <Section style="default" container="small" id="profiles">
+        <div className="uk-text-center uk-margin-large">
+          <h2 className="uk-text-bold">
+            <span className="uk-text-primary">Eux</span> cherchent un travail,
+            <br />
+            <span className="uk-text-primary">Vous</span> avez un réseau.
+          </h2>
+          <p className="uk-align-center uk-width-2-3@s">
+            Nos candidats sont des gens en situation de précarité financière et
+            professionnellle. Toutes accompagnées par des travailleurs sociaux,
+            motivées pour se réinsérer, elles dévoilent leurs talents et leurs
+            aspirations. Réseau, amis, recruteurs, à vos partages !
+          </p>
+        </div>
+        <GridNoSSR
+          childWidths={['1-1', '1-2@s']}
+          parallax={400}
+          items={items}
+          className="uk-padding-remove-bottom"
+        />
+      </Section>
+    );
+  }
+}
