@@ -239,6 +239,37 @@ router.post('/', (req, res) => {
     });
 });
 
+/** Get random CVs with parameter nb = number of results */
+router.get('/random', (req, res) => {
+  const infoLog = 'GET RANDOM CV -';
+  console.log(`${infoLog} Récupération de CVs au hasard`);
+  console.log(`${infoLog} ${req}`);
+  console.log(req);
+  console.log(`${infoLog} ${typeof req.query.nb}`);
+  console.log(`${infoLog} ${req.query.nb}`);
+  CV.findAll({
+    order: db.random(),
+    limit: req.query.nb,
+    attributes: ['id', 'url', 'firstName'],
+    include: [
+      {
+        model: Skill,
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+    ],
+  })
+    .then((CVs) => {
+      console.log(CVs);
+      // res.status(200).send(JSON.stringify(CVs, null, 4));
+      res.status(200).json(CVs);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
 // Find 1 CV  req.params.id
 router.get('/:url', (req, res) => {
   const infoLog = 'GET 1 CV -';
