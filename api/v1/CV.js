@@ -81,6 +81,7 @@ router.post('/', (req, res) => {
     story: req.body.story || '',
     status: req.body.status || 'Draft',
     transport: req.body.transport || '',
+    availability: req.body.availability || '',
   })
     .then((cv) => {
       cvCreated = cv;

@@ -55,19 +55,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         }, */
       },
-      location: {
-        type: DataTypes.STRING,
-        /* validate: {
-          len: {
-            args: [1, 100],
-            msg: '100 caractères maximum pour la localisation',
-          },
-          notEmpty: {
-            args: true,
-            msg: 'La localisation est requise',
-          },
-        }, */
-      },
       story: {
         type: DataTypes.TEXT,
         /* validate: {
@@ -81,7 +68,22 @@ module.exports = (sequelize, DataTypes) => {
           },
         }, */
       },
-      status: DataTypes.STRING,
+      location: {
+        type: DataTypes.STRING,
+        /* validate: {
+          len: {
+            args: [1, 100],
+            msg: '100 caractères maximum pour la localisation',
+          },
+          notEmpty: {
+            args: true,
+            msg: 'La localisation est requise',
+          },
+        }, */
+      },
+      availability: {
+        type: DataTypes.STRING,
+      },
       transport: {
         type: DataTypes.STRING,
         /* validate: {
@@ -95,6 +97,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         }, */
       },
+      status: DataTypes.STRING,
     },
     {}
   );
