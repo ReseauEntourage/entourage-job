@@ -56,7 +56,7 @@ router.get('/', (req, res) => {
   })
     .then((listeCV) => {
       console.log('All CVs : ', JSON.stringify(listeCV, null, 4));
-      res.status(200).send(JSON.stringify(listeCV, null, 4));
+      res.status(200).json(listeCV);
     })
     .catch((err) => {
       console.log(err);
@@ -232,41 +232,10 @@ router.post('/', (req, res) => {
         ],
       });
     })
-    .then((cv) => res.status(200).send(JSON.stringify(cv, null, 4)))
+    .then((cv) => res.status(200).json(cv))
     .catch((err) => {
       console.log(err);
       res.sendStatus(401);
-    });
-});
-
-/** Get random CVs with parameter nb = number of results */
-router.get('/random', (req, res) => {
-  const infoLog = 'GET RANDOM CV -';
-  console.log(`${infoLog} Récupération de CVs au hasard`);
-  console.log(`${infoLog} ${req}`);
-  console.log(req);
-  console.log(`${infoLog} ${typeof req.query.nb}`);
-  console.log(`${infoLog} ${req.query.nb}`);
-  CV.findAll({
-    order: db.random(),
-    limit: req.query.nb,
-    attributes: ['id', 'url', 'firstName'],
-    include: [
-      {
-        model: Skill,
-        through: { attributes: [] },
-        attributes: ['name'],
-      },
-    ],
-  })
-    .then((CVs) => {
-      console.log(CVs);
-      // res.status(200).send(JSON.stringify(CVs, null, 4));
-      res.status(200).json(CVs);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(401).send('Une erreur est survenue');
     });
 });
 
@@ -308,11 +277,44 @@ router.get('/:url', (req, res) => {
     .then((cv) => {
       console.log(`${infoLog} CV trouvé`);
       // res.status(200).send(JSON.stringify(cv, null, 4));
-      res.status(200).send(cv);
+      res.status(200).json(cv);
     })
     .catch((err) => {
       console.log(`${infoLog} Aucun CV trouvé`);
       res.status(401).send(err);
+    });
+});
+
+/**
+ * Titre : Récupérer 1 ou plusieurs CV aléatoirement
+ * Description : Retourne <nb> CV(s) pour des cartes de manière aléatoire
+ * Paramètre :
+ * - nb : Nombre de CVs à retourner (11 par défaut)
+ * Exemple : <server_url>/api/v1/cv/cards/random?nb=2
+ */
+router.get('/cards/random', (req, res) => {
+  const infoLog = 'GET RANDOM CARD CV -';
+  console.log(`${infoLog} Récupération de CVs au hasard pour des cartes`);
+  console.log(`${infoLog} ${typeof req.query.nb}`);
+  console.log(`${infoLog} ${req.query.nb}`);
+  CV.findAll({
+    order: db.random(),
+    limit: req.query.nb ? req.query.nb : 11,
+    attributes: ['id', 'url', 'firstName'],
+    include: [
+      {
+        model: Skill,
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+    ],
+  })
+    .then((CVs) => {
+      res.status(200).json(CVs);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
     });
 });
 

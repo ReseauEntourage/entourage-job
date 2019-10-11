@@ -13,7 +13,7 @@ export default class CandidatListPartial extends Component {
   }
 
   componentDidMount() {
-    Api.get('/api/v1/cv/random?nb=11')
+    Api.get('/api/v1/cv/cards/random?nb=11')
       /* Api.get('/api/v1/cv') */
       .then((res) => {
         if (res.data) {
