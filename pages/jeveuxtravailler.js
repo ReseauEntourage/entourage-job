@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { Button, Section } from '../components/utils';
 import HowTo from '../components/partials/HowTo';
-import { DiscovertPartial } from '../components/partials';
+import { DiscoverPartial } from '../components/partials';
 
 const JeVeuxTravailler = () => {
   const ccm = [
@@ -114,7 +114,7 @@ const JeVeuxTravailler = () => {
           </div>
         </div>
       </Section>
-      <DiscovertPartial />
+      <DiscoverPartial />
     </Layout>
   );
 };

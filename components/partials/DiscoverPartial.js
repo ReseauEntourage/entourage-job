@@ -2,7 +2,7 @@ import React from 'react';
 import { GridNoSSR, Section, IconNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 
-const DiscovertPartial = () => (
+const DiscoverPartial = () => (
   <Section id="discover">
     <div className="uk-text-center">
       <h2 className="uk-text-bold">
@@ -31,4 +31,4 @@ const DiscovertPartial = () => (
   </Section>
 );
 
-export default DiscovertPartial;
+export default DiscoverPartial;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { HelpingCard, ScaleCard } from '../components/cards';
 import { Button, Section, GridNoSSR, SliderNoSSR } from '../components/utils';
-import { DiscovertPartial } from '../components/partials';
+import { DiscoverPartial } from '../components/partials';
 import Layout from '../components/Layout';
 
 const cardsCoupsDePouce = [
@@ -259,7 +259,7 @@ const JeVeuxAider = () => (
         <Button style="primary">écrivez-nous</Button>
       </div>
     </Section>
-    <DiscovertPartial />
+    <DiscoverPartial />
   </Layout>
 );
 
