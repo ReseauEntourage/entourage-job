@@ -5,6 +5,7 @@ const router = express.Router();
 const sequelize = require('sequelize');
 const db = require('../../db/config/databaseConnect');
 const CV = require('../../db/models/cv')(db, sequelize.DataTypes);
+const Ambition = require('../../db/models/ambition')(db, sequelize.DataTypes);
 const Contract = require('../../db/models/contract')(db, sequelize.DataTypes);
 const Experience = require('../../db/models/experience')(
   db,
@@ -14,6 +15,7 @@ const Language = require('../../db/models/language')(db, sequelize.DataTypes);
 const Passion = require('../../db/models/passion')(db, sequelize.DataTypes);
 const Skill = require('../../db/models/skill')(db, sequelize.DataTypes);
 
+CV.belongsToMany(Ambition, { through: 'CV_Ambitions' });
 CV.belongsToMany(Contract, { through: 'CV_Contracts' });
 CV.belongsToMany(Language, { through: 'CV_Languages' });
 CV.belongsToMany(Passion, { through: 'CV_Passions' });
@@ -49,6 +51,11 @@ router.get('/', (req, res) => {
       },
       {
         model: Skill,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
+      {
+        model: Ambition,
         through: { attributes: [] },
         attributes: ['id', 'name'],
       },
@@ -185,6 +192,26 @@ router.post('/', (req, res) => {
       }
     })
     .then(() => {
+      if (req.body.ambitions) {
+        const ambitionsPromise = req.body.ambitions.map((ambition) => {
+          return Ambition.findOrCreate({ where: { name: ambition } });
+        });
+        return Promise.all(ambitionsPromise);
+      } else {
+        return Promise.resolve([]);
+      }
+    })
+    .then((ambitions) => {
+      if (ambitions) {
+        const listAmbitions = ambitions.map((ambition) => {
+          return ambition[0];
+        });
+        return cvCreated.addAmbitions(listAmbitions);
+      } else {
+        return Promise.resolve();
+      }
+    })
+    .then(() => {
       if (req.body.experiences) {
         const experiencesPromise = req.body.experiences.map((experience) => {
           return Experience.findOrCreate({
@@ -227,6 +254,11 @@ router.post('/', (req, res) => {
           },
           {
             model: Skill,
+            through: { attributes: [] },
+            attributes: ['id', 'name'],
+          },
+          {
+            model: Ambition,
             through: { attributes: [] },
             attributes: ['id', 'name'],
           },
@@ -273,6 +305,11 @@ router.get('/:url', (req, res) => {
         through: { attributes: [] },
         attributes: ['id', 'name'],
       },
+      {
+        model: Ambition,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
     ],
   })
     .then((cv) => {
@@ -304,7 +341,7 @@ router.get('/cards/random', (req, res) => {
     attributes: ['id', 'url', 'firstName'],
     include: [
       {
-        model: Skill,
+        model: Ambition,
         through: { attributes: [] },
         attributes: ['name'],
       },
