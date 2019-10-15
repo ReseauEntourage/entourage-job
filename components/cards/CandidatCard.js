@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SimpleLink from '../utils';
+import { SimpleLink } from '../utils';
 
 const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
   <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
