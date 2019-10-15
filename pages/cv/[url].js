@@ -12,6 +12,12 @@ class CVPage extends Component {
       cv: {
         firstName: '',
         intro: '',
+        Ambitions: [],
+        Contracts: [],
+        Languages: [],
+        Passions: [],
+        Skills: [],
+        Experiences: [],
       },
       router: {
         asPath: '',
