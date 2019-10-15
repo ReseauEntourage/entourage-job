@@ -31,7 +31,7 @@ class CVPage extends Component {
     };
   }
 
-  static async getInitialProps({ query }) {
+  /* static async getInitialProps({ query }) {
     return Api.get(`/api/v1/cv/${query.url}`)
       .then((res) => {
         return { cv: res.data };
@@ -43,7 +43,7 @@ class CVPage extends Component {
         console.log(error);
         return { cv: {} };
       });
-  }
+  } */
 
   render() {
     const { cv, router } = this.props;
