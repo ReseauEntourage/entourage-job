@@ -52,7 +52,7 @@ export default class DiscoverPartial extends Component {
                   imgSrc="static/img/arthur.png"
                   imgAlt={cv.firstName}
                   firstName={cv.firstName}
-                  ambitions={cv.Skills.slice(0, 2)}
+                  ambitions={cv.Ambitions.slice(0, 2)}
                 />
               );
             })}
