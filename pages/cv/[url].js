@@ -38,20 +38,21 @@ class CVPage extends Component {
   }
 
   static async getInitialProps({ query }) {
-    return (
-      Api.get(`/api/v1/cv/${query.url}`)
-        // return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
-        .then((res) => {
-          return { cv: res.data };
-        })
-        .catch((error) => {
-          console.log(error);
-          console.log(
-            `CVPage - getInitialProps error : ${error.response.status}`
-          );
-          return { cv: {} };
-        })
-    );
+    return Api.get(
+      `${process.env.SERVER_URL}${
+        process.env.PORT ? `:${process.env.PORT}` : ''
+      }/api/v1/cv/${query.url}`
+    )
+      .then((res) => {
+        return { cv: res.data };
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(
+          `CVPage - getInitialProps error : ${error.response.status}`
+        );
+        return { cv: {} };
+      });
   }
 
   render() {
