@@ -8,22 +8,25 @@ const cardsCoupsDePouce = [
   [
     {
       title:
-        'Vous connaissez une personne en difficulté ? Entourage vous accompagne dans les démarches',
+        'Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut',
       description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
+        'Votre partage permet de donner une visibilité inédite aux candidats auprès de recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer !',
       picture: '/static/img/illustrations/entourage_help.png',
     },
     {
-      title: '2ème texte ? Entourage vous accompagne dans les démarches',
+      title: 'Devenez bénévole-coach !',
       description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
+        'Vous souhaitez donner de votre temps pour tisser une relation de confiance avec un candidat et le coacher vers le retour à l’emploi ? Entourage vous forme à la mission de bénévole-coach et vous donne les outils !',
       picture: '/static/img/illustrations/entourage_papers.png',
+      writeButton: true,
     },
     {
-      title: '3ème texte  ? Entourage vous accompagne dans les démarches',
+      title:
+        'Vous souhaitez apporter au projet LinkedOut une compétence particulière ?',
       description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
+        '(Montage photo, animation d’ateliers ou de temps conviviaux...) Nous serons ravis d’intégrer votre talent au sein du projet.',
       picture: '/static/img/illustrations/entourage_phone.png',
+      writeButton: true,
     },
   ],
   [
@@ -204,6 +207,14 @@ const JeVeuxAider = () => (
                         <div className="uk-width-expand uk-text-left@m uk-text-center uk-flex-first@s">
                           <h6 className="uk-text-bold">{card.title}</h6>
                           <p className="uk-text-meta">{card.description}</p>
+                          <Button
+                            style="default"
+                            className={
+                              card.writeButton ? 'uk-visible' : 'uk-hidden'
+                            }
+                          >
+                            écrivez-nous
+                          </Button>
                         </div>
                       </div>
                     </div>
