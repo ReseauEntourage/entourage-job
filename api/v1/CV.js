@@ -5,6 +5,7 @@ const router = express.Router();
 const sequelize = require('sequelize');
 const db = require('../../db/config/databaseConnect');
 const CV = require('../../db/models/cv')(db, sequelize.DataTypes);
+const Ambition = require('../../db/models/ambition')(db, sequelize.DataTypes);
 const Contract = require('../../db/models/contract')(db, sequelize.DataTypes);
 const Experience = require('../../db/models/experience')(
   db,
@@ -14,6 +15,7 @@ const Language = require('../../db/models/language')(db, sequelize.DataTypes);
 const Passion = require('../../db/models/passion')(db, sequelize.DataTypes);
 const Skill = require('../../db/models/skill')(db, sequelize.DataTypes);
 
+CV.belongsToMany(Ambition, { through: 'CV_Ambitions' });
 CV.belongsToMany(Contract, { through: 'CV_Contracts' });
 CV.belongsToMany(Language, { through: 'CV_Languages' });
 CV.belongsToMany(Passion, { through: 'CV_Passions' });
@@ -52,11 +54,16 @@ router.get('/', (req, res) => {
         through: { attributes: [] },
         attributes: ['id', 'name'],
       },
+      {
+        model: Ambition,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
     ],
   })
     .then((listeCV) => {
       console.log('All CVs : ', JSON.stringify(listeCV, null, 4));
-      res.status(200).send(JSON.stringify(listeCV, null, 4));
+      res.status(200).json(listeCV);
     })
     .catch((err) => {
       console.log(err);
@@ -81,6 +88,7 @@ router.post('/', (req, res) => {
     story: req.body.story || '',
     status: req.body.status || 'Draft',
     transport: req.body.transport || '',
+    availability: req.body.availability || '',
   })
     .then((cv) => {
       cvCreated = cv;
@@ -184,6 +192,26 @@ router.post('/', (req, res) => {
       }
     })
     .then(() => {
+      if (req.body.ambitions) {
+        const ambitionsPromise = req.body.ambitions.map((ambition) => {
+          return Ambition.findOrCreate({ where: { name: ambition } });
+        });
+        return Promise.all(ambitionsPromise);
+      } else {
+        return Promise.resolve([]);
+      }
+    })
+    .then((ambitions) => {
+      if (ambitions) {
+        const listAmbitions = ambitions.map((ambition) => {
+          return ambition[0];
+        });
+        return cvCreated.addAmbitions(listAmbitions);
+      } else {
+        return Promise.resolve();
+      }
+    })
+    .then(() => {
       if (req.body.experiences) {
         const experiencesPromise = req.body.experiences.map((experience) => {
           return Experience.findOrCreate({
@@ -229,10 +257,15 @@ router.post('/', (req, res) => {
             through: { attributes: [] },
             attributes: ['id', 'name'],
           },
+          {
+            model: Ambition,
+            through: { attributes: [] },
+            attributes: ['id', 'name'],
+          },
         ],
       });
     })
-    .then((cv) => res.status(200).send(JSON.stringify(cv, null, 4)))
+    .then((cv) => res.status(200).json(cv))
     .catch((err) => {
       console.log(err);
       res.sendStatus(401);
@@ -272,16 +305,54 @@ router.get('/:url', (req, res) => {
         through: { attributes: [] },
         attributes: ['id', 'name'],
       },
+      {
+        model: Ambition,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
     ],
   })
     .then((cv) => {
       console.log(`${infoLog} CV trouvé`);
       // res.status(200).send(JSON.stringify(cv, null, 4));
-      res.status(200).send(cv);
+      res.status(200).json(cv);
     })
     .catch((err) => {
       console.log(`${infoLog} Aucun CV trouvé`);
       res.status(401).send(err);
+    });
+});
+
+/**
+ * Titre : Récupérer 1 ou plusieurs CV aléatoirement
+ * Description : Retourne <nb> CV(s) pour des cartes de manière aléatoire
+ * Paramètre :
+ * - nb : Nombre de CVs à retourner (11 par défaut)
+ * Exemple : <server_url>/api/v1/cv/cards/random?nb=2
+ */
+router.get('/cards/random', (req, res) => {
+  const infoLog = 'GET RANDOM CARD CV -';
+  console.log(`${infoLog} Récupération de CVs au hasard pour des cartes`);
+  console.log(`${infoLog} ${typeof req.query.nb}`);
+  console.log(`${infoLog} ${req.query.nb}`);
+  CV.findAll({
+    order: db.random(),
+    limit: req.query.nb ? req.query.nb : 11,
+    attributes: ['id', 'url', 'firstName'],
+    include: [
+      {
+        model: Ambition,
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+    ],
+  })
+    .then((CVs) => {
+      res.status(200).json(CVs);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
     });
 });
 

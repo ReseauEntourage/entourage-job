@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../components/Layout';
 import { Button, Section } from '../components/utils';
-import { DiscovertPartial } from '../components/partials';
+import { DiscoverPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
 import HowTo from '../components/partials/HowTo';
 
@@ -176,7 +176,7 @@ const JeVeuxRecruter = () => {
           </ul>
         </div>
       </Section>
-      <DiscovertPartial />
+      <DiscoverPartial />
     </Layout>
   );
 };

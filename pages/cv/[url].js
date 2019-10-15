@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
-import { DiscovertPartial, ContactPartial } from '../../components/partials';
+import { DiscoverPartial, ContactPartial } from '../../components/partials';
 import { CVBackground, CVFiche } from '../../components/cards';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
@@ -66,7 +66,7 @@ class CVPage extends Component {
           <CVBackground url="/static/img/arthur-background.jpg" />
           <CVFiche cv={cv} />
           <ContactPartial />
-          <DiscovertPartial />
+          <DiscoverPartial />
         </div>
       </Layout>
     );
