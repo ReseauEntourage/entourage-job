@@ -14,7 +14,7 @@ const LandingPagePartial = ({ presentations }) => {
   const sharedDescription =
     "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau.";
   const hashtags = ['LinkedOut'];
-  const sharedURL = 'https://entourage-job-preprod.herokuapp.com/';
+  const sharedURL = process.env.SERVER_URL;
   const viaTwitter = 'R_Entourage';
   return (
     <Background src="/static/img/background_1.png" position="top-right">
