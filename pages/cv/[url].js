@@ -38,11 +38,7 @@ class CVPage extends Component {
   }
 
   static async getInitialProps({ query }) {
-    return Api.get(
-      `${process.env.SERVER_URL}${
-        process.env.PORT ? `:${process.env.PORT}` : ''
-      }/api/v1/cv/${query.url}`
-    )
+    return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
       .then((res) => {
         return { cv: res.data };
       })
