@@ -1,0 +1,151 @@
+[
+  {
+    "field": "firstName",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "firstName",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 40
+      }
+    ],
+    "validWhen": true,
+    "message": "40 caractères maximum"
+  },
+  {
+    "field": "lastName",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "lastName",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 40
+      }
+    ],
+    "validWhen": true,
+    "message": "40 caractères maximum"
+  },
+  {
+    "field": "email",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "email",
+    "method": "isEmail",
+    "validWhen": true,
+    "message": "Adresse e-mail invalide"
+  },
+  {
+    "field": "phone",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 30
+      }
+    ],
+    "validWhen": true,
+    "message": "30 caractères maximum"
+  },
+  {
+    "field": "job",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "job",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 60
+      }
+    ],
+    "validWhen": true,
+    "message": "60 caractères maximum"
+  },
+  {
+    "field": "company",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 60
+      }
+    ],
+    "validWhen": true,
+    "message": "60 caractères maximum"
+  },
+  {
+    "field": "localization",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "localization",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 100
+      }
+    ],
+    "validWhen": true,
+    "message": "100 caractères maximum"
+  },
+  {
+    "field": "message",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "message",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 4000
+      }
+    ],
+    "validWhen": true,
+    "message": "4000 caractères maximum"
+  }
+]

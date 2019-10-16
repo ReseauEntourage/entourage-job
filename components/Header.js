@@ -19,6 +19,7 @@ const Header = () => {
   return (
     <header>
       <NavbarNoSSR
+        sticky
         left={
           <NavbarLogo
             href="/"
@@ -36,7 +37,7 @@ const Header = () => {
                 </SimpleLink>
               )),
               <div className="uk-navbar-item">
-                <LinkedinShareButton url="www.linkedout.fr">
+                <LinkedinShareButton url={process.env.SERVER_URL}>
                   <Button href="#" visible="m" style="primary">
                     Partager l&apos;opération
                   </Button>

@@ -1,15 +1,7 @@
 import React from 'react';
-import {
-  FacebookShareButton,
-  LinkedinShareButton,
-  TwitterShareButton,
-} from 'react-share';
 import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
 
 const Footer = () => {
-  const sharedURL = 'https://www.linkedout.fr/';
-  const sharedText =
-    "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau.";
   return (
     <footer id="footer">
       <Section style="secondary" size="medium">
@@ -25,7 +17,9 @@ const Footer = () => {
               <SimpleLink href="/contact">Contact</SimpleLink>
             </div>,
             <div className="uk-h4 uk-text-center">
-              <SimpleLink href="/entourage-social">Entourage social</SimpleLink>
+              <SimpleLink href="https://www.entourage.social">
+                Entourage social
+              </SimpleLink>
             </div>,
             <div className="uk-h4 uk-text-center">
               <SimpleLink href="/about">À propos d&apos;Entourage</SimpleLink>
@@ -33,7 +27,7 @@ const Footer = () => {
           ]}
         />
         <div className="uk-flex-center uk-flex uk-flex-middle uk-margin-top">
-          <SimpleLink href="/">
+          <SimpleLink href="https://www.entourage.social">
             <ImgNoSSR
               src="/static/img/logo-entourage.svg"
               alt="logo-entourage"
@@ -42,29 +36,27 @@ const Footer = () => {
           </SimpleLink>
           <hr className="uk-divider-vertical uk-margin-small-right uk-margin-small-left" />
           <div className="uk-flex-center uk-flex uk-flex-middle">
-            <LinkedinShareButton
+            <SimpleLink
               className="uk-link-muted uk-padding-small"
-              url={sharedURL}
-              style={{ cursor: 'pointedr' }}
+              href="https://www.linkedin.com/company/association-entourage/"
+              target="_blank"
             >
               <IconNoSSR name="linkedin" ratio={2} />
-            </LinkedinShareButton>
-            <FacebookShareButton
+            </SimpleLink>
+            <SimpleLink
               className="uk-link-muted uk-padding-small"
-              url={sharedURL}
-              quote={sharedText}
-              style={{ cursor: 'pointer' }}
+              href="https://www.facebook.com/EntourageReseauCivique/"
+              target="_blank"
             >
               <IconNoSSR name="facebook" ratio={2} />
-            </FacebookShareButton>
-            <TwitterShareButton
+            </SimpleLink>
+            <SimpleLink
               className="uk-link-muted uk-padding-small"
-              url={sharedURL}
-              title={sharedText}
-              style={{ cursor: 'pointer' }}
+              href="https://twitter.com/r_entourage/"
+              target="_blank"
             >
               <IconNoSSR name="twitter" ratio={2} />
-            </TwitterShareButton>
+            </SimpleLink>
           </div>
         </div>
       </Section>

@@ -1,24 +1,12 @@
 import '../static/dist/css/uikit.entourage.css';
 
 import React from 'react';
-import Head from 'next/head';
-import App, { Container } from 'next/app';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import App from 'next/app';
 
 class EntourageApp extends App {
   render() {
     const { Component, pageProps } = this.props;
-    return (
-      <Container>
-        <Head>
-          <title>Entourage Jobs</title>
-        </Head>
-        <Header />
-        <Component {...pageProps} />
-        <Footer />
-      </Container>
-    );
+    return <Component {...pageProps} />;
   }
 }
 
