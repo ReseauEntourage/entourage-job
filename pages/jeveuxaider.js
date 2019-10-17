@@ -121,6 +121,14 @@ const coupsDePouce = [
 
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - Entourage Jobs">
+    <Section id="travailler1">
+      <h1 className="uk-heading-medium uk-text-bold uk-text-center">
+        Vous souhaitez <span className="uk-text-primary">aider ?</span>
+      </h1>
+      <p className="uk-text-lead uk-text-center" style={{ fontWeight: '600' }}>
+        Il n&apos;y a pas de petit coup de pouce, aidez à votre échelle !
+      </p>
+    </Section>
     <Section id="help" style="default">
       <h1 className="uk-text-center">
         Vous souhaitez <span className="uk-text-primary">aider</span> ?
