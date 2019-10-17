@@ -1,34 +1,33 @@
 const sharp = require('sharp');
 const TextToSVG = require('text-to-svg');
 
-const textToSVG = TextToSVG.loadSync('./Roboto-Regular.ttf');
-const textToSVGBold = TextToSVG.loadSync('./Roboto-Black.ttf');
+const textToSVG = TextToSVG.loadSync('./static/fonts/Roboto-Regular.ttf');
+const textToSVGBold = TextToSVG.loadSync('./static/fonts/Roboto-Black.ttf');
 
-// genere les options svg par defaut. possibilité de changer la taille de la police
-function generateSVGOption(fontSize) {
+// créé les options svg par defaut. possibilité de changer la taille de la police
+function createSVGOption(fontSize, color) {
   return {
     fontSize,
     anchor: 'top',
     attributes: {
-      fill: 'white',
+      fill: color,
     },
   };
 }
 
-// permet de creer une carte entourage pour le partage. output: sortie de l'image selon le format voulue
-function createSharedImage(name, description, ambition, output) {
-  const ratio = 1.5;
+// permet de générer une carte entourage pour le partage. output: sortie de l'image selon le format voulue
+function generateCVPreview(name, description, ambition, imagePath, output) {
+  const ratio = 1.3;
+  // todo: variables a mettre en options
+  const imageWidth = Math.trunc(520 * ratio);
+  const imageHeight = Math.trunc(272 * ratio);
+  const marginTop = 14;
+  const marginBottom = 20;
+  const marginAmbition = 4;
+  const marginTitle = 8;
 
-  // variables a mettre en options
-  const imageWidth = 320 * ratio;
-  const imageHeight = 240 * ratio;
-  const marginTop = 20;
-  const marginBottom = 30;
-  const marginAmbition = 5;
-  const marginTitle = 10;
-
-  const option1 = generateSVGOption(24);
-  const option2 = generateSVGOption(16);
+  const option1 = createSVGOption(24, 'white');
+  const option2 = createSVGOption(16, 'white');
 
   const texts = {
     // svg générés
@@ -58,7 +57,7 @@ function createSharedImage(name, description, ambition, output) {
   );
 
   // creation de l'image
-  sharp('./static/img/arthur.png')
+  return sharp(imagePath)
     .resize(imageWidth, imageHeight)
     .composite([
       // masque de couleur entourage
@@ -103,13 +102,16 @@ function createSharedImage(name, description, ambition, output) {
       },
     ])
     .sharpen()
-    .toFile(output, console.log);
+    .toFile(output);
 }
 
 // test
-createSharedImage(
-  'LAITH',
-  "A besoin d'un coup de pouce pour travailler dans... ",
-  "LES TRANSPORTS EN COMMUN. L'ACCUEIL",
-  'output.webp'
-);
+// generateCVPreview(
+//   'ARTHUR',
+//   "A besoin d'un coup de pouce pour travailler dans... ",
+//   "LES TRANSPORTS EN COMMUN. L'ACCUEIL",
+//   './static/img/arthur.png',
+//   'output.webp'
+// ).then(console.log);
+
+export default generateCVPreview;
