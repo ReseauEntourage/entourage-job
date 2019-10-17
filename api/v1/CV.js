@@ -388,6 +388,7 @@ router.get('/generate-previews', (req, res) => {
       },
     ],
   }).then((listeCV) => {
+    console.log('generate cv');
     Promise.all(
       listeCV.map((cv) =>
         generateCVPreview(
@@ -400,6 +401,7 @@ router.get('/generate-previews', (req, res) => {
       )
     )
       .then((promiseReq, promiseRes) => {
+        console.log(promiseReq, promiseRes);
         res.status(200).send(`${promiseRes.length} preview générés`);
       })
       .catch((rej) => {
