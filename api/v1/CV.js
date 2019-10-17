@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const sequelize = require('sequelize');
+const generateCVPreview = require('../../shareImage');
 const db = require('../../db/config/databaseConnect');
 const CV = require('../../db/models/cv')(db, sequelize.DataTypes);
 const Ambition = require('../../db/models/ambition')(db, sequelize.DataTypes);
@@ -228,6 +229,21 @@ router.post('/', (req, res) => {
       } else {
         return Promise.resolve([]);
       }
+    })
+    .then(() => {
+      // creation de limage de preview cv
+      generateCVPreview(
+        cvCreated.name.toUpperCase(),
+        "A besoin d'un coup de pouce pour travailler dans...",
+        req.body.ambitions.length > 0
+          ? req.body.ambitions.join('. ').toUpperCase()
+          : '',
+        `../../static/img/arthur.png`,
+        `../../static/img/${cvCreated.url}-preview.jpg`
+      )
+        .then(console.log)
+        .catch(console.error);
+      return Promise.resolve();
     })
     .then(() => {
       console.log('Etape 6 - Reprendre le CV complet :');
