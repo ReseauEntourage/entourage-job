@@ -13,26 +13,39 @@ export default class ProfilAidant extends Component {
     const cardsCoupsDePouce = [
       [
         {
-          title:
-            'Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut',
+          title: (
+            <h4 className="uk-text-bold">
+              Ouvrez <span className="uk-text-primary">votre réseau</span> en{' '}
+              <span className="uk-text-primary">partageant le CV</span> d’un ou
+              de plusieurs candidats LinkedOut
+            </h4>
+          ),
           description:
             'Votre partage permet de donner une visibilité inédite aux candidats auprès de recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer !',
           picture: '/static/img/illustrations/entourage_help.png',
         },
         {
-          title: 'Devenez bénévole-coach !',
+          title: (
+            <h4 className="uk-text-bold">
+              Devenez <span className="uk-text-primary">bénévole-coach !</span>
+            </h4>
+          ),
           description:
             'Vous souhaitez donner de votre temps pour tisser une relation de confiance avec un candidat et le coacher vers le retour à l’emploi ? Entourage vous forme à la mission de bénévole-coach et vous donne les outils !',
           picture: '/static/img/illustrations/entourage_papers.png',
-          writeButton: true,
         },
         {
-          title:
-            'Vous souhaitez apporter au projet LinkedOut une compétence particulière ?',
+          title: (
+            <h4 className="uk-text-bold">
+              Vous souhaitez apporter au projet LinkedOut{' '}
+              <span className="uk-text-primary">
+                une compétence particulière ?
+              </span>
+            </h4>
+          ),
           description:
             '(Montage photo, animation d’ateliers ou de temps conviviaux...) Nous serons ravis d’intégrer votre talent au sein du projet.',
           picture: '/static/img/illustrations/entourage_phone.png',
-          writeButton: true,
         },
       ],
       [
@@ -132,11 +145,11 @@ export default class ProfilAidant extends Component {
 
     return (
       <Section id="profilAidant">
-        <div data-uk-grid className="uk-child-width-1-2@m uk-child-width-2-3@s">
-          <div>
+        <div data-uk-grid>
+          <div className="uk-width-2-5">
             <div className="uk-width-5-6">
               <ul
-                className="uk-list"
+                className="uk-list uk-margin-large-top"
                 data-uk-switcher="connect: .switcher-container"
               >
                 {coupsDePouce.map((coupDePouce, index) => (
@@ -157,7 +170,7 @@ export default class ProfilAidant extends Component {
               </ul>
             </div>
           </div>
-          <div>
+          <div className="uk-width-3-5">
             <ul className="uk-switcher switcher-container uk-margin">
               {coupsDePouce.map((coupDePouce, index) => (
                 <li key={index}>
@@ -165,23 +178,28 @@ export default class ProfilAidant extends Component {
                     {coupDePouce.cards.map((card, index2) => (
                       <div
                         key={index2}
-                        className="uk-card uk-card-small uk-card-default uk-card-body"
+                        className="uk-card uk-card-default uk-card-body uk-grid-small"
+                        data-uk-grid
+                        style={{
+                          border: '5px solid rgba(246,107,40,0.15)',
+                          borderRadius: '12px',
+                        }}
                       >
                         <div
-                          className="uk-panel uk-flex uk-flex-middle"
+                          className="uk-panel uk-flex uk-flex-middle uk-grid-small"
                           data-uk-grid
                         >
                           <div className="uk-width-auto@s uk-width-1-1 uk-text-center">
                             <img
                               src={card.picture}
-                              style={{ width: '150px', height: '150px' }}
+                              style={{ width: '225px', height: '225px' }}
                               alt=""
                               className="uk-margin-remove-bottom uk-margin-small-left"
                             />
                           </div>
                           <div className="uk-width-expand uk-text-left@m uk-text-center uk-flex-first@s">
-                            <h6 className="uk-text-bold">{card.title}</h6>
-                            <p className="uk-text-meta">{card.description}</p>
+                            {card.title}
+                            <p>{card.description}</p>
                             <Button
                               style="default"
                               className={
