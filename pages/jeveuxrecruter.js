@@ -3,7 +3,7 @@ import Layout from '../components/Layout';
 import { Button, Section } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
-import HowTo from '../components/partials/HowTo';
+import HowTo from '../components/sections/HowTo';
 import StepCard from '../components/cards/StepCard';
 
 const JeVeuxRecruter = () => {

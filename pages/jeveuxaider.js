@@ -3,7 +3,7 @@ import { Section } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
 import Layout from '../components/Layout';
 import ProfilAidant from '../components/sections/ProfilAidant';
-import HowTo from '../components/partials/HowTo';
+import HowTo from '../components/sections/HowTo';
 import StepCard from '../components/cards/StepCard';
 
 const JeVeuxAider = () => (
@@ -42,6 +42,14 @@ const JeVeuxAider = () => (
         description="Un parcours de courtes formations et d’ateliers à la carte permet aux candidats qui le souhaitent d’acquérir les compétences manquantes et de travailler la confiance en soi"
       />
     </HowTo>
+    <Section id="travailler3" style="secondary" size="small">
+      <p className="uk-text-lead uk-text-center uk-align-center uk-width-2-3@s">
+        Tout au long de leur parcours vers l&apos;emploi, la communauté
+        Entourage soutient moralement les candidats, leur permet de se
+        resocialiser et de faire de nouvelles rencontres
+      </p>
+      <p className="uk-text-center">Découvrez Entourage</p>
+    </Section>
     <DiscoverPartial />
   </Layout>
 );
