@@ -22,7 +22,7 @@ export default class ProfilAidant extends Component {
           ),
           description:
             'Votre partage permet de donner une visibilité inédite aux candidats auprès de recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer !',
-          picture: '/static/img/illustrations/entourage_help.png',
+          picture: '/static/img/illustrations/Personnage-Entourage-5.png',
         },
         {
           title: (
@@ -32,7 +32,7 @@ export default class ProfilAidant extends Component {
           ),
           description:
             'Vous souhaitez donner de votre temps pour tisser une relation de confiance avec un candidat et le coacher vers le retour à l’emploi ? Entourage vous forme à la mission de bénévole-coach et vous donne les outils !',
-          picture: '/static/img/illustrations/entourage_papers.png',
+          picture: '/static/img/illustrations/helping_process.png',
         },
         {
           title: (
@@ -45,7 +45,7 @@ export default class ProfilAidant extends Component {
           ),
           description:
             '(Montage photo, animation d’ateliers ou de temps conviviaux...) Nous serons ravis d’intégrer votre talent au sein du projet.',
-          picture: '/static/img/illustrations/entourage_phone.png',
+          picture: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
         },
       ],
       [
@@ -192,7 +192,7 @@ export default class ProfilAidant extends Component {
                           <div className="uk-width-auto@s uk-width-1-1 uk-text-center">
                             <img
                               src={card.picture}
-                              style={{ width: '225px', height: '225px' }}
+                              style={{ width: '225px' }}
                               alt=""
                               className="uk-margin-remove-bottom uk-margin-small-left"
                             />

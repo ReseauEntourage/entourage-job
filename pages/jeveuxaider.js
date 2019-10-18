@@ -19,7 +19,7 @@ const JeVeuxAider = () => (
     <ProfilAidant />
     <HowTo
       title={
-        <h1 className="uk-text-bold uk-align-center uk-text-center uk-width-1-2@m">
+        <h1 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
           Comment fonctionne{' '}
           <span className="uk-text-primary">LinkedOut ?</span>
         </h1>
@@ -33,12 +33,12 @@ const JeVeuxAider = () => (
       />
       <StepCard
         numStep={2}
-        img="/static/img/illustrations/entourage_papers.png"
+        img="/static/img/illustrations/helping_process.png"
         description="Chaque candidat est soutenu par un bénévole-coach, de la recherche d’emploi à l’intégration en entreprise"
       />
       <StepCard
         numStep={3}
-        img="/static/img/illustrations/entourage_meet.png"
+        img="/static/img/illustrations/Idee-reseau-entourage-dessin.png"
         description="Un parcours de courtes formations et d’ateliers à la carte permet aux candidats qui le souhaitent d’acquérir les compétences manquantes et de travailler la confiance en soi"
       />
     </HowTo>

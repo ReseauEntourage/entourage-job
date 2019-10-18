@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 const StepCard = ({ numStep, img, description }) => (
   <div className="uk-card">
     <div className="uk-card-media-top uk-text-center">
-      <img src={img} alt={`Etape ${numStep}`} />
+      <img src={img} alt={`Etape ${numStep}`} style={{ height: '150px' }} />
     </div>
-    <div className="uk-card-body">
+    <div className="uk-card-body uk-padding-small">
       <div className="uk-flex">
         <div className="uk-width-1-6 uk-text-center">
           <h2 className="uk-h2 uk-text-primary uk-text-bold">{numStep}</h2>
