@@ -1,42 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ImgNoSSR } from '../utils';
+import { Section } from '../utils';
 
-const HowTo = ({ ccm }) => (
-  <div className="uk-child-width-1-4@l uk-child-width-1-3@m uk-child-width-1-2@s uk-flex-center" data-uk-grid>
-    {ccm.map((etape, index) => (
-      <div className="uk-grid-item-match">
-        <div className="uk-card" key={index}>
-          <div className="uk-card-media-top uk-text-center">
-            <img src={etape.imgSrc} alt={index + 1} />
-          </div>
-          <div className="uk-card-body">
-            <div className="uk-flex">
-              <div className="uk-width-1-6 uk-text-center">
-                <h2 className="uk-h2 uk-text-primary uk-text-bold">{index + 1}</h2>
-              </div>
-              <div className="uk-width-5-6">{etape.description}</div>
-            </div>
-          </div>
-        </div>
+const HowTo = ({ title, children, colLarge }) => {
+  let classChildWidth =
+    'uk-child-width-1-4@l uk-child-width-1-3@m uk-child-width-1-2@s';
+  switch (colLarge) {
+    case 3:
+      classChildWidth =
+        'uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-1@s';
+      break;
+    case 2:
+      classChildWidth = 'uk-child-width-1-2@l uk-child-width-1-1@m';
+      break;
+    default:
+      classChildWidth =
+        'uk-child-width-1-4@l uk-child-width-1-3@m uk-child-width-1-2@s';
+  }
+
+  return (
+    <Section style="default">
+      {title}
+      <div className={`${classChildWidth} uk-flex-center`} data-uk-grid>
+        {children}
       </div>
-    ))}
-  </div>
-);
+    </Section>
+  );
+};
 
 HowTo.propTypes = {
-  ccm: PropTypes.arrayOf(
-    PropTypes.shape({
-      imgSrc: PropTypes.string,
-      description: PropTypes.string,
-    })
-  ).isRequired,
+  title: PropTypes.string.isRequired,
+  children: PropTypes.arrayOf(PropTypes.elementType).isRequired,
+  colLarge: PropTypes.number,
 };
+
 HowTo.defaultProps = {
-  ccm: {
-    imgSrc: undefined,
-    description: undefined,
-  },
+  colLarge: 4,
 };
 
 export default HowTo;

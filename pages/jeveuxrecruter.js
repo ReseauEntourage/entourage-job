@@ -4,27 +4,9 @@ import { Button, Section } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
 import HowTo from '../components/partials/HowTo';
+import StepCard from '../components/cards/StepCard';
 
 const JeVeuxRecruter = () => {
-  const ccm = [
-    {
-      description: 'Lorem ipsum lorem ipsum',
-      imgSrc: '/static/img/illustrations/entourage_phone.png',
-    },
-    {
-      description: 'Lorem ipsum lorem ipsum',
-      imgSrc: '/static/img/illustrations/entourage_papers.png',
-    },
-    {
-      description: 'Lorem ipsum lorem ipsum',
-      imgSrc: '/static/img/illustrations/entourage_meet.png',
-    },
-    {
-      description: 'Lorem ipsum lorem ipsum',
-      imgSrc: '/static/img/illustrations/entourage_phone.png',
-    },
-  ];
-
   const reviews = [
     {
       author: 'Paul Jean',
@@ -132,13 +114,35 @@ const JeVeuxRecruter = () => {
           </div>
         </div>
       </Section>
-      <Section id="recruter3" style="default">
-        <h3 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
-          Du premier contact à l'intégration en entreprise,{' '}
-          <span className="uk-text-primary">comment ça marche</span>
-        </h3>
-        <HowTo ccm={ccm} />
-      </Section>
+      <HowTo
+        title={
+          <h3 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
+            Du premier contact à l&apos;intégration en entreprise,{' '}
+            <span className="uk-text-primary">comment ça marche</span>
+          </h3>
+        }
+      >
+        <StepCard
+          numStep={1}
+          img="/static/img/illustrations/entourage_phone.png"
+          description="Lorem ipsum lorem ipsum"
+        />
+        <StepCard
+          numStep={2}
+          img="/static/img/illustrations/entourage_papers.png"
+          description="Lorem ipsum lorem ipsum"
+        />
+        <StepCard
+          numStep={3}
+          img="/static/img/illustrations/entourage_meet.png"
+          description="Lorem ipsum lorem ipsum"
+        />
+        <StepCard
+          numStep={4}
+          img="/static/img/illustrations/entourage_phone.png"
+          description="Lorem ipsum lorem ipsum"
+        />
+      </HowTo>
       <Section id="recruter4" style="default">
         <h2 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
           Vous avez des opportunités d'emplois ?{' '}

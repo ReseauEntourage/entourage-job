@@ -1,9 +1,10 @@
 import React from 'react';
-import { HelpingCard, ScaleCard } from '../components/cards';
-import { Button, Section, GridNoSSR, SliderNoSSR } from '../components/utils';
+import { Section } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
 import Layout from '../components/Layout';
 import ProfilAidant from '../components/sections/ProfilAidant';
+import HowTo from '../components/partials/HowTo';
+import StepCard from '../components/cards/StepCard';
 
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - Entourage Jobs">
@@ -16,50 +17,31 @@ const JeVeuxAider = () => (
       </p>
     </Section>
     <ProfilAidant />
-    <Section style="muted">
-      <div className="uk-text-center" id="scale">
-        <h2>
-          Aider <span className="uk-text-primary">à votre échelle</span>
-        </h2>
-        <SliderNoSSR
-          auto
-          finite={false}
-          childWidths={['1-1', '1-2@s', '1-4@m']}
-          grid="small"
-          items={[
-            <ScaleCard
-              title="Je suis un particulier"
-              titleEmphaseStart={2}
-              description="Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Laboriosam repellat suscipit, quo iure similique beatae
-                recusandae eius itaque."
-            />,
-            <ScaleCard
-              title="Je suis un acteur du millieu associatif"
-              titleEmphaseStart={2}
-              description="Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Laboriosam repellat suscipit, quo iure similique beatae
-                recusandae eius itaque."
-            />,
-            <ScaleCard
-              title="Je veux recruter"
-              titleEmphaseStart={2}
-              description="Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Laboriosam repellat suscipit, quo iure similique beatae
-                recusandae eius itaque."
-            />,
-            <ScaleCard
-              title="Je suis un travailleur social"
-              titleEmphaseStart={2}
-              description="Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Laboriosam repellat suscipit, quo iure similique beatae
-                recusandae eius itaque."
-            />,
-          ]}
-        />
-        <Button style="primary">écrivez-nous</Button>
-      </div>
-    </Section>
+    <HowTo
+      title={
+        <h1 className="uk-text-bold uk-align-center uk-text-center uk-width-1-2@m">
+          Comment fonctionne{' '}
+          <span className="uk-text-primary">LinkedOut ?</span>
+        </h1>
+      }
+      colLarge={3}
+    >
+      <StepCard
+        numStep={1}
+        img="/static/img/illustrations/entourage_phone.png"
+        description="La plateforme LinkedOut permet de viraliser les CV des candidats sur les réseaux sociaux pour les rendre visibles auprès de recruteurs et générer des opportunités d'emploi"
+      />
+      <StepCard
+        numStep={2}
+        img="/static/img/illustrations/entourage_papers.png"
+        description="Chaque candidat est soutenu par un bénévole-coach, de la recherche d’emploi à l’intégration en entreprise"
+      />
+      <StepCard
+        numStep={3}
+        img="/static/img/illustrations/entourage_meet.png"
+        description="Un parcours de courtes formations et d’ateliers à la carte permet aux candidats qui le souhaitent d’acquérir les compétences manquantes et de travailler la confiance en soi"
+      />
+    </HowTo>
     <DiscoverPartial />
   </Layout>
 );
