@@ -2,8 +2,8 @@
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
-    typeof define === 'function' && define.amd ? define('uikitparallax', ['uikit-util'], factory) :
-    (global = global || self, global.UIkitParallax = factory(global.UIkit.util));
+    typeof define === 'function' && define.amd ? define('uikitslideshow_parallax', ['uikit-util'], factory) :
+    (global = global || self, global.UIkitSlideshow_parallax = factory(global.UIkit.util));
 }(this, function (uikitUtil) { 'use strict';
 
     var Media = {
@@ -406,88 +406,129 @@
 
         mixins: [Parallax],
 
-        props: {
-            target: String,
-            viewport: Number,
-            easing: Number
-        },
-
         data: {
-            target: false,
-            viewport: 1,
-            easing: 1
+            selItem: '!li'
         },
 
         computed: {
 
-            target: function(ref, $el) {
-                var target = ref.target;
+            item: function(ref, $el) {
+                var selItem = ref.selItem;
 
-                return getOffsetElement(target && uikitUtil.query(target, $el) || $el);
+                return uikitUtil.query(selItem, $el);
             }
 
         },
 
-        update: {
+        events: [
 
-            read: function(ref, type) {
-                var percent = ref.percent;
-                var active = ref.active;
+            {
 
+                name: 'itemshown',
 
-                if (type !== 'scroll') {
-                    percent = false;
+                self: true,
+
+                el: function() {
+                    return this.item;
+                },
+
+                handler: function() {
+                    uikitUtil.css(this.$el, this.getCss(.5));
                 }
-
-                if (!active) {
-                    return;
-                }
-
-                var prev = percent;
-                percent = ease(uikitUtil.scrolledOver(this.target) / (this.viewport || 1), this.easing);
-
-                return {
-                    percent: percent,
-                    style: prev !== percent ? this.getCss(percent) : false
-                };
-            },
-
-            write: function(ref) {
-                var style = ref.style;
-                var active = ref.active;
-
-
-                if (!active) {
-                    this.reset();
-                    return;
-                }
-
-                style && uikitUtil.css(this.$el, style);
 
             },
 
-            events: ['scroll', 'resize']
-        }
+            {
+                name: 'itemin itemout',
+
+                self: true,
+
+                el: function() {
+                    return this.item;
+                },
+
+                handler: function(ref) {
+                    var type = ref.type;
+                    var ref_detail = ref.detail;
+                    var percent = ref_detail.percent;
+                    var duration = ref_detail.duration;
+                    var timing = ref_detail.timing;
+                    var dir = ref_detail.dir;
+
+
+                    uikitUtil.Transition.cancel(this.$el);
+                    uikitUtil.css(this.$el, this.getCss(getCurrent(type, dir, percent)));
+
+                    uikitUtil.Transition.start(this.$el, this.getCss(isIn(type)
+                        ? .5
+                        : dir > 0
+                            ? 1
+                            : 0
+                    ), duration, timing).catch(uikitUtil.noop);
+
+                }
+            },
+
+            {
+                name: 'transitioncanceled transitionend',
+
+                self: true,
+
+                el: function() {
+                    return this.item;
+                },
+
+                handler: function() {
+                    uikitUtil.Transition.cancel(this.$el);
+                }
+
+            },
+
+            {
+                name: 'itemtranslatein itemtranslateout',
+
+                self: true,
+
+                el: function() {
+                    return this.item;
+                },
+
+                handler: function(ref) {
+                    var type = ref.type;
+                    var ref_detail = ref.detail;
+                    var percent = ref_detail.percent;
+                    var dir = ref_detail.dir;
+
+                    uikitUtil.Transition.cancel(this.$el);
+                    uikitUtil.css(this.$el, this.getCss(getCurrent(type, dir, percent)));
+                }
+            }
+
+        ]
 
     };
 
-    function ease(percent, easing) {
-        return uikitUtil.clamp(percent * (1 - (easing - easing * percent)));
+    function isIn(type) {
+        return uikitUtil.endsWith(type, 'in');
     }
 
-    // SVG elements do not inherit from HTMLElement
-    function getOffsetElement(el) {
-        return el
-            ? 'offsetTop' in el
-                ? el
-                : getOffsetElement(el.parentNode)
-            : document.body;
+    function getCurrent(type, dir, percent) {
+
+        percent /= 2;
+
+        return !isIn(type)
+            ? dir < 0
+                ? percent
+                : 1 - percent
+            : dir < 0
+                ? 1 - percent
+                : percent;
     }
 
-    /* global UIkit, 'parallax' */
+    /* global UIkit, 'slideshowParallax' */
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('parallax', Component);
+        window.UIkit.component('slideshowParallax', Component);
     }
 
     return Component;
