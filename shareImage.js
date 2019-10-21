@@ -114,4 +114,4 @@ function generateCVPreview(name, description, ambition, imagePath, output) {
 //   'output.webp'
 // ).then(console.log);
 
-export default generateCVPreview;
+module.export = generateCVPreview;

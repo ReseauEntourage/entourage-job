@@ -18,6 +18,7 @@ class CVPage extends Component {
         Passions: [],
         Skills: [],
         Experiences: [],
+        url: '',
       },
       router: {
         asPath: '',
@@ -30,6 +31,7 @@ class CVPage extends Component {
       cv: PropTypes.shape({
         firstName: PropTypes.string.isRequired,
         intro: PropTypes.string.isRequired,
+        url: PropTypes.string.isRequired,
       }),
       router: PropTypes.shape({
         asPath: PropTypes.string.isRequired,
@@ -65,7 +67,7 @@ class CVPage extends Component {
         metaTitle={`Aidez ${firstName} en partageant son CV.`}
         metaUrl={`${hostname}${router.asPath}`}
         metaDescription={cv.intro}
-        metaImage={`${hostname}/static/img/arthur-preview.webp`}
+        metaImage={`${hostname}/static/img/${cv.url}-preview.jpg`}
         metaType="profile"
       >
         <div style={{ position: 'relative' }}>

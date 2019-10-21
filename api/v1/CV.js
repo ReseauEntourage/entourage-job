@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const sequelize = require('sequelize');
+const generateCVPreview = require('../../shareImage');
 const db = require('../../db/config/databaseConnect');
 const CV = require('../../db/models/cv')(db, sequelize.DataTypes);
 const Ambition = require('../../db/models/ambition')(db, sequelize.DataTypes);
@@ -230,6 +231,21 @@ router.post('/', (req, res) => {
       }
     })
     .then(() => {
+      // creation de limage de preview cv
+      generateCVPreview(
+        cvCreated.name.toUpperCase(),
+        "A besoin d'un coup de pouce pour travailler dans...",
+        req.body.ambitions.length > 0
+          ? req.body.ambitions.join('. ').toUpperCase()
+          : '',
+        `../../static/img/arthur.png`,
+        `../../static/img/${cvCreated.url}-preview.jpg`
+      )
+        .then(console.log)
+        .catch(console.error);
+      return Promise.resolve();
+    })
+    .then(() => {
       console.log('Etape 6 - Reprendre le CV complet :');
       return CV.findByPk(cvCreated.dataValues.id, {
         include: [
@@ -354,6 +370,45 @@ router.get('/cards/random', (req, res) => {
       console.log(err);
       res.status(401).send('Une erreur est survenue');
     });
+});
+
+// Pour générer toutes les preview de partage des cv
+router.get('/generate-previews', (req, res) => {
+  CV.findAll({
+    include: [
+      {
+        model: Contract,
+        through: { attributes: [] },
+        attributes: ['id', 'name', 'url'],
+      },
+      {
+        model: Ambition,
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
+    ],
+  }).then((listeCV) => {
+    console.log('generate cv');
+    Promise.all(
+      listeCV.map((cv) =>
+        generateCVPreview(
+          cv.name.toUpperCase(),
+          "A besoin d'un coup de pouce pour travailler dans...",
+          cv.Ambitions.length > 0 ? cv.Ambitions.join('. ').toUpperCase() : '',
+          `/static/img/arthur.png`,
+          `/static/img/${cv.url}-preview.jpg`
+        )
+      )
+    )
+      .then((promiseReq, promiseRes) => {
+        console.log(promiseReq, promiseRes);
+        res.status(200).send(`${promiseRes.length} preview générés`);
+      })
+      .catch((rej) => {
+        console.log(rej);
+        res.status(401).send('Une erreur est survenue');
+      });
+  });
 });
 
 /** **************************************** */
