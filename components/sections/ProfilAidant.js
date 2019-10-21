@@ -145,9 +145,9 @@ export default class ProfilAidant extends Component {
 
     return (
       <Section id="profilAidant">
-        <div data-uk-grid>
-          <div className="uk-width-2-5">
-            <div className="uk-width-5-6">
+        <div className="uk-flex-center" data-uk-grid>
+          <div className="uk-width-2-5@m uk-width-1-1">
+            <div className="uk-width-5-6@m">
               <ul
                 className="uk-list uk-margin-large-top"
                 data-uk-switcher="connect: .switcher-container"
@@ -170,49 +170,49 @@ export default class ProfilAidant extends Component {
               </ul>
             </div>
           </div>
-          <div className="uk-width-3-5">
+          <div className="uk-width-3-5@m uk-width-1-1">
             <ul className="uk-switcher switcher-container uk-margin">
               {coupsDePouce.map((coupDePouce, index) => (
                 <li key={index}>
-                  <div>
-                    {coupDePouce.cards.map((card, index2) => (
+                  {/* <div> */}
+                  {coupDePouce.cards.map((card, index2) => (
+                    <div
+                      key={index2}
+                      className="uk-card uk-card-default uk-card-body uk-grid-small uk-margin-auto"
+                      data-uk-grid
+                      style={{
+                        border: '5px solid rgba(246,107,40,0.15)',
+                        borderRadius: '12px',
+                      }}
+                    >
                       <div
-                        key={index2}
-                        className="uk-card uk-card-default uk-card-body uk-grid-small"
+                        className="uk-panel uk-flex uk-flex-middle uk-grid-small"
                         data-uk-grid
-                        style={{
-                          border: '5px solid rgba(246,107,40,0.15)',
-                          borderRadius: '12px',
-                        }}
                       >
-                        <div
-                          className="uk-panel uk-flex uk-flex-middle uk-grid-small"
-                          data-uk-grid
-                        >
-                          <div className="uk-width-auto@s uk-width-1-1 uk-text-center">
-                            <img
-                              src={card.picture}
-                              style={{ width: '225px' }}
-                              alt=""
-                              className="uk-margin-remove-bottom uk-margin-small-left"
-                            />
-                          </div>
-                          <div className="uk-width-expand uk-text-left@m uk-text-center uk-flex-first@s">
-                            {card.title}
-                            <p>{card.description}</p>
-                            <Button
+                        <div className="uk-width-auto@s uk-width-1-1 uk-text-center">
+                          <img
+                            src={card.picture}
+                            style={{ width: '225px' }}
+                            alt=""
+                            className="uk-margin-remove-bottom uk-margin-small-left"
+                          />
+                        </div>
+                        <div className="uk-width-expand uk-text-left@m uk-text-center uk-flex-first@s">
+                          {card.title}
+                          <p>{card.description}</p>
+                          {/* <Button
                               style="default"
                               className={
                                 card.writeButton ? 'uk-visible' : 'uk-hidden'
                               }
                             >
                               écrivez-nous
-                            </Button>
-                          </div>
+                            </Button> */}
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
+                  {/* </div> */}
                 </li>
               ))}
             </ul>
