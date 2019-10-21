@@ -67,7 +67,7 @@ class CVPage extends Component {
         metaTitle={`Aidez ${firstName} en partageant son CV.`}
         metaUrl={`${hostname}${router.asPath}`}
         metaDescription={cv.intro}
-        metaImage={`${hostname}/static/img/${cv.url}-preview.jpg`}
+        metaImage={`${hostname}/static/img/cv/${cv.url}-preview.jpg`}
         metaType="profile"
       >
         <div style={{ position: 'relative' }}>
