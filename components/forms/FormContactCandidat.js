@@ -259,8 +259,22 @@ export default class FormContactCandidat extends Component {
                   <option value="">
                     Sélectionnez un secteur d&apos;activité
                   </option>
+                  <option value="Accueil">Accueil</option>
+                  <option value="Administratif">Administratif</option>
+                  <option value="Animalier">Animalier</option>
+                  <option value="Artisanat">Artisanat</option>
+                  <option value="Associatif">Associatif</option>
+                  <option value="Assurance/Banque">Assurance/Banque</option>
+                  <option value="BTP">BTP</option>
+                  <option value="Communication">Communication</option>
+                  <option value="Culture">Culture</option>
                   <option value="Informatique">Informatique</option>
+                  <option value="Interpréterait">Interpréterait</option>
+                  <option value="Médico-social">Médico-social</option>
                   <option value="Restauration">Restauration</option>
+                  <option value="Social">Social</option>
+                  <option value="Transports">Transports</option>
+                  <option value="Vente / Commerce">Vente / Commerce</option>
                 </select>
               </label>
               <FormValidatorErrorMessage valid_obj={valid_businessLine} />
