@@ -1,6 +1,7 @@
 import React from 'react';
 import { Section } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
+import { IconNoSSR } from '../components/utils/Icon';
 import Layout from '../components/Layout';
 import ProfilAidant from '../components/sections/ProfilAidant';
 import HowTo from '../components/sections/HowTo';
@@ -48,7 +49,9 @@ const JeVeuxAider = () => (
         Entourage soutient moralement les candidats, leur permet de se
         resocialiser et de faire de nouvelles rencontres
       </p>
-      <p className="uk-text-center">Découvrez Entourage</p>
+      <p className="uk-text-center">
+        Découvrez Entourage <IconNoSSR name="linkedout-arrow-contact" />
+      </p>
     </Section>
     <DiscoverPartial />
   </Layout>
