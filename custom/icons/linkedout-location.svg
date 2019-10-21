@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="20px" viewBox="0 0 14 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <g id="UX/UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Profil-candidat-#1" transform="translate(-178.000000, -1834.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Group" transform="translate(178.000000, 1834.000000)">
+                <path d="M7,0 C3.13,0 0,3.13 0,7 C0,12.25 7,20 7,20 C7,20 14,12.25 14,7 C14,3.13 10.87,0 7,0 Z M2,7 C2,4.24 4.24,2 7,2 C9.76,2 12,4.24 12,7 C12,9.88 9.12,14.19 7,16.88 C4.92,14.21 2,9.85 2,7 Z" id="Shape"></path>
+                <circle id="Oval" cx="7" cy="7" r="2.5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

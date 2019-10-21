@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../components/Layout';
 import { Button, Section } from '../components/utils';
-import HowTo from '../components/partials/HowTo';
+import HowTo from '../components/sections/HowTo';
 import { DiscoverPartial } from '../components/partials';
 
 const JeVeuxTravailler = () => {

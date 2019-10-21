@@ -37,11 +37,9 @@ const Header = () => {
                 </SimpleLink>
               )),
               <div className="uk-navbar-item">
-                <LinkedinShareButton url={process.env.SERVER_URL}>
-                  <Button href="#" visible="m" style="primary">
-                    Partager l&apos;opération
-                  </Button>
-                </LinkedinShareButton>
+                <button type="button" className="uk-button uk-button-primary">
+                  Voir les candidats
+                </button>
               </div>,
               <HamburgerNoSSR href="#offcanvas" hidden="m" />,
             ]}

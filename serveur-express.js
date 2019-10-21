@@ -4,7 +4,7 @@ const next = require('next');
 const routeCV = require('./api/v1/CV');
 const routeMessage = require('./api/v1/Message');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const dev = process.env.NODE_ENV !== 'production';
 
 const app = next({ dev });
