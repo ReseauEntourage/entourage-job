@@ -105,13 +105,26 @@ function generateCVPreview(name, description, ambition, imagePath, output) {
     .toFile(output);
 }
 
-// test
-// generateCVPreview(
-//   'ARTHUR',
-//   "A besoin d'un coup de pouce pour travailler dans... ",
-//   "LES TRANSPORTS EN COMMUN. L'ACCUEIL",
-//   './static/img/arthur.png',
-//   'output.webp'
-// ).then(console.log);
+// const users = require('./users.json');
+
+// console.log('OK');
+
+// users.forEach((user) => {
+//   console.log('MOKO');
+//   const ambitions =
+//     user.Ambitions.length > 0
+//       ? user.Ambitions.map((ambition) => ambition.name.toUpperCase())
+//           .slice(0, 2)
+//           .join('. ')
+//       : '';
+//   console.log(ambitions);
+//   generateCVPreview(
+//     user.firstName.toUpperCase(),
+//     "A besoin d'un coup de pouce pour travailler dans...",
+//     ambitions,
+//     `./static/img/arthur.png`,
+//     `./static/img/cv/${user.url}-preview.jpg`
+//   );
+// });
 
 module.export = generateCVPreview;

@@ -372,45 +372,6 @@ router.get('/cards/random', (req, res) => {
     });
 });
 
-// Pour générer toutes les preview de partage des cv
-router.get('/generate-previews', (req, res) => {
-  CV.findAll({
-    include: [
-      {
-        model: Contract,
-        through: { attributes: [] },
-        attributes: ['id', 'name', 'url'],
-      },
-      {
-        model: Ambition,
-        through: { attributes: [] },
-        attributes: ['id', 'name'],
-      },
-    ],
-  }).then((listeCV) => {
-    console.log('generate cv');
-    Promise.all(
-      listeCV.map((cv) =>
-        generateCVPreview(
-          cv.name.toUpperCase(),
-          "A besoin d'un coup de pouce pour travailler dans...",
-          cv.Ambitions.length > 0 ? cv.Ambitions.join('. ').toUpperCase() : '',
-          `/static/img/arthur.png`,
-          `/static/img/${cv.url}-preview.jpg`
-        )
-      )
-    )
-      .then((promiseReq, promiseRes) => {
-        console.log(promiseReq, promiseRes);
-        res.status(200).send(`${promiseRes.length} preview générés`);
-      })
-      .catch((rej) => {
-        console.log(rej);
-        res.status(401).send('Une erreur est survenue');
-      });
-  });
-});
-
 /** **************************************** */
 /** ************ A RETRAVAILLER ************ */
 /** **************************************** */
