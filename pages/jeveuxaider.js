@@ -10,10 +10,13 @@ import StepCard from '../components/cards/StepCard';
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - Entourage Jobs">
     <Section id="titre">
-      <h1 className="uk-heading-medium uk-text-bold uk-text-center">
+      <h1 className="uk-heading-medium@s uk-text-bold uk-text-center uk-align-center">
         Vous souhaitez <span className="uk-text-primary">aider ?</span>
       </h1>
-      <p className="uk-text-lead uk-text-center" style={{ fontWeight: '600' }}>
+      <p
+        className="uk-text-lead@s uk-text-center uk-align-center uk-width-2-3 "
+        style={{ fontWeight: '600' }}
+      >
         Il n&apos;y a pas de petit coup de pouce, aidez à votre échelle !
       </p>
     </Section>
