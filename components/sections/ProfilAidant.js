@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Section, IconNoSSR } from '../utils';
+import { Section, IconNoSSR, Button } from '../utils';
 
 export default class ProfilAidant extends Component {
   constructor(props) {
@@ -60,7 +60,7 @@ export default class ProfilAidant extends Component {
           ),
           description: (
             <Button style="primary" href="#">
-              Nous l'orienter
+              Nous l&apos;orienter
             </Button>
           ),
           picture: '/static/img/illustrations/Personnage-Entourage-5.png',
@@ -117,32 +117,12 @@ export default class ProfilAidant extends Component {
 
     const coupsDePouce = [
       {
-        /*         title: (
-          <p className="uk-text-lead" style={{ fontWeight: '600' }}>
-            Je suis un particulier
-          </p>
-        ),
-        titleSelect: (
-          <h2 className="uk-text-bold">
-            Je suis <span className="uk-text-primary">un particulier</span>
-          </h2>
-        ), */
         title: 'Je suis un particulier',
         titleSelect: (
           <span className="uk-text-bold">
             Je suis <span className="uk-text-primary">un particulier</span>
           </span>
         ),
-        /*         titleSelectSmall: (
-          <h4 className="uk-text-bold">
-            Je suis <span className="uk-text-primary">un particulier</span>
-          </h4>
-        ),
-        titleSmall: (
-          <p style={{ fontWeight: '600' }}>
-            Je suis un particulier
-          </p>
-        ), */
         description:
           "LinkedOut cherche à recruter des bénévoles dont le rôle sera d'accompagner les personnes dans leur recherche d'emploi.",
         cards: cardsCoupsDePouce[0],
@@ -155,17 +135,6 @@ export default class ProfilAidant extends Component {
             <span className="uk-text-primary">milieu associatif ou social</span>
           </span>
         ),
-        /* title: (
-          <p className="uk-text-lead" style={{ fontWeight: '600' }}>
-            Je suis un acteur du milieu associatif ou social
-          </p>
-        ),
-        titleSelect: (
-          <h2 className="uk-text-bold">
-            Je suis un acteur du{' '}
-            <span className="uk-text-primary">milieu associatif ou social</span>
-          </h2>
-        ), */
         description:
           "Entourage cherche à construire son dispositif en collaboration avec d'autres acteurs de l'insertion ayant des expertises complémentaires. Contactez-nous pour rejoindre le projet ou apporter votre savoir-faire",
         cards: cardsCoupsDePouce[1],
@@ -177,16 +146,6 @@ export default class ProfilAidant extends Component {
             Je suis <span className="uk-text-primary">un employeur</span>
           </span>
         ),
-        /* title: (
-          <p className="uk-text-lead" style={{ fontWeight: '600' }}>
-            Je suis un employeur
-          </p>
-        ),
-        titleSelect: (
-          <h2 className="uk-text-bold">
-            Je suis <span className="uk-text-primary">un employeur</span>
-          </h2>
-        ), */
         description:
           "Contactez-nous si une personne que vous accompagnez vous semble pouvoir bénéficier du programme LinkedOut, que vous voulez apprendre à rédiger des CVs selon le modèle LinkedOut pour recevoir de l'aide dans les démarches de recherche d'emploi",
         cards: cardsCoupsDePouce[2],
@@ -222,7 +181,10 @@ export default class ProfilAidant extends Component {
                   </li>
                 ))}
               </ul>
-              <div className="uk-inline uk-hidden@m uk-width-1-1 zone-dropdown">
+              <div
+                className="uk-inline uk-hidden@m uk-width-1-1 zone-dropdown"
+                data-uk-toggle="target: .triangle-direction"
+              >
                 <button
                   className="uk-button uk-button-default uk-width-1-1 uk-padding-small btn-dropdown"
                   style={{ border: '2px solid rgba(246,107,40,0.5)' }}
@@ -232,13 +194,20 @@ export default class ProfilAidant extends Component {
                     <div className="uk-width-expand">
                       <h4>{coupsDePouce[profileSelect].titleSelect}</h4>
                     </div>
-                    <div className="uk-width-auto uk-text-primary">
+                    <div className="uk-width-auto uk-text-primary triangle-direction">
                       <IconNoSSR name="triangle-down" ratio={1.5} />
+                    </div>
+                    <div
+                      className="uk-width-auto uk-text-primary triangle-direction"
+                      hidden
+                    >
+                      <IconNoSSR name="triangle-up" ratio={1.5} />
                     </div>
                   </div>
                 </button>
                 <div
                   id="dropdownProfile"
+                  className="uk-dropdown-close"
                   data-uk-dropdown="mode: click; pos: bottom-justify; boundary: .zone-dropdown; boundary-align: true"
                 >
                   <ul
@@ -251,7 +220,6 @@ export default class ProfilAidant extends Component {
                           href="#"
                           className="uk-link-reset"
                           onClick={() => {
-                            UIkit.dropdown('#dropdownProfile').hide();
                             this.setState({ profileSelect: index });
                           }}
                         >
