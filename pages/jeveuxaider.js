@@ -10,7 +10,7 @@ import StepCard from '../components/cards/StepCard';
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - Entourage Jobs">
     <Section id="titre">
-      <h1 className="uk-heading-medium@s uk-text-bold uk-text-center uk-align-center">
+      <h1 className="uk-heading-medium@s uk-text-bold uk-text-center uk-align-center uk-width-3-4">
         Vous souhaitez <span className="uk-text-primary">aider ?</span>
       </h1>
       <p

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Section, Button } from '../utils';
+import { Section, IconNoSSR } from '../utils';
 
 export default class ProfilAidant extends Component {
   constructor(props) {
@@ -94,7 +94,7 @@ export default class ProfilAidant extends Component {
 
     const coupsDePouce = [
       {
-        title: (
+        /*         title: (
           <p className="uk-text-lead" style={{ fontWeight: '600' }}>
             Je suis un particulier
           </p>
@@ -103,13 +103,36 @@ export default class ProfilAidant extends Component {
           <h2 className="uk-text-bold">
             Je suis <span className="uk-text-primary">un particulier</span>
           </h2>
+        ), */
+        title: 'Je suis un particulier',
+        titleSelect: (
+          <span className="uk-text-bold">
+            Je suis <span className="uk-text-primary">un particulier</span>
+          </span>
         ),
+        /*         titleSelectSmall: (
+          <h4 className="uk-text-bold">
+            Je suis <span className="uk-text-primary">un particulier</span>
+          </h4>
+        ),
+        titleSmall: (
+          <p style={{ fontWeight: '600' }}>
+            Je suis un particulier
+          </p>
+        ), */
         description:
           "LinkedOut cherche à recruter des bénévoles dont le rôle sera d'accompagner les personnes dans leur recherche d'emploi.",
         cards: cardsCoupsDePouce[0],
       },
       {
-        title: (
+        title: 'Je suis un acteur du milieu associatif ou social',
+        titleSelect: (
+          <span className="uk-text-bold">
+            Je suis un acteur du{' '}
+            <span className="uk-text-primary">milieu associatif ou social</span>
+          </span>
+        ),
+        /* title: (
           <p className="uk-text-lead" style={{ fontWeight: '600' }}>
             Je suis un acteur du milieu associatif ou social
           </p>
@@ -119,13 +142,19 @@ export default class ProfilAidant extends Component {
             Je suis un acteur du{' '}
             <span className="uk-text-primary">milieu associatif ou social</span>
           </h2>
-        ),
+        ), */
         description:
           "Entourage cherche à construire son dispositif en collaboration avec d'autres acteurs de l'insertion ayant des expertises complémentaires. Contactez-nous pour rejoindre le projet ou apporter votre savoir-faire",
         cards: cardsCoupsDePouce[1],
       },
       {
-        title: (
+        title: 'Je suis un employeur',
+        titleSelect: (
+          <span className="uk-text-bold">
+            Je suis <span className="uk-text-primary">un employeur</span>
+          </span>
+        ),
+        /* title: (
           <p className="uk-text-lead" style={{ fontWeight: '600' }}>
             Je suis un employeur
           </p>
@@ -134,7 +163,7 @@ export default class ProfilAidant extends Component {
           <h2 className="uk-text-bold">
             Je suis <span className="uk-text-primary">un employeur</span>
           </h2>
-        ),
+        ), */
         description:
           "Contactez-nous si une personne que vous accompagnez vous semble pouvoir bénéficier du programme LinkedOut, que vous voulez apprendre à rédiger des CVs selon le modèle LinkedOut pour recevoir de l'aide dans les démarches de recherche d'emploi",
         cards: cardsCoupsDePouce[2],
@@ -149,7 +178,7 @@ export default class ProfilAidant extends Component {
           <div className="uk-width-2-5@m uk-width-1-1">
             <div className="uk-width-5-6@m">
               <ul
-                className="uk-list uk-margin-large-top"
+                className="uk-list uk-margin-large-top uk-visible@m"
                 data-uk-switcher="connect: .switcher-container"
               >
                 {coupsDePouce.map((coupDePouce, index) => (
@@ -161,13 +190,59 @@ export default class ProfilAidant extends Component {
                         this.setState({ profileSelect: index });
                       }}
                     >
-                      {profileSelect === index
-                        ? coupDePouce.titleSelect
-                        : coupDePouce.title}
+                      <h2>
+                        {profileSelect === index
+                          ? coupDePouce.titleSelect
+                          : coupDePouce.title}
+                      </h2>
                     </a>
                   </li>
                 ))}
               </ul>
+              <div className="uk-inline uk-hidden@m uk-width-1-1 zone-dropdown">
+                <button
+                  className="uk-button uk-button-default uk-width-1-1 uk-padding-small btn-dropdown"
+                  style={{ border: '2px solid rgba(246,107,40,0.5)' }}
+                  type="button"
+                >
+                  <div className="uk-width-1-1 uk-flex-middle" data-uk-grid>
+                    <div className="uk-width-expand">
+                      <h4>{coupsDePouce[profileSelect].titleSelect}</h4>
+                    </div>
+                    <div className="uk-width-auto uk-text-primary">
+                      <IconNoSSR name="triangle-down" ratio={1.5} />
+                    </div>
+                  </div>
+                </button>
+                <div
+                  id="dropdownProfile"
+                  data-uk-dropdown="mode: click; pos: bottom-justify; boundary: .zone-dropdown; boundary-align: true"
+                >
+                  <ul
+                    className="uk-list uk-margin-large-top"
+                    data-uk-switcher="connect: .switcher-container"
+                  >
+                    {coupsDePouce.map((coupDePouce, index) => (
+                      <li key={index}>
+                        <a
+                          href="#"
+                          className="uk-link-reset"
+                          onClick={() => {
+                            UIkit.dropdown('#dropdownProfile').hide();
+                            this.setState({ profileSelect: index });
+                          }}
+                        >
+                          <h4>
+                            {profileSelect === index
+                              ? coupDePouce.titleSelect
+                              : coupDePouce.title}
+                          </h4>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
           <div className="uk-width-3-5@m uk-width-1-1">
