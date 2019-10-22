@@ -50,24 +50,47 @@ export default class ProfilAidant extends Component {
       ],
       [
         {
-          title: 'Autre texte ? Entourage vous accompagne dans les démarches',
-          description:
-            "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-          picture: '/static/img/illustrations/entourage_meet.png',
+          title: (
+            <h4 className="uk-text-bold">
+              Vous accompagnez un personne{' '}
+              <span className="uk-text-primary">
+                en démarche de réinsertion professionnelle.
+              </span>
+            </h4>
+          ),
+          description: (
+            <Button style="primary" href="#">
+              Nous l'orienter
+            </Button>
+          ),
+          picture: '/static/img/illustrations/Personnage-Entourage-5.png',
         },
         {
-          title:
-            'Un Autre texte ? Entourage vous accompagne dans les démarches',
-          description:
-            "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-          picture: '/static/img/illustrations/entourage_help.png',
+          title: (
+            <h4 className="uk-text-bold">
+              Vous êtes intéressés par le projet LinkedOut et vous souhaiteriez
+              collaborer avec nous.
+            </h4>
+          ),
+          description: (
+            <Button style="default" href="#">
+              Ecrivez-nous
+            </Button>
+          ),
+          picture: '/static/img/illustrations/helping_process.png',
         },
         {
-          title:
-            'Encore un autre texte ? Entourage vous accompagne dans les démarches',
+          title: (
+            <h4 className="uk-text-bold">
+              Vous souhaitez apporter au projet LinkedOut{' '}
+              <span className="uk-text-primary">
+                une compétence particulière ?
+              </span>
+            </h4>
+          ),
           description:
-            "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-          picture: '/static/img/illustrations/entourage_coaching.png',
+            '(Montage photo, animation d’ateliers ou de temps conviviaux...) Nous serons ravis d’intégrer votre talent au sein du projet.',
+          picture: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
         },
       ],
       [
