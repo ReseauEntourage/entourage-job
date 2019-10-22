@@ -1,4 +1,4 @@
-/*! UIkit 3.1.8 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.2.1 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -89,8 +89,9 @@
         return obj !== null && typeof obj === 'object';
     }
 
+    var toString = objPrototype.toString;
     function isPlainObject(obj) {
-        return isObject(obj) && Object.getPrototypeOf(obj) === objPrototype;
+        return toString.call(obj) === '[object Object]';
     }
 
     function isWindow(obj) {
@@ -109,7 +110,6 @@
         return obj instanceof Node || isObject(obj) && obj.nodeType >= 1;
     }
 
-    var toString = objPrototype.toString;
     function isNodeCollection(obj) {
         return toString.call(obj).match(/^\[object (NodeList|HTMLCollection)\]$/);
     }
@@ -233,6 +233,10 @@
         }
         return target;
     };
+
+    function last(array) {
+        return array[array.length - 1];
+    }
 
     function each(obj, cb) {
         for (var key in obj) {
@@ -1254,7 +1258,7 @@
 
         args = getArgs$1(args);
 
-        var force = !isString(args[args.length - 1]) ? args.pop() : []; // in iOS 9.3 force === undefined evaluates to false
+        var force = !isString(last(args)) ? args.pop() : []; // in iOS 9.3 force === undefined evaluates to false
 
         args = args.filter(Boolean);
 
@@ -2143,7 +2147,7 @@
             }
 
             var p = offset(target);
-            var position = this.positions[this.positions.length - 1];
+            var position = last(this.positions);
             var ref = this.positions;
             var prevPos = ref[0];
 
@@ -2665,6 +2669,7 @@
         isEqual: isEqual,
         swap: swap,
         assign: assign,
+        last: last,
         each: each,
         sortBy: sortBy,
         uniqueBy: uniqueBy,
@@ -4156,42 +4161,32 @@
             read: function() {
 
                 var el = this.$el;
-
-                if (!isVisible(el)) {
-                    return false;
-                }
-
                 var ref = el.parentNode;
                 var height = ref.offsetHeight;
                 var width = ref.offsetWidth;
+                var dim = Dimensions.cover(
+                    {
+                        width: this.width || el.naturalWidth || el.videoWidth || el.clientWidth,
+                        height: this.height || el.naturalHeight || el.videoHeight || el.clientHeight
+                    },
+                    {
+                        width: width + (width % 2 ? 1 : 0),
+                        height: height + (height % 2 ? 1 : 0)
+                    }
+                );
 
-                return {height: height, width: width};
+                if (!dim.width || !dim.height) {
+                    return false;
+                }
+
+                return dim;
             },
 
             write: function(ref) {
                 var height = ref.height;
                 var width = ref.width;
 
-
-                var el = this.$el;
-                var elWidth = this.width || el.naturalWidth || el.videoWidth || el.clientWidth;
-                var elHeight = this.height || el.naturalHeight || el.videoHeight || el.clientHeight;
-
-                if (!elWidth || !elHeight) {
-                    return;
-                }
-
-                css(el, Dimensions.cover(
-                    {
-                        width: elWidth,
-                        height: elHeight
-                    },
-                    {
-                        width: width + (width % 2 ? 1 : 0),
-                        height: height + (height % 2 ? 1 : 0)
-                    }
-                ));
-
+                css(this.$el, {height: height, width: width});
             },
 
             events: ['resize']
@@ -5981,7 +5976,8 @@
                 var this$1 = this;
 
 
-                if (!entries.some(function (entry) { return entry.isIntersecting; })) {
+                // Old chromium based browsers (UC Browser) did not implement `isIntersecting`
+                if (!entries.some(function (entry) { return isUndefined(entry.isIntersecting) || entry.isIntersecting; })) {
                     return;
                 }
 
@@ -6222,7 +6218,7 @@
 
     };
 
-    var active$1;
+    var active$1 = [];
 
     var Modal = {
 
@@ -6312,20 +6308,15 @@
 
                 handler: function(e) {
 
-                    var prev = active$1 && active$1 !== this && active$1;
-
-                    active$1 = this;
-
-                    if (!prev) {
-                        return;
+                    if (includes(active$1, this)) {
+                        return false;
                     }
 
-                    if (this.stack) {
-                        this.prev = prev;
-                    } else {
-                        active$1 = prev;
-                        prev.hide().then(this.show);
+                    if (!this.stack && active$1.length) {
+                        Promise.all(active$1.map(function (modal) { return modal.hide(); })).then(this.show);
                         e.preventDefault();
+                    } else {
+                        active$1.push(this);
                     }
                 }
 
@@ -6338,16 +6329,40 @@
                 self: true,
 
                 handler: function() {
+                    var this$1 = this;
 
-                    registerEvents();
 
-                    if (!hasClass(document.documentElement, this.clsPage)) {
-                        this.scrollbarWidth = width(window) - width(document);
-                        css(document.body, 'overflowY', this.scrollbarWidth && this.overlay ? 'scroll' : '');
+                    if (width(window) - width(document) && this.overlay) {
+                        css(document.body, 'overflowY', 'scroll');
                     }
 
                     addClass(document.documentElement, this.clsPage);
 
+                    if (this.bgClose) {
+                        once(this.$el, 'hide', delayOn(document, 'click', function (ref) {
+                            var defaultPrevented = ref.defaultPrevented;
+                            var target = ref.target;
+
+                            var current = last(active$1);
+                            if (!defaultPrevented
+                                && current === this$1
+                                && (!current.overlay || within(target, current.$el))
+                                && !within(target, current.panel)
+                            ) {
+                                current.hide();
+                            }
+                        }), {self: true});
+                    }
+
+                    if (this.escClose) {
+                        once(this.$el, 'hide', on(document, 'keydown', function (e) {
+                            var current = last(active$1);
+                            if (e.keyCode === 27 && current === this$1) {
+                                e.preventDefault();
+                                current.hide();
+                            }
+                        }), {self: true});
+                    }
                 }
 
             },
@@ -6359,33 +6374,16 @@
                 self: true,
 
                 handler: function() {
+                    var this$1 = this;
 
-                    var found;
-                    var ref = this;
-                    var prev = ref.prev;
 
-                    active$1 = active$1 && active$1 !== this && active$1 || prev;
+                    active$1.splice(active$1.indexOf(this), 1);
 
-                    if (!active$1) {
-
+                    if (!active$1.length) {
                         css(document.body, 'overflowY', '');
-
-                    } else {
-                        while (prev) {
-
-                            if (prev.clsPage === this.clsPage) {
-                                found = true;
-                                break;
-                            }
-
-                            // eslint-disable-next-line prefer-destructuring
-                            prev = prev.prev;
-
-                        }
-
                     }
 
-                    if (!found) {
+                    if (!active$1.some(function (modal) { return modal.clsPage === this$1.clsPage; })) {
                         removeClass(document.documentElement, this.clsPage);
                     }
 
@@ -6417,47 +6415,11 @@
 
             hide: function() {
                 return this.toggleElement(this.$el, false, animate$1(this));
-            },
-
-            getActive: function() {
-                return active$1;
             }
 
         }
 
     };
-
-    var registered;
-
-    function registerEvents() {
-
-        if (registered) {
-            return;
-        }
-
-        registered = true;
-        on(document, 'click', function (ref) {
-            var defaultPrevented = ref.defaultPrevented;
-            var target = ref.target;
-
-            if (!defaultPrevented
-                && active$1
-                && active$1.bgClose
-                && (!active$1.overlay || within(target, active$1.$el))
-                && !within(target, active$1.panel)
-            ) {
-                active$1.hide();
-            }
-        });
-
-        on(document, 'keydown', function (e) {
-            if (e.keyCode === 27 && active$1 && active$1.escClose) {
-                e.preventDefault();
-                active$1.hide();
-            }
-        });
-
-    }
 
     function animate$1(ref) {
         var transitionElement = ref.transitionElement;
@@ -7085,11 +7047,6 @@
                 handler: function() {
                     removeClass(document.body, this.clsContainerAnimation);
                     css(document.body, 'touch-action', '');
-
-                    var active = this.getActive();
-                    if (this.mode === 'none' || active && active !== this && active !== this.prev) {
-                        trigger(this.panel, 'transitionend');
-                    }
                 }
             },
 
@@ -7400,71 +7357,37 @@
                     this.elements.forEach(function (el) {
 
                         var state = el._ukScrollspyState;
-                        var cls = state.cls;
+                        var toggle = function (inview) {
 
-                        if (state.show && !state.inview && !state.queued) {
+                            css(el, 'visibility', !inview && this$1.hidden ? 'hidden' : '');
 
-                            var show = function () {
+                            toggleClass(el, this$1.inViewClass, inview);
+                            toggleClass(el, state.cls);
 
-                                css(el, 'visibility', '');
-                                addClass(el, this$1.inViewClass);
-                                toggleClass(el, cls);
+                            trigger(el, inview ? 'inview' : 'outview');
 
-                                trigger(el, 'inview');
-
-                                this$1.$update(el);
-
-                                state.inview = true;
-                                state.abort && state.abort();
-                            };
-
-                            if (this$1.delay) {
-
-                                state.queued = true;
-                                data.promise = (data.promise || Promise.resolve()).then(function () {
-                                    return !state.inview && new Promise(function (resolve) {
-
-                                        var timer = setTimeout(function () {
-
-                                            show();
-                                            resolve();
-
-                                        }, data.promise || this$1.elements.length === 1 ? this$1.delay : 0);
-
-                                        state.abort = function () {
-                                            clearTimeout(timer);
-                                            resolve();
-                                            state.queued = false;
-                                        };
-
-                                    });
-
-                                });
-
-                            } else {
-                                show();
-                            }
-
-                        } else if (!state.show && (state.inview || state.queued) && this$1.repeat) {
-
-                            state.abort && state.abort();
-
-                            if (!state.inview) {
-                                return;
-                            }
-
-                            css(el, 'visibility', this$1.hidden ? 'hidden' : '');
-                            removeClass(el, this$1.inViewClass);
-                            toggleClass(el, cls);
-
-                            trigger(el, 'outview');
+                            state.inview = inview;
 
                             this$1.$update(el);
 
-                            state.inview = false;
+                        };
+
+                        if (state.show && !state.inview && !state.queued) {
+
+                            state.queued = true;
+
+                            data.promise = (data.promise || Promise.resolve()).then(function () { return new Promise(function (resolve) { return setTimeout(resolve, this$1.delay); }
+                                ); }
+                            ).then(function () {
+                                toggle(true);
+                                setTimeout(function () { return state.queued = false; }, 300);
+                            });
+
+                        } else if (!state.show && state.inview && !state.queued && this$1.repeat) {
+
+                            toggle(false);
 
                         }
-
 
                     });
 
@@ -8292,7 +8215,7 @@
 
     }
 
-    UIkit.version = '3.1.8';
+    UIkit.version = '3.2.1';
 
     core(UIkit);
 
@@ -9148,6 +9071,7 @@
 
                     if (!this.draggable
                         || !isTouch(e) && hasTextNodesOnly(e.target)
+                        || closest(e.target, selInput)
                         || e.button > 0
                         || this.length < 2
                     ) {
@@ -9449,7 +9373,8 @@
             easing: String,
             index: Number,
             finite: Boolean,
-            velocity: Number
+            velocity: Number,
+            selSlides: String
         },
 
         data: function () { return ({
@@ -9496,14 +9421,15 @@
 
             selSlides: function(ref) {
                 var selList = ref.selList;
+                var selSlides = ref.selSlides;
 
-                return (selList + " > *");
+                return (selList + " " + (selSlides || '> *'));
             },
 
             slides: {
 
                 get: function() {
-                    return toNodes(this.list.children);
+                    return $$(this.selSlides, this.$el);
                 },
 
                 watch: function() {
@@ -11005,7 +10931,7 @@
             finite: function(ref) {
                 var finite = ref.finite;
 
-                return finite || getWidth(this.list) < bounds(this.list).width + getMaxWidth(this.list) + this.center;
+                return finite || Math.ceil(getWidth(this.list)) < bounds(this.list).width + getMaxWidth(this.list) + this.center;
             },
 
             maxIndex: function() {
@@ -11015,7 +10941,7 @@
                 }
 
                 if (this.center) {
-                    return this.sets[this.sets.length - 1];
+                    return last(this.sets);
                 }
 
                 css(this.slides, 'order', '');
@@ -11103,7 +11029,7 @@
                     this$1.maxIndex && toggleClass(el, 'uk-hidden', isNumeric(index) && (this$1.sets && !includes(this$1.sets, toFloat(index)) || index > this$1.maxIndex));
                 });
 
-                if (!this.dragging && !this.stack.length) {
+                if (this.length && !this.dragging && !this.stack.length) {
                     this._getTransitioner().translate(1);
                 }
 
@@ -11516,7 +11442,7 @@
             write: function(ref) {
                 var height = ref.height;
 
-                css(this.list, 'minHeight', height || '');
+                height > 0 && css(this.list, 'minHeight', height);
             },
 
             events: ['resize']

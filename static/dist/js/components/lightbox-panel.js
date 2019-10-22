@@ -1,4 +1,4 @@
-/*! UIkit 3.1.8 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.2.1 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -362,7 +362,13 @@
         };
     }
 
-    var active;
+    function delayOn(el, type, fn) {
+        var off = uikitUtil.once(el, type, function () { return off = uikitUtil.on(el, type, fn); }
+        , true);
+        return function () { return off(); };
+    }
+
+    var active = [];
 
     var Modal = {
 
@@ -452,20 +458,15 @@
 
                 handler: function(e) {
 
-                    var prev = active && active !== this && active;
-
-                    active = this;
-
-                    if (!prev) {
-                        return;
+                    if (uikitUtil.includes(active, this)) {
+                        return false;
                     }
 
-                    if (this.stack) {
-                        this.prev = prev;
-                    } else {
-                        active = prev;
-                        prev.hide().then(this.show);
+                    if (!this.stack && active.length) {
+                        uikitUtil.Promise.all(active.map(function (modal) { return modal.hide(); })).then(this.show);
                         e.preventDefault();
+                    } else {
+                        active.push(this);
                     }
                 }
 
@@ -478,16 +479,40 @@
                 self: true,
 
                 handler: function() {
+                    var this$1 = this;
 
-                    registerEvents();
 
-                    if (!uikitUtil.hasClass(document.documentElement, this.clsPage)) {
-                        this.scrollbarWidth = uikitUtil.width(window) - uikitUtil.width(document);
-                        uikitUtil.css(document.body, 'overflowY', this.scrollbarWidth && this.overlay ? 'scroll' : '');
+                    if (uikitUtil.width(window) - uikitUtil.width(document) && this.overlay) {
+                        uikitUtil.css(document.body, 'overflowY', 'scroll');
                     }
 
                     uikitUtil.addClass(document.documentElement, this.clsPage);
 
+                    if (this.bgClose) {
+                        uikitUtil.once(this.$el, 'hide', delayOn(document, 'click', function (ref) {
+                            var defaultPrevented = ref.defaultPrevented;
+                            var target = ref.target;
+
+                            var current = uikitUtil.last(active);
+                            if (!defaultPrevented
+                                && current === this$1
+                                && (!current.overlay || uikitUtil.within(target, current.$el))
+                                && !uikitUtil.within(target, current.panel)
+                            ) {
+                                current.hide();
+                            }
+                        }), {self: true});
+                    }
+
+                    if (this.escClose) {
+                        uikitUtil.once(this.$el, 'hide', uikitUtil.on(document, 'keydown', function (e) {
+                            var current = uikitUtil.last(active);
+                            if (e.keyCode === 27 && current === this$1) {
+                                e.preventDefault();
+                                current.hide();
+                            }
+                        }), {self: true});
+                    }
                 }
 
             },
@@ -499,33 +524,16 @@
                 self: true,
 
                 handler: function() {
+                    var this$1 = this;
 
-                    var found;
-                    var ref = this;
-                    var prev = ref.prev;
 
-                    active = active && active !== this && active || prev;
+                    active.splice(active.indexOf(this), 1);
 
-                    if (!active) {
-
+                    if (!active.length) {
                         uikitUtil.css(document.body, 'overflowY', '');
-
-                    } else {
-                        while (prev) {
-
-                            if (prev.clsPage === this.clsPage) {
-                                found = true;
-                                break;
-                            }
-
-                            // eslint-disable-next-line prefer-destructuring
-                            prev = prev.prev;
-
-                        }
-
                     }
 
-                    if (!found) {
+                    if (!active.some(function (modal) { return modal.clsPage === this$1.clsPage; })) {
                         uikitUtil.removeClass(document.documentElement, this.clsPage);
                     }
 
@@ -557,47 +565,11 @@
 
             hide: function() {
                 return this.toggleElement(this.$el, false, animate(this));
-            },
-
-            getActive: function() {
-                return active;
             }
 
         }
 
     };
-
-    var registered;
-
-    function registerEvents() {
-
-        if (registered) {
-            return;
-        }
-
-        registered = true;
-        uikitUtil.on(document, 'click', function (ref) {
-            var defaultPrevented = ref.defaultPrevented;
-            var target = ref.target;
-
-            if (!defaultPrevented
-                && active
-                && active.bgClose
-                && (!active.overlay || uikitUtil.within(target, active.$el))
-                && !uikitUtil.within(target, active.panel)
-            ) {
-                active.hide();
-            }
-        });
-
-        uikitUtil.on(document, 'keydown', function (e) {
-            if (e.keyCode === 27 && active && active.escClose) {
-                e.preventDefault();
-                active.hide();
-            }
-        });
-
-    }
 
     function animate(ref) {
         var transitionElement = ref.transitionElement;
@@ -834,6 +806,7 @@
 
                     if (!this.draggable
                         || !uikitUtil.isTouch(e) && hasTextNodesOnly(e.target)
+                        || uikitUtil.closest(e.target, uikitUtil.selInput)
                         || e.button > 0
                         || this.length < 2
                     ) {
@@ -1135,7 +1108,8 @@
             easing: String,
             index: Number,
             finite: Boolean,
-            velocity: Number
+            velocity: Number,
+            selSlides: String
         },
 
         data: function () { return ({
@@ -1182,14 +1156,15 @@
 
             selSlides: function(ref) {
                 var selList = ref.selList;
+                var selSlides = ref.selSlides;
 
-                return (selList + " > *");
+                return (selList + " " + (selSlides || '> *'));
             },
 
             slides: {
 
                 get: function() {
-                    return uikitUtil.toNodes(this.list.children);
+                    return uikitUtil.$$(this.selSlides, this.$el);
                 },
 
                 watch: function() {
