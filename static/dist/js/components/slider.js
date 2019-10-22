@@ -1,4 +1,4 @@
-/*! UIkit 3.1.8 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.2.1 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -136,6 +136,7 @@
 
                     if (!this.draggable
                         || !uikitUtil.isTouch(e) && hasTextNodesOnly(e.target)
+                        || uikitUtil.closest(e.target, uikitUtil.selInput)
                         || e.button > 0
                         || this.length < 2
                     ) {
@@ -437,7 +438,8 @@
             easing: String,
             index: Number,
             finite: Boolean,
-            velocity: Number
+            velocity: Number,
+            selSlides: String
         },
 
         data: function () { return ({
@@ -484,14 +486,15 @@
 
             selSlides: function(ref) {
                 var selList = ref.selList;
+                var selSlides = ref.selSlides;
 
-                return (selList + " > *");
+                return (selList + " " + (selSlides || '> *'));
             },
 
             slides: {
 
                 get: function() {
-                    return uikitUtil.toNodes(this.list.children);
+                    return uikitUtil.$$(this.selSlides, this.$el);
                 },
 
                 watch: function() {
@@ -910,7 +913,7 @@
             finite: function(ref) {
                 var finite = ref.finite;
 
-                return finite || getWidth(this.list) < bounds(this.list).width + getMaxWidth(this.list) + this.center;
+                return finite || Math.ceil(getWidth(this.list)) < bounds(this.list).width + getMaxWidth(this.list) + this.center;
             },
 
             maxIndex: function() {
@@ -920,7 +923,7 @@
                 }
 
                 if (this.center) {
-                    return this.sets[this.sets.length - 1];
+                    return uikitUtil.last(this.sets);
                 }
 
                 uikitUtil.css(this.slides, 'order', '');
@@ -1008,7 +1011,7 @@
                     this$1.maxIndex && uikitUtil.toggleClass(el, 'uk-hidden', uikitUtil.isNumeric(index) && (this$1.sets && !uikitUtil.includes(this$1.sets, uikitUtil.toFloat(index)) || index > this$1.maxIndex));
                 });
 
-                if (!this.dragging && !this.stack.length) {
+                if (this.length && !this.dragging && !this.stack.length) {
                     this._getTransitioner().translate(1);
                 }
 
