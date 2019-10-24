@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Section, IconNoSSR, Button } from '../utils';
+import ModalInterestLinkedOut from '../modals/ModalInterestLinkedOut';
 
 export default class ProfilAidant extends Component {
   constructor(props) {
@@ -73,9 +74,19 @@ export default class ProfilAidant extends Component {
             </h4>
           ),
           description: (
-            <Button style="default" href="#">
-              Ecrivez-nous
-            </Button>
+            <>
+              <button
+                type="button"
+                className="uk-button uk-button-default"
+                href="#"
+                data-uk-toggle="target: #modalInterestLinkedOut"
+              >
+                Ecrivez-nous
+              </button>
+              <ModalInterestLinkedOut
+                candidat={{ id: 'test', firstName: 'test' }}
+              />
+            </>
           ),
           picture: '/static/img/illustrations/helping_process.png',
         },
