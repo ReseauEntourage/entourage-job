@@ -17,6 +17,7 @@ const Button = ({
   children,
   className,
   isExternal,
+  onClick,
 }) => {
   let classBuffer = 'uk-button';
   if (visible) classBuffer += ` uk-visible@${visible}`;
@@ -28,7 +29,12 @@ const Button = ({
   });
 
   const buttonComponent = (
-    <button className={classBuffer} disabled={disabled} type="button">
+    <button
+      className={classBuffer}
+      disabled={disabled}
+      type="button"
+      onClick={onClick}
+    >
       {children}
     </button>
   );
@@ -52,6 +58,7 @@ Button.propTypes = {
   widths: PropTypes.arrayOf(PropTypes.string), // UIKIT_WIDTH_SCREENS
   isExternal: PropTypes.bool,
   className: PropTypes.string,
+  onClick: PropTypes.func,
 };
 Button.defaultProps = {
   disabled: false,
@@ -62,6 +69,7 @@ Button.defaultProps = {
   widths: [],
   isExternal: false,
   className: undefined,
+  onClick: undefined,
 };
 
 export default Button;

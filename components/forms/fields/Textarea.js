@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
-export default class Input extends Component {
+export default class TextArea extends Component {
   static get propTypes() {
     return {
       id: PropTypes.string.isRequired,
@@ -16,12 +16,14 @@ export default class Input extends Component {
         message: PropTypes.boolean,
       }).isRequired,
       rows: PropTypes.number,
+      maxLength: PropTypes.number,
     };
   }
 
   static get defaultProps() {
     return {
       rows: 5,
+      maxLength: 1000,
     };
   }
 
@@ -43,6 +45,7 @@ export default class Input extends Component {
       valid,
       rows,
       handleChange,
+      maxLength,
     } = this.props;
     return (
       <div className="uk-form-controls">
@@ -54,8 +57,9 @@ export default class Input extends Component {
             type={type}
             rows={rows}
             placeholder={placeholder}
+            maxLength={maxLength}
             onChange={handleChange}
-            className={`uk-textarea ${this.getClass(valid)}`}
+            className={`uk-textarea ${() => this.getClassName(valid)}`}
           />
         </label>
         <FormValidatorErrorMessage valid_obj={valid} />
