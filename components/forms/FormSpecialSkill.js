@@ -6,7 +6,7 @@ import FormValidator from './FormValidator';
 import rulesSpecialSkill from './rulesSpecialSkill';
 import Api from '../../Axios';
 import Input from './fields/Input';
-import TextArea from './fields/TextArea';
+import Textarea from './fields/TextArea';
 import { GridNoSSR, Button } from '../utils';
 
 const DEFAULT_MESSAGE = {
@@ -143,7 +143,7 @@ export default class FormContactCandidat extends Component {
                 title="Lieu d'habitation *"
                 handleChange={this.handleChange}
               />,
-              <TextArea
+              <Textarea
                 type="text"
                 id="input-text"
                 placeholder="Tapez votre texte"

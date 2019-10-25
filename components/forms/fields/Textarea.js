@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
-export default class TextArea extends Component {
+export default class Textarea extends Component {
   static get propTypes() {
     return {
       id: PropTypes.string.isRequired,
