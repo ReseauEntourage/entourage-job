@@ -8,6 +8,7 @@ import FormValidatorErrorMessage from './FormValidatorErrorMessage';
 import Api from '../../Axios';
 import Input from './fields/Input';
 import Textarea from './fields/Textarea';
+import './FormInterestLinkedOut.less';
 
 const DEFAULT_MESSAGE = {
   name: '',

@@ -43,18 +43,18 @@ export default class Input extends Component {
       handleChange,
     } = this.props;
     return (
-      <div className="uk-form-controls">
+      <div className="uk-form-controls uk-padding-small">
         <label className="uk-form-label" htmlFor={id}>
           {title}
-          <input
-            name={name}
-            type={type}
-            id={id}
-            placeholder={placeholder}
-            onChange={handleChange}
-            className={`uk-input ${() => this.getClassName(valid)}`}
-          />
         </label>
+        <input
+          name={name}
+          type={type}
+          id={id}
+          placeholder={placeholder}
+          onChange={handleChange}
+          className={`uk-input uk-form-large ${() => this.getClassName(valid)}`}
+        />
         <FormValidatorErrorMessage validObj={valid} />
       </div>
     );
