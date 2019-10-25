@@ -48,6 +48,25 @@ export default class ProfilAidant extends Component {
             '(Montage photo, animation d’ateliers ou de temps conviviaux...) Nous serons ravis d’intégrer votre talent au sein du projet.',
           picture: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
         },
+        {
+          title: (
+            <h4 className="uk-text-bold">
+              <span className="uk-text-primary">Soutenez LinkedOut</span> en
+              faisant un don
+            </h4>
+          ),
+          description: (
+            <button
+              type="button"
+              className="uk-button uk-button-default"
+              href="#"
+              data-uk-toggle="target: #modalFaireDon"
+            >
+              Écrivez-nous
+            </button>
+          ),
+          picture: '/static/img/illustrations/download.png',
+        },
       ],
       [
         {
@@ -81,7 +100,7 @@ export default class ProfilAidant extends Component {
                 href="#"
                 data-uk-toggle="target: #modalInterestLinkedOut"
               >
-                Ecrivez-nous
+                Écrivez-nous
               </button>
               <ModalInterestLinkedOut
                 candidat={{ id: 'test', firstName: 'test' }}
@@ -89,19 +108,6 @@ export default class ProfilAidant extends Component {
             </>
           ),
           picture: '/static/img/illustrations/helping_process.png',
-        },
-        {
-          title: (
-            <h4 className="uk-text-bold">
-              Vous souhaitez apporter au projet LinkedOut{' '}
-              <span className="uk-text-primary">
-                une compétence particulière ?
-              </span>
-            </h4>
-          ),
-          description:
-            '(Montage photo, animation d’ateliers ou de temps conviviaux...) Nous serons ravis d’intégrer votre talent au sein du projet.',
-          picture: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
         },
       ],
       [

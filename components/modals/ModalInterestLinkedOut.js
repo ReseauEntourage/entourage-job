@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { IconNoSSR } from '../utils/Icon';
-import FormContactCandidat from '../forms/FormContactCandidat';
 import ModalGeneric from './ModalGeneric';
+import FormInterestLinkedOut from '../forms/FormInterestLinkedOut';
 
 export default class ModalInterestLinkedOut extends Component {
   constructor(props) {
@@ -36,13 +36,13 @@ export default class ModalInterestLinkedOut extends Component {
       <ModalGeneric id="modalInterestLinkedOut">
         {(closeModal) => (
           <>
-            <div className="uk-width-3-5 uk-flex">
-              <div className="uk-width-1-6 uk-text-center">
+            <div className="uk-flex">
+              <div className="uk-margin-medium-right">
                 <span className="uk-text-primary">
                   <IconNoSSR name="linkedout-contract" />
                 </span>
               </div>
-              <div className="uk-width-5-6">
+              <div className="">
                 <h3 className="uk-text-bold">
                   Vous êtes intéressés par LinkedOut ?
                 </h3>
@@ -71,13 +71,7 @@ export default class ModalInterestLinkedOut extends Component {
               </div>
             ) : (
               <>
-                <p>
-                  Cet espace est dédié aux potentiels recruteurs qui souhaitent
-                  proposer des opportunités aux candidats. Écrivez vos mots
-                  d&apos;encouragement ou contactez avec le coach plus bas dans
-                  la page CV !
-                </p>
-                <FormContactCandidat
+                <FormInterestLinkedOut
                   candidat={candidat}
                   closeModal={closeModal}
                   confirmMessageSent={this.confirmMessageSent}

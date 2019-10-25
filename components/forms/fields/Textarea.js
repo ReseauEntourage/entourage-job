@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
-export default class Input extends Component {
+export default class Textarea extends Component {
   static get propTypes() {
     return {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      placeholder: PropTypes.string.isRequired,
+      placeholder: PropTypes.string,
       handleChange: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
@@ -21,6 +20,7 @@ export default class Input extends Component {
 
   static get defaultProps() {
     return {
+      placeholder: 'Tapez votre texte',
       rows: 5,
     };
   }
@@ -37,7 +37,6 @@ export default class Input extends Component {
     const {
       id,
       name,
-      type,
       placeholder,
       title,
       valid,
@@ -51,14 +50,13 @@ export default class Input extends Component {
           <textarea
             id={id}
             name={name}
-            type={type}
             rows={rows}
             placeholder={placeholder}
             onChange={handleChange}
-            className={`uk-textarea ${this.getClass(valid)}`}
+            className={`uk-textarea ${() => this.getClass(valid)}`}
           />
         </label>
-        <FormValidatorErrorMessage valid_obj={valid} />
+        <FormValidatorErrorMessage validObj={valid} />
       </div>
     );
   }

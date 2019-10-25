@@ -8,13 +8,19 @@ export default class Input extends Component {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
-      placeholder: PropTypes.string.isRequired,
+      placeholder: PropTypes.string,
       handleChange: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
       }).isRequired,
+    };
+  }
+
+  static get defaultProps() {
+    return {
+      placeholder: 'Tapez votre texte',
     };
   }
 
@@ -46,10 +52,10 @@ export default class Input extends Component {
             id={id}
             placeholder={placeholder}
             onChange={handleChange}
-            className={`uk-input ${this.getClassName(valid)}`}
+            className={`uk-input ${() => this.getClassName(valid)}`}
           />
         </label>
-        <FormValidatorErrorMessage valid_obj={valid} />
+        <FormValidatorErrorMessage validObj={valid} />
       </div>
     );
   }
