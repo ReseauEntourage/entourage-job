@@ -22,7 +22,7 @@ const DEFAULT_VALID = {
   valid_text: undefined,
 };
 
-export default class FormContactCandidat extends Component {
+export default class FormSpecialSkill extends Component {
   validator = new FormValidator(rulesSpecialSkill);
 
   constructor(props) {
