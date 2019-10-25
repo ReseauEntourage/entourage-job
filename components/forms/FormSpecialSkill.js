@@ -172,7 +172,7 @@ export default class FormSpecialSkill extends Component {
           <Button
             style="default"
             className="uk-margin-right"
-            onClick={this.handleSubmit}
+            onClick={this.cancelForm}
           >
             Annuler
           </Button>
