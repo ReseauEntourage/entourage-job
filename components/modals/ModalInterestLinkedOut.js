@@ -5,6 +5,7 @@ import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { IconNoSSR } from '../utils/Icon';
 import FormContactCandidat from '../forms/FormContactCandidat';
 import ModalGeneric from './ModalGeneric';
+import FormInterestLinkedOut from '../forms/FormInterestLinkedOut';
 
 export default class ModalInterestLinkedOut extends Component {
   constructor(props) {
@@ -71,13 +72,7 @@ export default class ModalInterestLinkedOut extends Component {
               </div>
             ) : (
               <>
-                <p>
-                  Cet espace est dédié aux potentiels recruteurs qui souhaitent
-                  proposer des opportunités aux candidats. Écrivez vos mots
-                  d&apos;encouragement ou contactez avec le coach plus bas dans
-                  la page CV !
-                </p>
-                <FormContactCandidat
+                <FormInterestLinkedOut
                   candidat={candidat}
                   closeModal={closeModal}
                   confirmMessageSent={this.confirmMessageSent}
