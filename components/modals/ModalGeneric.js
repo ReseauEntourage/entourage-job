@@ -44,12 +44,8 @@ export default class ModalGeneric extends Component {
     const { children, id, param } = this.props;
 
     return (
-      <div
-        id={id}
-        className="uk-modal-container uk-flex-top"
-        data-uk-modal={param}
-      >
-        <div className="uk-modal-dialog uk-margin-auto-vertical">
+      <div id={id} className="uk-flex-top" data-uk-modal={param}>
+        <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-1-2">
           <div className="uk-modal-body uk-padding-large">
             {children(this.closeModal)}
           </div>
