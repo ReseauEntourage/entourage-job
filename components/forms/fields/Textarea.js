@@ -7,8 +7,7 @@ export default class TextArea extends Component {
     return {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      placeholder: PropTypes.string.isRequired,
+      placeholder: PropTypes.string,
       handleChange: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
@@ -22,6 +21,7 @@ export default class TextArea extends Component {
 
   static get defaultProps() {
     return {
+      placeholder: 'Tapez votre texte',
       rows: 5,
       maxLength: 1000,
     };
@@ -39,7 +39,6 @@ export default class TextArea extends Component {
     const {
       id,
       name,
-      type,
       placeholder,
       title,
       valid,
@@ -54,7 +53,6 @@ export default class TextArea extends Component {
           <textarea
             id={id}
             name={name}
-            type={type}
             rows={rows}
             placeholder={placeholder}
             maxLength={maxLength}
@@ -62,7 +60,7 @@ export default class TextArea extends Component {
             className={`uk-textarea ${() => this.getClassName(valid)}`}
           />
         </label>
-        <FormValidatorErrorMessage valid_obj={valid} />
+        <FormValidatorErrorMessage validObj={valid} />
       </div>
     );
   }
