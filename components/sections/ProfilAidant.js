@@ -90,19 +90,6 @@ export default class ProfilAidant extends Component {
           ),
           picture: '/static/img/illustrations/helping_process.png',
         },
-        {
-          title: (
-            <h4 className="uk-text-bold">
-              Vous souhaitez apporter au projet LinkedOut{' '}
-              <span className="uk-text-primary">
-                une compétence particulière ?
-              </span>
-            </h4>
-          ),
-          description:
-            '(Montage photo, animation d’ateliers ou de temps conviviaux...) Nous serons ravis d’intégrer votre talent au sein du projet.',
-          picture: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
-        },
       ],
       [
         {
