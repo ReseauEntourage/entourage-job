@@ -1,6 +1,15 @@
 @orange: #f66b28;
 @time-transition: 0.8s;
 
+.mixin-small-label {
+  padding-left: 12px;
+  color: @orange;
+  opacity: 0.8;
+  font-size: 0.8rem;
+  transform: translateY(-10px);
+  transition: @time-transition;
+}
+
 .uk-input {
   background-color: #e5e5e5;
   border-radius: 7px 7px 0 0;
@@ -27,14 +36,13 @@
 .uk-form-controls {
   position: relative;
 
+  .uk-form-label.stay-small {
+    .mixin-small-label;
+  }
+
   &:focus-within {
     .uk-form-label {
-      padding-left: 12px;
-      color: @orange;
-      opacity: 0.8;
-      font-size: 0.8rem;
-      transform: translateY(-10px);
-      transition: @time-transition;
+      .mixin-small-label;
     }
   }
 

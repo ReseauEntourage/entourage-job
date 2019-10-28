@@ -9,7 +9,7 @@ export default class Input extends Component {
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
       placeholder: PropTypes.string,
-      handleChange: PropTypes.func.isRequired,
+      onChange: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
         isInvalid: PropTypes.boolean,
@@ -24,27 +24,36 @@ export default class Input extends Component {
     };
   }
 
-  static getClassName(valid) {
+  getValidClass() {
+    const { valid } = this.props;
     if (valid !== undefined) {
-      if (!valid.isInvalid) return 'uk-form-success';
+      if (!valid.isInvalid) return '';
       return 'uk-form-danger';
     }
     return '';
   }
 
+  inputIsEmpty() {
+    const { id } = this.props;
+    if (document.getElementById(id)) {
+      if (document.getElementById(id).value !== '') return false;
+      return true;
+    }
+    return true;
+  }
+
   render() {
-    const {
-      id,
-      name,
-      type,
-      placeholder,
-      title,
-      valid,
-      handleChange,
-    } = this.props;
+    const { id, name, onChange, placeholder, title, type, valid } = this.props;
+
+    const addClasses = this.getValidClass();
+    console.log(`addClasses : ${addClasses}`);
+
     return (
       <div className="uk-form-controls uk-padding-small">
-        <label className="uk-form-label" htmlFor={id}>
+        <label
+          className={`uk-form-label ${!this.inputIsEmpty() && 'stay-small'}`}
+          htmlFor={id}
+        >
           {title}
         </label>
         <input
@@ -52,8 +61,8 @@ export default class Input extends Component {
           type={type}
           id={id}
           placeholder={placeholder}
-          onChange={handleChange}
-          className={`uk-input uk-form-large ${() => this.getClassName(valid)}`}
+          onChange={onChange}
+          className={`uk-input uk-form-large ${addClasses}`}
         />
         <FormValidatorErrorMessage validObj={valid} />
       </div>
