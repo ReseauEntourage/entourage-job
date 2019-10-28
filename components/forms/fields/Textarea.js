@@ -8,12 +8,12 @@ export default class Textarea extends Component {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       placeholder: PropTypes.string,
-      handleChange: PropTypes.func.isRequired,
+      onChange: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
-      }).isRequired,
+      }),
       rows: PropTypes.number,
     };
   }
@@ -22,6 +22,7 @@ export default class Textarea extends Component {
     return {
       placeholder: 'Tapez votre texte',
       rows: 5,
+      valid: undefined,
     };
   }
 
@@ -34,15 +35,7 @@ export default class Textarea extends Component {
   }
 
   render() {
-    const {
-      id,
-      name,
-      placeholder,
-      title,
-      valid,
-      rows,
-      handleChange,
-    } = this.props;
+    const { id, name, placeholder, title, valid, rows, onChange } = this.props;
     return (
       <div className="uk-form-controls">
         <label className="uk-form-label" htmlFor={id}>
@@ -52,7 +45,7 @@ export default class Textarea extends Component {
             name={name}
             rows={rows}
             placeholder={placeholder}
-            onChange={handleChange}
+            onChange={onChange}
             className={`uk-textarea ${() => this.getClass(valid)}`}
           />
         </label>

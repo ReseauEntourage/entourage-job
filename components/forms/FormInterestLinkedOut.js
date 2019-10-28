@@ -115,8 +115,6 @@ export default class FormInterestLinkedOut extends Component {
     } = this.state ? this.state : '';
     const { error } = this.state;
 
-    console.log(message);
-
     return (
       <>
         <div className="uk-width-1-2">

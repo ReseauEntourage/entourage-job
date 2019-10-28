@@ -14,13 +14,14 @@ export default class Input extends Component {
       valid: PropTypes.shape({
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
-      }).isRequired,
+      }),
     };
   }
 
   static get defaultProps() {
     return {
       placeholder: 'Tapez votre texte',
+      valid: undefined,
     };
   }
 
@@ -46,7 +47,6 @@ export default class Input extends Component {
     const { id, name, onChange, placeholder, title, type, valid } = this.props;
 
     const addClasses = this.getValidClass();
-    console.log(`addClasses : ${addClasses}`);
 
     return (
       <div className="uk-form-controls uk-padding-small">
