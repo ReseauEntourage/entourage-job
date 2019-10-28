@@ -14,7 +14,7 @@ export default class ModalGeneric extends Component {
 
   static get propTypes() {
     return {
-      children: PropTypes.element.isRequired,
+      children: PropTypes.func.isRequired,
       id: PropTypes.string.isRequired,
       param: PropTypes.string,
     };

@@ -289,7 +289,7 @@ export default class ProfilAidant extends Component {
                   </div>
                   <div className="uk-width-expand uk-text-left@m uk-text-center uk-flex-first@s">
                     {card.title}
-                    <p>{card.description}</p>
+                    <div>{card.description}</div>
                   </div>
                 </div>
               </div>
