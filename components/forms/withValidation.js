@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import FormValidator from './FormValidator';
 
@@ -52,7 +53,8 @@ export default function withValidation(
 
     render() {
       // Affiche le composant enrobé avec les données/fonctions à jour
-      // On passe aussi toute autre prop reçue.
+      // On passe aussi toute autres props reçues.
+      const { ...other } = this.props;
 
       return (
         <WrappedForm
@@ -60,6 +62,7 @@ export default function withValidation(
           handleSubmit={this.handleSubmit}
           afterCancel={afterCancel}
           afterSubmit={afterSubmit}
+          {...other}
         />
       );
     }
