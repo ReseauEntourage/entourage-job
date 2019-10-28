@@ -15,6 +15,7 @@ export default class Textarea extends Component {
         message: PropTypes.boolean,
       }).isRequired,
       rows: PropTypes.number,
+      maxLength: PropTypes.number,
     };
   }
 
@@ -22,6 +23,7 @@ export default class Textarea extends Component {
     return {
       placeholder: 'Tapez votre texte',
       rows: 5,
+      maxLength: 1000,
     };
   }
 
@@ -42,6 +44,7 @@ export default class Textarea extends Component {
       valid,
       rows,
       handleChange,
+      maxLength,
     } = this.props;
     return (
       <div className="uk-form-controls">
@@ -52,8 +55,9 @@ export default class Textarea extends Component {
             name={name}
             rows={rows}
             placeholder={placeholder}
+            maxLength={maxLength}
             onChange={handleChange}
-            className={`uk-textarea ${() => this.getClass(valid)}`}
+            className={`uk-textarea ${() => this.getClassName(valid)}`}
           />
         </label>
         <FormValidatorErrorMessage validObj={valid} />
