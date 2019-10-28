@@ -2,6 +2,7 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import FormValidator from './FormValidator';
 import rulesInterestLinkedOut from './rulesInterestLinkedOut';
 import Api from '../../Axios';
@@ -9,7 +10,6 @@ import Input from './fields/Input';
 import Textarea from './fields/Textarea';
 import './FormInterestLinkedOut.less';
 import CheckboxCGU from './fields/CheckboxCGU';
-import Link from 'next/link';
 
 const DEFAULT_MESSAGE = {
   name: '',
@@ -17,6 +17,7 @@ const DEFAULT_MESSAGE = {
   phone: '',
   structure: '',
   message: '',
+  cgu: false,
 };
 const DEFAULT_VALID = {
   valid_name: undefined,
@@ -24,6 +25,7 @@ const DEFAULT_VALID = {
   valid_phone: undefined,
   valid_structure: undefined,
   valid_message: undefined,
+  valid_cgu: undefined,
 };
 
 export default class FormInterestLinkedOut extends Component {
@@ -59,9 +61,13 @@ export default class FormInterestLinkedOut extends Component {
 
   handleChange(event) {
     const key = event.target.name;
-    const content = event.target.value;
+    const content =
+      event.target.type === 'checkbox'
+        ? event.target.checked
+        : event.target.value;
     const { message: newMessage } = this.state;
 
+    console.log(content);
     /* Validators start */
     const state = {};
     state[key] = content;
@@ -70,6 +76,7 @@ export default class FormInterestLinkedOut extends Component {
       const stateValidation = {};
       stateValidation[`valid_${key}`] = validation[key];
       this.setState(stateValidation);
+      console.log(stateValidation);
     }
     /* Validators end */
     newMessage[key] = content;
@@ -108,12 +115,12 @@ export default class FormInterestLinkedOut extends Component {
 
   render() {
     const {
-      message,
       valid_name,
       valid_email,
       valid_phone,
       valid_structure,
       valid_message,
+      valid_cgu,
     } = this.state ? this.state : '';
     const { error } = this.state;
 
@@ -129,7 +136,6 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Nom et prénom*"
                 valid={valid_name}
-                value={message.name}
               />
               <Input
                 type="text"
@@ -138,7 +144,6 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Structure*"
                 valid={valid_structure}
-                value={message.structure}
               />
               <Input
                 type="email"
@@ -147,7 +152,6 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="E-mail*"
                 valid={valid_email}
-                value={message.email}
               />
               <Input
                 type="text"
@@ -156,7 +160,6 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Téléphone"
                 valid={valid_phone}
-                value={message.phone}
               />
               <Textarea
                 rows={1}
@@ -165,15 +168,20 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Écrivez vos motivations*"
                 valid={valid_message}
-                value={message.message}
               />
               <CheckboxCGU
+                id="input-cgu"
+                name="cgu"
                 title={
                   <span>
-                    J&apos;accepte les <Link href="#">CGU</Link>
+                    J&apos;accepte les{' '}
+                    <Link href="#">
+                      <a>CGU</a>
+                    </Link>
                   </span>
                 }
                 onChange={this.handleChange}
+                valid={valid_cgu}
               />
             </fieldset>
           </form>
