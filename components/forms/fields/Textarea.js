@@ -57,7 +57,7 @@ export default class Textarea extends Component {
             placeholder={placeholder}
             maxLength={maxLength}
             onChange={handleChange}
-            className={`uk-textarea ${() => this.getClassName(valid)}`}
+            className={`uk-textarea ${this.constructor.getClassName(valid)}`}
           />
         </label>
         <FormValidatorErrorMessage validObj={valid} />

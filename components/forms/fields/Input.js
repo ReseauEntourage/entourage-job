@@ -52,7 +52,7 @@ export default class Input extends Component {
             id={id}
             placeholder={placeholder}
             onChange={handleChange}
-            className={`uk-input ${() => this.getClassName(valid)}`}
+            className={`uk-input ${this.constructor.getClassName(valid)}`}
           />
         </label>
         <FormValidatorErrorMessage validObj={valid} />
