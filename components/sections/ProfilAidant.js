@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Section, IconNoSSR, Button } from '../utils';
 import ModalInterestLinkedOut from '../modals/ModalInterestLinkedOut';
+import ModalSpecialSkill from '../modals/ModalSpecialSkill';
 
 export default class ProfilAidant extends Component {
   constructor(props) {
@@ -44,8 +45,24 @@ export default class ProfilAidant extends Component {
               </span>
             </h4>
           ),
-          description:
-            '(Montage photo, animation d’ateliers ou de temps conviviaux...) Nous serons ravis d’intégrer votre talent au sein du projet.',
+          description: (
+            <>
+              <p>
+                (Montage photo, animation d’ateliers ou de temps conviviaux...)
+                Nous serons ravis d’intégrer votre talent au sein du projet.
+              </p>
+
+              <button
+                type="button"
+                className="uk-button uk-button-default"
+                href="#"
+                data-uk-toggle="target: #modalSpecialSkill"
+              >
+                Ecrivez-nous
+              </button>
+              <ModalSpecialSkill id="modalSpecialSkill" />
+            </>
+          ),
           picture: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
         },
         {
