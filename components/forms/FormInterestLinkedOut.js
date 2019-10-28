@@ -3,11 +3,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FormValidator from './FormValidator';
-import rulesContactCandidat from './rulesContactCandidat';
-import FormValidatorErrorMessage from './FormValidatorErrorMessage';
+import rulesInterestLinkedOut from './rulesInterestLinkedOut';
 import Api from '../../Axios';
 import Input from './fields/Input';
 import Textarea from './fields/Textarea';
+import './FormInterestLinkedOut.less';
 
 const DEFAULT_MESSAGE = {
   name: '',
@@ -25,7 +25,7 @@ const DEFAULT_VALID = {
 };
 
 export default class FormInterestLinkedOut extends Component {
-  validator = new FormValidator(rulesContactCandidat);
+  validator = new FormValidator(rulesInterestLinkedOut);
 
   constructor(props) {
     super(props);
@@ -106,6 +106,7 @@ export default class FormInterestLinkedOut extends Component {
 
   render() {
     const {
+      message,
       valid_name,
       valid_email,
       valid_phone,
@@ -126,6 +127,7 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Nom et prénom*"
                 valid={valid_name}
+                value={message.name}
               />
               <Input
                 type="text"
@@ -134,6 +136,7 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Structure"
                 valid={valid_structure}
+                value={message.structure}
               />
               <Input
                 type="email"
@@ -142,6 +145,7 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="E-mail*"
                 valid={valid_email}
+                value={message.email}
               />
               <Input
                 type="text"
@@ -150,6 +154,7 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Téléphone"
                 valid={valid_phone}
+                value={message.phone}
               />
               <Textarea
                 rows={1}
@@ -158,6 +163,7 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Écrivez vos motivations*"
                 valid={valid_message}
+                value={message.message}
               />
             </fieldset>
             {/* ∟<div className="uk-width-1-4">

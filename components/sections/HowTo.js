@@ -29,8 +29,8 @@ const HowTo = ({ title, children, colLarge }) => {
 };
 
 HowTo.propTypes = {
-  title: PropTypes.string.isRequired,
-  children: PropTypes.arrayOf(PropTypes.elementType).isRequired,
+  title: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired,
   colLarge: PropTypes.number,
 };
 
