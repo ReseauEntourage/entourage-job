@@ -15,6 +15,8 @@ export default class Textarea extends Component {
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
       }),
+      rows: PropTypes.number,
+      maxLength: PropTypes.number,
     };
   }
 
@@ -23,6 +25,7 @@ export default class Textarea extends Component {
       placeholder: 'Tapez votre texte',
       rows: 5,
       valid: undefined,
+      maxLength: 1000,
     };
   }
 
@@ -45,9 +48,18 @@ export default class Textarea extends Component {
   }
 
   render() {
-    const { id, name, placeholder, title, valid, rows, onChange } = this.props;
-    const addClasses = this.getValidClass();
+    const {
+      id,
+      name,
+      placeholder,
+      title,
+      valid,
+      rows,
+      onChange,
+      maxLength,
+    } = this.props;
 
+    const addClasses = this.getValidClass();
     return (
       <div className="uk-form-controls uk-padding-small">
         <label
@@ -61,6 +73,7 @@ export default class Textarea extends Component {
           name={name}
           rows={rows}
           placeholder={placeholder}
+          maxLength={maxLength}
           onChange={onChange}
           className={`uk-textarea uk-form-large ${addClasses}`}
         />
