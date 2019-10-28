@@ -95,7 +95,7 @@ export default class FormSpecialSkill extends Component {
               valid={fields.valid_name}
               title="Nom*"
               placeholder="Tapez votre texte"
-              handleChange={handleChange}
+              onChange={handleChange}
             />,
             <Input
               id="input-email"
@@ -104,7 +104,7 @@ export default class FormSpecialSkill extends Component {
               valid={fields.valid_email}
               title="Addresse mail*"
               placeholder="Tapez votre texte"
-              handleChange={handleChange}
+              onChange={handleChange}
             />,
             <Input
               type="text"
@@ -113,7 +113,7 @@ export default class FormSpecialSkill extends Component {
               placeholder="Tapez votre texte"
               valid={fields.valid_localization}
               title="Lieu d'habitation *"
-              handleChange={handleChange}
+              onChange={handleChange}
             />,
             <Textarea
               type="text"
@@ -123,7 +123,7 @@ export default class FormSpecialSkill extends Component {
               valid={fields.valid_text}
               title="Ce que vous pouvez apporter*"
               rows="7"
-              handleChange={handleChange}
+              onChange={handleChange}
             />,
           ]}
         />
