@@ -8,6 +8,8 @@ import Api from '../../Axios';
 import Input from './fields/Input';
 import Textarea from './fields/Textarea';
 import './FormInterestLinkedOut.less';
+import CheckboxCGU from './fields/CheckboxCGU';
+import Link from 'next/link';
 
 const DEFAULT_MESSAGE = {
   name: '',
@@ -134,7 +136,7 @@ export default class FormInterestLinkedOut extends Component {
                 id="input-structure"
                 name="structure"
                 onChange={this.handleChange}
-                title="Structure"
+                title="Structure*"
                 valid={valid_structure}
                 value={message.structure}
               />
@@ -164,6 +166,14 @@ export default class FormInterestLinkedOut extends Component {
                 title="Écrivez vos motivations*"
                 valid={valid_message}
                 value={message.message}
+              />
+              <CheckboxCGU
+                title={
+                  <span>
+                    J&apos;accepte les <Link href="#">CGU</Link>
+                  </span>
+                }
+                onChange={this.handleChange}
               />
             </fieldset>
           </form>
