@@ -7,6 +7,7 @@ export default class Textarea extends Component {
     return {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
+      rows: PropTypes.number,
       placeholder: PropTypes.string,
       onChange: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
@@ -14,7 +15,6 @@ export default class Textarea extends Component {
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
       }),
-      rows: PropTypes.number,
     };
   }
 
@@ -26,29 +26,44 @@ export default class Textarea extends Component {
     };
   }
 
-  static getClassName(valid) {
+  getValidClass() {
+    const { valid } = this.props;
     if (valid !== undefined) {
-      if (!valid.isInvalid) return 'uk-form-success';
+      if (!valid.isInvalid) return '';
       return 'uk-form-danger';
     }
     return '';
   }
 
+  inputIsEmpty() {
+    const { id } = this.props;
+    if (document.getElementById(id)) {
+      if (document.getElementById(id).value !== '') return false;
+      return true;
+    }
+    return true;
+  }
+
   render() {
     const { id, name, placeholder, title, valid, rows, onChange } = this.props;
+    const addClasses = this.getValidClass();
+
     return (
-      <div className="uk-form-controls">
-        <label className="uk-form-label" htmlFor={id}>
+      <div className="uk-form-controls uk-padding-small">
+        <label
+          className={`uk-form-label ${!this.inputIsEmpty() && 'stay-small'}`}
+          htmlFor={id}
+        >
           {title}
-          <textarea
-            id={id}
-            name={name}
-            rows={rows}
-            placeholder={placeholder}
-            onChange={onChange}
-            className={`uk-textarea ${() => this.getClass(valid)}`}
-          />
         </label>
+        <textarea
+          id={id}
+          name={name}
+          rows={rows}
+          placeholder={placeholder}
+          onChange={onChange}
+          className={`uk-textarea uk-form-large ${addClasses}`}
+        />
         <FormValidatorErrorMessage validObj={valid} />
       </div>
     );

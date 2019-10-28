@@ -166,73 +166,9 @@ export default class FormInterestLinkedOut extends Component {
                 value={message.message}
               />
             </fieldset>
-            {/* ∟<div className="uk-width-1-4">
-            <div className="uk-form-controls">
-              <label className="uk-form-label" htmlFor="input-businessLine">
-                Secteur d&apos;activité
-                <select
-                  id="input-businessLine"
-                  name="businessLine"
-                  className={`uk-select ${
-                    valid_businessLine !== undefined
-                      ? !valid_businessLine.isInvalid
-                        ? 'uk-form-success'
-                        : 'uk-form-danger'
-                      : ''
-                  }`}
-                  onChange={this.handleChange.bind(this)}
-                >
-                  <option value="">
-                    Sélectionnez un secteur d&apos;activité
-                  </option>
-                  <option value="Accueil">Accueil</option>
-                  <option value="Administratif">Administratif</option>
-                  <option value="Animalier">Animalier</option>
-                  <option value="Artisanat">Artisanat</option>
-                  <option value="Associatif">Associatif</option>
-                  <option value="Assurance/Banque">Assurance/Banque</option>
-                  <option value="BTP">BTP</option>
-                  <option value="Communication">Communication</option>
-                  <option value="Culture">Culture</option>
-                  <option value="Informatique">Informatique</option>
-                  <option value="Interpréterait">Interpréterait</option>
-                  <option value="Médico-social">Médico-social</option>
-                  <option value="Restauration">Restauration</option>
-                  <option value="Social">Social</option>
-                  <option value="Transports">Transports</option>
-                  <option value="Vente / Commerce">Vente / Commerce</option>
-                </select>
-              </label>
-              <FormValidatorErrorMessage valid_obj={valid_businessLine} />
-            </div>
-          </div>
-
-          <div className="uk-width-1-1">
-            <div className="uk-form-controls">
-              <label className="uk-form-label" htmlFor="input-message">
-                Votre message*
-                <textarea
-                  id="input-message"
-                  name="message"
-                  className={`uk-textarea ${
-                    valid_message !== undefined
-                      ? !valid_message.isInvalid
-                        ? 'uk-form-success'
-                        : 'uk-form-danger'
-                      : ''
-                  }`}
-                  rows="7"
-                  style={{ width: '100%' }}
-                  placeholder={`Votre message pour ${candidat.firstName}`}
-                  onChange={this.handleChange.bind(this)}
-                />
-              </label>
-              <FormValidatorErrorMessage valid_obj={valid_message} />
-            </div>
-          </div> */}
           </form>
         </div>
-        <div>
+        <div className="uk-margin-medium-top">
           <div className="uk-flex uk-flex-right uk-width-1-1 uk-margin">
             <span
               className="uk-text-meta uk-flex-auto uk-margin-left"

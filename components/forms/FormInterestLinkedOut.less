@@ -1,22 +1,14 @@
 @orange: #f66b28;
 @time-transition: 0.8s;
 
-.mixin-small-label {
-  padding-left: 12px;
-  color: @orange;
-  opacity: 0.8;
-  font-size: 0.8rem;
-  transform: translateY(-10px);
-  transition: @time-transition;
-}
-
-.uk-input {
+.mixin-default-entry {
   background-color: #e5e5e5;
   border-radius: 7px 7px 0 0;
   font-size: 1rem;
   border: 0px;
   border-bottom: 2px solid grey;
   padding-top: 15px;
+
   &::placeholder {
     opacity: 0;
   }
@@ -30,6 +22,31 @@
       opacity: 1;
       transition: @time-transition;
     }
+  }
+}
+
+.mixin-small-label {
+  padding-left: 12px;
+  color: @orange;
+  opacity: 0.8;
+  font-size: 0.8rem;
+  transform: translateY(-10px);
+  transition: @time-transition;
+}
+
+.uk-input {
+  .mixin-default-entry;
+}
+
+.uk-textarea {
+  .mixin-default-entry;
+  height: 55px;
+  padding: 20px 12px 0 12px;
+
+  &:focus {
+    height: 150px;
+    width: 100%;
+    transition: @time-transition;
   }
 }
 
