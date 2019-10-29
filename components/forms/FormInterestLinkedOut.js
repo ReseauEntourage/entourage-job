@@ -92,7 +92,7 @@ export default class FormInterestLinkedOut extends Component {
 
     return (
       <>
-        <div className="uk-width-1-2">
+        <div className="uk-width-1-1 uk-width-2-3@m uk-width-1-2@xl">
           <form className="uk-form-stacked uk-grid-small" data-uk-grid>
             <fieldset className="uk-fieldset uk-width-1-1">
               <Input
@@ -128,7 +128,7 @@ export default class FormInterestLinkedOut extends Component {
                 valid={fields.valid_phone}
               />
               <Textarea
-                rows={1}
+                rows={7}
                 id="input-message"
                 name="message"
                 onChange={handleChange}

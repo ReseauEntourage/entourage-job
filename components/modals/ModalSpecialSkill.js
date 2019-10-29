@@ -36,7 +36,7 @@ export default class ModalSpecialSkill extends Component {
 
           return (
             <>
-              <h3 className="uk-width-auto">
+              {/* <h3 className="uk-width-auto">
                 <span className="uk-text-primary uk-margin-small-right">
                   <IconNoSSR name="linkedout-contract" />
                 </span>
@@ -46,7 +46,22 @@ export default class ModalSpecialSkill extends Component {
                     apporter vos compétences ?
                   </span>
                 </span>
-              </h3>
+              </h3> */}
+              <div className="uk-flex">
+                <div className="uk-margin-medium-right">
+                  <span className="uk-text-primary">
+                    <IconNoSSR name="linkedout-contract" ratio={1.5} />
+                  </span>
+                </div>
+                <div className="">
+                  <h3 className="uk-text-bold">
+                    Vous souhaitez{' '}
+                    <span className="uk-text-primary">
+                      apporter vos compétences ?
+                    </span>
+                  </h3>
+                </div>
+              </div>
 
               {formSent ? (
                 <div className="uk-flex uk-flex-center uk-margin-large">
@@ -71,7 +86,14 @@ export default class ModalSpecialSkill extends Component {
                 </div>
               ) : (
                 <>
-                  <p>
+                  <p
+                    className="uk-text-lead"
+                    style={{
+                      lineHeight: '1.2',
+                      fontSize: '1.2rem',
+                      fontWeight: '500',
+                    }}
+                  >
                     Nous avons besoin de tout le monde ! Merci de nous indiquer
                     ce que vous souhaitez apporter aux candidats, et de nous
                     laisser vos coordonnées
