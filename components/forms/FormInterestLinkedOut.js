@@ -2,12 +2,14 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import FormValidator from './FormValidator';
 import rulesInterestLinkedOut from './rulesInterestLinkedOut';
 import Api from '../../Axios';
 import Input from './fields/Input';
 import Textarea from './fields/Textarea';
 import './FormInterestLinkedOut.less';
+import CheckboxCGU from './fields/CheckboxCGU';
 
 const DEFAULT_MESSAGE = {
   name: '',
@@ -15,6 +17,7 @@ const DEFAULT_MESSAGE = {
   phone: '',
   structure: '',
   message: '',
+  cgu: false,
 };
 const DEFAULT_VALID = {
   valid_name: undefined,
@@ -22,6 +25,7 @@ const DEFAULT_VALID = {
   valid_phone: undefined,
   valid_structure: undefined,
   valid_message: undefined,
+  valid_cgu: undefined,
 };
 
 export default class FormInterestLinkedOut extends Component {
@@ -57,9 +61,13 @@ export default class FormInterestLinkedOut extends Component {
 
   handleChange(event) {
     const key = event.target.name;
-    const content = event.target.value;
+    const content =
+      event.target.type === 'checkbox'
+        ? event.target.checked
+        : event.target.value;
     const { message: newMessage } = this.state;
 
+    console.log(content);
     /* Validators start */
     const state = {};
     state[key] = content;
@@ -68,6 +76,7 @@ export default class FormInterestLinkedOut extends Component {
       const stateValidation = {};
       stateValidation[`valid_${key}`] = validation[key];
       this.setState(stateValidation);
+      console.log(stateValidation);
     }
     /* Validators end */
     newMessage[key] = content;
@@ -106,12 +115,12 @@ export default class FormInterestLinkedOut extends Component {
 
   render() {
     const {
-      message,
       valid_name,
       valid_email,
       valid_phone,
       valid_structure,
       valid_message,
+      valid_cgu,
     } = this.state ? this.state : '';
     const { error } = this.state;
 
@@ -127,16 +136,14 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Nom et prénom*"
                 valid={valid_name}
-                value={message.name}
               />
               <Input
                 type="text"
                 id="input-structure"
                 name="structure"
                 onChange={this.handleChange}
-                title="Structure"
+                title="Structure*"
                 valid={valid_structure}
-                value={message.structure}
               />
               <Input
                 type="email"
@@ -145,7 +152,6 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="E-mail*"
                 valid={valid_email}
-                value={message.email}
               />
               <Input
                 type="text"
@@ -154,7 +160,6 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Téléphone"
                 valid={valid_phone}
-                value={message.phone}
               />
               <Textarea
                 rows={1}
@@ -163,76 +168,25 @@ export default class FormInterestLinkedOut extends Component {
                 onChange={this.handleChange}
                 title="Écrivez vos motivations*"
                 valid={valid_message}
-                value={message.message}
+              />
+              <CheckboxCGU
+                id="input-cgu"
+                name="cgu"
+                title={
+                  <span>
+                    J&apos;accepte les{' '}
+                    <Link href="#">
+                      <a>CGU</a>
+                    </Link>
+                  </span>
+                }
+                onChange={this.handleChange}
+                valid={valid_cgu}
               />
             </fieldset>
-            {/* ∟<div className="uk-width-1-4">
-            <div className="uk-form-controls">
-              <label className="uk-form-label" htmlFor="input-businessLine">
-                Secteur d&apos;activité
-                <select
-                  id="input-businessLine"
-                  name="businessLine"
-                  className={`uk-select ${
-                    valid_businessLine !== undefined
-                      ? !valid_businessLine.isInvalid
-                        ? 'uk-form-success'
-                        : 'uk-form-danger'
-                      : ''
-                  }`}
-                  onChange={this.handleChange.bind(this)}
-                >
-                  <option value="">
-                    Sélectionnez un secteur d&apos;activité
-                  </option>
-                  <option value="Accueil">Accueil</option>
-                  <option value="Administratif">Administratif</option>
-                  <option value="Animalier">Animalier</option>
-                  <option value="Artisanat">Artisanat</option>
-                  <option value="Associatif">Associatif</option>
-                  <option value="Assurance/Banque">Assurance/Banque</option>
-                  <option value="BTP">BTP</option>
-                  <option value="Communication">Communication</option>
-                  <option value="Culture">Culture</option>
-                  <option value="Informatique">Informatique</option>
-                  <option value="Interpréterait">Interpréterait</option>
-                  <option value="Médico-social">Médico-social</option>
-                  <option value="Restauration">Restauration</option>
-                  <option value="Social">Social</option>
-                  <option value="Transports">Transports</option>
-                  <option value="Vente / Commerce">Vente / Commerce</option>
-                </select>
-              </label>
-              <FormValidatorErrorMessage valid_obj={valid_businessLine} />
-            </div>
-          </div>
-
-          <div className="uk-width-1-1">
-            <div className="uk-form-controls">
-              <label className="uk-form-label" htmlFor="input-message">
-                Votre message*
-                <textarea
-                  id="input-message"
-                  name="message"
-                  className={`uk-textarea ${
-                    valid_message !== undefined
-                      ? !valid_message.isInvalid
-                        ? 'uk-form-success'
-                        : 'uk-form-danger'
-                      : ''
-                  }`}
-                  rows="7"
-                  style={{ width: '100%' }}
-                  placeholder={`Votre message pour ${candidat.firstName}`}
-                  onChange={this.handleChange.bind(this)}
-                />
-              </label>
-              <FormValidatorErrorMessage valid_obj={valid_message} />
-            </div>
-          </div> */}
           </form>
         </div>
-        <div>
+        <div className="uk-margin-medium-top">
           <div className="uk-flex uk-flex-right uk-width-1-1 uk-margin">
             <span
               className="uk-text-meta uk-flex-auto uk-margin-left"

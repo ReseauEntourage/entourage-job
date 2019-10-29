@@ -2,30 +2,23 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
-export default class Textarea extends Component {
+export default class CheckboxCGU extends Component {
   static get propTypes() {
     return {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      rows: PropTypes.number,
-      placeholder: PropTypes.string,
       onChange: PropTypes.func.isRequired,
-      title: PropTypes.string.isRequired,
+      title: PropTypes.node.isRequired,
       valid: PropTypes.shape({
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
       }),
-      rows: PropTypes.number,
-      maxLength: PropTypes.number,
     };
   }
 
   static get defaultProps() {
     return {
-      placeholder: 'Tapez votre texte',
-      rows: 5,
       valid: undefined,
-      maxLength: 1000,
     };
   }
 
@@ -38,45 +31,23 @@ export default class Textarea extends Component {
     return '';
   }
 
-  inputIsEmpty() {
-    const { id } = this.props;
-    if (document.getElementById(id)) {
-      if (document.getElementById(id).value !== '') return false;
-      return true;
-    }
-    return true;
-  }
-
   render() {
-    const {
-      id,
-      name,
-      placeholder,
-      title,
-      valid,
-      rows,
-      onChange,
-      maxLength,
-    } = this.props;
+    const { id, name, onChange, title, valid } = this.props;
 
     const addClasses = this.getValidClass();
+
     return (
       <div className="uk-form-controls uk-padding-small">
-        <label
-          className={`uk-form-label ${!this.inputIsEmpty() && 'stay-small'}`}
-          htmlFor={id}
-        >
-          {title}
-        </label>
-        <textarea
+        <input
           id={id}
           name={name}
-          rows={rows}
-          placeholder={placeholder}
-          maxLength={maxLength}
+          type="checkbox"
           onChange={onChange}
-          className={`uk-textarea uk-form-large ${addClasses}`}
+          className={`uk-checkbox ${addClasses}`}
         />
+        <label htmlFor={id} style={{ paddingLeft: '10px' }}>
+          {title}
+        </label>
         <FormValidatorErrorMessage validObj={valid} />
       </div>
     );

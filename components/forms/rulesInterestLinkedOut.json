@@ -23,6 +23,17 @@
   },
   {
     "field": "structure",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "structure",
     "method": "isLength",
     "args": [
       {
@@ -81,5 +92,12 @@
     ],
     "validWhen": true,
     "message": "4000 caractères maximum"
+  },
+  {
+    "field": "cgu",
+    "method": "equals",
+    "args": ["true"],
+    "validWhen": true,
+    "message": "Obligatoire"
   }
 ]

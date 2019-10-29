@@ -122,7 +122,7 @@ export default class FormSpecialSkill extends Component {
               name="text"
               valid={fields.valid_text}
               title="Ce que vous pouvez apporter*"
-              rows="7"
+              rows={7}
               onChange={handleChange}
             />,
           ]}
