@@ -17,20 +17,15 @@ export default class ModalSpecialSkill extends Component {
     this.confirmMessageSent = this.confirmMessageSent.bind(this);
   }
 
-  static get propTypes() {
-    return { id: PropTypes.string.isRequired };
-  }
-
   confirmMessageSent() {
     this.setState({ formSent: true });
   }
 
   render() {
-    const { id } = this.props;
     const { formSent } = this.state;
 
     return (
-      <ModalGeneric id={id}>
+      <ModalGeneric id="modalSpecialSkill">
         {(closeModal) => {
           const FormSpecialSkillWithValidation = withValidation(
             FormSpecialSkill,
