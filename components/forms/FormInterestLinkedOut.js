@@ -3,8 +3,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import FormValidator from './FormValidator';
-import rulesInterestLinkedOut from './rulesInterestLinkedOut';
 import Api from '../../Axios';
 import Input from './fields/Input';
 import Textarea from './fields/Textarea';
@@ -29,100 +27,68 @@ const DEFAULT_VALID = {
 };
 
 export default class FormInterestLinkedOut extends Component {
-  validator = new FormValidator(rulesInterestLinkedOut);
-
   constructor(props) {
     super(props);
+    const { handleChange, handleSubmit } = this.props;
+
     this.state = {
-      message: { ...DEFAULT_MESSAGE },
+      fields: { values: DEFAULT_MESSAGE, ...DEFAULT_VALID },
       error: '',
+      handleChange: handleChange.bind(this),
+      handleSubmit: handleSubmit.bind(this),
+      onSubmit: this.onSubmit.bind(this),
     };
-    this.cancelForm = this.cancelForm.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   static get propTypes() {
     return {
-      candidat: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        firstName: PropTypes.string.isRequired,
-      }).isRequired,
-      closeModal: PropTypes.func.isRequired,
-      confirmMessageSent: PropTypes.func.isRequired,
+      // Gere la mise à jour des entrés utilisateur
+      // prend en parametre un event (input, textarea...) renvoie void
+      handleChange: PropTypes.func.isRequired,
+      // Gere l'envoie du formulaire
+      // renvoie une promesse informant si les champs sont corrects
+      handleSubmit: PropTypes.func.isRequired,
+      // action effectué lors de l'annulation d'un formulaire
+      afterCancel: PropTypes.func.isRequired,
+      // action effectué apres l'envoie du formulaire
+      afterSubmit: PropTypes.func.isRequired,
     };
   }
 
-  cancelForm() {
-    const { closeModal } = this.props;
-    this.setState({ ...DEFAULT_VALID });
-    closeModal();
-  }
-
-  handleChange(event) {
-    const key = event.target.name;
-    const content =
-      event.target.type === 'checkbox'
-        ? event.target.checked
-        : event.target.value;
-    const { message: newMessage } = this.state;
-
-    console.log(content);
-    /* Validators start */
-    const state = {};
-    state[key] = content;
-    const validation = this.validator.validate(state);
-    if (validation[key] !== undefined) {
-      const stateValidation = {};
-      stateValidation[`valid_${key}`] = validation[key];
-      this.setState(stateValidation);
-      console.log(stateValidation);
-    }
-    /* Validators end */
-    newMessage[key] = content;
-    this.setState({ message: newMessage, error: '' });
-  }
-
-  handleSubmit(event) {
+  onSubmit(event) {
     event.preventDefault();
-    const { message } = this.state;
-    const { confirmMessageSent } = this.props;
-    /* Validators control before submit */
-    const validation = this.validator.validate(message);
-    if (validation.isValid) {
-      Api.post('/api/v1/message', { message })
-        .then(() => {
-          this.setState({ message: { ...DEFAULT_MESSAGE } });
-          confirmMessageSent();
+    const { handleSubmit } = this.state;
+    const { afterSubmit } = this.props;
+
+    handleSubmit()
+      .then(({ values }) =>
+        Api.post('/api/v1/giveSkill', {
+          message: values,
         })
-        .catch((error) => {
-          let errorToDisplay = "Une erreur s'est produite";
-          if (error.response.status === 403) {
-            errorToDisplay = error.response.data;
-          }
-          this.setState({ error: errorToDisplay });
-        });
-    } else {
-      const stateValidation = {};
-      Object.keys(validation).forEach((key) => {
-        if (key !== 'isValid') {
-          stateValidation[`valid_${key}`] = validation[key];
+      )
+      .then(() => afterSubmit())
+      .catch((error) => {
+        if (error.validation !== undefined) {
+          // erreur de validation
+          const { fields } = this.state;
+          Object.keys(error.validation).forEach((key) => {
+            if (key !== 'isValid') {
+              fields[`valid_${key}`] = error.validation[key];
+            }
+          });
+          this.setState({
+            error: 'Un ou plusieurs champs sont invalides',
+            fields,
+          });
+        } else {
+          this.setState({ error: "Une erreur s'est produite" });
         }
       });
-      this.setState(stateValidation);
-    }
   }
 
   render() {
-    const {
-      valid_name,
-      valid_email,
-      valid_phone,
-      valid_structure,
-      valid_message,
-      valid_cgu,
-    } = this.state ? this.state : '';
-    const { error } = this.state;
+    const { fields, error, handleChange, onSubmit } = this.state;
+    const { afterCancel } = this.props;
 
     return (
       <>
@@ -133,41 +99,41 @@ export default class FormInterestLinkedOut extends Component {
                 type="text"
                 id="input-name"
                 name="name"
-                onChange={this.handleChange}
+                onChange={handleChange}
                 title="Nom et prénom*"
-                valid={valid_name}
+                valid={fields.valid_name}
               />
               <Input
                 type="text"
                 id="input-structure"
                 name="structure"
-                onChange={this.handleChange}
+                onChange={handleChange}
                 title="Structure*"
-                valid={valid_structure}
+                valid={fields.valid_structure}
               />
               <Input
                 type="email"
                 id="input-email"
                 name="email"
-                onChange={this.handleChange}
+                onChange={handleChange}
                 title="E-mail*"
-                valid={valid_email}
+                valid={fields.valid_email}
               />
               <Input
                 type="text"
                 id="input-phone"
                 name="phone"
-                onChange={this.handleChange}
+                onChange={handleChange}
                 title="Téléphone"
-                valid={valid_phone}
+                valid={fields.valid_phone}
               />
               <Textarea
                 rows={1}
                 id="input-message"
                 name="message"
-                onChange={this.handleChange}
+                onChange={handleChange}
                 title="Écrivez vos motivations*"
-                valid={valid_message}
+                valid={fields.valid_message}
               />
               <CheckboxCGU
                 id="input-cgu"
@@ -180,8 +146,8 @@ export default class FormInterestLinkedOut extends Component {
                     </Link>
                   </span>
                 }
-                onChange={this.handleChange}
-                valid={valid_cgu}
+                onChange={handleChange}
+                valid={fields.valid_cgu}
               />
             </fieldset>
           </form>
@@ -203,7 +169,7 @@ export default class FormInterestLinkedOut extends Component {
             <button
               type="button"
               className="uk-button uk-button-primary uk-margin-right"
-              onClick={this.handleSubmit}
+              onClick={onSubmit}
             >
               Envoyer
             </button>
@@ -211,7 +177,7 @@ export default class FormInterestLinkedOut extends Component {
               type="button"
               className="uk-button uk-button-default"
               name="cancel"
-              onClick={this.cancelForm}
+              onClick={afterCancel}
             >
               Annuler
             </button>

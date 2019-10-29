@@ -60,7 +60,6 @@ export default class ProfilAidant extends Component {
               >
                 Ecrivez-nous
               </button>
-              <ModalSpecialSkill id="modalSpecialSkill" />
             </>
           ),
           picture: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
@@ -119,9 +118,6 @@ export default class ProfilAidant extends Component {
               >
                 Écrivez-nous
               </button>
-              <ModalInterestLinkedOut
-                candidat={{ id: 'test', firstName: 'test' }}
-              />
             </>
           ),
           picture: '/static/img/illustrations/helping_process.png',
@@ -296,6 +292,8 @@ export default class ProfilAidant extends Component {
             ))}
           </div>
         </div>
+        <ModalInterestLinkedOut />
+        <ModalSpecialSkill />
       </Section>
     );
   }

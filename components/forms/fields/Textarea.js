@@ -40,9 +40,14 @@ export default class Textarea extends Component {
 
   inputIsEmpty() {
     const { id } = this.props;
-    if (document.getElementById(id)) {
-      if (document.getElementById(id).value !== '') return false;
-      return true;
+    /** Cette condition est indispensable avant de faire appel a document
+     * car le rendu a lieu côté serveur et n'a pas de document de défini.
+     * Source : https://stackoverflow.com/questions/35068451/reactjs-document-is-not-defined */
+    if (typeof window !== 'undefined') {
+      if (document.getElementById(id)) {
+        if (document.getElementById(id).value !== '') return false;
+        return true;
+      }
     }
     return true;
   }
