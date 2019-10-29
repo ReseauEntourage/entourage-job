@@ -37,7 +37,7 @@ export default class ModalInterestLinkedOut extends Component {
               <div className="uk-flex">
                 <div className="uk-margin-medium-right">
                   <span className="uk-text-primary">
-                    <IconNoSSR name="linkedout-contract" />
+                    <IconNoSSR name="linkedout-contract" ratio={1.5} />
                   </span>
                 </div>
                 <div className="">

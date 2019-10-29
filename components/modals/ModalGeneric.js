@@ -17,12 +17,14 @@ export default class ModalGeneric extends Component {
       children: PropTypes.func.isRequired,
       id: PropTypes.string.isRequired,
       param: PropTypes.string,
+      classNameSize: PropTypes.string,
     };
   }
 
   static get defaultProps() {
     return {
       param: 'bg-close:false',
+      classNameSize: 'uk-width-1-1 uk-width-2-3@l uk-width-1-2@xl',
     };
   }
 
@@ -41,11 +43,13 @@ export default class ModalGeneric extends Component {
   }
 
   render() {
-    const { children, id, param } = this.props;
+    const { children, classNameSize, id, param } = this.props;
 
     return (
       <div id={id} className="uk-flex-top" data-uk-modal={param}>
-        <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-1-2">
+        <div
+          className={`uk-modal-dialog uk-margin-auto-vertical ${classNameSize}`}
+        >
           <div className="uk-modal-body uk-padding-large">
             {children(this.closeModal)}
           </div>
