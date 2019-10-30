@@ -18,11 +18,11 @@ export default function withValidation(
 
     // fonction permettant de verifier une champs d'entré utilisateur
     handleChange(event) {
-      const { name, value } = event.target;
+      const { checked, name, type, value } = event.target;
       const { fields } = this.state;
 
       /* Validators start */
-      fields.values[name] = value; // enregistre la valeur du champs
+      fields.values[name] = type === 'checkbox' ? checked : value; // enregistre la valeur du champs
       const validation = validator.validate({ ...fields.values }); // envoie une copie des champs pour que le state ne soit pas altéré
 
       // enregistre la raison de la validation {isInvalid: boolean, message: string}
