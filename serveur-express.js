@@ -3,6 +3,7 @@ const next = require('next');
 
 const routeCV = require('./api/v1/CV');
 const routeMessage = require('./api/v1/Message');
+const routeMail = require('./api/v1/Mail');
 
 const PORT = process.env.PORT || 3001;
 const dev = process.env.NODE_ENV !== 'production';
@@ -18,6 +19,7 @@ app
     server.use(express.json());
     server.use('/api/v1/cv', routeCV);
     server.use('/api/v1/message', routeMessage);
+    server.use('/api/v1/mail', routeMail);
 
     server.get('*', (req, res) => {
       return handle(req, res);

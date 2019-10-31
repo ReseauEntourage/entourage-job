@@ -19,6 +19,7 @@ const Button = ({
   isExternal,
   newTab,
   onClick,
+  toggle,
 }) => {
   let classBuffer = 'uk-button';
   if (visible) classBuffer += ` uk-visible@${visible}`;
@@ -35,6 +36,7 @@ const Button = ({
       disabled={disabled}
       type="button"
       onClick={onClick}
+      data-uk-toggle={toggle}
     >
       {children}
     </button>
@@ -67,6 +69,7 @@ Button.propTypes = {
   newTab: PropTypes.bool,
   className: PropTypes.string,
   onClick: PropTypes.func,
+  toggle: PropTypes.string,
 };
 Button.defaultProps = {
   disabled: false,
@@ -79,6 +82,7 @@ Button.defaultProps = {
   newTab: false,
   className: undefined,
   onClick: undefined,
+  toggle: undefined,
 };
 
 export default Button;
