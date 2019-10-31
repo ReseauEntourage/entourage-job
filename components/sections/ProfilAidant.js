@@ -40,15 +40,14 @@ export default class ProfilAidant extends Component {
                 l’emploi ? Entourage vous forme à la mission de bénévole-coach
                 et vous donne les outils !
               </p>
-              <a
+              <Button
+                style="default"
                 href="https://airtable.com/shr6mZlTLgGFBh9om"
-                target="_blank"
-                rel="noopener noreferrer"
+                isExternal
+                newTab
               >
-                <button type="button" className="uk-button uk-button-default">
-                  Ecrivez-nous
-                </button>
-              </a>
+                Ecrivez-nous
+              </Button>
             </>
           ),
           picture: '/static/img/illustrations/helping_process.png',
@@ -112,8 +111,13 @@ export default class ProfilAidant extends Component {
             </h4>
           ),
           description: (
-            <Button style="primary" href="#">
-              Nous l&apos;orienter
+            <Button
+              style="primary"
+              href="https://airtable.com/shrKPT4yAv6LQmQto"
+              isExternal
+              newTab
+            >
+              Je vous l&apos;oriente
             </Button>
           ),
           picture: '/static/img/illustrations/Personnage-Entourage-5.png',

@@ -17,6 +17,7 @@ const Button = ({
   children,
   className,
   isExternal,
+  newTab,
   onClick,
 }) => {
   let classBuffer = 'uk-button';
@@ -40,7 +41,13 @@ const Button = ({
   );
 
   return isExternal ? (
-    <a href={href}>{buttonComponent}</a>
+    <a
+      href={href}
+      target={newTab ? '_blank' : ''}
+      rel={newTab ? 'noopener noreferrer' : ''}
+    >
+      {buttonComponent}
+    </a>
   ) : (
     <Link href={href}>{buttonComponent}</Link>
   );
@@ -57,6 +64,7 @@ Button.propTypes = {
   size: PropTypes.oneOf(UIKIT_BUTTON_SIZES),
   widths: PropTypes.arrayOf(PropTypes.string), // UIKIT_WIDTH_SCREENS
   isExternal: PropTypes.bool,
+  newTab: PropTypes.bool,
   className: PropTypes.string,
   onClick: PropTypes.func,
 };
@@ -68,6 +76,7 @@ Button.defaultProps = {
   href: '#',
   widths: [],
   isExternal: false,
+  newTab: false,
   className: undefined,
   onClick: undefined,
 };
