@@ -1,8 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Layout from '../components/Layout';
 import { Button, Section } from '../components/utils';
 import HowTo from '../components/sections/HowTo';
 import { DiscoverPartial } from '../components/partials';
+import ModalContactUs from '../components/modals/ModalContactUs';
+import SituationCard from '../components/cards/SituationCard';
 
 const JeVeuxTravailler = () => {
   const ccm = [
@@ -60,40 +63,24 @@ const JeVeuxTravailler = () => {
           data-uk-grid
         >
           <div>
-            <div className="uk-card uk-card-large uk-card-default uk-card-body">
-              <div className="uk-panel uk-flex uk-flex-middle" data-uk-grid>
-                <div className="uk-width-auto@s uk-width-1-1 uk-text-center">
-                  <img
-                    src="/static/img/illustrations/friendship.png"
-                    style={{ width: '150px', height: '150px' }}
-                    alt="1"
-                    className="uk-margin-remove-bottom uk-margin-small-right"
-                  />
-                </div>
-                <div className="uk-width-expand@s uk-width-1-1 uk-text-left@m uk-text-center">
-                  <p>Je suis prêt à intégrer le dispositif</p>
-                  <Button style="primary">Je postule</Button>
-                </div>
-              </div>
-            </div>
+            <SituationCard
+              isLeft
+              imgSrc="/static/img/illustrations/friendship.png"
+            >
+              <p>Je suis prêt à intégrer le dispositif</p>
+              <Button style="primary">Je postule</Button>
+            </SituationCard>
           </div>
           <div>
-            <div className="uk-card uk-card-large uk-card-default uk-card-body">
-              <div className="uk-panel uk-flex uk-flex-middle" data-uk-grid>
-                <div className="uk-width-auto@s uk-width-1-1 uk-text-center">
-                  <img
-                    src="/static/img/illustrations/entourage_help.png"
-                    style={{ width: '150px', height: '150px' }}
-                    alt="2"
-                    className="uk-margin-remove-bottom uk-margin-small-left"
-                  />
-                </div>
-                <div className="uk-width-expand uk-text-left@m uk-text-center uk-flex-first@s">
-                  <p>Je me fais aider dans les démarches</p>
-                  <Button style="default">J'ai besoin d'aide</Button>
-                </div>
-              </div>
-            </div>
+            <SituationCard imgSrc="/static/img/illustrations/entourage_help.png">
+              <p>
+                Je n'ai pas les papiers requis pour rejoindre LinkedOut, je
+                souhaite être aidé et réorienté
+              </p>
+              <Button style="default" toggle="target: #modalContactUs">
+                contactez nous
+              </Button>
+            </SituationCard>
           </div>
         </div>
       </Section>
@@ -115,6 +102,7 @@ const JeVeuxTravailler = () => {
         </div>
       </Section>
       <DiscoverPartial />
+      <ModalContactUs />
     </Layout>
   );
 };
