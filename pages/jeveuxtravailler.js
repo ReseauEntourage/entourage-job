@@ -67,8 +67,15 @@ const JeVeuxTravailler = () => {
               isLeft
               imgSrc="/static/img/illustrations/friendship.png"
             >
-              <p>Je suis prêt à intégrer le dispositif</p>
-              <Button style="primary">Je postule</Button>
+              <p>J&apos;ai les papiers requis pour intégrer LinkedOut</p>
+              <Button
+                style="primary"
+                href="https://airtable.com/shrxZHflIJQqGlQAd"
+                isExternal
+                newTab
+              >
+                Je rejoins LinkedOut
+              </Button>
             </SituationCard>
           </div>
           <div>

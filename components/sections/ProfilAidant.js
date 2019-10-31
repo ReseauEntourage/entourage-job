@@ -32,8 +32,24 @@ export default class ProfilAidant extends Component {
               Devenez <span className="uk-text-primary">bénévole-coach !</span>
             </h4>
           ),
-          description:
-            'Vous souhaitez donner de votre temps pour tisser une relation de confiance avec un candidat et le coacher vers le retour à l’emploi ? Entourage vous forme à la mission de bénévole-coach et vous donne les outils !',
+          description: (
+            <>
+              <p>
+                Vous souhaitez donner de votre temps pour tisser une relation de
+                confiance avec un candidat et le coacher vers le retour à
+                l’emploi ? Entourage vous forme à la mission de bénévole-coach
+                et vous donne les outils !
+              </p>
+              <Button
+                style="default"
+                href="https://airtable.com/shr6mZlTLgGFBh9om"
+                isExternal
+                newTab
+              >
+                Ecrivez-nous
+              </Button>
+            </>
+          ),
           picture: '/static/img/illustrations/helping_process.png',
         },
         {
@@ -95,8 +111,13 @@ export default class ProfilAidant extends Component {
             </h4>
           ),
           description: (
-            <Button style="primary" href="#">
-              Nous l&apos;orienter
+            <Button
+              style="primary"
+              href="https://airtable.com/shrKPT4yAv6LQmQto"
+              isExternal
+              newTab
+            >
+              Je vous l&apos;oriente
             </Button>
           ),
           picture: '/static/img/illustrations/Personnage-Entourage-5.png',
