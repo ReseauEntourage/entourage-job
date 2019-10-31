@@ -3,9 +3,6 @@ const Mailjet = require('node-mailjet').connect(
   process.env.MAILJET_SEC
 );
 
-const fromEmail = 'job@entourage.social';
-const fromName = 'Entourage Jobs';
-
 /*
 we register a resource to perform multiple tasks
 To learn more about the resources you can use, there is a well maintained
@@ -24,8 +21,8 @@ me.request((error, response, body) => {
  */
 const sendMail = ({ email, subject, text, html }) => {
   return send.request({
-    FromEmail: fromEmail,
-    FromName: fromName,
+    FromEmail: process.env.MAILJET_FROM_EMAIL,
+    FromName: process.env.MAILJET_FROM_NAME,
     Subject: subject,
     'Text-part': text,
     'HTML-part': html,
