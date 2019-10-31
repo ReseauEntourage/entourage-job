@@ -71,8 +71,15 @@ const JeVeuxTravailler = () => {
                   />
                 </div>
                 <div className="uk-width-expand@s uk-width-1-1 uk-text-left@m uk-text-center">
-                  <p>Je suis prêt à intégrer le dispositif</p>
-                  <Button style="primary">Je postule</Button>
+                  <p>J&apos;ai les papiers requis pour intégrer LinkedOut</p>
+                  <Button
+                    style="primary"
+                    href="https://airtable.com/shrxZHflIJQqGlQAd"
+                    isExternal
+                    newTab
+                  >
+                    Je rejoins LinkedOut
+                  </Button>
                 </div>
               </div>
             </div>
