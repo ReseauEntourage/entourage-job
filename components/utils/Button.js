@@ -18,6 +18,7 @@ const Button = ({
   className,
   isExternal,
   onClick,
+  toggle,
 }) => {
   let classBuffer = 'uk-button';
   if (visible) classBuffer += ` uk-visible@${visible}`;
@@ -34,6 +35,7 @@ const Button = ({
       disabled={disabled}
       type="button"
       onClick={onClick}
+      data-uk-toggle={toggle}
     >
       {children}
     </button>
@@ -59,6 +61,7 @@ Button.propTypes = {
   isExternal: PropTypes.bool,
   className: PropTypes.string,
   onClick: PropTypes.func,
+  toggle: PropTypes.string,
 };
 Button.defaultProps = {
   disabled: false,
@@ -70,6 +73,7 @@ Button.defaultProps = {
   isExternal: false,
   className: undefined,
   onClick: undefined,
+  toggle: undefined,
 };
 
 export default Button;
