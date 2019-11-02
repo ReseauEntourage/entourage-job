@@ -4,8 +4,13 @@ import Layout from '../components/Layout';
 import { Button, Section } from '../components/utils';
 import HowTo from '../components/sections/HowTo';
 import { DiscoverPartial } from '../components/partials';
-import ModalContactUs from '../components/modals/ModalContactUs';
 import SituationCard from '../components/cards/SituationCard';
+
+import FormContactUs from '../components/forms/FormContactUs';
+import withValidation from '../components/forms/withValidation';
+import StepperModal from '../components/modals/StepperModal';
+import rulesContactUs from '../components/forms/rulesContactUs';
+import SuccessModalContent from '../components/modals/SuccessModalContent';
 
 const JeVeuxTravailler = () => {
   const ccm = [
@@ -109,7 +114,34 @@ const JeVeuxTravailler = () => {
         </div>
       </Section>
       <DiscoverPartial />
-      <ModalContactUs />
+
+      {/* Modal de formulaire contact */}
+      <StepperModal
+        id="modalContactUs"
+        title={
+          <>
+            Vous souhaitez{' '}
+            <span className="uk-text-primary">apporter vos compétences ?</span>
+          </>
+        }
+        composers={[
+          (closeModal, nextStep, previousStep) => {
+            const FormContactUsValidation = withValidation(
+              FormContactUs,
+              rulesContactUs,
+              closeModal,
+              nextStep
+            );
+            return <FormContactUsValidation />;
+          },
+          (closeModal, nextStep, previousStep) => (
+            <SuccessModalContent
+              text="Merci pour votre message."
+              closeModal={closeModal}
+            />
+          ),
+        ]}
+      />
     </Layout>
   );
 };
