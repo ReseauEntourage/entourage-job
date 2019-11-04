@@ -36,6 +36,8 @@ export default class StepperModal extends Component {
   closeModal() {
     const { id } = this.props;
     UIkit.modal(`#${id}`).hide();
+    // TODO: Probleme car il est possible que la modale se ferme par un moyen autre qu'ici (uk-close-icon~)
+    this.setState({ index: 0 });
   }
 
   nextStep() {
