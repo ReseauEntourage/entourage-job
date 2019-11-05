@@ -29,7 +29,7 @@ const SituationCard = ({ imgSrc, isLeft, children }) => (
 SituationCard.propTypes = {
   imgSrc: PropTypes.string.isRequired,
   isLeft: PropTypes.bool,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.arrayOf(PropTypes.element).isRequired,
 };
 SituationCard.defaultProps = {
   isLeft: false,

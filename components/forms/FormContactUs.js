@@ -72,48 +72,50 @@ export default class FormSpecialSkill extends Component {
     const { afterCancel } = this.props;
 
     return (
-      <>
-        <div className="uk-width-1-1 uk-width-2-3@m uk-width-1-2@xl">
-          <form className="uk-form-stacked uk-grid-small" data-uk-grid>
-            <fieldset className="uk-fieldset uk-width-1-1">
-              <Input
-                id="input-email"
-                type="email"
-                name="email"
-                valid={fields.valid_email}
-                title="Addresse mail*"
-                placeholder="Tapez votre texte"
-                onChange={handleChange}
-              />
-              <Textarea
-                type="text"
-                id="input-text"
-                placeholder="Tapez votre texte"
-                name="text"
-                valid={fields.valid_text}
-                title="Ce que vous pouvez apporter*"
-                rows={7}
-                onChange={handleChange}
-              />
-              <CheckboxCGU
-                id="input-cgu"
-                name="cgu"
-                title={
-                  <span>
-                    J&apos;accepte les{' '}
-                    <Link href="#">
-                      <a>CGU</a>
-                    </Link>
-                  </span>
-                }
-                onChange={handleChange}
-                valid={fields.valid_cgu}
-              />
-            </fieldset>
-          </form>
-        </div>
-        <FooterForm error={error} onSubmit={onSubmit} onCancel={afterCancel} />
-      </>
+      <div className="uk-width-1-1 uk-width-2-3@m uk-width-1-2@xl">
+        <form className="uk-form-stacked uk-grid-small" data-uk-grid>
+          <fieldset className="uk-fieldset uk-width-1-1">
+            <Input
+              id="input-email"
+              type="email"
+              name="email"
+              valid={fields.valid_email}
+              title="Addresse mail*"
+              placeholder="Tapez votre texte"
+              onChange={handleChange}
+            />
+            <Textarea
+              type="text"
+              id="input-text"
+              placeholder="Tapez votre texte"
+              name="text"
+              valid={fields.valid_text}
+              title="Ce que vous pouvez apporter*"
+              rows={7}
+              onChange={handleChange}
+            />
+            <CheckboxCGU
+              id="input-cgu"
+              name="cgu"
+              title={
+                <span>
+                  J&apos;accepte les{' '}
+                  <Link href="#">
+                    <a>CGU</a>
+                  </Link>
+                </span>
+              }
+              onChange={handleChange}
+              valid={fields.valid_cgu}
+            />
+          </fieldset>
+          <FooterForm
+            error={error}
+            onSubmit={onSubmit}
+            onCancel={afterCancel}
+          />
+        </form>
+      </div>
     );
   }
 }
