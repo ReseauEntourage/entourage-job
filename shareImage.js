@@ -127,4 +127,4 @@ function generateCVPreview(name, description, ambition, imagePath, output) {
 //   );
 // });
 
-module.export = generateCVPreview;
+module.exports = generateCVPreview;

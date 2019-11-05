@@ -7,7 +7,7 @@
     "dev": "nodemon -r dotenv/config serveur-express.js",
     "dev-server": "nodemon -r dotenv/config serveur-express.js",
     "dev-front": "node -r dotenv/config serveur-express.js",
-    "test": "mocha --require @babel/register './test/*'",
+    "test": "mv justForMocha.babelrc .babelrc && mocha --require @babel/register './test/*' && mv .babelrc justForMocha.babelrc",
     "build": "next build",
     "start": "NODE_ENV=production node -r dotenv/config serveur-express.js",
     "uikit-install": "cd ./assets/ && git clone git@github.com:uikit/uikit.git && cd uikit && git checkout master && npm i",
@@ -65,6 +65,7 @@
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.6.3",
     "@babel/register": "^7.5.5",
     "babel-eslint": "^10.0.2",
     "chai": "*",

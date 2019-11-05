@@ -233,7 +233,7 @@ router.post('/', (req, res) => {
     .then(() => {
       // creation de limage de preview cv
       generateCVPreview(
-        cvCreated.name.toUpperCase(),
+        cvCreated.firstName.toUpperCase(),
         "A besoin d'un coup de pouce pour travailler dans...",
         req.body.ambitions.length > 0
           ? req.body.ambitions.join('. ').toUpperCase()
@@ -364,7 +364,31 @@ router.get('/cards/random', (req, res) => {
     ],
   })
     .then((CVs) => {
-      res.status(200).json(CVs);
+      res.status(200).json({ CVs });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Titre : Suppression d'un CV à partir de son id
+ * Description : Supprime le CV correspondant à l'<id> fournit dans l'URL.
+ * Paramètre :
+ * - id : ID du CV à supprimer
+ * Exemple : <server_url>/api/v1/cv/27272727-aaaa-bbbb-cccc-012345678927
+ */
+router.delete('/:id', (req, res) => {
+  const infoLog = 'DELETE 1 CV -';
+  console.log(`${infoLog} Suppression d'un CVs à partir de son id`);
+  console.log(`${infoLog} ${typeof req.params.url}`);
+  console.log(`${infoLog} ${req.params.url}`);
+  CV.destroy({
+    where: { id: req.params.id },
+  })
+    .then((result) => {
+      res.status(200).json(result);
     })
     .catch((err) => {
       console.log(err);
