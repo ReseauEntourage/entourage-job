@@ -50,29 +50,54 @@ const CV_EXAMPLE = {
 };
 
 describe('Tests des routes API', () => {
-  describe('Créer 1 CV', () => {
-    before(() => {
-      const newCV = CV_EXAMPLE;
-      return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, newCV)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-    });
-    it("doit retourner un tableau de CVs à l'appel API", () => {
-      return Api.get(`${process.env.SERVER_URL}/api/v1/cv`)
-        .then((res) => {
-          assert.isArray(res.data, 'Tableau reçu');
-        })
-        .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-    }).timeout(5000);
-  });
   describe('Partie CV', () => {
+    describe('CRUD CV', () => {
+      let cv;
+
+      describe('C - Create 1 CV', () => {
+        it('doit créer le CV dans la base de données', () => {
+          const newCV = CV_EXAMPLE;
+          return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, newCV)
+            .then((res) => {
+              cv = res.data;
+              assert.isObject(res.data, 'CV retourné');
+            })
+            .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+        }).timeout(5000);
+      });
+      describe('R - Read 1 CV', () => {
+        it("doit retourner un CV à l'appel API", () => {
+          return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${cv.url}`)
+            .then((res) => {
+              assert.isObject(res.data, 'CV reçu');
+            })
+            .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+        }).timeout(5000);
+      });
+      describe('U - Update 1 CV', () => {
+        it('doit mettre le CV à jour dans la base de données', () => {
+          return assert.isOk('Non testable pour le moment');
+        }).timeout(5000);
+      });
+      describe('D - Delete 1 CV', () => {
+        it('doit supprimer le CV de test dans la base de données', () => {
+          return Api.delete(`${process.env.SERVER_URL}/api/v1/cv/${cv.id}`)
+            .then((res) => {
+              if (res.data === 1) {
+                assert.isOk('CV supprimé');
+              } else {
+                assert.fail('Aucun CV supprimé');
+              }
+            })
+            .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+        }).timeout(5000);
+      });
+    });
+
     describe('Récupérer tous les CVs', () => {
       it("doit retourner un tableau de CVs à l'appel API", () => {
         return Api.get(`${process.env.SERVER_URL}/api/v1/cv`)
           .then((res) => {
-            console.log(res);
             assert.isArray(res.data, 'Tableau reçu');
           })
           .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
