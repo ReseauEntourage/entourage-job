@@ -2,6 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { Container } from 'next/app';
 import PropTypes from 'prop-types';
+import { withRouter } from 'next/router';
 import Footer from './Footer';
 import Header from './Header';
 
@@ -13,6 +14,7 @@ const Layout = ({
   metaDescription,
   metaUrl,
   metaType,
+  router,
 }) => (
   <Container>
     <Head>
@@ -30,7 +32,7 @@ const Layout = ({
       <meta name="twitter:image" content={metaImage} />
       {/* <meta name="fb:app_id" content="" /> */}
     </Head>
-    <Header />
+    <Header isHome={router.asPath === '/'} />
     {children}
     <Footer />
   </Container>
@@ -57,4 +59,4 @@ Layout.defaultProps = {
   metaUrl: process.env.SERVER_URL,
   metaType: 'website',
 };
-export default Layout;
+export default withRouter(Layout);

@@ -1,25 +1,29 @@
 import React from 'react';
-import { LinkedinShareButton } from 'react-share';
+import PropTypes from 'prop-types';
+import Link from 'next/link';
 import {
   Nav,
   NavbarNoSSR,
   OffcanvasNoSSR,
   HamburgerNoSSR,
   SimpleLink,
-  Button,
   NavbarLogo,
 } from './utils';
+import './Header.less';
 
-const Header = () => {
+const Header = ({ isHome }) => {
   const LINKS = [
-    { href: '/jeveuxaider', name: 'je veux aider' },
-    { href: '/jeveuxtravailler', name: 'je veux travailler' },
-    { href: '/jeveuxrecruter', name: 'je veux recruter' },
+    { href: '/jeveuxaider', name: 'Je veux aider' },
+    { href: '/jeveuxtravailler', name: 'Je veux travailler' },
+    { href: '/jeveuxrecruter', name: 'Je veux recruter' },
   ];
   return (
     <header>
       <NavbarNoSSR
-        sticky
+        sticky={isHome ? 'top: 300; animation: uk-animation-slide-top' : ''}
+        className={`uk-background-default uk-navbar-transparent ${
+          isHome ? 'ent-home' : 'ent-header-shadow'
+        }`}
         left={
           <NavbarLogo
             href="/"
@@ -32,11 +36,21 @@ const Header = () => {
             navbar
             items={[
               ...LINKS.map((value) => (
-                <SimpleLink href={value.href} visible="m">
-                  {value.name}
-                </SimpleLink>
+                <Link href={value.href}>
+                  <a
+                    className="uk-visible@m"
+                    style={{
+                      fontWeight: 500,
+                      fontSize: '1rem',
+                      color: 'black',
+                      textTransform: 'none',
+                    }}
+                  >
+                    {value.name}
+                  </a>
+                </Link>
               )),
-              <div className="uk-navbar-item">
+              <div className="uk-navbar-item uk-visible@m">
                 <button type="button" className="uk-button uk-button-primary">
                   Voir les candidats
                 </button>
@@ -57,5 +71,10 @@ const Header = () => {
     </header>
   );
 };
-
+Header.propTypes = {
+  isHome: PropTypes.bool,
+};
+Header.defaultProps = {
+  isHome: false,
+};
 export default Header;
