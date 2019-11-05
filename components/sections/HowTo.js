@@ -6,6 +6,9 @@ const HowTo = ({ title, children, colLarge }) => {
   let classChildWidth =
     'uk-child-width-1-4@l uk-child-width-1-3@m uk-child-width-1-2@s';
   switch (colLarge) {
+    case 4:
+      classChildWidth = 'uk-child-width-1-2@s uk-child-width-1-1';
+      break;
     case 3:
       classChildWidth =
         'uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-1@s';

@@ -1,11 +1,33 @@
 import React from 'react';
 import { Section } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
-import { IconNoSSR } from '../components/utils/Icon';
 import Layout from '../components/Layout';
 import ProfilAidant from '../components/sections/ProfilAidant';
 import HowTo from '../components/sections/HowTo';
 import StepCard from '../components/cards/StepCard';
+
+const content = [
+  {
+    img: '/static/img/illustrations/entourage_phone.png',
+    description:
+      "La plateforme LinkedOut permet de viraliser les CV des candidats sur les réseaux sociaux pour les rendre visibles auprès de recruteurs et générer des opportunités d'emploi.",
+  },
+  {
+    img: '/static/img/illustrations/helping_process.png',
+    description:
+      'Chaque candidat est soutenu par un bénévole-coach, de la recherche d’emploi à l’intégration en entreprise.',
+  },
+  {
+    img: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
+    description:
+      'Un parcours de courtes formations et d’ateliers à la carte permet aux candidats qui le souhaitent d’acquérir les compétences manquantes et de travailler la confiance en soi.',
+  },
+  {
+    img: '/static/img/illustrations/cafe_solidaire_personnages.png',
+    description:
+      'Tout au long de leur parcours vers l’emploi, la communauté Entourage soutient moralement les candidats, leur permet de se resocialiser et de faire de nouvelles rencontres.',
+  },
+];
 
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - Entourage Jobs">
@@ -28,25 +50,15 @@ const JeVeuxAider = () => (
           <span className="uk-text-primary">LinkedOut ?</span>
         </h1>
       }
-      colLarge={3}
+      colLarge={4}
     >
-      <StepCard
-        numStep={1}
-        img="/static/img/illustrations/entourage_phone.png"
-        description="La plateforme LinkedOut permet de viraliser les CV des candidats sur les réseaux sociaux pour les rendre visibles auprès de recruteurs et générer des opportunités d'emploi"
-      />
-      <StepCard
-        numStep={2}
-        img="/static/img/illustrations/helping_process.png"
-        description="Chaque candidat est soutenu par un bénévole-coach, de la recherche d’emploi à l’intégration en entreprise"
-      />
-      <StepCard
-        numStep={3}
-        img="/static/img/illustrations/Idee-reseau-entourage-dessin.png"
-        description="Un parcours de courtes formations et d’ateliers à la carte permet aux candidats qui le souhaitent d’acquérir les compétences manquantes et de travailler la confiance en soi"
-      />
+      {content.map(({ img, description }, index) => (
+        <li key={index}>
+          {<StepCard numStep={index + 1} img={img} description={description} />}
+        </li>
+      ))}
     </HowTo>
-    <Section id="travailler3" style="secondary" size="small">
+    {/* <Section id="travailler3" style="secondary" size="small">
       <p className="uk-text-lead uk-text-center uk-align-center uk-width-2-3@s">
         Tout au long de leur parcours vers l&apos;emploi, la communauté
         Entourage soutient moralement les candidats, leur permet de se
@@ -55,7 +67,7 @@ const JeVeuxAider = () => (
       <p className="uk-text-center">
         Découvrez Entourage <IconNoSSR name="linkedout-arrow-contact" />
       </p>
-    </Section>
+    </Section> */}
     <DiscoverPartial />
   </Layout>
 );
