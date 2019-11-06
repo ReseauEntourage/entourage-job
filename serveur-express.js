@@ -1,9 +1,7 @@
-const express = require('express');
-const next = require('next');
+// devrait etre renommé en serveur-next.js
 
-const routeCV = require('./api/v1/CV');
-const routeMessage = require('./api/v1/Message');
-const routeMail = require('./api/v1/Mail');
+const next = require('next');
+const server = require('./Server');
 
 const PORT = process.env.PORT || 3001;
 const dev = process.env.NODE_ENV !== 'production';
@@ -14,23 +12,12 @@ const handle = app.getRequestHandler();
 app
   .prepare()
   .then(() => {
-    const server = express();
-
-    server.use(express.json());
-    server.use('/api/v1/cv', routeCV);
-    server.use('/api/v1/message', routeMessage);
-    server.use('/api/v1/mail', routeMail);
-
-    server.get('*', (req, res) => {
-      return handle(req, res);
-    });
-
-    server.listen(PORT, (err) => {
-      if (err) throw err;
-      console.log(`> Ready on http://localhost:${PORT}`);
-    });
+    server.prepare();
+    server.get('*', handle);
+    server.start(PORT);
   })
   .catch((ex) => {
+    server.close();
     console.error(ex.stack);
     process.exit(1);
   });
