@@ -6,6 +6,10 @@ services:
   - postgresql
 addons:
   postgresql: '11.5'
+  apt:
+    packages:
+      - postgresql-11
+      - postgresql-client-11
 before_script:
   - export NODE_ENV=test
   - sequelize db:create
