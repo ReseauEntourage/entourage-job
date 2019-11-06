@@ -1,7 +1,11 @@
 import Api from '../Axios';
 
 const { assert } = require('chai');
+const server = require('../Server');
 require('dotenv').config();
+
+const PORT = process.env.PORT || 3001;
+const TIMEOUT = 20000;
 
 const CV_EXAMPLE = {
   firstName: 'Test',
@@ -50,6 +54,15 @@ const CV_EXAMPLE = {
 };
 
 describe('Tests des routes API', () => {
+  before((done) => {
+    server.prepare();
+    server.start(PORT).then(done);
+  });
+
+  after(() => {
+    server.close();
+  });
+
   describe('Partie CV', () => {
     describe('CRUD CV', () => {
       let cv;
@@ -63,7 +76,7 @@ describe('Tests des routes API', () => {
               assert.isObject(res.data, 'CV retourné');
             })
             .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-        }).timeout(5000);
+        }).timeout(TIMEOUT);
       });
       describe('R - Read 1 CV', () => {
         it("doit retourner un CV à l'appel API", () => {
@@ -72,12 +85,12 @@ describe('Tests des routes API', () => {
               assert.isObject(res.data, 'CV reçu');
             })
             .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-        }).timeout(5000);
+        }).timeout(TIMEOUT);
       });
       describe('U - Update 1 CV', () => {
         it('doit mettre le CV à jour dans la base de données', () => {
           return assert.isOk('Non testable pour le moment');
-        }).timeout(5000);
+        }).timeout(TIMEOUT);
       });
       describe('D - Delete 1 CV', () => {
         it('doit supprimer le CV de test dans la base de données', () => {
@@ -90,7 +103,7 @@ describe('Tests des routes API', () => {
               }
             })
             .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-        }).timeout(5000);
+        }).timeout(TIMEOUT);
       });
     });
 
@@ -101,7 +114,7 @@ describe('Tests des routes API', () => {
             assert.isArray(res.data, 'Tableau reçu');
           })
           .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-      }).timeout(5000);
+      }).timeout(TIMEOUT);
     });
   });
 });
