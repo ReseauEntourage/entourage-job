@@ -2,6 +2,12 @@ os: windows
 language: node_js
 node_js:
   - '10'
+services:
+  - postgresql
+before_script:
+  - NODE_ENV=test
+  - sequelize db:create
+  - sequelize db:migrate:all
 script: npm test
 deploy:
   provider: heroku
