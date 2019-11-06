@@ -1,6 +1,6 @@
 {
   "name": "entourage-jobs",
-  "version": "0.0.1",
+  "version": "0.5.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "dev-server": "nodemon -r dotenv/config serveur-express.js",
     "dev-front": "node -r dotenv/config serveur-express.js",
     "pretest": "ren justForMocha.babelrc .babelrc",
-    "test": "mocha --require @babel/register './test/*' || npm run posttest",
+    "test": "npm run dev-server && mocha --require @babel/register './test/*' || npm run posttest",
     "posttest": "ren .babelrc justForMocha.babelrc",
     "build": "next build",
     "start": "NODE_ENV=production node -r dotenv/config serveur-express.js",
