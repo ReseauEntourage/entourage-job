@@ -56,7 +56,8 @@ export default class StepperModal extends Component {
 
     return (
       <div id={id} className="uk-flex-top" data-uk-modal="bg-close:false">
-        <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-1-1 uk-width-2-3@m">
+        {/*  uk-width-1-1 */}
+        <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-2-3@m uk-width-1-2@l">
           <CloseButtonNoSSR className="uk-modal-close-default" />
           <div className="uk-modal-body uk-padding-large">
             <HeaderModal>{title}</HeaderModal>
