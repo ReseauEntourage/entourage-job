@@ -46,6 +46,16 @@ export default function withValidation(
         if (validation.isValid) {
           resolve({ fields: fields.values });
         } else {
+          // erreur de validation
+          Object.keys(validation).forEach((key) => {
+            if (key !== 'isValid') {
+              fields[`valid_${key}`] = validation[key];
+            }
+          });
+          this.setState({
+            error: 'Un ou plusieurs champs sont invalides',
+            fields,
+          });
           reject({ validation });
         }
       });

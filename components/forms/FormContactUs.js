@@ -9,15 +9,11 @@ import CheckboxCGU from './fields/CheckboxCGU';
 import FooterForm from '../utils/FooterForm';
 
 const DEFAULT_MESSAGE = {
-  name: '',
   email: '',
-  localization: '',
   text: '',
 };
 const DEFAULT_VALID = {
-  valid_name: undefined,
   valid_email: undefined,
-  valid_localization: undefined,
   valid_text: undefined,
 };
 
@@ -56,15 +52,18 @@ export default class FormSpecialSkill extends Component {
     const { afterSubmit } = this.props;
 
     handleSubmit()
-      .then(({ values }) =>
-        Api.post('/api/v1/giveSkill', {
-          message: values,
+      .then(({ fields }) => {
+        Api.post('/api/v1/mail', {
+          email: 'j.hospice@share-it.io',
+          text: `Texte:\n${fields.text}\nemail:\n${fields.email}`,
+          subject: `Je souhaite être aidé et réorienté - ${fields.email}`,
         })
           .then(() => afterSubmit())
-          .catch(() => {
+          .catch((error) => {
+            console.error(error);
             this.setState({ error: "Une erreur s'est produite" });
-          })
-      )
+          });
+      })
       .catch(console.error);
   }
 
@@ -73,51 +72,30 @@ export default class FormSpecialSkill extends Component {
     const { afterCancel } = this.props;
 
     return (
-      <div className="uk-width-1-1">
-        <form
-          className="uk-form-stacked uk-grid-small uk-child-width-1-1"
-          data-uk-grid
-        >
-          <fieldset className="uk-fieldset">
+      <div className="uk-width-1-1 uk-width-2-3@m uk-width-1-2@xl">
+        <form className="uk-form-stacked uk-grid-small" data-uk-grid>
+          <fieldset className="uk-fieldset uk-width-1-1">
             <Input
-              type="text"
-              name="name"
-              id="specialskill-input-name"
-              valid={fields.valid_name}
-              title="Nom *"
-              placeholder="Tapez votre texte"
-              onChange={handleChange}
-            />
-            <Input
+              id="input-email"
               type="email"
               name="email"
-              id="specialskill-input-email"
               valid={fields.valid_email}
-              title="Adresse mail *"
-              placeholder="Tapez votre texte"
-              onChange={handleChange}
-            />
-            <Input
-              type="text"
-              name="localization"
-              id="specialskill-input-localization"
-              valid={fields.valid_localization}
-              title="Lieu d'habitation *"
+              title="Addresse mail*"
               placeholder="Tapez votre texte"
               onChange={handleChange}
             />
             <Textarea
               type="text"
-              id="specialskill-input-text"
+              id="input-text"
               placeholder="Tapez votre texte"
               name="text"
               valid={fields.valid_text}
-              title="Ce que vous pouvez apporter *"
+              title="Ce que vous pouvez apporter*"
               rows={7}
               onChange={handleChange}
             />
             <CheckboxCGU
-              id="specialskill-input-cgu"
+              id="input-cgu"
               name="cgu"
               title={
                 <span>
@@ -131,13 +109,11 @@ export default class FormSpecialSkill extends Component {
               valid={fields.valid_cgu}
             />
           </fieldset>
-          <div>
-            <FooterForm
-              error={error}
-              onSubmit={onSubmit}
-              onCancel={afterCancel}
-            />
-          </div>
+          <FooterForm
+            error={error}
+            onSubmit={onSubmit}
+            onCancel={afterCancel}
+          />
         </form>
       </div>
     );

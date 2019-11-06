@@ -5,7 +5,7 @@ import {
   FacebookShareButton,
   TwitterShareButton,
 } from 'react-share';
-import { GridNoSSR, IconNoSSR, Button, Section, Background } from '../utils';
+import { GridNoSSR, IconNoSSR, Section, Background, ImgNoSSR } from '../utils';
 import { PresentationCard } from '../cards';
 
 // Home page partials
@@ -19,6 +19,16 @@ const LandingPagePartial = ({ presentations }) => {
   return (
     <Background src="/static/img/background_1.png" position="top-right">
       <Section container="large">
+        <div className="uk-margin-medium-bottom uk-text-center uk-text-left@s uk-text-middle">
+          <ImgNoSSR
+            src="/static/img/linkedout_2.png"
+            alt="logo linkedout"
+            width="250"
+          />
+          <span className="uk-text-emphasis uk-margin-small-left">
+            by Entourage
+          </span>
+        </div>
         <GridNoSSR
           childWidths={['1-3@m', '1-2@s']}
           items={[
@@ -28,7 +38,7 @@ const LandingPagePartial = ({ presentations }) => {
                 <span className="uk-text-primary">réseau</span>
                 <span> avec ceux qui n&apos;en ont pas</span>
               </h1>
-              <div className="uk-margin-large-top uk-margin-large-bottom uk-text-center uk-text-left@s">
+              <div className="uk-margin-medium-top uk-text-center uk-text-left@s">
                 <h2 className="uk-text-bold uk-text-uppercase">
                   Partager l&apos;opération
                 </h2>
