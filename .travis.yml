@@ -6,7 +6,8 @@ services:
   - postgresql
 before_script:
   - export NODE_ENV=test
-  - sequelize db:create
+  - psql -c "CREATE DATABASE linkedout_test_db;" -U postgres
+  - psql -c "CREATE USER postgres WITH PASSWORD 'test';" -U postgres
   - sequelize db:migrate:all
 script: npm test
 deploy:
