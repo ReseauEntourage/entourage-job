@@ -3,18 +3,27 @@
 const express = require('express');
 const router = express.Router();
 const sequelize = require('sequelize');
-const generateCVPreview = require('../../shareImage');
-const db = require('../../db/config/databaseConnect');
-const CV = require('../../db/models/cv')(db, sequelize.DataTypes);
-const Ambition = require('../../db/models/ambition')(db, sequelize.DataTypes);
-const Contract = require('../../db/models/contract')(db, sequelize.DataTypes);
-const Experience = require('../../db/models/experience')(
+const generateCVPreview = require('../../../shareImage');
+const db = require('../../../db/config/databaseConnect');
+const CV = require('../../../db/models/cv')(db, sequelize.DataTypes);
+const Ambition = require('../../../db/models/ambition')(
   db,
   sequelize.DataTypes
 );
-const Language = require('../../db/models/language')(db, sequelize.DataTypes);
-const Passion = require('../../db/models/passion')(db, sequelize.DataTypes);
-const Skill = require('../../db/models/skill')(db, sequelize.DataTypes);
+const Contract = require('../../../db/models/contract')(
+  db,
+  sequelize.DataTypes
+);
+const Experience = require('../../../db/models/experience')(
+  db,
+  sequelize.DataTypes
+);
+const Language = require('../../../db/models/language')(
+  db,
+  sequelize.DataTypes
+);
+const Passion = require('../../../db/models/passion')(db, sequelize.DataTypes);
+const Skill = require('../../../db/models/skill')(db, sequelize.DataTypes);
 
 CV.belongsToMany(Ambition, { through: 'CV_Ambitions' });
 CV.belongsToMany(Contract, { through: 'CV_Contracts' });

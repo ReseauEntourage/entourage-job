@@ -1,6 +1,6 @@
 const express = require('express');
-const routeCV = require('./api/v1/CV');
-const routeMessage = require('./api/v1/Message');
+const routeCV = require('./routes/api/v1/CV');
+const routeMessage = require('./routes/api/v1/Message');
 
 const app = express();
 let server;
@@ -20,7 +20,7 @@ module.exports.start = (port) => {
     server = app.listen(port, (err) => {
       if (err) reject(err);
       else {
-        console.log(`> Ready on http://localhost:${port}`);
+        console.log(`> Site disponible sur http://localhost:${port}`);
         resolve();
       }
     });
