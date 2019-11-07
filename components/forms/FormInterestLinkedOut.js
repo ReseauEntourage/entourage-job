@@ -61,9 +61,9 @@ export default class FormInterestLinkedOut extends Component {
     const { afterSubmit } = this.props;
 
     handleSubmit()
-      .then(({ values }) =>
-        Api.post('/api/v1/giveSkill', {
-          message: values,
+      .then(({ fields }) =>
+        Api.post('/api/v1/message', {
+          ...fields,
         })
       )
       .then(() => afterSubmit())

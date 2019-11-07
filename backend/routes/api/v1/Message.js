@@ -20,6 +20,8 @@ router.get('/', (req, res) => {
 
 // Create a new message
 router.post('/', (req, res) => {
+  console.log(req.body);
+
   Message.create({
     firstName: req.body.message.firstName,
     lastName: req.body.message.lastName,

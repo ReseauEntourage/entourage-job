@@ -50,21 +50,21 @@ export default class FormSpecialSkill extends Component {
     const { afterSubmit } = this.props;
 
     handleSubmit()
-      .then(({ values }) =>
-        Api.post('/api/v1/login', {
-          values,
+      .then(({ fields: { email, password } }) => {
+        Api.post('/auth/login', {
+          email,
+          password,
         })
           .then(() => afterSubmit())
           .catch(() => {
             this.setState({ error: "Une erreur s'est produite" });
-          })
-      )
+          });
+      })
       .catch(console.error);
   }
 
   render() {
     const { fields, error, handleChange, onSubmit } = this.state;
-    const { afterCancel } = this.props;
 
     return (
       <form className="uk-form-stacked">
