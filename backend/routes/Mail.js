@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const mailjet = require('../../mailjet');
+const mailjet = require('../mailjet');
 
 router.post('/', (req, res) => {
   // todo verification de champs

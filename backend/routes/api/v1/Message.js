@@ -1,16 +1,15 @@
-const express = require("express");
-const router = express.Router();
-const sequelize = require("sequelize");
-const db = require("../../db/config/databaseConnect");
-const Message = require("../../db/models/message")(db, sequelize.DataTypes);
-const moment = require("moment");
+const express = require('express');
 
+const router = express.Router();
+const sequelize = require('sequelize');
+const db = require('../../../db/config/databaseConnect');
+const Message = require('../../../db/models/message')(db, sequelize.DataTypes);
 
 // Find all messages
 router.get('/', (req, res) => {
   Message.findAll()
     .then((listeMessages) => {
-      console.log("All Messages : ", JSON.stringify(listeMessages, null, 4));
+      console.log('All Messages : ', JSON.stringify(listeMessages, null, 4));
       res.status(200).send(JSON.stringify(listeMessages, null, 4));
     })
     .catch((err) => {
@@ -30,15 +29,15 @@ router.post('/', (req, res) => {
     businessLine: req.body.message.businessLine,
     company: req.body.message.company,
     localization: req.body.message.localization,
-    message: req.body.message.message
+    message: req.body.message.message,
   })
     .then((message) => {
-      console.log("Message créé : ", message);
+      console.log('Message créé : ', message);
       res.status(200).send(message);
     })
     .catch((err) => {
       console.log(err);
-      if (err.name === "SequelizeValidationError") {
+      if (err.name === 'SequelizeValidationError') {
         const errMessage = err.errors[0].message;
         res.status(403).send(errMessage);
       } else {
@@ -50,10 +49,10 @@ router.post('/', (req, res) => {
 // Find 1 message req.params.id
 router.get('/:id', (req, res) => {
   Message.findAll({
-    where: { id: req.params.id }
+    where: { id: req.params.id },
   })
     .then((message) => {
-      console.log("Message found : ", JSON.stringify(message, null, 4));
+      console.log('Message found : ', JSON.stringify(message, null, 4));
       res.status(200).send(JSON.stringify(message, null, 4));
     })
     .catch((err) => {
@@ -65,10 +64,10 @@ router.get('/:id', (req, res) => {
 // Delete a message
 router.delete('/:id', (req, res) => {
   Message.destroy({
-    where: { id: req.params.id }
+    where: { id: req.params.id },
   })
     .then(() => {
-      console.log("Message destroy");
+      console.log('Message destroy');
       res.status(200);
     })
     .catch((err) => {

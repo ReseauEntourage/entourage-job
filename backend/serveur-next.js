@@ -1,7 +1,5 @@
-// devrait etre renommé en serveur-next.js
-
 const next = require('next');
-const server = require('./Server');
+const server = require('./server');
 
 const PORT = process.env.PORT || 3001;
 const dev = process.env.NODE_ENV !== 'production';
