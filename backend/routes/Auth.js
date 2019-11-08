@@ -5,6 +5,7 @@ const sequelize = require('sequelize');
 const passport = require('passport');
 const db = require('../db/config/databaseConnect');
 const auth = require('../auth');
+const tmpUser = require('../myuser');
 
 router.post('/login', auth.optional, (req, res, next) => {
   const {
@@ -50,19 +51,28 @@ router.post('/login', auth.optional, (req, res, next) => {
   )(req, res, next);
 });
 
+router.get('/logout', auth.required, (req, res, next) => {
+  req.logout();
+
+  // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
+  res.redirect(process.env.SERVER_URL);
+});
+
 // GET current route (required, only authenticated users have access)
 router.get('/current', auth.required, (req, res, next) => {
   const {
     payload: { id },
   } = req;
+  console.log(req);
 
-  return Users.findById(id).then((user) => {
-    if (!user) {
-      return res.sendStatus(400);
-    }
+  // return Users.findById(id).then((user) => {
+  //   if (!user) {
+  //     return res.sendStatus(400);
+  //   }
 
-    return res.json({ user: user.toAuthJSON() });
-  });
+  //   return res.json({ user: user.toAuthJSON() });
+  // });
+  return res.json({ user: tmpUser.toAuthJSON() });
 });
 
 module.exports = router;

@@ -1,4 +1,5 @@
 import React from 'react';
+import Router from 'next/router';
 import Layout from '../components/Layout';
 import { Section } from '../components/utils';
 import FromLogin from '../components/forms/FormLogin';
@@ -9,10 +10,8 @@ const Login = () => {
   const FromLoginWithValidator = withValidation(
     FromLogin,
     rulesLogin,
-    () => {},
-    () => {
-      console.log('logged');
-    }
+    console.log,
+    console.log
   );
   return (
     <Layout title="Connexion - Entourage Jobs">
@@ -20,7 +19,11 @@ const Login = () => {
         <div className="uk-flex uk-flex-center">
           <div className="uk-width-1-2 uk-card uk-card-default uk-card-body">
             <h1>Connexion</h1>
-            <FromLoginWithValidator />
+            <FromLoginWithValidator
+              afterSubmit={() => {
+                Router.push('/');
+              }}
+            />
           </div>
         </div>
       </Section>

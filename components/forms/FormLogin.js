@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Api from '../../Axios';
 import Input from './fields/Input';
 import FooterForm from '../utils/FooterForm';
-import { GridNoSSR } from '../utils';
+import UserProvider from '../UserProvider';
 
 const DEFAULT_MESSAGE = {
   email: '',
@@ -15,7 +15,7 @@ const DEFAULT_VALID = {
   valid_password: undefined,
 };
 
-export default class FormSpecialSkill extends Component {
+class FormLogin extends Component {
   constructor(props) {
     super(props);
     const { handleChange, handleSubmit } = this.props;
@@ -29,6 +29,10 @@ export default class FormSpecialSkill extends Component {
     };
   }
 
+  static get contextType() {
+    return UserProvider;
+  }
+
   static get propTypes() {
     return {
       // Gere la mise à jour des entrés utilisateur
@@ -37,10 +41,10 @@ export default class FormSpecialSkill extends Component {
       // Gere l'envoie du formulaire
       // renvoie une promesse informant si les champs sont corrects
       handleSubmit: PropTypes.func.isRequired,
-      // action effectué lors de l'annulation d'un formulaire
-      afterCancel: PropTypes.func.isRequired,
       // action effectué apres l'envoie du formulaire
       afterSubmit: PropTypes.func.isRequired,
+      // action effectué lors de l'annulation d'un formulaire
+      afterCancel: PropTypes.func,
     };
   }
 
@@ -48,6 +52,7 @@ export default class FormSpecialSkill extends Component {
     event.preventDefault();
     const { handleSubmit } = this.state;
     const { afterSubmit } = this.props;
+    const { writeUser } = this.context;
 
     handleSubmit()
       .then(({ fields: { email, password } }) => {
@@ -55,8 +60,15 @@ export default class FormSpecialSkill extends Component {
           email,
           password,
         })
-          .then(() => afterSubmit())
-          .catch(() => {
+          .then((req) => {
+            const {
+              data: { user },
+            } = req;
+            writeUser(user);
+            afterSubmit();
+          })
+          .catch((error) => {
+            console.error(error);
             this.setState({ error: "Une erreur s'est produite" });
           });
       })
@@ -93,3 +105,5 @@ export default class FormSpecialSkill extends Component {
     );
   }
 }
+
+export default FormLogin;

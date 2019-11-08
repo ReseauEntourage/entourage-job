@@ -1,6 +1,5 @@
 const next = require('next');
 const server = require('./server');
-require('./config/passport');
 
 const PORT = process.env.PORT || 3001;
 const dev = process.env.NODE_ENV !== 'production';
