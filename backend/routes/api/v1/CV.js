@@ -373,7 +373,7 @@ router.get('/cards/random', (req, res) => {
     ],
   })
     .then((CVs) => {
-      res.status(200).json({ CVs });
+      res.status(200).json(CVs);
     })
     .catch((err) => {
       console.log(err);
