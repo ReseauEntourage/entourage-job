@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import UserProvider from './UserProvider';
+import { UserContext } from './UserProvider';
 import {
   Nav,
   NavbarNoSSR,
@@ -12,13 +12,7 @@ import {
 } from './utils';
 import './Header.less';
 
-const Header = (props) => {
-  const { isHome } = props;
-  const context = useContext(UserProvider);
-  const { loadUser, removeUser } = context;
-  console.log(context);
-  loadUser();
-
+const Header = ({ isHome }) => {
   const LINKS = [
     { href: '/jeveuxaider', name: 'Je veux aider' },
     { href: '/jeveuxtravailler', name: 'Je veux travailler' },
@@ -40,19 +34,19 @@ const Header = (props) => {
           />
         }
         center={
-          <button
-            onClick={removeUser}
-            type="button"
-            styles={
-              context.isAuthentificated
-                ? { display: 'block' }
-                : { display: 'none' }
-            }
-          >
-            <span className="uk-text-uppercase uk-label uk-label-success">
-              connecté
-            </span>
-          </button>
+          <UserContext.Consumer>
+            {({ isAuthentificated, logout }) => (
+              <div
+                onClick={logout}
+                className={`uk-text-uppercase uk-label ${
+                  isAuthentificated ? 'uk-label-success' : 'uk-label-warning'
+                }`}
+                style={{ cursor: 'pointer' }}
+              >
+                {isAuthentificated ? 'connecté' : 'déconnecté'}
+              </div>
+            )}
+          </UserContext.Consumer>
         }
         right={
           <Nav
@@ -94,7 +88,7 @@ const Header = (props) => {
     </header>
   );
 };
-Header.contextType = UserProvider;
+Header.contextType = UserContext;
 Header.propTypes = {
   isHome: PropTypes.bool,
 };

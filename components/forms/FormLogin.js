@@ -1,10 +1,9 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Api from '../../Axios';
 import Input from './fields/Input';
 import FooterForm from '../utils/FooterForm';
-import UserProvider from '../UserProvider';
+import { UserContext } from '../UserProvider';
 
 const DEFAULT_MESSAGE = {
   email: '',
@@ -29,10 +28,6 @@ class FormLogin extends Component {
     };
   }
 
-  static get contextType() {
-    return UserProvider;
-  }
-
   static get propTypes() {
     return {
       // Gere la mise à jour des entrés utilisateur
@@ -43,8 +38,6 @@ class FormLogin extends Component {
       handleSubmit: PropTypes.func.isRequired,
       // action effectué apres l'envoie du formulaire
       afterSubmit: PropTypes.func.isRequired,
-      // action effectué lors de l'annulation d'un formulaire
-      afterCancel: PropTypes.func,
     };
   }
 
@@ -52,27 +45,15 @@ class FormLogin extends Component {
     event.preventDefault();
     const { handleSubmit } = this.state;
     const { afterSubmit } = this.props;
-    const { writeUser } = this.context;
+    const { login } = this.context;
 
     handleSubmit()
-      .then(({ fields: { email, password } }) => {
-        Api.post('/auth/login', {
-          email,
-          password,
-        })
-          .then((req) => {
-            const {
-              data: { user },
-            } = req;
-            writeUser(user);
-            afterSubmit();
-          })
-          .catch((error) => {
-            console.error(error);
-            this.setState({ error: "Une erreur s'est produite" });
-          });
-      })
-      .catch(console.error);
+      .then(({ fields: { email, password } }) => login(email, password))
+      .then(afterSubmit)
+      .catch((error) => {
+        console.error(error);
+        this.setState({ error: "Une erreur s'est produite" });
+      });
   }
 
   render() {
@@ -105,5 +86,5 @@ class FormLogin extends Component {
     );
   }
 }
-
+FormLogin.contextType = UserContext;
 export default FormLogin;
