@@ -2,10 +2,12 @@
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+
+const UserController = require('../controllers/User');
+const AuthController = require('../controllers/Auth');
 // const db = require('../db/config/databaseConnect');
 // const sequelize = require('sequelize');
 // const Users = require('../../../db/models/user')(db, sequelize.DataTypes);
-const tmpUser = require('../myuser');
 // configuring Passport
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
@@ -21,22 +23,16 @@ module.exports = {
         },
         (email, password, done) => {
           console.log(`lets found the user : ${email}`);
-
-          // TODO FIND USER
-          // Users.findOne({ email })
-          //   .then((user) => {
-          //     if (!user || !user.validatePassword(password)) {
-          //       return done(null, false, {
-          //         errors: { 'email or password': 'is invalid' },
-          //       });
-          //     }
-          //     return done(null, user);
-          //   })
-          //   .catch(done);
-          done(null, tmpUser);
-          // done(null, false, {
-          //   errors: { server: 'db is not called' },
-          // });
+          UserController.getUserByEmail(email)
+            .then((user) => {
+              if (!user || !AuthController.validatePassword(user, password)) {
+                return done(null, false, {
+                  errors: { 'email or password': 'is invalid' },
+                });
+              }
+              return done(null, user);
+            })
+            .catch(done);
         }
       )
     );
