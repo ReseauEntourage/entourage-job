@@ -22,6 +22,7 @@ module.exports = {
         (email, password, done) => {
           console.log(`lets found the user : ${email}`);
 
+          // TODO FIND USER
           // Users.findOne({ email })
           //   .then((user) => {
           //     if (!user || !user.validatePassword(password)) {

@@ -5,7 +5,7 @@ const sequelize = require('sequelize');
 const passport = require('passport');
 const db = require('../db/config/databaseConnect');
 const auth = require('../auth');
-const tmpUser = require('../myuser');
+const tmpUser = require('../controllers/Auth');
 
 router.post('/login', auth.optional, (req, res, next) => {
   const {
@@ -51,7 +51,7 @@ router.post('/login', auth.optional, (req, res, next) => {
   )(req, res, next);
 });
 
-router.get('/logout', auth.required, (req, res, next) => {
+router.post('/logout', auth.required, (req, res, next) => {
   req.logout();
 
   // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
@@ -63,7 +63,7 @@ router.get('/current', auth.required, (req, res, next) => {
   const {
     payload: { id },
   } = req;
-  console.log(req);
+  console.log('OK');
 
   // return Users.findById(id).then((user) => {
   //   if (!user) {

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Input from './fields/Input';
 import FooterForm from '../utils/FooterForm';
-import { UserContext } from '../UserProvider';
+import { UserContext } from '../store/UserProvider';
 
 const DEFAULT_MESSAGE = {
   email: '',
@@ -14,7 +14,7 @@ const DEFAULT_VALID = {
   valid_password: undefined,
 };
 
-class FormLogin extends Component {
+export default class FormLogin extends Component {
   constructor(props) {
     super(props);
     const { handleChange, handleSubmit } = this.props;
@@ -26,6 +26,10 @@ class FormLogin extends Component {
       handleSubmit: handleSubmit.bind(this),
       onSubmit: this.onSubmit.bind(this),
     };
+  }
+
+  static get contextType() {
+    return UserContext;
   }
 
   static get propTypes() {
@@ -46,7 +50,6 @@ class FormLogin extends Component {
     const { handleSubmit } = this.state;
     const { afterSubmit } = this.props;
     const { login } = this.context;
-
     handleSubmit()
       .then(({ fields: { email, password } }) => login(email, password))
       .then(afterSubmit)
@@ -86,5 +89,3 @@ class FormLogin extends Component {
     );
   }
 }
-FormLogin.contextType = UserContext;
-export default FormLogin;

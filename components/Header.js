@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import { UserContext } from './UserProvider';
+import { UserContext } from './store/UserProvider';
 import {
   Nav,
   NavbarNoSSR,
