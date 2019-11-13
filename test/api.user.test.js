@@ -13,6 +13,7 @@ const USER_EXAMPLE = {
   lastName: 'Ament',
   role: null,
   password: 'azerty',
+  salt: 'test',
 };
 
 describe('Tests des routes API - Partie User', () => {

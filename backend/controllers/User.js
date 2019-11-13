@@ -69,17 +69,9 @@ const setUser = (id, user) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'setUser -';
     console.log(`${infoLog} Modification du User`);
-    User.update(
-      {
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      },
-      {
-        where: { id },
-        fields: ['email', 'firstName', 'lastName'],
-      }
-    )
+    User.update(user, {
+      where: { id },
+    })
       .then((result) => resolve(result))
       .catch((err) => reject(err));
   });

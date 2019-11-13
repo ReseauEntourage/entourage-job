@@ -107,6 +107,21 @@ describe('Tests des routes API - Partie CV', () => {
   });
 
   describe('Routes CV supplémentaires', () => {
+    let arrayCVId;
+    before(() => {
+      const create3CVs = [
+        Api.post(`${process.env.SERVER_URL}/api/v1/cv`, CV_EXAMPLE),
+        Api.post(`${process.env.SERVER_URL}/api/v1/cv`, CV_EXAMPLE),
+        Api.post(`${process.env.SERVER_URL}/api/v1/cv`, CV_EXAMPLE),
+      ];
+      return Promise.all(create3CVs)
+        .then((res) => {
+          res.map((cv) => arrayCVId.push(cv.id));
+          console.log(arrayCVId);
+          assert.isOk('CVs créés');
+        })
+        .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+    });
     describe('Récupérer tous les CVs', () => {
       it("doit retourner un tableau de CVs à l'appel API", () => {
         return Api.get(`${process.env.SERVER_URL}/api/v1/cv`)
