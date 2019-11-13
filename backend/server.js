@@ -6,6 +6,7 @@ const passport = require('./config/passport');
 const routeCV = require('./routes/api/v1/CV');
 const routeMessage = require('./routes/api/v1/Message');
 const routeAuth = require('./routes/Auth');
+const routeUser = require('./routes/api/v1/User');
 
 const app = express();
 let server;
@@ -33,18 +34,19 @@ module.exports.prepare = () => {
   // adding routes
   app.use('/api/v1/cv', routeCV);
   app.use('/api/v1/message', routeMessage);
+  app.use('/api/v1/user', routeUser);
   app.use('/auth', routeAuth);
 
   // restricting access to some routes
-  const restrictAccess = (req, res, next) => {
-    console.log(`restrictAccess : ${req.isAuthenticated()}`);
+  // const restrictAccess = (req, res, next) => {
+  //   console.log(`restrictAccess : ${req.isAuthenticated()}`);
 
-    if (!req.isAuthenticated()) return res.redirect('/login');
-    return next();
-  };
+  //   if (!req.isAuthenticated()) return res.redirect('/login');
+  //   return next();
+  // };
 
-  app.use('/profile', restrictAccess);
-  app.use('/logout', restrictAccess);
+  // app.use('/profile', restrictAccess);
+  // app.use('/logout', restrictAccess);
 };
 
 module.exports.get = (path, handle) => {

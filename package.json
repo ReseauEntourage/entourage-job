@@ -14,6 +14,7 @@
     "test-windows": "mocha --require @babel/register './test/*.test.js' || npm run posttest-windows",
     "posttest-windows": "del .\\.babelrc",
     "build": "next build",
+    "prestart": "sequelize db:migrate",
     "start": "NODE_ENV=production node -r dotenv/config ./backend/serveur-next.js",
     "uikit-install": "cd ./assets/ && git clone git@github.com:uikit/uikit.git && cd uikit && git checkout master && npm i",
     "uikit-update": "cd ./assets/uikit/ && git pull && npm i",
