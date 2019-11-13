@@ -48,8 +48,13 @@ describe('Tests des routes API - Partie User', () => {
       }).timeout(TIMEOUT);
     });
     describe('U - Update 1 User', () => {
+      const userUpdated = USER_EXAMPLE;
+      userUpdated.lastName = 'Updated';
       it('doit mettre à jour les données du User dans la base de données', () => {
-        return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
+        return Api.put(
+          `${process.env.SERVER_URL}/api/v1/user/${user.id}`,
+          userUpdated
+        )
           .then((res) => {
             assert.equal(res.data, 1, 'Update du User effectué');
           })
