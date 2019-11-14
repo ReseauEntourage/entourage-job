@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
       },
       password: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       salt: {
