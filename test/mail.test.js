@@ -18,16 +18,14 @@ describe('Mail', () => {
     done();
   });
 
-  describe('#login', () => {
-    it('doit effectuer l\'envoie de mail "contactez nous"', () => {
-      return Api.post(`${process.env.SERVER_URL}/mail/contact-us`, {
-        email: 'myemail@myemail.email',
-        text: 'mon text de blablabla test',
+  it('doit effectuer l\'envoie de mail "contactez nous"', () => {
+    return Api.post(`${process.env.SERVER_URL}/mail/contact-us`, {
+      email: 'myemail@myemail.email',
+      text: 'mon text de blablabla test',
+    })
+      .then((res) => {
+        assert.isObject(res, 'pas de res');
       })
-        .then((res) => {
-          assert.isObject(res, 'pas de res');
-        })
-        .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-    });
-  }).timeout(TIMEOUT);
+      .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+  });
 });
