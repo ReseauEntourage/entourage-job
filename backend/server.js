@@ -54,9 +54,14 @@ module.exports.get = (path, handle) => {
 };
 
 module.exports.start = (port) => {
-  server = app.listen(port, (err) => {
-    if (err) throw err;
-    console.log(`> Site disponible sur http://localhost:${port}`);
+  return new Promise((resolve, reject) => {
+    server = app.listen(port, (err) => {
+      if (err) reject(err);
+      else {
+        console.log(`> Site disponible sur http://localhost:${port}`);
+        resolve();
+      }
+    });
   });
 };
 
