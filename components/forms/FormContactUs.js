@@ -17,7 +17,7 @@ const DEFAULT_VALID = {
   valid_text: undefined,
 };
 
-export default class FormSpecialSkill extends Component {
+export default class FormContactUs extends Component {
   constructor(props) {
     super(props);
     const { handleChange, handleSubmit } = this.props;
@@ -71,21 +71,24 @@ export default class FormSpecialSkill extends Component {
     const { afterCancel } = this.props;
 
     return (
-      <div className="uk-width-1-1 uk-width-2-3@m uk-width-1-2@xl">
-        <form className="uk-form-stacked uk-grid-small" data-uk-grid>
+      <div className="uk-width-1-1">
+        <form
+          className="uk-form-stacked uk-grid-small uk-child-width-1-1"
+          data-uk-grid
+        >
           <fieldset className="uk-fieldset uk-width-1-1">
             <Input
-              id="input-email"
+              id="contactUs-input-email"
               type="email"
               name="email"
               valid={fields.valid_email}
-              title="Addresse mail*"
+              title="Adresse mail*"
               placeholder="Tapez votre texte"
               onChange={handleChange}
             />
             <Textarea
+              id="contactUs-input-text"
               type="text"
-              id="input-text"
               placeholder="Tapez votre texte"
               name="text"
               valid={fields.valid_text}
@@ -94,7 +97,7 @@ export default class FormSpecialSkill extends Component {
               onChange={handleChange}
             />
             <CheckboxCGU
-              id="input-cgu"
+              id="contactUs-input-cgu"
               name="cgu"
               title={
                 <span>
@@ -108,11 +111,13 @@ export default class FormSpecialSkill extends Component {
               valid={fields.valid_cgu}
             />
           </fieldset>
-          <FooterForm
-            error={error}
-            onSubmit={onSubmit}
-            onCancel={afterCancel}
-          />
+          <div>
+            <FooterForm
+              error={error}
+              onSubmit={onSubmit}
+              onCancel={afterCancel}
+            />
+          </div>
         </form>
       </div>
     );
