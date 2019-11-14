@@ -72,7 +72,7 @@ router.get('/', (req, res) => {
     ],
   })
     .then((listeCV) => {
-      console.log('All CVs : ', JSON.stringify(listeCV, null, 4));
+      // console.log('All CVs : ', JSON.stringify(listeCV, null, 4));
       res.status(200).json(listeCV);
     })
     .catch((err) => {

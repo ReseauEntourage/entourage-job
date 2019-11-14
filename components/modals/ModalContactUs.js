@@ -12,8 +12,10 @@ const ModalContactUs = () => (
     id="modalContactUs"
     title={
       <>
-        Vous souhaitez{' '}
-        <span className="uk-text-primary">apporter vos compétences ?</span>
+        <span className="uk-text-primary">
+          Je n&apos;ai pas les papiers requis
+        </span>{' '}
+        pour rejoindre LinkedOut
       </>
     }
     composers={[
@@ -24,7 +26,22 @@ const ModalContactUs = () => (
           closeModal,
           nextStep
         );
-        return <FormContactUsValidation />;
+        return (
+          <>
+            <p
+              className="uk-text-lead"
+              style={{
+                lineHeight: '1.2',
+                fontSize: '1.2rem',
+                fontWeight: '500',
+              }}
+            >
+              Ma situation actuelle ne me permet pas de rejoindre LinkedOut, je
+              souhaite être aidé et orienté dans mes différentes démarches.
+            </p>
+            <FormContactUsValidation />
+          </>
+        );
       },
       (closeModal) => (
         <SuccessModalContent

@@ -1,4 +1,5 @@
 import '../static/dist/css/uikit.entourage.css';
+import '../static/css/Forms.less';
 
 import React from 'react';
 import App from 'next/app';
