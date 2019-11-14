@@ -19,21 +19,22 @@ const USER_EXAMPLE = {
 };
 
 describe('Auth', () => {
-  before((done) => {
+  before(() => {
     server.prepare();
-    server.start(PORT).then(done);
+    return server.start(PORT);
   });
 
-  after(() => {
+  after((done) => {
     server.close();
+    done();
   });
 
   describe('#login', () => {
-    let compactUser;
+    let user;
     before(() => {
       return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
         .then((res) => {
-          compactUser = res.data;
+          user = res.data;
         })
         .catch(() => {
           throw new Error("Erreur lors de la creation de l'utilisateur");
@@ -41,9 +42,7 @@ describe('Auth', () => {
     });
 
     after(() => {
-      return Api.delete(
-        `${process.env.SERVER_URL}/api/v1/user/${compactUser.id}`
-      )
+      return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
         .then(() => {})
         .catch(() => {
           throw new Error("Erreur lors de la suppression de l'utilisateur");
