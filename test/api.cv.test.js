@@ -107,7 +107,8 @@ describe('Tests des routes API - Partie CV', () => {
   });
 
   describe('Routes CV supplémentaires', () => {
-    let arrayCVId;
+    const arrayCVId = [];
+
     before(() => {
       const create3CVs = [
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, CV_EXAMPLE),
@@ -116,7 +117,7 @@ describe('Tests des routes API - Partie CV', () => {
       ];
       return Promise.all(create3CVs)
         .then((res) => {
-          res.map((cv) => arrayCVId.push(cv.id));
+          res.map((cv) => arrayCVId.push(cv.data.id));
           console.log(arrayCVId);
           assert.isOk('CVs créés');
         })
@@ -154,6 +155,25 @@ describe('Tests des routes API - Partie CV', () => {
           })
           .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
       }).timeout(TIMEOUT);
+    });
+
+    after(() => {
+      const delete3CVs = [];
+      arrayCVId.map((id) =>
+        delete3CVs.push(Api.delete(`${process.env.SERVER_URL}/api/v1/cv/${id}`))
+      );
+      return Promise.all(delete3CVs)
+        .then((res) => {
+          const result = [];
+          res.map(({ data }) => result.push(data));
+          console.log(result);
+          assert.sameOrderedMembers(
+            result,
+            [1, 1, 1],
+            "Des CVs de tests n'ont pas pu être supprimés"
+          );
+        })
+        .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
     });
   });
 });

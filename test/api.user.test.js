@@ -62,7 +62,7 @@ describe('Tests des routes API - Partie User', () => {
           .catch((err) => assert.fail(`Update User échoué : ${err} `));
       }).timeout(TIMEOUT);
     });
-    describe('D - Delete 1 CV', () => {
+    describe('D - Delete 1 User', () => {
       it('doit supprimer le User de test dans la base de données', () => {
         return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
           .then((res) => {
