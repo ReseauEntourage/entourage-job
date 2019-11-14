@@ -37,7 +37,7 @@ export default class CheckboxCGU extends Component {
     const addClasses = this.getValidClass();
 
     return (
-      <div className="uk-form-controls uk-padding-small">
+      <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
         <input
           id={id}
           name={name}
