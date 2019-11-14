@@ -19,14 +19,14 @@ me.request((error, response, body) => {
  * Fonction permettant d'envoyer un mail
  * il est optionnel de remplir à la fois text et html
  */
-const sendMail = ({ email, subject, text, html }) => {
+const sendMail = ({ toEmail, subject, text, html }) => {
   return send.request({
     FromEmail: process.env.MAILJET_FROM_EMAIL,
     FromName: process.env.MAILJET_FROM_NAME,
     Subject: subject,
     'Text-part': text,
     'HTML-part': html,
-    Recipients: [{ Email: email }],
+    Recipients: [{ Email: toEmail }],
   });
 };
 

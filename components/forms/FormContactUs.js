@@ -53,10 +53,9 @@ export default class FormSpecialSkill extends Component {
 
     handleSubmit()
       .then(({ fields }) => {
-        Api.post('/mail', {
-          email: 'j.hospice@share-it.io',
-          text: `Texte:\n${fields.text}\nemail:\n${fields.email}`,
-          subject: `Je souhaite être aidé et réorienté - ${fields.email}`,
+        Api.post('/mail/contact-us', {
+          email: fields.email,
+          text: fields.text,
         })
           .then(() => afterSubmit())
           .catch((error) => {
