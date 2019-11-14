@@ -66,7 +66,7 @@ export default class Textarea extends Component {
 
     const addClasses = this.getValidClass();
     return (
-      <div className="uk-form-controls uk-padding-small">
+      <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
         <label
           className={`uk-form-label ${!this.inputIsEmpty() && 'stay-small'}`}
           htmlFor={id}

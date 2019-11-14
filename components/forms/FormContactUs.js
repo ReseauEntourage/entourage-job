@@ -73,7 +73,10 @@ export default class FormContactUs extends Component {
 
     return (
       <div className="uk-width-1-1">
-        <form className="uk-form-stacked uk-grid-small" data-uk-grid>
+        <form
+          className="uk-form-stacked uk-grid-small uk-child-width-1-1"
+          data-uk-grid
+        >
           <fieldset className="uk-fieldset uk-width-1-1">
             <Input
               id="contactUs-input-email"
@@ -109,11 +112,13 @@ export default class FormContactUs extends Component {
               valid={fields.valid_cgu}
             />
           </fieldset>
-          <FooterForm
-            error={error}
-            onSubmit={onSubmit}
-            onCancel={afterCancel}
-          />
+          <div>
+            <FooterForm
+              error={error}
+              onSubmit={onSubmit}
+              onCancel={afterCancel}
+            />
+          </div>
         </form>
       </div>
     );
