@@ -1,7 +1,6 @@
-/* eslint-disable no-else-return */
-import isEmail from 'validator/lib/isEmail';
-// eslint-disable-next-line import/newline-after-import
+const validator = require('validator');
 const express = require('express');
+
 const router = express.Router();
 const UserController = require('../../../controllers/User');
 
@@ -43,7 +42,7 @@ router.post('/', (req, res) => {
  */
 router.get('/:identifier', (req, res) => {
   let getUser;
-  if (isEmail(req.params.identifier)) {
+  if (validator.isEmail(req.params.identifier)) {
     getUser = UserController.getUserByEmail(req.params.identifier);
   } else {
     getUser = UserController.getUser(req.params.identifier);
