@@ -31,28 +31,27 @@ describe('Auth', () => {
 
   describe('#login', () => {
     let compactUser;
-    before((done) => {
+    before(() => {
       return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
         .then((res) => {
           compactUser = res.data;
-          done();
         })
         .catch(() => {
           throw new Error("Erreur lors de la creation de l'utilisateur");
         });
     });
 
-    after((done) => {
+    after(() => {
       return Api.delete(
         `${process.env.SERVER_URL}/api/v1/user/${compactUser.id}`
       )
-        .then(() => done())
+        .then(() => {})
         .catch(() => {
           throw new Error("Erreur lors de la suppression de l'utilisateur");
         });
     });
 
-    it("doit connecter l'utilisateur en lui renvoyant un token", (done) => {
+    it("doit connecter l'utilisateur en lui renvoyant un token", () => {
       return Api.post(`${process.env.SERVER_URL}/auth/login`, {
         email: USER_EXAMPLE.email,
         password: USER_EXAMPLE.password,
@@ -60,19 +59,18 @@ describe('Auth', () => {
         .then((res) => {
           assert.isObject(res.data, 'User retourné');
           assert.hasAnyKeys(res.data, 'token', 'contient un token');
-          done();
         })
         .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
     });
   }).timeout(TIMEOUT);
 
-  it.skip("doit changer le mot de passe de l'utilisateur", (done) => {
+  it.skip("doit changer le mot de passe de l'utilisateur", () => {
     return Api.post(`${process.env.SERVER_URL}/auth/changepassword`, {
       email: USER_EXAMPLE.email,
       password: USER_EXAMPLE.password,
       newPassword: 'poiuytreza',
     })
-      .then((res) => done())
+      .then((res) => {})
       .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
   }).timeout(TIMEOUT);
 });
