@@ -11,7 +11,6 @@ function setPassword(user, password) {
   UserController.setUser(user.id, {
     password: hash,
     salt,
-    ...user,
   });
 }
 
