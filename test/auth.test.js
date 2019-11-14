@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 3001;
 const TIMEOUT = 20000;
 
 const USER_EXAMPLE = {
-  id: 0,
   email: 'test.ament@cesttropsuper.com',
   firstName: 'Test',
   lastName: 'Ament',
