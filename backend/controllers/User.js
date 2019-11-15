@@ -6,14 +6,7 @@ const createUser = (newUser) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'createUser -';
     console.log(`${infoLog} Création du User`);
-    User.create({
-      email: newUser.email,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      password: newUser.password,
-      role: newUser.role,
-      salt: 'test',
-    })
+    User.create(newUser)
       .then((result) => resolve(result))
       .catch((err) => reject(err));
   });

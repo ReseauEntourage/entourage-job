@@ -5,7 +5,7 @@ const sequelize = require('sequelize');
 const passport = require('passport');
 const db = require('../db/config/databaseConnect');
 const auth = require('../auth');
-const tmpUser = require('../controllers/Auth');
+const authController = require('../controllers/Auth');
 
 router.post('/login', auth.optional, (req, res, next) => {
   const {
@@ -41,9 +41,9 @@ router.post('/login', auth.optional, (req, res, next) => {
 
       if (passportUser) {
         const user = passportUser;
-        user.token = passportUser.generateJWT();
+        user.token = authController.generateJWT(passportUser);
 
-        return res.json({ user: user.toAuthJSON() });
+        return res.json({ user: authController.toAuthJSON(user) });
       }
 
       return res.status(400).json({ errors: info });
@@ -72,7 +72,10 @@ router.get('/current', auth.required, (req, res, next) => {
 
   //   return res.json({ user: user.toAuthJSON() });
   // });
-  return res.json({ user: tmpUser.toAuthJSON() });
+  return res.json({
+    user: 'will provide the user data',
+    // authController.toAuthJSON()
+  });
 });
 
 module.exports = router;

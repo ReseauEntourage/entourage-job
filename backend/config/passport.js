@@ -23,9 +23,14 @@ module.exports = {
           console.log(`lets found the user : ${email}`);
           UserController.getUserByEmail(email)
             .then((user) => {
+              const userValues = user.dataValues;
               if (
                 !user ||
-                !AuthController.validatePassword(password, user.hash, user.salt)
+                !AuthController.validatePassword(
+                  password,
+                  userValues.password,
+                  userValues.salt
+                )
               ) {
                 return done(null, false, {
                   errors: { 'email or password': 'is invalid' },
