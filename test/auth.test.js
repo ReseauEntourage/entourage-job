@@ -52,7 +52,7 @@ describe('Auth', () => {
     it("doit connecter l'utilisateur en lui renvoyant un token", () => {
       return Api.post(`${process.env.SERVER_URL}/auth/login`, {
         email: USER_EXAMPLE.email,
-        password: USER_EXAMPLE.password,
+        password: 'azertyuiop',
       })
         .then((res) => {
           assert.isObject(res.data, 'User retourné');
@@ -65,7 +65,7 @@ describe('Auth', () => {
   it.skip("doit changer le mot de passe de l'utilisateur", () => {
     return Api.post(`${process.env.SERVER_URL}/auth/changepassword`, {
       email: USER_EXAMPLE.email,
-      password: USER_EXAMPLE.password,
+      password: 'azertyuiop',
       newPassword: 'poiuytreza',
     })
       .then((res) => {})
