@@ -63,7 +63,7 @@ export default class Textarea extends Component {
       onChange,
       maxLength,
     } = this.props;
-
+    const { value } = this.state;
     const addClasses = this.getValidClass();
     return (
       <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
@@ -79,7 +79,11 @@ export default class Textarea extends Component {
           rows={rows}
           placeholder={placeholder}
           maxLength={maxLength}
-          onChange={onChange}
+          value={value}
+          onChange={(e) => {
+            this.setState({ value: e.target.value });
+            onChange(e);
+          }}
           className={`uk-textarea uk-form-large ${addClasses}`}
         />
         <FormValidatorErrorMessage validObj={valid} />
