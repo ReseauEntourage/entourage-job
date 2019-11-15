@@ -7,6 +7,7 @@ const routeCV = require('./routes/api/v1/CV');
 const routeMessage = require('./routes/api/v1/Message');
 const routeAuth = require('./routes/Auth');
 const routeUser = require('./routes/api/v1/User');
+const routeMail = require('./routes/Mail');
 
 const app = express();
 let server;
@@ -47,6 +48,7 @@ module.exports.prepare = () => {
 
   // app.use('/profile', restrictAccess);
   // app.use('/logout', restrictAccess);
+  app.use('/mail', routeMail);
 };
 
 module.exports.get = (path, handle) => {

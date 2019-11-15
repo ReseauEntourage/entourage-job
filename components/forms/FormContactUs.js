@@ -53,10 +53,9 @@ export default class FormContactUs extends Component {
 
     handleSubmit()
       .then(({ fields }) => {
-        Api.post('/api/v1/mail', {
-          email: 'j.hospice@share-it.io',
-          text: `Texte:\n${fields.text}\nemail:\n${fields.email}`,
-          subject: `Je souhaite être aidé et réorienté - ${fields.email}`,
+        Api.post('/mail/contact-us', {
+          email: fields.email,
+          text: fields.text,
         })
           .then(() => afterSubmit())
           .catch((error) => {
