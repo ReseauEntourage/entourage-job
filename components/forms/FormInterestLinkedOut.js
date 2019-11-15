@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Api from '../../Axios';
 import Input from './fields/Input';
 import Textarea from './fields/Textarea';
-import './FormInterestLinkedOut.less';
 import CheckboxCGU from './fields/CheckboxCGU';
 
 const DEFAULT_MESSAGE = {

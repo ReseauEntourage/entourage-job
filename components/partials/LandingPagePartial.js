@@ -17,7 +17,7 @@ const LandingPagePartial = ({ presentations }) => {
   const sharedURL = process.env.SERVER_URL;
   const viaTwitter = 'R_Entourage';
   return (
-    <Background src="/static/img/background_1.png" position="top-right">
+    <Background src="/static/img/background_1.webp" position="top-right">
       <Section container="large">
         <div className="uk-margin-medium-bottom uk-text-center uk-text-left@s uk-text-middle">
           <ImgNoSSR
