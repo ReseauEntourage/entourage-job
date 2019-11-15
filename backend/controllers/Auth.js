@@ -3,22 +3,19 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const UserController = require('./User');
 
-function setPassword(user, password) {
+function encryptPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
   const hash = crypto
     .pbkdf2Sync(password, salt, 10000, 512, 'sha512')
     .toString('hex');
-  UserController.setUser(user.id, {
-    password: hash,
-    salt,
-  });
+  return { salt, hash };
 }
 
-function validatePassword(user, password) {
-  const hash = crypto
-    .pbkdf2Sync(password, user.salt, 10000, 512, 'sha512')
+function validatePassword(password, hash, salt) {
+  const passwordHash = crypto
+    .pbkdf2Sync(password, salt, 10000, 512, 'sha512')
     .toString('hex');
-  return user.password === hash;
+  return passwordHash === hash;
 }
 
 function generateJWT(user) {
@@ -45,7 +42,7 @@ function toAuthJSON(user) {
 }
 
 module.exports = {
-  setPassword,
+  encryptPassword,
   validatePassword,
   generateJWT,
   toAuthJSON,
