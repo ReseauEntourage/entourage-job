@@ -1,9 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const sequelize = require('sequelize');
 const passport = require('passport');
-const db = require('../db/config/databaseConnect');
 const auth = require('../auth');
 const authController = require('../controllers/Auth');
 
@@ -28,13 +26,11 @@ router.post('/login', auth.optional, (req, res, next) => {
     });
   }
 
-  console.log('route auth : pass');
-
   return passport.authenticate(
     'local',
     { session: false },
     (err, passportUser, info) => {
-      console.log('route in authenticate : ', err, passportUser, info);
+      // console.log('route in authenticate : ', err, passportUser, info);
       if (err) {
         return next(err);
       }
