@@ -3,6 +3,7 @@ const express = require('express');
 
 const router = express.Router();
 const UserController = require('../../../controllers/User');
+const AuthController = require('../../../controllers/Auth');
 
 /**
  * Route : GET /api/<VERSION>/user
@@ -25,7 +26,11 @@ router.get('/', (req, res) => {
  * Description : Créé le User
  */
 router.post('/', (req, res) => {
-  UserController.createUser(req.body)
+  const newUser = req.body;
+  const objPassword = AuthController.encryptPassword(newUser.password);
+  newUser.password = objPassword.hash;
+  newUser.salt = objPassword.salt;
+  UserController.createUser(newUser)
     .then((users) => {
       console.log(`User créé`);
       res.status(200).json(users);

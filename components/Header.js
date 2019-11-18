@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import { UserContext } from './store/UserProvider';
 import {
   Nav,
   NavbarNoSSR,
@@ -17,6 +18,7 @@ const Header = ({ isHome }) => {
     { href: '/jeveuxtravailler', name: 'Je veux travailler' },
     { href: '/jeveuxrecruter', name: 'Je veux recruter' },
   ];
+
   return (
     <header>
       <NavbarNoSSR
@@ -30,6 +32,21 @@ const Header = ({ isHome }) => {
             src="/static/img/linkedout_by_entourage.png"
             alt="Linkedout"
           />
+        }
+        center={
+          <UserContext.Consumer>
+            {({ isAuthentificated, logout }) => (
+              <div
+                onClick={logout}
+                className={`uk-text-uppercase uk-label ${
+                  isAuthentificated ? 'uk-label-success' : 'uk-label-warning'
+                }`}
+                style={{ cursor: 'pointer' }}
+              >
+                {isAuthentificated ? 'connecté' : 'déconnecté'}
+              </div>
+            )}
+          </UserContext.Consumer>
         }
         right={
           <Nav
@@ -71,6 +88,7 @@ const Header = ({ isHome }) => {
     </header>
   );
 };
+Header.contextType = UserContext;
 Header.propTypes = {
   isHome: PropTypes.bool,
 };

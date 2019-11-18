@@ -6,7 +6,7 @@ const Footer = () => {
     <footer id="footer">
       <Section style="secondary" size="medium">
         <GridNoSSR
-          childWidths={['1-4@s', '1-2']}
+          childWidths={['1-5@s', '1-2']}
           center
           match
           items={[
@@ -23,6 +23,9 @@ const Footer = () => {
             </div>,
             <div className="uk-h4 uk-text-center">
               <SimpleLink href="/about">À propos d&apos;Entourage</SimpleLink>
+            </div>,
+            <div className="uk-h4 uk-text-center">
+              <SimpleLink href="/login">Espace candidat</SimpleLink>
             </div>,
           ]}
         />
