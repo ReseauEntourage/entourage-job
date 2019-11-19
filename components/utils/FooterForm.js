@@ -20,7 +20,8 @@ const FooterForm = ({ error, onSubmit, onCancel }) => {
       )}
       <GridNoSSR
         className="uk-margin uk-grid-small"
-        childWidths={['1-2']}
+        between
+        childWidths={['auto']}
         items={[
           <div className="uk-width-auto@s">
             <span className="uk-text-meta" style={{ alignSelf: 'center' }}>
@@ -31,9 +32,13 @@ const FooterForm = ({ error, onSubmit, onCancel }) => {
             <GridNoSSR
               className="uk-grid-small"
               items={[
-                <Button style="default" onClick={onCancel}>
-                  Annuler
-                </Button>,
+                onCancel ? (
+                  <Button style="default" onClick={onCancel}>
+                    Annuler
+                  </Button>
+                ) : (
+                  <></>
+                ),
                 <Button style="primary" onClick={onSubmit}>
                   Envoyer
                 </Button>,
@@ -54,7 +59,7 @@ FooterForm.propTypes = {
 
 FooterForm.defaultProps = {
   error: undefined,
-  onCancel: () => {},
+  onCancel: undefined
 };
 
 export default FooterForm;

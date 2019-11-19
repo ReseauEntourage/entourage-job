@@ -1,0 +1,52 @@
+[
+  {
+    "field": "email",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "email",
+    "method": "isEmail",
+    "validWhen": true,
+    "message": "Adresse e-mail invalide"
+  },
+  {
+    "field": "password",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "password",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 100
+      }
+    ],
+    "validWhen": true,
+    "message": "100 caractères maximum"
+  },
+  {
+    "field": "password",
+    "method": "isLength",
+    "args": [
+      {
+        "min": 6
+      }
+    ],
+    "validWhen": true,
+    "message": "must be at least 6 characters"
+  }
+]

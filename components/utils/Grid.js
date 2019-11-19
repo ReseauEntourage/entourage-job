@@ -4,7 +4,16 @@ import dynamic from 'next/dynamic';
 
 export const GridNoSSR = dynamic(() => import('./Grid'), { ssr: false });
 
-const Grid = ({ items, childWidths, match, divider, center, parallax, className }) => {
+const Grid = ({
+  items,
+  childWidths,
+  match,
+  divider,
+  center,
+  between,
+  parallax,
+  className,
+}) => {
   let classBuffer = '';
   let gridBuffer = '';
   if (parallax) gridBuffer += `parallax: ${parallax}`;
@@ -14,6 +23,7 @@ const Grid = ({ items, childWidths, match, divider, center, parallax, className 
   if (match) classBuffer += ' uk-grid-match';
   if (divider) classBuffer += ' uk-grid-divider';
   if (center) classBuffer += ' uk-flex-center';
+  if (between) classBuffer += ' uk-flex-between';
   if (className) classBuffer += ` ${className}`;
 
   return (
@@ -28,6 +38,7 @@ Grid.propTypes = {
   parallax: PropTypes.number,
   match: PropTypes.bool,
   center: PropTypes.bool,
+  between: PropTypes.bool,
   childWidths: PropTypes.arrayOf(PropTypes.string),
   items: PropTypes.arrayOf(PropTypes.element).isRequired,
   divider: PropTypes.bool,
@@ -35,6 +46,7 @@ Grid.propTypes = {
 Grid.defaultProps = {
   match: false,
   center: false,
+  between: false,
   divider: false,
   parallax: undefined,
   childWidths: [],
