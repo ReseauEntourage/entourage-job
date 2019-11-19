@@ -48,12 +48,13 @@ const FooterForm = ({ error, onSubmit, onCancel }) => {
 
 FooterForm.propTypes = {
   error: PropTypes.string,
-  onCancel: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
   onSubmit: PropTypes.func.isRequired,
 };
 
 FooterForm.defaultProps = {
   error: undefined,
+  onCancel: () => {},
 };
 
 export default FooterForm;
