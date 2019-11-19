@@ -3,9 +3,16 @@ import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
 export default class Textarea extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: '',
+    };
+  }
+
   static get propTypes() {
     return {
-      id: PropTypes.string.isRequired,
+      id: PropTypes.string,
       name: PropTypes.string.isRequired,
       rows: PropTypes.number,
       placeholder: PropTypes.string,
@@ -17,16 +24,23 @@ export default class Textarea extends Component {
       }),
       rows: PropTypes.number,
       maxLength: PropTypes.number,
+      value: PropTypes.string,
     };
   }
 
   static get defaultProps() {
     return {
+      id: undefined,
       placeholder: 'Tapez votre texte',
       rows: 5,
       valid: undefined,
       maxLength: 1000,
+      value: '',
     };
+  }
+
+  componentWillReceiveProps({ value }) {
+    this.setState({ value });
   }
 
   getValidClass() {
