@@ -9,7 +9,6 @@ import rulesMyStoryCV from '../../forms/edit/rulesMyStoryCV';
 
 const ModalMyStoryCV = ({ story, setStory }) => (
   <ModalGeneric id="modalMyStoryCV">
-    <HeaderModal>Edition - phrase d&apos;accroche</HeaderModal>
     {(closeModal) => {
       const FormMyStoryCVValidation = withValidation(
         FormMyStoryCV,
@@ -20,7 +19,14 @@ const ModalMyStoryCV = ({ story, setStory }) => (
           closeModal();
         }
       );
-      return <FormMyStoryCVValidation story={story} />;
+      return (
+        <>
+          <HeaderModal>
+            <span>Edition - phrase d&apos;accroche</span>
+          </HeaderModal>
+          <FormMyStoryCVValidation story={story} />
+        </>
+      );
     }}
   </ModalGeneric>
 );
