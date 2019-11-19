@@ -48,6 +48,9 @@ Layout.propTypes = {
   metaDescription: PropTypes.string,
   metaUrl: PropTypes.string,
   metaType: PropTypes.string,
+  router: PropTypes.shape({
+    asPath: PropTypes.string,
+  }).isRequired,
 };
 Layout.defaultProps = {
   title: 'Entourage Jobs',
