@@ -7,10 +7,12 @@ export default class MyDocument extends Document {
       <html lang="fr">
         <Head />
         <body>
+          {/* <UserProvider> */}
           <Main />
           <NextScript />
           <script src="/static/dist/js/uikit.js" />
           <script src="/static/dist/js/uikit-icons.js" />
+          {/* </UserProvider> */}
         </body>
       </html>
     );

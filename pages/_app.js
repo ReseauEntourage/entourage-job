@@ -3,11 +3,16 @@ import '../static/css/Forms.less';
 
 import React from 'react';
 import App from 'next/app';
+import UserProvider from '../components/store/UserProvider';
 
 class EntourageApp extends App {
   render() {
     const { Component, pageProps } = this.props;
-    return <Component {...pageProps} />;
+    return (
+      <UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
+    );
   }
 }
 
