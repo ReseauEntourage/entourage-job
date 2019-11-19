@@ -3,9 +3,16 @@ import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
 export default class Textarea extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: '',
+    };
+  }
+
   static get propTypes() {
     return {
-      id: PropTypes.string.isRequired,
+      id: PropTypes.string,
       name: PropTypes.string.isRequired,
       rows: PropTypes.number,
       placeholder: PropTypes.string,
@@ -17,16 +24,23 @@ export default class Textarea extends Component {
       }),
       rows: PropTypes.number,
       maxLength: PropTypes.number,
+      value: PropTypes.string,
     };
   }
 
   static get defaultProps() {
     return {
+      id: undefined,
       placeholder: 'Tapez votre texte',
       rows: 5,
       valid: undefined,
       maxLength: 1000,
+      value: '',
     };
+  }
+
+  componentWillReceiveProps({ value }) {
+    this.setState({ value });
   }
 
   getValidClass() {
@@ -63,7 +77,7 @@ export default class Textarea extends Component {
       onChange,
       maxLength,
     } = this.props;
-
+    const { value } = this.state;
     const addClasses = this.getValidClass();
     return (
       <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
@@ -79,7 +93,11 @@ export default class Textarea extends Component {
           rows={rows}
           placeholder={placeholder}
           maxLength={maxLength}
-          onChange={onChange}
+          value={value}
+          onChange={(e) => {
+            this.setState({ value: e.target.value });
+            onChange(e);
+          }}
           className={`uk-textarea uk-form-large ${addClasses}`}
         />
         <FormValidatorErrorMessage validObj={valid} />

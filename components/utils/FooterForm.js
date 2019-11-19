@@ -59,7 +59,7 @@ FooterForm.propTypes = {
 
 FooterForm.defaultProps = {
   error: undefined,
-  onCancel: undefined,
+  onCancel: undefined
 };
 
 export default FooterForm;

@@ -7,7 +7,7 @@ export default class Input extends Component {
     super(props);
     this.state = {
       labelClass: '',
-      // , value: ''
+      value: '',
     };
   }
 
@@ -23,7 +23,7 @@ export default class Input extends Component {
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
       }),
-      // value: PropTypes.string,
+      value: PropTypes.string,
     };
   }
 
@@ -31,14 +31,15 @@ export default class Input extends Component {
     return {
       placeholder: 'Tapez votre texte',
       valid: undefined,
-      // value: '',
+      value: '',
     };
   }
 
-  // componentWillReceiveProps() {
-  //   const { value } = this.props;
-  //   this.setLabelClass(value);
-  // }
+  componentWillReceiveProps() {
+    const { value } = this.props;
+    this.setState({ value });
+    this.setLabelClass(value);
+  }
 
   getValidClass() {
     const { valid } = this.props;
@@ -58,21 +59,13 @@ export default class Input extends Component {
   handleChange(event) {
     const { onChange } = this.props;
     onChange(event);
-
+    this.setState({ value: event.target.value });
     this.setLabelClass(event.target.value);
   }
 
   render() {
-    const {
-      id,
-      name,
-      placeholder,
-      title,
-      type,
-      valid,
-      // , value
-    } = this.props;
-    const { labelClass } = this.state;
+    const { id, name, placeholder, title, type, valid } = this.props;
+    const { labelClass, value } = this.state;
 
     const addClasses = this.getValidClass();
 
@@ -85,7 +78,7 @@ export default class Input extends Component {
           name={name}
           type={type}
           id={id}
-          // value={value}
+          value={value}
           placeholder={placeholder}
           onChange={(event) => this.handleChange(event)}
           className={`uk-input uk-form-large ${addClasses}`}
