@@ -7,7 +7,6 @@ export default class Input extends Component {
     super(props);
     this.state = {
       labelClass: '',
-      value: '',
     };
   }
 
@@ -35,9 +34,8 @@ export default class Input extends Component {
     };
   }
 
-  componentWillReceiveProps() {
+  componentDidMount() {
     const { value } = this.props;
-    this.setState({ value });
     this.setLabelClass(value);
   }
 
@@ -57,15 +55,15 @@ export default class Input extends Component {
   }
 
   handleChange(event) {
+    const { value } = event.target;
     const { onChange } = this.props;
     onChange(event);
-    this.setState({ value: event.target.value });
-    this.setLabelClass(event.target.value);
+    this.setLabelClass(value);
   }
 
   render() {
-    const { id, name, placeholder, title, type, valid } = this.props;
-    const { labelClass, value } = this.state;
+    const { id, name, placeholder, title, type, valid, value } = this.props;
+    const { labelClass } = this.state;
 
     const addClasses = this.getValidClass();
 
@@ -78,7 +76,7 @@ export default class Input extends Component {
           name={name}
           type={type}
           id={id}
-          value={value}
+          defaultValue={value}
           placeholder={placeholder}
           onChange={(event) => this.handleChange(event)}
           className={`uk-input uk-form-large ${addClasses}`}

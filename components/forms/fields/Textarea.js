@@ -6,7 +6,7 @@ export default class Textarea extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
+      labelClass: '',
     };
   }
 
@@ -14,7 +14,6 @@ export default class Textarea extends Component {
     return {
       id: PropTypes.string,
       name: PropTypes.string.isRequired,
-      rows: PropTypes.number,
       placeholder: PropTypes.string,
       onChange: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
@@ -39,8 +38,15 @@ export default class Textarea extends Component {
     };
   }
 
-  componentWillReceiveProps({ value }) {
-    this.setState({ value });
+  componentDidMount() {
+    const { value } = this.props;
+    this.setLabelClass(value);
+  }
+
+  setLabelClass(value) {
+    this.setState({
+      labelClass: value.length > 0 ? ' stay-small' : '',
+    });
   }
 
   getValidClass() {
@@ -76,15 +82,14 @@ export default class Textarea extends Component {
       rows,
       onChange,
       maxLength,
+      value,
     } = this.props;
-    const { value } = this.state;
+    const { labelClass } = this.state;
+
     const addClasses = this.getValidClass();
     return (
       <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
-        <label
-          className={`uk-form-label ${!this.inputIsEmpty() && 'stay-small'}`}
-          htmlFor={id}
-        >
+        <label className={`uk-form-label ${labelClass}`} htmlFor={id}>
           {title}
         </label>
         <textarea
@@ -93,9 +98,9 @@ export default class Textarea extends Component {
           rows={rows}
           placeholder={placeholder}
           maxLength={maxLength}
-          value={value}
+          defaultValue={value}
           onChange={(e) => {
-            this.setState({ value: e.target.value });
+            this.setLabelClass(e.target.value);
             onChange(e);
           }}
           className={`uk-textarea uk-form-large ${addClasses}`}
