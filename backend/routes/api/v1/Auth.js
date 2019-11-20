@@ -2,14 +2,12 @@ const express = require('express');
 
 const router = express.Router();
 const passport = require('passport');
-const auth = require('../auth');
-const authController = require('../controllers/Auth');
-const UserController = require('../controllers/User');
+const auth = require('../../../auth');
+const authController = require('../../../controllers/Auth');
+const UserController = require('../../../controllers/User');
 
 router.post('/login', auth.optional, (req, res, next) => {
-  const {
-    body: { email, password },
-  } = req;
+  const { email, password } = req.body;
 
   if (!email) {
     return res.status(422).json({

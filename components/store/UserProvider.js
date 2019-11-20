@@ -35,7 +35,7 @@ export default class UserProvider extends Component {
     const accessToken = localStorage.getItem('access-token');
     if (accessToken) {
       console.log('token found');
-      Api.get('/auth/current', {
+      Api.get('/api/v1/auth/current', {
         headers: { authorization: `Token ${accessToken}` },
       })
         .then((res) => {
@@ -58,7 +58,7 @@ export default class UserProvider extends Component {
   login(email, password) {
     return new Promise((resolve, reject) => {
       console.log('Start login');
-      Api.post('/auth/login', {
+      Api.post('/api/v1/auth/login', {
         email,
         password,
       })
@@ -91,7 +91,7 @@ export default class UserProvider extends Component {
 
     if (user) {
       console.log('logout: start', user);
-      Api.post('/auth/logout', {
+      Api.post('/api/v1/auth/logout', {
         headers: { authorization: `Token ${user.token}` },
       })
         .finally((res) => {

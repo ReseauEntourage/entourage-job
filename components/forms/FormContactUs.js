@@ -53,7 +53,7 @@ export default class FormContactUs extends Component {
 
     handleSubmit()
       .then(({ fields }) => {
-        Api.post('/mail/contact-us', {
+        Api.post('/api/v1/mail/contact-us', {
           email: fields.email,
           text: fields.text,
         })
