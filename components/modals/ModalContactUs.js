@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
 import React from 'react';
-import FormContactUs from '../forms/FormContactUs';
-import withValidation from '../forms/withValidation';
-import rulesContactUs from '../forms/rulesContactUs';
+import FormWithValidation from '../forms/FormWithValidation';
+import rulesContactUs from '../forms/schema/formContactUs';
 import SuccessModalContent from './SuccessModalContent';
 import StepperModal from './StepperModal';
+import Api from '../../Axios';
 
 // Modal de formulaire contact
 const ModalContactUs = () => (
@@ -19,30 +19,30 @@ const ModalContactUs = () => (
       </>
     }
     composers={[
-      (closeModal, nextStep) => {
-        const FormContactUsValidation = withValidation(
-          FormContactUs,
-          rulesContactUs,
-          closeModal,
-          nextStep
-        );
-        return (
-          <>
-            <p
-              className="uk-text-lead"
-              style={{
-                lineHeight: '1.2',
-                fontSize: '1.2rem',
-                fontWeight: '500',
-              }}
-            >
-              Ma situation actuelle ne me permet pas de rejoindre LinkedOut, je
-              souhaite être aidé et orienté dans mes différentes démarches.
-            </p>
-            <FormContactUsValidation />
-          </>
-        );
-      },
+      (closeModal, nextStep) => (
+        <>
+          <p
+            className="uk-text-lead"
+            style={{
+              lineHeight: '1.2',
+              fontSize: '1.2rem',
+              fontWeight: '500',
+            }}
+          >
+            Ma situation actuelle ne me permet pas de rejoindre LinkedOut, je
+            souhaite être aidé et orienté dans mes différentes démarches.
+          </p>
+          <FormWithValidation
+            formData={rulesContactUs}
+            onCancel={closeModal}
+            onSubmit={({ email, text }, reject) =>
+              Api.post('/mail/contact-us', { email, text })
+                .then(nextStep)
+                .catch(() => reject("Une erreur s'est produite"))
+            }
+          />
+        </>
+      ),
       (closeModal) => (
         <SuccessModalContent
           text="Merci pour votre message."
