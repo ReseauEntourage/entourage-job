@@ -7,7 +7,7 @@ import schemaCatchphrase from '../components/forms/schema/formEditCatchphrase';
 import schemaTestimonial from '../components/forms/schema/formEditTestimonial';
 import schemaformEditSkills from '../components/forms/schema/formEditSkills';
 import schemaformEditPassions from '../components/forms/schema/formEditPassions';
-import ModalEdit from '../components/modals/edit/ModalEdit';
+import ModalEdit from '../components/modals/ModalEdit';
 
 export default () => {
   return (

@@ -1,11 +1,11 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import PropTypes from 'prop-types';
-import ModalGeneric from '../ModalGeneric';
-import HeaderModal from '../HeaderModal';
-import FormWithValidation from '../../forms/FormWithValidation';
+import ModalGeneric from './ModalGeneric';
+import HeaderModal from './HeaderModal';
+import FormWithValidation from '../forms/FormWithValidation';
 
-import { Button } from '../../utils';
+import { Button } from '../utils';
 
 const ModalEdit = ({
   id,
