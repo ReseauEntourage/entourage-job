@@ -4,6 +4,7 @@
 // store/UserProvider.js
 import React, { createContext, Component } from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import Api from '../../Axios';
 
 /**
@@ -43,33 +44,14 @@ export default class UserProvider extends Component {
             isAuthentificated: true,
             user: res.data.user,
           });
+          Router.push('/backoffice/cv/edit');
         })
-        .catch(console.log);
+        .catch((err) => {
+          console.log(err);
+          localStorage.removeItem('access-token');
+        });
     } else {
       console.log('no token');
-    }
-  }
-
-  logout() {
-    const { user } = this.state;
-
-    if (user) {
-      console.log('logout: start', user);
-      Api.post('/auth/logout', {
-        headers: { authorization: `Token ${user.token}` },
-      })
-        .then((res) => {
-          console.log('logout: completed ', res);
-          localStorage.removeItem('access-token');
-          this.setState({
-            isAuthentificated: false,
-            user: null,
-            error: null,
-          });
-        })
-        .catch(console.error);
-    } else {
-      console.error('logout: no user');
     }
   }
 
@@ -82,10 +64,13 @@ export default class UserProvider extends Component {
       })
         .then((res) => {
           localStorage.setItem('access-token', res.data.user.token);
+          console.log('login success');
+          console.log(res.data.user);
           this.setState({
             isAuthentificated: true,
-            user: res.data.data,
+            user: res.data.user,
           });
+          Router.push('/backoffice/cv/edit');
           resolve();
         })
         .catch((error) => {
@@ -99,6 +84,30 @@ export default class UserProvider extends Component {
           reject(myError);
         });
     });
+  }
+
+  logout() {
+    const { user } = this.state;
+
+    if (user) {
+      console.log('logout: start', user);
+      Api.post('/auth/logout', {
+        headers: { authorization: `Token ${user.token}` },
+      })
+        .finally((res) => {
+          console.log('logout: completed ', res);
+          localStorage.removeItem('access-token');
+          this.setState({
+            isAuthentificated: false,
+            user: null,
+            error: null,
+          });
+          Router.push('/login');
+        })
+        .catch(console.error);
+    } else {
+      console.error('logout: no user');
+    }
   }
 
   render() {

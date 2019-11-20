@@ -30,18 +30,19 @@ router.post('/', (req, res) => {
   CVController.createCV(req.body)
     .then((cv) => {
       cvCreated = cv;
-      // creation de limage de preview cv
+      // creation de l'image de preview cv
+      console.log(req.body);
       generateCVPreview(
         cvCreated.firstName.toUpperCase(),
         "A besoin d'un coup de pouce pour travailler dans...",
-        req.body.ambitions.length > 0
-          ? req.body.ambitions.join('. ').toUpperCase()
-          : '',
-        `../../static/img/arthur.png`,
-        `../../static/img/${cvCreated.url}-preview.jpg`
+        /* cvCreated.ambitions.length > 0
+          ? cvCreated.ambitions.join('. ').toUpperCase()
+          :  */ '',
+        `../../../../static/img/arthur.png`,
+        `../../../../static/img/${cvCreated.url}-preview.jpg`
       )
-        .then(console.log)
-        .catch(console.error);
+        .then((resu) => console.log(resu))
+        .catch((err) => console.log(err));
       return Promise.resolve();
     })
     .then(() => res.status(200).json(cvCreated))
@@ -49,6 +50,34 @@ router.post('/', (req, res) => {
       console.log(`Une erreur est survenue`);
       res.status(401).send(err);
     });
+});
+
+/**
+ * Route : GET /api/<VERSION>/cv/edit
+ * Description : Récupère le CV associé au <USERID> fournit en body
+ */
+router.get('/edit', (req, res) => {
+  console.log(req.body);
+  if (!req.body.userId) {
+    console.log(`Aucun userId fournit, aucun CV ne peut être récupéré`);
+    res
+      .status(401)
+      .send('Aucun userId fournit, aucun CV ne peut être récupéré');
+  } else {
+    CVController.getCVbyUserId(req.body.userId)
+      .then((cv) => {
+        if (cv !== null) {
+          console.log(`CV trouvé`);
+        } else {
+          console.log(`Aucun CV trouvé`);
+        }
+        res.status(200).json(cv);
+      })
+      .catch((err) => {
+        console.log(`Aucun CV trouvé`);
+        res.status(401).send(err);
+      });
+  }
 });
 
 /**
@@ -63,7 +92,7 @@ router.get('/:url', (req, res) => {
       res.status(200).json(cv);
     })
     .catch((err) => {
-      console.log(`Aucun CV trouvé`);
+      console.log(err);
       res.status(401).send(err);
     });
 });

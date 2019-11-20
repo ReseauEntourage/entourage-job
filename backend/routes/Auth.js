@@ -4,6 +4,7 @@ const router = express.Router();
 const passport = require('passport');
 const auth = require('../auth');
 const authController = require('../controllers/Auth');
+const UserController = require('../controllers/User');
 
 router.post('/login', auth.optional, (req, res, next) => {
   const {
@@ -59,18 +60,11 @@ router.get('/current', auth.required, (req, res, next) => {
   const {
     payload: { id },
   } = req;
-  console.log('OK');
-
-  // return Users.findById(id).then((user) => {
-  //   if (!user) {
-  //     return res.sendStatus(400);
-  //   }
-
-  //   return res.json({ user: user.toAuthJSON() });
-  // });
-  return res.json({
-    user: 'will provide the user data',
-    // authController.toAuthJSON()
+  return UserController.getUser(id).then((user) => {
+    if (!user) {
+      return res.sendStatus(400);
+    }
+    return res.json({ user: authController.toAuthJSON(user) });
   });
 });
 

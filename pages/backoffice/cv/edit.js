@@ -39,7 +39,8 @@ class CVEdit extends Component {
   }
 
   static async getInitialProps({ query }) {
-    return Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`, query.userId)
+    console.log(query);
+    return Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`)
       .then((res) => {
         return { cv: res.data };
       })
@@ -55,13 +56,20 @@ class CVEdit extends Component {
   render() {
     const { cv } = this.props;
     const title = `Edition du CV`;
+    console.log(cv);
     return (
       <LayoutBackOffice title={title}>
         <div style={{ position: 'relative' }}>
-          <CVBackground url="/static/img/arthur-background.jpg" />
-          <CVFiche cv={cv} />
-          <ContactPartial />
-          <DiscoverPartial />
+          {cv.firstName ? (
+            <>
+              <CVBackground url="/static/img/arthur-background.jpg" />
+              <CVFiche cv={cv} />
+              <ContactPartial />
+              <DiscoverPartial />
+            </>
+          ) : (
+            <div>Une erreur s&apos;est produite</div>
+          )}
         </div>
       </LayoutBackOffice>
     );

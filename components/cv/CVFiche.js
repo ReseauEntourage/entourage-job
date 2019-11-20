@@ -14,25 +14,34 @@ import {
 } from '../cards';
 
 const CVFiche = ({ cv }) => {
-  const arrayContracts = cv.Contracts.map((contract) => {
-    return contract.name;
-  });
-  const arrayLanguages = cv.Languages.map((language) => {
-    return (
-      language.name.charAt(0).toUpperCase() +
-      language.name.slice(1).toLowerCase()
-    );
-  });
-  const arraySkills = cv.Skills.map((skill) => {
-    return (
-      skill.name.charAt(0).toUpperCase() + skill.name.slice(1).toLowerCase()
-    );
-  });
-  const arrayPassions = cv.Passions.map((passion) => {
-    return (
-      passion.name.charAt(0).toUpperCase() + passion.name.slice(1).toLowerCase()
-    );
-  });
+  const arrayContracts =
+    cv.Contracts &&
+    cv.Contracts.map((contract) => {
+      return contract.name;
+    });
+  const arrayLanguages =
+    cv.Languages &&
+    cv.Languages.map((language) => {
+      return (
+        language.name.charAt(0).toUpperCase() +
+        language.name.slice(1).toLowerCase()
+      );
+    });
+  const arraySkills =
+    cv.Skills &&
+    cv.Skills.map((skill) => {
+      return (
+        skill.name.charAt(0).toUpperCase() + skill.name.slice(1).toLowerCase()
+      );
+    });
+  const arrayPassions =
+    cv.Passions &&
+    cv.Passions.map((passion) => {
+      return (
+        passion.name.charAt(0).toUpperCase() +
+        passion.name.slice(1).toLowerCase()
+      );
+    });
 
   return (
     <Section>

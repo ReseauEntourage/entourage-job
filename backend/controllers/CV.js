@@ -8,6 +8,8 @@ const Language = require('../db/models/language')(db, sequelize.DataTypes);
 const Passion = require('../db/models/passion')(db, sequelize.DataTypes);
 const Skill = require('../db/models/skill')(db, sequelize.DataTypes);
 
+const { Op } = sequelize;
+
 const INCLUDE_CV_COMPLETE = [
   {
     model: Contract,
@@ -240,6 +242,19 @@ const getCV = (url) => {
   });
 };
 
+const getCVbyUserId = (userId) => {
+  return new Promise((resolve, reject) => {
+    const infoLog = 'getCV -';
+    console.log(`${infoLog} Récupérer un CV non publié à partir du userId`);
+    CV.findOne({
+      where: { userId, status: { [Op.notLike]: 'Published' } },
+      include: INCLUDE_CV_COMPLETE,
+    })
+      .then((result) => resolve(result))
+      .catch((err) => reject(err));
+  });
+};
+
 const getCVs = () => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getCVs -';
@@ -291,6 +306,7 @@ module.exports = {
   createCV,
   deleteCV,
   getCV,
+  getCVbyUserId,
   getCVs,
   getRandomShortCVs,
   setCV,

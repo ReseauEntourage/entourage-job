@@ -1,5 +1,4 @@
 import React from 'react';
-import Router from 'next/router';
 import Layout from '../components/Layout';
 import { Section } from '../components/utils';
 import FromLogin from '../components/forms/FormLogin';
@@ -18,16 +17,13 @@ const Login = () => {
       <Section size="large" style="muted">
         <div className="uk-flex uk-flex-center">
           <div className="uk-width-1-2 uk-card uk-card-default uk-card-body">
-            <h1>Connexion</h1>
-            <FromLoginWithValidator
-              afterSubmit={() => {
-                Router.push('/');
-              }}
-            />
+            <h1>Connexion (test@cesttropsuper.com)</h1>
+            <FromLoginWithValidator />
           </div>
         </div>
       </Section>
     </Layout>
   );
 };
+
 export default Login;

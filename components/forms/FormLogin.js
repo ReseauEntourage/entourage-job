@@ -52,7 +52,9 @@ export default class FormLogin extends Component {
     const { login } = this.context;
     handleSubmit()
       .then(({ fields: { email, password } }) => login(email, password))
-      .then(afterSubmit)
+      .then(() => {
+        console.log('Connexin réussie');
+      })
       .catch((error) => {
         console.error(error);
         this.setState({ error: "Une erreur s'est produite" });
