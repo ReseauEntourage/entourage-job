@@ -10,30 +10,6 @@ import FooterForm from '../utils/FooterForm';
 import withValidation from './withValidation';
 
 export class Form extends Component {
-  constructor(props) {
-    super(props);
-    const { handleChange, handleSubmit, fieldsInfo } = this.props;
-
-    // todo revoir la structure du state
-    const fieldsName = fieldsInfo.map((field) => field.name);
-    this.state = {
-      fields: {
-        values: fieldsName.reduce((acc, item) => {
-          acc[item] = '';
-          return acc;
-        }, {}),
-        ...fieldsName.reduce((acc, item) => {
-          acc[`valid_${item}`] = undefined;
-          return acc;
-        }, {}),
-      },
-      error: '',
-      handleChange: handleChange.bind(this),
-      handleSubmit: handleSubmit.bind(this),
-      onSubmit: this.onSubmit.bind(this),
-    };
-  }
-
   static get propTypes() {
     return {
       // Gere la mise à jour des entrés utilisateur
@@ -64,15 +40,48 @@ export class Form extends Component {
     };
   }
 
+  static initializeForm(fieldsInfo) {
+    // todo revoir la structure du state
+    const fieldsName = fieldsInfo.map((field) => field.name);
+    return {
+      fields: {
+        values: fieldsName.reduce((acc, item) => {
+          acc[item] = '';
+          return acc;
+        }, {}),
+        ...fieldsName.reduce((acc, item) => {
+          acc[`valid_${item}`] = undefined;
+          return acc;
+        }, {}),
+      },
+      error: '',
+    };
+  }
+
+  constructor(props) {
+    super(props);
+    const { handleChange, handleSubmit, fieldsInfo } = this.props;
+
+    // todo revoir la structure du state
+    // const fieldsName = fieldsInfo.map((field) => field.name);
+    this.state = {
+      handleChange: handleChange.bind(this),
+      handleSubmit: handleSubmit.bind(this),
+      onSubmit: this.onSubmit.bind(this),
+      ...this.constructor.initializeForm(fieldsInfo),
+    };
+  }
+
   onSubmit(event) {
     event.preventDefault();
     const { handleSubmit } = this.state;
-    const { afterSubmit } = this.props;
+    const { afterSubmit, fieldsInfo } = this.props;
 
     handleSubmit()
-      .then(({ fields }) =>
-        afterSubmit(fields, (error) => this.setState({ error }))
-      )
+      .then(({ fields }) => {
+        this.setState(this.constructor.initializeForm(fieldsInfo));
+        afterSubmit(fields, (error) => this.setState({ error }));
+      })
       .catch(console.error);
   }
 
@@ -88,6 +97,7 @@ export class Form extends Component {
             placeholder={fieldInfo.placeholder}
             name={fieldInfo.name}
             title={fieldInfo.title}
+            value={fieldInfo.value}
             type={fieldInfo.type}
             valid={fields[`valid_${fieldInfo.name}`]}
             onChange={handleChange}
@@ -102,6 +112,7 @@ export class Form extends Component {
             row={fieldInfo.row}
             title={fieldInfo.title}
             type={fieldInfo.type}
+            value={fieldInfo.value}
             placeholder={fieldInfo.placeholder}
             valid={fields[`valid_${fieldInfo.name}`]}
             onChange={handleChange}

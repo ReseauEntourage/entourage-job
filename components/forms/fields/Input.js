@@ -35,8 +35,12 @@ export default class Input extends Component {
   }
 
   componentDidMount() {
-    const { value } = this.props;
-    this.setLabelClass(value);
+    const { value, name } = this.props;
+    if (value) {
+      this.setLabelClass(value);
+      // trick to verify field before the user update of the field
+      this.handleChange({ target: { name, value, type: 'input' } });
+    }
   }
 
   getValidClass() {
@@ -77,7 +81,7 @@ export default class Input extends Component {
           type={type}
           id={id}
           defaultValue={value}
-          placeholder={placeholder}
+          placeholder={placeholder || 'Tapez votre texte'}
           onChange={(event) => this.handleChange(event)}
           className={`uk-input uk-form-large ${addClasses}`}
         />

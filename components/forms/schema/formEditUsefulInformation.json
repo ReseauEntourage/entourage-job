@@ -1,0 +1,152 @@
+{
+  "id": "form-catchphrase",
+  "fields": [
+    {
+      "id": "job",
+      "name": "job",
+      "component": "input",
+      "type": "text",
+      "title": "Type de poste recherché"
+    },
+    {
+      "id": "location",
+      "name": "location",
+      "component": "input",
+      "type": "text",
+      "title": "Lieu de travail souhaité"
+    },
+    {
+      "id": "availability",
+      "name": "availability",
+      "component": "input",
+      "type": "text",
+      "title": "Disponibilité de traivail possibles"
+    },
+    {
+      "id": "language",
+      "name": "language",
+      "component": "input",
+      "type": "text",
+      "title": "Langues parlées"
+    },
+    {
+      "id": "transport",
+      "name": "transport",
+      "component": "input",
+      "type": "text",
+      "title": "Permis de conduire"
+    }
+  ],
+  "rules": [
+    {
+      "field": "job",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "job",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 40
+        }
+      ],
+      "validWhen": true,
+      "message": "40 caractères maximum"
+    },
+    {
+      "field": "location",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "location",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 100
+        }
+      ],
+      "validWhen": true,
+      "message": "100 caractères maximum"
+    },
+    {
+      "field": "availability",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "availability",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 40
+        }
+      ],
+      "validWhen": true,
+      "message": "40 caractères maximum"
+    },
+    {
+      "field": "language",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "language",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 100
+        }
+      ],
+      "validWhen": true,
+      "message": "100 caractères maximum"
+    },
+    {
+      "field": "transport",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "transport",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 100
+        }
+      ],
+      "validWhen": true,
+      "message": "100 caractères maximum"
+    }
+  ]
+}

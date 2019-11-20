@@ -96,7 +96,7 @@ export default class Textarea extends Component {
           id={id}
           name={name}
           rows={rows}
-          placeholder={placeholder}
+          placeholder={placeholder || 'Tapez votre texte'}
           maxLength={maxLength}
           defaultValue={value}
           onChange={(e) => {
