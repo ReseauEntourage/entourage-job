@@ -5,7 +5,7 @@ import ModalGeneric from './ModalGeneric';
 import HeaderModal from './HeaderModal';
 import FormWithValidation from '../forms/FormWithValidation';
 
-import { Button } from '../utils';
+import { Button, CloseButtonNoSSR } from '../utils';
 
 const ModalEdit = ({
   id,
@@ -27,6 +27,7 @@ const ModalEdit = ({
       <ModalGeneric id={id}>
         {(closeModal) => (
           <>
+            <CloseButtonNoSSR className="uk-modal-close-default" />
             <HeaderModal>{title}</HeaderModal>
             {description || (
               <p
