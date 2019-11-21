@@ -2,44 +2,41 @@
   "id": "form-catchphrase",
   "fields": [
     {
-      "id": "job",
-      "name": "job",
+      "id": "title",
+      "name": "title",
       "component": "input",
       "type": "text",
-      "title": "Type de poste recherché"
+      "title": "Intitulé du poste"
     },
     {
-      "id": "location",
-      "name": "location",
-      "component": "input",
+      "id": "description",
+      "name": "description",
+      "component": "textarea",
       "type": "text",
-      "title": "Lieu de travail souhaité"
+      "title": "Description du poste"
     },
     {
-      "id": "availability",
-      "name": "availability",
-      "component": "input",
-      "type": "text",
-      "title": "Disponibilité de travail possibles"
+      "id": "dateEnd",
+      "name": "dateEnd",
+      "component": "datepicker",
+      "type": "date",
+      "title": "Date de début",
+      "min": "1960",
+      "max": "2020"
     },
     {
-      "id": "language",
-      "name": "language",
-      "component": "input",
-      "type": "text",
-      "title": "Langues parlées"
-    },
-    {
-      "id": "transport",
-      "name": "transport",
-      "component": "input",
-      "type": "text",
-      "title": "Permis de conduire"
+      "id": "dateStart",
+      "name": "dateStart",
+      "component": "datepicker",
+      "type": "date",
+      "title": "Date de fin",
+      "min": "1960",
+      "max": "2020"
     }
   ],
   "rules": [
     {
-      "field": "job",
+      "field": "title",
       "method": "isEmpty",
       "args": [
         {
@@ -50,7 +47,7 @@
       "message": "Obligatoire"
     },
     {
-      "field": "job",
+      "field": "title",
       "method": "isLength",
       "args": [
         {
@@ -61,7 +58,7 @@
       "message": "40 caractères maximum"
     },
     {
-      "field": "location",
+      "field": "description",
       "method": "isEmpty",
       "args": [
         {
@@ -72,7 +69,7 @@
       "message": "Obligatoire"
     },
     {
-      "field": "location",
+      "field": "description",
       "method": "isLength",
       "args": [
         {
@@ -83,7 +80,7 @@
       "message": "100 caractères maximum"
     },
     {
-      "field": "availability",
+      "field": "dateStart",
       "method": "isEmpty",
       "args": [
         {
@@ -94,7 +91,29 @@
       "message": "Obligatoire"
     },
     {
-      "field": "availability",
+      "field": "dateStart",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 40
+        }
+      ],
+      "validWhen": true,
+      "message": "100 caractères maximum"
+    },
+    {
+      "field": "dateEnd",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "dateEnd",
       "method": "isLength",
       "args": [
         {
@@ -103,50 +122,6 @@
       ],
       "validWhen": true,
       "message": "40 caractères maximum"
-    },
-    {
-      "field": "language",
-      "method": "isEmpty",
-      "args": [
-        {
-          "ignore_whitespace": true
-        }
-      ],
-      "validWhen": false,
-      "message": "Obligatoire"
-    },
-    {
-      "field": "language",
-      "method": "isLength",
-      "args": [
-        {
-          "max": 100
-        }
-      ],
-      "validWhen": true,
-      "message": "100 caractères maximum"
-    },
-    {
-      "field": "transport",
-      "method": "isEmpty",
-      "args": [
-        {
-          "ignore_whitespace": true
-        }
-      ],
-      "validWhen": false,
-      "message": "Obligatoire"
-    },
-    {
-      "field": "transport",
-      "method": "isLength",
-      "args": [
-        {
-          "max": 100
-        }
-      ],
-      "validWhen": true,
-      "message": "100 caractères maximum"
     }
   ]
 }

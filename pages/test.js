@@ -7,6 +7,7 @@ import schemaCatchphrase from '../components/forms/schema/formEditCatchphrase';
 import schemaTestimonial from '../components/forms/schema/formEditTestimonial';
 import schemaformEditSkills from '../components/forms/schema/formEditSkills';
 import schemaformEditPassions from '../components/forms/schema/formEditPassions';
+import schemaformEditExperience from '../components/forms/schema/formEditExperience';
 import ModalEdit from '../components/modals/ModalEdit';
 
 export default () => {
@@ -52,6 +53,12 @@ export default () => {
           title="Edition - mes passions (6 maximum)"
           formSchema={schemaformEditPassions}
           defaultValues={['La dégustation de chocolat', 'Le sport']}
+          onSubmit={console.log}
+        />
+        <ModalEdit
+          id="modal-experience"
+          title="Edition - mon expérience"
+          formSchema={schemaformEditExperience}
           onSubmit={console.log}
         />
       </Section>
