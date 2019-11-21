@@ -26,7 +26,7 @@ export default function withValidation(WrappedForm, validatorRules) {
       }
 
       /* Validators end */
-      this.setState({ fields });
+      this.setState({ fields, error: '' });
     }
 
     // fonction d'envoie de formulaire
