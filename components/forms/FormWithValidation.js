@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import DatePicker from './fields/DatePicker';
 import Input from './fields/Input';
 import Textarea from './fields/Textarea';
 import CheckboxCGU from './fields/CheckboxCGU';
@@ -101,6 +102,22 @@ export class Form extends Component {
             type={fieldInfo.type}
             valid={fields[`valid_${fieldInfo.name}`]}
             onChange={handleChange}
+          />
+        );
+      }
+      if (fieldInfo.component === 'datepicker') {
+        return (
+          <DatePicker
+            id={`${id}-${fieldInfo.name}`}
+            placeholder={fieldInfo.placeholder}
+            name={fieldInfo.name}
+            title={fieldInfo.title}
+            value={fieldInfo.value}
+            valid={fields[`valid_${fieldInfo.name}`]}
+            onChange={handleChange}
+            pattern={fieldInfo.pattern}
+            min={fieldInfo.min}
+            max={fieldInfo.max}
           />
         );
       }
