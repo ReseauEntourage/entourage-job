@@ -2,10 +2,14 @@ const express = require('express');
 
 const router = express.Router();
 const passport = require('passport');
-const auth = require('../../../auth');
-const authController = require('../../../controllers/Auth');
+const { auth } = require('../../../controllers/Auth');
+const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 
+/**
+ * Utilisation d'un "custom callback" pour mieux gérer l'echec d'authentification
+ * Source : http://www.passportjs.org/docs/downloads/html/#custom-callback
+ */
 router.post('/login', auth.optional, (req, res, next) => {
   const { email, password } = req.body;
 
@@ -36,12 +40,12 @@ router.post('/login', auth.optional, (req, res, next) => {
 
       if (passportUser) {
         const user = passportUser;
-        user.token = authController.generateJWT(passportUser);
+        user.token = AuthController.generateJWT(passportUser);
 
-        return res.json({ user: authController.toAuthJSON(user) });
+        return res.json({ user: AuthController.toAuthJSON(user) });
       }
 
-      return res.status(400).json({ errors: info });
+      return res.status(400).json({ error: info.error });
     }
   )(req, res, next);
 });
@@ -62,7 +66,7 @@ router.get('/current', auth.required, (req, res, next) => {
     if (!user) {
       return res.sendStatus(400);
     }
-    return res.json({ user: authController.toAuthJSON(user) });
+    return res.json({ user: AuthController.toAuthJSON(user) });
   });
 });
 

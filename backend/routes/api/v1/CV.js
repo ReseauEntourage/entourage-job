@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/newline-after-import
 const express = require('express');
 const router = express.Router();
+const { auth } = require('../../../controllers/Auth');
 const CVController = require('../../../controllers/CV');
 const generateCVPreview = require('../../../shareImage');
 
@@ -56,15 +57,12 @@ router.post('/', (req, res) => {
  * Route : GET /api/<VERSION>/cv/edit
  * Description : Récupère le CV associé au <USERID> fournit en body
  */
-router.get('/edit', (req, res) => {
-  console.log(req.body);
-  if (!req.body.userId) {
-    console.log(`Aucun userId fournit, aucun CV ne peut être récupéré`);
-    res
-      .status(401)
-      .send('Aucun userId fournit, aucun CV ne peut être récupéré');
+router.get('/edit', auth.required, (req, res) => {
+  if (!req.payload.id) {
+    console.log(`Aucun userId trouvé, aucun CV ne peut être récupéré`);
+    res.status(401).send('Aucun userId trouvé, aucun CV ne peut être récupéré');
   } else {
-    CVController.getCVbyUserId(req.body.userId)
+    CVController.getCVbyUserId(req.payload.id)
       .then((cv) => {
         if (cv !== null) {
           console.log(`CV trouvé`);

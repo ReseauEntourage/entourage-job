@@ -46,9 +46,7 @@ class CVEdit extends Component {
       })
       .catch((error) => {
         console.log(error);
-        console.log(
-          `CVPage - getInitialProps error : ${error.response.status}`
-        );
+        console.log(`CVPage - getInitialProps error : ${error}`);
         return { cv: {} };
       });
   }

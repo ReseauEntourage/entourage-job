@@ -57,7 +57,7 @@ export default class FormLogin extends Component {
       })
       .catch((error) => {
         console.error(error);
-        this.setState({ error: "Une erreur s'est produite" });
+        this.setState({ error });
       });
   }
 

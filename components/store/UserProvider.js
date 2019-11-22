@@ -33,11 +33,10 @@ export default class UserProvider extends Component {
   // Control if user is connected and always available
   componentDidMount() {
     const accessToken = localStorage.getItem('access-token');
+    console.log(accessToken);
     if (accessToken) {
       console.log('token found');
-      Api.get('/api/v1/auth/current', {
-        headers: { authorization: `Token ${accessToken}` },
-      })
+      Api.get('/api/v1/auth/current')
         .then((res) => {
           localStorage.setItem('access-token', res.data.user.token);
           this.setState({
@@ -49,6 +48,7 @@ export default class UserProvider extends Component {
         .catch((err) => {
           console.log(err);
           localStorage.removeItem('access-token');
+          Router.push('/login');
         });
     } else {
       console.log('no token');
@@ -74,10 +74,9 @@ export default class UserProvider extends Component {
           resolve();
         })
         .catch((error) => {
-          const myError = error.response.data.errors[0]
-            ? error.response.data.errors[0]
-            : error;
-          console.log(error);
+          const myError = error.response.data.error
+            ? error.response.data.error
+            : "Une erreur s'est produite";
           this.setState({
             error: myError,
           });
@@ -91,9 +90,7 @@ export default class UserProvider extends Component {
 
     if (user) {
       console.log('logout: start', user);
-      Api.post('/api/v1/auth/logout', {
-        headers: { authorization: `Token ${user.token}` },
-      })
+      Api.post('/api/v1/auth/logout')
         .finally((res) => {
           console.log('logout: completed ', res);
           localStorage.removeItem('access-token');

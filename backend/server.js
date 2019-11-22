@@ -10,10 +10,12 @@ const routeUser = require('./routes/api/v1/User');
 const routeMail = require('./routes/api/v1/Mail');
 
 const app = express();
+
 let server;
 
 module.exports.prepare = () => {
   app.use(express.json());
+
   // add session management to Express
   app.use(
     session({
