@@ -10,8 +10,8 @@ import {
   StoryProfileCard,
   ExperiencesProfileCard,
   ReviewCard,
-  CVPresentationCard,
 } from '../cards';
+import { CVPresentationCard } from '.';
 
 const CVFiche = ({ cv }) => {
   const arrayContracts =

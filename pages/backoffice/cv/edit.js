@@ -1,28 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'next/router';
 import { DiscoverPartial, ContactPartial } from '../../../components/partials';
-import { CVBackground, CVFiche } from '../../../components/cards';
+import { CVActions, CVFiche } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
+
+const DEFAULT_CV = {
+  firstName: '',
+  intro: '',
+  Ambitions: [],
+  Contracts: [],
+  Languages: [],
+  Passions: [],
+  Skills: [],
+  Experiences: [],
+  url: '',
+};
 
 class CVEdit extends Component {
   static get defaultProps() {
     return {
-      cv: {
-        firstName: '',
-        intro: '',
-        Ambitions: [],
-        Contracts: [],
-        Languages: [],
-        Passions: [],
-        Skills: [],
-        Experiences: [],
-        url: '',
-      },
-      router: {
-        asPath: '',
-      },
+      cv: DEFAULT_CV,
     };
   }
 
@@ -31,9 +29,6 @@ class CVEdit extends Component {
       cv: PropTypes.shape({
         firstName: PropTypes.string.isRequired,
         url: PropTypes.string.isRequired,
-      }),
-      router: PropTypes.shape({
-        asPath: PropTypes.string.isRequired,
       }),
     };
   }
@@ -46,8 +41,7 @@ class CVEdit extends Component {
       })
       .catch((error) => {
         console.log(error);
-        console.log(`CVPage - getInitialProps error : ${error}`);
-        return { cv: {} };
+        return { cv: DEFAULT_CV };
       });
   }
 
@@ -58,9 +52,9 @@ class CVEdit extends Component {
     return (
       <LayoutBackOffice title={title}>
         <div style={{ position: 'relative' }}>
-          {cv.firstName ? (
+          {cv.firstName !== '' ? (
             <>
-              <CVBackground url="/static/img/arthur-background.jpg" />
+              <CVActions />
               <CVFiche cv={cv} />
               <ContactPartial />
               <DiscoverPartial />
@@ -74,4 +68,4 @@ class CVEdit extends Component {
   }
 }
 
-export default withRouter(CVEdit);
+export default CVEdit;
