@@ -4,15 +4,19 @@ import { Button, Section } from '../utils';
 const CVActions = () => (
   <Section>
     <h2 className="uk-text-bold">Ravi de te revoir, USERCONTEXTFIRSTNAME !</h2>
-    <div data-uk-grid>
+    <div className="uk-grid-match" data-uk-grid>
       <div className="uk-width-2-3@m">
         <p className="uk-text-lead">
           Bienvenue dans ton espace personnel, depuis lequel tu peux modifier
           les informations qui s&apos;affichent dans ta page profil candidat sur
-          LinkedOut.fr.
+          LinkedOut.
         </p>
       </div>
-      <div className="uk-width-auto"> </div>
+      <div className="uk-width-1-3@m uk-flex uk-flex-bottom">
+        <span className="uk-text-meta uk-text-right">
+          Masquer mon profil temporairement
+        </span>
+      </div>
     </div>
     <hr
       className="uk-margin-medium-top"
