@@ -1,5 +1,5 @@
 {
-  "id": "form-catchphrase",
+  "id": "form-experience",
   "fields": [
     {
       "id": "title",
@@ -16,22 +16,57 @@
       "title": "Description du poste"
     },
     {
-      "id": "dateEnd",
-      "name": "dateEnd",
-      "component": "datepicker",
-      "type": "date",
-      "title": "Date de début",
-      "min": "1960",
-      "max": "2020"
+      "id": "start-month",
+      "name": "start-month",
+      "component": "select",
+      "options": [
+        { "value": null, "text": "Mois" },
+        { "value": 1, "text": "Janvier" },
+        { "value": 2, "text": "Fevrier" },
+        { "value": 3, "text": "Mars" },
+        { "value": 4, "text": "Avril" },
+        { "value": 5, "text": "Mai" },
+        { "value": 6, "text": "Juin" },
+        { "value": 7, "text": "Juillet" },
+        { "value": 8, "text": "Aout" },
+        { "value": 9, "text": "Septembre" },
+        { "value": 10, "text": "Octobre" },
+        { "value": 11, "text": "Novembre" },
+        { "value": 12, "text": "Decembre" }
+      ]
     },
     {
-      "id": "dateStart",
-      "name": "dateStart",
-      "component": "datepicker",
-      "type": "date",
+      "id": "end",
       "title": "Date de fin",
-      "min": "1960",
-      "max": "2020"
+      "component": "fieldgroup",
+      "fields": [
+        {
+          "id": "end-month",
+          "name": "end-month",
+          "component": "select",
+          "options": [
+            { "value": null, "text": "Mois" },
+            { "value": 1, "text": "Janvier" },
+            { "value": 2, "text": "Fevrier" },
+            { "value": 3, "text": "Mars" },
+            { "value": 4, "text": "Avril" },
+            { "value": 5, "text": "Mai" },
+            { "value": 6, "text": "Juin" },
+            { "value": 7, "text": "Juillet" },
+            { "value": 8, "text": "Aout" },
+            { "value": 9, "text": "Septembre" },
+            { "value": 10, "text": "Octobre" },
+            { "value": 11, "text": "Novembre" },
+            { "value": 12, "text": "Decembre" }
+          ]
+        },
+        {
+          "id": "end-year",
+          "name": "end-year",
+          "component": "select",
+          "generate": { "min": 1960, "max": 2000, "type": "inc" }
+        }
+      ]
     }
   ],
   "rules": [
@@ -122,6 +157,28 @@
       ],
       "validWhen": true,
       "message": "40 caractères maximum"
+    },
+    {
+      "field": "start-month",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "end-month",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
     }
   ]
 }

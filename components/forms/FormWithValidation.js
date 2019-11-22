@@ -2,14 +2,11 @@
 /* eslint-disable default-case */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Link from 'next/link';
-import DatePicker from './fields/DatePicker';
-import Input from './fields/Input';
-import Textarea from './fields/Textarea';
-import CheckboxCGU from './fields/CheckboxCGU';
 import FooterForm from '../utils/FooterForm';
 import withValidation from './withValidation';
+import FieldFactory from './fields/FieldFactory';
 
+let fieldFactory;
 export class Form extends Component {
   static get propTypes() {
     return {
@@ -43,8 +40,10 @@ export class Form extends Component {
 
   static initializeForm(fieldsInfo) {
     // todo revoir la structure du state
+    // on extrait les nom des champs
     const fieldsName = fieldsInfo.map((field) => field.name);
     return {
+      error: '',
       fields: {
         values: fieldsName.reduce((acc, item) => {
           acc[item] = '';
@@ -55,22 +54,23 @@ export class Form extends Component {
           return acc;
         }, {}),
       },
-      error: '',
     };
   }
 
   constructor(props) {
     super(props);
-    const { handleChange, handleSubmit, fieldsInfo } = this.props;
-
+    const { handleChange, handleSubmit, fieldsInfo, id } = this.props;
     // todo revoir la structure du state
-    // const fieldsName = fieldsInfo.map((field) => field.name);
     this.state = {
       handleChange: handleChange.bind(this),
       handleSubmit: handleSubmit.bind(this),
       onSubmit: this.onSubmit.bind(this),
       ...this.constructor.initializeForm(fieldsInfo),
     };
+    //
+    const { handleChange: stHandleChange, fields } = this.state;
+    debugger;
+    fieldFactory = FieldFactory(id, fields, stHandleChange);
   }
 
   onSubmit(event) {
@@ -86,81 +86,9 @@ export class Form extends Component {
       .catch(console.error);
   }
 
-  // todo create another component to manage fields
-  generateFields() {
-    const { fields, handleChange } = this.state;
-    const { fieldsInfo, id } = this.props;
-    return fieldsInfo.map((fieldInfo) => {
-      if (fieldInfo.component === 'input') {
-        return (
-          <Input
-            id={`${id}-${fieldInfo.name}`}
-            placeholder={fieldInfo.placeholder}
-            name={fieldInfo.name}
-            title={fieldInfo.title}
-            value={fieldInfo.value}
-            type={fieldInfo.type}
-            valid={fields[`valid_${fieldInfo.name}`]}
-            onChange={handleChange}
-          />
-        );
-      }
-      if (fieldInfo.component === 'datepicker') {
-        return (
-          <DatePicker
-            id={`${id}-${fieldInfo.name}`}
-            placeholder={fieldInfo.placeholder}
-            name={fieldInfo.name}
-            title={fieldInfo.title}
-            value={fieldInfo.value}
-            valid={fields[`valid_${fieldInfo.name}`]}
-            onChange={handleChange}
-            pattern={fieldInfo.pattern}
-            min={fieldInfo.min}
-            max={fieldInfo.max}
-          />
-        );
-      }
-      if (fieldInfo.component === 'textarea') {
-        return (
-          <Textarea
-            id={`${id}-${fieldInfo.name}`}
-            name={fieldInfo.name}
-            row={fieldInfo.row}
-            title={fieldInfo.title}
-            type={fieldInfo.type}
-            value={fieldInfo.value}
-            placeholder={fieldInfo.placeholder}
-            valid={fields[`valid_${fieldInfo.name}`]}
-            onChange={handleChange}
-          />
-        );
-      }
-      if (fieldInfo.component === 'cgu') {
-        return (
-          <CheckboxCGU
-            id={`${id}-${fieldInfo.name}`}
-            name={fieldInfo.name}
-            title={
-              <span>
-                J&apos;accepte les{' '}
-                <Link href="#">
-                  <a>CGU</a>
-                </Link>
-              </span>
-            }
-            valid={fields[`valid_${fieldInfo.name}`]}
-            onChange={handleChange}
-          />
-        );
-      }
-      throw `component ${fieldInfo.component} does not exist`; // eslint-disable-line no-throw-literal
-    });
-  }
-
   render() {
     const { error, onSubmit } = this.state;
-    const { afterCancel, id } = this.props;
+    const { afterCancel, fieldsInfo, id } = this.props;
     return (
       <div className="uk-width-1-1">
         <form
@@ -169,7 +97,7 @@ export class Form extends Component {
           data-uk-grid
         >
           <fieldset className="uk-fieldset uk-width-1-1">
-            {this.generateFields()}
+            {id !== 'form-experience' || fieldsInfo.map(fieldFactory.generate)}
           </fieldset>
           <div>
             <FooterForm

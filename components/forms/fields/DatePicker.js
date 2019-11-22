@@ -99,8 +99,12 @@ export default class DatePicker extends Component {
           childWidths={['1-2']}
           items={[
             <div className="uk-margin">
-              <select className="uk-select">
-                <option>Selectionnez le mois...</option>
+              <select
+                className="uk-select"
+                onChange={(event) => this.handleChange(event)}
+                name={`${id}-mounth`}
+              >
+                <option />
                 {[
                   'janvier',
                   'fevrier',
@@ -117,7 +121,11 @@ export default class DatePicker extends Component {
               </select>
             </div>,
             <div className="uk-margin">
-              <select className="uk-select">
+              <select
+                className="uk-select"
+                onChange={(event) => this.handleChange(event)}
+                name={`${id}-year`}
+              >
                 <option>Selectionnez l&apos;année...</option>
                 {Array(max - min)
                   .fill(min)
