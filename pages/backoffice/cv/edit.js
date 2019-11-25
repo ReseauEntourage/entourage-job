@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { DiscoverPartial, ContactPartial } from '../../../components/partials';
 import { CVActions, CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';

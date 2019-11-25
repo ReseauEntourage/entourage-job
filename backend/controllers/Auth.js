@@ -37,12 +37,12 @@ function toAuthJSON(user) {
   return {
     id: user.id,
     email: user.email,
+    firstName: user.firstName,
     token: generateJWT(user),
   };
 }
 
 const getTokenFromHeaders = (req) => {
-  console.log(req);
   const {
     headers: { authorization },
   } = req;

@@ -12,7 +12,7 @@ import {
 } from '../cards';
 import { CVEditIntro, CVEditPicture, CVEditReviews } from '.';
 
-const CVFicheEdition = ({ cv }) => {
+const CVFicheEdition = ({ cv, onChange }) => {
   const arrayContracts =
     cv.Contracts &&
     cv.Contracts.map((contract) => {
@@ -47,7 +47,10 @@ const CVFicheEdition = ({ cv }) => {
       <GridNoSSR
         childWidths={['1-2@s']}
         match
-        items={[<CVEditIntro intro={cv.intro} />, <CVEditPicture img="" />]}
+        items={[
+          <CVEditIntro intro={cv.intro} onChange={onChange} />,
+          <CVEditPicture img="" onChange={onChange} />,
+        ]}
       />
       <GridNoSSR
         childWidths={['1-2@s']}
@@ -59,13 +62,14 @@ const CVFicheEdition = ({ cv }) => {
             availability={cv.availability}
             language={arrayLanguages}
             transport={cv.transport}
+            onChange={onChange}
           />,
           <GridNoSSR
             childWidths={['1-2@m']}
             match
             items={[
-              <SkillsCard list={arraySkills} />,
-              <PassionsCard list={arrayPassions} />,
+              <SkillsCard list={arraySkills} onChange={onChange} />,
+              <PassionsCard list={arrayPassions} onChange={onChange} />,
             ]}
           />,
         ]}
@@ -76,11 +80,14 @@ const CVFicheEdition = ({ cv }) => {
           <GridNoSSR
             childWidths={['1-1']}
             items={[
-              <StoryProfileCard description={cv.story} />,
-              <CVEditReviews />,
+              <StoryProfileCard description={cv.story} onChange={onChange} />,
+              <CVEditReviews onChange={onChange} />,
             ]}
           />,
-          <ExperiencesProfileCard experiences={cv.Experiences} />,
+          <ExperiencesProfileCard
+            experiences={cv.Experiences}
+            onChange={onChange}
+          />,
         ]}
       />
     </Section>
@@ -89,8 +96,11 @@ const CVFicheEdition = ({ cv }) => {
 
 CVFicheEdition.propTypes = {
   cv: PropTypes.shape().isRequired,
+  onChange: PropTypes.func,
 };
 
-CVFicheEdition.defaultProps = {};
+CVFicheEdition.defaultProps = {
+  onChange: 'test',
+};
 
 export default CVFicheEdition;

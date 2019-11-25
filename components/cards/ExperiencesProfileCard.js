@@ -1,12 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { IconNoSSR } from '../utils';
 
-const ExperiencesProfileCard = ({ experiences }) => {
+const ExperiencesProfileCard = ({ experiences, onChange }) => {
   return (
     <div className="uk-card uk-card-default uk-card-body">
-      <h3 className="uk-card-title">
-        Mon <span className="uk-text-primary">expérience</span>
-      </h3>
+      <div className="uk-flex-inline uk-width-1-1">
+        <h3 className="uk-card-title">
+          Mon <span className="uk-text-primary">expérience</span>
+        </h3>
+        {onChange && (
+          <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
+            <button type="button" className="uk-button uk-button-text">
+              <IconNoSSR name="pencil" ratio={1.5} />
+            </button>
+          </h3>
+        )}
+      </div>
 
       {experiences.length !== 0 ? (
         <ul className="uk-list ent-list">
@@ -41,8 +51,10 @@ ExperiencesProfileCard.propTypes = {
       description: PropTypes.string,
     })
   ),
+  onChange: PropTypes.func,
 };
 ExperiencesProfileCard.defaultProps = {
   experiences: [],
+  onChange: null,
 };
 export default ExperiencesProfileCard;

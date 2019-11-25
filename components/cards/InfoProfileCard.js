@@ -8,6 +8,7 @@ const InfoProfileCard = ({
   availability,
   language,
   transport,
+  onChange,
 }) => {
   let formatContract = '';
   contract.forEach((c, index) => {
@@ -22,12 +23,23 @@ const InfoProfileCard = ({
 
   return (
     <div className="uk-card uk-card-primary uk-card-body">
-      <h3 className="uk-card-title">
-        <span className="uk-margin-small-right">
-          <IconNoSSR name="info" />
-        </span>
-        Infos pratiques
-      </h3>
+      <div className="uk-flex-inline uk-width-1-1">
+        <h3 className="uk-card-title">
+          {!onChange && (
+            <span className="uk-margin-small-right">
+              <IconNoSSR name="info" />
+            </span>
+          )}
+          Infos pratiques
+        </h3>
+        {onChange && (
+          <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
+            <button type="button" className="uk-button uk-button-text">
+              <IconNoSSR name="pencil" ratio={1.5} />
+            </button>
+          </h3>
+        )}
+      </div>
       <ul className="uk-list">
         <li>
           <IconNoSSR name="file-text" />{' '}
@@ -63,6 +75,7 @@ InfoProfileCard.propTypes = {
   availability: PropTypes.string,
   language: PropTypes.arrayOf(PropTypes.string),
   transport: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 InfoProfileCard.defaultProps = {
@@ -71,6 +84,7 @@ InfoProfileCard.defaultProps = {
   availability: 'Disponibilité non renseigné',
   language: ['Langues apprises non renseigné'],
   transport: 'Moyen de transport non renseigné',
+  onChange: null,
 };
 
 export default InfoProfileCard;
