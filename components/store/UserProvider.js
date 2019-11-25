@@ -91,6 +91,7 @@ export default class UserProvider extends Component {
     if (user) {
       console.log('logout: start', user);
       Api.post('/api/v1/auth/logout')
+        .catch(console.error)
         .finally((res) => {
           console.log('logout: completed ', res);
           localStorage.removeItem('access-token');
@@ -100,8 +101,7 @@ export default class UserProvider extends Component {
             error: null,
           });
           Router.push('/login');
-        })
-        .catch(console.error);
+        });
     } else {
       console.error('logout: no user');
     }
