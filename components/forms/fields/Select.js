@@ -69,27 +69,35 @@ export default class Select extends Component {
     const { labelClass } = this.state;
 
     return (
-      <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
-        <label
-          className={`uk-form-label ${labelClass}`}
-          htmlFor={id}
-          // style={{ top: '6px' }}
-        >
-          {title}
-        </label>
-        <div className="uk-margin">
-          <select
-            className="uk-select"
-            onChange={(event) => this.handleChange(event)}
-            name={name}
-            id={id}
-            defaultValue={value}
+      <div
+        className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right"
+        style={{ paddingBottom: '2px' }}
+      >
+        {title ? (
+          <label
+            className={`uk-form-label ${labelClass}`}
+            htmlFor={id}
+            // style={{ top: '6px' }}
           >
-            {options.map(({ value, text }) => (
-              <option value={value}>{text}</option>
-            ))}
-          </select>
-        </div>
+            {title}
+          </label>
+        ) : null}
+        <select
+          className="uk-select"
+          onChange={(event) => this.handleChange(event)}
+          name={name}
+          id={id}
+          defaultValue={value}
+          style={{
+            backgroundColor: 'transparent',
+            paddingLeft: 0,
+            border: 'initial',
+          }}
+        >
+          {options.map(({ value, text }) => (
+            <option value={value}>{text}</option>
+          ))}
+        </select>
         <FormValidatorErrorMessage validObj={valid} />
       </div>
     );
