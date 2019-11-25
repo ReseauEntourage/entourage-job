@@ -12,16 +12,23 @@ const PassionsCard = ({ list }) => {
         Mes passions
       </h3>
       <ul className="uk-list">
-        {list.map((item, i) => (
-          <li id={i} key={i}>
-            {item}
-          </li>
-        ))}
+        {list.length !== 0 ? (
+          list.map((item, i) => (
+            <li id={i} key={i}>
+              {item}
+            </li>
+          ))
+        ) : (
+          <li>Aucune passion renseignée</li>
+        )}
       </ul>
     </div>
   );
 };
 PassionsCard.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.string).isRequired,
+  list: PropTypes.arrayOf(PropTypes.string),
+};
+PassionsCard.defaultProps = {
+  list: [],
 };
 export default PassionsCard;

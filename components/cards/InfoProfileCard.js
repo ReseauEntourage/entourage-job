@@ -30,19 +30,28 @@ const InfoProfileCard = ({
       </h3>
       <ul className="uk-list">
         <li>
-          <IconNoSSR name="file-text" /> {formatContract}
+          <IconNoSSR name="file-text" />{' '}
+          {formatContract !== ''
+            ? formatContract
+            : 'Type de contrat recherché non renseigné'}
         </li>
         <li>
-          <IconNoSSR name="location" /> {location}
+          <IconNoSSR name="location" />{' '}
+          {location !== '' ? location : 'Localisation non renseigné'}
         </li>
         <li>
-          <IconNoSSR name="calendar" /> {availability}
+          <IconNoSSR name="calendar" />{' '}
+          {availability !== '' ? availability : 'Disponibilité non renseigné'}
         </li>
         <li>
-          <IconNoSSR name="users" /> {formatLanguage}
+          <IconNoSSR name="users" />{' '}
+          {formatLanguage !== ''
+            ? formatLanguage
+            : 'Langues apprises non renseigné'}
         </li>
         <li>
-          <IconNoSSR name="hashtag" /> {transport}
+          <IconNoSSR name="hashtag" />{' '}
+          {transport !== '' ? transport : 'Moyen de transport non renseigné'}
         </li>
       </ul>
     </div>

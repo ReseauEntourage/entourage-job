@@ -7,11 +7,20 @@ const StoryProfileCard = ({ description }) => {
       <h3 className="uk-card-title">
         Mon <span className="uk-text-primary">histoire</span>
       </h3>
-      <p>{description}</p>
+      {description ? (
+        <p>{description}</p>
+      ) : (
+        <p className="uk-text-italic">
+          Aucune histoire n&apos;a encore été ajoutée
+        </p>
+      )}
     </div>
   );
 };
 StoryProfileCard.propTypes = {
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string,
+};
+StoryProfileCard.defaultProps = {
+  description: '',
 };
 export default StoryProfileCard;

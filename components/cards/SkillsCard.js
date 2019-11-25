@@ -12,16 +12,25 @@ const SkillCard = ({ list }) => {
         Mes atouts
       </h3>
       <ul className="uk-list">
-        {list.map((item, i) => (
-          <li id={i} key={i}>
-            {item}
-          </li>
-        ))}
+        {list.length !== 0 ? (
+          list.map((item, i) => (
+            <li id={i} key={i}>
+              {item}
+            </li>
+          ))
+        ) : (
+          <li>Aucun atout renseigné</li>
+        )}
       </ul>
     </div>
   );
 };
 SkillCard.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.string).isRequired,
+  list: PropTypes.arrayOf(PropTypes.string),
 };
+
+SkillCard.defaultProps = {
+  list: [],
+};
+
 export default SkillCard;
