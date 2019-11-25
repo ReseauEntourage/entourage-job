@@ -6,7 +6,6 @@ import FooterForm from '../utils/FooterForm';
 import withValidation from './withValidation';
 import FieldFactory from './fields/FieldFactory';
 
-let fieldFactory;
 export class Form extends Component {
   static get propTypes() {
     return {
@@ -59,31 +58,34 @@ export class Form extends Component {
 
   constructor(props) {
     super(props);
-    const { handleChange, handleSubmit, fieldsInfo, id } = this.props;
-    // todo revoir la structure du state
-    this.state = {
-      handleChange: handleChange.bind(this),
-      handleSubmit: handleSubmit.bind(this),
-      onSubmit: this.onSubmit.bind(this),
-      ...this.constructor.initializeForm(fieldsInfo),
-    };
-    //
-    const { handleChange: stHandleChange, fields } = this.state;
-    debugger;
-    fieldFactory = FieldFactory(id, fields, stHandleChange);
+    this.state = this.createState(props);
+
+    const { id } = this.props;
+    const { handleChange, fields } = this.state;
+    this.fieldFactory = new FieldFactory(id, fields, handleChange);
   }
 
   onSubmit(event) {
     event.preventDefault();
     const { handleSubmit } = this.state;
-    const { afterSubmit, fieldsInfo } = this.props;
 
     handleSubmit()
       .then(({ fields }) => {
+        const { afterSubmit, fieldsInfo } = this.props;
         this.setState(this.constructor.initializeForm(fieldsInfo));
         afterSubmit(fields, (error) => this.setState({ error }));
       })
       .catch(console.error);
+  }
+
+  createState({ handleChange, handleSubmit, fieldsInfo }) {
+    // todo revoir la structure du state
+    return {
+      handleChange: handleChange.bind(this),
+      handleSubmit: handleSubmit.bind(this),
+      onSubmit: this.onSubmit.bind(this),
+      ...this.constructor.initializeForm(fieldsInfo),
+    };
   }
 
   render() {
@@ -97,7 +99,7 @@ export class Form extends Component {
           data-uk-grid
         >
           <fieldset className="uk-fieldset uk-width-1-1">
-            {id !== 'form-experience' || fieldsInfo.map(fieldFactory.generate)}
+            {fieldsInfo.map(this.fieldFactory.generate)}
           </fieldset>
           <div>
             <FooterForm

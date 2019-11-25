@@ -65,7 +65,7 @@ export default class Select extends Component {
   }
 
   render() {
-    const { id, name, title, valid, options } = this.props;
+    const { id, name, title, valid, options, value } = this.props;
     const { labelClass } = this.state;
 
     return (
@@ -83,6 +83,7 @@ export default class Select extends Component {
             onChange={(event) => this.handleChange(event)}
             name={name}
             id={id}
+            defaultValue={value}
           >
             {options.map(({ value, text }) => (
               <option value={value}>{text}</option>

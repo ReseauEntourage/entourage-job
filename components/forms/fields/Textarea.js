@@ -39,8 +39,9 @@ export default class Textarea extends Component {
   }
 
   componentDidMount() {
-    const { value } = this.props;
+    const { name, value, onChange } = this.props;
     this.setLabelClass(value);
+    onChange({ target: { name, value, type: 'textarea' } });
   }
 
   setLabelClass(value) {
