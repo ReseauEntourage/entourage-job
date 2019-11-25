@@ -40,8 +40,10 @@ export default class Textarea extends Component {
 
   componentDidMount() {
     const { name, value, onChange } = this.props;
-    this.setLabelClass(value);
-    onChange({ target: { name, value, type: 'textarea' } });
+    if (value) {
+      this.setLabelClass(value);
+      onChange({ target: { name, value, type: 'textarea' } });
+    }
   }
 
   setLabelClass(value) {
