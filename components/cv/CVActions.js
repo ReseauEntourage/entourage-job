@@ -4,6 +4,9 @@ import { Button, Section } from '../utils';
 
 const CVActions = () => {
   const userContext = useContext(UserContext);
+  if (!userContext.user) {
+    return null;
+  }
   return (
     <Section>
       <h2 className="uk-text-bold">

@@ -4,7 +4,7 @@ import { Container } from 'next/app';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Footer from './Footer';
-import Header from './Header';
+import Header from './headers/Header';
 
 const Layout = ({
   children,

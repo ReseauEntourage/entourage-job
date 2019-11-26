@@ -43,7 +43,7 @@ export default class UserProvider extends Component {
             isAuthentificated: true,
             user: res.data.user,
           });
-          Router.push('/backoffice/cv/edit');
+          // Router.push('/backoffice/cv/edit');
         })
         .catch((err) => {
           console.log(err);

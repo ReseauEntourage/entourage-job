@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { Container } from 'next/app';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
-import Header from '../Header';
+import Header from '../headers/Header';
 
 const LayoutBackOffice = ({ children, title, router }) => {
   return (
