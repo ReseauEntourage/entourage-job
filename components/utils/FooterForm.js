@@ -7,7 +7,7 @@ const FooterForm = ({ error, onSubmit, onCancel }) => {
   return (
     <>
       {error ? (
-        <div className="uk-width-1-3@m">
+        <div className="uk-width-1-1">
           <span
             className="uk-text-danger uk-margin-right"
             style={{ alignSelf: 'center' }}

@@ -27,5 +27,5 @@ describe('Mail', () => {
         assert.isObject(res, 'pas de res');
       })
       .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-  });
+  }).timeout(TIMEOUT);
 });

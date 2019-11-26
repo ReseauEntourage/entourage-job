@@ -1,0 +1,164 @@
+{
+  "id": "form-experience",
+  "fields": [
+    {
+      "id": "title",
+      "name": "title",
+      "component": "input",
+      "type": "text",
+      "title": "Intitulé du poste"
+    },
+    {
+      "id": "description",
+      "name": "description",
+      "component": "textarea",
+      "type": "text",
+      "title": "Description du poste"
+    },
+    {
+      "id": "start",
+      "title": "Date de début",
+      "component": "fieldgroup",
+      "fields": [
+        {
+          "id": "start-month",
+          "name": "start-month",
+          "component": "select",
+          "options": [
+            { "value": null, "text": "Mois" },
+            { "value": 1, "text": "Janvier" },
+            { "value": 2, "text": "Fevrier" },
+            { "value": 3, "text": "Mars" },
+            { "value": 4, "text": "Avril" },
+            { "value": 5, "text": "Mai" },
+            { "value": 6, "text": "Juin" },
+            { "value": 7, "text": "Juillet" },
+            { "value": 8, "text": "Aout" },
+            { "value": 9, "text": "Septembre" },
+            { "value": 10, "text": "Octobre" },
+            { "value": 11, "text": "Novembre" },
+            { "value": 12, "text": "Decembre" }
+          ]
+        },
+        {
+          "id": "start-year",
+          "name": "start-year",
+          "component": "select",
+          "generate": {
+            "placeholder": "Année",
+            "type": "inc",
+            "min": 1960,
+            "max": 2000
+          }
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "title": "Date de fin",
+      "component": "fieldgroup",
+      "fields": [
+        {
+          "id": "end-month",
+          "name": "end-month",
+          "component": "select",
+          "placeholder": "Mois",
+          "options": [
+            { "value": null, "text": "Mois" },
+            { "value": 1, "text": "Janvier" },
+            { "value": 2, "text": "Fevrier" },
+            { "value": 3, "text": "Mars" },
+            { "value": 4, "text": "Avril" },
+            { "value": 5, "text": "Mai" },
+            { "value": 6, "text": "Juin" },
+            { "value": 7, "text": "Juillet" },
+            { "value": 8, "text": "Aout" },
+            { "value": 9, "text": "Septembre" },
+            { "value": 10, "text": "Octobre" },
+            { "value": 11, "text": "Novembre" },
+            { "value": 12, "text": "Decembre" }
+          ]
+        },
+        {
+          "id": "end-year",
+          "name": "end-year",
+          "component": "select",
+          "generate": {
+            "placeholder": "Année",
+            "type": "inc",
+            "min": 1960,
+            "max": 2020
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "field": "title",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "title",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 40
+        }
+      ],
+      "validWhen": true,
+      "message": "40 caractères maximum"
+    },
+    {
+      "field": "description",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "description",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 100
+        }
+      ],
+      "validWhen": true,
+      "message": "100 caractères maximum"
+    },
+    {
+      "field": "end-month",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "end-year",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    }
+  ]
+}

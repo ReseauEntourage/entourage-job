@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
-export default class Input extends Component {
+export default class Select extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,8 +14,6 @@ export default class Input extends Component {
     return {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      placeholder: PropTypes.string,
       onChange: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
@@ -23,14 +21,14 @@ export default class Input extends Component {
         message: PropTypes.boolean,
       }),
       value: PropTypes.string,
+      options: PropTypes.arrayOf(PropTypes.string).isRequired,
     };
   }
 
   static get defaultProps() {
     return {
-      placeholder: 'Tapez votre texte',
       valid: undefined,
-      value: '',
+      value: undefined,
     };
   }
 
@@ -54,6 +52,7 @@ export default class Input extends Component {
 
   setLabelClass(value) {
     this.setState({
+      // labelClass: ' stay-small',
       labelClass: value.length > 0 ? ' stay-small' : '',
     });
   }
@@ -66,25 +65,39 @@ export default class Input extends Component {
   }
 
   render() {
-    const { id, name, placeholder, title, type, valid, value } = this.props;
+    const { id, name, title, valid, options, value } = this.props;
     const { labelClass } = this.state;
 
-    const addClasses = this.getValidClass();
-
     return (
-      <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
-        <label className={`uk-form-label ${labelClass}`} htmlFor={id}>
-          {title}
-        </label>
-        <input
+      <div
+        className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right"
+        style={{ paddingBottom: '2px' }}
+      >
+        {title ? (
+          <label
+            className={`uk-form-label ${labelClass}`}
+            htmlFor={id}
+            // style={{ top: '6px' }}
+          >
+            {title}
+          </label>
+        ) : null}
+        <select
+          className="uk-select"
+          onChange={(event) => this.handleChange(event)}
           name={name}
-          type={type}
           id={id}
           defaultValue={value}
-          placeholder={placeholder || 'Tapez votre texte'}
-          onChange={(event) => this.handleChange(event)}
-          className={`uk-input uk-form-large ${addClasses}`}
-        />
+          style={{
+            backgroundColor: 'transparent',
+            paddingLeft: 0,
+            border: 'initial',
+          }}
+        >
+          {options.map(({ value, text }) => (
+            <option value={value}>{text}</option>
+          ))}
+        </select>
         <FormValidatorErrorMessage validObj={valid} />
       </div>
     );

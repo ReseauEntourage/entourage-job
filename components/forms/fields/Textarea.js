@@ -3,11 +3,17 @@ import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
 export default class Textarea extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      labelClass: '',
+    };
+  }
+
   static get propTypes() {
     return {
-      id: PropTypes.string.isRequired,
+      id: PropTypes.string,
       name: PropTypes.string.isRequired,
-      rows: PropTypes.number,
       placeholder: PropTypes.string,
       onChange: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
@@ -17,16 +23,33 @@ export default class Textarea extends Component {
       }),
       rows: PropTypes.number,
       maxLength: PropTypes.number,
+      value: PropTypes.string,
     };
   }
 
   static get defaultProps() {
     return {
+      id: undefined,
       placeholder: 'Tapez votre texte',
       rows: 5,
       valid: undefined,
       maxLength: 1000,
+      value: '',
     };
+  }
+
+  componentDidMount() {
+    const { name, value, onChange } = this.props;
+    if (value) {
+      this.setLabelClass(value);
+      onChange({ target: { name, value, type: 'textarea' } });
+    }
+  }
+
+  setLabelClass(value) {
+    this.setState({
+      labelClass: value.length > 0 ? ' stay-small' : '',
+    });
   }
 
   getValidClass() {
@@ -62,24 +85,27 @@ export default class Textarea extends Component {
       rows,
       onChange,
       maxLength,
+      value,
     } = this.props;
+    const { labelClass } = this.state;
 
     const addClasses = this.getValidClass();
     return (
       <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
-        <label
-          className={`uk-form-label ${!this.inputIsEmpty() && 'stay-small'}`}
-          htmlFor={id}
-        >
+        <label className={`uk-form-label ${labelClass}`} htmlFor={id}>
           {title}
         </label>
         <textarea
           id={id}
           name={name}
           rows={rows}
-          placeholder={placeholder}
+          placeholder={placeholder || 'Tapez votre texte'}
           maxLength={maxLength}
-          onChange={onChange}
+          defaultValue={value}
+          onChange={(e) => {
+            this.setLabelClass(e.target.value);
+            onChange(e);
+          }}
           className={`uk-textarea uk-form-large ${addClasses}`}
         />
         <FormValidatorErrorMessage validObj={valid} />

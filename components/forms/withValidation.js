@@ -5,12 +5,7 @@ import FormValidator from './FormValidator';
 // Voici un HOC sur les validation de champs pour les formulaires
 // Cette fonction accepte un composant...
 // prend en parametre un Formulaire, des regle de validation et 2 action (annulation du formulaire, apres envoie du formulaire)
-export default function withValidation(
-  WrappedForm,
-  validatorRules,
-  afterCancel,
-  afterSubmit
-) {
+export default function withValidation(WrappedForm, validatorRules) {
   const validator = new FormValidator(validatorRules);
   // ... et renvoie un autre composant...
   return class extends React.Component {
@@ -31,7 +26,7 @@ export default function withValidation(
       }
 
       /* Validators end */
-      this.setState({ fields });
+      this.setState({ fields, error: '' });
     }
 
     // fonction d'envoie de formulaire
@@ -70,8 +65,6 @@ export default function withValidation(
         <WrappedForm
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
-          afterCancel={afterCancel}
-          afterSubmit={afterSubmit}
           {...other}
         />
       );
