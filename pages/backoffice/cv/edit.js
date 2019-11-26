@@ -77,7 +77,7 @@ export default class CVEdit extends Component {
           {cv.firstName !== '' ? (
             <>
               <CVActions />
-              <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
+              <CVFicheEdition cv={cv} onChange={() => this.setLocalCV} />
             </>
           ) : (
             <div>Une erreur s&apos;est produite</div>

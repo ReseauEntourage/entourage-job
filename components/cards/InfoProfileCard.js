@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils/Icon';
+import ModalEdit from '../modals/ModalEdit';
+import schemaUsefulInformation from '../forms/schema/formEditUsefulInformation';
 
 const InfoProfileCard = ({
-  contract,
+  contracts,
   location,
   availability,
   language,
@@ -11,8 +13,8 @@ const InfoProfileCard = ({
   onChange,
 }) => {
   let formatContract = '';
-  contract.forEach((c, index) => {
-    const separator = index + 1 < contract.length ? ' / ' : '';
+  contracts.forEach((c, index) => {
+    const separator = index + 1 < contracts.length ? ' / ' : '';
     formatContract += `${c}${separator}`;
   });
   let formatLanguage = '';
@@ -34,9 +36,19 @@ const InfoProfileCard = ({
         </h3>
         {onChange && (
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
-            <button type="button" className="uk-button uk-button-text">
-              <IconNoSSR name="pencil" ratio={1.5} />
-            </button>
+            <ModalEdit
+              id="modal-usefulinformation"
+              title="Edition - informations utiles"
+              formSchema={schemaUsefulInformation}
+              defaultValues={[
+                contracts,
+                location,
+                availability,
+                transport,
+                transport,
+              ]}
+              onSubmit={onChange}
+            />
           </h3>
         )}
       </div>
@@ -70,7 +82,7 @@ const InfoProfileCard = ({
   );
 };
 InfoProfileCard.propTypes = {
-  contract: PropTypes.arrayOf(PropTypes.string),
+  contracts: PropTypes.arrayOf(PropTypes.string),
   location: PropTypes.string,
   availability: PropTypes.string,
   language: PropTypes.arrayOf(PropTypes.string),
@@ -79,7 +91,7 @@ InfoProfileCard.propTypes = {
 };
 
 InfoProfileCard.defaultProps = {
-  contract: ['Type de contrat recherché non renseigné'],
+  contracts: ['Type de contrat recherché non renseigné'],
   location: 'Localisation non renseigné',
   availability: 'Disponibilité non renseigné',
   language: ['Langues apprises non renseigné'],

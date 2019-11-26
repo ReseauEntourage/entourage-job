@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils/Icon';
+import ModalEdit from '../modals/ModalEdit';
+import schemaformEditPassions from '../forms/schema/formEditPassions';
 
 const PassionsCard = ({ list, onChange }) => {
   return (
@@ -16,9 +18,13 @@ const PassionsCard = ({ list, onChange }) => {
         </h3>
         {onChange && (
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand uk-margin-remove">
-            <button type="button" className="uk-button uk-button-text">
-              <IconNoSSR name="pencil" ratio={1.5} />
-            </button>
+            <ModalEdit
+              id="modal-passions"
+              title="Edition - mes passions (6 maximum)"
+              formSchema={schemaformEditPassions}
+              defaultValues={list}
+              onSubmit={onChange}
+            />
           </h3>
         )}
       </div>

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils';
+import ModalEdit from '../modals/ModalEdit';
+import schemaformEditExperience from '../forms/schema/formEditExperience';
 
 const ExperiencesProfileCard = ({ experiences, onChange }) => {
   return (
@@ -11,9 +13,17 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
         </h3>
         {onChange && (
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
-            <button type="button" className="uk-button uk-button-text">
-              <IconNoSSR name="pencil" ratio={1.5} />
-            </button>
+            <ModalEdit
+              id="modal-experience"
+              title="Edition - mon expérience"
+              formSchema={schemaformEditExperience}
+              defaultValues={[
+                'La dégustation de chocolat',
+                'Le sport',
+                [2, 1999],
+              ]}
+              onSubmit={onChange}
+            />
           </h3>
         )}
       </div>

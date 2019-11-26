@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils/Icon';
+import ModalEdit from '../modals/ModalEdit';
+import schemaformEditSkills from '../forms/schema/formEditSkills';
 
 const SkillCard = ({ list, onChange }) => {
   return (
@@ -16,9 +18,13 @@ const SkillCard = ({ list, onChange }) => {
         </h3>
         {onChange && (
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand uk-margin-remove">
-            <button type="button" className="uk-button uk-button-text">
-              <IconNoSSR name="pencil" ratio={1.5} />
-            </button>
+            <ModalEdit
+              id="modal-skills"
+              title="Edition - mes atouts (6 maximum)"
+              formSchema={schemaformEditSkills}
+              defaultValues={list}
+              onSubmit={onChange}
+            />
           </h3>
         )}
       </div>

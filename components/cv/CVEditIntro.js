@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconNoSSR } from '../utils';
+import ModalEdit from '../modals/ModalEdit';
+import schemaCatchphrase from '../forms/schema/formEditCatchphrase';
 
 const CVEditIntro = ({ intro, onChange }) => {
   return (
@@ -15,9 +16,13 @@ const CVEditIntro = ({ intro, onChange }) => {
         </h3>
         {onChange && (
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
-            <button type="button" className="uk-button uk-button-text">
-              <IconNoSSR name="pencil" ratio={1.5} />
-            </button>
+            <ModalEdit
+              id="modal-catchphrase"
+              title="Edition - ma phrase d'accroche"
+              formSchema={schemaCatchphrase}
+              defaultValues={[intro]}
+              onSubmit={onChange}
+            />
           </h3>
         )}
       </div>

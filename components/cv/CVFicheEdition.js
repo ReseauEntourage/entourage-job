@@ -81,7 +81,7 @@ const CVFicheEdition = ({ cv, onChange }) => {
             childWidths={['1-1']}
             items={[
               <StoryProfileCard description={cv.story} onChange={onChange} />,
-              <CVEditReviews onChange={onChange} />,
+              <CVEditReviews reviews={[]} onChange={onChange} />,
             ]}
           />,
           <ExperiencesProfileCard
@@ -100,7 +100,7 @@ CVFicheEdition.propTypes = {
 };
 
 CVFicheEdition.defaultProps = {
-  onChange: 'test',
+  onChange: console.log('Aucune fonction de modification associé'),
 };
 
 export default CVFicheEdition;

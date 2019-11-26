@@ -3,8 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ReviewCard } from '../cards';
 import { Button } from '../utils';
+import ModalEdit from '../modals/ModalEdit';
+import schemaTestimonial from '../forms/schema/formEditTestimonial';
 
-const CVEditReviews = ({ reviews }) => {
+const CVEditReviews = ({ reviews, onChange }) => {
   return (
     <>
       {reviews.length === 0 &&
@@ -18,15 +20,23 @@ const CVEditReviews = ({ reviews }) => {
           />
         ))}
       {reviews.length < 3 && (
-        <Button style="primary">Ajouter une recommandation</Button>
+        <ModalEdit
+          id="modal-testimonial"
+          button="Ajouter une recommandation"
+          title="Edition - recommandation"
+          formSchema={schemaTestimonial}
+          onSubmit={onChange}
+        />
       )}
     </>
   );
 };
 CVEditReviews.propTypes = {
   reviews: PropTypes.arrayOf(PropTypes.shape()),
+  onChange: PropTypes.func,
 };
 CVEditReviews.defaultProps = {
   reviews: [],
+  onChange: null,
 };
 export default CVEditReviews;

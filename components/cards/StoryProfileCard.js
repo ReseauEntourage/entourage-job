@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils';
+import ModalEdit from '../modals/ModalEdit';
+import schemaStory from '../forms/schema/formEditStory';
 
 const StoryProfileCard = ({ description, onChange }) => {
   return (
@@ -11,9 +13,13 @@ const StoryProfileCard = ({ description, onChange }) => {
         </h3>
         {onChange && (
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
-            <button type="button" className="uk-button uk-button-text">
-              <IconNoSSR name="pencil" ratio={1.5} />
-            </button>
+            <ModalEdit
+              id="modal-story"
+              title="Edition - mon histoire"
+              formSchema={schemaStory}
+              defaultValues={[description]}
+              onSubmit={onChange}
+            />
           </h3>
         )}
       </div>
