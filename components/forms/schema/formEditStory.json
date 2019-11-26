@@ -1,0 +1,37 @@
+{
+  "id": "form-story",
+  "fields": [
+    {
+      "name": "text",
+      "component": "textarea",
+      "type": "text",
+      "placeholder": "Tapez votre texte",
+      "title": "Ce que vous pouvez apporter*",
+      "rows": 7
+    }
+  ],
+  "rules": [
+    {
+      "field": "text",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "text",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 4000
+        }
+      ],
+      "validWhen": true,
+      "message": "4000 caractères maximum"
+    }
+  ]
+}
