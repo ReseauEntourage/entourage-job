@@ -118,7 +118,14 @@ export default class Select extends Component {
           }}
         >
           {options.map(({ value, text }) => (
-            <option value={value}>{text}</option>
+            <option
+              value={value}
+              disabled={value === null}
+              selected={value === null}
+              hidden={value === null}
+            >
+              {text}
+            </option>
           ))}
         </select>
         <FormValidatorErrorMessage validObj={valid} />
