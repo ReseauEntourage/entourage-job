@@ -56,7 +56,13 @@ export default () => (
       id="modal-experience"
       title="Edition - mon expérience"
       formSchema={schemaformEditExperience}
-      defaultValues={['La dégustation de chocolat', 'Le sport', [2, 1999]]}
+      defaultValues={[
+        undefined,
+        'La dégustation de chocolat',
+        'Le sport',
+        undefined,
+        [2, 1999],
+      ]}
       onSubmit={console.log}
     />
   </Section>
