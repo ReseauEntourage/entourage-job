@@ -2,22 +2,34 @@
   "id": "form-experience",
   "fields": [
     {
+      "id": "type",
+      "title": "Type d'expérience*",
+      "name": "type",
+      "component": "select",
+      "options": [
+        { "value": null, "text": "Choisissez un type" },
+        { "value": 0, "text": "Expérience" },
+        { "value": 1, "text": "Diplôme" },
+        { "value": 2, "text": "Formation" }
+      ]
+    },
+    {
       "id": "title",
       "name": "title",
       "component": "input",
       "type": "text",
-      "title": "Intitulé du poste"
+      "title": "Intitulé*"
     },
     {
       "id": "description",
       "name": "description",
       "component": "textarea",
       "type": "text",
-      "title": "Description du poste"
+      "title": "Description"
     },
     {
       "id": "start",
-      "title": "Date de début",
+      "title": "Date de début*",
       "component": "fieldgroup",
       "fields": [
         {
@@ -95,6 +107,17 @@
   ],
   "rules": [
     {
+      "field": "type",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
       "field": "title",
       "method": "isEmpty",
       "args": [
@@ -118,17 +141,6 @@
     },
     {
       "field": "description",
-      "method": "isEmpty",
-      "args": [
-        {
-          "ignore_whitespace": true
-        }
-      ],
-      "validWhen": false,
-      "message": "Obligatoire"
-    },
-    {
-      "field": "description",
       "method": "isLength",
       "args": [
         {
@@ -139,7 +151,7 @@
       "message": "100 caractères maximum"
     },
     {
-      "field": "end-month",
+      "field": "start-month",
       "method": "isEmpty",
       "args": [
         {
@@ -150,7 +162,7 @@
       "message": "Obligatoire"
     },
     {
-      "field": "end-year",
+      "field": "start-year",
       "method": "isEmpty",
       "args": [
         {

@@ -67,8 +67,8 @@ const ModalEdit = ({
             <FormWithValidation
               formData={schema}
               onCancel={closeModal}
-              onSubmit={(fields) => {
-                onSubmit(fields);
+              onSubmit={(fields, setError) => {
+                onSubmit(fields, setError);
                 closeModal();
               }}
             />
@@ -81,7 +81,7 @@ const ModalEdit = ({
 ModalEdit.propTypes = {
   id: PropTypes.string.isRequired,
   button: PropTypes.string,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.element.isRequired,
   formSchema: PropTypes.shape({
     id: PropTypes.string,
     fields: PropTypes.object,
