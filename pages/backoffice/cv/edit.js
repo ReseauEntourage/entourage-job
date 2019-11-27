@@ -23,7 +23,7 @@ export default class CVEdit extends Component {
       cv: this.props,
     };
 
-    // this.setLocalCV = this.setLocalCV.bind(this);
+    this.setLocalCV = this.setLocalCV.bind(this);
   }
 
   static get defaultProps() {
@@ -41,18 +41,6 @@ export default class CVEdit extends Component {
     };
   }
 
-  /* static async getInitialProps({ query }) {
-    console.log(query);
-    return Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`)
-      .then((res) => {
-        return { cv: res.data };
-      })
-      .catch((error) => {
-        console.log(error);
-        return { cv: DEFAULT_CV };
-      });
-  } */
-
   componentDidMount() {
     Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`)
       .then((res) => {
@@ -63,8 +51,12 @@ export default class CVEdit extends Component {
       });
   }
 
-  static setLocalCV(field) {
+  setLocalCV(field) {
+    const { cv } = this.state;
     console.log(`Modification de ${field}`);
+    console.log(field);
+    const newCV = { ...cv, ...field };
+    this.setState({ cv: newCV });
   }
 
   render() {
@@ -77,7 +69,7 @@ export default class CVEdit extends Component {
           {cv.firstName !== '' ? (
             <>
               <CVActions />
-              <CVFicheEdition cv={cv} onChange={() => this.setLocalCV} />
+              <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
             </>
           ) : (
             <div>Une erreur s&apos;est produite</div>

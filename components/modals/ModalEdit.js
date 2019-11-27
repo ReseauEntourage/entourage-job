@@ -68,8 +68,8 @@ const ModalEdit = ({
               formData={schema}
               onCancel={closeModal}
               onSubmit={(fields, setError) => {
-                onSubmit(fields, setError);
                 closeModal();
+                onSubmit(fields, setError);
               }}
             />
           </>

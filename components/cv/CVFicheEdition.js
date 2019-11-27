@@ -12,34 +12,45 @@ import {
 } from '../cards';
 import { CVEditIntro, CVEditPicture, CVEditReviews } from '.';
 
+const toUpperFirstLetter = (text) => {
+  if (typeof text !== 'string' || text === '') {
+    return text;
+  }
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+};
+
 const CVFicheEdition = ({ cv, onChange }) => {
   const arrayContracts =
     cv.Contracts &&
     cv.Contracts.map((contract) => {
-      return contract.name;
+      if (contract.name) {
+        return contract.name;
+      }
+      return contract;
     });
   const arrayLanguages =
     cv.Languages &&
     cv.Languages.map((language) => {
-      return (
-        language.name.charAt(0).toUpperCase() +
-        language.name.slice(1).toLowerCase()
-      );
+      if (language.name) {
+        return toUpperFirstLetter(language.name);
+      }
+      return toUpperFirstLetter(language);
     });
   const arraySkills =
     cv.Skills &&
     cv.Skills.map((skill) => {
-      return (
-        skill.name.charAt(0).toUpperCase() + skill.name.slice(1).toLowerCase()
-      );
+      if (skill.name) {
+        return toUpperFirstLetter(skill.name);
+      }
+      return toUpperFirstLetter(skill);
     });
   const arrayPassions =
     cv.Passions &&
     cv.Passions.map((passion) => {
-      return (
-        passion.name.charAt(0).toUpperCase() +
-        passion.name.slice(1).toLowerCase()
-      );
+      if (passion.name) {
+        return toUpperFirstLetter(passion.name);
+      }
+      return toUpperFirstLetter(passion);
     });
 
   return (
@@ -57,10 +68,10 @@ const CVFicheEdition = ({ cv, onChange }) => {
         match
         items={[
           <InfoProfileCard
-            contract={arrayContracts}
+            contracts={arrayContracts}
             location={cv.location}
             availability={cv.availability}
-            language={arrayLanguages}
+            languages={arrayLanguages}
             transport={cv.transport}
             onChange={onChange}
           />,

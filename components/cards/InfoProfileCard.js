@@ -8,7 +8,7 @@ const InfoProfileCard = ({
   contracts,
   location,
   availability,
-  language,
+  languages,
   transport,
   onChange,
 }) => {
@@ -18,8 +18,8 @@ const InfoProfileCard = ({
     formatContract += `${c}${separator}`;
   });
   let formatLanguage = '';
-  language.forEach((l, index) => {
-    const separator = index + 1 < language.length ? ' / ' : '';
+  languages.forEach((l, index) => {
+    const separator = index + 1 < languages.length ? ' / ' : '';
     formatLanguage += `${l}${separator}`;
   });
 
@@ -41,13 +41,19 @@ const InfoProfileCard = ({
               title="Edition - informations utiles"
               formSchema={schemaUsefulInformation}
               defaultValues={[
-                contracts,
+                contracts[0],
                 location,
                 availability,
-                transport,
+                languages[0],
                 transport,
               ]}
-              onSubmit={onChange}
+              onSubmit={(fields) => {
+                const fieldsTransform = fields;
+                console.log(fields);
+                fieldsTransform.Contracts = [fields.Contracts];
+                fieldsTransform.Languages = [fields.Languages];
+                onChange(fieldsTransform);
+              }}
             />
           </h3>
         )}
@@ -61,17 +67,17 @@ const InfoProfileCard = ({
         </li>
         <li>
           <IconNoSSR name="location" />{' '}
-          {location !== '' ? location : 'Localisation non renseigné'}
+          {location !== '' ? location : 'Localisation non renseignée'}
         </li>
         <li>
           <IconNoSSR name="calendar" />{' '}
-          {availability !== '' ? availability : 'Disponibilité non renseigné'}
+          {availability !== '' ? availability : 'Disponibilité non renseignée'}
         </li>
         <li>
           <IconNoSSR name="users" />{' '}
           {formatLanguage !== ''
             ? formatLanguage
-            : 'Langues apprises non renseigné'}
+            : 'Langues apprises non renseignées'}
         </li>
         <li>
           <IconNoSSR name="hashtag" />{' '}
@@ -85,17 +91,17 @@ InfoProfileCard.propTypes = {
   contracts: PropTypes.arrayOf(PropTypes.string),
   location: PropTypes.string,
   availability: PropTypes.string,
-  language: PropTypes.arrayOf(PropTypes.string),
+  languages: PropTypes.arrayOf(PropTypes.string),
   transport: PropTypes.string,
   onChange: PropTypes.func,
 };
 
 InfoProfileCard.defaultProps = {
-  contracts: ['Type de contrat recherché non renseigné'],
-  location: 'Localisation non renseigné',
-  availability: 'Disponibilité non renseigné',
-  language: ['Langues apprises non renseigné'],
-  transport: 'Moyen de transport non renseigné',
+  contracts: [],
+  location: '',
+  availability: '',
+  languages: [],
+  transport: '',
   onChange: null,
 };
 

@@ -2,7 +2,7 @@
   "id": "form-catchphrase",
   "fields": [
     {
-      "name": "text",
+      "name": "intro",
       "component": "textarea",
       "type": "text",
       "title": "Ce que vous pouvez apporter*"
@@ -10,18 +10,7 @@
   ],
   "rules": [
     {
-      "field": "text",
-      "method": "isEmpty",
-      "args": [
-        {
-          "ignore_whitespace": true
-        }
-      ],
-      "validWhen": false,
-      "message": "Obligatoire"
-    },
-    {
-      "field": "text",
+      "field": "intro",
       "method": "isLength",
       "args": [
         {
