@@ -113,9 +113,9 @@ export default class DatePicker extends Component {
                   'mai',
                   'juin',
                   'juillet',
-                ].map((mounth) => (
-                  <option value={mounth}>
-                    {mounth.charAt(0).toUpperCase() + mounth.slice(1)}
+                ].map((month, index) => (
+                  <option key={index} value={month}>
+                    {month.charAt(0).toUpperCase() + month.slice(1)}
                   </option>
                 ))}
               </select>
