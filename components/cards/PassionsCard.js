@@ -20,10 +20,18 @@ const PassionsCard = ({ list, onChange }) => {
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand uk-margin-remove">
             <ModalEdit
               id="modal-passions"
-              title="Edition - mes passions (6 maximum)"
+              title="Édition - Mes passions (6 maximum)"
               formSchema={schemaformEditPassions}
               defaultValues={list}
-              onSubmit={onChange}
+              onSubmit={(fields) => {
+                const fieldsTransform = {
+                  Passions: Object.values(fields).filter((val) => {
+                    return typeof val === 'string' && val !== '';
+                  }),
+                };
+                console.log(fields);
+                onChange(fieldsTransform);
+              }}
             />
           </h3>
         )}

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconNoSSR } from '../utils';
 import ModalEdit from '../modals/ModalEdit';
 import schemaformEditExperience from '../forms/schema/formEditExperience';
 
@@ -15,14 +14,31 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
             <ModalEdit
               id="modal-experience"
-              title="Edition - mon expérience"
+              title="Édition - Mon expérience"
               formSchema={schemaformEditExperience}
               defaultValues={[
-                'La dégustation de chocolat',
-                'Le sport',
+                'Formation',
+                'CACES 3',
+                'test',
                 [2, 1999],
+                [3, 2000],
               ]}
-              onSubmit={onChange}
+              onSubmit={(fields) => {
+                const fieldsTransform = { ...fields };
+                fieldsTransform.dateStart = `${fields['start-month']} / ${
+                  fields['start-year']
+                }`;
+                fieldsTransform.dateEnd = `${fields['end-month']} / ${
+                  fields['end-year']
+                }`;
+                delete fieldsTransform['start-month'];
+                delete fieldsTransform['start-year'];
+                delete fieldsTransform['end-month'];
+                delete fieldsTransform['end-year'];
+                console.log(fields);
+                console.log(fieldsTransform);
+                onChange({ Experiences: [fieldsTransform] });
+              }}
             />
           </h3>
         )}

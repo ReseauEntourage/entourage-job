@@ -11,7 +11,7 @@ import { Button, CloseButtonNoSSR, IconNoSSR } from '../utils';
 // va parcourir les champs et leurs assignant leurs variable par default, ainsi que les groupe de champs de maniere recursive
 // retourne tous les fields avec leurs valeurs par default
 function fieldsWithDefaultValues(defaultValues, fields) {
-  const myFields = fields;
+  const myFields = [...fields];
   defaultValues.forEach((value, i) => {
     if (Array.isArray(value) && fields[i].component === 'fieldgroup') {
       myFields[i].fields = fieldsWithDefaultValues(value, fields[i].fields);
@@ -30,10 +30,19 @@ const ModalEdit = ({
   defaultValues,
   onSubmit,
 }) => {
+  /**
+   * Fix value in formSchema
+   */
+  const fixFormSchema = formSchema;
+  fixFormSchema.fields.map((field) => {
+    const changeField = field;
+    return (changeField.value = '');
+  });
   const schema = {
     ...formSchema,
-    fields: fieldsWithDefaultValues(defaultValues, formSchema.fields),
+    fields: [...fieldsWithDefaultValues(defaultValues, formSchema.fields)],
   };
+
   return (
     <>
       {button === 'pencil' ? (

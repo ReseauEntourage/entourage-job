@@ -15,7 +15,7 @@ const StoryProfileCard = ({ description, onChange }) => {
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
             <ModalEdit
               id="modal-story"
-              title="Edition - mon histoire"
+              title="Édition - Mon histoire"
               formSchema={schemaStory}
               defaultValues={[description]}
               onSubmit={onChange}

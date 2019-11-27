@@ -20,10 +20,18 @@ const SkillCard = ({ list, onChange }) => {
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand uk-margin-remove">
             <ModalEdit
               id="modal-skills"
-              title="Edition - mes atouts (6 maximum)"
+              title="Édition - Mes atouts (6 maximum)"
               formSchema={schemaformEditSkills}
               defaultValues={list}
-              onSubmit={onChange}
+              onSubmit={(fields) => {
+                const fieldsTransform = {
+                  Skills: Object.values(fields).filter((val) => {
+                    return typeof val === 'string' && val !== '';
+                  }),
+                };
+                console.log(fields);
+                onChange(fieldsTransform);
+              }}
             />
           </h3>
         )}

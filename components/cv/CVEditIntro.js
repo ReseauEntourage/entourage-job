@@ -18,7 +18,7 @@ const CVEditIntro = ({ intro, onChange }) => {
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
             <ModalEdit
               id="modal-catchphrase"
-              title="Edition - ma phrase d'accroche"
+              title="Édition - Ma phrase d'accroche"
               formSchema={schemaCatchphrase}
               defaultValues={[intro]}
               onSubmit={onChange}
