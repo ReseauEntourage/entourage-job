@@ -16,9 +16,33 @@ function fieldsWithDefaultValues(defaultValues, fields) {
     if (Array.isArray(value) && fields[i].component === 'fieldgroup') {
       myFields[i].fields = fieldsWithDefaultValues(value, fields[i].fields);
     }
+
     return (myFields[i].value = value);
   });
   return myFields;
+}
+
+function renderButton(buttonType, id) {
+  switch (buttonType) {
+    case 'pencil':
+      return (
+        <Button style="text" toggle={`target: #${id}`}>
+          <IconNoSSR name="pencil" ratio={1.5} />
+        </Button>
+      );
+    case 'plus':
+      return (
+        <Button style="text" toggle={`target: #${id}`}>
+          <IconNoSSR name="plus" ratio={1.5} />
+        </Button>
+      );
+    default:
+      return (
+        <Button style="default" toggle={`target: #${id}`}>
+          {buttonType}
+        </Button>
+      );
+  }
 }
 
 const ModalEdit = ({
@@ -45,16 +69,7 @@ const ModalEdit = ({
 
   return (
     <>
-      {button === 'pencil' ? (
-        <Button style="text" toggle={`target: #${id}`}>
-          <IconNoSSR name="pencil" ratio={1.5} />
-        </Button>
-      ) : (
-        <Button style="default" toggle={`target: #${id}`}>
-          {button}
-        </Button>
-      )}
-
+      {renderButton(button, id)}
       <ModalGeneric id={id}>
         {(closeModal) => (
           <>

@@ -14,6 +14,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
             <ModalEdit
               id="modal-experience"
+              button="plus"
               title="Édition - Mon expérience"
               formSchema={schemaformEditExperience}
               defaultValues={[
@@ -37,7 +38,11 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
                 delete fieldsTransform['end-year'];
                 console.log(fields);
                 console.log(fieldsTransform);
-                onChange({ Experiences: [fieldsTransform] });
+                const experiencesModified = [...experiences];
+                experiencesModified.push(fieldsTransform);
+                onChange({
+                  Experiences: experiencesModified,
+                });
               }}
             />
           </h3>
@@ -46,16 +51,56 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
 
       {experiences.length !== 0 ? (
         <ul className="uk-list ent-list">
-          {experiences.map((item, i) => (
+          {experiences.map((exp, i) => (
             <li id={i} key={i}>
-              <p className="uk-text-muted uk-margin-small">
-                {item.dateStart} - {item.dateEnd}
-              </p>
+              <div className="uk-text-muted uk-margin-small">
+                <span>
+                  {exp.dateStart} - {exp.dateEnd}
+                </span>
+                <span className="uk-align-right uk-text-right">
+                  <ModalEdit
+                    id="modal-experience-edit"
+                    title="Édition - Mon expérience -TAGTEST"
+                    formSchema={schemaformEditExperience}
+                    defaultValues={[
+                      exp.type,
+                      exp.title,
+                      exp.description,
+                      [
+                        exp.dateStart.split('/')[0].trim(),
+                        exp.dateStart.split('/')[1].trim(),
+                      ],
+                      [
+                        exp.dateEnd.split('/')[0].trim(),
+                        exp.dateEnd.split('/')[1].trim(),
+                      ],
+                    ]}
+                    onSubmit={(fields) => {
+                      const fieldsTransform = { ...fields };
+                      fieldsTransform.dateStart = `${fields['start-month']} / ${
+                        fields['start-year']
+                      }`;
+                      fieldsTransform.dateEnd = `${fields['end-month']} / ${
+                        fields['end-year']
+                      }`;
+                      delete fieldsTransform['start-month'];
+                      delete fieldsTransform['start-year'];
+                      delete fieldsTransform['end-month'];
+                      delete fieldsTransform['end-year'];
+                      console.log(fields);
+                      console.log(fieldsTransform);
+                      const experienceModified = [...experiences];
+                      experienceModified[i] = fieldsTransform;
+                      onChange({ Experiences: experienceModified });
+                    }}
+                  />
+                </span>
+              </div>
               <p className="uk-text-bold uk-text-primary uk-margin-small">
-                {item.title}
+                {exp.title}
               </p>
               <p className="uk-margin-small-top uk-margin-medium-bottom">
-                {item.description}
+                {exp.description}
               </p>
             </li>
           ))}
@@ -71,6 +116,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
 ExperiencesProfileCard.propTypes = {
   experiences: PropTypes.arrayOf(
     PropTypes.shape({
+      type: PropTypes.string,
       dateStart: PropTypes.string,
       dateEnd: PropTypes.string,
       title: PropTypes.string,
