@@ -6,6 +6,20 @@ import FooterForm from '../utils/FooterForm';
 import withValidation from './withValidation';
 import FieldFactory from './fields/FieldFactory';
 
+// ajouter les valeurs par default des champs
+// va parcourir les champs et leurs assignant leurs variable par default, ainsi que les groupe de champs de maniere recursive
+// retourne tous les fields avec leurs valeurs par default
+function fieldsWithDefaultValues(defaultValues, fields) {
+  const myFields = fields;
+  defaultValues.forEach((value, i) => {
+    if (Array.isArray(value) && fields[i].component === 'fieldgroup') {
+      myFields[i].fields = fieldsWithDefaultValues(value, fields[i].fields);
+    }
+    return (myFields[i].value = value);
+  });
+  return myFields;
+}
+
 export class Form extends Component {
   static get propTypes() {
     return {
@@ -21,7 +35,7 @@ export class Form extends Component {
       afterSubmit: PropTypes.func,
 
       id: PropTypes.string.isRequired,
-
+      submitText: PropTypes.string,
       fieldsInfo: PropTypes.arrayOf(
         PropTypes.shape({
           name: PropTypes.string,
@@ -34,6 +48,7 @@ export class Form extends Component {
     return {
       afterCancel: undefined,
       afterSubmit: undefined,
+      submitText: undefined,
     };
   }
 
@@ -90,13 +105,14 @@ export class Form extends Component {
 
   render() {
     const { error, onSubmit } = this.state;
-    const { afterCancel, fieldsInfo, id } = this.props;
+    const { submitText, afterCancel, fieldsInfo, id } = this.props;
     return (
       <div className="uk-width-1-1">
         <form
           id={id}
           className="uk-form-stacked uk-grid-small uk-child-width-1-1"
           data-uk-grid
+          onSubmit={onSubmit}
         >
           <fieldset className="uk-fieldset uk-width-1-1">
             {fieldsInfo.map(this.fieldFactory.generate)}
@@ -104,6 +120,7 @@ export class Form extends Component {
           <div>
             <FooterForm
               error={error}
+              submitText={submitText}
               onSubmit={onSubmit}
               onCancel={afterCancel}
             />
@@ -114,18 +131,27 @@ export class Form extends Component {
   }
 }
 
-const FormWithValidation = ({ formData, onCancel, onSubmit }) => {
+const FormWithValidation = ({
+  formData,
+  defaultValues,
+  onCancel,
+  onSubmit,
+  submitText,
+}) => {
   const GeneratedForm = withValidation(Form, formData.rules);
   return (
     <GeneratedForm
       id={formData.id}
       fieldsInfo={formData.fields}
+      defaultValues={defaultValues}
       afterCancel={onCancel}
       afterSubmit={onSubmit}
+      submitText={submitText}
     />
   );
 };
 FormWithValidation.propTypes = {
+  defaultValues: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   formData: PropTypes.shape({
@@ -133,5 +159,10 @@ FormWithValidation.propTypes = {
     fields: PropTypes.object,
     rules: PropTypes.object,
   }).isRequired,
+  submitText: PropTypes.string,
+};
+FormWithValidation.defaultProps = {
+  submitText: undefined,
+  defaultValues: [],
 };
 export default FormWithValidation;
