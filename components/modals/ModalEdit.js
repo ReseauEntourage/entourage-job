@@ -7,20 +7,6 @@ import FormWithValidation from '../forms/FormWithValidation';
 
 import { Button, CloseButtonNoSSR } from '../utils';
 
-// ajouter les valeurs par default des champs
-// va parcourir les champs et leurs assignant leurs variable par default, ainsi que les groupe de champs de maniere recursive
-// retourne tous les fields avec leurs valeurs par default
-function fieldsWithDefaultValues(defaultValues, fields) {
-  const myFields = fields;
-  defaultValues.forEach((value, i) => {
-    if (Array.isArray(value) && fields[i].component === 'fieldgroup') {
-      myFields[i].fields = fieldsWithDefaultValues(value, fields[i].fields);
-    }
-    return (myFields[i].value = value);
-  });
-  return myFields;
-}
-
 const ModalEdit = ({
   id,
   title,
@@ -29,10 +15,6 @@ const ModalEdit = ({
   defaultValues,
   onSubmit,
 }) => {
-  const schema = {
-    ...formSchema,
-    fields: fieldsWithDefaultValues(defaultValues, formSchema.fields),
-  };
   return (
     <>
       {/* todo retirer le bouton quand les testes seront terminés */}
@@ -58,7 +40,9 @@ const ModalEdit = ({
             ) : null}
 
             <FormWithValidation
-              formData={schema}
+              submitText="Sauvegarder"
+              formData={formSchema}
+              defaultValues={defaultValues}
               onCancel={closeModal}
               onSubmit={(fields, setError) => {
                 onSubmit(fields, setError);
