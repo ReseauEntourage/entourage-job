@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { UserContext } from '../store/UserProvider';
-import { IconNoSSR } from '../utils';
+import { IconNoSSR, SimpleLink } from '../utils';
 import './Header.less';
 
 const HeaderUserDropdown = () => {
@@ -35,7 +35,7 @@ const HeaderUserDropdown = () => {
             <a href="#">Mon profil</a>
           </li>
           <li>
-            <a href="#">Paramètres</a>
+            <SimpleLink href="/backoffice/parametres">Paramètres</SimpleLink>
           </li>
           <li className="uk-nav-divider" />
           <li>
