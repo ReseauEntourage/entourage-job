@@ -49,7 +49,7 @@ export default class ParamCVVisible extends Component {
     return (
       <Section>
         <p className="uk-inline">
-          Masquer mon profil temporairement
+          Masquer mon CV du site LinkedOut
           <span className="uk-form-controls uk-padding-small">
             <label className="ent-toggle" htmlFor="ent-toggle-visibility">
               <input id="ent-toggle-visibility" type="checkbox" />
