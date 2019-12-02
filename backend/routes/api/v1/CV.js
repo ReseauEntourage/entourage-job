@@ -79,6 +79,31 @@ router.get('/edit', auth.required, (req, res) => {
 });
 
 /**
+ * Route : GET /api/<VERSION>/cv/visibility
+ * Description : Retourne l'état actuel d'affichage du CV sur le site
+ */
+router.get('/visibility', auth.required, (req, res) => {
+  if (!req.payload.id) {
+    console.log(`Profil non connecté, action non autorisé`);
+    res.status(401).send('Profil non connecté, action non autorisé');
+  } else {
+    CVController.getVisibility(req.payload.id)
+      .then((status) => {
+        if (status !== null) {
+          console.log(`Etat actuel à retourner : ${status}`);
+        } else {
+          console.log(`Impossible d'obtenir un état`);
+        }
+        res.status(200).json(status);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(401).send(err);
+      });
+  }
+});
+
+/**
  * Route : GET /api/<VERSION>/cv/<URL>
  * Description : Récupère le CV associé à l'<URL> fournit
  */

@@ -290,6 +290,21 @@ const getRandomShortCVs = (nb) => {
   });
 };
 
+const getVisibility = (userId) => {
+  return new Promise((resolve, reject) => {
+    const infoLog = 'getVisibility -';
+    console.log(
+      `${infoLog} Recherche de l'état visibility du dernier CV publié de l'utilisateur`
+    );
+    CV.findOne({
+      where: { status: 'Draft' },
+      attributes: ['visibility'],
+    })
+      .then((result) => resolve(result))
+      .catch((err) => reject(err));
+  });
+};
+
 const setCV = (id, cv) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'setCV -';
@@ -309,5 +324,6 @@ module.exports = {
   getCVbyUserId,
   getCVs,
   getRandomShortCVs,
+  getVisibility,
   setCV,
 };

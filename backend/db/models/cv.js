@@ -98,6 +98,16 @@ module.exports = (sequelize, DataTypes) => {
         }, */
       },
       status: DataTypes.STRING,
+      visibility: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
+      version: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+        allowNull: false,
+      },
     },
     {}
   );
