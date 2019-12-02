@@ -2,6 +2,7 @@
   "id": "form-catchphrase",
   "fields": [
     {
+      "id": "intro",
       "name": "intro",
       "component": "textarea",
       "type": "text",

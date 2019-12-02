@@ -34,6 +34,7 @@
       "title": "Téléphone"
     },
     {
+      "id": "message",
       "name": "message",
       "component": "textarea",
       "type": "text",
@@ -42,6 +43,7 @@
       "rows": 7
     },
     {
+      "id": "cgu",
       "name": "cgu",
       "component": "cgu"
     }

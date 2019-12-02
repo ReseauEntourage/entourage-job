@@ -63,9 +63,9 @@ const ModalEdit = ({
             formSchema={formSchema}
             defaultValues={defaultValues}
             onCancel={closeModal}
-            onSubmit={(fields, setError) => {
+            onSubmit={(fields) => {
               closeModal();
-              onSubmit(fields, setError);
+              onSubmit(fields);
             }}
           />
         </>

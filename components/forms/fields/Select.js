@@ -3,13 +3,6 @@ import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
 export default class Select extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      labelClass: '',
-    };
-  }
-
   static get propTypes() {
     return {
       id: PropTypes.string.isRequired,
@@ -20,7 +13,7 @@ export default class Select extends Component {
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
       }),
-      value: PropTypes.string,
+      defaultValue: PropTypes.string,
       options: PropTypes.arrayOf(PropTypes.string).isRequired,
     };
   }
@@ -28,16 +21,17 @@ export default class Select extends Component {
   static get defaultProps() {
     return {
       valid: undefined,
-      value: undefined,
+      defaultValue: undefined,
     };
   }
 
   componentDidMount() {
-    const { value, name } = this.props;
-    if (value) {
-      this.setLabelClass(value);
+    const { defaultValue, name } = this.props;
+    if (defaultValue) {
       // trick to verify field before the user update of the field
-      this.handleChange({ target: { name, value, type: 'input' } });
+      this.handleChange({
+        target: { name, value: defaultValue, type: 'input' },
+      });
     }
   }
 
@@ -50,22 +44,13 @@ export default class Select extends Component {
     return '';
   }
 
-  setLabelClass(value) {
-    this.setState({
-      // labelClass: ' stay-small',
-      labelClass: value.length > 0 ? ' stay-small' : '',
-    });
-  }
-
   handleChange(event) {
-    const { value } = event.target;
     const { onChange } = this.props;
     onChange(event);
-    this.setLabelClass(value);
   }
 
   render() {
-    const { id, name, title, valid, options, value } = this.props;
+    const { id, name, title, valid, options, defaultValue } = this.props;
     const transparent = !!title;
     return (
       <div
@@ -110,7 +95,7 @@ export default class Select extends Component {
           onChange={(event) => this.handleChange(event)}
           name={name}
           id={id}
-          defaultValue={value}
+          defaultValue={defaultValue}
           style={{
             backgroundColor: 'transparent',
             paddingLeft: 0,

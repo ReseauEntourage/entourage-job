@@ -16,6 +16,7 @@
       "title": "Status *"
     },
     {
+      "id": "text",
       "name": "text",
       "component": "textarea",
       "type": "text",

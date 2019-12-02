@@ -23,7 +23,7 @@ export default class Textarea extends Component {
       }),
       rows: PropTypes.number,
       maxLength: PropTypes.number,
-      value: PropTypes.string,
+      defaultValue: PropTypes.string,
     };
   }
 
@@ -34,15 +34,15 @@ export default class Textarea extends Component {
       rows: 5,
       valid: undefined,
       maxLength: 1000,
-      value: '',
+      defaultValue: '',
     };
   }
 
   componentDidMount() {
-    const { name, value, onChange } = this.props;
-    if (value) {
-      this.setLabelClass(value);
-      onChange({ target: { name, value, type: 'textarea' } });
+    const { name, defaultValue, onChange } = this.props;
+    if (defaultValue) {
+      this.setLabelClass(defaultValue);
+      onChange({ target: { name, value: defaultValue, type: 'textarea' } });
     }
   }
 
@@ -85,7 +85,7 @@ export default class Textarea extends Component {
       rows,
       onChange,
       maxLength,
-      value,
+      defaultValue,
     } = this.props;
     const { labelClass } = this.state;
 
@@ -101,7 +101,7 @@ export default class Textarea extends Component {
           rows={rows}
           placeholder={placeholder || 'Tapez votre texte'}
           maxLength={maxLength}
-          defaultValue={value}
+          defaultValue={defaultValue}
           onChange={(e) => {
             this.setLabelClass(e.target.value);
             onChange(e);

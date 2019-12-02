@@ -6,20 +6,6 @@ import FooterForm from '../utils/FooterForm';
 import withValidation from './withValidation';
 import FieldFactory from './fields/FieldFactory';
 
-// ajouter les valeurs par default des champs
-// va parcourir les champs et leurs assignant leurs variable par default, ainsi que les groupe de champs de maniere recursive
-// retourne tous les fields avec leurs valeurs par default
-function fieldsWithDefaultValues(defaultValues, fields) {
-  const myFields = [...fields];
-  defaultValues.forEach((value, i) => {
-    if (Array.isArray(value) && fields[i].component === 'fieldgroup') {
-      myFields[i].fields = fieldsWithDefaultValues(value, fields[i].fields);
-    }
-
-    return (myFields[i].value = value);
-  });
-  return myFields;
-}
 export class Form extends Component {
   static get propTypes() {
     return {
@@ -58,19 +44,24 @@ export class Form extends Component {
   static initializeForm(fieldsInfo) {
     // todo revoir la structure du state
     // on extrait les nom des champs
-    const fieldsName = fieldsInfo.map((field) => field.name);
+    const fieldsId = fieldsInfo.map((field) => field.id);
+
+    const values = fieldsId.reduce((acc, id) => {
+      acc[id] = '';
+      return acc;
+    }, {});
+
+    const validation = fieldsId.reduce((acc, id) => {
+      acc[`valid_${id}`] = undefined;
+      return acc;
+    }, {});
+
     return {
-      error: '',
-      fields: {
-        values: fieldsName.reduce((acc, item) => {
-          acc[item] = '';
-          return acc;
-        }, {}),
-        ...fieldsName.reduce((acc, item) => {
-          acc[`valid_${item}`] = undefined;
-          return acc;
-        }, {}),
-      },
+      setValid: (key, value) => (validation[`valid_${key}`] = value),
+      getValid: (key) => validation[`valid_${key}`],
+      setValue: (key, value) => (values[key] = value),
+      getValue: (key) => values[key],
+      getValues: () => values,
     };
   }
 
@@ -79,12 +70,13 @@ export class Form extends Component {
     this.state = this.createState(props);
 
     const { id, defaultValues } = this.props;
-    const { handleChange, fields } = this.state;
+    const { handleChange, fields, getValid } = this.state;
     this.fieldFactory = new FieldFactory(
       id,
       fields,
       defaultValues,
-      handleChange
+      handleChange,
+      getValid
     );
   }
 
@@ -93,7 +85,7 @@ export class Form extends Component {
     const { handleSubmit } = this.state;
 
     handleSubmit()
-      .then(({ fields }) => {
+      .then((fields) => {
         const { afterSubmit, fieldsInfo } = this.props;
         this.setState(this.constructor.initializeForm(fieldsInfo));
         afterSubmit(fields, (error) => this.setState({ error }));
@@ -104,6 +96,7 @@ export class Form extends Component {
   createState({ handleChange, handleSubmit, fieldsInfo }) {
     // todo revoir la structure du state
     return {
+      error: '',
       handleChange: handleChange.bind(this),
       handleSubmit: handleSubmit.bind(this),
       onSubmit: this.onSubmit.bind(this),
