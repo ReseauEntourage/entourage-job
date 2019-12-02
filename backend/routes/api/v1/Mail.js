@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const mailController = require('../controllers/mail');
+const mailController = require('../../../controllers/mail');
 
 // sent a common mail
 // must be authentified

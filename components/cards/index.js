@@ -10,6 +10,3 @@ export { default as InfoProfileCard } from './InfoProfileCard';
 export { default as StoryProfileCard } from './StoryProfileCard';
 export { default as ExperiencesProfileCard } from './ExperiencesProfileCard';
 export { default as CommentProfileCard } from './CommentProfileCard';
-export { default as CVPresentationCard } from '../cv/CVPresentationCard';
-export { default as CVBackground } from '../cv/CVBackground';
-export { default as CVFiche } from '../cv/CVFiche';

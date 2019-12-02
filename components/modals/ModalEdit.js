@@ -5,58 +5,77 @@ import ModalGeneric from './ModalGeneric';
 import HeaderModal from './HeaderModal';
 import FormWithValidation from '../forms/FormWithValidation';
 
-import { Button, CloseButtonNoSSR } from '../utils';
+import { Button, CloseButtonNoSSR, IconNoSSR } from '../utils';
 
+function renderButton(buttonType, id) {
+  switch (buttonType) {
+    case 'pencil':
+      return (
+        <Button style="text" toggle={`target: #${id}`}>
+          <IconNoSSR name="pencil" ratio={1.5} />
+        </Button>
+      );
+    case 'plus':
+      return (
+        <Button style="text" toggle={`target: #${id}`}>
+          <IconNoSSR name="plus" ratio={1.5} />
+        </Button>
+      );
+    default:
+      return (
+        <Button style="default" toggle={`target: #${id}`}>
+          {buttonType}
+        </Button>
+      );
+  }
+}
 const ModalEdit = ({
   id,
+  button,
   title,
   description,
   formSchema,
   defaultValues,
   onSubmit,
-}) => {
-  return (
-    <>
-      {/* todo retirer le bouton quand les testes seront terminés */}
-      <Button style="default" toggle={`target: #${id}`}>
-        {id}
-      </Button>
-      <ModalGeneric id={id}>
-        {(closeModal) => (
-          <>
-            <CloseButtonNoSSR className="uk-modal-close-default" />
-            <HeaderModal>{title}</HeaderModal>
-            {description ? (
-              <p
-                className="uk-text-lead"
-                style={{
-                  lineHeight: '1.2',
-                  fontSize: '1.2rem',
-                  fontWeight: '500',
-                }}
-              >
-                {description}
-              </p>
-            ) : null}
-
-            <FormWithValidation
-              submitText="Sauvegarder"
-              formData={formSchema}
-              defaultValues={defaultValues}
-              onCancel={closeModal}
-              onSubmit={(fields, setError) => {
-                onSubmit(fields, setError);
-                closeModal();
+}) => (
+  <>
+    {renderButton(button, id)}
+    <ModalGeneric id={id}>
+      {(closeModal) => (
+        <>
+          <CloseButtonNoSSR className="uk-modal-close-default" />
+          <HeaderModal>{title}</HeaderModal>
+          {description ? (
+            <p
+              className="uk-text-lead"
+              style={{
+                lineHeight: '1.2',
+                fontSize: '1.2rem',
+                fontWeight: '500',
               }}
-            />
-          </>
-        )}
-      </ModalGeneric>
-    </>
-  );
-};
+            >
+              {description}
+            </p>
+          ) : null}
+
+          <FormWithValidation
+            submitText="Sauvegarder"
+            formSchema={formSchema}
+            defaultValues={defaultValues}
+            onCancel={closeModal}
+            onSubmit={(fields, setError) => {
+              closeModal();
+              onSubmit(fields, setError);
+            }}
+          />
+        </>
+      )}
+    </ModalGeneric>
+  </>
+);
 ModalEdit.propTypes = {
   id: PropTypes.string.isRequired,
+  button: PropTypes.string,
   title: PropTypes.element.isRequired,
   formSchema: PropTypes.shape({
     id: PropTypes.string,
@@ -68,6 +87,7 @@ ModalEdit.propTypes = {
   description: PropTypes.string,
 };
 ModalEdit.defaultProps = {
+  button: 'pencil',
   defaultValues: [],
   description: undefined,
 };

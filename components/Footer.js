@@ -17,7 +17,7 @@ const Footer = () => {
               <SimpleLink href="/contact">Contact</SimpleLink>
             </div>,
             <div className="uk-h4 uk-text-center">
-              <SimpleLink href="https://www.entourage.social">
+              <SimpleLink href="https://www.entourage.social" isExternal>
                 Entourage social
               </SimpleLink>
             </div>,
@@ -30,7 +30,7 @@ const Footer = () => {
           ]}
         />
         <div className="uk-flex-center uk-flex uk-flex-middle uk-margin-top">
-          <SimpleLink href="https://www.entourage.social">
+          <SimpleLink href="https://www.entourage.social" isExternal>
             <ImgNoSSR
               src="/static/img/logo-entourage.svg"
               alt="logo-entourage"
@@ -43,6 +43,7 @@ const Footer = () => {
               className="uk-link-muted uk-padding-small"
               href="https://www.linkedin.com/company/association-entourage/"
               target="_blank"
+              isExternal
             >
               <IconNoSSR name="linkedin" ratio={2} />
             </SimpleLink>
@@ -50,6 +51,7 @@ const Footer = () => {
               className="uk-link-muted uk-padding-small"
               href="https://www.facebook.com/EntourageReseauCivique/"
               target="_blank"
+              isExternal
             >
               <IconNoSSR name="facebook" ratio={2} />
             </SimpleLink>
@@ -57,6 +59,7 @@ const Footer = () => {
               className="uk-link-muted uk-padding-small"
               href="https://twitter.com/r_entourage/"
               target="_blank"
+              isExternal
             >
               <IconNoSSR name="twitter" ratio={2} />
             </SimpleLink>

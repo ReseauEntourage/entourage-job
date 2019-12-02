@@ -10,11 +10,12 @@ import Textarea from './Textarea';
 import CheckboxCGU from './CheckboxCGU';
 
 export default class FieldFactory {
-  constructor(id, fields, handleChange) {
+  constructor(id, fields, defaultProps, handleChange) {
     this.generate = this.generate.bind(this);
     this.id = id;
     this.fields = fields;
     this.handleChange = handleChange;
+    this.defaultProps = defaultProps;
   }
 
   generate(data) {
@@ -35,7 +36,7 @@ export default class FieldFactory {
           placeholder={data.placeholder}
           name={data.name}
           title={data.title}
-          value={data.value}
+          value={this.defaultProps[data.id]}
           type={data.type}
           valid={this.fields[`valid_${data.name}`]}
           onChange={this.handleChange}
@@ -49,7 +50,7 @@ export default class FieldFactory {
           placeholder={data.placeholder}
           name={data.name}
           title={data.title}
-          value={data.value}
+          value={this.defaultProps[data.id]}
           valid={this.fields[`valid_${data.name}`]}
           onChange={this.handleChange}
           pattern={data.pattern}
@@ -77,7 +78,7 @@ export default class FieldFactory {
           placeholder={data.placeholder}
           name={data.name}
           title={data.title}
-          value={data.value}
+          value={this.defaultProps[data.id]}
           options={options}
           valid={this.fields[`valid_${data.name}`]}
           onChange={this.handleChange}
@@ -92,7 +93,7 @@ export default class FieldFactory {
           row={data.row}
           title={data.title}
           type={data.type}
-          value={data.value}
+          value={this.defaultProps[data.id]}
           placeholder={data.placeholder}
           valid={this.fields[`valid_${data.name}`]}
           onChange={this.handleChange}

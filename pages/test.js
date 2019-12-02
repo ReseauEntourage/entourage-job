@@ -9,6 +9,15 @@ import schemaformEditPassions from '../components/forms/schema/formEditPassions'
 import schemaformEditExperience from '../components/forms/schema/formEditExperience';
 import ModalEdit from '../components/modals/ModalEdit';
 
+const skills = [
+  'Salto arrière',
+  undefined,
+  undefined,
+  undefined,
+  undefined,
+  undefined,
+  undefined,
+];
 export default () => (
   <Section size="large" style="default">
     <ModalEdit
@@ -31,19 +40,23 @@ export default () => (
       formSchema={schemaUsefulInformation}
       defaultValues={['CDI / CDD', 'Paris, France', '', '', 'Non']}
       onSubmit={console.log}
+      submitText="Sauvegarder"
     />
     <ModalEdit
       id="modal-testimonial"
       title="Edition - recommandation"
       formSchema={schemaTestimonial}
       onSubmit={console.log}
+      submitText="Sauvegarder"
     />
     <ModalEdit
       id="modal-skills"
       title="Edition - mes atouts (6 maximum)"
       formSchema={schemaformEditSkills}
-      defaultValues={['Salto arrière']}
-      onSubmit={console.log}
+      defaultValues={skills}
+      onSubmit={(fields) =>
+        Object.values(fields).forEach((val, i) => (skills[i] = val))
+      }
     />
     <ModalEdit
       id="modal-passions"

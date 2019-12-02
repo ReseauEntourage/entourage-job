@@ -10,16 +10,16 @@ import FieldFactory from './fields/FieldFactory';
 // va parcourir les champs et leurs assignant leurs variable par default, ainsi que les groupe de champs de maniere recursive
 // retourne tous les fields avec leurs valeurs par default
 function fieldsWithDefaultValues(defaultValues, fields) {
-  const myFields = fields;
+  const myFields = [...fields];
   defaultValues.forEach((value, i) => {
     if (Array.isArray(value) && fields[i].component === 'fieldgroup') {
       myFields[i].fields = fieldsWithDefaultValues(value, fields[i].fields);
     }
+
     return (myFields[i].value = value);
   });
   return myFields;
 }
-
 export class Form extends Component {
   static get propTypes() {
     return {
@@ -41,6 +41,8 @@ export class Form extends Component {
           name: PropTypes.string,
         })
       ).isRequired,
+
+      defaultValues: PropTypes.objectOf(PropTypes.string),
     };
   }
 
@@ -49,6 +51,7 @@ export class Form extends Component {
       afterCancel: undefined,
       afterSubmit: undefined,
       submitText: undefined,
+      defaultValues: undefined,
     };
   }
 
@@ -75,9 +78,14 @@ export class Form extends Component {
     super(props);
     this.state = this.createState(props);
 
-    const { id } = this.props;
+    const { id, defaultValues } = this.props;
     const { handleChange, fields } = this.state;
-    this.fieldFactory = new FieldFactory(id, fields, handleChange);
+    this.fieldFactory = new FieldFactory(
+      id,
+      fields,
+      defaultValues,
+      handleChange
+    );
   }
 
   onSubmit(event) {
@@ -132,17 +140,18 @@ export class Form extends Component {
 }
 
 const FormWithValidation = ({
-  formData,
+  formSchema,
   defaultValues,
   onCancel,
   onSubmit,
   submitText,
 }) => {
-  const GeneratedForm = withValidation(Form, formData.rules);
+  console.log(formSchema);
+  const GeneratedForm = withValidation(Form, formSchema.rules);
   return (
     <GeneratedForm
-      id={formData.id}
-      fieldsInfo={formData.fields}
+      id={formSchema.id}
+      fieldsInfo={formSchema.fields}
       defaultValues={defaultValues}
       afterCancel={onCancel}
       afterSubmit={onSubmit}
@@ -154,7 +163,7 @@ FormWithValidation.propTypes = {
   defaultValues: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  formData: PropTypes.shape({
+  formSchema: PropTypes.shape({
     id: PropTypes.string,
     fields: PropTypes.object,
     rules: PropTypes.object,

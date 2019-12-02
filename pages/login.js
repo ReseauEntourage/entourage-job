@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import Router from 'next/router';
 import Layout from '../components/Layout';
 import { Section } from '../components/utils';
 import schema from '../components/forms/schema/formLogin';
@@ -15,13 +14,13 @@ const Login = () => {
           <div className="uk-width-1-2 uk-card uk-card-default uk-card-body">
             <h1>Connexion</h1>
             <FormWithValidation
-              formData={schema}
+              formSchema={schema}
               onSubmit={({ email, password }, setError) => {
                 login(email, password)
-                  .then(() => Router.push('/'))
+                  .then(() => console.log('Connexion réussie'))
                   .catch((error) => {
                     console.error(error);
-                    setError("Une erreur s'est produite");
+                    setError(error);
                   });
               }}
             />
@@ -31,4 +30,5 @@ const Login = () => {
     </Layout>
   );
 };
+
 export default Login;

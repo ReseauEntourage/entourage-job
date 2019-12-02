@@ -4,6 +4,7 @@
 // store/UserProvider.js
 import React, { createContext, Component } from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import Api from '../../Axios';
 
 /**
@@ -32,22 +33,56 @@ export default class UserProvider extends Component {
   // Control if user is connected and always available
   componentDidMount() {
     const accessToken = localStorage.getItem('access-token');
+    console.log(accessToken);
     if (accessToken) {
       console.log('token found');
-      Api.get('/auth/current', {
-        headers: { authorization: `Token ${accessToken}` },
-      })
+      Api.get('/api/v1/auth/current')
         .then((res) => {
           localStorage.setItem('access-token', res.data.user.token);
           this.setState({
             isAuthentificated: true,
             user: res.data.user,
           });
+          // Router.push('/backoffice/cv/edit');
         })
-        .catch(console.log);
+        .catch((err) => {
+          console.log(err);
+          localStorage.removeItem('access-token');
+          Router.push('/login');
+        });
     } else {
       console.log('no token');
     }
+  }
+
+  login(email, password) {
+    return new Promise((resolve, reject) => {
+      console.log('Start login');
+      Api.post('/api/v1/auth/login', {
+        email,
+        password,
+      })
+        .then((res) => {
+          localStorage.setItem('access-token', res.data.user.token);
+          console.log('login success');
+          console.log(res.data.user);
+          this.setState({
+            isAuthentificated: true,
+            user: res.data.user,
+          });
+          Router.push('/backoffice/cv/edit');
+          resolve();
+        })
+        .catch((error) => {
+          const myError = error.response.data.error
+            ? error.response.data.error
+            : "Une erreur s'est produite";
+          this.setState({
+            error: myError,
+          });
+          reject(myError);
+        });
+    });
   }
 
   logout() {
@@ -55,10 +90,9 @@ export default class UserProvider extends Component {
 
     if (user) {
       console.log('logout: start', user);
-      Api.post('/auth/logout', {
-        headers: { authorization: `Token ${user.token}` },
-      })
-        .then((res) => {
+      Api.post('/api/v1/auth/logout')
+        .catch(console.error)
+        .finally((res) => {
           console.log('logout: completed ', res);
           localStorage.removeItem('access-token');
           this.setState({
@@ -66,39 +100,11 @@ export default class UserProvider extends Component {
             user: null,
             error: null,
           });
-        })
-        .catch(console.error);
+          Router.push('/login');
+        });
     } else {
       console.error('logout: no user');
     }
-  }
-
-  login(email, password) {
-    return new Promise((resolve, reject) => {
-      console.log('Start login');
-      Api.post('/auth/login', {
-        email,
-        password,
-      })
-        .then((res) => {
-          localStorage.setItem('access-token', res.data.user.token);
-          this.setState({
-            isAuthentificated: true,
-            user: res.data.data,
-          });
-          resolve();
-        })
-        .catch((error) => {
-          const myError = error.response.data.errors[0]
-            ? error.response.data.errors[0]
-            : error;
-          console.log(error);
-          this.setState({
-            error: myError,
-          });
-          reject(myError);
-        });
-    });
   }
 
   render() {

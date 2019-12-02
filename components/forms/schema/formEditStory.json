@@ -2,28 +2,17 @@
   "id": "form-story",
   "fields": [
     {
-      "name": "text",
+      "name": "story",
       "component": "textarea",
       "type": "text",
       "placeholder": "Tapez votre texte",
-      "title": "Ce que vous pouvez apporter*",
-      "rows": 7
+      "title": "Mon histoire",
+      "rows": 14
     }
   ],
   "rules": [
     {
-      "field": "text",
-      "method": "isEmpty",
-      "args": [
-        {
-          "ignore_whitespace": true
-        }
-      ],
-      "validWhen": false,
-      "message": "Obligatoire"
-    },
-    {
-      "field": "text",
+      "field": "story",
       "method": "isLength",
       "args": [
         {
