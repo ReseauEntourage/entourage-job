@@ -9,25 +9,25 @@ import schemaTestimonial from '../forms/schema/formEditTestimonial';
 const CVEditReviews = ({ reviews, onChange }) => {
   return (
     <>
-      {reviews.length === 0 &&
-        reviews.map((review, i) => (
-          <ReviewCard
-            picture="/static/img/arthur.png"
-            review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
-            author="Hervé"
-            role="Assistant social"
-            key={i}
-          />
-        ))}
-      {reviews.length < 3 && (
-        <ModalEdit
-          id="modal-testimonial"
-          button="Ajouter une recommandation"
-          title="Edition - recommandation"
-          formSchema={schemaTestimonial}
-          onSubmit={onChange}
-        />
-      )}
+      {reviews.length > 0
+        ? reviews.map((review, i) => (
+            <ReviewCard
+              picture="/static/img/arthur.png"
+              review={review.text}
+              author={review.name}
+              role={review.status}
+              key={i}
+            />
+          ))
+        : 'pas de reviews'}
+
+      <ModalEdit
+        id="modal-testimonial"
+        button="Ajouter une recommandation"
+        title="Ajout - recommandation"
+        formSchema={schemaTestimonial}
+        onSubmit={(fields) => onChange({ reviews: [...reviews, fields] })}
+      />
     </>
   );
 };
