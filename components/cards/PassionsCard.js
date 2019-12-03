@@ -22,7 +22,10 @@ const PassionsCard = ({ list, onChange }) => {
               id="modal-passions"
               title="Édition - Mes passions (6 maximum)"
               formSchema={schemaformEditPassions}
-              defaultValues={list}
+              defaultValues={list.reduce((acc, value, i) => {
+                acc[`passion${i + 1}`] = value;
+                return acc;
+              }, {})}
               onSubmit={(fields) => {
                 const fieldsTransform = {
                   Passions: Object.values(fields).filter((val) => {

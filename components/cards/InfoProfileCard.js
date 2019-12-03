@@ -40,13 +40,13 @@ const InfoProfileCard = ({
               id="modal-usefulinformation"
               title="Edition - informations utiles"
               formSchema={schemaUsefulInformation}
-              defaultValues={[
-                contracts[0],
+              defaultValues={{
                 location,
                 availability,
-                languages[0],
                 transport,
-              ]}
+                Contracts: contracts[0],
+                Languages: languages[0],
+              }}
               onSubmit={(fields) => {
                 const fieldsTransform = fields;
                 console.log(fields);

@@ -20,7 +20,7 @@ const CVEditIntro = ({ intro, onChange }) => {
               id="modal-catchphrase"
               title="Édition - Ma phrase d'accroche"
               formSchema={schemaCatchphrase}
-              defaultValues={[intro]}
+              defaultValues={{ intro }}
               onSubmit={onChange}
             />
           </h3>

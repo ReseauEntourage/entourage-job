@@ -20,7 +20,7 @@ export default class CVEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cv: this.props,
+      cv: this.props ? this.props : {},
     };
 
     this.setLocalCV = this.setLocalCV.bind(this);
@@ -51,21 +51,18 @@ export default class CVEdit extends Component {
       });
   }
 
-  setLocalCV(field) {
+  setLocalCV(fields) {
     const { cv } = this.state;
-    console.log(`Modification de ${field}`);
-    console.log(field);
-    const newCV = { ...cv, ...field };
-    this.setState({ cv: newCV });
+    Object.keys(fields).forEach((key) => (cv[key] = fields[key]));
+    this.setState({ cv });
+
+    console.log('update cv', fields);
   }
 
   render() {
-    let { cv } = this.state;
-    const title = `Edition du CV`;
-    console.log(cv);
-    cv = {};
+    const { cv } = this.state;
     return (
-      <LayoutBackOffice title={title}>
+      <LayoutBackOffice title="Edition du CV">
         <div style={{ position: 'relative' }}>
           {cv.firstName !== '' ? (
             <>

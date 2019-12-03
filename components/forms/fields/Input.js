@@ -22,7 +22,7 @@ export default class Input extends Component {
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
       }),
-      defaultValues: PropTypes.string,
+      defaultValue: PropTypes.string,
     };
   }
 
@@ -30,17 +30,17 @@ export default class Input extends Component {
     return {
       placeholder: 'Tapez votre texte',
       valid: undefined,
-      defaultValues: '',
+      defaultValue: '',
     };
   }
 
   componentDidMount() {
-    const { defaultValues, name } = this.props;
-    if (defaultValues) {
-      this.setLabelClass(defaultValues);
+    const { defaultValue, name } = this.props;
+    if (defaultValue) {
+      this.setLabelClass(defaultValue);
       // trick to verify field before the user update of the field
       this.handleChange({
-        target: { name, value: defaultValues, type: 'input' },
+        target: { name, value: defaultValue, type: 'input' },
       });
     }
   }
@@ -75,7 +75,7 @@ export default class Input extends Component {
       title,
       type,
       valid,
-      defaultValues,
+      defaultValue,
     } = this.props;
     const { labelClass } = this.state;
 
@@ -90,7 +90,7 @@ export default class Input extends Component {
           name={name}
           type={type}
           id={id}
-          defaultValue={defaultValues}
+          defaultValue={defaultValue}
           placeholder={placeholder || 'Tapez votre texte'}
           onChange={(event) => this.handleChange(event)}
           className={`uk-input uk-form-large ${addClasses}`}

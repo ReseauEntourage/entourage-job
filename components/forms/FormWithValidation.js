@@ -139,7 +139,6 @@ const FormWithValidation = ({
   onSubmit,
   submitText,
 }) => {
-  console.log(formSchema);
   const GeneratedForm = withValidation(Form, formSchema.rules);
   return (
     <GeneratedForm
