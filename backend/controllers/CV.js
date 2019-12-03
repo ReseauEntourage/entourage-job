@@ -297,8 +297,12 @@ const getVisibility = (userId) => {
       `${infoLog} Recherche de l'état visibility du dernier CV publié de l'utilisateur`
     );
     CV.findOne({
-      where: { status: 'Draft' },
-      attributes: ['visibility'],
+      where: {
+        status: 'Published',
+        userId,
+      },
+      attributes: ['visibility', sequelize.fn('max', sequelize.col('version'))],
+      group: ['visibility'],
     })
       .then((result) => resolve(result))
       .catch((err) => reject(err));

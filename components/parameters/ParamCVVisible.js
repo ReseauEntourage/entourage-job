@@ -5,7 +5,6 @@ import { Section } from '../utils';
 import '../../static/css/Toggle.less';
 
 const DEFAULT_CV = {
-  id: '',
   visibility: false,
 };
 
