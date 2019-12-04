@@ -53,68 +53,70 @@ export default class Select extends Component {
     const { id, name, title, valid, options, defaultValue } = this.props;
     const transparent = !!title;
     return (
-      <div
-        className="uk-form-controls"
-        style={
-          transparent
-            ? {
-                backgroundColor: '#e5e5e5',
-                borderRadius: '7px 7px 0 0',
-                fontSize: '1rem',
-                border: '0px',
-                borderBottom: '2px solid grey',
-                paddingTop: '15px',
-                paddingLeft: '12px',
-                paddingRight: '12px',
-                paddingBottom: '2px',
-              }
-            : {
-                paddingTop: '15px',
-                paddingBottom: '2px',
-              }
-        }
-      >
-        {title ? (
-          <label
-            className="uk-form-label"
-            style={{
-              paddingLeft: '0px',
-              color: '#f66b28',
-              opacity: '.8',
-              fontSize: '0.8rem',
-              transform: 'translateY(-26px)',
-              transition: '0.8s',
-            }}
-            htmlFor={id}
-          >
-            {title}
-          </label>
-        ) : null}
-        <select
-          className="uk-select"
-          onChange={(event) => this.handleChange(event)}
-          name={name}
-          id={id}
-          defaultValue={defaultValue}
-          style={{
-            backgroundColor: 'transparent',
-            paddingLeft: 0,
-            border: 'initial',
-          }}
+      <>
+        <div
+          className="uk-form-controls"
+          style={
+            transparent
+              ? {
+                  backgroundColor: '#e5e5e5',
+                  borderRadius: '7px 7px 0 0',
+                  fontSize: '1rem',
+                  border: '0px',
+                  borderBottom: '2px solid grey',
+                  paddingTop: '15px',
+                  paddingLeft: '12px',
+                  paddingRight: '12px',
+                  paddingBottom: '2px',
+                }
+              : {
+                  paddingTop: '15px',
+                  paddingBottom: '2px',
+                }
+          }
         >
-          {options.map(({ value, text }) => (
-            <option
-              value={value}
-              disabled={value === null}
-              selected={value === null}
-              hidden={value === null}
+          {title ? (
+            <label
+              className="uk-form-label"
+              style={{
+                paddingLeft: '0px',
+                color: '#f66b28',
+                opacity: '.8',
+                fontSize: '0.8rem',
+                transform: 'translateY(-26px)',
+                transition: '0.8s',
+              }}
+              htmlFor={id}
             >
-              {text}
-            </option>
-          ))}
-        </select>
+              {title}
+            </label>
+          ) : null}
+          <select
+            className="uk-select"
+            onChange={(event) => this.handleChange(event)}
+            name={name}
+            id={id}
+            defaultValue={defaultValue}
+            style={{
+              backgroundColor: 'transparent',
+              paddingLeft: 0,
+              border: 'initial',
+            }}
+          >
+            {options.map(({ value, text }) => (
+              <option
+                value={value}
+                disabled={value === null}
+                selected={value === null}
+                hidden={value === null}
+              >
+                {text}
+              </option>
+            ))}
+          </select>
+        </div>
         <FormValidatorErrorMessage validObj={valid} />
-      </div>
+      </>
     );
   }
 }
