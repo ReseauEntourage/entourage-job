@@ -321,6 +321,36 @@ const setCV = (id, cv) => {
   });
 };
 
+const setVisibility = (userId, cv) => {
+  return new Promise((resolve, reject) => {
+    const infoLog = 'setVisibility -';
+    console.log(
+      `${infoLog} Recherche de l'état visibility du dernier CV publié de l'utilisateur`
+    );
+    CV.max('version', {
+      where: {
+        status: 'Published',
+        userId,
+      },
+    })
+      .then((max) => {
+        return CV.update(cv, {
+          where: {
+            status: 'Published',
+            userId,
+            version: max,
+          },
+          fields: ['visibility'],
+          returning: true,
+        });
+      })
+      .then((result) => {
+        resolve({ visibility: result[1][0].visibility });
+      })
+      .catch((err) => reject(err));
+  });
+};
+
 module.exports = {
   createCV,
   deleteCV,
@@ -330,4 +360,5 @@ module.exports = {
   getRandomShortCVs,
   getVisibility,
   setCV,
+  setVisibility,
 };

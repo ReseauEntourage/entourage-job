@@ -1,36 +1,34 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Api from '../../Axios';
-import { Section, CloseButtonNoSSR, GridNoSSR, Button } from '../utils';
+import { CloseButtonNoSSR, GridNoSSR, Button } from '../utils';
 import '../../static/css/Toggle.less';
 import ModalGeneric from '../modals/ModalGeneric';
 import HeaderModal from '../modals/HeaderModal';
-import FooterForm from '../utils/FooterForm';
 
-const DEFAULT_CV = {
-  visibility: false,
-};
+const DEFAULT_CV = null;
 
 export default class ParamCVVisible extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cv: this.props,
+      ...this.props,
     };
   }
 
   static get defaultProps() {
     return {
       cv: DEFAULT_CV,
+      error: '',
     };
   }
 
   static get propTypes() {
     return {
       cv: PropTypes.shape({
-        id: PropTypes.string.isRequired,
         visibility: PropTypes.bool,
       }),
+      error: PropTypes.string,
     };
   }
 
@@ -47,42 +45,61 @@ export default class ParamCVVisible extends Component {
 
   setVisibility(closeModal) {
     const { cv } = this.state;
-    console.log(cv);
     cv.visibility = !cv.visibility;
-    Api.post(`${process.env.SERVER_URL}/api/v1/cv/visibility`, cv)
+    console.log(cv);
+    Api.put(`${process.env.SERVER_URL}/api/v1/cv/visibility`, cv)
       .then((res) => {
         console.log(res);
-        this.setState({ cv: res.data });
-        closeModal();
+        this.setState({ cv: res.data, error: '' });
+        if (closeModal) {
+          closeModal();
+        }
       })
       .catch((error) => {
         console.log(error);
+        this.setState({ error: 'Une erreur est survenue' });
       });
   }
 
   render() {
-    const { cv } = this.state;
+    const { cv, error } = this.state;
+    /**
+     * Ne pas afficher le composant si aucun CV publié existe
+     */
+    if (cv === null) {
+      return null;
+    }
     return (
-      <Section>
-        <p className="uk-inline">
-          Masquer mon CV du site LinkedOut
-          <span className="uk-form-controls uk-padding-small">
+      <div className="uk-padding uk-padding-remove-left">
+        <p className="uk-inline ">
+          Masquer mon CV du site LinkedOut :
+          <span className="uk-form-controls uk-padding">
             <label className="ent-toggle" htmlFor="ent-toggle-visibility">
-              <input
-                id="ent-toggle-visibility"
-                type="checkbox"
-                checked={cv.visibility}
-                data-uk-toggle="target: #modal-confirm-visibility"
-              />
+              {cv.visibility ? (
+                <input
+                  id="ent-toggle-visibility"
+                  type="checkbox"
+                  checked
+                  onChange={() => this.setVisibility()}
+                />
+              ) : (
+                <input
+                  id="ent-toggle-visibility"
+                  type="checkbox"
+                  data-uk-toggle="target:#modal-confirm-visibility"
+                  checked={false}
+                />
+              )}
               <span className="ent-slider round" />
             </label>
           </span>
+          {error && <span className="uk-text-danger">{error}</span>}
         </p>
         <ModalGeneric id="modal-confirm-visibility">
           {(closeModal) => (
             <>
               <CloseButtonNoSSR className="uk-modal-close-default" />
-              <HeaderModal>Changer la visibilité du CV en ligne</HeaderModal>
+              <HeaderModal>Changer la visibilité du CV en ligne ?</HeaderModal>
               <p
                 className="uk-text-lead"
                 style={{
@@ -110,14 +127,14 @@ export default class ParamCVVisible extends Component {
                     style="primary"
                     onClick={() => this.setVisibility(closeModal)}
                   >
-                    Masquer mon CV
+                    Oui, masquer mon CV
                   </Button>,
                 ]}
               />
             </>
           )}
         </ModalGeneric>
-      </Section>
+      </div>
     );
   }
 }
