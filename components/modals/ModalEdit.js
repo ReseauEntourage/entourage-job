@@ -5,40 +5,71 @@ import ModalGeneric from './ModalGeneric';
 import HeaderModal from './HeaderModal';
 import FormWithValidation from '../forms/FormWithValidation';
 
-import { Button, CloseButtonNoSSR } from '../utils';
+import { Button, CloseButtonNoSSR, IconNoSSR } from '../utils';
 
 // ajouter les valeurs par default des champs
 // va parcourir les champs et leurs assignant leurs variable par default, ainsi que les groupe de champs de maniere recursive
 // retourne tous les fields avec leurs valeurs par default
 function fieldsWithDefaultValues(defaultValues, fields) {
-  const myFields = fields;
+  const myFields = [...fields];
   defaultValues.forEach((value, i) => {
     if (Array.isArray(value) && fields[i].component === 'fieldgroup') {
       myFields[i].fields = fieldsWithDefaultValues(value, fields[i].fields);
     }
+
     return (myFields[i].value = value);
   });
   return myFields;
 }
 
+function renderButton(buttonType, id) {
+  switch (buttonType) {
+    case 'pencil':
+      return (
+        <Button style="text" toggle={`target: #${id}`}>
+          <IconNoSSR name="pencil" ratio={1.5} />
+        </Button>
+      );
+    case 'plus':
+      return (
+        <Button style="text" toggle={`target: #${id}`}>
+          <IconNoSSR name="plus" ratio={1.5} />
+        </Button>
+      );
+    default:
+      return (
+        <Button style="default" toggle={`target: #${id}`}>
+          {buttonType}
+        </Button>
+      );
+  }
+}
+
 const ModalEdit = ({
   id,
+  button,
   title,
   description,
   formSchema,
   defaultValues,
   onSubmit,
 }) => {
+  /**
+   * Fix value in formSchema
+   */
+  const fixFormSchema = formSchema;
+  fixFormSchema.fields.map((field) => {
+    const changeField = field;
+    return (changeField.value = '');
+  });
   const schema = {
     ...formSchema,
-    fields: fieldsWithDefaultValues(defaultValues, formSchema.fields),
+    fields: [...fieldsWithDefaultValues(defaultValues, formSchema.fields)],
   };
+
   return (
     <>
-      {/* todo retirer le bouton quand les testes seront terminés */}
-      <Button style="default" toggle={`target: #${id}`}>
-        {id}
-      </Button>
+      {renderButton(button, id)}
       <ModalGeneric id={id}>
         {(closeModal) => (
           <>
@@ -61,8 +92,8 @@ const ModalEdit = ({
               formData={schema}
               onCancel={closeModal}
               onSubmit={(fields, setError) => {
-                onSubmit(fields, setError);
                 closeModal();
+                onSubmit(fields, setError);
               }}
             />
           </>
@@ -73,6 +104,7 @@ const ModalEdit = ({
 };
 ModalEdit.propTypes = {
   id: PropTypes.string.isRequired,
+  button: PropTypes.string,
   title: PropTypes.element.isRequired,
   formSchema: PropTypes.shape({
     id: PropTypes.string,
@@ -84,6 +116,7 @@ ModalEdit.propTypes = {
   description: PropTypes.string,
 };
 ModalEdit.defaultProps = {
+  button: 'pencil',
   defaultValues: [],
   description: undefined,
 };

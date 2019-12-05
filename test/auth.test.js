@@ -83,7 +83,7 @@ describe('Auth', () => {
       });
 
       it("doit connecter l'utilisateur en lui renvoyant un token", () => {
-        return Api.post(`${process.env.SERVER_URL}/auth/login`, {
+        return Api.post(`${process.env.SERVER_URL}/api/v1/auth/login`, {
           email: USER_EXAMPLE.email,
           password: 'azertyuiop',
         })
@@ -96,7 +96,7 @@ describe('Auth', () => {
     }).timeout(TIMEOUT);
 
     it.skip("doit changer le mot de passe de l'utilisateur", () => {
-      return Api.post(`${process.env.SERVER_URL}/auth/changepassword`, {
+      return Api.post(`${process.env.SERVER_URL}/api/v1/auth/changepassword`, {
         email: USER_EXAMPLE.email,
         password: 'azertyuiop',
         newPassword: 'poiuytreza',

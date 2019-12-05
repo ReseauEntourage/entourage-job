@@ -2,8 +2,8 @@
   "id": "form-catchphrase",
   "fields": [
     {
-      "id": "job",
-      "name": "job",
+      "id": "Contracts",
+      "name": "Contracts",
       "component": "input",
       "type": "text",
       "title": "Type de poste recherché"
@@ -23,8 +23,8 @@
       "title": "Disponibilité de travail possibles"
     },
     {
-      "id": "language",
-      "name": "language",
+      "id": "Languages",
+      "name": "Languages",
       "component": "input",
       "type": "text",
       "title": "Langues parlées"
@@ -39,18 +39,7 @@
   ],
   "rules": [
     {
-      "field": "job",
-      "method": "isEmpty",
-      "args": [
-        {
-          "ignore_whitespace": true
-        }
-      ],
-      "validWhen": false,
-      "message": "Obligatoire"
-    },
-    {
-      "field": "job",
+      "field": "Contracts",
       "method": "isLength",
       "args": [
         {
@@ -59,17 +48,6 @@
       ],
       "validWhen": true,
       "message": "40 caractères maximum"
-    },
-    {
-      "field": "location",
-      "method": "isEmpty",
-      "args": [
-        {
-          "ignore_whitespace": true
-        }
-      ],
-      "validWhen": false,
-      "message": "Obligatoire"
     },
     {
       "field": "location",
@@ -84,17 +62,6 @@
     },
     {
       "field": "availability",
-      "method": "isEmpty",
-      "args": [
-        {
-          "ignore_whitespace": true
-        }
-      ],
-      "validWhen": false,
-      "message": "Obligatoire"
-    },
-    {
-      "field": "availability",
       "method": "isLength",
       "args": [
         {
@@ -105,18 +72,7 @@
       "message": "40 caractères maximum"
     },
     {
-      "field": "language",
-      "method": "isEmpty",
-      "args": [
-        {
-          "ignore_whitespace": true
-        }
-      ],
-      "validWhen": false,
-      "message": "Obligatoire"
-    },
-    {
-      "field": "language",
+      "field": "Languages",
       "method": "isLength",
       "args": [
         {
@@ -125,17 +81,6 @@
       ],
       "validWhen": true,
       "message": "100 caractères maximum"
-    },
-    {
-      "field": "transport",
-      "method": "isEmpty",
-      "args": [
-        {
-          "ignore_whitespace": true
-        }
-      ],
-      "validWhen": false,
-      "message": "Obligatoire"
     },
     {
       "field": "transport",

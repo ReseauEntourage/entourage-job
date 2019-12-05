@@ -4,7 +4,7 @@ import { Container } from 'next/app';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Footer from './Footer';
-import Header from './Header';
+import Header from './headers/Header';
 
 const Layout = ({
   children,
@@ -48,6 +48,9 @@ Layout.propTypes = {
   metaDescription: PropTypes.string,
   metaUrl: PropTypes.string,
   metaType: PropTypes.string,
+  router: PropTypes.shape({
+    asPath: PropTypes.string,
+  }).isRequired,
 };
 Layout.defaultProps = {
   title: 'Entourage Jobs',
