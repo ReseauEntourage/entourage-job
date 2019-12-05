@@ -19,7 +19,7 @@ describe('Mail', () => {
   });
 
   it('doit effectuer l\'envoie de mail "contactez nous"', () => {
-    return Api.post(`${process.env.SERVER_URL}/mail/contact-us`, {
+    return Api.post(`${process.env.SERVER_URL}/api/v1/mail/contact-us`, {
       email: 'myemail@myemail.email',
       text: 'mon text de blablabla test',
     })
