@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
     .then((cv) => {
       cvCreated = cv;
       // creation de l'image de preview cv
-      console.log(req.body);
+      // console.log(req.body);
       generateCVPreview(
         cvCreated.firstName.toUpperCase(),
         "A besoin d'un coup de pouce pour travailler dans...",
@@ -79,15 +79,69 @@ router.get('/edit', auth.required, (req, res) => {
 });
 
 /**
+ * Route : GET /api/<VERSION>/cv/visibility
+ * Description : Retourne l'état actuel d'affichage du CV sur le site
+ */
+router.get('/visibility', auth.required, (req, res) => {
+  if (!req.payload.id) {
+    console.log(`Profil non connecté, action non autorisé`);
+    res.status(401).send('Profil non connecté, action non autorisé');
+  } else {
+    CVController.getVisibility(req.payload.id)
+      .then((status) => {
+        if (status !== null) {
+          console.log(`Etat actuel à retourner : ${status}`);
+        } else {
+          console.log(`Impossible d'obtenir un état`);
+        }
+        res.status(200).json(status);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(401).send(err);
+      });
+  }
+});
+
+/**
+ * Route : PUT /api/<VERSION>/cv/visibility
+ * Description : Modifie la visibilité du CV publié sur le site
+ */
+router.put('/visibility', auth.required, (req, res) => {
+  if (!req.payload.id) {
+    console.log(`Profil non connecté, action non autorisé`);
+    res.status(401).send('Profil non connecté, action non autorisé');
+  } else {
+    CVController.setVisibility(req.payload.id, req.body)
+      .then((status) => {
+        if (status !== null) {
+          console.log(`Etat modifié à retourner : ${status}`);
+        } else {
+          console.log(`Impossible d'obtenir un état`);
+        }
+        res.status(200).json(status);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(401).send(err);
+      });
+  }
+});
+
+/**
  * Route : GET /api/<VERSION>/cv/<URL>
  * Description : Récupère le CV associé à l'<URL> fournit
  */
 router.get('/:url', (req, res) => {
-  CVController.getCV(req.params.url)
+  CVController.getCVbyUrl(req.params.url)
     .then((cv) => {
-      console.log(`CV trouvé`);
-      // res.status(200).send(JSON.stringify(cv, null, 4));
-      res.status(200).json(cv);
+      if (cv) {
+        console.log(`CV trouvé`);
+        res.status(200).json(cv);
+      } else {
+        console.log(`Aucun CV trouvé`);
+        res.status(204).json(cv);
+      }
     })
     .catch((err) => {
       console.log(err);

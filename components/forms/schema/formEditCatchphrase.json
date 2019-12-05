@@ -15,11 +15,11 @@
       "method": "isLength",
       "args": [
         {
-          "max": 4000
+          "max": 80
         }
       ],
       "validWhen": true,
-      "message": "4000 caractères maximum"
+      "message": "80 caractères maximum"
     }
   ]
 }

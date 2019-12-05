@@ -98,15 +98,27 @@ module.exports = (sequelize, DataTypes) => {
         }, */
       },
       status: DataTypes.STRING,
+      visibility: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
+      version: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+        allowNull: false,
+      },
     },
     {}
   );
   CV.beforeValidate((cv) => {
     const cvToCreate = cv;
-    cvToCreate.url = `${cvToCreate.firstName.toLowerCase()}-${cvToCreate.userId.substring(
-      0,
-      8
-    )}`;
+    if (cvToCreate.firstName && cvToCreate.userId) {
+      cvToCreate.url = `${cvToCreate.firstName.toLowerCase()}-${cvToCreate.userId.substring(
+        0,
+        8
+      )}`;
+    }
     return cvToCreate;
   });
   CV.beforeCreate((cv) => {
