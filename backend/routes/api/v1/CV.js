@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
     .then((cv) => {
       cvCreated = cv;
       // creation de l'image de preview cv
-      console.log(req.body);
+      // console.log(req.body);
       generateCVPreview(
         cvCreated.firstName.toUpperCase(),
         "A besoin d'un coup de pouce pour travailler dans...",
@@ -133,11 +133,15 @@ router.put('/visibility', auth.required, (req, res) => {
  * Description : Récupère le CV associé à l'<URL> fournit
  */
 router.get('/:url', (req, res) => {
-  CVController.getCV(req.params.url)
+  CVController.getCVbyUrl(req.params.url)
     .then((cv) => {
-      console.log(`CV trouvé`);
-      // res.status(200).send(JSON.stringify(cv, null, 4));
-      res.status(200).json(cv);
+      if (cv) {
+        console.log(`CV trouvé`);
+        res.status(200).json(cv);
+      } else {
+        console.log(`Aucun CV trouvé`);
+        res.status(204).json(cv);
+      }
     })
     .catch((err) => {
       console.log(err);

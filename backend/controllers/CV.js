@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 const sequelize = require('sequelize');
 const db = require('../db/config/databaseConnect');
 const CV = require('../db/models/cv')(db, sequelize.DataTypes);
@@ -65,9 +66,10 @@ const createCV = (newCV) => {
       intro: newCV.intro || '',
       location: newCV.location || '',
       story: newCV.story || '',
-      status: newCV.status || 'Draft',
+      status: newCV.status || 'Pending',
       transport: newCV.transport || '',
       availability: newCV.availability || '',
+      visibility: newCV.visibility || false,
     })
       .then((cv) => {
         cvCreated = cv;
@@ -229,14 +231,25 @@ const deleteCV = (id) => {
   });
 };
 
-const getCV = (url) => {
+const getCVbyUrl = (url) => {
   return new Promise((resolve, reject) => {
-    const infoLog = 'getCV -';
+    const infoLog = 'getCVbyUrl -';
     console.log(`${infoLog} Récupérer un CV à partir de son url`);
-    CV.findOne({
-      where: { url },
-      include: INCLUDE_CV_COMPLETE,
+    CV.max('version', {
+      where: {
+        status: 'Published',
+        url,
+      },
     })
+      .then((version) => {
+        if (isNaN(version)) {
+          return Promise.resolve(null);
+        }
+        return CV.findOne({
+          where: { url, status: 'Published', version, visibility: true },
+          include: INCLUDE_CV_COMPLETE,
+        });
+      })
       .then((result) => resolve(result))
       .catch((err) => reject(err));
   });
@@ -260,6 +273,10 @@ const getCVs = () => {
     const infoLog = 'getCVs -';
     console.log(`${infoLog} Récupérer les CVs`);
     CV.findAll({
+      where: {
+        status: 'Published',
+        visibility: true,
+      },
       include: INCLUDE_CV_COMPLETE,
     })
       .then((listeCVs) => resolve(listeCVs))
@@ -274,6 +291,10 @@ const getRandomShortCVs = (nb) => {
       `${infoLog} Récupère des CVs au format court de manière aléatoire`
     );
     CV.findAll({
+      where: {
+        status: 'Published',
+        visibility: true,
+      },
       order: db.random(),
       limit: nb || 11,
       attributes: ['id', 'url', 'firstName'],
@@ -354,7 +375,7 @@ const setVisibility = (userId, cv) => {
 module.exports = {
   createCV,
   deleteCV,
-  getCV,
+  getCVbyUrl,
   getCVbyUserId,
   getCVs,
   getRandomShortCVs,
