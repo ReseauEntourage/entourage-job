@@ -4,7 +4,7 @@
     {
       "id": "intro",
       "name": "intro",
-      "component": "textarea",
+      "component": "input",
       "type": "text",
       "title": "Ce que vous pouvez apporter*"
     }
