@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconNoSSR } from '../utils';
 import ModalEdit from '../modals/ModalEdit';
 import schemaStory from '../forms/schema/formEditStory';
 
@@ -25,7 +24,9 @@ const StoryProfileCard = ({ description, onChange }) => {
       </div>
 
       {description ? (
-        <p>{description}</p>
+        description
+          .split('\n')
+          .map((paragraphe, index) => <p key={index}>{paragraphe}</p>)
       ) : (
         <p className="uk-text-italic">
           Aucune histoire n&apos;a encore été ajoutée
