@@ -22,7 +22,10 @@ const SkillCard = ({ list, onChange }) => {
               id="modal-skills"
               title="Édition - Mes atouts (6 maximum)"
               formSchema={schemaformEditSkills}
-              defaultValues={list}
+              defaultValues={list.reduce((acc, value, i) => {
+                acc[`skill${i + 1}`] = value;
+                return acc;
+              }, {})}
               onSubmit={(fields) => {
                 const fieldsTransform = {
                   Skills: Object.values(fields).filter((val) => {

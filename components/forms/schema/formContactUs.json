@@ -10,6 +10,7 @@
       "title": "Adresse mail*"
     },
     {
+      "id": "text",
       "name": "text",
       "component": "textarea",
       "type": "text",

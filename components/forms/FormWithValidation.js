@@ -21,12 +21,14 @@ export class Form extends Component {
       afterSubmit: PropTypes.func,
 
       id: PropTypes.string.isRequired,
-
+      submitText: PropTypes.string,
       fieldsInfo: PropTypes.arrayOf(
         PropTypes.shape({
           name: PropTypes.string,
         })
       ).isRequired,
+
+      defaultValues: PropTypes.objectOf(PropTypes.string),
     };
   }
 
@@ -34,25 +36,32 @@ export class Form extends Component {
     return {
       afterCancel: undefined,
       afterSubmit: undefined,
+      submitText: undefined,
+      defaultValues: undefined,
     };
   }
 
   static initializeForm(fieldsInfo) {
     // todo revoir la structure du state
     // on extrait les nom des champs
-    const fieldsName = fieldsInfo.map((field) => field.name);
+    const fieldsId = fieldsInfo.map((field) => field.id);
+
+    const values = fieldsId.reduce((acc, id) => {
+      acc[id] = '';
+      return acc;
+    }, {});
+
+    const validation = fieldsId.reduce((acc, id) => {
+      acc[`valid_${id}`] = undefined;
+      return acc;
+    }, {});
+
     return {
-      error: '',
-      fields: {
-        values: fieldsName.reduce((acc, item) => {
-          acc[item] = '';
-          return acc;
-        }, {}),
-        ...fieldsName.reduce((acc, item) => {
-          acc[`valid_${item}`] = undefined;
-          return acc;
-        }, {}),
-      },
+      setValid: (key, value) => (validation[`valid_${key}`] = value),
+      getValid: (key) => validation[`valid_${key}`],
+      setValue: (key, value) => (values[key] = value),
+      getValue: (key) => values[key],
+      getValues: () => values,
     };
   }
 
@@ -60,9 +69,15 @@ export class Form extends Component {
     super(props);
     this.state = this.createState(props);
 
-    const { id } = this.props;
-    const { handleChange, fields } = this.state;
-    this.fieldFactory = new FieldFactory(id, fields, handleChange);
+    const { id, defaultValues } = this.props;
+    const { handleChange, fields, getValid } = this.state;
+    this.fieldFactory = new FieldFactory(
+      id,
+      fields,
+      defaultValues,
+      handleChange,
+      getValid
+    );
   }
 
   onSubmit(event) {
@@ -70,7 +85,7 @@ export class Form extends Component {
     const { handleSubmit } = this.state;
 
     handleSubmit()
-      .then(({ fields }) => {
+      .then((fields) => {
         const { afterSubmit, fieldsInfo } = this.props;
         this.setState(this.constructor.initializeForm(fieldsInfo));
         afterSubmit(fields, (error) => this.setState({ error }));
@@ -81,6 +96,7 @@ export class Form extends Component {
   createState({ handleChange, handleSubmit, fieldsInfo }) {
     // todo revoir la structure du state
     return {
+      error: '',
       handleChange: handleChange.bind(this),
       handleSubmit: handleSubmit.bind(this),
       onSubmit: this.onSubmit.bind(this),
@@ -90,13 +106,14 @@ export class Form extends Component {
 
   render() {
     const { error, onSubmit } = this.state;
-    const { afterCancel, fieldsInfo, id } = this.props;
+    const { submitText, afterCancel, fieldsInfo, id } = this.props;
     return (
       <div className="uk-width-1-1">
         <form
           id={id}
           className="uk-form-stacked uk-grid-small uk-child-width-1-1"
           data-uk-grid
+          onSubmit={onSubmit}
         >
           <fieldset className="uk-fieldset uk-width-1-1">
             {fieldsInfo.map(this.fieldFactory.generate)}
@@ -104,6 +121,7 @@ export class Form extends Component {
           <div>
             <FooterForm
               error={error}
+              submitText={submitText}
               onSubmit={onSubmit}
               onCancel={afterCancel}
             />
@@ -114,24 +132,38 @@ export class Form extends Component {
   }
 }
 
-const FormWithValidation = ({ formData, onCancel, onSubmit }) => {
-  const GeneratedForm = withValidation(Form, formData.rules);
+const FormWithValidation = ({
+  formSchema,
+  defaultValues,
+  onCancel,
+  onSubmit,
+  submitText,
+}) => {
+  const GeneratedForm = withValidation(Form, formSchema.rules);
   return (
     <GeneratedForm
-      id={formData.id}
-      fieldsInfo={formData.fields}
+      id={formSchema.id}
+      fieldsInfo={formSchema.fields}
+      defaultValues={defaultValues}
       afterCancel={onCancel}
       afterSubmit={onSubmit}
+      submitText={submitText}
     />
   );
 };
 FormWithValidation.propTypes = {
+  defaultValues: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  formData: PropTypes.shape({
+  formSchema: PropTypes.shape({
     id: PropTypes.string,
     fields: PropTypes.object,
     rules: PropTypes.object,
   }).isRequired,
+  submitText: PropTypes.string,
+};
+FormWithValidation.defaultProps = {
+  submitText: undefined,
+  defaultValues: [],
 };
 export default FormWithValidation;

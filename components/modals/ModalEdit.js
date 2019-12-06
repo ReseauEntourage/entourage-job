@@ -7,21 +7,6 @@ import FormWithValidation from '../forms/FormWithValidation';
 
 import { Button, CloseButtonNoSSR, IconNoSSR } from '../utils';
 
-// ajouter les valeurs par default des champs
-// va parcourir les champs et leurs assignant leurs variable par default, ainsi que les groupe de champs de maniere recursive
-// retourne tous les fields avec leurs valeurs par default
-function fieldsWithDefaultValues(defaultValues, fields) {
-  const myFields = [...fields];
-  defaultValues.forEach((value, i) => {
-    if (Array.isArray(value) && fields[i].component === 'fieldgroup') {
-      myFields[i].fields = fieldsWithDefaultValues(value, fields[i].fields);
-    }
-
-    return (myFields[i].value = value);
-  });
-  return myFields;
-}
-
 function renderButton(buttonType, id) {
   switch (buttonType) {
     case 'pencil':
@@ -44,7 +29,6 @@ function renderButton(buttonType, id) {
       );
   }
 }
-
 const ModalEdit = ({
   id,
   button,
@@ -53,55 +37,42 @@ const ModalEdit = ({
   formSchema,
   defaultValues,
   onSubmit,
-}) => {
-  /**
-   * Fix value in formSchema
-   */
-  const fixFormSchema = formSchema;
-  fixFormSchema.fields.map((field) => {
-    const changeField = field;
-    return (changeField.value = '');
-  });
-  const schema = {
-    ...formSchema,
-    fields: [...fieldsWithDefaultValues(defaultValues, formSchema.fields)],
-  };
-
-  return (
-    <>
-      {renderButton(button, id)}
-      <ModalGeneric id={id}>
-        {(closeModal) => (
-          <>
-            <CloseButtonNoSSR className="uk-modal-close-default" />
-            <HeaderModal>{title}</HeaderModal>
-            {description ? (
-              <p
-                className="uk-text-lead"
-                style={{
-                  lineHeight: '1.2',
-                  fontSize: '1.2rem',
-                  fontWeight: '500',
-                }}
-              >
-                {description}
-              </p>
-            ) : null}
-
-            <FormWithValidation
-              formData={schema}
-              onCancel={closeModal}
-              onSubmit={(fields, setError) => {
-                closeModal();
-                onSubmit(fields, setError);
+}) => (
+  <>
+    {renderButton(button, id)}
+    <ModalGeneric id={id}>
+      {(closeModal) => (
+        <>
+          <CloseButtonNoSSR className="uk-modal-close-default" />
+          <HeaderModal>{title}</HeaderModal>
+          {description ? (
+            <p
+              className="uk-text-lead"
+              style={{
+                lineHeight: '1.2',
+                fontSize: '1.2rem',
+                fontWeight: '500',
               }}
-            />
-          </>
-        )}
-      </ModalGeneric>
-    </>
-  );
-};
+            >
+              {description}
+            </p>
+          ) : null}
+
+          <FormWithValidation
+            submitText="Sauvegarder"
+            formSchema={formSchema}
+            defaultValues={defaultValues}
+            onCancel={closeModal}
+            onSubmit={(fields) => {
+              closeModal();
+              onSubmit(fields);
+            }}
+          />
+        </>
+      )}
+    </ModalGeneric>
+  </>
+);
 ModalEdit.propTypes = {
   id: PropTypes.string.isRequired,
   button: PropTypes.string,

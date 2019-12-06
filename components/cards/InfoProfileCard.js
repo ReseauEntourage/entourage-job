@@ -38,15 +38,15 @@ const InfoProfileCard = ({
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
             <ModalEdit
               id="modal-usefulinformation"
-              title="Edition - informations utiles"
+              title="Édition - Informations utiles"
               formSchema={schemaUsefulInformation}
-              defaultValues={[
-                contracts[0],
+              defaultValues={{
                 location,
                 availability,
-                languages[0],
                 transport,
-              ]}
+                Contracts: contracts[0],
+                Languages: languages[0],
+              }}
               onSubmit={(fields) => {
                 const fieldsTransform = fields;
                 console.log(fields);

@@ -1,34 +1,76 @@
 /* eslint-disable jsx-a11y/aria-role */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ReviewCard } from '../cards';
-import { Button } from '../utils';
+import { IconNoSSR, GridNoSSR } from '../utils';
 import ModalEdit from '../modals/ModalEdit';
 import schemaTestimonial from '../forms/schema/formEditTestimonial';
 
 const CVEditReviews = ({ reviews, onChange }) => {
   return (
-    <>
-      {reviews.length === 0 &&
-        reviews.map((review, i) => (
-          <ReviewCard
-            picture="/static/img/arthur.png"
-            review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
-            author="Hervé"
-            role="Assistant social"
-            key={i}
-          />
-        ))}
-      {reviews.length < 3 && (
-        <ModalEdit
-          id="modal-testimonial"
-          button="Ajouter une recommandation"
-          title="Edition - recommandation"
-          formSchema={schemaTestimonial}
-          onSubmit={onChange}
-        />
+    <div className="uk-card uk-card-default uk-card-body">
+      <div className="uk-flex-inline uk-width-1-1">
+        <h3 className="uk-card-title">
+          Mes <span className="uk-text-primary">recommandations</span>
+        </h3>
+        {onChange && (
+          <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
+            <ModalEdit
+              id="modal-testimonial-add"
+              button="plus"
+              title="Ajout - Mes recommandations"
+              formSchema={schemaTestimonial}
+              onSubmit={(fields) =>
+                onChange({
+                  reviews: [...reviews, fields],
+                })
+              }
+            />
+          </h3>
+        )}
+      </div>
+      {/* todo terminer linterface graphique. alignement des informaiton */}
+      {reviews.length > 0 ? (
+        <ul className="uk-list uk-list-divider">
+          {reviews.map((review, i) => (
+            <li id={i} key={i}>
+              <GridNoSSR
+                childWidths={['auto']}
+                items={[
+                  <IconNoSSR name="quote-right" />,
+                  <>
+                    <p className="uk-text-small uk-margin-small">
+                      {review.text}
+                    </p>
+                    <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
+                      {review.name}
+                    </p>
+                    <p className="uk-margin-remove">{review.status}</p>
+                  </>,
+                  <span className="uk-text-muted uk-margin-small uk-align-right uk-text-right">
+                    <ModalEdit
+                      // must use different id for each modal
+                      id={`modal-testimonial-edit-${i}`}
+                      title="Édition - Mes recommandations"
+                      formSchema={schemaTestimonial}
+                      defaultValues={review}
+                      onSubmit={(fields) => {
+                        const newReviews = reviews;
+                        newReviews[i] = fields;
+                        onChange({ reviews: newReviews });
+                      }}
+                    />
+                  </span>,
+                ]}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="uk-text-italic">
+          Aucune recommandation n&apos;a encore été ajoutée
+        </p>
       )}
-    </>
+    </div>
   );
 };
 CVEditReviews.propTypes = {

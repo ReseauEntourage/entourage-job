@@ -92,7 +92,7 @@ const CVFicheEdition = ({ cv, onChange }) => {
             childWidths={['1-1']}
             items={[
               <StoryProfileCard description={cv.story} onChange={onChange} />,
-              <CVEditReviews reviews={[]} onChange={onChange} />,
+              <CVEditReviews reviews={cv.reviews} onChange={onChange} />,
             ]}
           />,
           <ExperiencesProfileCard

@@ -58,9 +58,9 @@
           "component": "select",
           "generate": {
             "placeholder": "Année",
-            "type": "inc",
-            "min": 1960,
-            "max": 2000
+            "type": "dec",
+            "min": 1970,
+            "max": 2021
           }
         }
       ]
@@ -97,9 +97,9 @@
           "component": "select",
           "generate": {
             "placeholder": "Année",
-            "type": "inc",
-            "min": 1960,
-            "max": 2020
+            "type": "dec",
+            "min": 1970,
+            "max": 2021
           }
         }
       ]

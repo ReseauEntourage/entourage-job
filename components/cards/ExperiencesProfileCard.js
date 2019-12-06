@@ -3,6 +3,39 @@ import PropTypes from 'prop-types';
 import ModalEdit from '../modals/ModalEdit';
 import schemaformEditExperience from '../forms/schema/formEditExperience';
 
+function getExpWithSeparatedDates(exp) {
+  const dateStartSplited = exp.dateStart.split('/');
+
+  const newExp = {
+    type: exp.type,
+    title: exp.title,
+    description: exp.description,
+    'start-month': Number(dateStartSplited[0]),
+    'start-year': Number(dateStartSplited[1]),
+  };
+  if (exp.dateEnd) {
+    const [month, year] = exp.dateEnd.split('/').map((val) => Number(val));
+    // on admet la date au bon format
+    newExp['end-month'] = month;
+    newExp['end-year'] = year;
+  }
+  return newExp;
+}
+
+function getExpWithoutSeparatedDate(exp) {
+  return {
+    type: exp.type,
+    title: exp.title,
+    description: exp.description,
+    dateStart: `${exp['start-month']}/${exp['start-year']}`,
+    dateEnd:
+      exp['end-month'] && exp['end-year']
+        ? `${exp['end-month']}/${exp['end-year']}`
+        : undefined,
+  };
+}
+
+// todo: ONE MODAL, MULTIPLE EDITION
 const ExperiencesProfileCard = ({ experiences, onChange }) => {
   return (
     <div className="uk-card uk-card-default uk-card-body">
@@ -15,35 +48,16 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
             <ModalEdit
               id="modal-experience"
               button="plus"
-              title="Édition - Mon expérience"
+              title="Ajout - Mon expérience"
               formSchema={schemaformEditExperience}
-              defaultValues={[
-                'Formation',
-                'CACES 3',
-                'test',
-                [2, 1999],
-                [3, 2000],
-              ]}
-              onSubmit={(fields) => {
-                const fieldsTransform = { ...fields };
-                fieldsTransform.dateStart = `${fields['start-month']} / ${
-                  fields['start-year']
-                }`;
-                fieldsTransform.dateEnd = `${fields['end-month']} / ${
-                  fields['end-year']
-                }`;
-                delete fieldsTransform['start-month'];
-                delete fieldsTransform['start-year'];
-                delete fieldsTransform['end-month'];
-                delete fieldsTransform['end-year'];
-                console.log(fields);
-                console.log(fieldsTransform);
-                const experiencesModified = [...experiences];
-                experiencesModified.push(fieldsTransform);
+              onSubmit={(fields) =>
                 onChange({
-                  Experiences: experiencesModified,
-                });
-              }}
+                  Experiences: [
+                    ...experiences,
+                    getExpWithoutSeparatedDate(fields),
+                  ],
+                })
+              }
             />
           </h3>
         )}
@@ -55,43 +69,21 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
             <li id={i} key={i}>
               <div className="uk-text-muted uk-margin-small">
                 <span>
-                  {exp.dateStart} - {exp.dateEnd}
+                  {exp.dateEnd
+                    ? `${exp.dateStart} - ${exp.dateEnd}`
+                    : exp.dateStart}
                 </span>
                 <span className="uk-align-right uk-text-right">
                   <ModalEdit
-                    id="modal-experience-edit"
-                    title="Édition - Mon expérience -TAGTEST"
+                    // must use different id for each modal
+                    id={`modal-experience-edit-${i}`}
+                    title="Édition - Mon expérience"
                     formSchema={schemaformEditExperience}
-                    defaultValues={[
-                      exp.type,
-                      exp.title,
-                      exp.description,
-                      [
-                        exp.dateStart.split('/')[0].trim(),
-                        exp.dateStart.split('/')[1].trim(),
-                      ],
-                      [
-                        exp.dateEnd.split('/')[0].trim(),
-                        exp.dateEnd.split('/')[1].trim(),
-                      ],
-                    ]}
+                    defaultValues={getExpWithSeparatedDates(exp)}
                     onSubmit={(fields) => {
-                      const fieldsTransform = { ...fields };
-                      fieldsTransform.dateStart = `${fields['start-month']} / ${
-                        fields['start-year']
-                      }`;
-                      fieldsTransform.dateEnd = `${fields['end-month']} / ${
-                        fields['end-year']
-                      }`;
-                      delete fieldsTransform['start-month'];
-                      delete fieldsTransform['start-year'];
-                      delete fieldsTransform['end-month'];
-                      delete fieldsTransform['end-year'];
-                      console.log(fields);
-                      console.log(fieldsTransform);
-                      const experienceModified = [...experiences];
-                      experienceModified[i] = fieldsTransform;
-                      onChange({ Experiences: experienceModified });
+                      const newExperiences = experiences;
+                      newExperiences[i] = getExpWithoutSeparatedDate(fields);
+                      onChange({ Experiences: newExperiences });
                     }}
                   />
                 </span>

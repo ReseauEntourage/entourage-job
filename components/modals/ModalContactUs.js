@@ -33,7 +33,7 @@ const ModalContactUs = () => (
             souhaite être aidé et orienté dans mes différentes démarches.
           </p>
           <FormWithValidation
-            formData={rulesContactUs}
+            formSchema={rulesContactUs}
             onCancel={closeModal}
             onSubmit={({ email, text }, reject) =>
               Api.post('/mail/contact-us', { email, text })

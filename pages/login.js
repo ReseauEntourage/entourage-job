@@ -14,7 +14,7 @@ const Login = () => {
           <div className="uk-width-1-2 uk-card uk-card-default uk-card-body">
             <h1>Connexion</h1>
             <FormWithValidation
-              formData={schema}
+              formSchema={schema}
               onSubmit={({ email, password }, setError) => {
                 login(email, password)
                   .then(() => console.log('Connexion réussie'))

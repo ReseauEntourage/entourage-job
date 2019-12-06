@@ -74,13 +74,11 @@ export default class UserProvider extends Component {
           resolve();
         })
         .catch((error) => {
-          const myError = error.response.data.error
-            ? error.response.data.error
-            : "Une erreur s'est produite";
+          console.error(error);
           this.setState({
-            error: myError,
+            error: "Une erreur s'est produite",
           });
-          reject(myError);
+          reject("Une erreur s'est produite");
         });
     });
   }

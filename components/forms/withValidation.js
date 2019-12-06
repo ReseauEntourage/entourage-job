@@ -14,19 +14,21 @@ export default function withValidation(WrappedForm, validatorRules) {
     // fonction permettant de verifier une champs d'entré utilisateur
     handleChange(event) {
       const { checked, name, type, value } = event.target;
-      const { fields } = this.state;
+      const { setValue, getValues, setValid } = this.state;
 
       /* Validators start */
-      fields.values[name] = type === 'checkbox' ? checked : value; // enregistre la valeur du champs
-      const validation = validator.validate({ ...fields.values }); // envoie une copie des champs pour que le state ne soit pas altéré
+      setValue(name, type === 'checkbox' ? checked : value); // enregistre la valeur du champs
+      const validation = validator.validate(getValues()); // envoie une copie des champs pour que le state ne soit pas altéré
 
       // enregistre la raison de la validation {isInvalid: boolean, message: string}
       if (validation[name] !== undefined) {
-        fields[`valid_${name}`] = validation[name];
+        setValid(name, validation[name]);
       }
 
       /* Validators end */
-      this.setState({ fields, error: '' });
+      this.setState({
+        error: '',
+      });
     }
 
     // fonction d'envoie de formulaire
@@ -35,21 +37,20 @@ export default function withValidation(WrappedForm, validatorRules) {
     // si valide renvoie les valeurs des champs
     handleSubmit() {
       return new Promise((resolve, reject) => {
-        const { fields } = this.state;
+        const { getValues, setValid } = this.state;
         /* Validators control before submit */
-        const validation = validator.validate({ ...fields.values });
+        const validation = validator.validate(getValues());
         if (validation.isValid) {
-          resolve({ fields: fields.values });
+          resolve(getValues());
         } else {
           // erreur de validation
           Object.keys(validation).forEach((key) => {
             if (key !== 'isValid') {
-              fields[`valid_${key}`] = validation[key];
+              setValid(key, validation[key]);
             }
           });
           this.setState({
             error: 'Un ou plusieurs champs sont invalides',
-            fields,
           });
           reject({ validation });
         }

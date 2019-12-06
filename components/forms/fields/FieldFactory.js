@@ -10,11 +10,13 @@ import Textarea from './Textarea';
 import CheckboxCGU from './CheckboxCGU';
 
 export default class FieldFactory {
-  constructor(id, fields, handleChange) {
+  constructor(id, fields, defaultValues, handleChange, getValid) {
     this.generate = this.generate.bind(this);
     this.id = id;
     this.fields = fields;
     this.handleChange = handleChange;
+    this.defaultValues = defaultValues;
+    this.getValid = getValid;
   }
 
   generate(data) {
@@ -35,9 +37,9 @@ export default class FieldFactory {
           placeholder={data.placeholder}
           name={data.name}
           title={data.title}
-          value={data.value}
+          defaultValue={this.defaultValues[data.id]}
           type={data.type}
-          valid={this.fields[`valid_${data.name}`]}
+          valid={this.getValid(data.name)}
           onChange={this.handleChange}
         />
       );
@@ -49,8 +51,8 @@ export default class FieldFactory {
           placeholder={data.placeholder}
           name={data.name}
           title={data.title}
-          value={data.value}
-          valid={this.fields[`valid_${data.name}`]}
+          defaultValue={this.defaultValues[data.id]}
+          valid={this.getValid(data.name)}
           onChange={this.handleChange}
           pattern={data.pattern}
           min={data.min}
@@ -70,6 +72,14 @@ export default class FieldFactory {
               return { value: min + i, text: min + i };
             });
         }
+        if (type === 'dec') {
+          options = Array(max - min)
+            .fill(max)
+            .map((_, i) => {
+              if (i === 0) return { value: null, text: placeholder };
+              return { value: max - i, text: max - i };
+            });
+        }
       }
       return (
         <Select
@@ -77,9 +87,9 @@ export default class FieldFactory {
           placeholder={data.placeholder}
           name={data.name}
           title={data.title}
-          value={data.value}
+          defaultValue={this.defaultValues[data.id]}
           options={options}
-          valid={this.fields[`valid_${data.name}`]}
+          valid={this.getValid(data.name)}
           onChange={this.handleChange}
         />
       );
@@ -92,9 +102,9 @@ export default class FieldFactory {
           row={data.row}
           title={data.title}
           type={data.type}
-          value={data.value}
+          defaultValue={this.defaultValues[data.id]}
           placeholder={data.placeholder}
-          valid={this.fields[`valid_${data.name}`]}
+          valid={this.getValid(data.name)}
           onChange={this.handleChange}
         />
       );
@@ -112,7 +122,7 @@ export default class FieldFactory {
               </Link>
             </span>
           }
-          valid={this.fields[`valid_${data.name}`]}
+          valid={this.getValid(data.name)}
           onChange={this.handleChange}
         />
       );

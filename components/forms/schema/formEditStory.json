@@ -2,6 +2,7 @@
   "id": "form-story",
   "fields": [
     {
+      "id": "story",
       "name": "story",
       "component": "textarea",
       "type": "text",

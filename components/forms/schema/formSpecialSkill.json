@@ -1,26 +1,51 @@
 {
-  "id": "form-testimonial",
+  "id": "form-specialskills",
   "fields": [
     {
       "id": "name",
       "name": "name",
-      "component": "input",
       "type": "text",
-      "title": "Nom *"
+      "component": "input",
+      "placeholder": "Tapez votre texte",
+      "title": "Nom et prénom*"
     },
     {
-      "id": "status",
-      "name": "status",
-      "component": "input",
+      "id": "structure",
+      "name": "structure",
       "type": "text",
-      "title": "Status *"
+      "component": "input",
+      "placeholder": "Tapez votre texte",
+      "title": "Structure*"
     },
     {
-      "id": "text",
-      "name": "text",
+      "id": "email",
+      "name": "email",
+      "type": "email",
+      "component": "input",
+      "placeholder": "Tapez votre adresse mail",
+      "title": "Adresse mail*"
+    },
+    {
+      "id": "phone",
+      "name": "phone",
+      "type": "text",
+      "component": "input",
+      "placeholder": "Tapez votre texte",
+      "title": "Téléphone"
+    },
+    {
+      "id": "message",
+      "name": "message",
       "component": "textarea",
       "type": "text",
-      "title": "Votre recommendation*"
+      "placeholder": "Tapez votre texte",
+      "title": "Écrivez vos motivations*",
+      "rows": 7
+    },
+    {
+      "id": "cgu",
+      "name": "cgu",
+      "component": "cgu"
     }
   ],
   "rules": [
@@ -47,7 +72,7 @@
       "message": "40 caractères maximum"
     },
     {
-      "field": "status",
+      "field": "email",
       "method": "isEmpty",
       "args": [
         {
@@ -58,7 +83,24 @@
       "message": "Obligatoire"
     },
     {
-      "field": "status",
+      "field": "email",
+      "method": "isEmail",
+      "validWhen": true,
+      "message": "Adresse e-mail invalide"
+    },
+    {
+      "field": "localization",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "localization",
       "method": "isLength",
       "args": [
         {
@@ -89,6 +131,13 @@
       ],
       "validWhen": true,
       "message": "4000 caractères maximum"
+    },
+    {
+      "field": "cgu",
+      "method": "equals",
+      "args": ["true"],
+      "validWhen": true,
+      "message": "Obligatoire"
     }
   ]
 }

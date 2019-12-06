@@ -3,13 +3,6 @@ import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
 export default class Select extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      labelClass: '',
-    };
-  }
-
   static get propTypes() {
     return {
       id: PropTypes.string.isRequired,
@@ -20,7 +13,7 @@ export default class Select extends Component {
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
       }),
-      value: PropTypes.string,
+      defaultValue: PropTypes.string,
       options: PropTypes.arrayOf(PropTypes.string).isRequired,
     };
   }
@@ -28,16 +21,17 @@ export default class Select extends Component {
   static get defaultProps() {
     return {
       valid: undefined,
-      value: undefined,
+      defaultValue: undefined,
     };
   }
 
   componentDidMount() {
-    const { value, name } = this.props;
-    if (value) {
-      this.setLabelClass(value);
+    const { defaultValue, name } = this.props;
+    if (defaultValue) {
       // trick to verify field before the user update of the field
-      this.handleChange({ target: { name, value, type: 'input' } });
+      this.handleChange({
+        target: { name, value: defaultValue, type: 'input' },
+      });
     }
   }
 
@@ -50,86 +44,79 @@ export default class Select extends Component {
     return '';
   }
 
-  setLabelClass(value) {
-    this.setState({
-      // labelClass: ' stay-small',
-      labelClass: value.length > 0 ? ' stay-small' : '',
-    });
-  }
-
   handleChange(event) {
-    const { value } = event.target;
     const { onChange } = this.props;
     onChange(event);
-    this.setLabelClass(value);
   }
 
   render() {
-    const { id, name, title, valid, options, value } = this.props;
+    const { id, name, title, valid, options, defaultValue } = this.props;
     const transparent = !!title;
     return (
-      <div
-        className="uk-form-controls"
-        style={
-          transparent
-            ? {
-                backgroundColor: '#e5e5e5',
-                borderRadius: '7px 7px 0 0',
-                fontSize: '1rem',
-                border: '0px',
-                borderBottom: '2px solid grey',
-                paddingTop: '15px',
-                paddingLeft: '12px',
-                paddingRight: '12px',
-                paddingBottom: '2px',
-              }
-            : {
-                paddingTop: '15px',
-                paddingBottom: '2px',
-              }
-        }
-      >
-        {title ? (
-          <label
-            className="uk-form-label"
-            style={{
-              paddingLeft: '0px',
-              color: '#f66b28',
-              opacity: '.8',
-              fontSize: '0.8rem',
-              transform: 'translateY(-26px)',
-              transition: '0.8s',
-            }}
-            htmlFor={id}
-          >
-            {title}
-          </label>
-        ) : null}
-        <select
-          className="uk-select"
-          onChange={(event) => this.handleChange(event)}
-          name={name}
-          id={id}
-          defaultValue={value}
-          style={{
-            backgroundColor: 'transparent',
-            paddingLeft: 0,
-            border: 'initial',
-          }}
+      <>
+        <div
+          className="uk-form-controls"
+          style={
+            transparent
+              ? {
+                  backgroundColor: '#e5e5e5',
+                  borderRadius: '7px 7px 0 0',
+                  fontSize: '1rem',
+                  border: '0px',
+                  borderBottom: '2px solid grey',
+                  paddingTop: '15px',
+                  paddingLeft: '12px',
+                  paddingRight: '12px',
+                  paddingBottom: '2px',
+                }
+              : {
+                  paddingTop: '15px',
+                  paddingBottom: '2px',
+                }
+          }
         >
-          {options.map(({ value, text }) => (
-            <option
-              value={value}
-              disabled={value === null}
-              selected={value === null}
-              hidden={value === null}
+          {title ? (
+            <label
+              className="uk-form-label"
+              style={{
+                paddingLeft: '0px',
+                color: '#f66b28',
+                opacity: '.8',
+                fontSize: '0.8rem',
+                transform: 'translateY(-26px)',
+                transition: '0.8s',
+              }}
+              htmlFor={id}
             >
-              {text}
-            </option>
-          ))}
-        </select>
+              {title}
+            </label>
+          ) : null}
+          <select
+            className="uk-select"
+            onChange={(event) => this.handleChange(event)}
+            name={name}
+            id={id}
+            defaultValue={defaultValue}
+            style={{
+              backgroundColor: 'transparent',
+              paddingLeft: 0,
+              border: 'initial',
+            }}
+          >
+            {options.map(({ value, text }) => (
+              <option
+                value={value}
+                disabled={value === null}
+                selected={value === null}
+                hidden={value === null}
+              >
+                {text}
+              </option>
+            ))}
+          </select>
+        </div>
         <FormValidatorErrorMessage validObj={valid} />
-      </div>
+      </>
     );
   }
 }
