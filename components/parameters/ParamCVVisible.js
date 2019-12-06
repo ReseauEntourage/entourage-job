@@ -69,7 +69,6 @@ export default class ParamCVVisible extends Component {
     if (cv === null) {
       return null;
     }
-    cv.visibility = !cv.visibility;
     return (
       <div className="uk-padding uk-padding-remove-left">
         <p className="uk-inline ">
@@ -80,15 +79,15 @@ export default class ParamCVVisible extends Component {
                 <input
                   id="ent-toggle-visibility"
                   type="checkbox"
-                  checked
-                  onChange={() => this.setVisibility()}
+                  data-uk-toggle="target:#modal-confirm-visibility"
+                  checked={false}
                 />
               ) : (
                 <input
                   id="ent-toggle-visibility"
                   type="checkbox"
-                  data-uk-toggle="target:#modal-confirm-visibility"
-                  checked={false}
+                  checked
+                  onChange={() => this.setVisibility()}
                 />
               )}
               <span className="ent-slider round" />
