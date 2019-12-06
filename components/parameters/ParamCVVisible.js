@@ -69,6 +69,7 @@ export default class ParamCVVisible extends Component {
     if (cv === null) {
       return null;
     }
+    cv.visibility = !cv.visibility;
     return (
       <div className="uk-padding uk-padding-remove-left">
         <p className="uk-inline ">
