@@ -64,7 +64,7 @@ export default class CVEdit extends Component {
     return (
       <LayoutBackOffice title="Edition du CV">
         <div style={{ position: 'relative' }}>
-          {cv.firstName !== '' ? (
+          {cv ? (
             <>
               <CVActions />
               <CVFicheEdition cv={cv} onChange={this.setLocalCV} />

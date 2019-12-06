@@ -259,10 +259,20 @@ const getCVbyUserId = (userId) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getCV -';
     console.log(`${infoLog} Récupérer un CV non publié à partir du userId`);
-    CV.findOne({
-      where: { userId, status: { [Op.notLike]: 'Published' } },
-      include: INCLUDE_CV_COMPLETE,
+    CV.max('version', {
+      where: {
+        userId,
+      },
     })
+      .then((version) => {
+        if (isNaN(version)) {
+          return Promise.resolve(null);
+        }
+        return CV.findOne({
+          where: { userId, version },
+          include: INCLUDE_CV_COMPLETE,
+        });
+      })
       .then((result) => resolve(result))
       .catch((err) => reject(err));
   });
