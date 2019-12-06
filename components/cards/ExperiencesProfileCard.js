@@ -77,7 +77,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
                   <ModalEdit
                     // must use different id for each modal
                     id={`modal-experience-edit-${i}`}
-                    title="Édition - Mon expérience -TAGTEST"
+                    title="Édition - Mon expérience"
                     formSchema={schemaformEditExperience}
                     defaultValues={getExpWithSeparatedDates(exp)}
                     onSubmit={(fields) => {

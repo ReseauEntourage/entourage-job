@@ -67,7 +67,7 @@
         }
       ],
       "validWhen": true,
-      "message": "must be at least 6 characters"
+      "message": "Doit contenir au moins 6 caractères"
     }
   ]
 }

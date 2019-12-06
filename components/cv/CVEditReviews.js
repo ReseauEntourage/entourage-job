@@ -46,7 +46,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
                     </p>
                     <p className="uk-margin-remove">{review.status}</p>
                   </>,
-                  <span className="uk-text-muted uk-margin-small">
+                  <span className="uk-text-muted uk-margin-small uk-align-right uk-text-right">
                     <ModalEdit
                       // must use different id for each modal
                       id={`modal-testimonial-edit-${i}`}

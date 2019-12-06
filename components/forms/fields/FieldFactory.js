@@ -72,6 +72,14 @@ export default class FieldFactory {
               return { value: min + i, text: min + i };
             });
         }
+        if (type === 'dec') {
+          options = Array(max - min)
+            .fill(max)
+            .map((_, i) => {
+              if (i === 0) return { value: null, text: placeholder };
+              return { value: max - i, text: max - i };
+            });
+        }
       }
       return (
         <Select

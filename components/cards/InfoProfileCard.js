@@ -38,7 +38,7 @@ const InfoProfileCard = ({
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
             <ModalEdit
               id="modal-usefulinformation"
-              title="Edition - informations utiles"
+              title="Édition - Informations utiles"
               formSchema={schemaUsefulInformation}
               defaultValues={{
                 location,
