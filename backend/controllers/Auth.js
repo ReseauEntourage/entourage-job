@@ -27,6 +27,8 @@ function generateJWT(user) {
     {
       email: user.email,
       id: user.id,
+      role: user.role,
+      userToCoach: user.userToCoach,
       exp: parseInt(expirationDate.getTime() / 1000, 10),
     },
     'secret'
