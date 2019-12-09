@@ -33,20 +33,19 @@ const CVEditReviews = ({ reviews, onChange }) => {
         <ul className="uk-list uk-list-divider">
           {reviews.map((review, i) => (
             <li id={i} key={i}>
-              <GridNoSSR
-                childWidths={['auto']}
-                items={[
-                  <IconNoSSR name="quote-right" />,
-                  <>
-                    <p className="uk-text-small uk-margin-small">
-                      {review.text}
-                    </p>
-                    <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
-                      {review.name}
-                    </p>
-                    <p className="uk-margin-remove">{review.status}</p>
-                  </>,
-                  <span className="uk-text-muted uk-margin-small uk-align-right uk-text-right">
+              <div className="uk-child-width-auto" data-uk-grid>
+                <div>
+                  <IconNoSSR name="quote-right" />
+                </div>
+                <div className="uk-width-expand">
+                  <p className="uk-text-small uk-margin-small">{review.text}</p>
+                  <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
+                    {review.name}
+                  </p>
+                  <p className="uk-margin-remove">{review.status}</p>
+                </div>
+                <div>
+                  <span className="uk-text-muted uk-margin-small">
                     <ModalEdit
                       // must use different id for each modal
                       id={`modal-testimonial-edit-${i}`}
@@ -59,9 +58,9 @@ const CVEditReviews = ({ reviews, onChange }) => {
                         onChange({ reviews: newReviews });
                       }}
                     />
-                  </span>,
-                ]}
-              />
+                  </span>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
