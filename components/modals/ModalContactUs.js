@@ -36,7 +36,7 @@ const ModalContactUs = () => (
             formSchema={rulesContactUs}
             onCancel={closeModal}
             onSubmit={({ email, text }, reject) =>
-              Api.post('/mail/contact-us', { email, text })
+              Api.post('/api/v1/mail/contact-us', { email, text })
                 .then(nextStep)
                 .catch(() => reject("Une erreur s'est produite"))
             }
