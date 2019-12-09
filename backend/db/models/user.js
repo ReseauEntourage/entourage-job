@@ -42,11 +42,18 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      role: DataTypes.STRING,
-      isAdmin: {
-        type: DataTypes.BOOLEAN,
+      role: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: false,
+        defaultValue: 'Candidat',
+      },
+      userToCoach: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
       },
       password: {
         type: DataTypes.TEXT,
