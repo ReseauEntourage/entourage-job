@@ -40,6 +40,7 @@ function toAuthJSON(user) {
     id: user.id,
     email: user.email,
     firstName: user.firstName,
+    role: user.role,
     token: generateJWT(user),
   };
 }
