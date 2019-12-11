@@ -11,7 +11,6 @@ const USER_EXAMPLE = {
   email: 'test.ament@cesttropsuper.com',
   firstName: 'Test',
   lastName: 'Ament',
-  role: null,
   password: 'azerty',
   salt: 'test',
 };
