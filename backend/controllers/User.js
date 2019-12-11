@@ -6,7 +6,9 @@ const createUser = (newUser) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'createUser -';
     console.log(`${infoLog} Création du User`);
-    User.create(newUser)
+    const userToCreate = { ...newUser };
+    userToCreate.role = newUser.role || 'Candidat';
+    User.create(userToCreate)
       .then((result) => resolve(result))
       .catch((err) => reject(err));
   });
