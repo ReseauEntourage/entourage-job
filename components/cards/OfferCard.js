@@ -10,24 +10,30 @@ const OfferCard = ({
   link,
   isStared,
   isNew,
+  isArchive,
 }) => (
   <a className="uk-link-reset" href={link}>
-    <div className="uk-card uk-card-hover uk-card-default uk-card-body ent-offer">
+    <div
+      className={`uk-card uk-card-hover uk-card-${
+        isArchive ? 'secondary' : 'default'
+      } uk-card-body ent-offer`}
+    >
       {isNew ? <div className="ent-offer-badge" /> : undefined}
+
       <GridNoSSR
-        eachWidths={['expand', 'auto']}
+        gap="medium"
+        childWidths={['1-1']}
         items={[
-          <h5 className="uk-text-bold">{title}</h5>,
-          <IconNoSSR
-            name="star"
-            className={`${isStared ? 'ent-color-amber' : undefined}`}
+          <GridNoSSR
+            eachWidths={['expand', 'auto']}
+            items={[
+              <h5 className="uk-text-bold">{title}</h5>,
+              <IconNoSSR
+                name="star"
+                className={`${isStared ? 'ent-color-amber' : undefined}`}
+              />,
+            ]}
           />,
-        ]}
-      />
-      <GridNoSSR
-        className="uk-margin-large-top uk-margin-large-bottom"
-        gap="small"
-        items={[
           <GridNoSSR
             gap="small"
             eachWidths={['auto', 'expand']}
@@ -38,16 +44,18 @@ const OfferCard = ({
             eachWidths={['auto', 'expand']}
             items={[<IconNoSSR name="hashtag" />, <p>{shortDescription}</p>]}
           />,
-        ]}
-      />
-      <GridNoSSR
-        gap="small"
-        between
-        items={[
-          <Button disabled>{type}</Button>,
-          <a className="uk-link-muted" href="">
-            voir l&rsquo;offre
-          </a>,
+          <GridNoSSR
+            gap="small"
+            between
+            items={[
+              <Button disabled>
+                <span style={{ color: '#666' }}>{type}</span>
+              </Button>,
+              <a className="uk-link-muted" href="">
+                voir l&rsquo;offre
+              </a>,
+            ]}
+          />,
         ]}
       />
     </div>
@@ -61,11 +69,13 @@ OfferCard.propTypes = {
   link: PropTypes.string,
   isStared: PropTypes.bool,
   isNew: PropTypes.bool,
+  isArchive: PropTypes.bool,
 };
 
 OfferCard.defaultProps = {
   link: '#',
   isStared: true,
   isNew: true,
+  isArchive: false,
 };
 export default OfferCard;
