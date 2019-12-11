@@ -73,8 +73,8 @@ if (typeof UIkit !== 'undefined') {
           const isStared = Math.random() >= 0.5;
           return {
             tag,
-            isStared: Math.random() >= 0.5,
-            isNew: isStared ? false : i !== 2 ? Math.random() >= 0.5 : false,
+            isStared,
+            isNew: isStared ? false : Math.random() >= 0.5,
             title: randomPhrase(8),
             from: randomPhrase(6),
             shortDescription: randomPhrase(20),

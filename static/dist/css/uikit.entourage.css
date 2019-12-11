@@ -12468,11 +12468,11 @@ iframe.uk-cover {
 }
 .ent-divier-backoffice {
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  /* margin-left: auto;
+  margin-right: auto; */
   border-top: 1px solid black;
 }
-@media (max-width: 1200px) {
+/* @media (max-width: 1200px) {
   .ent-divier-backoffice {
     margin-left: 40px;
     margin-right: 40px;
@@ -12483,4 +12483,4 @@ iframe.uk-cover {
     margin-left: 30px;
     margin-right: 30px;
   }
-}
+} */
