@@ -56,7 +56,6 @@ Grid.propTypes = {
   divider: PropTypes.bool,
   eachWidths: PropTypes.arrayOf(PropTypes.string),
   gap: PropTypes.oneOf(['small', 'medium', 'large', 'collapse']),
-
   items: PropTypes.arrayOf(PropTypes.element),
   children: PropTypes.arrayOf(PropTypes.element),
 };

@@ -1,12 +1,8 @@
 import React, { useContext, useState } from 'react';
+import PropsType from 'prop-types';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
-import {
-  Section,
-  CloseButtonNoSSR,
-  GridNoSSR,
-  IconNoSSR,
-} from '../../components/utils';
+import { Section, GridNoSSR, IconNoSSR } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
 import Textarea from '../../components/forms/fields/Textarea';
 
@@ -36,34 +32,60 @@ const OfferInfoContainer = ({ icon, title, items }) => (
     eachWidths={['auto', 'expand']}
     items={[
       <IconNoSSR name={icon} />,
-      <GridNoSSR gap="small" childWidths={['1-1']}>
-        {title
-          ? [<span className="uk-text-bold">{title}</span>, ...items]
-          : items}
-      </GridNoSSR>,
+      <GridNoSSR
+        gap="collapse"
+        childWidths={['1-1']}
+        items={[<span className="uk-text-bold">{title}</span>, ...items]}
+      />,
     ]}
   />
 );
+OfferInfoContainer.propsType = {
+  icon: PropsType.string.isRequired,
+  title: PropsType.string.isRequired,
+  items: PropsType.arrayOf(PropsType.string),
+};
+OfferInfoContainer.defaultProps = {
+  items: [],
+};
+
+const ButtonIcon = ({ name, onClick, className }) => (
+  <a href="#" onClick={() => onClick()}>
+    <IconNoSSR name={name} className={className} />
+  </a>
+);
+ButtonIcon.propsType = {
+  name: PropsType.string.isRequired,
+  onClick: PropsType.func.isRequired,
+  className: PropsType.string,
+};
+ButtonIcon.defaultProps = {
+  className: undefined,
+};
+
 let offers;
 if (typeof UIkit !== 'undefined') {
   offers = ['private', 'public', 'archive']
     .map((tag, i) =>
       Array(i === 0 ? 4 : i === 1 ? 10 : 15)
         .fill(0)
-        .map(() => ({
-          tag,
-          isStared: Math.random() >= 0.5,
-          isNew: i !== 2 ? Math.random() >= 0.5 : false,
-          title: randomPhrase(8),
-          from: randomPhrase(6),
-          shortDescription: randomPhrase(20),
-          type: randomPhrase(5),
-          message: randomPhrase(250),
-          date: randomPhrase(4),
-          email: randomPhrase(18),
-          phone: randomPhrase(10),
-          location: randomPhrase(12),
-        }))
+        .map(() => {
+          const isStared = Math.random() >= 0.5;
+          return {
+            tag,
+            isStared: Math.random() >= 0.5,
+            isNew: isStared ? false : i !== 2 ? Math.random() >= 0.5 : false,
+            title: randomPhrase(8),
+            from: randomPhrase(6),
+            shortDescription: randomPhrase(20),
+            type: randomPhrase(5),
+            message: randomPhrase(250),
+            date: randomPhrase(4),
+            email: randomPhrase(18),
+            phone: randomPhrase(10),
+            location: randomPhrase(12),
+          };
+        })
     )
     .flat()
     .sort((a, b) => b.isNew - a.isNew); // trie par isNew
@@ -88,9 +110,7 @@ const Opportunites = () => {
           Parcours les offres qui t&rsquo;ont été adressées directement ainsi
           que celles communes aux différents candidats du parcours LinkedOut.
         </p>
-      </Section>
-      <hr className="ent-divier-backoffice" />
-      <Section>
+        <hr className="ent-divier-backoffice uk-margin-large-top uk-margin-large-bottom" />
         <div uk-filter="target: .js-filter">
           <ul className="uk-subnav ent-subnav">
             <li uk-filter-control=".tag-private" className="uk-active">
@@ -103,10 +123,9 @@ const Opportunites = () => {
               <a href="#">Offres archivées</a>
             </li>
           </ul>
-
           <ul
-            className="js-filter uk-child-width-1-2@s uk-child-width-1-3@m"
-            data-uk-grid
+            className="js-filter uk-child-width-1-3@s uk-child-width-1-4@m"
+            data-uk-grid="masonry: true"
           >
             {offers.map((offer, i) => (
               <li className={`tag-${offer.tag}`} key={i}>
@@ -137,49 +156,89 @@ const Opportunites = () => {
         </div>
       </Section>
 
+      {/* Modal offer */}
       <div id="modal-offer" data-uk-modal="bg-close:false">
-        <div className="uk-modal-dialog">
+        <div className="uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl">
           <div className="uk-modal-body">
-            <div>
-              <CloseButtonNoSSR className="uk-modal-close-default" />
-              <h3 className="uk-text-bold">{currentOffer.title}</h3>
-            </div>
+            <GridNoSSR
+              gap="small"
+              between
+              items={[
+                <h3 className="uk-text-bold">{currentOffer.title}</h3>,
+                <ul className="uk-iconnav uk-grid-medium">
+                  <li>
+                    <ButtonIcon name="trash" />
+                  </li>
+                  <li>
+                    <ButtonIcon
+                      name="star"
+                      onClick={() => {
+                        setCurrentOffer({
+                          ...currentOffer,
+                          isStared: !currentOffer.isStared,
+                        });
+                      }}
+                      className={`${
+                        currentOffer.isStared ? 'ent-color-amber' : undefined
+                      }`}
+                    />
+                  </li>
+                  <li>
+                    <ButtonIcon
+                      name="close"
+                      onClick={() => UIkit.modal(`#modal-offer`).hide()}
+                    />
+                  </li>
+                </ul>,
+              ]}
+            />
             <hr />
             <GridNoSSR
+              className="uk-margin-bottom"
               eachWidths={['1-3@s', '2-3@s']}
               items={[
-                <div>
-                  <div className="uk-margin uk-label">{currentOffer.tag}</div>
-                  <OfferInfoContainer
-                    icon="hashtag"
-                    title="Entreprise"
-                    items={[currentOffer.shortDescription]}
-                  />
-                  <OfferInfoContainer
-                    icon="hashtag"
-                    title="Recruteur"
-                    items={[
-                      currentOffer.from,
-                      currentOffer.email,
-                      currentOffer.phone,
-                      <span className="uk-text-italic">
-                        offre soumise le {currentOffer.date}
-                      </span>,
-                    ]}
-                  />
-                  <OfferInfoContainer
-                    icon="location"
-                    items={[currentOffer.location]}
-                  />
-                </div>,
+                <GridNoSSR
+                  gap="medium"
+                  items={[
+                    <div className="uk-margin-large-left uk-label">
+                      {currentOffer.tag}
+                    </div>,
+                    <OfferInfoContainer
+                      icon="hashtag"
+                      title="Entreprise"
+                      items={[currentOffer.shortDescription]}
+                    />,
+                    <OfferInfoContainer
+                      icon="user"
+                      title="Recruteur"
+                      items={[
+                        currentOffer.from,
+                        currentOffer.email,
+                        currentOffer.phone,
+                        <span className="uk-text-italic">
+                          offre soumise le {currentOffer.date}
+                        </span>,
+                      ]}
+                    />,
+                    <OfferInfoContainer
+                      icon="location"
+                      title={currentOffer.location}
+                    />,
+                  ]}
+                />,
                 <OfferInfoContainer
-                  icon="mail"
+                  icon="comment"
                   title="Message"
                   items={[currentOffer.message]}
                 />,
               ]}
             />
-            <Textarea placeholder="Ecrivez un commentaire à propos de cette opportunité..." />
+            <Textarea
+              id="modal-offer-comment"
+              name="modal-offer-comment"
+              title="Ecrivez un commentaire à propos de cette opportunité..."
+              type="text"
+            />
           </div>
         </div>
       </div>
