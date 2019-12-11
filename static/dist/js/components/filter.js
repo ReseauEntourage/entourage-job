@@ -1,10 +1,10 @@
-/*! UIkit 3.2.1 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.2.4 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
     typeof define === 'function' && define.amd ? define('uikitfilter', ['uikit-util'], factory) :
     (global = global || self, global.UIkitFilter = factory(global.UIkit.util));
-}(this, function (uikitUtil) { 'use strict';
+}(this, (function (uikitUtil) { 'use strict';
 
     var targetClass = 'uk-animation-target';
 
@@ -133,13 +133,12 @@
     }
 
     function getPositionWithMargin(el) {
-        var ref = el.getBoundingClientRect();
+        var ref = uikitUtil.offset(el);
         var height = ref.height;
         var width = ref.width;
         var ref$1 = uikitUtil.position(el);
         var top = ref$1.top;
         var left = ref$1.left;
-        top += uikitUtil.toFloat(uikitUtil.css(el, 'marginTop'));
 
         return {top: top, left: left, height: height, width: width};
     }
@@ -397,4 +396,4 @@
 
     return Component;
 
-}));
+})));

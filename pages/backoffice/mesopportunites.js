@@ -1,10 +1,8 @@
 import React, { useContext } from 'react';
-import { Router } from 'next/router';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
 import { Section } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
-import './mesopportunites.less';
 
 const Opportunites = () => {
   const title = `Mes opportunités`;
@@ -21,10 +19,12 @@ const Opportunites = () => {
           tag,
           isStared: Math.random() >= 0.5,
           isNew: i !== 2 ? Math.random() >= 0.5 : false,
-          title: Math.round(Math.random() * 100000000),
-          from: Math.round(Math.random() * 1000000),
-          shortDescription: Math.round(Math.random() * 10000000000000000000),
-          type: Math.round(Math.random() * 100000),
+          title: Math.round(Math.random() * 100000000).toString(),
+          from: Math.round(Math.random() * 1000000).toString(),
+          shortDescription: Math.round(
+            Math.random() * 10000000000000000000
+          ).toString(),
+          type: Math.round(Math.random() * 100000).toString(),
         }))
     )
     .flat()
@@ -59,8 +59,8 @@ const Opportunites = () => {
             className="js-filter uk-child-width-1-2@s uk-child-width-1-3@m"
             data-uk-grid
           >
-            {offers.map((offer) => (
-              <li className={offer.tag}>
+            {offers.map((offer, i) => (
+              <li className={offer.tag} key={i}>
                 <OfferCard
                   isNew={offer.isNew}
                   isStared={offer.isStared}

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { GridNoSSR, Button, IconNoSSR } from '../utils';
+import { GridNoSSR, Button, IconNoSSR, SimpleLink } from '../utils';
 
 const OfferCard = ({
   title,
@@ -51,9 +51,7 @@ const OfferCard = ({
               <Button disabled>
                 <span style={{ color: '#666' }}>{type}</span>
               </Button>,
-              <a className="uk-link-muted" href="">
-                voir l&rsquo;offre
-              </a>,
+              <u className="uk-link-muted">voir l&rsquo;offre</u>,
             ]}
           />,
         ]}

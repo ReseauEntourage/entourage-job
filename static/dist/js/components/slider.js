@@ -1,10 +1,10 @@
-/*! UIkit 3.2.1 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.2.4 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
     typeof define === 'function' && define.amd ? define('uikitslider', ['uikit-util'], factory) :
     (global = global || self, global.UIkitSlider = factory(global.UIkit.util));
-}(this, function (uikitUtil) { 'use strict';
+}(this, (function (uikitUtil) { 'use strict';
 
     var Class = {
 
@@ -627,7 +627,7 @@
                 );
 
                 if (!force && !prev) {
-                    this._transitioner.translate(1);
+                    this._translate(1);
                     return uikitUtil.Promise.resolve();
                 }
 
@@ -724,10 +724,10 @@
 
         var from = prev
             ? getLeft(prev, list, center)
-            : getLeft(next, list, center) + bounds(next).width * dir;
+            : getLeft(next, list, center) + uikitUtil.offset(next).width * dir;
         var to = next
             ? getLeft(next, list, center)
-            : from + bounds(prev).width * dir * (uikitUtil.isRtl ? -1 : 1);
+            : from + uikitUtil.offset(prev).width * dir * (uikitUtil.isRtl ? -1 : 1);
 
         return {
 
@@ -781,7 +781,7 @@
                 uikitUtil.css(list, 'transform', translate(uikitUtil.clamp(
                     -to + (distance - distance * percent),
                     -getWidth(list),
-                    bounds(list).width
+                    uikitUtil.offset(list).width
                 ) * (uikitUtil.isRtl ? -1 : 1), 'px'));
 
                 this.updateTranslates();
@@ -820,7 +820,7 @@
 
                 return uikitUtil.sortBy(slides(list).filter(function (slide) {
                     var slideLeft = getElLeft(slide, list);
-                    return slideLeft >= left && slideLeft + bounds(slide).width <= bounds(list).width + left;
+                    return slideLeft >= left && slideLeft + uikitUtil.offset(slide).width <= uikitUtil.offset(list).width + left;
                 }), 'offsetLeft');
 
             },
@@ -854,27 +854,23 @@
     }
 
     function getMax(list) {
-        return Math.max(0, getWidth(list) - bounds(list).width);
+        return Math.max(0, getWidth(list) - uikitUtil.offset(list).width);
     }
 
     function getWidth(list) {
-        return slides(list).reduce(function (right, el) { return bounds(el).width + right; }, 0);
+        return slides(list).reduce(function (right, el) { return uikitUtil.offset(el).width + right; }, 0);
     }
 
     function getMaxWidth(list) {
-        return slides(list).reduce(function (right, el) { return Math.max(right, bounds(el).width); }, 0);
+        return slides(list).reduce(function (right, el) { return Math.max(right, uikitUtil.offset(el).width); }, 0);
     }
 
     function centerEl(el, list) {
-        return bounds(list).width / 2 - bounds(el).width / 2;
+        return uikitUtil.offset(list).width / 2 - uikitUtil.offset(el).width / 2;
     }
 
     function getElLeft(el, list) {
-        return (uikitUtil.position(el).left + (uikitUtil.isRtl ? bounds(el).width - bounds(list).width : 0)) * (uikitUtil.isRtl ? -1 : 1);
-    }
-
-    function bounds(el) {
-        return el.getBoundingClientRect();
+        return (uikitUtil.position(el).left + (uikitUtil.isRtl ? uikitUtil.offset(el).width - uikitUtil.offset(list).width : 0)) * (uikitUtil.isRtl ? -1 : 1);
     }
 
     function triggerUpdate(el, type, data) {
@@ -913,7 +909,7 @@
             finite: function(ref) {
                 var finite = ref.finite;
 
-                return finite || Math.ceil(getWidth(this.list)) < bounds(this.list).width + getMaxWidth(this.list) + this.center;
+                return finite || Math.ceil(getWidth(this.list)) < uikitUtil.offset(this.list).width + getMaxWidth(this.list) + this.center;
             },
 
             maxIndex: function() {
@@ -945,7 +941,7 @@
                 var sets = ref.sets;
 
 
-                var width = bounds(this.list).width / (this.center ? 2 : 1);
+                var width = uikitUtil.offset(this.list).width / (this.center ? 2 : 1);
 
                 var left = 0;
                 var leftCenter = width;
@@ -953,7 +949,7 @@
 
                 sets = sets && this.slides.reduce(function (sets, slide, i) {
 
-                    var ref = bounds(slide);
+                    var ref = uikitUtil.offset(slide);
                     var slideWidth = ref.width;
                     var slideRight = slideLeft + slideWidth;
 
@@ -966,7 +962,7 @@
                         if (!uikitUtil.includes(sets, i)) {
 
                             var cmp = this$1.slides[i + 1];
-                            if (this$1.center && cmp && slideWidth < leftCenter - bounds(cmp).width / 2) {
+                            if (this$1.center && cmp && slideWidth < leftCenter - uikitUtil.offset(cmp).width / 2) {
                                 leftCenter -= slideWidth;
                             } else {
                                 leftCenter = width;
@@ -1012,7 +1008,7 @@
                 });
 
                 if (this.length && !this.dragging && !this.stack.length) {
-                    this._getTransitioner().translate(1);
+                    this._translate(1);
                 }
 
             },
@@ -1046,7 +1042,7 @@
                 }
 
                 this.duration = speedUp(this.avgWidth / this.velocity)
-                    * (bounds(
+                    * (uikitUtil.offset(
                         this.dir < 0 || !this.slides[this.prevIndex]
                             ? this.slides[this.index]
                             : this.slides[this.prevIndex]
@@ -1097,7 +1093,7 @@
                 }
 
                 var next = this.slides[index];
-                var width = bounds(this.list).width / 2 - bounds(next).width / 2;
+                var width = uikitUtil.offset(this.list).width / 2 - uikitUtil.offset(next).width / 2;
                 var j = 0;
 
                 while (width > 0) {
@@ -1105,7 +1101,7 @@
                     var slide = this.slides[slideIndex];
 
                     uikitUtil.css(slide, 'order', slideIndex > index ? -2 : -1);
-                    width -= bounds(slide).width;
+                    width -= uikitUtil.offset(slide).width;
                 }
 
             },
@@ -1149,4 +1145,4 @@
 
     return Component;
 
-}));
+})));

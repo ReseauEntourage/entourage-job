@@ -1,10 +1,10 @@
-/*! UIkit 3.2.1 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.2.4 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
     typeof define === 'function' && define.amd ? define('uikitslideshow', ['uikit-util'], factory) :
     (global = global || self, global.UIkitSlideshow = factory(global.UIkit.util));
-}(this, function (uikitUtil) { 'use strict';
+}(this, (function (uikitUtil) { 'use strict';
 
     var Class = {
 
@@ -758,7 +758,7 @@
                 );
 
                 if (!force && !prev) {
-                    this._transitioner.translate(1);
+                    this._translate(1);
                     return uikitUtil.Promise.resolve();
                 }
 
@@ -1051,7 +1051,7 @@
                     height = Math.min(this.maxHeight, height);
                 }
 
-                return {height: height - uikitUtil.boxModelAdjust(this.list, 'content-box')};
+                return {height: height - uikitUtil.boxModelAdjust(this.list, 'height', 'content-box')};
             },
 
             write: function(ref) {
@@ -1074,4 +1074,4 @@
 
     return Component;
 
-}));
+})));
