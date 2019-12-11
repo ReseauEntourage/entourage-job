@@ -1,17 +1,52 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
-import { Section } from '../../components/utils';
+import {
+  Section,
+  CloseButtonNoSSR,
+  GridNoSSR,
+  IconNoSSR,
+} from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
+import Textarea from '../../components/forms/fields/Textarea';
 
-const Opportunites = () => {
-  const title = `Mes opportunités`;
-  const userContext = useContext(UserContext);
-  if (!userContext.isAuthentificated) {
-    // Router.push('/login');
-    return null;
-  }
-  const offers = ['tag-private', 'tag-public', 'tag-archive']
+function randomPhrase(length) {
+  const radom13chars = function() {
+    return Math.random()
+      .toString(16)
+      .substring(2, 15);
+  };
+  const loops = Math.ceil(length / 13);
+  const str = new Array(loops)
+    .fill(radom13chars)
+    .reduce((string, func) => {
+      return string + func();
+    }, '')
+    .substring(0, length);
+
+  return [...str].reduce(
+    (acc, c) => acc + c + (Math.random() >= 0.6 ? ' ' : ''),
+    ''
+  );
+}
+
+const OfferInfoContainer = ({ icon, title, items }) => (
+  <GridNoSSR
+    gap="small"
+    eachWidths={['auto', 'expand']}
+    items={[
+      <IconNoSSR name={icon} />,
+      <GridNoSSR gap="small" childWidths={['1-1']}>
+        {title
+          ? [<span className="uk-text-bold">{title}</span>, ...items]
+          : items}
+      </GridNoSSR>,
+    ]}
+  />
+);
+let offers;
+if (typeof UIkit !== 'undefined') {
+  offers = ['private', 'public', 'archive']
     .map((tag, i) =>
       Array(i === 0 ? 4 : i === 1 ? 10 : 15)
         .fill(0)
@@ -19,16 +54,30 @@ const Opportunites = () => {
           tag,
           isStared: Math.random() >= 0.5,
           isNew: i !== 2 ? Math.random() >= 0.5 : false,
-          title: Math.round(Math.random() * 100000000).toString(),
-          from: Math.round(Math.random() * 1000000).toString(),
-          shortDescription: Math.round(
-            Math.random() * 10000000000000000000
-          ).toString(),
-          type: Math.round(Math.random() * 100000).toString(),
+          title: randomPhrase(8),
+          from: randomPhrase(6),
+          shortDescription: randomPhrase(20),
+          type: randomPhrase(5),
+          message: randomPhrase(250),
+          date: randomPhrase(4),
+          email: randomPhrase(18),
+          phone: randomPhrase(10),
+          location: randomPhrase(12),
         }))
     )
     .flat()
-    .sort((a, b) => b.isNew - a.isNew); // trie par new
+    .sort((a, b) => b.isNew - a.isNew); // trie par isNew
+}
+
+const Opportunites = () => {
+  const title = `Mes opportunités`;
+  const userContext = useContext(UserContext);
+  const [currentOffer, setCurrentOffer] = useState({});
+  if (!userContext.isAuthentificated) {
+    // Router.push('/login');
+    return null;
+  }
+
   return (
     <LayoutBackOffice title={title}>
       <Section>
@@ -44,10 +93,10 @@ const Opportunites = () => {
       <Section>
         <div uk-filter="target: .js-filter">
           <ul className="uk-subnav ent-subnav">
-            <li uk-filter-control=".tag-private">
+            <li uk-filter-control=".tag-private" className="uk-active">
               <a href="#">Mes offres</a>
             </li>
-            <li uk-filter-control=".tag-public" className="uk-active">
+            <li uk-filter-control=".tag-public">
               <a href="#">Toutes les offres</a>
             </li>
             <li uk-filter-control=".tag-archive">
@@ -60,23 +109,81 @@ const Opportunites = () => {
             data-uk-grid
           >
             {offers.map((offer, i) => (
-              <li className={offer.tag} key={i}>
-                <OfferCard
-                  isNew={offer.isNew}
-                  isStared={offer.isStared}
-                  title={offer.title}
-                  from={offer.from}
-                  shortDescription={offer.shortDescription}
-                  type={offer.type}
-                  isArchive={offer.tag === 'tag-archive'}
-                />
+              <li className={`tag-${offer.tag}`} key={i}>
+                <a
+                  className="uk-link-reset"
+                  onClick={() => {
+                    /* global UIkit */
+                    setCurrentOffer(offer);
+
+                    UIkit.modal(`#modal-offer`).show();
+                  }}
+                  aria-hidden
+                  role="button"
+                >
+                  <OfferCard
+                    isNew={offer.isNew}
+                    isStared={offer.isStared}
+                    title={offer.title}
+                    from={offer.from}
+                    shortDescription={offer.shortDescription}
+                    type={offer.type}
+                    isArchive={offer.tag === 'archive'}
+                  />
+                </a>
               </li>
             ))}
           </ul>
         </div>
       </Section>
+
+      <div id="modal-offer" data-uk-modal="bg-close:false">
+        <div className="uk-modal-dialog">
+          <div className="uk-modal-body">
+            <div>
+              <CloseButtonNoSSR className="uk-modal-close-default" />
+              <h3 className="uk-text-bold">{currentOffer.title}</h3>
+            </div>
+            <hr />
+            <GridNoSSR
+              eachWidths={['1-3@s', '2-3@s']}
+              items={[
+                <div>
+                  <div className="uk-margin uk-label">{currentOffer.tag}</div>
+                  <OfferInfoContainer
+                    icon="hashtag"
+                    title="Entreprise"
+                    items={[currentOffer.shortDescription]}
+                  />
+                  <OfferInfoContainer
+                    icon="hashtag"
+                    title="Recruteur"
+                    items={[
+                      currentOffer.from,
+                      currentOffer.email,
+                      currentOffer.phone,
+                      <span className="uk-text-italic">
+                        offre soumise le {currentOffer.date}
+                      </span>,
+                    ]}
+                  />
+                  <OfferInfoContainer
+                    icon="location"
+                    items={[currentOffer.location]}
+                  />
+                </div>,
+                <OfferInfoContainer
+                  icon="mail"
+                  title="Message"
+                  items={[currentOffer.message]}
+                />,
+              ]}
+            />
+            <Textarea placeholder="Ecrivez un commentaire à propos de cette opportunité..." />
+          </div>
+        </div>
+      </div>
     </LayoutBackOffice>
   );
 };
-
 export default Opportunites;

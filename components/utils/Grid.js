@@ -15,6 +15,7 @@ const Grid = ({
   className,
   eachWidths,
   gap,
+  children,
 }) => {
   let classBuffer = '';
   let gridBuffer = '';
@@ -30,7 +31,7 @@ const Grid = ({
   if (className) classBuffer += ` ${className}`;
   return (
     <div className={classBuffer} data-uk-grid={gridBuffer}>
-      {items.map((item, index) => (
+      {(items !== undefined ? items : children).map((item, index) => (
         <div
           // todo optimize
           className={
@@ -52,10 +53,12 @@ Grid.propTypes = {
   center: PropTypes.bool,
   between: PropTypes.bool,
   childWidths: PropTypes.arrayOf(PropTypes.string),
-  items: PropTypes.arrayOf(PropTypes.element).isRequired,
   divider: PropTypes.bool,
   eachWidths: PropTypes.arrayOf(PropTypes.string),
   gap: PropTypes.oneOf(['small', 'medium', 'large', 'collapse']),
+
+  items: PropTypes.arrayOf(PropTypes.element),
+  children: PropTypes.arrayOf(PropTypes.element),
 };
 Grid.defaultProps = {
   match: false,
@@ -66,5 +69,7 @@ Grid.defaultProps = {
   childWidths: [],
   eachWidths: [],
   gap: undefined,
+  items: undefined,
+  children: [],
 };
 export default Grid;
