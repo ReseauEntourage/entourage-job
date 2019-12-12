@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/aria-role */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconNoSSR, GridNoSSR } from '../utils';
+import { IconNoSSR } from '../utils';
 import ModalEdit from '../modals/ModalEdit';
 import schemaTestimonial from '../forms/schema/formEditTestimonial';
 
+const MAX_REVIEWS = 4;
 const CVEditReviews = ({ reviews, onChange }) => {
   return (
     <div className="uk-card uk-card-default uk-card-body">
@@ -12,7 +13,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
         <h3 className="uk-card-title">
           Mes <span className="uk-text-primary">recommandations</span>
         </h3>
-        {onChange && (
+        {onChange && reviews.length < MAX_REVIEWS && (
           <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
             <ModalEdit
               id="modal-testimonial-add"
