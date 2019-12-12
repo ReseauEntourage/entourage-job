@@ -53,13 +53,6 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
               button="plus"
               title="Ajout - Mon expérience"
               formSchema={schemaformEditExperience}
-              // defaultValues={{
-              //   type: 1,
-              //   title: 'La dégustation de chocolat',
-              //   description: 'Le sport',
-              //   'start-month': 2,
-              //   'start-year': 1999,
-              // }}
               onSubmit={(fields) =>
                 onChange({
                   Experiences: [
@@ -93,59 +86,61 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
                     {exp.description}
                   </p>
                 </div>
-                <div className="uk-flex uk-flex-column">
-                  <ModalEdit
-                    // must use different id for each modal
-                    id={`modal-experience-edit-${i}`}
-                    title="Édition - Mon expérience"
-                    formSchema={schemaformEditExperience}
-                    defaultValues={getExpWithSeparatedDates(exp)}
-                    onSubmit={(fields) => {
-                      const newExperiences = experiences;
-                      newExperiences[i] = getExpWithoutSeparatedDate(fields);
-                      onChange({ Experiences: newExperiences });
-                    }}
-                  />
-                  <Button
-                    style="text"
-                    toggle={`target: #modal-experience-remove-${i}`}
-                  >
-                    <IconNoSSR name="trash" ratio={1.5} />
-                  </Button>
-                  <ModalGeneric
-                    classNameSize="uk-width-1-2@m"
-                    id={`modal-experience-remove-${i}`}
-                  >
-                    {(close) => (
-                      <div>
-                        <CloseButtonNoSSR className="uk-modal-close-default" />
-                        <p className="uk-text-center uk-text-lead">
-                          Êtes-vous sûr(e) de vouloir supprimer cette expérience
-                          ?
-                        </p>
-                        <GridNoSSR
-                          center
-                          className="uk-grid-small"
-                          items={[
-                            <Button style="default" onClick={() => close()}>
-                              Annuler
-                            </Button>,
-                            <Button
-                              style="primary"
-                              onClick={() => {
-                                close();
-                                experiences.splice(i, 1);
-                                onChange({ Experiences: experiences });
-                              }}
-                            >
-                              Supprimer
-                            </Button>,
-                          ]}
-                        />
-                      </div>
-                    )}
-                  </ModalGeneric>
-                </div>
+                {onChange && (
+                  <div className="uk-flex uk-flex-column">
+                    <ModalEdit
+                      // must use different id for each modal
+                      id={`modal-experience-edit-${i}`}
+                      title="Édition - Mon expérience"
+                      formSchema={schemaformEditExperience}
+                      defaultValues={getExpWithSeparatedDates(exp)}
+                      onSubmit={(fields) => {
+                        const newExperiences = experiences;
+                        newExperiences[i] = getExpWithoutSeparatedDate(fields);
+                        onChange({ Experiences: newExperiences });
+                      }}
+                    />
+                    <Button
+                      style="text"
+                      toggle={`target: #modal-experience-remove-${i}`}
+                    >
+                      <IconNoSSR name="trash" ratio={1.5} />
+                    </Button>
+                    <ModalGeneric
+                      classNameSize="uk-width-1-2@m"
+                      id={`modal-experience-remove-${i}`}
+                    >
+                      {(close) => (
+                        <div>
+                          <CloseButtonNoSSR className="uk-modal-close-default" />
+                          <p className="uk-text-center uk-text-lead">
+                            Êtes-vous sûr(e) de vouloir supprimer cette
+                            expérience ?
+                          </p>
+                          <GridNoSSR
+                            center
+                            className="uk-grid-small"
+                            items={[
+                              <Button style="default" onClick={() => close()}>
+                                Annuler
+                              </Button>,
+                              <Button
+                                style="primary"
+                                onClick={() => {
+                                  close();
+                                  experiences.splice(i, 1);
+                                  onChange({ Experiences: experiences });
+                                }}
+                              >
+                                Supprimer
+                              </Button>,
+                            ]}
+                          />
+                        </div>
+                      )}
+                    </ModalGeneric>
+                  </div>
+                )}
               </div>
             </li>
           ))}
