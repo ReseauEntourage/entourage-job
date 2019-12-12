@@ -58,11 +58,18 @@ router.post('/', (req, res) => {
  * Description : Récupère le CV associé au <USERID> fournit en body
  */
 router.get('/edit', auth.required, (req, res) => {
-  if (!req.payload.id) {
+  console.log(req.payload);
+  let userId;
+  if (req.payload.role === 'Candidat') {
+    userId = req.payload.id;
+  } else if (req.payload.userToCoach) {
+    userId = req.payload.userToCoach;
+  }
+  if (!userId) {
     console.log(`Aucun userId trouvé, aucun CV ne peut être récupéré`);
     res.status(401).send('Aucun userId trouvé, aucun CV ne peut être récupéré');
   } else {
-    CVController.getCVbyUserId(req.payload.id)
+    CVController.getCVbyUserId(userId)
       .then((cv) => {
         if (cv !== null) {
           console.log(`CV trouvé`);

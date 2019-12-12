@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { UserContext } from '../../../components/store/UserProvider';
 import { CVActions, CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
+import CVEditNoCandidat from '../../../components/cv/CVEditNoCandidat';
 
 const DEFAULT_CV = {
   firstName: '',
@@ -20,7 +22,7 @@ export default class CVEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cv: this.props ? this.props : {},
+      cv: /* this.props ? this.props :  */ {},
     };
 
     this.setLocalCV = this.setLocalCV.bind(this);
@@ -61,17 +63,31 @@ export default class CVEdit extends Component {
 
   render() {
     const { cv } = this.state;
+
     return (
       <LayoutBackOffice title="Edition du CV">
         <div style={{ position: 'relative' }}>
-          {cv ? (
-            <>
-              <CVActions />
-              <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
-            </>
-          ) : (
-            <div>Une erreur s&apos;est produite</div>
-          )}
+          <UserContext.Consumer>
+            {({ user }) => {
+              if (user && user.role === 'Candidat') {
+                return (
+                  <>
+                    <CVActions />
+                    <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
+                  </>
+                );
+              }
+              if (cv.firstName) {
+                return (
+                  <>
+                    <CVActions cv={cv} />
+                    <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
+                  </>
+                );
+              }
+              return <CVEditNoCandidat />;
+            }}
+          </UserContext.Consumer>
         </div>
       </LayoutBackOffice>
     );

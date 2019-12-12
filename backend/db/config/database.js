@@ -5,6 +5,7 @@ dotenv.config();
 module.exports = {
   development: {
     use_env_variable: 'DATABASE_URL',
+    seederStorage: 'sequelize',
   },
   test: {
     /* username: process.env.DB_USERNAME,
@@ -13,8 +14,10 @@ module.exports = {
     host: process.env.DB_HOSTNAME,
     dialect: 'postgres' */
     use_env_variable: 'DATABASE_URL',
+    seederStorage: 'sequelize',
   },
   production: {
     use_env_variable: 'DATABASE_URL',
+    seederStorage: 'sequelize',
   },
 };

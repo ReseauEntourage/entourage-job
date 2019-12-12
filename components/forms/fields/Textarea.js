@@ -15,7 +15,7 @@ export default class Textarea extends Component {
       id: PropTypes.string,
       name: PropTypes.string.isRequired,
       placeholder: PropTypes.string,
-      onChange: PropTypes.func.isRequired,
+      onChange: PropTypes.func,
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
         isInvalid: PropTypes.boolean,
@@ -35,6 +35,7 @@ export default class Textarea extends Component {
       valid: undefined,
       maxLength: 1000,
       defaultValue: '',
+      onChange: () => {},
     };
   }
 
