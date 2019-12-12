@@ -63,7 +63,7 @@ ButtonIcon.defaultProps = {
   onClick: () => {},
 };
 
-let offers;
+let offers = [];
 if (typeof UIkit !== 'undefined') {
   offers = ['private', 'public', 'archive']
     .map((tag, i) =>
@@ -93,11 +93,10 @@ if (typeof UIkit !== 'undefined') {
 }
 
 const Opportunites = () => {
-  const title = `Mes opportunités`;
   const [currentOffer, setCurrentOffer] = useState({});
 
   return (
-    <LayoutBackOffice title={title}>
+    <LayoutBackOffice title="Mes opportunités">
       <Section>
         <h2 className="uk-text-bold">
           Consulte toutes tes opportunités de travail
