@@ -42,15 +42,15 @@ module.exports.prepare = () => {
   app.use('/api/v1/user', routeUser);
 
   // restricting access to some routes
-  // const restrictAccess = (req, res, next) => {
-  //   console.log(`restrictAccess : ${req.isAuthenticated()}`);
+  const restrictAccess = (req, res, next) => {
+    console.log(`restrictAccess : ${req.isAuthenticated()}`);
 
-  //   if (!req.isAuthenticated()) return res.redirect('/login');
-  //   return next();
-  // };
+    if (!req.isAuthenticated()) return res.redirect('/login');
+    return next();
+  };
 
-  // app.use('/profile', restrictAccess);
-  // app.use('/logout', restrictAccess);
+  // todo restriction acces login for connected users
+  app.use('/backoffice/', restrictAccess);
 };
 
 module.exports.get = (path, handle) => {

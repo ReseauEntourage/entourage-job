@@ -1,7 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import PropsType from 'prop-types';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
-import { UserContext } from '../../components/store/UserProvider';
 import { Section, GridNoSSR, IconNoSSR, Button } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
 import Textarea from '../../components/forms/fields/Textarea';
@@ -95,12 +94,7 @@ if (typeof UIkit !== 'undefined') {
 
 const Opportunites = () => {
   const title = `Mes opportunités`;
-  const userContext = useContext(UserContext);
   const [currentOffer, setCurrentOffer] = useState({});
-  if (!userContext.isAuthentificated) {
-    // Router.push('/login');
-    return null;
-  }
 
   return (
     <LayoutBackOffice title={title}>
