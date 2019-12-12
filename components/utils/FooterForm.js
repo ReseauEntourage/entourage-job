@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import Button from './Button';
 import { GridNoSSR } from '.';
 
-const FooterForm = ({ error, onSubmit, onCancel }) => {
+const FooterForm = ({ error, onSubmit, onCancel, submitText }) => {
   return (
     <>
       {error ? (
-        <div className="uk-width-1-3@m">
+        <div className="uk-width-1-1">
           <span
             className="uk-text-danger uk-margin-right"
             style={{ alignSelf: 'center' }}
@@ -40,7 +40,7 @@ const FooterForm = ({ error, onSubmit, onCancel }) => {
                   <></>
                 ),
                 <Button style="primary" onClick={onSubmit}>
-                  Envoyer
+                  {submitText || 'Envoyer'}
                 </Button>,
               ]}
             />
@@ -55,11 +55,13 @@ FooterForm.propTypes = {
   error: PropTypes.string,
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func.isRequired,
+  submitText: PropTypes.string,
 };
 
 FooterForm.defaultProps = {
   error: undefined,
   onCancel: undefined,
+  submitText: undefined,
 };
 
 export default FooterForm;

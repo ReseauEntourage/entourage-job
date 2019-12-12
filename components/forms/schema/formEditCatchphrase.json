@@ -1,0 +1,25 @@
+{
+  "id": "form-catchphrase",
+  "fields": [
+    {
+      "id": "intro",
+      "name": "intro",
+      "component": "input",
+      "type": "text",
+      "title": "Ce que vous pouvez apporter*"
+    }
+  ],
+  "rules": [
+    {
+      "field": "intro",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 80
+        }
+      ],
+      "validWhen": true,
+      "message": "80 caractères maximum"
+    }
+  ]
+}

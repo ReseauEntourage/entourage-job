@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 const sequelize = require('sequelize');
 const db = require('../db/config/databaseConnect');
 const CV = require('../db/models/cv')(db, sequelize.DataTypes);
@@ -7,6 +8,8 @@ const Experience = require('../db/models/experience')(db, sequelize.DataTypes);
 const Language = require('../db/models/language')(db, sequelize.DataTypes);
 const Passion = require('../db/models/passion')(db, sequelize.DataTypes);
 const Skill = require('../db/models/skill')(db, sequelize.DataTypes);
+
+const { Op } = sequelize;
 
 const INCLUDE_CV_COMPLETE = [
   {
@@ -63,9 +66,10 @@ const createCV = (newCV) => {
       intro: newCV.intro || '',
       location: newCV.location || '',
       story: newCV.story || '',
-      status: newCV.status || 'Draft',
+      status: newCV.status || 'Pending',
       transport: newCV.transport || '',
       availability: newCV.availability || '',
+      visibility: newCV.visibility || false,
     })
       .then((cv) => {
         cvCreated = cv;
@@ -227,14 +231,48 @@ const deleteCV = (id) => {
   });
 };
 
-const getCV = (url) => {
+const getCVbyUrl = (url) => {
+  return new Promise((resolve, reject) => {
+    const infoLog = 'getCVbyUrl -';
+    console.log(`${infoLog} Récupérer un CV à partir de son url`);
+    CV.max('version', {
+      where: {
+        status: 'Published',
+        url,
+      },
+    })
+      .then((version) => {
+        if (isNaN(version)) {
+          return Promise.resolve(null);
+        }
+        return CV.findOne({
+          where: { url, status: 'Published', version, visibility: true },
+          include: INCLUDE_CV_COMPLETE,
+        });
+      })
+      .then((result) => resolve(result))
+      .catch((err) => reject(err));
+  });
+};
+
+const getCVbyUserId = (userId) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getCV -';
-    console.log(`${infoLog} Récupérer un CV à partir de son url`);
-    CV.findOne({
-      where: { url },
-      include: INCLUDE_CV_COMPLETE,
+    console.log(`${infoLog} Récupérer un CV non publié à partir du userId`);
+    CV.max('version', {
+      where: {
+        userId,
+      },
     })
+      .then((version) => {
+        if (isNaN(version)) {
+          return Promise.resolve(null);
+        }
+        return CV.findOne({
+          where: { userId, version },
+          include: INCLUDE_CV_COMPLETE,
+        });
+      })
       .then((result) => resolve(result))
       .catch((err) => reject(err));
   });
@@ -245,6 +283,10 @@ const getCVs = () => {
     const infoLog = 'getCVs -';
     console.log(`${infoLog} Récupérer les CVs`);
     CV.findAll({
+      where: {
+        status: 'Published',
+        visibility: true,
+      },
       include: INCLUDE_CV_COMPLETE,
     })
       .then((listeCVs) => resolve(listeCVs))
@@ -259,6 +301,10 @@ const getRandomShortCVs = (nb) => {
       `${infoLog} Récupère des CVs au format court de manière aléatoire`
     );
     CV.findAll({
+      where: {
+        status: 'Published',
+        visibility: true,
+      },
       order: db.random(),
       limit: nb || 11,
       attributes: ['id', 'url', 'firstName'],
@@ -275,6 +321,25 @@ const getRandomShortCVs = (nb) => {
   });
 };
 
+const getVisibility = (userId) => {
+  return new Promise((resolve, reject) => {
+    const infoLog = 'getVisibility -';
+    console.log(
+      `${infoLog} Recherche de l'état visibility du dernier CV publié de l'utilisateur`
+    );
+    CV.findOne({
+      where: {
+        status: 'Published',
+        userId,
+      },
+      attributes: ['visibility', sequelize.fn('max', sequelize.col('version'))],
+      group: ['visibility'],
+    })
+      .then((result) => resolve(result))
+      .catch((err) => reject(err));
+  });
+};
+
 const setCV = (id, cv) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'setCV -';
@@ -287,11 +352,44 @@ const setCV = (id, cv) => {
   });
 };
 
+const setVisibility = (userId, cv) => {
+  return new Promise((resolve, reject) => {
+    const infoLog = 'setVisibility -';
+    console.log(
+      `${infoLog} Recherche de l'état visibility du dernier CV publié de l'utilisateur`
+    );
+    CV.max('version', {
+      where: {
+        status: 'Published',
+        userId,
+      },
+    })
+      .then((max) => {
+        return CV.update(cv, {
+          where: {
+            status: 'Published',
+            userId,
+            version: max,
+          },
+          fields: ['visibility'],
+          returning: true,
+        });
+      })
+      .then((result) => {
+        resolve({ visibility: result[1][0].visibility });
+      })
+      .catch((err) => reject(err));
+  });
+};
+
 module.exports = {
   createCV,
   deleteCV,
-  getCV,
+  getCVbyUrl,
+  getCVbyUserId,
   getCVs,
   getRandomShortCVs,
+  getVisibility,
   setCV,
+  setVisibility,
 };

@@ -1,0 +1,27 @@
+{
+  "id": "form-story",
+  "fields": [
+    {
+      "id": "story",
+      "name": "story",
+      "component": "textarea",
+      "type": "text",
+      "placeholder": "Tapez votre texte",
+      "title": "Mon histoire",
+      "rows": 14
+    }
+  ],
+  "rules": [
+    {
+      "field": "story",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 4000
+        }
+      ],
+      "validWhen": true,
+      "message": "4000 caractères maximum"
+    }
+  ]
+}

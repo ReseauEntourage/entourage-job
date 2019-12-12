@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const UserController = require('./User');
+const jwtExpress = require('express-jwt');
 
 function encryptPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
@@ -27,6 +27,8 @@ function generateJWT(user) {
     {
       email: user.email,
       id: user.id,
+      role: user.role,
+      userToCoach: user.userToCoach,
       exp: parseInt(expirationDate.getTime() / 1000, 10),
     },
     'secret'
@@ -37,11 +39,40 @@ function toAuthJSON(user) {
   return {
     id: user.id,
     email: user.email,
+    firstName: user.firstName,
+    role: user.role,
     token: generateJWT(user),
   };
 }
 
+const getTokenFromHeaders = (req) => {
+  const {
+    headers: { authorization },
+  } = req;
+  console.log('auth :', authorization);
+
+  if (authorization && authorization.split(' ')[0] === 'Token') {
+    return authorization.split(' ')[1];
+  }
+  return null;
+};
+
+const auth = {
+  required: jwtExpress({
+    secret: 'secret',
+    userProperty: 'payload',
+    getToken: getTokenFromHeaders,
+  }),
+  optional: jwtExpress({
+    secret: 'secret',
+    userProperty: 'payload',
+    getToken: getTokenFromHeaders,
+    credentialsRequired: false,
+  }),
+};
+
 module.exports = {
+  auth,
   encryptPassword,
   validatePassword,
   generateJWT,

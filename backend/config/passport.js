@@ -17,23 +17,20 @@ module.exports = {
         {
           usernameField: 'email',
           passwordField: 'password',
-          session: false,
         },
         (email, password, done) => {
-          console.log(`lets found the user : ${email}`);
           UserController.getUserByEmail(email)
             .then((user) => {
-              const userValues = user.dataValues;
               if (
                 !user ||
                 !AuthController.validatePassword(
                   password,
-                  userValues.password,
-                  userValues.salt
+                  user.dataValues.password,
+                  user.dataValues.salt
                 )
               ) {
                 return done(null, false, {
-                  errors: { 'email or password': 'is invalid' },
+                  error: `L'adresse email ou le mot de passe est invalide`,
                 });
               }
               return done(null, user);

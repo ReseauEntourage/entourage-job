@@ -1,0 +1,73 @@
+{
+  "id": "form-login",
+  "fields": [
+    {
+      "id": "email",
+      "name": "email",
+      "type": "email",
+      "component": "input",
+      "placeholder": "Tapez votre adresse mail",
+      "title": "Adresse mail*"
+    },
+    {
+      "id": "password",
+      "name": "password",
+      "type": "password",
+      "component": "input",
+      "placeholder": "Tapez votre mot de passe",
+      "title": "Mot de passe*"
+    }
+  ],
+  "rules": [
+    {
+      "field": "email",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "email",
+      "method": "isEmail",
+      "validWhen": true,
+      "message": "Adresse e-mail invalide"
+    },
+    {
+      "field": "password",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "password",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 100
+        }
+      ],
+      "validWhen": true,
+      "message": "100 caractères maximum"
+    },
+    {
+      "field": "password",
+      "method": "isLength",
+      "args": [
+        {
+          "min": 6
+        }
+      ],
+      "validWhen": true,
+      "message": "Doit contenir au moins 6 caractères"
+    }
+  ]
+}

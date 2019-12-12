@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import { DiscoverPartial, ContactPartial } from '../../components/partials';
-import { CVBackground, CVFiche } from '../../components/cards';
+import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
 
