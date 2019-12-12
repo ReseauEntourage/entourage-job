@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import PropsType from 'prop-types';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
-import { Section, GridNoSSR, IconNoSSR } from '../../components/utils';
+import { Section, GridNoSSR, IconNoSSR, Button } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
 import Textarea from '../../components/forms/fields/Textarea';
 
@@ -56,11 +56,12 @@ const ButtonIcon = ({ name, onClick, className }) => (
 );
 ButtonIcon.propsType = {
   name: PropsType.string.isRequired,
-  onClick: PropsType.func.isRequired,
+  onClick: PropsType.func,
   className: PropsType.string,
 };
 ButtonIcon.defaultProps = {
   className: undefined,
+  onClick: () => {},
 };
 
 let offers;
@@ -70,19 +71,20 @@ if (typeof UIkit !== 'undefined') {
       Array(i === 0 ? 4 : i === 1 ? 10 : 15)
         .fill(0)
         .map(() => {
-          const isStared = Math.random() >= 0.5;
+          const isBookmark = Math.random() >= 0.5;
           return {
-            tag,
-            isStared,
-            isNew: isStared ? false : Math.random() >= 0.5,
+            tag, // todo update the management
+            // category
+            isBookmark,
+            isNew: isBookmark ? false : Math.random() >= 0.5,
             title: randomPhrase(8),
-            from: randomPhrase(6),
-            shortDescription: randomPhrase(20),
-            type: randomPhrase(5),
-            message: randomPhrase(250),
+            company: randomPhrase(20),
+            businessLine: randomPhrase(5),
+            description: randomPhrase(250),
             date: randomPhrase(4),
-            email: randomPhrase(18),
-            phone: randomPhrase(10),
+            recruiterName: randomPhrase(6),
+            recruiterEmail: randomPhrase(18),
+            recruiterPhone: randomPhrase(10),
             location: randomPhrase(12),
           };
         })
@@ -124,8 +126,9 @@ const Opportunites = () => {
             </li>
           </ul>
           <ul
-            className="js-filter uk-child-width-1-3@s uk-child-width-1-4@m"
-            data-uk-grid="masonry: true"
+            className="js-filter uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-3@l"
+            data-uk-grid=""
+            uk-height-match="target: > li .uk-card"
           >
             {offers.map((offer, i) => (
               <li className={`tag-${offer.tag}`} key={i}>
@@ -142,11 +145,11 @@ const Opportunites = () => {
                 >
                   <OfferCard
                     isNew={offer.isNew}
-                    isStared={offer.isStared}
+                    isStared={offer.isBookmark}
                     title={offer.title}
-                    from={offer.from}
-                    shortDescription={offer.shortDescription}
-                    type={offer.type}
+                    from={offer.recruiterName}
+                    shortDescription={offer.company}
+                    type={offer.businessLine}
                     isArchive={offer.tag === 'archive'}
                   />
                 </a>
@@ -175,11 +178,11 @@ const Opportunites = () => {
                       onClick={() => {
                         setCurrentOffer({
                           ...currentOffer,
-                          isStared: !currentOffer.isStared,
+                          isBookmark: !currentOffer.isBookmark,
                         });
                       }}
                       className={`${
-                        currentOffer.isStared ? 'ent-color-amber' : undefined
+                        currentOffer.isBookmark ? 'ent-color-amber' : undefined
                       }`}
                     />
                   </li>
@@ -200,21 +203,23 @@ const Opportunites = () => {
                 <GridNoSSR
                   gap="medium"
                   items={[
-                    <div className="uk-margin-large-left uk-label">
-                      {currentOffer.tag}
-                    </div>,
+                    <Button className="uk-margin-large-left" disabled>
+                      <span style={{ color: '#666' }}>
+                        {currentOffer.businessLine}
+                      </span>
+                    </Button>,
                     <OfferInfoContainer
                       icon="hashtag"
                       title="Entreprise"
-                      items={[currentOffer.shortDescription]}
+                      items={[currentOffer.company]}
                     />,
                     <OfferInfoContainer
                       icon="user"
                       title="Recruteur"
                       items={[
-                        currentOffer.from,
-                        currentOffer.email,
-                        currentOffer.phone,
+                        currentOffer.recruiterName,
+                        currentOffer.recruiterEmail,
+                        currentOffer.recruiterPhone,
                         <span className="uk-text-italic">
                           offre soumise le {currentOffer.date}
                         </span>,
@@ -229,7 +234,7 @@ const Opportunites = () => {
                 <OfferInfoContainer
                   icon="comment"
                   title="Message"
-                  items={[currentOffer.message]}
+                  items={[currentOffer.description]}
                 />,
               ]}
             />
