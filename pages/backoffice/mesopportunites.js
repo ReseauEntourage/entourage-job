@@ -4,6 +4,7 @@ import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { Section, GridNoSSR, IconNoSSR, Button } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
 import Textarea from '../../components/forms/fields/Textarea';
+import ButtonIcon from '../../components/utils/ButtonIcon';
 
 function randomPhrase(length) {
   const radom13chars = function() {
@@ -46,21 +47,6 @@ OfferInfoContainer.propsType = {
 };
 OfferInfoContainer.defaultProps = {
   items: [],
-};
-
-const ButtonIcon = ({ name, onClick, className }) => (
-  <a href="#" onClick={() => onClick()}>
-    <IconNoSSR name={name} className={className} />
-  </a>
-);
-ButtonIcon.propsType = {
-  name: PropsType.string.isRequired,
-  onClick: PropsType.func,
-  className: PropsType.string,
-};
-ButtonIcon.defaultProps = {
-  className: undefined,
-  onClick: () => {},
 };
 
 let offers = [];
