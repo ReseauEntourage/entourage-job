@@ -46,7 +46,7 @@ router.post('/contact-us', (req, res) => {
       })
       .then((value) => {
         console.log('mail: contact us sent');
-        res.status(200).send(value);
+        res.status(200).send('mail sent');
       })
       .catch((err) => {
         console.log(err);
