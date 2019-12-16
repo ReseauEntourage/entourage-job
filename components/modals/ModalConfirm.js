@@ -6,28 +6,24 @@ import ModalGeneric from './ModalGeneric';
 import { Button, GridNoSSR } from '../utils';
 
 const ModalConfirm = ({ id, onConfirm, text, buttonText }) => (
-  <ModalGeneric classNameSize="uk-width-1-2@m" id={id}>
+  <ModalGeneric id={id} classNameSize="uk-width-1-2@m">
     {(close) => (
       <>
         <p className="uk-text-center uk-text-lead">{text}</p>
-        <GridNoSSR
-          center
-          gap="small"
-          items={[
-            <Button style="default" onClick={() => close()}>
-              Annuler
-            </Button>,
-            <Button
-              style="primary"
-              onClick={() => {
-                close();
-                onConfirm();
-              }}
-            >
-              {buttonText}
-            </Button>,
-          ]}
-        />
+        <GridNoSSR gap="small" center>
+          <Button style="default" onClick={close}>
+            Annuler
+          </Button>
+          <Button
+            style="primary"
+            onClick={() => {
+              close();
+              onConfirm();
+            }}
+          >
+            {buttonText}
+          </Button>
+        </GridNoSSR>
       </>
     )}
   </ModalGeneric>

@@ -36,39 +36,35 @@ const CVEditReviews = ({ reviews, onChange }) => {
         {reviews.length > 0 ? (
           reviews.map((review, i) => (
             <li id={i} key={i}>
-              <div className="uk-child-width-auto" data-uk-grid>
-                <div>
-                  <IconNoSSR name="quote-right" />
-                </div>
-                <div className="uk-width-expand">
+              <GridNoSSR eachWidths={['auto', 'expand']}>
+                <IconNoSSR name="quote-right" />
+                <>
                   <p className="uk-text-small uk-margin-small">{review.text}</p>
                   <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
                     {review.name}
                   </p>
                   <p className="uk-margin-remove">{review.status}</p>
-                </div>
-                <div>
-                  <span className="uk-text-muted uk-margin-small">
-                    <div className="uk-flex uk-flex-column">
-                      <ButtonIcon
-                        name="pencil"
-                        onClick={() => {
-                          setCurrentIndex(i);
-                          setCurrentDefaultValue(review); // todo
-                          UIkit.modal(`#modal-testimonial-edit`).show();
-                        }}
-                      />
-                      <ButtonIcon
-                        name="trash"
-                        onClick={() => {
-                          setCurrentIndex(i);
-                          UIkit.modal(`#modal-testimonial-remove`).show();
-                        }}
-                      />
-                    </div>
-                  </span>
-                </div>
-              </div>
+                </>
+                <span className="uk-text-muted uk-margin-small">
+                  <div className="uk-flex uk-flex-column">
+                    <ButtonIcon
+                      name="pencil"
+                      onClick={() => {
+                        setCurrentIndex(i);
+                        setCurrentDefaultValue(review); // todo
+                        UIkit.modal(`#modal-testimonial-edit`).show();
+                      }}
+                    />
+                    <ButtonIcon
+                      name="trash"
+                      onClick={() => {
+                        setCurrentIndex(i);
+                        UIkit.modal(`#modal-testimonial-remove`).show();
+                      }}
+                    />
+                  </div>
+                </span>
+              </GridNoSSR>
             </li>
           ))
         ) : (

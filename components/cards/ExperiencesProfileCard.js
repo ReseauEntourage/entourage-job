@@ -40,7 +40,7 @@ function getExpWithoutSeparatedDate(exp) {
   };
 }
 
-// PROPBLEM: les modals existe. mais ne sont pas present dans le dom react, resultat les evenements ne sont plus géré
+// PROBLEM: les modals existe. mais ne sont pas present dans le dom react, resultat les evenements ne sont plus géré
 // todo: ONE MODAL, MULTIPLE EDITION
 const ExperiencesProfileCard = ({ experiences, onChange }) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -61,27 +61,29 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           />
         )}
       </GridNoSSR>
-
-      <ul className="uk-list ent-list">
-        {experiences.length !== 0 ? (
+      {/* trick pour ne pas avoir une erreur lors de la creation d'un nouveau noeud, voir l'edition des review */}
+      <ul className={`uk-list${experiences.length > 0 ? ' ent-list' : ''}`}>
+        {experiences.length <= 0 ? (
+          <li className="uk-text-italic">
+            Aucune expérience n&apos;a encore été ajoutée
+          </li>
+        ) : (
           experiences.map((exp, i) => (
             <li id={i} key={i}>
-              <div className="uk-child-width-auto" data-uk-grid>
-                <div className="uk-width-expand">
-                  <div className="uk-text-muted uk-margin-small">
-                    <span>
-                      {exp.dateEnd
-                        ? `${exp.dateStart} - ${exp.dateEnd}`
-                        : exp.dateStart}
-                    </span>
-                  </div>
+              <GridNoSSR eachWidths={['expand', 'auto']}>
+                <>
+                  <p className="uk-text-muted uk-margin-small">
+                    {exp.dateEnd
+                      ? `${exp.dateStart} - ${exp.dateEnd}`
+                      : exp.dateStart}
+                  </p>
                   <p className="uk-text-bold uk-text-primary uk-margin-small">
                     {exp.title}
                   </p>
                   <p className="uk-margin-small-top uk-margin-medium-bottom">
                     {exp.description}
                   </p>
-                </div>
+                </>
                 {onChange && (
                   <div className="uk-flex uk-flex-column">
                     <ButtonIcon
@@ -103,13 +105,9 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
                     />
                   </div>
                 )}
-              </div>
+              </GridNoSSR>
             </li>
           ))
-        ) : (
-          <li className="uk-text-italic">
-            Aucune expérience n&apos;a encore été ajoutée
-          </li>
         )}
       </ul>
       {onChange && (
