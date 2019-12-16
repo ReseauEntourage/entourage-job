@@ -40,7 +40,7 @@ const createOpportunity = (newOpportunity) => {
 
     console.log(`${infoLog} Etape 1 - Création de l'opportunité de base`);
     Opportunity.create({
-      category: newOpportunity.category,
+      category: newOpportunity.userId ? 'Perso' : 'Publique',
       title: newOpportunity.title,
       company: newOpportunity.company || null,
       recruiterName: newOpportunity.recruiterName,
@@ -92,9 +92,9 @@ const createOpportunity = (newOpportunity) => {
         console.log(`${infoLog} Etape 5 - Relation Opportunity / Users`);
         if (users) {
           console.log(`${infoLog} Candidat(s) trouvé(s)`);
-          const listUsers = users.map((user) => {
+          const listUsers = users; /* .map((user) => {
             return user[0];
-          });
+          }); */
           console.log(
             `${infoLog} Ajout de la relation entre l'opportunité et les users`
           );
@@ -127,29 +127,6 @@ const deleteOpportunity = (id) => {
   });
 };
 
-/* const getCVbyUserId = (userId) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getCV -';
-    console.log(`${infoLog} Récupérer un CV non publié à partir du userId`);
-    CV.max('version', {
-      where: {
-        userId,
-      },
-    })
-      .then((version) => {
-        if (isNaN(version)) {
-          return Promise.resolve(null);
-        }
-        return CV.findOne({
-          where: { userId, version },
-          include: INCLUDE_CV_COMPLETE,
-        });
-      })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
-  });
-}; */
-
 const getOpportunities = () => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getOpportunities -';
@@ -166,24 +143,16 @@ const getOpportunities = () => {
   });
 };
 
-/* const getVisibility = (userId) => {
+const getOpportunity = (id) => {
   return new Promise((resolve, reject) => {
-    const infoLog = 'getVisibility -';
-    console.log(
-      `${infoLog} Recherche de l'état visibility du dernier CV publié de l'utilisateur`
-    );
-    CV.findOne({
-      where: {
-        status: 'Published',
-        userId,
-      },
-      attributes: ['visibility', sequelize.fn('max', sequelize.col('version'))],
-      group: ['visibility'],
+    Opportunity.findOne({
+      where: { id },
+      include: INCLUDE_OPPORTUNITY_COMPLETE,
     })
       .then((result) => resolve(result))
       .catch((err) => reject(err));
   });
-}; */
+};
 
 /* const setCV = (id, cv) => {
   return new Promise((resolve, reject) => {
@@ -197,43 +166,10 @@ const getOpportunities = () => {
   });
 }; */
 
-/* const setVisibility = (userId, cv) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'setVisibility -';
-    console.log(
-      `${infoLog} Recherche de l'état visibility du dernier CV publié de l'utilisateur`
-    );
-    CV.max('version', {
-      where: {
-        status: 'Published',
-        userId,
-      },
-    })
-      .then((max) => {
-        return CV.update(cv, {
-          where: {
-            status: 'Published',
-            userId,
-            version: max,
-          },
-          fields: ['visibility'],
-          returning: true,
-        });
-      })
-      .then((result) => {
-        resolve({ visibility: result[1][0].visibility });
-      })
-      .catch((err) => reject(err));
-  });
-}; */
-
 module.exports = {
   createOpportunity,
   deleteOpportunity,
-  /* getCVbyUserId, */
+  getOpportunity,
   getOpportunities,
-  /* getRandomShortCVs,
-  getVisibility,
-  setCV,
-  setVisibility, */
+  /* setCV, */
 };

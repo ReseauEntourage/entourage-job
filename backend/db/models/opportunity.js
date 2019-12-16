@@ -2,7 +2,7 @@ const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
   const Opportunity = sequelize.define(
-    'opportunities',
+    'Opportunities',
     {
       category: {
         type: DataTypes.STRING,
