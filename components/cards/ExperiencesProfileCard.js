@@ -1,9 +1,12 @@
-import React from 'react';
+/* global UIkit */
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+
 import ModalEdit from '../modals/ModalEdit';
 import schemaformEditExperience from '../forms/schema/formEditExperience';
-import ModalGeneric from '../modals/ModalGeneric';
-import { Button, IconNoSSR, GridNoSSR, CloseButtonNoSSR } from '../utils';
+import { GridNoSSR } from '../utils';
+import ButtonIcon from '../utils/ButtonIcon';
+import ModalConfirm from '../modals/ModalConfirm';
 
 function getExpWithSeparatedDates(exp) {
   const dateStartSplited = exp.dateStart.split('/');
@@ -40,35 +43,28 @@ function getExpWithoutSeparatedDate(exp) {
 // PROPBLEM: les modals existe. mais ne sont pas present dans le dom react, resultat les evenements ne sont plus géré
 // todo: ONE MODAL, MULTIPLE EDITION
 const ExperiencesProfileCard = ({ experiences, onChange }) => {
+  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [currentDefaultValue, setCurrentDefaultValue] = useState({});
+
   return (
     <div className="uk-card uk-card-default uk-card-body">
-      <div className="uk-flex-inline uk-width-1-1">
+      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
         <h3 className="uk-card-title">
           Mon <span className="uk-text-primary">expérience</span>
         </h3>
         {onChange && (
-          <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
-            <ModalEdit
-              id="modal-experience"
-              button="plus"
-              title="Ajout - Mon expérience"
-              formSchema={schemaformEditExperience}
-              onSubmit={(fields) =>
-                onChange({
-                  Experiences: [
-                    ...experiences,
-                    getExpWithoutSeparatedDate(fields),
-                  ],
-                })
-              }
-            />
-          </h3>
+          <ButtonIcon
+            onClick={() => {
+              UIkit.modal(`#modal-experience-add`).show();
+            }}
+            name="plus"
+          />
         )}
-      </div>
+      </GridNoSSR>
 
-      {experiences.length !== 0 ? (
-        <ul className="uk-list ent-list">
-          {experiences.map((exp, i) => (
+      <ul className="uk-list ent-list">
+        {experiences.length !== 0 ? (
+          experiences.map((exp, i) => (
             <li id={i} key={i}>
               <div className="uk-child-width-auto" data-uk-grid>
                 <div className="uk-width-expand">
@@ -88,67 +84,70 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
                 </div>
                 {onChange && (
                   <div className="uk-flex uk-flex-column">
-                    <ModalEdit
-                      // must use different id for each modal
-                      id={`modal-experience-edit-${i}`}
-                      title="Édition - Mon expérience"
-                      formSchema={schemaformEditExperience}
-                      defaultValues={getExpWithSeparatedDates(exp)}
-                      onSubmit={(fields) => {
-                        const newExperiences = experiences;
-                        newExperiences[i] = getExpWithoutSeparatedDate(fields);
-                        onChange({ Experiences: newExperiences });
+                    <ButtonIcon
+                      name="pencil"
+                      onClick={() => {
+                        setCurrentIndex(i);
+                        setCurrentDefaultValue(
+                          getExpWithSeparatedDates(experiences[i])
+                        );
+                        UIkit.modal(`#modal-experience-edit`).show();
                       }}
                     />
-                    <Button
-                      style="text"
-                      toggle={`target: #modal-experience-remove-${i}`}
-                    >
-                      <IconNoSSR name="trash" ratio={1.5} />
-                    </Button>
-                    <ModalGeneric
-                      classNameSize="uk-width-1-2@m"
-                      id={`modal-experience-remove-${i}`}
-                    >
-                      {(close) => (
-                        <div>
-                          <CloseButtonNoSSR className="uk-modal-close-default" />
-                          <p className="uk-text-center uk-text-lead">
-                            Êtes-vous sûr(e) de vouloir supprimer cette
-                            expérience ?
-                          </p>
-                          <GridNoSSR
-                            center
-                            className="uk-grid-small"
-                            items={[
-                              <Button style="default" onClick={() => close()}>
-                                Annuler
-                              </Button>,
-                              <Button
-                                style="primary"
-                                onClick={() => {
-                                  close();
-                                  experiences.splice(i, 1);
-                                  onChange({ Experiences: experiences });
-                                }}
-                              >
-                                Supprimer
-                              </Button>,
-                            ]}
-                          />
-                        </div>
-                      )}
-                    </ModalGeneric>
+                    <ButtonIcon
+                      name="trash"
+                      onClick={() => {
+                        setCurrentIndex(i);
+                        UIkit.modal(`#modal-experience-remove`).show();
+                      }}
+                    />
                   </div>
                 )}
               </div>
             </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="uk-text-italic">
-          Aucune expérience n&apos;a encore été ajoutée
-        </p>
+          ))
+        ) : (
+          <li className="uk-text-italic">
+            Aucune expérience n&apos;a encore été ajoutée
+          </li>
+        )}
+      </ul>
+      {onChange && (
+        <>
+          <ModalEdit
+            id="modal-experience-add"
+            title="Ajout - Mon expérience"
+            formSchema={schemaformEditExperience}
+            onSubmit={(fields) =>
+              onChange({
+                Experiences: [
+                  ...experiences,
+                  getExpWithoutSeparatedDate(fields),
+                ],
+              })
+            }
+          />
+          <ModalEdit
+            id="modal-experience-edit"
+            title="Édition - Mon expérience"
+            formSchema={schemaformEditExperience}
+            defaultValues={currentDefaultValue}
+            onSubmit={(fields) => {
+              const newExperiences = experiences;
+              newExperiences[currentIndex] = getExpWithoutSeparatedDate(fields);
+              onChange({ Experiences: newExperiences });
+            }}
+          />
+          <ModalConfirm
+            id="modal-experience-remove"
+            text="Êtes-vous sûr(e) de vouloir supprimer cette expérience ?"
+            buttonText="supprimer"
+            onConfirm={() => {
+              experiences.splice(currentIndex, 1);
+              onChange({ Experiences: experiences });
+            }}
+          />
+        </>
       )}
     </div>
   );

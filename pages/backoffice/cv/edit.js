@@ -1,51 +1,27 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { UserContext } from '../../../components/store/UserProvider';
 import { CVActions, CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
 import CVEditNoCandidat from '../../../components/cv/CVEditNoCandidat';
 
-const DEFAULT_CV = {
-  firstName: '',
-  intro: '',
-  Ambitions: [],
-  Contracts: [],
-  Languages: [],
-  Passions: [],
-  Skills: [],
-  Experiences: [],
-  url: '',
-};
-
-export default class CVEdit extends Component {
+export default class Edit extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cv: /* this.props ? this.props :  */ {},
+      cv: {},
     };
 
     this.setLocalCV = this.setLocalCV.bind(this);
   }
 
-  static get defaultProps() {
-    return {
-      cv: DEFAULT_CV,
-    };
-  }
-
-  static get propTypes() {
-    return {
-      cv: PropTypes.shape({
-        firstName: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired,
-      }),
-    };
-  }
-
   componentDidMount() {
     Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`)
       .then((res) => {
+        // TODO SUPPRIMER LORSQUE DB REVIEWS OK
+        if (!res.data.Reviews) {
+          res.data.Reviews = [];
+        }
         this.setState({ cv: res.data });
       })
       .catch((error) => {

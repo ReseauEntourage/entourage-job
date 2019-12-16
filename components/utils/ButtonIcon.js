@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { IconNoSSR } from './Icon';
 
 const ButtonIcon = ({ name, onClick, className, href }) => (
-  <a href={href} onClick={() => onClick()}>
+  <a className="uk-text-emphasis" href={href} onClick={() => onClick()}>
     <IconNoSSR name={name} className={className} ratio={1.5} />
   </a>
 );

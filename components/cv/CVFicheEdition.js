@@ -55,52 +55,34 @@ const CVFicheEdition = ({ cv, onChange }) => {
 
   return (
     <Section>
-      <GridNoSSR
-        childWidths={['1-2@s']}
-        match
-        items={[
-          <CVEditIntro intro={cv.intro} onChange={onChange} />,
-          <CVEditPicture img="" onChange={onChange} />,
-        ]}
-      />
-      <GridNoSSR
-        childWidths={['1-2@s']}
-        match
-        items={[
-          <InfoProfileCard
-            contracts={arrayContracts}
-            location={cv.location}
-            availability={cv.availability}
-            languages={arrayLanguages}
-            transport={cv.transport}
-            onChange={onChange}
-          />,
-          <GridNoSSR
-            childWidths={['1-2@m']}
-            match
-            items={[
-              <SkillsCard list={arraySkills} onChange={onChange} />,
-              <PassionsCard list={arrayPassions} onChange={onChange} />,
-            ]}
-          />,
-        ]}
-      />
-      <GridNoSSR
-        childWidths={['1-2@s']}
-        items={[
-          <GridNoSSR
-            childWidths={['1-1']}
-            items={[
-              <StoryProfileCard description={cv.story} onChange={onChange} />,
-              <CVEditReviews reviews={cv.reviews} onChange={onChange} />,
-            ]}
-          />,
-          <ExperiencesProfileCard
-            experiences={cv.Experiences}
-            onChange={onChange}
-          />,
-        ]}
-      />
+      <GridNoSSR childWidths={['1-2@s']} match>
+        <CVEditIntro intro={cv.intro} onChange={onChange} />
+        <CVEditPicture img="" onChange={onChange} />
+      </GridNoSSR>
+      <GridNoSSR childWidths={['1-2@s']} match>
+        <InfoProfileCard
+          contracts={arrayContracts}
+          location={cv.location}
+          availability={cv.availability}
+          languages={arrayLanguages}
+          transport={cv.transport}
+          onChange={onChange}
+        />
+        <GridNoSSR childWidths={['1-2@m']} match>
+          <SkillsCard list={arraySkills} onChange={onChange} />
+          <PassionsCard list={arrayPassions} onChange={onChange} />
+        </GridNoSSR>
+      </GridNoSSR>
+      <GridNoSSR childWidths={['1-2@s']}>
+        <GridNoSSR childWidths={['1-1']}>
+          <StoryProfileCard description={cv.story} onChange={onChange} />
+          <CVEditReviews reviews={cv.Reviews} onChange={onChange} />
+        </GridNoSSR>
+        <ExperiencesProfileCard
+          experiences={cv.Experiences}
+          onChange={onChange}
+        />
+      </GridNoSSR>
     </Section>
   );
 };
