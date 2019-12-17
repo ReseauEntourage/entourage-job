@@ -47,69 +47,69 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
   const [currentDefaultValue, setCurrentDefaultValue] = useState({});
 
   return (
-    <div className="uk-card uk-card-default uk-card-body">
-      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
-        <h3 className="uk-card-title">
-          Mon <span className="uk-text-primary">expérience</span>
-        </h3>
-        {onChange && (
-          <ButtonIcon
-            onClick={() => {
-              UIkit.modal(`#modal-experience-add`).show();
-            }}
-            name="plus"
-          />
-        )}
-      </GridNoSSR>
-      {/* trick pour ne pas avoir une erreur lors de la creation d'un nouveau noeud, voir l'edition des review */}
-      <ul className={`uk-list${experiences.length > 0 ? ' ent-list' : ''}`}>
-        {experiences.length <= 0 ? (
-          <li className="uk-text-italic">
-            Aucune expérience n&apos;a encore été ajoutée
-          </li>
-        ) : (
-          experiences.map((exp, i) => (
-            <li id={i} key={i}>
-              <GridNoSSR eachWidths={['expand', 'auto']}>
-                <>
-                  <p className="uk-text-muted uk-margin-small">
-                    {exp.dateEnd
-                      ? `${exp.dateStart} - ${exp.dateEnd}`
-                      : exp.dateStart}
-                  </p>
-                  <p className="uk-text-bold uk-text-primary uk-margin-small">
-                    {exp.title}
-                  </p>
-                  <p className="uk-margin-small-top uk-margin-medium-bottom">
-                    {exp.description}
-                  </p>
-                </>
-                {onChange && (
-                  <div className="uk-flex uk-flex-column">
-                    <ButtonIcon
-                      name="pencil"
-                      onClick={() => {
-                        setCurrentIndex(i);
-                        setCurrentDefaultValue(
-                          getExpWithSeparatedDates(experiences[i])
-                        );
-                        UIkit.modal(`#modal-experience-edit`).show();
-                      }}
-                    />
-                    <ButtonIcon
-                      name="trash"
-                      onClick={() => {
-                        setCurrentIndex(i);
-                        UIkit.modal(`#modal-experience-remove`).show();
-                      }}
-                    />
-                  </div>
-                )}
-              </GridNoSSR>
+    <>
+      <div className="uk-card uk-card-default uk-card-body">
+        <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+          <h3 className="uk-card-title">
+            Mon <span className="uk-text-primary">expérience</span>
+          </h3>
+          {onChange && (
+            <ButtonIcon
+              onClick={() => UIkit.modal(`#modal-experience-add`).show()}
+              name="plus"
+            />
+          )}
+        </GridNoSSR>
+        {/* trick pour ne pas avoir une erreur lors de la creation d'un nouveau noeud, voir l'edition des review */}
+        <ul className={`uk-list${experiences.length > 0 ? ' ent-list' : ''}`}>
+          {experiences.length <= 0 ? (
+            <li className="uk-text-italic">
+              Aucune expérience n&apos;a encore été ajoutée
             </li>
-          ))
-        )}
-      </ul>
+          ) : (
+            experiences.map((exp, i) => (
+              <li id={i} key={i}>
+                <GridNoSSR eachWidths={['expand', 'auto']}>
+                  <>
+                    <p className="uk-text-muted uk-margin-small">
+                      {exp.dateEnd
+                        ? `${exp.dateStart} - ${exp.dateEnd}`
+                        : exp.dateStart}
+                    </p>
+                    <p className="uk-text-bold uk-text-primary uk-margin-small">
+                      {exp.title}
+                    </p>
+                    <p className="uk-margin-small-top uk-margin-medium-bottom">
+                      {exp.description}
+                    </p>
+                  </>
+                  {onChange && (
+                    <div className="uk-flex uk-flex-column">
+                      <ButtonIcon
+                        name="pencil"
+                        onClick={() => {
+                          setCurrentIndex(i);
+                          setCurrentDefaultValue(
+                            getExpWithSeparatedDates(experiences[i])
+                          );
+                          UIkit.modal(`#modal-experience-edit`).show();
+                        }}
+                      />
+                      <ButtonIcon
+                        name="trash"
+                        onClick={() => {
+                          setCurrentIndex(i);
+                          UIkit.modal(`#modal-experience-remove`).show();
+                        }}
+                      />
+                    </div>
+                  )}
+                </GridNoSSR>
+              </li>
+            ))
+          )}
+        </ul>
+      </div>
       {onChange && (
         <>
           <ModalEdit
@@ -147,7 +147,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           />
         </>
       )}
-    </div>
+    </>
   );
 };
 ExperiencesProfileCard.propTypes = {

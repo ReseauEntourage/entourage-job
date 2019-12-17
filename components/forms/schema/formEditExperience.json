@@ -74,7 +74,6 @@
           "id": "end-month",
           "name": "end-month",
           "component": "select",
-          "placeholder": "Mois",
           "options": [
             { "value": null, "text": "Mois" },
             { "value": 1, "text": "Janvier" },
@@ -133,22 +132,22 @@
       "method": "isLength",
       "args": [
         {
-          "max": 40
+          "max": 100
         }
       ],
       "validWhen": true,
-      "message": "40 caractères maximum"
+      "message": "100 caractères maximum"
     },
     {
       "field": "description",
       "method": "isLength",
       "args": [
         {
-          "max": 100
+          "max": 2000
         }
       ],
       "validWhen": true,
-      "message": "100 caractères maximum"
+      "message": "2000 caractères maximum"
     },
     {
       "field": "start-month",
