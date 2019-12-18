@@ -5,6 +5,7 @@ import { Section, GridNoSSR, IconNoSSR, Button } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
 import Textarea from '../../components/forms/fields/Textarea';
 import ButtonIcon from '../../components/utils/ButtonIcon';
+import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
 
 function randomPhrase(length) {
   const radom13chars = function() {
@@ -84,14 +85,10 @@ const Opportunites = () => {
   return (
     <LayoutBackOffice title="Mes opportunités">
       <Section>
-        <h2 className="uk-text-bold">
-          Consulte toutes tes opportunités de travail
-        </h2>
-        <p className="uk-text-lead uk-width-2-3@m">
-          Parcours les offres qui t&rsquo;ont été adressées directement ainsi
-          que celles communes aux différents candidats du parcours LinkedOut.
-        </p>
-        <hr className="ent-divier-backoffice uk-margin-large-top uk-margin-large-bottom" />
+        <HeaderBackoffice
+          title="Consulte toutes tes opportunités de travail"
+          description="Parcours les offres qui t&rsquo;ont été adressées directement ainsi que celles communes aux différents candidats du parcours LinkedOut."
+        />
         <div uk-filter="target: .js-filter">
           <ul className="uk-subnav ent-subnav">
             <li uk-filter-control=".tag-private" className="uk-active">

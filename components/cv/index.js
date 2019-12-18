@@ -1,4 +1,3 @@
-export { default as CVActions } from './CVActions';
 export { default as CVBackground } from './CVBackground';
 export { default as CVEditCatchphrase } from './CVEditCatchphrase';
 export { default as CVEditPicture } from './CVEditPicture';

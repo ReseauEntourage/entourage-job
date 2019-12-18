@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import { UserContext } from '../../../components/store/UserProvider';
-import { CVActions, CVFicheEdition } from '../../../components/cv';
+import { CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
 import CVEditNoCandidat from '../../../components/cv/CVEditNoCandidat';
+import { Section, Button, GridNoSSR } from '../../../components/utils';
+import CVEditWelcome from '../../../components/cv/CVEditWelcome';
 
 export default class Edit extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cv: {},
+      cv: undefined,
     };
 
     this.setLocalCV = this.setLocalCV.bind(this);
@@ -19,6 +20,7 @@ export default class Edit extends Component {
     Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`)
       .then((res) => {
         // TODO SUPPRIMER LORSQUE DB REVIEWS OK
+        // TODO ajouter un loading screen
         if (!res.data.Reviews) {
           res.data.Reviews = [];
         }
@@ -49,29 +51,20 @@ export default class Edit extends Component {
 
     return (
       <LayoutBackOffice title="Edition du CV">
-        <div style={{ position: 'relative' }}>
-          <UserContext.Consumer>
-            {({ user }) => {
-              if (user && user.role === 'Candidat') {
-                return (
-                  <>
-                    <CVActions />
-                    <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
-                  </>
-                );
-              }
-              if (cv.firstName) {
-                return (
-                  <>
-                    <CVActions cv={cv} />
-                    <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
-                  </>
-                );
-              }
-              return <CVEditNoCandidat />;
-            }}
-          </UserContext.Consumer>
-        </div>
+        <Section>
+          {cv === undefined ? (
+            <CVEditNoCandidat />
+          ) : (
+            <>
+              <CVEditWelcome cv={cv} />
+              <GridNoSSR className="uk-flex-right uk-margin">
+                <Button style="default">Prévisualiser la page</Button>
+                <Button style="primary">Publier</Button>
+              </GridNoSSR>
+              <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
+            </>
+          )}
+        </Section>
       </LayoutBackOffice>
     );
   }

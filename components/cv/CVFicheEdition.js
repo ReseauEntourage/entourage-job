@@ -55,7 +55,7 @@ const CVFicheEdition = ({ cv, onChange }) => {
     });
 
   return (
-    <Section>
+    <div>
       <GridNoSSR childWidths={['1-2@s']} match>
         <GridNoSSR
           childWidths={['1-1']}
@@ -93,7 +93,7 @@ const CVFicheEdition = ({ cv, onChange }) => {
           onChange={onChange}
         />
       </GridNoSSR>
-    </Section>
+    </div>
   );
 };
 
