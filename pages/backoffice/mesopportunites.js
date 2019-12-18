@@ -95,7 +95,7 @@ const Opportunites = () => {
               <a href="#">Mes offres</a>
             </li>
             <li uk-filter-control=".tag-public">
-              <a href="#">Toutes les offres</a>
+              <a href="#">Offres générales</a>
             </li>
             <li uk-filter-control=".tag-archive">
               <a href="#">Offres archivées</a>
