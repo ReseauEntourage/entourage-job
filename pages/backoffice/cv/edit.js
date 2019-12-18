@@ -22,6 +22,13 @@ export default class Edit extends Component {
         if (!res.data.Reviews) {
           res.data.Reviews = [];
         }
+        if (!res.data.catchphrase) {
+          res.data.catchphrase = res.data.intro;
+          res.data.intro = undefined;
+        }
+        if (!res.data.devise) {
+          res.data.devise = null;
+        }
         this.setState({ cv: res.data });
       })
       .catch((error) => {

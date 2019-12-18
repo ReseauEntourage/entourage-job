@@ -10,7 +10,8 @@ import {
   StoryProfileCard,
   ExperiencesProfileCard,
 } from '../cards';
-import { CVEditIntro, CVEditPicture, CVEditReviews } from '.';
+import { CVEditCatchphrase, CVEditPicture, CVEditReviews } from '.';
+import CVEditDevise from './CVEditDevise';
 
 const toUpperFirstLetter = (text) => {
   if (typeof text !== 'string' || text === '') {
@@ -56,8 +57,17 @@ const CVFicheEdition = ({ cv, onChange }) => {
   return (
     <Section>
       <GridNoSSR childWidths={['1-2@s']} match>
-        <CVEditIntro intro={cv.intro} onChange={onChange} />
-        <CVEditPicture img="" onChange={onChange} />
+        <GridNoSSR
+          childWidths={['1-1']}
+          items={[
+            <CVEditDevise devise={cv.devise} onChange={onChange} />,
+            <CVEditCatchphrase
+              catchphrase={cv.catchphrase}
+              onChange={onChange}
+            />,
+          ]}
+        />
+        <CVEditPicture onChange={onChange} />
       </GridNoSSR>
       <GridNoSSR childWidths={['1-2@s']} match>
         <InfoProfileCard
