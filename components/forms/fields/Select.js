@@ -7,7 +7,7 @@ export default class Select extends Component {
     return {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      onChange: PropTypes.func.isRequired,
+      onChange: PropTypes.func,
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
         isInvalid: PropTypes.boolean,
@@ -22,6 +22,7 @@ export default class Select extends Component {
     return {
       valid: undefined,
       defaultValue: undefined,
+      onChange: () => {},
     };
   }
 
@@ -53,7 +54,7 @@ export default class Select extends Component {
     const { id, name, title, valid, options, defaultValue } = this.props;
     const transparent = !!title;
     return (
-      <>
+      <div>
         <div
           className="uk-form-controls"
           style={
@@ -109,7 +110,7 @@ export default class Select extends Component {
           </select>
         </div>
         <FormValidatorErrorMessage validObj={valid} />
-      </>
+      </div>
     );
   }
 }

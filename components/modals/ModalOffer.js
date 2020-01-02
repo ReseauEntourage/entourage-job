@@ -3,28 +3,25 @@ import React from 'react';
 import PropsType from 'prop-types';
 import { GridNoSSR, Button, IconNoSSR } from '../utils';
 import Textarea from '../forms/fields/Textarea';
+import Select from '../forms/fields/Select';
 import ButtonIcon from '../utils/ButtonIcon';
 
 const OfferInfoContainer = ({ icon, title, items }) => (
-  <GridNoSSR
-    gap="small"
-    eachWidths={['auto', 'expand']}
-    items={[
-      <IconNoSSR name={icon} />,
-      <GridNoSSR
-        gap="collapse"
-        childWidths={['1-1']}
-        items={[<span className="uk-text-bold">{title}</span>, ...items]}
-      />,
-    ]}
-  />
+  <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
+    {icon ? <IconNoSSR name={icon} /> : <div className="uk-margin-left" />}
+    <GridNoSSR gap="collapse" childWidths={['1-1']}>
+      {title ? <span className="uk-text-bold">{title}</span> : undefined}
+      {items}
+    </GridNoSSR>
+  </GridNoSSR>
 );
 OfferInfoContainer.propsType = {
-  icon: PropsType.string.isRequired,
+  icon: PropsType.string,
   title: PropsType.string.isRequired,
   items: PropsType.arrayOf(PropsType.string),
 };
 OfferInfoContainer.defaultProps = {
+  icon: undefined,
   items: [],
 };
 
@@ -72,37 +69,55 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
           className="uk-margin-bottom"
           eachWidths={['1-3@s', '2-3@s']}
           items={[
-            <GridNoSSR
-              gap="medium"
-              items={[
-                <Button className="uk-margin-large-left" disabled>
+            <GridNoSSR gap="medium">
+              {/*
+              <div> <Button className="uk-margin-large-left" disabled>
                   <span style={{ color: '#666' }}>
                     {currentOffer.businessLine}
                   </span>
-                </Button>,
-                <OfferInfoContainer
-                  icon="hashtag"
-                  title="Entreprise"
-                  items={[currentOffer.company]}
-                />,
-                <OfferInfoContainer
-                  icon="user"
-                  title="Recruteur"
-                  items={[
-                    currentOffer.recruiterName,
-                    currentOffer.recruiterEmail,
-                    currentOffer.recruiterPhone,
-                    <span className="uk-text-italic">
-                      offre soumise le {currentOffer.date}
-                    </span>,
-                  ]}
-                />,
-                <OfferInfoContainer
-                  icon="location"
-                  title={currentOffer.location}
-                />,
-              ]}
-            />,
+                </Button>
+              </div>
+                */}
+              <OfferInfoContainer
+                items={[
+                  <Select
+                    id="offer-status"
+                    title="Status"
+                    name="status"
+                    placeholder="status"
+                    options={[
+                      { value: 'contacté', text: 'Contacté' },
+                      { value: "phase d'entretien", text: "Phase d'entretien" },
+                      { value: 'embauche', text: 'Embauche' },
+                      { value: 'refus', text: 'Refus' },
+                      { value: 'standby', text: 'Standby' },
+                      { value: 'relance', text: 'Relance' },
+                    ]}
+                  />,
+                ]}
+              />
+              <OfferInfoContainer
+                icon="hashtag"
+                title="Entreprise"
+                items={[currentOffer.company]}
+              />
+              <OfferInfoContainer
+                icon="user"
+                title="Recruteur"
+                items={[
+                  currentOffer.recruiterName,
+                  currentOffer.recruiterEmail,
+                  currentOffer.recruiterPhone,
+                  <span className="uk-text-italic">
+                    offre soumise le {currentOffer.date}
+                  </span>,
+                ]}
+              />
+              <OfferInfoContainer
+                icon="location"
+                title={currentOffer.location}
+              />
+            </GridNoSSR>,
             <OfferInfoContainer
               icon="comment"
               title="Message"
