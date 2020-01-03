@@ -17,6 +17,8 @@ const Grid = ({
   gap,
   children,
   middle,
+  column,
+  row,
 }) => {
   let classBuffer = '';
   let gridBuffer = '';
@@ -30,6 +32,8 @@ const Grid = ({
   if (center) classBuffer += ' uk-flex-center';
   if (between) classBuffer += ' uk-flex-between';
   if (middle) classBuffer += ' uk-flex-middle';
+  if (column) classBuffer += ' uk-flex-column';
+  if (row) classBuffer += ' uk-flex-row';
   if (className) classBuffer += ` ${className}`;
   const content = items !== undefined ? items : children;
   return (

@@ -11,82 +11,81 @@ import {
   NavbarLogo,
 } from '../utils';
 import './Header.less';
-import HeaderConnected from './HeaderConnected';
 
 const Header = ({ isHome }) => {
   const LINKS = [
-    { href: '/jeveuxaider', name: 'Je veux aider' },
-    { href: '/jeveuxtravailler', name: 'Je veux travailler' },
-    { href: '/jeveuxrecruter', name: 'Je veux recruter' },
+    { href: '/jeveuxtravailler', name: 'Travailler' },
+    { href: '#', name: '|' },
+    { href: '/jeveuxrecruter', name: 'Recruter' },
+    { href: '#', name: '|' },
+    { href: '/jeveuxaider', name: 'Aider' },
   ];
-
+  // style={{ backgroundColor: '#000' }}
   return (
-    <header style={{ borderBottom: '3px solid darkgray' }}>
-      <UserContext.Consumer>
-        {({ isAuthentificated }) => {
-          if (isAuthentificated) {
-            return <HeaderConnected />;
-          }
-          return (
-            <>
-              <NavbarNoSSR
-                sticky={
-                  isHome ? 'top: 300; animation: uk-animation-slide-top' : ''
-                }
-                className={`uk-background-default uk-navbar-transparent ${
-                  isHome ? 'ent-home' : 'ent-header-shadow'
-                }`}
-                left={
-                  <NavbarLogo
-                    href="/"
-                    src="/static/img/linkedout_by_entourage.png"
-                    alt="Linkedout"
-                  />
-                }
-                right={
-                  <Nav
-                    navbar
-                    items={[
-                      ...LINKS.map((value) => (
-                        <Link href={value.href}>
-                          <a
-                            className="uk-visible@m"
-                            style={{
-                              fontWeight: 500,
-                              fontSize: '1rem',
-                              color: 'black',
-                              textTransform: 'none',
-                            }}
-                          >
-                            {value.name}
-                          </a>
-                        </Link>
-                      )),
-                      <div className="uk-navbar-item uk-visible@m">
-                        <button
-                          type="button"
-                          className="uk-button uk-button-primary"
-                        >
-                          Voir les candidats
-                        </button>
-                      </div>,
-                      <HamburgerNoSSR href="#offcanvas" hidden="m" />,
-                    ]}
-                  />
-                }
-              />
-              <OffcanvasNoSSR id="offcanvas">
-                <Nav
-                  navbar={false}
-                  items={LINKS.map((value) => (
-                    <SimpleLink href={value.href}>{value.name}</SimpleLink>
-                  ))}
-                />
-              </OffcanvasNoSSR>
-            </>
-          );
-        }}
-      </UserContext.Consumer>
+    <header>
+      <NavbarNoSSR
+        sticky={isHome ? 'top: 300; animation: uk-animation-slide-top' : ''}
+        className={`uk-background-secondary uk-navbar-transparent uk-light ${
+          isHome ? 'ent-home' : 'ent-header-shadow'
+        }`}
+        // left={
+        //   !isHome && (
+        //     <NavbarLogo
+        //       href="/"
+        //       src="/static/img/linkedout_by_entourage.png"
+        //       alt="Linkedout"
+        //     />
+        //   )
+        // }
+        right={
+          <Nav
+            navbar
+            items={[
+              ...LINKS.map((value) => (
+                <Link href={value.href}>
+                  <a
+                    // className="uk-visible@s"
+                    style={{
+                      // fontWeight: 500,
+                      // fontSize: '1rem',
+                      color: 'white',
+                      textTransform: 'none',
+                    }}
+                  >
+                    {value.name}
+                  </a>
+                </Link>
+              )),
+              <div className="uk-navbar-item uk-visible@s">
+                <button
+                  type="button"
+                  className="uk-button uk-button-primary"
+                  style={{
+                    color: 'white',
+                    backgroundColor: '#F55F24',
+                    backgroundImage: 'none',
+                    textTransform: 'none',
+                    boder: null,
+                    padding: '0px 20px',
+                    borderRadius: '2px',
+                  }}
+                >
+                  Voir les candidats &gt;
+                </button>
+              </div>,
+              <HamburgerNoSSR href="#offcanvas" hidden="s" />,
+            ]}
+          />
+        }
+      />
+      <OffcanvasNoSSR id="offcanvas">
+        <Nav
+          navbar={false}
+          items={LINKS.map((value) => (
+            <SimpleLink href={value.href}>{value.name}</SimpleLink>
+          ))}
+        />
+      </OffcanvasNoSSR>
     </header>
   );
 };

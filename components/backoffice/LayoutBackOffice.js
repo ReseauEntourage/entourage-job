@@ -4,6 +4,8 @@ import { Container } from 'next/app';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Header from '../headers/Header';
+import HeaderConnected from '../headers/HeaderConnected';
+import { UserContext } from '../store/UserProvider';
 
 const LayoutBackOffice = ({ children, title, router }) => {
   return (
@@ -12,7 +14,14 @@ const LayoutBackOffice = ({ children, title, router }) => {
         <title>{`${title} - LinkedOut`}</title>
         <link rel="icon" type="image/png" href="/static/img/fav.png" />
       </Head>
-      <Header isHome={router.asPath === `/backoffice/cv/edit`} />
+      <UserContext.Consumer>
+        {({ isAuthentificated }) => {
+          if (isAuthentificated) {
+            return <HeaderConnected />;
+          }
+          return <Header isHome={false} />;
+        }}
+      </UserContext.Consumer>
       {children}
     </Container>
   );
