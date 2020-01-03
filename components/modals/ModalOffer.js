@@ -36,7 +36,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
             <h3 className="uk-text-bold">{currentOffer.title}</h3>,
             <ul className="uk-iconnav uk-grid-medium">
               <li>
-                <ButtonIcon name="trash" />
+                <ButtonIcon name="pull" />
               </li>
               <li>
                 <ButtonIcon
