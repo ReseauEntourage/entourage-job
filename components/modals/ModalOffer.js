@@ -65,7 +65,18 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
             />
           </GridNoSSR>
           <List className="uk-iconnav uk-grid-medium">
-            <ButtonIcon name="pull" />
+            <ButtonIcon
+              name="pull"
+              className={
+                currentOffer.tag === 'archive' ? 'ent-color-amber' : undefined
+              }
+              onClick={() => {
+                setCurrentOffer({
+                  ...currentOffer,
+                  tag: currentOffer.tag === 'archive' ? 'private' : 'archive',
+                });
+              }}
+            />
             <ButtonIcon
               name="star"
               className={
