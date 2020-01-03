@@ -32,8 +32,25 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
         <GridNoSSR
           gap="small"
           between
+          eachWidths={['auto', 'auto']} // uk-flex-first@s
           items={[
-            <h3 className="uk-text-bold">{currentOffer.title}</h3>,
+            <GridNoSSR middle>
+              <h3 className="uk-text-bold">{currentOffer.title}</h3>
+              <Select
+                id="offer-status"
+                title="Status"
+                name="status"
+                placeholder="status"
+                options={[
+                  { value: 'contacté', text: 'Contacté' },
+                  { value: "phase d'entretien", text: "Phase d'entretien" },
+                  { value: 'embauche', text: 'Embauche' },
+                  { value: 'refus', text: 'Refus' },
+                  { value: 'standby', text: 'Standby' },
+                  { value: 'relance', text: 'Relance' },
+                ]}
+              />
+            </GridNoSSR>,
             <ul className="uk-iconnav uk-grid-medium">
               <li>
                 <ButtonIcon name="pull" />
@@ -80,20 +97,11 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
                 */}
               <OfferInfoContainer
                 items={[
-                  <Select
-                    id="offer-status"
-                    title="Status"
-                    name="status"
-                    placeholder="status"
-                    options={[
-                      { value: 'contacté', text: 'Contacté' },
-                      { value: "phase d'entretien", text: "Phase d'entretien" },
-                      { value: 'embauche', text: 'Embauche' },
-                      { value: 'refus', text: 'Refus' },
-                      { value: 'standby', text: 'Standby' },
-                      { value: 'relance', text: 'Relance' },
-                    ]}
-                  />,
+                  <Button disabled>
+                    <span style={{ color: '#666' }}>
+                      {currentOffer.businessLine}
+                    </span>
+                  </Button>,
                 ]}
               />
               <OfferInfoContainer
