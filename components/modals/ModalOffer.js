@@ -5,6 +5,22 @@ import { GridNoSSR, Button, IconNoSSR } from '../utils';
 import Textarea from '../forms/fields/Textarea';
 import Select from '../forms/fields/Select';
 import ButtonIcon from '../utils/ButtonIcon';
+import { CloseButtonNoSSR } from '../utils/CloseButton';
+
+const List = ({ className, children }) => (
+  <ul className={`uk-nav ${className}`}>
+    {children.map((item) => (
+      <li>{item}</li>
+    ))}
+  </ul>
+);
+List.propTypes = {
+  className: PropsType.string,
+  children: PropsType.arrayOf(PropsType.element).isRequired,
+};
+List.defaultProps = {
+  className: undefined,
+};
 
 const OfferInfoContainer = ({ icon, title, items }) => (
   <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
@@ -15,7 +31,7 @@ const OfferInfoContainer = ({ icon, title, items }) => (
     </GridNoSSR>
   </GridNoSSR>
 );
-OfferInfoContainer.propsType = {
+OfferInfoContainer.propTypes = {
   icon: PropsType.string,
   title: PropsType.string.isRequired,
   items: PropsType.arrayOf(PropsType.string),
@@ -28,73 +44,48 @@ OfferInfoContainer.defaultProps = {
 const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
   <div id="modal-offer" data-uk-modal="bg-close:false">
     <div className="uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl">
+      <CloseButtonNoSSR className="uk-modal-close-default" />
       <div className="uk-modal-body">
-        <GridNoSSR
-          gap="small"
-          between
-          eachWidths={['auto', 'auto']} // uk-flex-first@s
-          items={[
-            <GridNoSSR middle>
-              <h3 className="uk-text-bold">{currentOffer.title}</h3>
-              <Select
-                id="offer-status"
-                title="Status"
-                name="status"
-                placeholder="status"
-                options={[
-                  { value: 'contacté', text: 'Contacté' },
-                  { value: "phase d'entretien", text: "Phase d'entretien" },
-                  { value: 'embauche', text: 'Embauche' },
-                  { value: 'refus', text: 'Refus' },
-                  { value: 'standby', text: 'Standby' },
-                  { value: 'relance', text: 'Relance' },
-                ]}
-              />
-            </GridNoSSR>,
-            <ul className="uk-iconnav uk-grid-medium">
-              <li>
-                <ButtonIcon name="pull" />
-              </li>
-              <li>
-                <ButtonIcon
-                  name="star"
-                  className={
-                    currentOffer.isBookmark ? 'ent-color-amber' : undefined
-                  }
-                  onClick={() => {
-                    setCurrentOffer({
-                      ...currentOffer,
-                      isBookmark: !currentOffer.isBookmark,
-                    });
-                  }}
-                />
-              </li>
-              <li>
-                <ButtonIcon
-                  name="close"
-                  onClick={() => {
-                    setCurrentOffer({});
-                    UIkit.modal('#modal-offer').hide();
-                  }}
-                />
-              </li>
-            </ul>,
-          ]}
-        />
+        <GridNoSSR gap="small" between middle>
+          <GridNoSSR middle>
+            <h3 className="uk-text-bold">{currentOffer.title}</h3>
+            <Select
+              id="offer-status"
+              title="Status"
+              name="status"
+              placeholder="status"
+              options={[
+                { value: 'contacté', text: 'Contacté' },
+                { value: "phase d'entretien", text: "Phase d'entretien" },
+                { value: 'embauche', text: 'Embauche' },
+                { value: 'refus', text: 'Refus' },
+                { value: 'standby', text: 'Standby' },
+                { value: 'relance', text: 'Relance' },
+              ]}
+            />
+          </GridNoSSR>
+          <List className="uk-iconnav uk-grid-medium">
+            <ButtonIcon name="pull" />
+            <ButtonIcon
+              name="star"
+              className={
+                currentOffer.isBookmark ? 'ent-color-amber' : undefined
+              }
+              onClick={() => {
+                setCurrentOffer({
+                  ...currentOffer,
+                  isBookmark: !currentOffer.isBookmark,
+                });
+              }}
+            />
+          </List>
+        </GridNoSSR>
         <hr />
         <GridNoSSR
           className="uk-margin-bottom"
           eachWidths={['1-3@s', '2-3@s']}
           items={[
             <GridNoSSR gap="medium">
-              {/*
-              <div> <Button className="uk-margin-large-left" disabled>
-                  <span style={{ color: '#666' }}>
-                    {currentOffer.businessLine}
-                  </span>
-                </Button>
-              </div>
-                */}
               <OfferInfoContainer
                 items={[
                   <Button disabled>
@@ -143,7 +134,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
     </div>
   </div>
 );
-ModalOffer.propsType = {
+ModalOffer.propTypes = {
   currentOffer: PropsType.shape({
     description: PropsType.string,
     recruiterName: PropsType.string,
