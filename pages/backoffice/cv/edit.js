@@ -31,6 +31,9 @@ export default class Edit extends Component {
         if (!res.data.devise) {
           res.data.devise = null;
         }
+        if (!res.data.careerPath) {
+          res.data.careerPath = null;
+        }
         this.setState({ cv: res.data });
       })
       .catch((error) => {

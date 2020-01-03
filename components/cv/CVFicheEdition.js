@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/aria-role */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Section } from '../utils';
 import { GridNoSSR } from '../utils/Grid';
 import {
   SkillsCard,
@@ -12,6 +11,7 @@ import {
 } from '../cards';
 import { CVEditCatchphrase, CVEditPicture, CVEditReviews } from '.';
 import CVEditDevise from './CVEditDevise';
+import CVEditCareerPath from './CVEditCareerPath';
 
 const toUpperFirstLetter = (text) => {
   if (typeof text !== 'string' || text === '') {
@@ -55,18 +55,17 @@ const CVFicheEdition = ({ cv, onChange }) => {
     });
 
   return (
-    <div>
+    <GridNoSSR childWidths={['1-1']}>
+      <CVEditCareerPath
+        careerPath0={cv.careerPath0}
+        careerPath1={cv.careerPath1}
+        onChange={onChange}
+      />
       <GridNoSSR childWidths={['1-2@s']} match>
-        <GridNoSSR
-          childWidths={['1-1']}
-          items={[
-            <CVEditDevise devise={cv.devise} onChange={onChange} />,
-            <CVEditCatchphrase
-              catchphrase={cv.catchphrase}
-              onChange={onChange}
-            />,
-          ]}
-        />
+        <GridNoSSR childWidths={['1-1']}>
+          <CVEditDevise devise={cv.devise} onChange={onChange} />
+          <CVEditCatchphrase catchphrase={cv.catchphrase} onChange={onChange} />
+        </GridNoSSR>
         <CVEditPicture onChange={onChange} />
       </GridNoSSR>
       <GridNoSSR childWidths={['1-2@s']} match>
@@ -93,7 +92,7 @@ const CVFicheEdition = ({ cv, onChange }) => {
           onChange={onChange}
         />
       </GridNoSSR>
-    </div>
+    </GridNoSSR>
   );
 };
 
