@@ -28,7 +28,7 @@ const datas = [
   },
 ];
 const EmphasePartial = () => (
-  <Section style="default" container="small" id="profiles">
+  <Section style="default" container="" id="profiles">
     <GridNoSSR gap="large" column middle eachWidths={['2-3@s', '1-1']}>
       <div className="uk-text-center">
         <h2 className="uk-text-bold">

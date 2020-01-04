@@ -50,7 +50,7 @@ export default class CandidatListPartial extends Component {
       return null;
     }
     return (
-      <Section style="muted" container="small" id="profiles">
+      <Section style="muted" container="" id="profiles">
         <GridNoSSR gap="large" column middle eachWidths={['2-3@s', '1-1']}>
           <div className="uk-text-center">
             <h2 className="uk-text-bold">
