@@ -70,7 +70,12 @@ const NumberPartial = () => (
         center
         childWidths={['1-1', '1-3@s']}
         items={numbers.map((content) => (
-          <NumberCard value={content.value} description={content.description} />
+          <div className="uk-flex uk-flex-center">
+            <NumberCard
+              value={content.value}
+              description={content.description}
+            />
+          </div>
         ))}
       />
       <p className="uk-text-center">

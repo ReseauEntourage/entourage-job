@@ -18,10 +18,7 @@ const Index = () => {
       <CandidatListPartial />
       <EmphasePartial />
       <NumberPartial />
-
-      {/*
       <DifferencePartial />
-      <ContactPartial /> */}
     </Layout>
   );
 };
