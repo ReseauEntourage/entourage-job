@@ -57,7 +57,7 @@ const EmphasePartial = () => (
               <span className="uk-text-primary uk-heading-small">
                 {value.number}
               </span>
-              <GridNoSSR column>
+              <GridNoSSR gap="small" column>
                 <h4>{value.title}</h4>
                 <hr
                   // className="uk-divider-small"

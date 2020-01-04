@@ -5,7 +5,6 @@ import {
   EmphasePartial,
   CandidatListPartial,
   DifferencePartial,
-  ContactPartial,
   NumberPartial,
 } from '../components/partials';
 import Header from '../components/headers/Header';

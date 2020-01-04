@@ -8,21 +8,21 @@ const datas = [
     button: 'Je veux travailler',
     title: 'Découvrez les profils des candidats',
     description:
-      'Nos candidats sont des gens en situation de précarité financière ?et professionnels, mais ils sont ?tous accompagnés par des travailleurs sociaux.',
+      'Nos candidats sont des gens en situation de précarité financière et professionnels, mais ils sont tous accompagnés par des travailleurs sociaux.',
   },
   {
     href: '/jeveuxaider',
     button: 'Je veux aider',
     title: 'Découvrez les profils des candidats',
     description:
-      'Nos candidats sont des gens en situation de précarité financière ?et professionnels, mais ils sont ?tous accompagnés par des travailleurs sociaux.',
+      'Nos candidats sont des gens en situation de précarité financière et professionnels, mais ils sont tous accompagnés par des travailleurs sociaux.',
   },
   {
     href: '/jeveuxrecruter',
     button: 'Je veux recruter',
     title: 'Découvrez les profils des candidats',
     description:
-      'Nos candidats sont des gens en situation de précarité financière ?et professionnels, mais ils sont ?tous accompagnés par des travailleurs sociaux.',
+      'Nos candidats sont des gens en situation de précarité financière et professionnels, mais ils sont tous accompagnés par des travailleurs sociaux.',
   },
 ];
 const DifferencePartial = () => (

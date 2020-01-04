@@ -139,22 +139,24 @@ const NumberPartial = () => (
           <div>
             <a
               href="#"
-              className="uk-position-center-left-out uk-position-small"
+              // -out
+              className="uk-position-center-left uk-position-small"
               uk-slider-item="previous"
             >
               <IconNoSSR
-                className="uk-text-primary"
+                className="uk-text-primary uk-icon-button"
                 name="chevron-left"
                 ratio="2"
               />
             </a>
             <a
               href="#"
-              className="uk-position-center-right-out  uk-position-small"
+              // -out
+              className="uk-position-center-right  uk-position-small"
               uk-slider-item="next"
             >
               <IconNoSSR
-                className="uk-text-primary"
+                className="uk-text-primary uk-icon-button"
                 name="chevron-right"
                 ratio="2"
               />
