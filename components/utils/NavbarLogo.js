@@ -3,9 +3,11 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { ImgNoSSR } from './Img';
 
-const NavbarLogo = ({ href, src, alt }) => (
+const NavbarLogo = ({ href, src, alt, alwaysVisible }) => (
   <Link href={href}>
-    <a className="uk-navbar-item uk-logo">
+    <a // info: regle css sur uk-logo
+      className={`uk-navbar-item uk-width-small ${!alwaysVisible && 'uk-logo'}`}
+    >
       <ImgNoSSR src={src} alt={alt} />
     </a>
   </Link>

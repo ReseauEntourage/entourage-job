@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { UserContext } from '../store/UserProvider';
@@ -20,23 +20,22 @@ const Header = ({ isHome }) => {
     { href: '#', name: '|' },
     { href: '/jeveuxaider', name: 'Aider' },
   ];
-  // style={{ backgroundColor: '#000' }}
+
   return (
     <header>
       <NavbarNoSSR
-        sticky={isHome ? 'top: 300; animation: uk-animation-slide-top' : ''}
-        className={`uk-background-secondary uk-navbar-transparent uk-light ${
-          isHome ? 'ent-home' : 'ent-header-shadow'
-        }`}
-        // left={
-        //   !isHome && (
-        //     <NavbarLogo
-        //       href="/"
-        //       src="/static/img/linkedout_by_entourage.png"
-        //       alt="Linkedout"
-        //     />
-        //   )
-        // }
+        sticky=""
+        className="uk-background-secondary uk-navbar-transparent uk-light ent-home"
+        left={
+          <>
+            <NavbarLogo
+              href="/"
+              src="/static/img/logo-linkedout.png"
+              alt="Linkedout"
+              alwaysVisible={!isHome}
+            />
+          </>
+        }
         right={
           <Nav
             navbar

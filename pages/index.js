@@ -11,22 +11,16 @@ import {
 import Header from '../components/headers/Header';
 
 const Index = () => {
-  const numbers = [
-    { value: 15, description: 'Candidats accompagnés' },
-    { value: 342, description: 'CVs partagés sur les réseaux' },
-    { value: 5, description: 'Personnes réinsérées' },
-  ];
-
   return (
     <Layout>
       <LandingPagePartial />
-      <Header />
+      <Header isHome />
       <CandidatListPartial />
       <EmphasePartial />
+      <NumberPartial />
 
       {/*
       <DifferencePartial />
-      <NumberPartial numbers={numbers} />
       <ContactPartial /> */}
     </Layout>
   );

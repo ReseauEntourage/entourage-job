@@ -33,7 +33,7 @@ const LandingPagePartial = () => {
               width="250"
             />
             <h1
-              className="uk-heading-small uk-text-bold uk-text-center uk-width-xxlarge"
+              className="uk-heading-small uk-text-bold uk-text-center uk-width-xxlarge@m"
               style={{ color: 'white' }}
             >
               <span>Partagez votre </span>
