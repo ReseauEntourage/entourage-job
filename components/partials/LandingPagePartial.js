@@ -43,22 +43,22 @@ const LandingPagePartial = () => {
 
             <div className="uk-flex uk-flex-row uk-flex-center uk-flex-left@s">
               <FacebookShareButton
-                className="uk-icon-link uk-text-primary uk-margin-right"
+                className="uk-icon-button uk-icon-link uk-text-primary uk-margin-right"
                 url={sharedURL}
                 quote={sharedDescription}
                 hashtags={hashtags}
                 style={{ cursor: 'pointer' }}
               >
-                <IconNoSSR name="facebook" ratio={2} />
+                <IconNoSSR name="facebook" />
               </FacebookShareButton>
               <LinkedinShareButton
-                className="uk-icon-link uk-text-primary uk-margin-right"
+                className="uk-icon-button uk-icon-link uk-text-primary uk-margin-right"
                 url={sharedURL}
                 title={sharedTitle}
                 description={sharedDescription}
                 style={{ cursor: 'pointer' }}
               >
-                <IconNoSSR name="linkedin" ratio={2} />
+                <IconNoSSR name="linkedin" />
               </LinkedinShareButton>
               <TwitterShareButton
                 url={sharedURL}
@@ -66,9 +66,9 @@ const LandingPagePartial = () => {
                 hashtags={hashtags}
                 via={viaTwitter}
                 style={{ cursor: 'pointer' }}
-                className="uk-icon-link uk-text-primary primary uk-margin-right"
+                className="uk-icon-button uk-icon-link uk-text-primary primary uk-margin-right"
               >
-                <IconNoSSR name="twitter" ratio={2} />
+                <IconNoSSR name="twitter" />
               </TwitterShareButton>
             </div>
           </GridNoSSR>
