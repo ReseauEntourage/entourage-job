@@ -43,7 +43,7 @@ const Header = ({ isHome }) => {
               ...LINKS.map((value) => (
                 <Link href={value.href}>
                   <a
-                    // className="uk-visible@s"
+                    className="uk-visible@s"
                     style={{
                       // fontWeight: 500,
                       // fontSize: '1rem',
@@ -80,7 +80,7 @@ const Header = ({ isHome }) => {
       <OffcanvasNoSSR id="offcanvas">
         <Nav
           navbar={false}
-          items={LINKS.map((value) => (
+          items={LINKS.filter(({ href }) => href !== '#').map((value) => (
             <SimpleLink href={value.href}>{value.name}</SimpleLink>
           ))}
         />

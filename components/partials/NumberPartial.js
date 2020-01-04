@@ -85,7 +85,7 @@ const NumberPartial = () => (
       <div data-uk-slider="">
         <div className="uk-position-relative">
           <div className="uk-slider-container uk-visible-toggle" tabIndex="-1">
-            <ul className="uk-slider-items uk-child-width-1-4@s uk-grid uk-grid-match uk-grid-small">
+            <ul className="uk-slider-items uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small">
               {data.map(({ title, description, role, imgSrc, imgAlt }) => (
                 <li>
                   <div className="uk-card uk-card-small uk-card-default">
