@@ -29,9 +29,14 @@ export default class CandidatListPartial extends Component {
   }
 
   prepareItems() {
+    // function insert(arr, index, item) {
+    //   arr.splice(index, 0, item);
+    // }
+
     const { listCVs } = this.state;
-    return listCVs.map((cv) => {
-      return (
+    const cardsToDisplay = listCVs
+      // .filter((v, i) => i < 7)
+      .map((cv) => (
         <CandidatCard
           url={cv.url}
           imgSrc="static/img/arthur.png"
@@ -39,8 +44,19 @@ export default class CandidatListPartial extends Component {
           firstName={cv.firstName}
           ambitions={cv.Ambitions.slice(0, 2)}
         />
-      );
-    });
+      ));
+
+    // effet parallax fixé
+    // insert(cardsToDisplay, 0, <div style={{ height: '80px' }} />);
+    // insert(cardsToDisplay, 2, <div style={{ height: '80px' }} />);
+    // if (!cardsToDisplay.length % 2) {
+    //   insert(
+    //     cardsToDisplay,
+    //     cardsToDisplay.length - 1,
+    //     <div style={{ height: '80px' }}>ok</div>
+    //   );
+    // }
+    return cardsToDisplay;
   }
 
   render() {
@@ -50,7 +66,7 @@ export default class CandidatListPartial extends Component {
       return null;
     }
     return (
-      <Section style="muted" container="" id="profiles">
+      <Section style="muted" container="" id="candidat">
         <GridNoSSR gap="large" column middle eachWidths={['2-3@s', '1-1']}>
           <div className="uk-text-center">
             <h2 className="uk-text-bold">
@@ -62,11 +78,13 @@ export default class CandidatListPartial extends Component {
               partagez ou contactez-les.
             </p>
           </div>
-          <GridNoSSR
-            childWidths={['1-1', '1-3@s']}
-            // parallax={400}
-            items={items}
-          />
+          <div uk-scrollspy="cls:uk-animation-slide-bottom-small; target: .uk-card; delay: 50">
+            <GridNoSSR
+              childWidths={['1-1', '1-2@m', '1-3@l']}
+              gap="small"
+              items={items}
+            />
+          </div>
           <button
             type="button"
             className="uk-button uk-button-primary"

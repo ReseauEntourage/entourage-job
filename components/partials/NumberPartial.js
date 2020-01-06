@@ -82,86 +82,110 @@ const NumberPartial = () => (
         Linked Out est plébiscité par les candidats et aussi par les recuteurs.
       </p>
 
-      <div data-uk-slider="">
-        <div className="uk-position-relative">
-          <div className="uk-slider-container uk-visible-toggle" tabIndex="-1">
-            <ul className="uk-slider-items uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small">
-              {data.map(({ title, description, role, imgSrc, imgAlt }) => (
-                <li>
-                  <div className="uk-card uk-card-small uk-card-default">
-                    <div className="uk-height-1-1">
-                      {imgSrc && (
-                        <div className="uk-card-media-top">
-                          <img
-                            className="uk-height-small uk-width-1-1"
-                            src={imgSrc}
-                            alt={imgAlt}
-                          />
-                        </div>
-                      )}
-                      <GridNoSSR
-                        gap="small"
-                        between
-                        column
-                        eachWidths={['expand', 'auto']}
-                        className={`uk-card-body ${!imgSrc && 'uk-height-1-1'}`}
-                      >
-                        <div>
-                          <IconNoSSR
-                            flip
-                            className="uk-text-primary"
-                            name="quote-right"
-                            ratio="1.4"
-                          />
-                          <p className="uk-margin-remove">{description}</p>
-                          <IconNoSSR
-                            className="uk-text-muted uk-width-1-1 uk-text-right"
-                            name="quote-right"
-                            ratio=".8"
-                          />
-                        </div>
-                        <div className="uk-card-title">
-                          <h3 className="uk-text-bold uk-text-small uk-margin-remove-bottom uk-text-uppercase">
-                            {title}
-                          </h3>
-                          <p className="uk-text-meta uk-margin-remove-top">
-                            {role}
-                          </p>
-                        </div>
-                      </GridNoSSR>
+      <div className="uk-hidden@s uk-card uk-card-body uk-card-secondary">
+        Slider désactivé
+      </div>
+
+      {/* probleme avec slider qui decale la fenetre  */}
+      <div className="uk-position-relative uk-visible@s" data-uk-slider="">
+        <div className="uk-slider-container">
+          <ul className="uk-slider-items uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small">
+            {data.map(({ title, description, role, imgSrc, imgAlt }) => (
+              <li>
+                <div className="uk-card uk-card-small uk-card-default">
+                  {imgSrc && (
+                    <div className="uk-card-media-top">
+                      <img
+                        className="uk-height-small uk-width-1-1"
+                        src={imgSrc}
+                        alt={imgAlt}
+                      />
                     </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <ul className="uk-slider-nav uk-dotnav uk-flex-center uk-margin" />
-          </div>
-          <div>
-            <a
-              href="#"
-              // -out
-              className="uk-position-center-left uk-position-small"
-              uk-slider-item="previous"
-            >
-              <IconNoSSR
-                className="uk-text-primary uk-icon-button"
-                name="chevron-left"
-                ratio="2"
-              />
-            </a>
-            <a
-              href="#"
-              // -out
-              className="uk-position-center-right  uk-position-small"
-              uk-slider-item="next"
-            >
-              <IconNoSSR
-                className="uk-text-primary uk-icon-button"
-                name="chevron-right"
-                ratio="2"
-              />
-            </a>
-          </div>
+                  )}
+                  <GridNoSSR
+                    gap="small"
+                    between
+                    column
+                    eachWidths={['expand', 'auto']}
+                    className={`uk-card-body ${!imgSrc && 'uk-height-1-1'}`}
+                  >
+                    <div>
+                      <IconNoSSR
+                        flip
+                        className="uk-text-primary"
+                        name="quote-right"
+                        ratio="1.4"
+                      />
+                      <p className="uk-margin-remove">{description}</p>
+                      <IconNoSSR
+                        className="uk-text-muted uk-width-1-1 uk-text-right"
+                        name="quote-right"
+                        ratio=".8"
+                      />
+                    </div>
+                    <div className="uk-card-title">
+                      <h3 className="uk-text-bold uk-text-small uk-margin-remove-bottom uk-text-uppercase">
+                        {title}
+                      </h3>
+                      <p className="uk-text-meta uk-margin-remove-top">
+                        {role}
+                      </p>
+                    </div>
+                  </GridNoSSR>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <ul className="uk-slider-nav uk-dotnav uk-flex-center uk-margin" />
+        </div>
+
+        <div className="uk-hidden@l">
+          <a
+            href="#"
+            className="uk-position-center-left uk-position-small"
+            uk-slider-item="previous"
+          >
+            <IconNoSSR
+              className="uk-text-primary uk-icon-button uk-overlay-default"
+              name="chevron-left"
+              ratio="2"
+            />
+          </a>
+          <a
+            href="#"
+            className="uk-position-center-right uk-position-small"
+            uk-slider-item="next"
+          >
+            <IconNoSSR
+              className="uk-text-primary uk-icon-button uk-overlay-default"
+              name="chevron-right"
+              ratio="2"
+            />
+          </a>
+        </div>
+        <div className="uk-visible@l">
+          <a
+            href="#"
+            className="uk-position-center-left-out uk-position-small"
+            uk-slider-item="previous"
+          >
+            <IconNoSSR
+              className="uk-text-primary"
+              name="chevron-left"
+              ratio="2"
+            />
+          </a>
+          <a
+            href="#"
+            className="uk-position-center-right-out  uk-position-small"
+            uk-slider-item="next"
+          >
+            <IconNoSSR
+              className="uk-text-primary"
+              name="chevron-right"
+              ratio="2"
+            />
+          </a>
         </div>
       </div>
     </GridNoSSR>

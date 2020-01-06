@@ -80,14 +80,21 @@ const DifferencePartial = () => (
         </p>
 
         {/* input */}
-        <div className="uk-align-center uk-text-center" data-uk-grid>
-          <div className="uk-padding-remove">
-            <div data-uk-form-custom="target: true">
+        <div
+          className="uk-align-center uk-text-center uk-width-1-2@s"
+          data-uk-grid
+        >
+          <GridNoSSR
+            eachWidths={['expand', 'auto']}
+            className="uk-padding-remove"
+            gap="collapse"
+          >
+            <div data-uk-form-custom="target: true" className="uk-width-1-1">
               <a className="uk-form-icon" disabled>
                 <IconNoSSR name="mail" />
               </a>
               <input
-                className="uk-input uk-width-large"
+                className="uk-input"
                 type="text"
                 placeholder="Votre adresse mail..."
                 style={{ borderBottom: 0, borderRadius: '2px 0 0 2px' }}
@@ -108,7 +115,7 @@ const DifferencePartial = () => (
             >
               OK
             </button>
-          </div>
+          </GridNoSSR>
         </div>
       </>
 

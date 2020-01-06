@@ -8,6 +8,7 @@ import {
   NumberPartial,
 } from '../components/partials';
 import Header from '../components/headers/Header';
+import '../static/css/style.less';
 
 const Index = () => {
   return (
