@@ -11,6 +11,7 @@ const Grid = ({
   divider,
   center,
   between,
+  around,
   parallax,
   className,
   eachWidths,
@@ -33,6 +34,7 @@ const Grid = ({
   if (divider) classBuffer += ' uk-grid-divider';
   if (center) classBuffer += ' uk-flex-center';
   if (between) classBuffer += ' uk-flex-between';
+  if (around) classBuffer += ' uk-flex-around';
   if (middle) classBuffer += ' uk-flex-middle';
   if (column) classBuffer += ' uk-flex-column';
   if (row) classBuffer += ' uk-flex-row';

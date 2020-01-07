@@ -9,6 +9,7 @@ import {
 } from '../components/partials';
 import Header from '../components/headers/Header';
 import '../static/css/style.less';
+import AssociationEntourage from '../components/partials/AssociationEntourage';
 
 const Index = () => {
   return (
@@ -19,6 +20,7 @@ const Index = () => {
       <EmphasePartial />
       <NumberPartial />
       <DifferencePartial />
+      <AssociationEntourage />
     </Layout>
   );
 };
