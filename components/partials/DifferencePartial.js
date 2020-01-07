@@ -119,9 +119,9 @@ const DifferencePartial = () => (
         </div>
       </>
 
-      <div className="uk-flex uk-flex-middle uk-flex-column">
-        <p className="uk-text-center uk-margin-remove">Suivez-nous sur :</p>
-        <GridNoSSR className="uk-width-1-2@m uk-flex uk-flex-center">
+      <>
+        <p className="uk-text-center">Suivez-nous sur :</p>
+        <GridNoSSR center>
           {[
             {
               name: 'facebook',
@@ -138,25 +138,27 @@ const DifferencePartial = () => (
               title: 'LinkedIn',
               href: 'https://www.linkedin.com/company/association-entourage/',
             },
-          ].map(({ name, title }) => (
-            <button
-              type="button"
-              className="uk-button uk-button-primary uk-margin-top"
-              style={{
-                color: 'white',
-                backgroundColor: '#F55F24',
-                backgroundImage: 'none',
-                textTransform: 'none',
-                boder: null,
-                padding: '0px 20px',
-                borderRadius: '2px',
-              }}
-            >
-              {title} <IconNoSSR name={name} />
-            </button>
+          ].map(({ name, title, href }) => (
+            <Link href={href}>
+              <a
+                className="uk-button uk-button-primary"
+                target="_blank"
+                style={{
+                  color: 'white',
+                  backgroundColor: '#F55F24',
+                  backgroundImage: 'none',
+                  textTransform: 'none',
+                  boder: null,
+                  padding: '0px 20px',
+                  borderRadius: '2px',
+                }}
+              >
+                {title} <IconNoSSR name={name} />
+              </a>
+            </Link>
           ))}
         </GridNoSSR>
-      </div>
+      </>
     </GridNoSSR>
   </Section>
 );

@@ -16,7 +16,7 @@ const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
 
         <div
           style={{
-            borderRadius: '0px 15px 15px 0px',
+            borderRadius: '0px 2px 2px 0px',
             background: 'linear-gradient(90deg, white 50%, transparent 200%)',
           }}
           // ent-gradiant-default

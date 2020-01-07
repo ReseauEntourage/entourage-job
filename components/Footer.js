@@ -6,6 +6,7 @@ import {
 } from 'react-share';
 import Link from 'next/link';
 import { GridNoSSR, IconNoSSR, Section, SimpleLink } from './utils';
+import AssociationEntourage from './partials/AssociationEntourage';
 
 const sharedTitle = 'Entourage Jobs';
 const sharedDescription =
@@ -17,6 +18,7 @@ const viaTwitter = 'R_Entourage';
 const Footer = () => {
   return (
     <footer id="footer">
+      <AssociationEntourage />
       <Section style="secondary" size="small">
         <GridNoSSR
           row
