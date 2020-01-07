@@ -6,8 +6,8 @@ import { ImgNoSSR } from './Img';
 const NavbarLogo = ({ href, src, alt, alwaysVisible }) => (
   <Link href={href}>
     <a // info: regle css sur uk-logo
-      className={`uk-navbar-item uk-width-small uk-animation-fade ${!alwaysVisible &&
-        'uk-logo'}`}
+      className={`uk-navbar-item uk-width-small ${!alwaysVisible &&
+        'uk-logo uk-animation-fade'}`}
     >
       <ImgNoSSR src={src} alt={alt} />
     </a>
