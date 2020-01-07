@@ -1,7 +1,7 @@
 const fs = require('fs');
 const generateCVPreview = require('../backend/shareImage');
 
-describe('Shared image', () => {
+describe.skip('Shared image', () => {
   const output = './mytest.jpg';
   const input = '../static/img/arthur.png';
 
