@@ -80,7 +80,7 @@ export default class CandidatListPartial extends Component {
           </div>
           <div uk-scrollspy="cls:uk-animation-slide-bottom-small; target: .uk-card; delay: 50">
             <GridNoSSR
-              childWidths={['1-1', '1-2@m', '1-3@l']}
+              childWidths={['1-1', '1-2@s', '1-3@m']}
               gap="small"
               items={items}
             />
