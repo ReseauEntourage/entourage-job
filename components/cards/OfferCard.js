@@ -9,12 +9,12 @@ const OfferCard = ({
   type,
   isStared,
   isNew,
-  isArchive,
+  tag,
 }) => (
   <div
-    className={`uk-card uk-card-hover uk-card-${
-      isArchive ? 'secondary' : 'default'
-    } uk-card-body ent-offer`}
+    className={`ent-offer uk-card uk-card-hover uk-card-body uk-card-${
+      tag === 'archive' ? 'secondary' : 'default'
+    }`}
   >
     {isNew ? <div className="ent-offer-badge" /> : undefined}
 
@@ -63,12 +63,12 @@ OfferCard.propTypes = {
   type: PropTypes.string.isRequired,
   isStared: PropTypes.bool,
   isNew: PropTypes.bool,
-  isArchive: PropTypes.bool,
+  tag: PropTypes.string,
 };
 
 OfferCard.defaultProps = {
   isStared: true,
   isNew: true,
-  isArchive: false,
+  tag: undefined,
 };
 export default OfferCard;

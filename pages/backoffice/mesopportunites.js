@@ -6,7 +6,7 @@ import OfferCard from '../../components/cards/OfferCard';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
 import ModalOffer from '../../components/modals/ModalOffer';
 
-const offers = (function generateOffers() {
+const offersBase = (function generateOffers() {
   function randomPhrase(length) {
     const radom13chars = () =>
       Math.random()
@@ -44,6 +44,7 @@ const offers = (function generateOffers() {
               // category
               isBookmark,
               isNew: isBookmark ? false : Math.random() >= 0.5,
+              status: '4',
               title: randomPhrase(8),
               company: randomPhrase(20),
               businessLine: randomPhrase(5),
@@ -56,14 +57,16 @@ const offers = (function generateOffers() {
             };
           })
       )
-      .flat()
-      .sort((a, b) => b.isNew - a.isNew); // trie par isNew
+      .sort((a, b) => b.isBookmark - a.isBookmark || b.isNew - a.isNew)
+      .flat();
   }
   return [];
 })();
 
 const Opportunites = () => {
+  const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentOffer, setCurrentOffer] = useState({});
+  const [offers, setOffers] = useState(offersBase);
 
   return (
     <LayoutBackOffice title="Mes opportunités">
@@ -72,6 +75,7 @@ const Opportunites = () => {
           title="Consulte toutes tes opportunités de travail"
           description="Parcours les offres qui t&rsquo;ont été adressées directement ainsi que celles communes aux différents candidats du parcours LinkedOut."
         />
+        {/* revoir le filtrage, utiliser des data */}
         <div uk-filter="target: #opportunitees">
           <ul className="uk-subnav ent-subnav">
             <li uk-filter-control=".tag-private" className="uk-active">
@@ -95,7 +99,13 @@ const Opportunites = () => {
                 <a
                   className="uk-link-reset"
                   onClick={() => {
+                    if (offer.isNew) {
+                      offers[i].isNew = false;
+                    }
+
+                    setCurrentIndex(i);
                     setCurrentOffer(offer);
+
                     UIkit.modal('#modal-offer').show();
                   }}
                   aria-hidden
@@ -108,7 +118,7 @@ const Opportunites = () => {
                     from={offer.recruiterName}
                     shortDescription={offer.company}
                     type={offer.businessLine}
-                    isArchive={offer.tag === 'archive'}
+                    tag={offer.tag}
                   />
                 </a>
               </li>
@@ -118,7 +128,15 @@ const Opportunites = () => {
 
         <ModalOffer
           currentOffer={currentOffer}
-          setCurrentOffer={setCurrentOffer}
+          setCurrentOffer={(offer) => {
+            setCurrentOffer(offer);
+            offers[currentIndex] = offer;
+            setOffers(
+              offers.sort(
+                (a, b) => b.isBookmark - a.isBookmark || b.isNew - a.isNew
+              )
+            );
+          }}
         />
       </Section>
     </LayoutBackOffice>

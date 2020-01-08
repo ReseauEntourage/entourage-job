@@ -14,7 +14,16 @@ export default class Select extends Component {
         message: PropTypes.boolean,
       }),
       defaultValue: PropTypes.string,
-      options: PropTypes.arrayOf(PropTypes.string).isRequired,
+      options: PropTypes.arrayOf(
+        PropTypes.objectOf({
+          value: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.bool,
+          ]),
+          text: PropTypes.string,
+        })
+      ).isRequired,
     };
   }
 
@@ -38,8 +47,7 @@ export default class Select extends Component {
 
   getValidClass() {
     const { valid } = this.props;
-    if (valid !== undefined) {
-      if (!valid.isInvalid) return '';
+    if (valid !== undefined && valid.isInvalid) {
       return 'uk-form-danger';
     }
     return '';

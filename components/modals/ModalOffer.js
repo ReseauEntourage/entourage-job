@@ -33,10 +33,11 @@ const OfferInfoContainer = ({ icon, title, items }) => (
 );
 OfferInfoContainer.propTypes = {
   icon: PropsType.string,
-  title: PropsType.string.isRequired,
+  title: PropsType.string,
   items: PropsType.arrayOf(PropsType.string),
 };
 OfferInfoContainer.defaultProps = {
+  title: undefined,
   icon: undefined,
   items: [],
 };
@@ -50,18 +51,25 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
           <GridNoSSR middle>
             <h3 className="uk-text-bold">{currentOffer.title}</h3>
             <Select
-              id="offer-status"
+              id="modal-offer-status"
               title="Status"
               name="status"
               placeholder="status"
               options={[
-                { value: 'contacté', text: 'Contacté' },
-                { value: "phase d'entretien", text: "Phase d'entretien" },
-                { value: 'embauche', text: 'Embauche' },
-                { value: 'refus', text: 'Refus' },
-                { value: 'standby', text: 'Standby' },
-                { value: 'relance', text: 'Relance' },
+                { value: '0', text: 'Contacté' },
+                { value: '1', text: "Phase d'entretien" },
+                { value: '2', text: 'Embauche' },
+                { value: '3', text: 'Refus' },
+                { value: '4', text: 'Standby' },
+                { value: '5', text: 'Relance' },
               ]}
+              defaultValue={currentOffer.status}
+              onChange={(event) =>
+                setCurrentOffer({
+                  ...currentOffer,
+                  status: event.target.value,
+                })
+              }
             />
           </GridNoSSR>
           <List className="uk-iconnav uk-grid-medium">
@@ -146,14 +154,24 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
   </div>
 );
 ModalOffer.propTypes = {
-  currentOffer: PropsType.shape({
+  currentOffer: PropsType.objectOf({
+    title: PropsType.string,
+    status: PropsType.string,
+    company: PropsType.string,
     description: PropsType.string,
     recruiterName: PropsType.string,
     recruiterEmail: PropsType.string,
     recruiterPhone: PropsType.string,
+    businessLine: PropsType.string,
+    isBookmark: PropsType.string,
+    date: PropsType.string,
     location: PropsType.string,
-  }).isRequired,
+    tag: PropsType.string,
+  }),
   setCurrentOffer: PropsType.func.isRequired,
+};
+ModalOffer.defaultProps = {
+  currentOffer: {},
 };
 
 export default ModalOffer;
