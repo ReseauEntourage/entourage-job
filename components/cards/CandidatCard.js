@@ -10,8 +10,8 @@ const doEllipsis = (text, max) =>
 
 const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
   <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
-    <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover">
-      <div className="uk-cover-container uk-height-large uk-margin-bottom">
+    <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small">
+      <div className="uk-cover-container uk-height-medium uk-margin-bottom">
         <img src={imgSrc} alt={imgAlt} data-uk-cover />
 
         <div
@@ -20,13 +20,17 @@ const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
             background: 'linear-gradient(90deg, white 50%, transparent 200%)',
           }}
           // ent-gradiant-default
-          className="uk-width-1-2 uk-position-center-left uk-padding-small"
+          className="uk-width-1-2 uk-position-center-left"
         >
-          <GridNoSSR column gap="small">
+          <GridNoSSR
+            column
+            gap="small"
+            className="uk-margin-small-bottom uk-margin-small-top uk-margin-small-right"
+          >
             <div>
-              <h3 className="uk-margin-remove uk-text-uppercase uk-text-bold">
+              <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold">
                 {firstName}
-              </h3>
+              </h5>
               <p className="uk-margin-remove">
                 A besoin d&apos;un coup de pouce pour travailler dans...
               </p>
@@ -55,23 +59,38 @@ const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
           </GridNoSSR>
         </div>
       </div>
-      <GridNoSSR row gap="small" between>
+      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
         <u className="uk-text-link uk-text-primary">Voir le CV</u>
-        <GridNoSSR row gap="small">
+        <GridNoSSR middle center gap="small">
           <span>Partager :</span>
-          <IconNoSSR className="uk-text-primary" name="facebook" ratio=".8" />
-          <IconNoSSR className="uk-text-primary" name="twitter" ratio=".8" />
-          <IconNoSSR className="uk-text-primary" name="linkedin" ratio=".8" />
-          <span className="uk-text-primary">|</span>
-          <span>X fois</span>
+          <ul className="uk-iconnav">
+            <li>
+              <IconNoSSR
+                className="uk-text-primary"
+                name="facebook"
+                ratio=".8"
+              />
+            </li>
+            <li>
+              <IconNoSSR
+                className="uk-text-primary"
+                name="twitter"
+                ratio=".8"
+              />
+            </li>
+            <li>
+              <IconNoSSR
+                className="uk-text-primary"
+                name="linkedin"
+                ratio=".8"
+              />
+            </li>
+          </ul>
+          <span className="uk-text-primary">
+            | <span className="uk-text-bold">XXX</span>
+          </span>
         </GridNoSSR>
       </GridNoSSR>
-
-      {/* <div className="uk-width-1-1 uk-padding-small uk-overlay-default uk-position-bottom">
-        </div>
-        <div className="uk-width-1-1 uk-padding-small uk-overlay-default uk-position-top" />
-        <div className="uk-height-1-1 uk-padding-small uk-overlay-default uk-position-left" />
-        <div className="uk-height-1-1 uk-padding-small uk-overlay-default uk-position-right" /> */}
     </div>
   </SimpleLink>
 );
