@@ -25,7 +25,7 @@ const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
           <GridNoSSR
             column
             gap="small"
-            className="uk-margin-small-bottom uk-margin-small-top"
+            className="uk-margin-small-bottom uk-margin-small-top uk-margin-small-right"
           >
             <div>
               <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold">
