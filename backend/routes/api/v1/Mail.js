@@ -41,7 +41,7 @@ router.post('/contact-us', (req, res) => {
     mailController
       .sendMail({
         toEmail: process.env.MAILJET_TO_EMAIL,
-        subject: `Entourage Job - Je souhaite être aidé et réorienté - ${email}`,
+        subject: `LinkedOut - Je souhaite être aidé ou réorienté `,
         text: `Adresse mail : ${email}\nMessage : ${text}`,
       })
       .then((value) => {
