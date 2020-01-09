@@ -56,15 +56,15 @@ const CVFicheEdition = ({ cv, onChange }) => {
 
   return (
     <GridNoSSR childWidths={['1-1']}>
-      <CVEditCareerPath
-        careerPath0={cv.careerPath0}
-        careerPath1={cv.careerPath1}
-        onChange={onChange}
-      />
+      <CVEditDevise devise={cv.devise} onChange={onChange} />
       <GridNoSSR childWidths={['1-2@s']} match>
         <GridNoSSR childWidths={['1-1']}>
-          <CVEditDevise devise={cv.devise} onChange={onChange} />
           <CVEditCatchphrase catchphrase={cv.catchphrase} onChange={onChange} />
+          <CVEditCareerPath
+            careerPath0={cv.careerPath0}
+            careerPath1={cv.careerPath1}
+            onChange={onChange}
+          />
         </GridNoSSR>
         <CVEditPicture onChange={onChange} />
       </GridNoSSR>
