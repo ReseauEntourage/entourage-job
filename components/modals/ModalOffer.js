@@ -52,16 +52,16 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
             <h3 className="uk-text-bold">{currentOffer.title}</h3>
             <Select
               id="modal-offer-status"
-              title="Status"
+              title="Statuts"
               name="status"
               placeholder="status"
               options={[
-                { value: '0', text: 'Contacté' },
-                { value: '1', text: "Phase d'entretien" },
-                { value: '2', text: 'Embauche' },
-                { value: '3', text: 'Refus' },
-                { value: '4', text: 'Standby' },
-                { value: '5', text: 'Relance' },
+                { value: 'contacté', text: 'Contacté' },
+                { value: "phase d'entretien", text: "Phase d'entretien" },
+                { value: 'embauche', text: 'Embauche' },
+                { value: 'refus', text: 'Refus' },
+                { value: 'standby', text: 'Standby' },
+                { value: 'relance', text: 'Relance' },
               ]}
               defaultValue={currentOffer.status}
               onChange={(event) =>

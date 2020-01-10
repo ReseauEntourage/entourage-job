@@ -44,7 +44,7 @@ const offersBase = (function generateOffers() {
               // category
               isBookmark,
               isNew: isBookmark ? false : Math.random() >= 0.5,
-              status: '4',
+              status: 'contacté',
               title: randomPhrase(8),
               company: randomPhrase(20),
               businessLine: randomPhrase(5),
@@ -119,6 +119,7 @@ const Opportunites = () => {
                     shortDescription={offer.company}
                     type={offer.businessLine}
                     tag={offer.tag}
+                    status={offer.status}
                   />
                 </a>
               </li>

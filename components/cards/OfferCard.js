@@ -7,6 +7,7 @@ const OfferCard = ({
   from,
   shortDescription,
   type,
+  status,
   isStared,
   isNew,
   tag,
@@ -47,7 +48,7 @@ const OfferCard = ({
           between
           items={[
             <Button disabled>
-              <span style={{ color: '#666' }}>{type}</span>
+              <span style={{ color: '#666' }}>{status}</span>
             </Button>,
             <u className="uk-link-muted">voir l&rsquo;offre</u>,
           ]}
