@@ -1,10 +1,16 @@
+/* global UIkit */
 import React from 'react';
 import Layout from '../components/Layout';
-import { Button, Section } from '../components/utils';
+import { Button, Section, GridNoSSR, IconNoSSR } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
 import HowTo from '../components/sections/HowTo';
 import StepCard from '../components/cards/StepCard';
+import schemaformEditOffer from '../components/forms/schema/formEditOffer';
+import ModalEdit from '../components/modals/ModalEdit';
+import Api from '../Axios';
+import StepperModal from '../components/modals/StepperModal';
+import FormWithValidation from '../components/forms/FormWithValidation';
 
 const JeVeuxRecruter = () => {
   const reviews = [
@@ -77,7 +83,15 @@ const JeVeuxRecruter = () => {
             offres d'emplois et en cherchant les candidats qui feront le bonheur
             de votre entreprise.
           </p>
-          <Button style="primary">Découvrir les candidats</Button>
+          <GridNoSSR center gap="small">
+            <Button
+              style="default"
+              onClick={() => UIkit.modal('#modal-offer-add').show()}
+            >
+              Poster une offre
+            </Button>
+            <Button style="primary">Découvrir les candidats</Button>
+          </GridNoSSR>
         </div>
       </Section>
       <Section id="recruter2">
@@ -145,7 +159,7 @@ const JeVeuxRecruter = () => {
       </HowTo>
       <Section id="recruter4" style="default">
         <h2 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
-          Vous avez des opportunités d'emplois ?{' '}
+          Vous avez des opportunités d'emplois ?
           <span className="uk-text-primary">Discutons</span>
         </h2>
         <div
@@ -180,6 +194,57 @@ const JeVeuxRecruter = () => {
           </ul>
         </div>
       </Section>
+      <StepperModal
+        id="modal-offer-add"
+        title="Proposer une opportunité"
+        composers={[
+          (closeModal, nextStep) => (
+            <div>
+              <p>
+                Cet espace est dédié aux potentiels recruteurs qui souhaitent
+                proposer des opportunités aux candidats. Écrivez vos mots
+                d&apos;encouragement ou contactez avec le coach plus bas dans la
+                page CV !
+              </p>
+              <FormWithValidation
+                submitText="Envoyer"
+                formSchema={schemaformEditOffer}
+                onCancel={closeModal}
+                onSubmit={(message) => {
+                  console.log(message);
+
+                  Api.post('/api/v1/message', { message })
+                    .then(nextStep)
+                    .catch((error) => {
+                      console.error(error);
+                      UIkit.notification(
+                        "Une erreur c'est produite lors de l'envoie de l'offre",
+                        { pos: 'bottom-center', status: 'danger' }
+                      );
+                    });
+                }}
+              />
+            </div>
+          ),
+          (closeModal) => (
+            <div className="uk-flex uk-flex-center uk-margin-large">
+              <div className="uk-card uk-card-body uk-text-center">
+                <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
+                <p className="uk-text-lead">
+                  Merci pour votre offre, nous reviendrons bientôt vers vous.
+                </p>
+                <button
+                  type="button"
+                  className="uk-button uk-button-primary"
+                  onClick={closeModal}
+                >
+                  Fermer
+                </button>
+              </div>
+            </div>
+          ),
+        ]}
+      />
       <DiscoverPartial />
     </Layout>
   );
