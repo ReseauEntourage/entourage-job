@@ -18,8 +18,8 @@ const LandingPagePartial = () => {
   return (
     <Background
       blend={{ mode: 'soft-light', color: 'secondary' }}
-      src="/static/img/arthur-background.jpg"
-      position="top-right"
+      src="/static/img/cover-linkedout.jpg"
+      position="center"
     >
       <div
         className="uk-flex uk-flex-1 uk-flex-center uk-flex-middle"
@@ -28,9 +28,10 @@ const LandingPagePartial = () => {
         <Section container="large">
           <GridNoSSR middle column>
             <ImgNoSSR
-              src="/static/img/logo-linkedout.png"
-              alt="logo linkedout"
-              width="250"
+              src="/static/img/logo-linkedout-by-entourage.png"
+              alt="LinkedOut by entourage"
+              className="uk-width-medium"
+              // width="300"
             />
             <h1
               className="uk-heading-small uk-text-bold uk-text-center uk-width-xxlarge@m"
