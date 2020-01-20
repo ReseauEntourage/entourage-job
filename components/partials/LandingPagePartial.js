@@ -19,7 +19,7 @@ const LandingPagePartial = () => {
     <Background
       blend={{ mode: 'soft-light', color: 'secondary' }}
       src="/static/img/cover-linkedout.jpg"
-      position="center"
+      position="top-center"
     >
       <div
         className="uk-flex uk-flex-1 uk-flex-center uk-flex-middle"
