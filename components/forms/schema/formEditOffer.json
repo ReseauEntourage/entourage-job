@@ -2,25 +2,15 @@
   "id": "form-offer",
   "fields": [
     {
-<<<<<<< HEAD
       "id": "firstName",
       "name": "firstName",
-=======
-      "id": "firstname",
-      "name": "firstname",
->>>>>>> cf216ef908435a5654a2af8809a54e2c39291cf4
       "component": "input",
       "type": "text",
       "title": "Prenom*"
     },
     {
-<<<<<<< HEAD
       "id": "lastName",
       "name": "lastName",
-=======
-      "id": "lastname",
-      "name": "lastname",
->>>>>>> cf216ef908435a5654a2af8809a54e2c39291cf4
       "component": "input",
       "type": "text",
       "title": "Nom*"
@@ -40,27 +30,16 @@
       "title": "Téléphone"
     },
     {
-<<<<<<< HEAD
       "id": "job",
       "name": "job",
-=======
-      "id": "title",
-      "name": "title",
->>>>>>> cf216ef908435a5654a2af8809a54e2c39291cf4
       "component": "input",
       "type": "text",
       "title": "Nom du poste proposé*"
     },
     {
-<<<<<<< HEAD
       "id": "businessLine",
       "name": "businessLine",
       "title": "Secteur d'activité*",
-=======
-      "id": "type",
-      "title": "Secteur d'activité*",
-      "name": "type",
->>>>>>> cf216ef908435a5654a2af8809a54e2c39291cf4
       "component": "select",
       "options": [
         { "value": null, "text": "Sélectionnez un secteur d'activité" },
@@ -90,13 +69,8 @@
       "title": "Entreprise"
     },
     {
-<<<<<<< HEAD
       "id": "localization",
       "name": "localization",
-=======
-      "id": "location",
-      "name": "location",
->>>>>>> cf216ef908435a5654a2af8809a54e2c39291cf4
       "component": "input",
       "type": "text",
       "title": "Localisation*"
