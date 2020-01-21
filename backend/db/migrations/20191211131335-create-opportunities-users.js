@@ -27,17 +27,22 @@ module.exports = {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       },
-      isNew: {
-        type: Sequelize.BOOLEAN,
+      status: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: true,
+        defaultValue: 0,
       },
-      isBookmark: {
+      seen: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
       },
-      isArchived: {
+      bookmarked: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      archived: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,

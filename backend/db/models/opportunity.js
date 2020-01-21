@@ -4,15 +4,6 @@ module.exports = (sequelize, DataTypes) => {
   const Opportunity = sequelize.define(
     'Opportunities',
     {
-      category: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      status: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: 'Pending',
-      },
       title: {
         type: DataTypes.STRING,
         allowNull: false,

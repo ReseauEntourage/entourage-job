@@ -20,17 +20,22 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
-      isNew: {
-        type: DataTypes.BOOLEAN,
+      status: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: true,
+        defaultValue: 0,
       },
-      isBookmark: {
+      seen: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
       },
-      isArchived: {
+      bookmarked: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      archived: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
