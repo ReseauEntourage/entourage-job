@@ -8,6 +8,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      visibility: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'public',
+      },
       company: {
         type: DataTypes.STRING,
         allowNull: true,
