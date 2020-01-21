@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Footer from './Footer';
 import Header from './headers/Header';
+import HeaderConnected from './headers/HeaderConnected';
+import { UserContext } from './store/UserProvider';
 
 const Layout = ({
   children,
@@ -32,7 +34,15 @@ const Layout = ({
       <meta name="twitter:image" content={metaImage} />
       {/* <meta name="fb:app_id" content="" /> */}
     </Head>
-    <Header isHome={router.asPath === '/'} />
+    <UserContext.Consumer>
+      {({ isAuthentificated }) =>
+        isAuthentificated ? (
+          <HeaderConnected />
+        ) : (
+          router.asPath !== '/' && <Header isHome={false} />
+        )
+      }
+    </UserContext.Consumer>
     {children}
     <Footer />
   </Container>

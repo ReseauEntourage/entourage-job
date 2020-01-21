@@ -52,7 +52,7 @@ module.exports.prepare = () => {
   };
 
   // todo restriction acces login for connected users
-  app.use('/backoffice/', restrictAccess);
+  // app.use('/backoffice/', restrictAccess);
 };
 
 module.exports.get = (path, handle) => {

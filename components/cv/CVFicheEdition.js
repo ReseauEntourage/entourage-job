@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/aria-role */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Section } from '../utils';
 import { GridNoSSR } from '../utils/Grid';
 import {
   SkillsCard,
@@ -10,7 +9,9 @@ import {
   StoryProfileCard,
   ExperiencesProfileCard,
 } from '../cards';
-import { CVEditIntro, CVEditPicture, CVEditReviews } from '.';
+import { CVEditCatchphrase, CVEditPicture, CVEditReviews } from '.';
+import CVEditDevise from './CVEditDevise';
+import CVEditCareerPath from './CVEditCareerPath';
 
 const toUpperFirstLetter = (text) => {
   if (typeof text !== 'string' || text === '') {
@@ -54,54 +55,44 @@ const CVFicheEdition = ({ cv, onChange }) => {
     });
 
   return (
-    <Section>
-      <GridNoSSR
-        childWidths={['1-2@s']}
-        match
-        items={[
-          <CVEditIntro intro={cv.intro} onChange={onChange} />,
-          <CVEditPicture img="" onChange={onChange} />,
-        ]}
-      />
-      <GridNoSSR
-        childWidths={['1-2@s']}
-        match
-        items={[
-          <InfoProfileCard
-            contracts={arrayContracts}
-            location={cv.location}
-            availability={cv.availability}
-            languages={arrayLanguages}
-            transport={cv.transport}
+    <GridNoSSR childWidths={['1-1']}>
+      <CVEditDevise devise={cv.devise} onChange={onChange} />
+      <GridNoSSR childWidths={['1-2@s']} match>
+        <GridNoSSR childWidths={['1-1']}>
+          <CVEditCatchphrase catchphrase={cv.catchphrase} onChange={onChange} />
+          <CVEditCareerPath
+            careerPath0={cv.careerPath0}
+            careerPath1={cv.careerPath1}
             onChange={onChange}
-          />,
-          <GridNoSSR
-            childWidths={['1-2@m']}
-            match
-            items={[
-              <SkillsCard list={arraySkills} onChange={onChange} />,
-              <PassionsCard list={arrayPassions} onChange={onChange} />,
-            ]}
-          />,
-        ]}
-      />
-      <GridNoSSR
-        childWidths={['1-2@s']}
-        items={[
-          <GridNoSSR
-            childWidths={['1-1']}
-            items={[
-              <StoryProfileCard description={cv.story} onChange={onChange} />,
-              <CVEditReviews reviews={cv.reviews} onChange={onChange} />,
-            ]}
-          />,
-          <ExperiencesProfileCard
-            experiences={cv.Experiences}
-            onChange={onChange}
-          />,
-        ]}
-      />
-    </Section>
+          />
+        </GridNoSSR>
+        <CVEditPicture onChange={onChange} />
+      </GridNoSSR>
+      <GridNoSSR childWidths={['1-2@s']} match>
+        <InfoProfileCard
+          contracts={arrayContracts}
+          location={cv.location}
+          availability={cv.availability}
+          languages={arrayLanguages}
+          transport={cv.transport}
+          onChange={onChange}
+        />
+        <GridNoSSR childWidths={['1-2@m']} match>
+          <SkillsCard list={arraySkills} onChange={onChange} />
+          <PassionsCard list={arrayPassions} onChange={onChange} />
+        </GridNoSSR>
+      </GridNoSSR>
+      <GridNoSSR childWidths={['1-2@s']}>
+        <GridNoSSR childWidths={['1-1']}>
+          <StoryProfileCard description={cv.story} onChange={onChange} />
+          <CVEditReviews reviews={cv.Reviews} onChange={onChange} />
+        </GridNoSSR>
+        <ExperiencesProfileCard
+          experiences={cv.Experiences}
+          onChange={onChange}
+        />
+      </GridNoSSR>
+    </GridNoSSR>
   );
 };
 

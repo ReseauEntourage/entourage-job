@@ -1,9 +1,9 @@
 {
-  "id": "form-catchphrase",
+  "id": "form-devise",
   "fields": [
     {
-      "id": "catchphrase",
-      "name": "catchphrase",
+      "id": "devise",
+      "name": "devise",
       "component": "input",
       "type": "text",
       "title": "Ce que vous pouvez apporter*"
@@ -11,15 +11,15 @@
   ],
   "rules": [
     {
-      "field": "catchphrase",
+      "field": "devise",
       "method": "isLength",
       "args": [
         {
-          "max": 80
+          "max": 150
         }
       ],
       "validWhen": true,
-      "message": "80 caractères maximum"
+      "message": "150 caractères maximum"
     }
   ]
 }

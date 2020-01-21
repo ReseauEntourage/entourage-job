@@ -13,12 +13,21 @@ export default function withValidation(WrappedForm, validatorRules) {
 
     // fonction permettant de verifier une champs d'entré utilisateur
     handleChange(event) {
-      const { checked, name, type, value } = event.target;
+      const { checked, name, type, value, selectedIndex } = event.target;
       const { setValue, getValues, setValid } = this.state;
 
+      let fieldValue;
+      if (type === 'checkbox') {
+        fieldValue = checked;
+      } else if (type === 'select-one' && selectedIndex === 0) {
+        fieldValue = null; // si on est sur le placeholder ( option sans valeur )
+      } else fieldValue = value;
+
       /* Validators start */
-      setValue(name, type === 'checkbox' ? checked : value); // enregistre la valeur du champs
+      setValue(name, fieldValue); // enregistre la valeur du champs
       const validation = validator.validate(getValues()); // envoie une copie des champs pour que le state ne soit pas altéré
+
+      console.log('ok');
 
       // enregistre la raison de la validation {isInvalid: boolean, message: string}
       if (validation[name] !== undefined) {
@@ -38,10 +47,12 @@ export default function withValidation(WrappedForm, validatorRules) {
     handleSubmit() {
       return new Promise((resolve, reject) => {
         const { getValues, setValid } = this.state;
+
+        const values = getValues();
         /* Validators control before submit */
-        const validation = validator.validate(getValues());
+        const validation = validator.validate(values);
         if (validation.isValid) {
-          resolve(getValues());
+          resolve(values);
         } else {
           // erreur de validation
           Object.keys(validation).forEach((key) => {

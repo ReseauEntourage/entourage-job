@@ -1,56 +1,32 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { UserContext } from '../store/UserProvider';
+import HeaderBackoffice from '../headers/HeaderBackoffice';
 
-const CVEditWelcome = ({ cv }) => {
+const CVEditWelcome = ({ cvFirstName }) => {
   const userContext = useContext(UserContext);
-
-  if (!userContext.user) {
-    return null;
-  }
-  if (userContext.user.role === 'Candidat') {
-    return (
-      <>
-        <h2 className="uk-text-bold">
-          Ravi de te revoir, {userContext.user.firstName} !
-        </h2>
-        <div className="uk-grid-match" data-uk-grid>
-          <div className="uk-width-2-3@m">
-            <p className="uk-text-lead">
-              Bienvenue dans ton espace personnel, depuis lequel tu peux
-              modifier les informations qui s&apos;affichent dans ta page profil
-              candidat sur LinkedOut.
-            </p>
-          </div>
-        </div>
-      </>
-    );
-  }
   return (
-    <>
-      <h2 className="uk-text-bold">
-        Ravi de te revoir, coach {userContext.user.firstName} !
-      </h2>
-      <div className="uk-grid-match" data-uk-grid>
-        <div className="uk-width-2-3@m">
-          <p className="uk-text-lead">
-            Bienvenue dans l&apos;espace personnel{' '}
-            {cv.firstName ? `de ${cv.firstName}` : 'de ton candidat rattaché'},
-            depuis lequel tu peux modifier avec lui ses informations qui
-            s&apos;affichent dans la page profil candidat sur LinkedOut.
-          </p>
-        </div>
-      </div>
-    </>
+    <HeaderBackoffice
+      title={
+        userContext.user.role === 'Candidat'
+          ? `Ravi de te revoir, ${userContext.user.firstName} !`
+          : `Ravi de te revoir, coach ${userContext.user.firstName} !`
+      }
+      description={
+        userContext.user.role === 'Candidat'
+          ? "Bienvenue dans ton espace personnel, depuis lequel tu peux modifier les informations qui s'affichent dans ta page profil candidat sur LinkedOut."
+          : `Bienvenue dans l&apos;espace personnel ${
+              cvFirstName ? `de ${cvFirstName}` : 'de ton candidat rattaché'
+            }, depuis lequel tu peux modifier avec lui ses informations qui s&apos;affichent dans la page profil candidat sur LinkedOut.`
+      }
+    />
   );
 };
-
 CVEditWelcome.propTypes = {
-  cv: PropTypes.shape(),
+  cvFirstName: PropTypes.string,
 };
-
 CVEditWelcome.defaultProps = {
-  cv: {},
+  cvFirstName: undefined,
 };
 
 export default CVEditWelcome;

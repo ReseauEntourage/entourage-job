@@ -1,0 +1,32 @@
+{
+  "id": "form-career-path",
+  "fields": [
+    {
+      "id": "careerPath0",
+      "name": "careerPath0",
+      "component": "input",
+      "type": "text",
+      "title": "Domaine 1*"
+    },
+    {
+      "id": "careerPath1",
+      "name": "careerPath1",
+      "component": "input",
+      "type": "text",
+      "title": "Domaine 2"
+    }
+  ],
+  "rules": [
+    {
+      "field": "careerPath0",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 150
+        }
+      ],
+      "validWhen": true,
+      "message": "150 caractères maximum"
+    }
+  ]
+}

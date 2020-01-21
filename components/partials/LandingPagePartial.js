@@ -6,10 +6,9 @@ import {
   TwitterShareButton,
 } from 'react-share';
 import { GridNoSSR, IconNoSSR, Section, Background, ImgNoSSR } from '../utils';
-import { PresentationCard } from '../cards';
 
 // Home page partials
-const LandingPagePartial = ({ presentations }) => {
+const LandingPagePartial = () => {
   const sharedTitle = 'Entourage Jobs';
   const sharedDescription =
     "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau.";
@@ -17,93 +16,68 @@ const LandingPagePartial = ({ presentations }) => {
   const sharedURL = process.env.SERVER_URL;
   const viaTwitter = 'R_Entourage';
   return (
-    <Background src="/static/img/background_1.webp" position="top-right">
-      <Section container="large">
-        <div className="uk-margin-medium-bottom uk-text-center uk-text-left@s uk-text-middle">
-          <ImgNoSSR
-            src="/static/img/linkedout_2.png"
-            alt="logo linkedout"
-            width="250"
-          />
-          <span className="uk-text-emphasis uk-margin-small-left">
-            by Entourage
-          </span>
-        </div>
-        <GridNoSSR
-          childWidths={['1-3@m', '1-2@s']}
-          items={[
-            <div>
-              <h1 className="uk-heading-small uk-text-bold uk-text-center uk-text-left@s">
-                <span>Partagez votre </span>
-                <span className="uk-text-primary">réseau</span>
-                <span> avec ceux qui n&apos;en ont pas</span>
-              </h1>
-              <div className="uk-margin-medium-top uk-text-center uk-text-left@s">
-                <h2 className="uk-text-bold uk-text-uppercase">
-                  Partager l&apos;opération
-                </h2>
-                <div className="uk-flex uk-flex-row uk-flex-center uk-flex-left@s">
-                  <LinkedinShareButton
-                    className="uk-icon-link uk-text-primary uk-margin-right"
-                    url={sharedURL}
-                    title={sharedTitle}
-                    description={sharedDescription}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <IconNoSSR name="linkedin" ratio={2} />
-                  </LinkedinShareButton>
-                  <FacebookShareButton
-                    className="uk-icon-link uk-text-primary uk-margin-right"
-                    url={sharedURL}
-                    quote={sharedDescription}
-                    hashtags={hashtags}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <IconNoSSR name="facebook" ratio={2} />
-                  </FacebookShareButton>
-                  <TwitterShareButton
-                    url={sharedURL}
-                    title={sharedDescription}
-                    hashtags={hashtags}
-                    via={viaTwitter}
-                    style={{ cursor: 'pointer' }}
-                    className="uk-icon-link uk-text-primary primary uk-margin-right"
-                  >
-                    <IconNoSSR name="twitter" ratio={2} />
-                  </TwitterShareButton>
-                </div>
-              </div>
-            </div>,
-          ]}
-        />
-        <GridNoSSR
-          match
-          center
-          childWidths={['1-3@m', '1-2@s']}
-          items={presentations.map(({ imgSrc, imgAlt, text }) => (
-            <PresentationCard imgSrc={imgSrc} imgAlt={imgAlt} text={text} />
-          ))}
-        />
-        <div className="uk-light uk-flex uk-flex-center uk-padding-large uk-padding-remove-bottom">
-          <p className="uk-text-bold">Découvrez les candidats</p>
-        </div>
-        <div className="uk-flex uk-flex-center">
-          <a className="uk-icon-button" href="#profiles" data-uk-scroll>
-            <IconNoSSR name="chevron-down" />
-          </a>
-        </div>
-      </Section>
+    <Background
+      blend={{ mode: 'soft-light', color: 'secondary' }}
+      src="/static/img/cover-linkedout.jpg"
+      position="top-center"
+    >
+      <div
+        className="uk-flex uk-flex-1 uk-flex-center uk-flex-middle"
+        uk-height-viewport="offset-bottom: 80px"
+      >
+        <Section container="large">
+          <GridNoSSR middle column>
+            <ImgNoSSR
+              src="/static/img/logo-linkedout-by-entourage.png"
+              alt="LinkedOut by entourage"
+              className="uk-width-medium"
+              // width="300"
+            />
+            <h1
+              className="uk-heading-small uk-text-bold uk-text-center uk-width-xxlarge@m"
+              style={{ color: 'white' }}
+            >
+              <span>Partagez votre </span>
+              <span className="uk-text-primary">réseau professionnel</span>
+              <span> avec ceux qui n&apos;en ont plus</span>
+            </h1>
+
+            <div className="uk-flex uk-flex-row uk-flex-center uk-flex-left@s">
+              <FacebookShareButton
+                className="uk-icon-button uk-icon-link uk-text-primary uk-margin-right"
+                url={sharedURL}
+                quote={sharedDescription}
+                hashtags={hashtags}
+                style={{ cursor: 'pointer' }}
+              >
+                <IconNoSSR name="facebook" />
+              </FacebookShareButton>
+              <LinkedinShareButton
+                className="uk-icon-button uk-icon-link uk-text-primary uk-margin-right"
+                url={sharedURL}
+                title={sharedTitle}
+                description={sharedDescription}
+                style={{ cursor: 'pointer' }}
+              >
+                <IconNoSSR name="linkedin" />
+              </LinkedinShareButton>
+              <TwitterShareButton
+                url={sharedURL}
+                title={sharedDescription}
+                hashtags={hashtags}
+                via={viaTwitter}
+                style={{ cursor: 'pointer' }}
+                className="uk-icon-button uk-icon-link uk-text-primary primary uk-margin-right"
+              >
+                <IconNoSSR name="twitter" />
+              </TwitterShareButton>
+            </div>
+          </GridNoSSR>
+        </Section>
+      </div>
     </Background>
   );
 };
-LandingPagePartial.propTypes = {
-  presentations: PropTypes.arrayOf(
-    PropTypes.shape({
-      imgSrc: PropTypes.string,
-      imgAlt: PropTypes.string,
-      text: PropTypes.string,
-    })
-  ).isRequired,
-};
+LandingPagePartial.propTypes = {};
 
 export default LandingPagePartial;

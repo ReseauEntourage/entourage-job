@@ -1,17 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const CVEditPicture = ({ img }) => {
-  const imgToDisplay =
-    img !== '' ? img : '../../static/img/arthur-background.jpg';
-  return (
-    <div
-      className="uk-card uk-card-default uk-card-body uk-height-medium uk-background-cover"
-      style={{ backgroundImage: `url(${imgToDisplay})` }}
-    />
-  );
-};
+const CVEditPicture = ({ img }) => (
+  <div
+    className="uk-card uk-card-default uk-card-body uk-height-1-1 uk-background-cover"
+    style={{ backgroundImage: `url(${img})`, minHeight: '300px' }}
+  />
+);
 CVEditPicture.propTypes = {
-  img: PropTypes.string.isRequired,
+  img: PropTypes.string,
+};
+CVEditPicture.defaultProps = {
+  img: '../../static/img/arthur-background.jpg',
 };
 export default CVEditPicture;

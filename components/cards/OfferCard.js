@@ -7,14 +7,15 @@ const OfferCard = ({
   from,
   shortDescription,
   type,
+  status,
   isStared,
   isNew,
-  isArchive,
+  tag,
 }) => (
   <div
-    className={`uk-card uk-card-hover uk-card-${
-      isArchive ? 'secondary' : 'default'
-    } uk-card-body ent-offer`}
+    className={`ent-offer uk-card uk-card-hover uk-card-body uk-card-${
+      tag === 'archive' ? 'secondary' : 'default'
+    }`}
   >
     {isNew ? <div className="ent-offer-badge" /> : undefined}
 
@@ -47,7 +48,7 @@ const OfferCard = ({
           between
           items={[
             <Button disabled>
-              <span style={{ color: '#666' }}>{type}</span>
+              <span style={{ color: '#666' }}>{status}</span>
             </Button>,
             <u className="uk-link-muted">voir l&rsquo;offre</u>,
           ]}
@@ -63,12 +64,12 @@ OfferCard.propTypes = {
   type: PropTypes.string.isRequired,
   isStared: PropTypes.bool,
   isNew: PropTypes.bool,
-  isArchive: PropTypes.bool,
+  tag: PropTypes.string,
 };
 
 OfferCard.defaultProps = {
   isStared: true,
   isNew: true,
-  isArchive: false,
+  tag: undefined,
 };
 export default OfferCard;

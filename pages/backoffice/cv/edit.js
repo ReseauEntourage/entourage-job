@@ -1,51 +1,39 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { UserContext } from '../../../components/store/UserProvider';
-import { CVActions, CVFicheEdition } from '../../../components/cv';
+import { CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
 import CVEditNoCandidat from '../../../components/cv/CVEditNoCandidat';
+import { Section, Button, GridNoSSR } from '../../../components/utils';
+import CVEditWelcome from '../../../components/cv/CVEditWelcome';
 
-const DEFAULT_CV = {
-  firstName: '',
-  intro: '',
-  Ambitions: [],
-  Contracts: [],
-  Languages: [],
-  Passions: [],
-  Skills: [],
-  Experiences: [],
-  url: '',
-};
-
-export default class CVEdit extends Component {
+export default class Edit extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cv: /* this.props ? this.props :  */ {},
+      cv: undefined,
     };
 
     this.setLocalCV = this.setLocalCV.bind(this);
   }
 
-  static get defaultProps() {
-    return {
-      cv: DEFAULT_CV,
-    };
-  }
-
-  static get propTypes() {
-    return {
-      cv: PropTypes.shape({
-        firstName: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired,
-      }),
-    };
-  }
-
   componentDidMount() {
     Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`)
       .then((res) => {
+        // TODO SUPPRIMER LORSQUE DB REVIEWS OK
+        // TODO ajouter un loading screen
+        if (!res.data.Reviews) {
+          res.data.Reviews = [];
+        }
+        if (!res.data.catchphrase) {
+          res.data.catchphrase = res.data.intro;
+          res.data.intro = undefined;
+        }
+        if (!res.data.devise) {
+          res.data.devise = null;
+        }
+        if (!res.data.careerPath) {
+          res.data.careerPath = null;
+        }
         this.setState({ cv: res.data });
       })
       .catch((error) => {
@@ -66,29 +54,20 @@ export default class CVEdit extends Component {
 
     return (
       <LayoutBackOffice title="Edition du CV">
-        <div style={{ position: 'relative' }}>
-          <UserContext.Consumer>
-            {({ user }) => {
-              if (user && user.role === 'Candidat') {
-                return (
-                  <>
-                    <CVActions />
-                    <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
-                  </>
-                );
-              }
-              if (cv.firstName) {
-                return (
-                  <>
-                    <CVActions cv={cv} />
-                    <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
-                  </>
-                );
-              }
-              return <CVEditNoCandidat />;
-            }}
-          </UserContext.Consumer>
-        </div>
+        <Section>
+          {cv === undefined ? (
+            <CVEditNoCandidat />
+          ) : (
+            <>
+              <CVEditWelcome cv={cv} />
+              <GridNoSSR className="uk-flex-right uk-margin">
+                <Button style="default">Prévisualiser la page</Button>
+                <Button style="primary">Publier</Button>
+              </GridNoSSR>
+              <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
+            </>
+          )}
+        </Section>
       </LayoutBackOffice>
     );
   }

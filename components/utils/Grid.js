@@ -11,15 +11,21 @@ const Grid = ({
   divider,
   center,
   between,
+  around,
   parallax,
   className,
   eachWidths,
   gap,
   children,
+  middle,
+  column,
+  row,
+  masonry,
 }) => {
   let classBuffer = '';
   let gridBuffer = '';
-  if (parallax) gridBuffer += `parallax: ${parallax}`;
+  if (parallax) gridBuffer += `parallax: ${parallax};`;
+  if (masonry) gridBuffer += 'masonry: true';
   classBuffer += childWidths
     .map((childWidth) => ` uk-child-width-${childWidth}`)
     .join(' ');
@@ -28,10 +34,16 @@ const Grid = ({
   if (divider) classBuffer += ' uk-grid-divider';
   if (center) classBuffer += ' uk-flex-center';
   if (between) classBuffer += ' uk-flex-between';
+  if (around) classBuffer += ' uk-flex-around';
+  if (middle) classBuffer += ' uk-flex-middle';
+  if (column) classBuffer += ' uk-flex-column';
+  if (row) classBuffer += ' uk-flex-row';
+
   if (className) classBuffer += ` ${className}`;
+  const content = items !== undefined ? items : children;
   return (
     <div className={classBuffer} data-uk-grid={gridBuffer}>
-      {(items !== undefined ? items : children).map((item, index) => (
+      {content.map((item, index) => (
         <div
           // todo optimize
           className={
@@ -58,6 +70,7 @@ Grid.propTypes = {
   gap: PropTypes.oneOf(['small', 'medium', 'large', 'collapse']),
   items: PropTypes.arrayOf(PropTypes.element),
   children: PropTypes.arrayOf(PropTypes.element),
+  className: PropTypes.string,
 };
 Grid.defaultProps = {
   match: false,
@@ -70,5 +83,6 @@ Grid.defaultProps = {
   gap: undefined,
   items: undefined,
   children: [],
+  className: undefined,
 };
 export default Grid;

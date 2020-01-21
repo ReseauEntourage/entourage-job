@@ -7,14 +7,23 @@ export default class Select extends Component {
     return {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      onChange: PropTypes.func.isRequired,
+      onChange: PropTypes.func,
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
         isInvalid: PropTypes.boolean,
         message: PropTypes.boolean,
       }),
       defaultValue: PropTypes.string,
-      options: PropTypes.arrayOf(PropTypes.string).isRequired,
+      options: PropTypes.arrayOf(
+        PropTypes.objectOf({
+          value: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.bool,
+          ]),
+          text: PropTypes.string,
+        })
+      ).isRequired,
     };
   }
 
@@ -22,6 +31,7 @@ export default class Select extends Component {
     return {
       valid: undefined,
       defaultValue: undefined,
+      onChange: () => {},
     };
   }
 
@@ -37,8 +47,7 @@ export default class Select extends Component {
 
   getValidClass() {
     const { valid } = this.props;
-    if (valid !== undefined) {
-      if (!valid.isInvalid) return '';
+    if (valid !== undefined && valid.isInvalid) {
       return 'uk-form-danger';
     }
     return '';
@@ -53,7 +62,7 @@ export default class Select extends Component {
     const { id, name, title, valid, options, defaultValue } = this.props;
     const transparent = !!title;
     return (
-      <>
+      <div>
         <div
           className="uk-form-controls"
           style={
@@ -104,19 +113,12 @@ export default class Select extends Component {
             }}
           >
             {options.map(({ value, text }) => (
-              <option
-                value={value}
-                disabled={value === null}
-                selected={value === null}
-                hidden={value === null}
-              >
-                {text}
-              </option>
+              <option value={value}>{text}</option>
             ))}
           </select>
         </div>
         <FormValidatorErrorMessage validObj={valid} />
-      </>
+      </div>
     );
   }
 }

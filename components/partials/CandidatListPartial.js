@@ -29,9 +29,14 @@ export default class CandidatListPartial extends Component {
   }
 
   prepareItems() {
+    // function insert(arr, index, item) {
+    //   arr.splice(index, 0, item);
+    // }
+
     const { listCVs } = this.state;
-    const items = listCVs.map((cv) => {
-      return (
+    const cardsToDisplay = listCVs
+      // .filter((v, i) => i < 7)
+      .map((cv) => (
         <CandidatCard
           url={cv.url}
           imgSrc="static/img/arthur.png"
@@ -39,23 +44,19 @@ export default class CandidatListPartial extends Component {
           firstName={cv.firstName}
           ambitions={cv.Ambitions.slice(0, 2)}
         />
-      );
-    });
-    items.push(
-      <div className="uk-flex uk-flex-column uk-flex-middle">
-        <button
-          type="button"
-          className="uk-icon-button"
-          style={{ color: 'white', backgroundColor: '#F55F24' }}
-        >
-          <IconNoSSR name="plus" />
-        </button>
-        <SimpleLink href="/contact" className="uk-link-muted uk-padding-small">
-          <span className="uk-text-bold">Voir plus</span>
-        </SimpleLink>
-      </div>
-    );
-    return items;
+      ));
+
+    // effet parallax fixé
+    // insert(cardsToDisplay, 0, <div style={{ height: '80px' }} />);
+    // insert(cardsToDisplay, 2, <div style={{ height: '80px' }} />);
+    // if (!cardsToDisplay.length % 2) {
+    //   insert(
+    //     cardsToDisplay,
+    //     cardsToDisplay.length - 1,
+    //     <div style={{ height: '80px' }}>ok</div>
+    //   );
+    // }
+    return cardsToDisplay;
   }
 
   render() {
@@ -65,26 +66,41 @@ export default class CandidatListPartial extends Component {
       return null;
     }
     return (
-      <Section style="default" container="small" id="profiles">
-        <div className="uk-text-center uk-margin-large">
-          <h2 className="uk-text-bold">
-            <span className="uk-text-primary">Eux</span> cherchent un travail,
-            <br />
-            <span className="uk-text-primary">Vous</span> avez un réseau.
-          </h2>
-          <p className="uk-align-center uk-width-2-3@s">
-            Nos candidats sont des gens en situation de précarité financière et
-            professionnellle. Toutes accompagnées par des travailleurs sociaux,
-            motivées pour se réinsérer, elles dévoilent leurs talents et leurs
-            aspirations. Réseau, amis, recruteurs, à vos partages !
-          </p>
-        </div>
-        <GridNoSSR
-          childWidths={['1-1', '1-2@s']}
-          parallax={400}
-          items={items}
-          className="uk-padding-remove-bottom"
-        />
+      <Section style="muted" container="" id="candidat">
+        <GridNoSSR gap="large" column middle eachWidths={['2-3@s', '1-1']}>
+          <div className="uk-text-center">
+            <h2 className="uk-text-bold">
+              Ils viennent de{' '}
+              <span className="uk-text-primary">s&apos;inscrire</span>
+            </h2>
+            <p>
+              Ils sont disponibles pour travailler. Découvrez leurs profils,
+              partagez ou contactez-les.
+            </p>
+          </div>
+          <div uk-scrollspy="cls:uk-animation-slide-bottom-small; target: .uk-card; delay: 50">
+            <GridNoSSR
+              childWidths={['1-1', '1-2@s', '1-3@m']}
+              gap="small"
+              items={items}
+            />
+          </div>
+          <button
+            type="button"
+            className="uk-button uk-button-primary"
+            style={{
+              color: 'white',
+              backgroundColor: '#F55F24',
+              backgroundImage: 'none',
+              textTransform: 'none',
+              boder: null,
+              padding: '0px 20px',
+              borderRadius: '2px',
+            }}
+          >
+            Voir les candidats &gt;
+          </button>
+        </GridNoSSR>
       </Section>
     );
   }
