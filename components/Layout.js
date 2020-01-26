@@ -63,7 +63,7 @@ Layout.propTypes = {
   }).isRequired,
 };
 Layout.defaultProps = {
-  title: 'Entourage Jobs',
+  title: 'LinkedOut',
   metaTitle:
     'Faites don de votre visibilité avec LinkedOut. Un partage peut tout changer.',
   metaImage: `${process.env.SERVER_URL}/static/img/entouragejobs-preview.jpg`,

@@ -86,9 +86,9 @@ const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
               />
             </li>
           </ul>
-          <span className="uk-text-primary">
+          {/* <span className="uk-text-primary">
             | <span className="uk-text-bold">XXX</span>
-          </span>
+          </span> */}
         </GridNoSSR>
       </GridNoSSR>
     </div>

@@ -60,7 +60,7 @@ class CVPage extends Component {
     const firstName =
       cv.firstName.charAt(0).toUpperCase() +
       cv.firstName.slice(1).toLowerCase();
-    const title = `${firstName} - Entourage Jobs`;
+    const title = `${firstName} - LinkedOut`;
     return (
       <Layout
         title={title}

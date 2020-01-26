@@ -1,26 +1,38 @@
-import React, { Component } from 'react';
+import React, { Component, useContext, useEffect, useState } from 'react';
 import { CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
 import CVEditNoCandidat from '../../../components/cv/CVEditNoCandidat';
 import { Section, Button, GridNoSSR } from '../../../components/utils';
 import CVEditWelcome from '../../../components/cv/CVEditWelcome';
+import { UserContext } from '../../../components/store/UserProvider';
 
-export default class Edit extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cv: undefined,
-    };
-
-    this.setLocalCV = this.setLocalCV.bind(this);
+function translate(status) {
+  if (status === 'Pending') {
+    return 'En attente';
   }
+  if (status === 'Published') {
+    return 'Publié';
+  }
+  return status;
+}
 
-  componentDidMount() {
+const Edit = () => {
+  const context = useContext(UserContext);
+  const [cv, setCV] = useState(undefined);
+  const [pubSpinner, setPubSpinner] = useState(false);
+
+  useEffect(() => {
     Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`)
       .then((res) => {
         // TODO SUPPRIMER LORSQUE DB REVIEWS OK
         // TODO ajouter un loading screen
+
+        // si pas de CV
+        if (!res.data) {
+          return setCV(null);
+        }
+
         if (!res.data.Reviews) {
           res.data.Reviews = [];
         }
@@ -34,41 +46,100 @@ export default class Edit extends Component {
         if (!res.data.careerPath) {
           res.data.careerPath = null;
         }
-        this.setState({ cv: res.data });
+
+        return setCV(res.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  }, [1]);
 
-  setLocalCV(fields) {
-    const { cv } = this.state;
-    Object.keys(fields).forEach((key) => (cv[key] = fields[key]));
-    this.setState({ cv });
-
-    console.log('update cv', fields);
-  }
-
-  render() {
-    const { cv } = this.state;
-
-    return (
-      <LayoutBackOffice title="Edition du CV">
-        <Section>
-          {cv === undefined ? (
+  return (
+    <LayoutBackOffice title="Edition du CV">
+      <Section>
+        {cv === null && (
+          <>
             <CVEditNoCandidat />
-          ) : (
-            <>
-              <CVEditWelcome cv={cv} />
-              <GridNoSSR className="uk-flex-right uk-margin">
+            <Button
+              onClick={() =>
+                Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                  userId: context.user.id,
+                  firstName: context.user.firstName,
+                  lastName: context.user.lastName,
+                }).then(({ data }) => setCV(data))
+              }
+            >
+              Creer votre CV
+            </Button>
+          </>
+        )}
+        {cv === undefined ? (
+          <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
+            <div
+              className="uk-position-absolute uk-transform-center uk-text-center"
+              style={{ left: '50%', top: '50%' }}
+            >
+              <h2 className="uk-text-bold">loading ...</h2>
+              <div data-uk-spinner />
+            </div>
+          </div>
+        ) : (
+          <>
+            <CVEditWelcome cv={cv} />
+            <GridNoSSR between middle>
+              <div>Statut : {translate(cv.status)}</div>
+              <GridNoSSR>
                 <Button style="default">Prévisualiser la page</Button>
-                <Button style="primary">Publier</Button>
+                <Button
+                  style="primary"
+                  onClick={() => {
+                    setPubSpinner(true);
+                    Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                      ...cv,
+                      id: undefined,
+                      status: 'Pending',
+                      version: cv.version + 1,
+                    })
+                      .then((res) => {
+                        console.log(res);
+                        setCV(res.data);
+                        UIkit.notification('Le profil a été mis à jour', {
+                          pos: 'bottom-center',
+                          status: 'success',
+                        });
+                      })
+                      .catch((err) => {
+                        console.error(err);
+                        UIkit.notification("Une erreur s'est produite", {
+                          pos: 'bottom-center',
+                          status: 'danger',
+                        });
+                      })
+                      .finally(() => setPubSpinner(false));
+                  }}
+                >
+                  <div className="uk-flex uk-flex-middle">
+                    Publier
+                    {pubSpinner ? (
+                      <div
+                        className="uk-margin-small-left"
+                        data-uk-spinner="ratio: .5"
+                      />
+                    ) : null}
+                  </div>
+                </Button>
               </GridNoSSR>
-              <CVFicheEdition cv={cv} onChange={this.setLocalCV} />
-            </>
-          )}
-        </Section>
-      </LayoutBackOffice>
-    );
-  }
-}
+            </GridNoSSR>
+            <CVFicheEdition
+              cv={cv}
+              onChange={(fields) => {
+                setCV({ ...cv, ...fields });
+              }}
+            />
+          </>
+        )}
+      </Section>
+    </LayoutBackOffice>
+  );
+};
+export default Edit;

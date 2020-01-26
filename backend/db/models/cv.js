@@ -97,6 +97,15 @@ module.exports = (sequelize, DataTypes) => {
           },
         }, */
       },
+      catchphrase: {
+        type: DataTypes.STRING,
+      },
+      devise: {
+        type: DataTypes.STRING,
+      },
+      careerPath: {
+        type: DataTypes.STRING,
+      },
       status: DataTypes.STRING,
       visibility: {
         type: DataTypes.BOOLEAN,

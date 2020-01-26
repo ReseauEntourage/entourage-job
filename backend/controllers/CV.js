@@ -59,18 +59,7 @@ const createCV = (newCV) => {
     let cvCreated;
 
     console.log(`${infoLog} Etape 1 - Création du CV de base`);
-    CV.create({
-      userId: newCV.userId,
-      firstName: newCV.firstName,
-      lastName: newCV.lastName || '',
-      intro: newCV.intro || '',
-      location: newCV.location || '',
-      story: newCV.story || '',
-      status: newCV.status || 'Pending',
-      transport: newCV.transport || '',
-      availability: newCV.availability || '',
-      visibility: newCV.visibility || false,
-    })
+    CV.create(newCV)
       .then((cv) => {
         cvCreated = cv;
         console.log(`${infoLog} Etape 2 - Skills`);

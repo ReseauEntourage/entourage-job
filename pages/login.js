@@ -8,7 +8,7 @@ import { UserContext } from '../components/store/UserProvider';
 const Login = () => {
   const { login } = useContext(UserContext);
   return (
-    <Layout title="Connexion - Entourage Jobs">
+    <Layout title="Connexion - LinkedOut">
       <Section size="large" style="muted">
         <div className="uk-flex uk-flex-center">
           <div className="uk-width-1-2 uk-card uk-card-default uk-card-body">
