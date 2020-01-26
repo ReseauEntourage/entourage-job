@@ -5,7 +5,9 @@ import { Section } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
 import ModalOffer from '../../components/modals/ModalOffer';
+import Api from '../../Axios';
 
+/*
 const offersBase = (function generateOffers() {
   function randomPhrase(length) {
     const radom13chars = () =>
@@ -38,12 +40,12 @@ const offersBase = (function generateOffers() {
         )
           .fill(0)
           .map(() => {
-            const isBookmark = Math.random() >= 0.5;
+            const bookmarked = Math.random() >= 0.5;
             return {
               tag, // todo update the management
               // category
-              isBookmark,
-              isNew: isBookmark ? false : Math.random() >= 0.5,
+              bookmarked,
+              isNew: bookmarked ? false : Math.random() >= 0.5,
               status: 'contacté',
               title: randomPhrase(8),
               company: randomPhrase(20),
@@ -57,16 +59,20 @@ const offersBase = (function generateOffers() {
             };
           })
       )
-      .sort((a, b) => b.isBookmark - a.isBookmark || b.isNew - a.isNew)
+      .sort((a, b) => b.bookmarked - a.bookmarked || b.isNew - a.isNew)
       .flat();
   }
   return [];
 })();
-
+*/
 const Opportunites = () => {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentOffer, setCurrentOffer] = useState({});
-  const [offers, setOffers] = useState(offersBase);
+  const [offers, setOffers] = useState(undefined);
+
+  Api.get(`${process.env.SERVER_URL}/api/v1/opportunity`)
+    .then((res) => setOffers(res.data))
+    .catch(console.error);
 
   return (
     <LayoutBackOffice title="Mes opportunités">
@@ -94,36 +100,41 @@ const Opportunites = () => {
             data-uk-grid=""
             uk-height-match="target: > li .uk-card"
           >
-            {offers.map((offer, i) => (
-              <li className={`tag-${offer.tag}`} key={i}>
-                <a
-                  className="uk-link-reset"
-                  onClick={() => {
-                    if (offer.isNew) {
-                      offers[i].isNew = false;
-                    }
+            {/* { error && <div>failed to load</div>} */}
+            {!offers ? (
+              <div>loading...</div>
+            ) : (
+              offers.map((offer, i) => (
+                <li className={`tag-${offer.tag}`} key={i}>
+                  <a
+                    className="uk-link-reset"
+                    onClick={() => {
+                      if (!offer.seen) {
+                        offers[i].seen = true;
+                      }
 
-                    setCurrentIndex(i);
-                    setCurrentOffer(offer);
+                      setCurrentIndex(i);
+                      setCurrentOffer(offer);
 
-                    UIkit.modal('#modal-offer').show();
-                  }}
-                  aria-hidden
-                  role="button"
-                >
-                  <OfferCard
-                    isNew={offer.isNew}
-                    isStared={offer.isBookmark}
-                    title={offer.title}
-                    from={offer.recruiterName}
-                    shortDescription={offer.company}
-                    type={offer.businessLine}
-                    tag={offer.tag}
-                    status={offer.status}
-                  />
-                </a>
-              </li>
-            ))}
+                      UIkit.modal('#modal-offer').show();
+                    }}
+                    aria-hidden
+                    role="button"
+                  >
+                    <OfferCard
+                      isNew={offer.seen}
+                      isStared={offer.bookmarked}
+                      title={offer.title}
+                      from={offer.recruiterName}
+                      shortDescription={offer.company}
+                      type={offer.businessLine}
+                      tag={offer.category}
+                      status={offer.status}
+                    />
+                  </a>
+                </li>
+              ))
+            )}
           </ul>
         </div>
 
@@ -134,7 +145,7 @@ const Opportunites = () => {
             offers[currentIndex] = offer;
             setOffers(
               offers.sort(
-                (a, b) => b.isBookmark - a.isBookmark || b.isNew - a.isNew
+                (a, b) => b.bookmarked - a.bookmarked || b.seen - a.seen
               )
             );
           }}

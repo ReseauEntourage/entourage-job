@@ -63,6 +63,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      gender: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
     {}
   );
@@ -70,7 +75,13 @@ module.exports = (sequelize, DataTypes) => {
     return (user.id = uuid());
   });
   User.associate = function(models) {
-    // associations can be defined here
+    User.belongsToMany(models.Opportunity, {
+      through: 'Opportunities_User',
+      as: 'Opportunities',
+      foreignKey: 'UserId',
+      otherKey: 'OpportunityId',
+    });
   };
   return User;
 };
+// to many ?

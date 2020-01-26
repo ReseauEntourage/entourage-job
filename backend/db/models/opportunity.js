@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      visibility: {
+      category: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'public',
+        defaultValue: 'Public',
       },
       company: {
         type: DataTypes.STRING,
@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
       description: {
         type: DataTypes.TEXT,
         allowNull: false,
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
       },
     },
     {}

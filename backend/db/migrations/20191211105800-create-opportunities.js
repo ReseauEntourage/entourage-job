@@ -7,10 +7,10 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
       },
-      visibility: {
+      category: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'public',
+        defaultValue: 'Public',
       },
       title: {
         type: Sequelize.STRING,

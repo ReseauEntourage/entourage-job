@@ -10,6 +10,10 @@ const BusinessLine = require('../db/models/businessline')(
   sequelize.DataTypes
 );
 const User = require('../db/models/user')(db, sequelize.DataTypes);
+const OpportunityUser = require('../db/models/opportunity_user')(
+  db,
+  sequelize.DataTypes
+);
 
 // const { Op } = sequelize;
 
@@ -23,6 +27,19 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
     model: User,
     through: { attributes: [] },
     attributes: ['id', 'firstName'],
+  },
+  {
+    model: OpportunityUser,
+    through: { attributes: [] },
+    attributes: [
+      'id',
+      'name',
+      'status',
+      'seen',
+      'bookmarked',
+      'archived',
+      'note',
+    ],
   },
 ];
 

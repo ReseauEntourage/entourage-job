@@ -75,25 +75,23 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
           <List className="uk-iconnav uk-grid-medium">
             <ButtonIcon
               name="pull"
-              className={
-                currentOffer.tag === 'archive' ? 'ent-color-amber' : undefined
-              }
+              className={currentOffer.archived ? 'ent-color-amber' : undefined}
               onClick={() => {
                 setCurrentOffer({
                   ...currentOffer,
-                  tag: currentOffer.tag === 'archive' ? 'private' : 'archive',
+                  archived: !currentOffer.archived,
                 });
               }}
             />
             <ButtonIcon
               name="star"
               className={
-                currentOffer.isBookmark ? 'ent-color-amber' : undefined
+                currentOffer.bookmarked ? 'ent-color-amber' : undefined
               }
               onClick={() => {
                 setCurrentOffer({
                   ...currentOffer,
-                  isBookmark: !currentOffer.isBookmark,
+                  bookmarked: !currentOffer.bookmarked,
                 });
               }}
             />
@@ -127,7 +125,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
                   currentOffer.recruiterEmail,
                   currentOffer.recruiterPhone,
                   <span className="uk-text-italic">
-                    offre soumise le {currentOffer.date}
+                    offre soumise le {currentOffer.createdAt}
                   </span>,
                 ]}
               />
@@ -148,6 +146,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
           name="modal-offer-comment"
           title="Ecrivez un commentaire à propos de cette opportunité..."
           type="text"
+          defaultValue={currentOffer.note}
         />
       </div>
     </div>
@@ -163,10 +162,10 @@ ModalOffer.propTypes = {
     recruiterEmail: PropsType.string,
     recruiterPhone: PropsType.string,
     businessLine: PropsType.string,
-    isBookmark: PropsType.string,
+    bookmarked: PropsType.string,
     date: PropsType.string,
     location: PropsType.string,
-    tag: PropsType.string,
+    archived: PropsType.string,
   }),
   setCurrentOffer: PropsType.func.isRequired,
 };
