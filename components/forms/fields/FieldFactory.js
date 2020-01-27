@@ -109,6 +109,18 @@ export default class FieldFactory {
         />
       );
     }
+    if (data.component === 'checkbox') {
+      return (
+        <CheckboxCGU
+          id={`${this.id}-${data.id}`}
+          name={data.name}
+          title={data.title}
+          defaultValue={this.defaultValues[data.id]}
+          valid={this.getValid(data.name)}
+          onChange={this.handleChange}
+        />
+      );
+    }
     if (data.component === 'cgu') {
       return (
         <CheckboxCGU

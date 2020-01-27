@@ -66,6 +66,7 @@ const Edit = () => {
                   userId: context.user.id,
                   firstName: context.user.firstName,
                   lastName: context.user.lastName,
+                  gender: context.user.gender,
                 }).then(({ data }) => setCV(data))
               }
             >

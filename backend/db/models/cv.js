@@ -42,6 +42,9 @@ module.exports = (sequelize, DataTypes) => {
           },
         }, */
       },
+      gender: {
+        type: DataTypes.INTEGER,
+      },
       intro: {
         type: DataTypes.TEXT,
         /* validate: {
@@ -97,14 +100,14 @@ module.exports = (sequelize, DataTypes) => {
           },
         }, */
       },
-      catchphrase: {
-        type: DataTypes.STRING,
-      },
-      devise: {
-        type: DataTypes.STRING,
-      },
-      careerPath: {
-        type: DataTypes.STRING,
+      catchphrase: DataTypes.STRING,
+      devise: DataTypes.STRING,
+      careerPath0: DataTypes.STRING,
+      careerPath1: DataTypes.STRING,
+      careerPathOpen: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
       status: DataTypes.STRING,
       visibility: {
