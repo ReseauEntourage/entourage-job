@@ -71,29 +71,24 @@ const CVFiche = ({ cv }) => {
           />,
         ]}
       />
-      <GridNoSSR
-        childWidths={['1-2@s']}
-        items={[
-          <GridNoSSR
-            items={[
-              <StoryProfileCard description={cv.story} />,
-              <ReviewCard
-                picture="/static/img/arthur.png"
-                review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
-                author="Hervé"
-                role="Assistant social"
-              />,
-              <ReviewCard
-                picture="/static/img/arthur.png"
-                review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
-                author="Hervé"
-                role="Assistant social"
-              />,
-            ]}
-          />,
-          <ExperiencesProfileCard experiences={cv.Experiences} />,
-        ]}
-      />
+      <GridNoSSR childWidths={['1-2@s']}>
+        <GridNoSSR column childWidths={['1-1']}>
+          <StoryProfileCard description={cv.story} />
+          <ReviewCard
+            picture="/static/img/arthur.png"
+            review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
+            author="Hervé"
+            role="Assistant social"
+          />
+          <ReviewCard
+            picture="/static/img/arthur.png"
+            review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
+            author="Hervé"
+            role="Assistant social"
+          />
+        </GridNoSSR>
+        <ExperiencesProfileCard experiences={cv.Experiences} />
+      </GridNoSSR>
     </Section>
   );
 };
