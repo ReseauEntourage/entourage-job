@@ -13,10 +13,10 @@ module.exports = {
       queryInterface.addColumn('CVs', 'devise', Sequelize.STRING),
       queryInterface.addColumn('CVs', 'careerPath0', Sequelize.STRING),
       queryInterface.addColumn('CVs', 'careerPath1', Sequelize.STRING),
-      queryInterface.removeColumn('CVs', 'careerPathOpen', {
+      queryInterface.addColumn('CVs', 'careerPathOpen', {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: true,
+        defaultValue: false,
       }),
     ]),
   down: (queryInterface, Sequelize) =>
