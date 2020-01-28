@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Ambition.belongsToMany(models.CV, {
       through: 'CV_Ambition',
-      as: 'Ambitions',
+      as: 'CVs',
       foreignKey: 'AmbitionId',
       otherKey: 'CVId',
     });

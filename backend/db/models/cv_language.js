@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const CV_Language = sequelize.define(
     'CV_Language',
     {
-      CVid: {
+      CVId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {

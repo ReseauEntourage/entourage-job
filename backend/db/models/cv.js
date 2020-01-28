@@ -16,35 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      firstName: {
-        type: DataTypes.STRING,
-        validate: {
-          len: {
-            args: [1, 30],
-            msg: '30 caractères maximum pour le prénom',
-          },
-          notEmpty: {
-            args: true,
-            msg: 'Un prénom est requis',
-          },
-        },
-      },
-      lastName: {
-        type: DataTypes.STRING,
-        /* validate: {
-          len: {
-            args: [1, 30],
-            msg: '30 caractères maximum pour le nom',
-          },
-          notEmpty: {
-            args: true,
-            msg: 'Un nom est requis',
-          },
-        }, */
-      },
-      gender: {
-        type: DataTypes.INTEGER,
-      },
+      urlImg: DataTypes.STRING,
       intro: {
         type: DataTypes.TEXT,
         /* validate: {
@@ -125,12 +97,12 @@ module.exports = (sequelize, DataTypes) => {
   );
   CV.beforeValidate((cv) => {
     const cvToCreate = cv;
-    if (cvToCreate.firstName && cvToCreate.userId) {
-      cvToCreate.url = `${cvToCreate.firstName.toLowerCase()}-${cvToCreate.userId.substring(
-        0,
-        8
-      )}`;
-    }
+    // if (cvToCreate.firstName && cvToCreate.userId) {
+    //   cvToCreate.url = `${cvToCreate.firstName.toLowerCase()}-${cvToCreate.userId.substring(
+    //     0,
+    //     8
+    //   )}`;
+    // }
     return cvToCreate;
   });
   CV.beforeCreate((cv) => {
@@ -139,35 +111,37 @@ module.exports = (sequelize, DataTypes) => {
     return cvToCreate;
   });
   CV.associate = function(models) {
-    CV.belongsToMany(models.Skill, {
-      through: 'CV_Skill',
-      as: 'Skills',
-      foreignKey: 'CVId',
-      otherKey: 'SkillId',
+    // link and rename for association
+    CV.belongsToMany(models.Ambition, {
+      through: 'CV_Ambitions',
+      as: 'ambitions',
+    });
+    CV.belongsToMany(models.Contract, {
+      through: 'CV_Contracts',
+      as: 'contracts',
     });
     CV.belongsToMany(models.Language, {
       through: 'CV_Language',
-      as: 'Languages',
-      foreignKey: 'CVId',
-      otherKey: 'LanguageId',
+      as: 'languages',
     });
-    CV.belongsToMany(models.Contract, {
-      through: 'CV_Contract',
-      as: 'Contracts',
-      foreignKey: 'CVId',
-      otherKey: 'ContractId',
+    CV.belongsToMany(models.Skill, {
+      through: 'CV_Skills',
+      as: 'skills',
     });
     CV.belongsToMany(models.Passion, {
-      through: 'CV_Passion',
-      as: 'Passions',
-      foreignKey: 'CVId',
-      otherKey: 'PassionId',
+      through: 'CV_Passions',
+      as: 'passions',
     });
-    CV.belongsToMany(models.Ambitions, {
-      through: 'CV_Ambition',
-      as: 'Ambitions',
+
+    CV.belongsTo(models.User, {
+      as: 'user',
+    });
+    CV.hasMany(models.Experience, {
+      as: 'experiences',
+    });
+    CV.hasMany(models.Review, {
+      as: 'reviews',
       foreignKey: 'CVId',
-      otherKey: 'AmbitionId',
     });
   };
   return CV;

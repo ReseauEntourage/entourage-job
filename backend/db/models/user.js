@@ -75,11 +75,15 @@ module.exports = (sequelize, DataTypes) => {
     return (user.id = uuid());
   });
   User.associate = function(models) {
-    User.belongsToMany(models.Opportunity, {
+    User.belongsToMany(models.Opportunities, {
       through: 'Opportunities_User',
       as: 'Opportunities',
       foreignKey: 'UserId',
       otherKey: 'OpportunityId',
+    });
+    User.hasMany(models.CV, {
+      as: 'cvs',
+      foreignKey: 'userId',
     });
   };
   return User;

@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     return businessLineToCreate;
   });
   BusinessLine.associate = function(models) {
-    BusinessLine.belongsToMany(models.Opportunity, {
+    BusinessLine.belongsToMany(models.Opportunities, {
       through: 'Opportunities_BusinessLine',
       as: 'Opportunities',
       foreignKey: 'BusinessLineId',

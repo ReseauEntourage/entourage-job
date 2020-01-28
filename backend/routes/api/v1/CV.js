@@ -31,13 +31,13 @@ router.post('/', (req, res) => {
       // creation de l'image de preview cv
       // console.log(req.body);
       generateCVPreview(
-        cv.firstName.toUpperCase(),
+        cv.user.firstName.toUpperCase(),
         "A besoin d'un coup de pouce pour travailler dans...",
         /* cvCreated.ambitions.length > 0
           ? cvCreated.ambitions.join('. ').toUpperCase()
           :  */ '',
         `../../../../static/img/arthur.png`,
-        `../../../../static/img/${cv.url}-preview.jpg`
+        `../../../../static/img/${cv.user.firstName}-preview.jpg`
       )
         .then((resu) => console.log(resu))
         .catch((err) => console.log(err));
@@ -143,7 +143,7 @@ router.get('/:url', (req, res) => {
         res.status(200).json(cv);
       } else {
         console.log(`Aucun CV trouvé`);
-        res.status(204).json(cv);
+        res.status(204).send(null);
       }
     })
     .catch((err) => {
