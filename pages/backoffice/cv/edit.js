@@ -1,4 +1,4 @@
-import React, { Component, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
@@ -17,43 +17,52 @@ function translate(status) {
   return status;
 }
 
+const toUpperFirstLetter = (text) => {
+  if (typeof text !== 'string' || text === '') {
+    return text;
+  }
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+};
+
 const Edit = () => {
   const context = useContext(UserContext);
   const [cv, setCV] = useState(undefined);
-  const [pubSpinner, setPubSpinner] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`)
+  useEffect(async () => {
+    const resCV = await Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`);
+    if (!resCV.data) {
+      return setCV(null);
+    }
+    return setCV(resCV.data);
+  }, []);
+
+  const submitCV = () => {
+    setLoading(true);
+
+    Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+      ...cv,
+      id: undefined,
+      status: 'Pending',
+      version: cv.version + 1,
+    })
       .then((res) => {
-        // TODO SUPPRIMER LORSQUE DB REVIEWS OK
-        // TODO ajouter un loading screen
-
-        // si pas de CV
-        if (!res.data) {
-          return setCV(null);
-        }
-
-        if (!res.data.Reviews) {
-          res.data.Reviews = [];
-        }
-        if (!res.data.catchphrase) {
-          res.data.catchphrase = res.data.intro;
-          res.data.intro = undefined;
-        }
-        if (!res.data.devise) {
-          res.data.devise = null;
-        }
-        if (!res.data.careerPath) {
-          res.data.careerPath = null;
-        }
-
-        return setCV(res.data);
+        console.log(res);
+        setCV(res.data);
+        UIkit.notification('Le profil a été mis à jour', {
+          pos: 'bottom-center',
+          status: 'info',
+        });
       })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [1]);
-
+      .catch((err) => {
+        console.error(err);
+        UIkit.notification("Une erreur s'est produite", {
+          pos: 'bottom-center',
+          status: 'danger',
+        });
+      })
+      .finally(() => setLoading(false));
+  };
   return (
     <LayoutBackOffice title="Edition du CV">
       <Section>
@@ -94,34 +103,12 @@ const Edit = () => {
                 <Button
                   style="primary"
                   onClick={() => {
-                    setPubSpinner(true);
-                    Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                      ...cv,
-                      id: undefined,
-                      status: 'Pending',
-                      version: cv.version + 1,
-                    })
-                      .then((res) => {
-                        console.log(res);
-                        setCV(res.data);
-                        UIkit.notification('Le profil a été mis à jour', {
-                          pos: 'bottom-center',
-                          status: 'success',
-                        });
-                      })
-                      .catch((err) => {
-                        console.error(err);
-                        UIkit.notification("Une erreur s'est produite", {
-                          pos: 'bottom-center',
-                          status: 'danger',
-                        });
-                      })
-                      .finally(() => setPubSpinner(false));
+                    if (!loading) submitCV();
                   }}
                 >
                   <div className="uk-flex uk-flex-middle">
                     Publier
-                    {pubSpinner ? (
+                    {loading ? (
                       <div
                         className="uk-margin-small-left"
                         data-uk-spinner="ratio: .5"

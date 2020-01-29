@@ -25,7 +25,7 @@ const CVPage = ({ cv, router }) => {
   }
 
   const name =
-    cv.firstName.charAt(0).toUpperCase() + cv.firstName.slice(1).toLowerCase();
+    cv.user.firstName.charAt(0).toUpperCase() + cv.user.firstName.slice(1).toLowerCase();
   return (
     <Layout
       title={`${name} - LinkedOut`}

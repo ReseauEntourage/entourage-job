@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       text: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       status: DataTypes.STRING,
@@ -30,9 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     return r;
   });
   Review.associate = function(models) {
-    Review.belongsTo(models.CV, {
-      as: 'cvs',
-    });
+    Review.belongsTo(models.CV);
   };
   return Review;
 };

@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       dateEnd: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       title: {
         type: DataTypes.STRING,
@@ -29,7 +29,9 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   Experience.beforeCreate((experience, _) => {
-    return (experience.id = uuid());
+    const e = experience;
+    e.id = uuid();
+    return experience;
   });
   Experience.associate = function(models) {
     Experience.belongsTo(models.CV);

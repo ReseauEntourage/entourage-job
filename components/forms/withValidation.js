@@ -45,7 +45,7 @@ export default function withValidation(WrappedForm, validatorRules) {
     handleSubmit() {
       return new Promise((resolve, reject) => {
         const { getValues, setValid } = this.state;
-
+        debugger;
         const values = getValues();
         /* Validators control before submit */
         const validation = validator.validate(values);

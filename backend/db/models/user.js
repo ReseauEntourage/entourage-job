@@ -71,9 +71,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  User.beforeCreate((user) => {
-    return (user.id = uuid());
-  });
+
+  User.beforeCreate((user) => (user.id = uuid()));
+
   User.associate = function(models) {
     User.belongsToMany(models.Opportunities, {
       through: 'Opportunities_User',
@@ -86,6 +86,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId',
     });
   };
+
   return User;
 };
 // to many ?

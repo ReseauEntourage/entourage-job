@@ -9,7 +9,9 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   Skill.beforeCreate((skill, _) => {
-    return (skill.id = uuid());
+    const s = skill;
+    s.id = uuid();
+    return s;
   });
   Skill.associate = function(models) {
     Skill.belongsToMany(models.CV, {

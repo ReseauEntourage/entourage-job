@@ -50,9 +50,9 @@ export default class DiscoverPartial extends Component {
                 <CandidatCard
                   url={cv.url}
                   imgSrc="/static/img/arthur.png"
-                  imgAlt={cv.firstName}
-                  firstName={cv.firstName}
-                  ambitions={cv.Ambitions.slice(0, 2)}
+                  imgAlt={cv.user && cv.user.firstName}
+                  firstName={cv.user && cv.user.firstName}
+                  ambitions={cv.ambitions.slice(0, 2)}
                 />
               );
             })}

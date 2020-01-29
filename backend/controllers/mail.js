@@ -11,9 +11,9 @@ API reference: dev.mailjet.com
 const send = Mailjet.post('send');
 const me = Mailjet.get('user');
 
-me.request((error, response, body) => {
-  console.log(response, error || body);
-});
+// me.request((error, response, body) => {
+//   console.log(response, error || body);
+// });
 
 /**
  * Fonction permettant d'envoyer un mail

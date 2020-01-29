@@ -118,7 +118,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
             formSchema={schemaformEditExperience}
             onSubmit={(fields) =>
               onChange({
-                Experiences: [
+                experiences: [
                   ...experiences,
                   getExpWithoutSeparatedDate(fields),
                 ],
@@ -133,7 +133,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
             onSubmit={(fields) => {
               const newExperiences = experiences;
               newExperiences[currentIndex] = getExpWithoutSeparatedDate(fields);
-              onChange({ Experiences: newExperiences });
+              onChange({ experiences: newExperiences });
             }}
           />
           <ModalConfirm
@@ -142,7 +142,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
             buttonText="supprimer"
             onConfirm={() => {
               experiences.splice(currentIndex, 1);
-              onChange({ Experiences: experiences });
+              onChange({ experiences });
             }}
           />
         </>
@@ -180,7 +180,7 @@ export default ExperiencesProfileCard;
 //     {content}
 //   </div>
 //       {onChange && (
-//         <> 
+//         <>
 //           <ModalEdit
 //             id={`${id}-add`}
 //             title={`Ajout - ${title}`}

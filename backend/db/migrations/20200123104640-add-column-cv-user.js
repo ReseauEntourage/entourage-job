@@ -18,6 +18,10 @@ module.exports = {
         allowNull: false,
         defaultValue: false,
       }),
+      queryInterface.changeColumn('Experiences', 'dateEnd', {
+        allowNull: true,
+        type: Sequelize.STRING,
+      }),
     ]),
   down: (queryInterface, Sequelize) =>
     Promise.all([

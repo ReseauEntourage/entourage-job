@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
 
 dotenv.config();
-const db = {};
+const db = { models: {} };
 const basename = path.basename(__filename);
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
@@ -19,12 +19,12 @@ fs.readdirSync(__dirname)
   })
   .forEach((file) => {
     const model = sequelize.import(path.join(__dirname, file));
-    db[model.name] = model;
+    db.models[model.name] = model;
   });
 
-Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+Object.keys(db.models).forEach((modelName) => {
+  if (db.models[modelName].associate) {
+    db.models[modelName].associate(db.models);
   }
 });
 

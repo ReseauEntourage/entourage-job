@@ -97,6 +97,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   CV.beforeValidate((cv) => {
     const cvToCreate = cv;
+    // mover to controller
     // if (cvToCreate.firstName && cvToCreate.userId) {
     //   cvToCreate.url = `${cvToCreate.firstName.toLowerCase()}-${cvToCreate.userId.substring(
     //     0,
@@ -133,15 +134,15 @@ module.exports = (sequelize, DataTypes) => {
       as: 'passions',
     });
 
-    CV.belongsTo(models.User, {
-      as: 'user',
-    });
     CV.hasMany(models.Experience, {
       as: 'experiences',
     });
     CV.hasMany(models.Review, {
       as: 'reviews',
-      foreignKey: 'CVId',
+    });
+
+    CV.belongsTo(models.User, {
+      as: 'user',
     });
   };
   return CV;

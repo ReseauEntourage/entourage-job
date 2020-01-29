@@ -47,35 +47,37 @@ const CVEditCareerPath = ({
   careerPathOpen,
   gender,
   onChange,
-}) => {
-  return (
-    <>
-      <div className="uk-card uk-card-default uk-card-body">
-        <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
-          <h3 className="uk-card-title">
-            Mon <span className="uk-text-primary">projet professionnel</span>
-          </h3>
-          {onChange && (
-            <ButtonIcon
-              name="pencil"
-              onClick={() => UIkit.modal(`#modal-career-path`).show()}
-            />
-          )}
-        </GridNoSSR>
-        {generateContent(careerPath0, careerPath1, careerPathOpen, gender)}
-      </div>
-      {onChange && (
-        <ModalEdit
-          id="modal-career-path"
-          title="Édition - Projet professionnel"
-          formSchema={schemaCareerPath}
-          defaultValues={{ careerPath0, careerPath1, careerPathOpen }}
-          onSubmit={onChange}
-        />
-      )}
-    </>
-  );
-};
+}) => (
+  <>
+    <div className="uk-card uk-card-default uk-card-body">
+      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+        <h3 className="uk-card-title">
+          Mon <span className="uk-text-primary">projet professionnel</span>
+        </h3>
+        {onChange && (
+          <ButtonIcon
+            name="pencil"
+            onClick={() => UIkit.modal(`#modal-career-path`).show()}
+          />
+        )}
+      </GridNoSSR>
+      {generateContent(careerPath0, careerPath1, careerPathOpen, gender)}
+    </div>
+    {onChange && (
+      <ModalEdit
+        id="modal-career-path"
+        title="Édition - Projet professionnel"
+        formSchema={schemaCareerPath}
+        defaultValues={{ careerPath0, careerPath1, careerPathOpen }}
+        onSubmit={(aa) => {
+          console.log(aa);
+          debugger;
+          onChange(aa);
+        }}
+      />
+    )}
+  </>
+);
 CVEditCareerPath.propTypes = {
   careerPath0: PropTypes.string.isRequired,
   careerPath1: PropTypes.string.isRequired,

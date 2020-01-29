@@ -41,13 +41,13 @@ export class Form extends Component {
     };
   }
 
-  static initializeForm(fieldsInfo) {
+  static initializeForm(fieldsInfo, defaultValues) {
     // todo revoir la structure du state
     // on extrait les nom des champs
     const fieldsId = fieldsInfo.map((field) => field.id);
 
     const values = fieldsId.reduce((acc, id) => {
-      acc[id] = '';
+      acc[id] = defaultValues[id];
       return acc;
     }, {});
 
@@ -83,24 +83,27 @@ export class Form extends Component {
   onSubmit(event) {
     event.preventDefault();
     const { handleSubmit } = this.state;
-
+    debugger;
     handleSubmit()
       .then((fields) => {
-        const { afterSubmit, fieldsInfo } = this.props;
-        this.setState(this.constructor.initializeForm(fieldsInfo));
+        debugger;
+        const { afterSubmit, fieldsInfo, defaultValues } = this.props;
+        this.setState(
+          this.constructor.initializeForm(fieldsInfo, defaultValues)
+        );
         afterSubmit(fields, (error) => this.setState({ error }));
       })
       .catch(console.error);
   }
 
-  createState({ handleChange, handleSubmit, fieldsInfo }) {
+  createState({ handleChange, handleSubmit, fieldsInfo, defaultValues }) {
     // todo revoir la structure du state
     return {
       error: '',
       handleChange: handleChange.bind(this),
       handleSubmit: handleSubmit.bind(this),
       onSubmit: this.onSubmit.bind(this),
-      ...this.constructor.initializeForm(fieldsInfo),
+      ...this.constructor.initializeForm(fieldsInfo, defaultValues),
     };
   }
 

@@ -14,87 +14,81 @@ const InfoProfileCard = ({
   languages,
   transport,
   onChange,
-}) => {
-  let formatContract = '';
-  contracts.forEach((c, index) => {
-    const separator = index + 1 < contracts.length ? ' / ' : '';
-    formatContract += `${c}${separator}`;
-  });
-  let formatLanguage = '';
-  languages.forEach((l, index) => {
-    const separator = index + 1 < languages.length ? ' / ' : '';
-    formatLanguage += `${l}${separator}`;
-  });
-
-  return (
-    <div className="uk-card uk-card-primary uk-card-body">
-      <GridNoSSR between gap="small" eachWidths={['expand', 'auto']}>
-        <h3 className="uk-card-title">
-          {!onChange && (
-            <span className="uk-margin-small-right">
-              <IconNoSSR name="info" />
-            </span>
-          )}
-          Infos pratiques
-        </h3>
-        {onChange && (
-          <ButtonIcon
-            name="pencil"
-            onClick={() => {
-              UIkit.modal(`#modal-usefulinformation`).show();
-            }}
-          />
+}) => (
+  <div className="uk-card uk-card-primary uk-card-body">
+    <GridNoSSR between gap="small" eachWidths={['expand', 'auto']}>
+      <h3 className="uk-card-title">
+        {!onChange && (
+          <span className="uk-margin-small-right">
+            <IconNoSSR name="info" />
+          </span>
         )}
-      </GridNoSSR>
-      <ul className="uk-list">
-        <li>
-          <IconNoSSR name="file-text" />{' '}
-          {formatContract !== ''
-            ? formatContract
-            : 'Type de contrat recherché non renseigné'}
-        </li>
-        <li>
-          <IconNoSSR name="location" />{' '}
-          {location !== '' ? location : 'Localisation non renseignée'}
-        </li>
-        <li>
-          <IconNoSSR name="calendar" />{' '}
-          {availability !== '' ? availability : 'Disponibilité non renseignée'}
-        </li>
-        <li>
-          <IconNoSSR name="users" />{' '}
-          {formatLanguage !== ''
-            ? formatLanguage
-            : 'Langues apprises non renseignées'}
-        </li>
-        <li>
-          <IconNoSSR name="hashtag" />{' '}
-          {transport !== '' ? transport : 'Moyen de transport non renseigné'}
-        </li>
-      </ul>
+        Infos pratiques
+      </h3>
       {onChange && (
-        <ModalEdit
-          id="modal-usefulinformation"
-          title="Édition - Informations utiles"
-          formSchema={schemaUsefulInformation}
-          defaultValues={{
-            location,
-            availability,
-            transport,
-            Contracts: contracts[0],
-            Languages: languages[0],
-          }}
-          onSubmit={(fields) => {
-            const fieldsTransform = fields;
-            fieldsTransform.Contracts = [fields.Contracts];
-            fieldsTransform.Languages = [fields.Languages];
-            onChange(fieldsTransform);
+        <ButtonIcon
+          name="pencil"
+          onClick={() => {
+            UIkit.modal(`#modal-usefulinformation`).show();
           }}
         />
       )}
-    </div>
-  );
-};
+    </GridNoSSR>
+    <ul className="uk-list">
+      <li>
+        <IconNoSSR name="file-text" />{' '}
+        {contracts.length > 0
+          ? contracts.join(' / ')
+          : 'Type de contrat recherché non renseigné'}
+      </li>
+      <li>
+        <IconNoSSR name="location" />{' '}
+        {location !== '' ? location : 'Localisation non renseignée'}
+      </li>
+      <li>
+        <IconNoSSR name="calendar" />{' '}
+        {availability !== '' ? availability : 'Disponibilité non renseignée'}
+      </li>
+      <li>
+        <IconNoSSR name="users" />{' '}
+        {languages.length > 0
+          ? languages.join(' / ')
+          : 'Langues apprises non renseignées'}
+      </li>
+      <li>
+        <IconNoSSR name="hashtag" />{' '}
+        {transport !== '' ? transport : 'Moyen de transport non renseigné'}
+      </li>
+    </ul>
+    {onChange && (
+      <ModalEdit
+        id="modal-usefulinformation"
+        title="Édition - Informations utiles"
+        formSchema={schemaUsefulInformation}
+        defaultValues={{
+          location,
+          availability,
+          transport,
+          contracts: contracts[0],
+          languages: languages[0],
+        }}
+        onSubmit={(fields) =>
+          onChange({
+            ...fields,
+            contracts: fields.contracts
+              .split('/')
+              .map((s) => s.trim())
+              .filter((s) => s.length > 0),
+            languages: fields.languages
+              .split('/')
+              .map((s) => s.trim())
+              .filter((s) => s.length > 0),
+          })
+        }
+      />
+    )}
+  </div>
+);
 InfoProfileCard.propTypes = {
   contracts: PropTypes.arrayOf(PropTypes.string),
   location: PropTypes.string,

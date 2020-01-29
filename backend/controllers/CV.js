@@ -1,6 +1,31 @@
 /* eslint-disable no-restricted-globals */
-const sequelize = require('sequelize');
-const models = require('../db/models');
+const { models, sequelize } = require('../db/models');
+
+// nettoyage des données
+function clean(cv) {
+  if (!cv) return null;
+  const tmpCV = cv.toJSON();
+  if (tmpCV.skills) {
+    tmpCV.skills = tmpCV.skills.map((o) => o.name);
+  }
+  if (tmpCV.contracts) {
+    tmpCV.contracts = tmpCV.contracts.map((o) => o.name);
+  }
+  if (tmpCV.languages) {
+    tmpCV.languages = tmpCV.languages.map((o) => o.name);
+  }
+  if (tmpCV.passions) {
+    tmpCV.passions = tmpCV.passions.map((o) => o.name);
+  }
+  if (tmpCV.ambitions) {
+    tmpCV.ambitions = tmpCV.ambitions.map((o) => o.name);
+  }
+  return tmpCV;
+}
+
+function controlText(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+}
 
 const INCLUDE_CV_COMPLETE = [
   {
@@ -50,106 +75,123 @@ const INCLUDE_CV_COMPLETE = [
   },
 ];
 
-const createCV = (data) => {
-  return new Promise((resolve, reject) => {
-    console.log(`createCV - Création du CV`);
+const createCV = async (data) => {
+  console.log(`createCV - Création du CV`);
 
-    models.CV.create(data).then((modelCV) => {
-      // Skills
-      if (data.skills) {
-        console.log(`createCV - Etape 2 - Skills`);
-        data.skills.forEach(async (skill) => {
-          const modelSkill = await models.Skill.findOrCreate({
-            where: { name: skill },
-          });
-          modelCV.addSkill(modelSkill);
-        });
-      }
+  const modelCV = await models.CV.create(data);
 
-      // languages
-      if (data.languages) {
-        console.log(`createCV - Etape 4 - Langues`);
-        data.languages.map(async (language) => {
-          const modelLanguage = await models.Language.findOrCreate({
-            where: { name: language },
-          });
-          modelCV.addLanguage(modelLanguage);
-        });
-      }
+  // Skills
+  if (data.skills) {
+    console.log(`createCV - Etape 2 - Skills`);
+    const skills = await Promise.all(
+      // pour chaque competence
+      data.skills.map((name) =>
+        // on trouve ou créé la donné
+        models.Skill.findOrCreate({
+          where: { name: controlText(name) },
+        })
+          // on recupere de model retourné
+          .then((model) => model[0])
+      )
+    );
+    // on ajoute toutes les competences
+    modelCV.addSkills(skills);
+  }
 
-      // Contracts
-      if (data.contracts) {
-        console.log(`createCV - Etape 6 - Contrats`);
-        data.contracts.map(async (contract) => {
-          const modelContract = await models.Contract.findOrCreate({
-            where: { name: contract },
-          });
-          modelCV.addContract(modelContract);
-        });
-      }
+  // languages
+  if (data.languages) {
+    console.log(`createCV - Etape 4 - Langues`);
+    const languages = await Promise.all(
+      data.languages.map((name) =>
+        models.Language.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0])
+      )
+    );
+    modelCV.addLanguages(languages);
+  }
 
-      // Passions
-      if (data.passions) {
-        console.log(`createCV - Etape 8 - Passions`);
-        data.passions.map(async (passion) => {
-          const modelPassion = await models.Passion.findOrCreate({
-            where: { name: passion },
-          });
-          modelCV.addPassion(modelPassion);
-        });
-      }
-
-      // Ambitions
-      if (data.ambitions) {
-        console.log(`createCV - Etape 10 - Ambitions`);
-        data.ambitions.map(async (ambition) => {
-          const modelAmbition = await models.Ambition.findOrCreate({
-            where: { name: ambition },
-          });
-          modelCV.addAmbition(modelAmbition);
-        });
-      }
-
-      if (data.experiences) {
-        console.log(`createCV - Etape 11 - Expériences`);
-        data.experiences.map((experience) =>
-          models.Experience.findOrCreate({
-            where: {
-              CVId: modelCV.id,
-              dateStart: experience.dateStart,
-              dateEnd: experience.dateEnd,
-              title: experience.title,
-              description: experience.description,
-            },
-          })
-        );
-      }
-
-      if (data.reviews) {
-        console.log(`createCV - Etape 11 - Expériences`);
-        data.reviews.map((review) =>
-          models.Review.findOrCreate({
-            where: {
-              CVId: modelCV.id,
-              text: review.text,
-              status: review.status,
-              name: review.name,
-              description: review.description,
-            },
-          })
-        );
-      }
-
-      console.log(
-        `createCV - Etape finale - Reprendre le CV complet à retourner`
-      );
-      return models.CV.findByPk(modelCV.id, {
-        include: INCLUDE_CV_COMPLETE,
+  // Contracts
+  if (data.contracts) {
+    console.log(`createCV - Etape 6 - Contrats`);
+    const contracts = await Promise.all(
+      data.contracts.map((name) => {
+        return models.Contract.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0]);
       })
-        .then(resolve)
-        .catch(reject);
-    });
+    );
+    modelCV.addContracts(contracts);
+  }
+
+  // Passions
+  if (data.passions) {
+    console.log(`createCV - Etape 8 - Passions`);
+    const passions = await Promise.all(
+      data.passions.map((name) => {
+        return models.Passion.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0]);
+      })
+    );
+    modelCV.addPassions(passions);
+  }
+
+  // Ambitions
+  if (data.ambitions) {
+    console.log(`createCV - Etape 10 - Ambitions`);
+    const ambitions = await Promise.all(
+      data.ambitions.map((name) => {
+        return models.Ambition.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0]);
+      })
+    );
+    modelCV.addAmbitions(ambitions);
+  }
+
+  // Experiences
+  if (data.experiences) {
+    console.log(`createCV - Etape 11 - Expériences`);
+    data.experiences.forEach((experience) =>
+      models.Experience.create({
+        CVId: modelCV.id,
+        dateStart: experience.dateStart,
+        dateEnd: experience.dateEnd,
+        title: experience.title,
+        description: experience.description,
+      })
+    );
+  }
+
+  // Reviews
+  if (data.reviews) {
+    console.log(`createCV - Etape 11 - Expériences`);
+    data.reviews.forEach((review) =>
+      models.Review.create({
+        CVId: modelCV.id,
+        text: review.text,
+        status: review.status,
+        name: review.name,
+      })
+    );
+  }
+
+  // si possible le faire à la creation du cv
+  const { firstName } = await models.User.findByPk(data.userId, {
+    attributes: ['firstName'],
   });
+  modelCV.update({
+    url: `${firstName.toLowerCase()}-${data.userId.substring(0, 8)}`,
+  });
+
+  // renvoie du cv complet
+  console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
+  const completeCV = await models.CV.findByPk(modelCV.id, {
+    exclude: ['userId'],
+    include: INCLUDE_CV_COMPLETE,
+  });
+  return clean(completeCV);
 };
 
 const deleteCV = (id) => {
@@ -159,89 +201,65 @@ const deleteCV = (id) => {
   });
 };
 
-const getCVbyUrl = (url) => {
+const getCVbyUrl = async (url) => {
   console.log(`getCVbyUrl - Récupérer un CV à partir de son url`);
-  return models.CV.max('version', {
+  const modelCV = await models.CV.findOne({
+    include: INCLUDE_CV_COMPLETE,
+    where: { url, status: 'Published', visibility: true },
+    order: [['version', 'DESC']],
+  });
+  return clean(modelCV);
+};
+
+const getCVbyUserId = async (userId) => {
+  console.log(`getCV - Récupérer un CV non publié à partir du userId`);
+  const modelCV = await models.CV.findOne({
+    include: INCLUDE_CV_COMPLETE,
+    where: { userId },
+    order: [['version', 'DESC']],
+  });
+  return clean(modelCV);
+};
+
+const getCVs = async () => {
+  console.log(`getCVs - Récupérer les CVs`);
+  const modelCVs = await models.CV.findAll({
     where: {
       status: 'Published',
       visibility: true,
-      url,
     },
-  }).then((version) => {
-    if (isNaN(version)) {
-      return Promise.resolve(null);
-    }
-    return models.CV.findOne({
-      where: { url, status: 'Published', version, visibility: true },
-      include: INCLUDE_CV_COMPLETE,
-    });
+    include: INCLUDE_CV_COMPLETE,
   });
+  return modelCVs.map((modelCV) => clean(modelCV));
 };
 
-const getCVbyUserId = (userId) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getCV -';
-    console.log(`${infoLog} Récupérer un CV non publié à partir du userId`);
-    models.CV.max('version', {
-      where: {
-        userId,
+const getRandomShortCVs = async (nb) => {
+  console.log(
+    `getRandomShortCVs - Récupère des CVs au format court de manière aléatoire`
+  );
+  const modelCVs = await models.CV.findAll({
+    where: {
+      status: 'Published',
+      visibility: true,
+    },
+    order: sequelize.random(),
+    limit: nb || 11,
+    attributes: ['id', 'url'],
+    include: [
+      {
+        model: models.Ambition,
+        as: 'ambitions',
+        through: { attributes: [] },
+        attributes: ['name'],
       },
-    })
-      .then((version) => {
-        if (isNaN(version)) {
-          return Promise.resolve(null);
-        }
-        return models.CV.findOne({
-          where: { userId, version },
-          include: INCLUDE_CV_COMPLETE,
-        });
-      })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
-  });
-};
-
-const getCVs = () => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getCVs -';
-    console.log(`${infoLog} Récupérer les CVs`);
-    models.CV.findAll({
-      where: {
-        status: 'Published',
-        visibility: true,
+      {
+        model: models.User,
+        as: 'user',
+        attributes: ['firstName'],
       },
-      include: INCLUDE_CV_COMPLETE,
-    })
-      .then((listeCVs) => resolve(listeCVs))
-      .catch((err) => reject(err));
+    ],
   });
-};
-
-const getRandomShortCVs = (nb) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getRandomShortCVs -';
-    console.log(
-      `${infoLog} Récupère des CVs au format court de manière aléatoire`
-    );
-    models.CV.findAll({
-      where: {
-        status: 'Published',
-        visibility: true,
-      },
-      order: db.random(),
-      limit: nb || 11,
-      attributes: ['id', 'url', 'firstName'],
-      include: [
-        {
-          model: models.Ambition,
-          through: { attributes: [] },
-          attributes: ['name'],
-        },
-      ],
-    })
-      .then((listeCVs) => resolve(listeCVs))
-      .catch((err) => reject(err));
-  });
+  return modelCVs.map((modelCV) => clean(modelCV));
 };
 
 const getVisibility = (userId) => {

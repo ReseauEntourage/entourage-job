@@ -19,7 +19,6 @@
       "id": "careerPathOpen",
       "name": "careerPathOpen",
       "component": "checkbox",
-      "type": "boolean",
       "title": "Ouvert à toutes proposition ?"
     }
   ],

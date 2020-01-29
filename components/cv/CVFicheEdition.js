@@ -13,90 +13,48 @@ import { CVEditCatchphrase, CVEditPicture, CVEditReviews } from '.';
 import CVEditDevise from './CVEditDevise';
 import CVEditCareerPath from './CVEditCareerPath';
 
-const toUpperFirstLetter = (text) => {
-  if (typeof text !== 'string' || text === '') {
-    return text;
-  }
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-};
-
-const CVFicheEdition = ({ cv, onChange }) => {
-  const arrayContracts =
-    cv.Contracts &&
-    cv.Contracts.map((contract) => {
-      if (contract.name) {
-        return contract.name;
-      }
-      return contract;
-    });
-  const arrayLanguages =
-    cv.Languages &&
-    cv.Languages.map((language) => {
-      if (language.name) {
-        return toUpperFirstLetter(language.name);
-      }
-      return toUpperFirstLetter(language);
-    });
-  const arraySkills =
-    cv.Skills &&
-    cv.Skills.map((skill) => {
-      if (skill.name) {
-        return toUpperFirstLetter(skill.name);
-      }
-      return toUpperFirstLetter(skill);
-    });
-  const arrayPassions =
-    cv.Passions &&
-    cv.Passions.map((passion) => {
-      if (passion.name) {
-        return toUpperFirstLetter(passion.name);
-      }
-      return toUpperFirstLetter(passion);
-    });
-
-  return (
-    <GridNoSSR childWidths={['1-1']}>
-      <CVEditDevise devise={cv.devise} onChange={onChange} />
-      <GridNoSSR childWidths={['1-2@s']} match>
-        <GridNoSSR childWidths={['1-1']}>
-          <CVEditCatchphrase catchphrase={cv.catchphrase} onChange={onChange} />
-          <CVEditCareerPath
-            careerPath0={cv.careerPath0}
-            careerPath1={cv.careerPath1}
-            careerPathOpen={cv.careerPathOpen}
-            gender={cv.gender}
-            onChange={onChange}
-          />
-        </GridNoSSR>
-        <CVEditPicture onChange={onChange} />
-      </GridNoSSR>
-      <GridNoSSR childWidths={['1-2@s']} match>
-        <InfoProfileCard
-          contracts={arrayContracts}
-          location={cv.location}
-          availability={cv.availability}
-          languages={arrayLanguages}
-          transport={cv.transport}
+const CVFicheEdition = ({ cv, onChange }) => (
+  <GridNoSSR childWidths={['1-1']}>
+    <CVEditDevise devise={cv.devise} onChange={onChange} />
+    <GridNoSSR childWidths={['1-2@s']} match>
+      <GridNoSSR childWidths={['1-1']}>
+        <CVEditCatchphrase catchphrase={cv.catchphrase} onChange={onChange} />
+        <CVEditCareerPath
+          careerPath0={cv.careerPath0}
+          careerPath1={cv.careerPath1}
+          careerPathOpen={cv.careerPathOpen}
+          gender={cv.gender}
           onChange={onChange}
         />
-        <GridNoSSR childWidths={['1-2@m']} match>
-          <SkillsCard list={arraySkills} onChange={onChange} />
-          <PassionsCard list={arrayPassions} onChange={onChange} />
-        </GridNoSSR>
       </GridNoSSR>
-      <GridNoSSR childWidths={['1-2@s']}>
-        <GridNoSSR childWidths={['1-1']}>
-          <StoryProfileCard description={cv.story} onChange={onChange} />
-          <CVEditReviews reviews={cv.Reviews} onChange={onChange} />
-        </GridNoSSR>
-        <ExperiencesProfileCard
-          experiences={cv.Experiences}
-          onChange={onChange}
-        />
+      <CVEditPicture onChange={onChange} />
+    </GridNoSSR>
+    <GridNoSSR childWidths={['1-2@s']} match>
+      <InfoProfileCard
+        contracts={cv.contracts}
+        location={cv.location}
+        availability={cv.availability}
+        languages={cv.languages}
+        transport={cv.transport}
+        onChange={onChange}
+      />
+      <GridNoSSR childWidths={['1-2@m']} match>
+        <SkillsCard list={cv.skills} onChange={onChange} />
+        <PassionsCard list={cv.passions} onChange={onChange} />
       </GridNoSSR>
     </GridNoSSR>
-  );
-};
+    <GridNoSSR childWidths={['1-2@s']}>
+      <GridNoSSR childWidths={['1-1']}>
+        <StoryProfileCard description={cv.story} onChange={onChange} />
+        <CVEditReviews reviews={cv.reviews} onChange={onChange} />
+      </GridNoSSR>
+      <ExperiencesProfileCard
+        experiences={cv.experiences}
+        onChange={onChange}
+      />
+    </GridNoSSR>
+  </GridNoSSR>
+);
 
 CVFicheEdition.propTypes = {
   cv: PropTypes.shape().isRequired,
