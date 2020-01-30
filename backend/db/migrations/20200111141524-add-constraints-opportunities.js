@@ -2,9 +2,9 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.addConstraint('Opportunities_Users', ['OpportunityId'], {
+        queryInterface.addConstraint('Opportunity_Users', ['OpportunityId'], {
           type: 'foreign key',
-          name: 'Opportunities_Users_OpportunitiesId_fkey',
+          name: 'Opportunity_Users_OpportunitiesId_fkey',
           references: {
             table: 'Opportunities',
             field: 'id',
@@ -21,8 +21,8 @@ module.exports = {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.removeConstraint(
-          'Opportunities_Users',
-          'Opportunities_Users_OpportunitiesId_fkey',
+          'Opportunity_Users',
+          'Opportunity_Users_OpportunitiesId_fkey',
           {
             transaction: t,
           }

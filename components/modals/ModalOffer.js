@@ -1,11 +1,12 @@
 /* global UIkit */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropsType from 'prop-types';
 import { GridNoSSR, Button, IconNoSSR } from '../utils';
 import Textarea from '../forms/fields/Textarea';
 import Select from '../forms/fields/Select';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
+import axios from '../../Axios';
 
 const List = ({ className, children }) => (
   <ul className={`uk-nav ${className}`}>
@@ -42,116 +43,153 @@ OfferInfoContainer.defaultProps = {
   items: [],
 };
 
-const ModalOffer = ({ currentOffer, setCurrentOffer }) => (
-  <div id="modal-offer" data-uk-modal="bg-close:false">
-    <div className="uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl">
-      <CloseButtonNoSSR className="uk-modal-close-default" />
-      <div className="uk-modal-body">
-        <GridNoSSR gap="small" between middle>
-          <GridNoSSR middle>
-            <h3 className="uk-text-bold">{currentOffer.title}</h3>
-            <Select
-              id="modal-offer-status"
-              title="Statuts"
-              name="status"
-              placeholder="status"
-              options={[
-                { value: 'contacté', text: 'Contacté' },
-                { value: "phase d'entretien", text: "Phase d'entretien" },
-                { value: 'embauche', text: 'Embauche' },
-                { value: 'refus', text: 'Refus' },
-                { value: 'standby', text: 'Standby' },
-                { value: 'relance', text: 'Relance' },
-              ]}
-              defaultValue={currentOffer.status}
-              onChange={(event) =>
-                setCurrentOffer({
-                  ...currentOffer,
-                  status: event.target.value,
-                })
-              }
-            />
+const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
+  const [note, setNote] = useState(currentOffer.note);
+  const [noteChanged, setNoteChanged] = useState(false);
+
+  async function updateOpportunity(opportunity) {
+    const res = await axios.post(
+      `${process.env.SERVER_URL}/api/v1/opportunity/${currentOffer.id}`,
+      opportunity
+    );
+    setCurrentOffer(opportunity);
+    console.log(res);
+  }
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (noteChanged) {
+        setNoteChanged(false);
+        console.log('update offer note', note);
+
+        updateOpportunity({
+          ...currentOffer,
+          note,
+        });
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div id="modal-offer" data-uk-modal="bg-close:false">
+      <div className="uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl">
+        <CloseButtonNoSSR className="uk-modal-close-default" />
+        <div className="uk-modal-body">
+          <GridNoSSR gap="small" between middle>
+            <GridNoSSR middle>
+              <h3 className="uk-text-bold">{currentOffer.title}</h3>
+              <Select
+                id="modal-offer-status"
+                title="Statuts"
+                name="status"
+                placeholder="statut"
+                options={[
+                  { value: 'contacté', text: 'Contacté' },
+                  { value: "phase d'entretien", text: "Phase d'entretien" },
+                  { value: 'embauche', text: 'Embauche' },
+                  { value: 'refus', text: 'Refus' },
+                  { value: 'standby', text: 'Standby' },
+                  { value: 'relance', text: 'Relance' },
+                ]}
+                defaultValue={currentOffer.status}
+                onChange={async (event) => {
+                  updateOpportunity({
+                    ...currentOffer,
+                    status: event.target.value,
+                  });
+                }}
+              />
+            </GridNoSSR>
+            <List className="uk-iconnav uk-grid-medium">
+              <ButtonIcon
+                name="pull"
+                className={
+                  currentOffer.archived ? 'ent-color-amber' : undefined
+                }
+                onClick={() => {
+                  setCurrentOffer({
+                    ...currentOffer,
+                    archived: !currentOffer.archived,
+                  });
+                }}
+              />
+              <ButtonIcon
+                name="star"
+                className={
+                  currentOffer.bookmarked ? 'ent-color-amber' : undefined
+                }
+                onClick={() => {
+                  setCurrentOffer({
+                    ...currentOffer,
+                    bookmarked: !currentOffer.bookmarked,
+                  });
+                }}
+              />
+            </List>
           </GridNoSSR>
-          <List className="uk-iconnav uk-grid-medium">
-            <ButtonIcon
-              name="pull"
-              className={currentOffer.archived ? 'ent-color-amber' : undefined}
-              onClick={() => {
-                setCurrentOffer({
-                  ...currentOffer,
-                  archived: !currentOffer.archived,
-                });
+          <hr />
+          <GridNoSSR
+            className="uk-margin-bottom"
+            eachWidths={['1-3@s', '2-3@s']}
+            items={[
+              <GridNoSSR gap="medium">
+                <OfferInfoContainer
+                  items={[
+                    <Button disabled>
+                      <span style={{ color: '#666' }}>
+                        {currentOffer.businessLine}
+                      </span>
+                    </Button>,
+                  ]}
+                />
+                <OfferInfoContainer
+                  icon="hashtag"
+                  title="Entreprise"
+                  items={[currentOffer.company]}
+                />
+                <OfferInfoContainer
+                  icon="user"
+                  title="Recruteur"
+                  items={[
+                    currentOffer.recruiterName,
+                    currentOffer.recruiterEmail,
+                    currentOffer.recruiterPhone,
+                    <span className="uk-text-italic">
+                      offre soumise le {currentOffer.createdAt}
+                    </span>,
+                  ]}
+                />
+                <OfferInfoContainer
+                  icon="location"
+                  title={currentOffer.location}
+                />
+              </GridNoSSR>,
+              <OfferInfoContainer
+                icon="comment"
+                title="Message"
+                items={[currentOffer.description]}
+              />,
+            ]}
+          />
+          <div>
+            <Textarea
+              id="modal-offer-comment"
+              name="modal-offer-comment"
+              title="Ecrivez un commentaire à propos de cette opportunité..."
+              type="text"
+              defaultValue={note}
+              onChange={(e) => {
+                setNote(e.target.value);
               }}
             />
-            <ButtonIcon
-              name="star"
-              className={
-                currentOffer.bookmarked ? 'ent-color-amber' : undefined
-              }
-              onClick={() => {
-                setCurrentOffer({
-                  ...currentOffer,
-                  bookmarked: !currentOffer.bookmarked,
-                });
-              }}
-            />
-          </List>
-        </GridNoSSR>
-        <hr />
-        <GridNoSSR
-          className="uk-margin-bottom"
-          eachWidths={['1-3@s', '2-3@s']}
-          items={[
-            <GridNoSSR gap="medium">
-              <OfferInfoContainer
-                items={[
-                  <Button disabled>
-                    <span style={{ color: '#666' }}>
-                      {currentOffer.businessLine}
-                    </span>
-                  </Button>,
-                ]}
-              />
-              <OfferInfoContainer
-                icon="hashtag"
-                title="Entreprise"
-                items={[currentOffer.company]}
-              />
-              <OfferInfoContainer
-                icon="user"
-                title="Recruteur"
-                items={[
-                  currentOffer.recruiterName,
-                  currentOffer.recruiterEmail,
-                  currentOffer.recruiterPhone,
-                  <span className="uk-text-italic">
-                    offre soumise le {currentOffer.createdAt}
-                  </span>,
-                ]}
-              />
-              <OfferInfoContainer
-                icon="location"
-                title={currentOffer.location}
-              />
-            </GridNoSSR>,
-            <OfferInfoContainer
-              icon="comment"
-              title="Message"
-              items={[currentOffer.description]}
-            />,
-          ]}
-        />
-        <Textarea
-          id="modal-offer-comment"
-          name="modal-offer-comment"
-          title="Ecrivez un commentaire à propos de cette opportunité..."
-          type="text"
-          defaultValue={currentOffer.note}
-        />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 ModalOffer.propTypes = {
   currentOffer: PropsType.objectOf({
     title: PropsType.string,

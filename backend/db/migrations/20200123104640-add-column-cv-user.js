@@ -13,6 +13,15 @@ module.exports = {
       queryInterface.addColumn('CVs', 'devise', Sequelize.STRING),
       queryInterface.addColumn('CVs', 'careerPath0', Sequelize.STRING),
       queryInterface.addColumn('CVs', 'careerPath1', Sequelize.STRING),
+      queryInterface.addColumn('Users', 'hiden', {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      }),
+      queryInterface.addColumn('Users', 'url', {
+        type: Sequelize.STRING,
+        allowNull: false,
+      }),
       queryInterface.addColumn('CVs', 'careerPathOpen', {
         type: Sequelize.BOOLEAN,
         allowNull: false,
@@ -22,10 +31,14 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING,
       }),
+      // queryInterface.removeColumn('CVs', 'visibility'),
+      // queryInterface.removeColumn('CVs', 'url'),
     ]),
   down: (queryInterface, Sequelize) =>
     Promise.all([
       queryInterface.removeColumn('Users', 'gender'),
+      queryInterface.removeColumn('Users', 'url'),
+      queryInterface.removeColumn('Users', 'hiden'),
       queryInterface.removeColumn('CVs', 'catchphrase'),
       queryInterface.removeColumn('CVs', 'devise'),
       queryInterface.removeColumn('CVs', 'careerPath0'),
@@ -40,5 +53,22 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       }),
+      // queryInterface.addColumn(
+      //   'CVs',
+      //   'url',
+      //   {
+      //     allowNull: false,
+      //     type: Sequelize.STRING,
+      //     defaultValue: 'to-define',
+      //   }),
+      //   queryInterface.addColumn(
+      //     'CVs',
+      //     'visibility',
+      //     {
+      //       type: Sequelize.BOOLEAN,
+      //       defaultValue: false,
+      //       allowNull: false,
+      //     }
+      //   )
     ]),
 };

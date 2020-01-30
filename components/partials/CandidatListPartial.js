@@ -8,11 +8,16 @@ const CandidatListPartial = () => {
   const nb = 11;
 
   useEffect(() => {
-    Api.get(`/api/v1/cv/cards/random?nb=${nb}`)
+    console.log(Api);
+
+    const req = Api.get(`/api/v1/cv/cards/random?nb=${nb}`)
       .then((res) => {
         setCVs(res.data);
       })
       .catch(() => console.error('Impossible de récupérer les CVs.'));
+    console.log(req);
+
+    debugger;
   }, [nb]);
 
   return (

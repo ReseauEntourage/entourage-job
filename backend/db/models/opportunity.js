@@ -1,8 +1,8 @@
 const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
-  const Opportunities = sequelize.define(
-    'Opportunities',
+  const Opportunity = sequelize.define(
+    'Opportunity',
     {
       title: {
         type: DataTypes.STRING,
@@ -46,21 +46,25 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Opportunities.beforeCreate((opportunity) => {
+
+  Opportunity.beforeCreate((opportunity) => {
     const opportunityToCreate = opportunity;
     opportunityToCreate.id = uuid();
     return opportunityToCreate;
   });
-  Opportunities.associate = function(models) {
-    Opportunities.belongsToMany(models.BusinessLines, {
-      through: 'Opportunities_BusinessLine',
-      as: 'BusinessLines',
-      foreignKey: 'OpportunityId',
-      otherKey: 'BusinessLineId',
+
+  Opportunity.associate = function(models) {
+    Opportunity.belongsToMany(models.BusinessLine, {
+      through: 'Opportunity_BusinessLines',
+      as: 'businessLines',
     });
-    // models.Opportunity.belongsToMany(models.User, {
-    //   through: 'Opportunities_Users',
-    // });
+    Opportunity.belongsToMany(models.User, {
+      through: 'Opportunity_Users', // etrange
+      as: 'users',
+    });
+    Opportunity.hasMany(models.Opportunity_User, {
+      as: 'userOpportunity',
+    });
   };
-  return Opportunities;
+  return Opportunity;
 };

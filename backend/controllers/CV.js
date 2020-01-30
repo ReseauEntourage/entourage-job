@@ -1,31 +1,6 @@
 /* eslint-disable no-restricted-globals */
 const { models, sequelize } = require('../db/models');
-
-// nettoyage des données
-function clean(cv) {
-  if (!cv) return null;
-  const tmpCV = cv.toJSON();
-  if (tmpCV.skills) {
-    tmpCV.skills = tmpCV.skills.map((o) => o.name);
-  }
-  if (tmpCV.contracts) {
-    tmpCV.contracts = tmpCV.contracts.map((o) => o.name);
-  }
-  if (tmpCV.languages) {
-    tmpCV.languages = tmpCV.languages.map((o) => o.name);
-  }
-  if (tmpCV.passions) {
-    tmpCV.passions = tmpCV.passions.map((o) => o.name);
-  }
-  if (tmpCV.ambitions) {
-    tmpCV.ambitions = tmpCV.ambitions.map((o) => o.name);
-  }
-  return tmpCV;
-}
-
-function controlText(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-}
+const { cleanCV, controlText } = require('./tools');
 
 const INCLUDE_CV_COMPLETE = [
   {
@@ -191,7 +166,7 @@ const createCV = async (data) => {
     exclude: ['userId'],
     include: INCLUDE_CV_COMPLETE,
   });
-  return clean(completeCV);
+  return cleanCV(completeCV);
 };
 
 const deleteCV = (id) => {
@@ -208,7 +183,22 @@ const getCVbyUrl = async (url) => {
     where: { url, status: 'Published', visibility: true },
     order: [['version', 'DESC']],
   });
-  return clean(modelCV);
+  return cleanCV(modelCV);
+};
+
+const getVisibleCVbyUrl = async (url) => {
+  const modelUser = await models.User.findOne({
+    where: { url, hiden: false },
+    attributes: ['id'],
+  });
+
+  const modelCV = await models.CV.findOne({
+    include: INCLUDE_CV_COMPLETE,
+    where: { status: 'Published', userId: modelUser.id },
+    order: [['version', 'DESC']],
+  });
+
+  return cleanCV(modelCV);
 };
 
 const getCVbyUserId = async (userId) => {
@@ -218,7 +208,7 @@ const getCVbyUserId = async (userId) => {
     where: { userId },
     order: [['version', 'DESC']],
   });
-  return clean(modelCV);
+  return cleanCV(modelCV);
 };
 
 const getCVs = async () => {
@@ -230,7 +220,7 @@ const getCVs = async () => {
     },
     include: INCLUDE_CV_COMPLETE,
   });
-  return modelCVs.map((modelCV) => clean(modelCV));
+  return modelCVs.map((modelCV) => cleanCV(modelCV));
 };
 
 const getRandomShortCVs = async (nb) => {
@@ -259,7 +249,7 @@ const getRandomShortCVs = async (nb) => {
       },
     ],
   });
-  return modelCVs.map((modelCV) => clean(modelCV));
+  return modelCVs.map((modelCV) => cleanCV(modelCV));
 };
 
 const getVisibility = (userId) => {

@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const Opportunity_BusinessLine = sequelize.define(
-    'Opportunities_BusinessLines',
+    'Opportunity_BusinessLine',
     {
       OpportunityId: {
         type: DataTypes.UUID,

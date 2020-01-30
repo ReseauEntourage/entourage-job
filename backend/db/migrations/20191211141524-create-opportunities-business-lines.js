@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Opportunities_BusinessLines', {
+    return queryInterface.createTable('Opportunity_BusinessLines', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -38,6 +38,6 @@ module.exports = {
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('Opportunities_BusinessLines');
+    return queryInterface.dropTable('Opportunity_BusinessLines');
   },
 };

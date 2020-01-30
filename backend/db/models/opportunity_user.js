@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 
 module.exports = (sequelize, DataTypes) => {
-  const Opportunities_Users = sequelize.define(
-    'Opportunities_Users',
+  const Opportunity_User = sequelize.define(
+    'Opportunity_User',
     {
       OpportunityId: {
         type: DataTypes.UUID,
@@ -47,15 +47,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Opportunities_Users.associate = function(models) {
-    Opportunities_Users.belongsTo(models.User);
+  Opportunity_User.associate = function(models) {
+    Opportunity_User.belongsTo(models.User);
     // , {
-    //   through: 'Opportunities_Users',
+    //   through: 'Opportunity_User',
     //   as: 'Users',
     //   foreignKey: 'OpportunityId',
     //   otherKey: 'UserId',
     // });
     // associations can be defined here
   };
-  return Opportunities_Users;
+  return Opportunity_User;
 };

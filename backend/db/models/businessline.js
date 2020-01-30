@@ -2,7 +2,7 @@ const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
   const BusinessLine = sequelize.define(
-    'BusinessLines',
+    'BusinessLine',
     {
       name: {
         type: DataTypes.STRING,
@@ -12,13 +12,13 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   BusinessLine.beforeCreate((businessLine, _) => {
-    const businessLineToCreate = businessLine;
-    businessLineToCreate.id = uuid();
-    return businessLineToCreate;
+    const bl = businessLine;
+    bl.id = uuid();
+    return bl;
   });
   BusinessLine.associate = function(models) {
-    BusinessLine.belongsToMany(models.Opportunities, {
-      through: 'Opportunities_BusinessLine',
+    BusinessLine.belongsToMany(models.Opportunity, {
+      through: 'Opportunity_BusinessLine',
       as: 'Opportunities',
       foreignKey: 'BusinessLineId',
       otherKey: 'OpportunityId',

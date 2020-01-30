@@ -29,12 +29,14 @@ const Edit = () => {
   const [cv, setCV] = useState(undefined);
   const [loading, setLoading] = useState(false);
 
-  useEffect(async () => {
-    const resCV = await Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`);
-    if (!resCV.data) {
-      return setCV(null);
-    }
-    return setCV(resCV.data);
+  useEffect(() => {
+    (async () => {
+      const resCV = await Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`);
+      if (!resCV.data) {
+        setCV(null);
+      }
+      setCV(resCV.data);
+    })();
   }, []);
 
   const submitCV = () => {
