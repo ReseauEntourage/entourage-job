@@ -83,10 +83,8 @@ export class Form extends Component {
   onSubmit(event) {
     event.preventDefault();
     const { handleSubmit } = this.state;
-    debugger;
     handleSubmit()
       .then((fields) => {
-        debugger;
         const { afterSubmit, fieldsInfo, defaultValues } = this.props;
         this.setState(
           this.constructor.initializeForm(fieldsInfo, defaultValues)

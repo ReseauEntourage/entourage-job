@@ -2,19 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR, Button, IconNoSSR } from '../utils';
 
+function translateStatus(status) {
+  if (status === 0) return 'Contacté';
+  if (status === 1) return "Phase d'entretien";
+  if (status === 2) return 'Embauche';
+  if (status === 3) return 'Refus';
+  if (status === 4) return 'En attente';
+  if (status === 5) return 'Relance';
+  return 'Undefined';
+}
+
 const OfferCard = ({
   title,
   from,
   shortDescription,
-  type,
   status,
   isStared,
   isNew,
-  tag,
+  archived,
 }) => (
   <div
     className={`ent-offer uk-card uk-card-hover uk-card-body uk-card-${
-      tag === 'archive' ? 'secondary' : 'default'
+      archived ? 'secondary' : 'default'
     }`}
   >
     {isNew ? <div className="ent-offer-badge" /> : undefined}
@@ -48,7 +57,7 @@ const OfferCard = ({
           between
           items={[
             <Button disabled>
-              <span style={{ color: '#666' }}>{status}</span>
+              <span style={{ color: '#666' }}>{translateStatus(status)}</span>
             </Button>,
             <u className="uk-link-muted">voir l&rsquo;offre</u>,
           ]}
@@ -61,15 +70,14 @@ OfferCard.propTypes = {
   title: PropTypes.string.isRequired,
   from: PropTypes.string.isRequired,
   shortDescription: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
   isStared: PropTypes.bool,
   isNew: PropTypes.bool,
-  tag: PropTypes.string,
+  archived: PropTypes.bool.isRequired,
 };
 
 OfferCard.defaultProps = {
-  isStared: true,
+  isStared: false,
   isNew: true,
-  tag: undefined,
 };
 export default OfferCard;

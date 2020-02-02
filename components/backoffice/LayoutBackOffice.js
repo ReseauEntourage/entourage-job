@@ -1,31 +1,18 @@
 import React from 'react';
 import Head from 'next/head';
-import { Container } from 'next/app';
 import PropTypes from 'prop-types';
-import { withRouter } from 'next/router';
-import Header from '../headers/Header';
 import HeaderConnected from '../headers/HeaderConnected';
-import { UserContext } from '../store/UserProvider';
 
-const LayoutBackOffice = ({ children, title, router }) => {
-  return (
-    <Container>
-      <Head>
-        <title>{`${title} - LinkedOut`}</title>
-        <link rel="icon" type="image/png" href="/static/img/fav.png" />
-      </Head>
-      <UserContext.Consumer>
-        {({ isAuthentificated }) => {
-          if (isAuthentificated) {
-            return <HeaderConnected />;
-          }
-          return <Header isHome={false} />;
-        }}
-      </UserContext.Consumer>
-      {children}
-    </Container>
-  );
-};
+const LayoutBackOffice = ({ children, title }) => (
+  <>
+    <Head>
+      <title>{`${title} - LinkedOut`}</title>
+      <link rel="icon" type="image/png" href="/static/img/fav.png" />
+    </Head>
+    <HeaderConnected />
+    {children}
+  </>
+);
 LayoutBackOffice.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.element,
@@ -40,4 +27,4 @@ LayoutBackOffice.propTypes = {
 LayoutBackOffice.defaultProps = {
   title: 'Espace perso',
 };
-export default withRouter(LayoutBackOffice);
+export default LayoutBackOffice;

@@ -27,15 +27,19 @@ const Textarea = ({
   defaultValue,
 }) => {
   const [labelClass, setLabelClass] = useState('');
+  const [value, setValue] = useState(defaultValue);
 
   function update(event) {
     setLabelClass(event.target.value.length > 0 && ' stay-small');
+    setValue(event.target.value);
     onChange(event);
   }
 
   useEffect(() => {
     if (defaultValue) {
-      update({ target: { name, value: defaultValue, type: 'textarea' } });
+      setValue(defaultValue);
+      setLabelClass(defaultValue.length > 0 && ' stay-small');
+      onChange({ target: { name, defaultValue, type: 'textarea' } });
     }
   }, [defaultValue]);
 
@@ -50,8 +54,10 @@ const Textarea = ({
         rows={rows}
         placeholder={placeholder || 'Tapez votre texte'}
         maxLength={maxLength}
-        defaultValue={defaultValue}
-        onChange={update}
+        value={value}
+        onChange={(e) => {
+          update(e);
+        }}
         className={`uk-textarea uk-form-large ${
           valid !== undefined && valid.isInvalid ? 'uk-form-danger' : ''
         }`}

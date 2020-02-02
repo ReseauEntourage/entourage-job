@@ -1,5 +1,6 @@
 /* global UIkit */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../components/store/UserProvider';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { Section } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
@@ -65,14 +66,48 @@ const offersBase = (function generateOffers() {
   return [];
 })();
 */
+function getTag(offer) {
+  if (offer.userOpportunity && offer.userOpportunity.archived) {
+    return 'tag-archive';
+  }
+  return `tag-${offer.category.toLowerCase()}`;
+}
 const Opportunites = () => {
-  const [currentIndex, setCurrentIndex] = useState(-1);
-  const [currentOffer, setCurrentOffer] = useState({});
+  const [currentOffer, setCurrentOffer] = useState(null);
   const [offers, setOffers] = useState(undefined);
+  const [loading, setLoading] = useState(true);
+  const { user } = useContext(UserContext);
 
-  Api.get(`${process.env.SERVER_URL}/api/v1/opportunity`)
-    .then((res) => setOffers(res.data))
-    .catch(console.error);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (user) {
+        setLoading(true);
+        const { data } = await Api.get(
+          `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${user.id}`
+        );
+
+        console.log(data);
+
+        setOffers(
+          data.sort((a, b) => {
+            if (a.userOpportunity || b.userOpportunity) {
+              if (a.userOpportunity && b.userOpportunity) {
+                return (
+                  b.userOpportunity.bookmarked - a.userOpportunity.bookmarked
+                );
+              }
+              if (b.userOpportunity) return b.userOpportunity.bookmarked;
+              return false;
+            }
+            return new Date(b.date) - new Date(a.date);
+          })
+        );
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [user]);
 
   return (
     <LayoutBackOffice title="Mes opportunités">
@@ -81,73 +116,82 @@ const Opportunites = () => {
           title="Consulte toutes tes opportunités de travail"
           description="Parcours les offres qui t&rsquo;ont été adressées directement ainsi que celles communes aux différents candidats du parcours LinkedOut."
         />
-        {/* revoir le filtrage, utiliser des data */}
-        <div uk-filter="target: #opportunitees">
-          <ul className="uk-subnav ent-subnav">
-            <li uk-filter-control=".tag-private" className="uk-active">
-              <a href="#">Mes offres</a>
-            </li>
-            <li uk-filter-control=".tag-public">
-              <a href="#">Offres générales</a>
-            </li>
-            <li uk-filter-control=".tag-archive">
-              <a href="#">Offres archivées</a>
-            </li>
-          </ul>
-          <ul
-            id="opportunitees"
-            className="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-3@l"
-            data-uk-grid=""
-            uk-height-match="target: > li .uk-card"
-          >
-            {/* { error && <div>failed to load</div>} */}
-            {!offers ? (
-              <div>loading...</div>
-            ) : (
-              offers.map((offer, i) => (
-                <li className={`tag-${offer.tag}`} key={i}>
-                  <a
-                    className="uk-link-reset"
-                    onClick={() => {
-                      if (!offer.seen) {
-                        offers[i].seen = true;
-                      }
+        {/* revoir le filtrage, utiliser des data */}{' '}
+        {loading ? (
+          <p className="uk-text-center">loading...</p>
+        ) : (
+          <div uk-filter="target: #opportunitees">
+            <ul className="uk-subnav ent-subnav">
+              <li uk-filter-control=".tag-private" className="uk-active">
+                <a href="#">Mes offres</a>
+              </li>
+              <li uk-filter-control=".tag-public">
+                <a href="#">Offres générales</a>
+              </li>
+              <li uk-filter-control=".tag-archive">
+                <a href="#">Offres archivées</a>
+              </li>
+            </ul>
+            <ul
+              id="opportunitees"
+              className="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-3@l"
+              data-uk-grid=""
+              uk-height-match="target: > li .uk-card"
+            >
+              {offers.map((offer, i) => {
+                return (
+                  <li key={i} className={getTag(offer)}>
+                    <a
+                      className="uk-link-reset"
+                      onClick={async () => {
+                        const opportunity = offer;
+                        // si jamais ouvert
+                        if (!offer.userOpportunity) {
+                          const { data } = await Api.post(
+                            `${process.env.SERVER_URL}/api/v1/opportunity/join`,
+                            {
+                              opportunityId: offer.id,
+                              userId: user.id,
+                            }
+                          );
+                          opportunity.userOpportunity = data;
+                        }
 
-                      setCurrentIndex(i);
-                      setCurrentOffer(offer);
-
-                      UIkit.modal('#modal-offer').show();
-                    }}
-                    aria-hidden
-                    role="button"
-                  >
-                    <OfferCard
-                      isNew={offer.seen}
-                      isStared={offer.bookmarked}
-                      title={offer.title}
-                      from={offer.recruiterName}
-                      shortDescription={offer.company}
-                      type={offer.businessLine}
-                      tag={offer.category}
-                      status={offer.status}
-                    />
-                  </a>
-                </li>
-              ))
-            )}
-          </ul>
-        </div>
-
+                        setCurrentOffer(opportunity);
+                        UIkit.modal('#modal-offer').show();
+                      }}
+                      aria-hidden
+                      role="button"
+                    >
+                      <OfferCard
+                        title={offer.title}
+                        from={offer.recruiterName}
+                        shortDescription={offer.company}
+                        type={offer.businessLines}
+                        archived={
+                          offer.userOpportunity &&
+                          offer.userOpportunity.archived
+                        }
+                        isNew={!offer.userOpportunity}
+                        isStared={
+                          offer.userOpportunity &&
+                          offer.userOpportunity.bookmarked
+                        }
+                        status={
+                          offer.userOpportunity && offer.userOpportunity.status
+                        }
+                      />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
         <ModalOffer
           currentOffer={currentOffer}
           setCurrentOffer={(offer) => {
             setCurrentOffer(offer);
-            offers[currentIndex] = offer;
-            setOffers(
-              offers.sort(
-                (a, b) => b.bookmarked - a.bookmarked || b.seen - a.seen
-              )
-            );
           }}
         />
       </Section>

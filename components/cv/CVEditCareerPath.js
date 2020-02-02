@@ -71,7 +71,6 @@ const CVEditCareerPath = ({
         defaultValues={{ careerPath0, careerPath1, careerPathOpen }}
         onSubmit={(aa) => {
           console.log(aa);
-          debugger;
           onChange(aa);
         }}
       />

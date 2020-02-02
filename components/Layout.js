@@ -1,6 +1,5 @@
 import React from 'react';
 import Head from 'next/head';
-import { Container } from 'next/app';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Footer from './Footer';
@@ -18,7 +17,7 @@ const Layout = ({
   metaType,
   router,
 }) => (
-  <Container>
+  <>
     <Head>
       <title>{title}</title>
       <link rel="icon" type="image/png" href="/static/img/fav.png" />
@@ -45,7 +44,7 @@ const Layout = ({
     </UserContext.Consumer>
     {children}
     <Footer />
-  </Container>
+  </>
 );
 Layout.propTypes = {
   children: PropTypes.oneOfType([

@@ -16,8 +16,6 @@ const CandidatListPartial = () => {
       })
       .catch(() => console.error('Impossible de récupérer les CVs.'));
     console.log(req);
-
-    debugger;
   }, [nb]);
 
   return (

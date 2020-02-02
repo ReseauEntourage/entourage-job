@@ -39,7 +39,7 @@ router.get('/', auth.required, (req, res) => {
  * Route : GET /api/<VERSION>/...
  * Description : ...
  */
-router.get('/user/public', auth.required, (req, res) => {
+router.get('/public', auth.required, (req, res) => {
   OpportunityController.getOpportunities('Public')
     .then((listeOpportunities) => {
       res.status(200).json(listeOpportunities);
@@ -55,7 +55,7 @@ router.get('/user/public', auth.required, (req, res) => {
  * Description : ...
  */
 router.get('/user/private/:id', auth.required, (req, res) => {
-  OpportunityController.getUserOpportunities(req.params.id, 'Private')
+  OpportunityController.getPrivateUserOpportunities(req.params.id)
     .then((listeOpportunities) => {
       res.status(200).json(listeOpportunities);
     })
@@ -69,8 +69,8 @@ router.get('/user/private/:id', auth.required, (req, res) => {
  * Route : GET /api/<VERSION>/...
  * Description : ...
  */
-router.get('/user/:id', auth.required, (req, res) => {
-  OpportunityController.getUserOpportunities(req.params.id)
+router.get('/user/all/:id', auth.required, (req, res) => {
+  OpportunityController.getAllUserOpportunities(req.params.id)
     .then((listeOpportunities) => {
       res.status(200).json(listeOpportunities);
     })
@@ -105,7 +105,7 @@ router.get('/:id', auth.required, (req, res) => {
  * Route : POST /api/<VERSION>/...
  * Description : ...
  */
-router.post('/link', auth.required, (req, res) => {
+router.post('/join', auth.required, (req, res) => {
   OpportunityController.addUserToOpportunity(
     req.body.opportunityId,
     req.body.userId
@@ -117,7 +117,7 @@ router.post('/link', auth.required, (req, res) => {
     });
 });
 
-router.put('/user', auth.required, (req, res) => {
+router.put('/join', auth.required, (req, res) => {
   OpportunityController.updateOpportunityUser(req.body)
     .then((oppUs) => {
       res.status(200).json(oppUs);

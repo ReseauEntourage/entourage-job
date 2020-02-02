@@ -1,6 +1,6 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
-import PropsType from 'prop-types';
+import PropsType, { func } from 'prop-types';
 import { GridNoSSR, Button, IconNoSSR } from '../utils';
 import Textarea from '../forms/fields/Textarea';
 import Select from '../forms/fields/Select';
@@ -23,192 +23,222 @@ List.defaultProps = {
   className: undefined,
 };
 
-const OfferInfoContainer = ({ icon, title, items }) => (
-  <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
-    {icon ? <IconNoSSR name={icon} /> : <div className="uk-margin-left" />}
-    <GridNoSSR gap="collapse" childWidths={['1-1']}>
-      {title ? <span className="uk-text-bold">{title}</span> : undefined}
-      {items}
+const OfferInfoContainer = ({ icon, title, children }) => {
+  if (!children.map) {
+    children = [children];
+  }
+
+  return (
+    <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
+      {icon ? <IconNoSSR name={icon} /> : <div className="uk-margin-left" />}
+      <div>
+        {title ? <span className="uk-text-bold">{title}</span> : undefined}
+        <GridNoSSR gap="collapse" childWidths={['1-1']}>
+          {children}
+        </GridNoSSR>
+      </div>
     </GridNoSSR>
-  </GridNoSSR>
-);
+  );
+};
 OfferInfoContainer.propTypes = {
   icon: PropsType.string,
   title: PropsType.string,
-  items: PropsType.arrayOf(PropsType.string),
+  children: PropsType.arrayOf(PropsType.string),
 };
 OfferInfoContainer.defaultProps = {
   title: undefined,
   icon: undefined,
-  items: [],
+  children: [],
 };
-
+function translateCategory(category) {
+  if (category === 'Private') return 'Personnel';
+  if (category === 'Public') return 'public';
+  return 'Unknown';
+}
 const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
-  const [note, setNote] = useState(currentOffer.note);
-  const [noteChanged, setNoteChanged] = useState(false);
-
-  async function updateOpportunity(opportunity) {
-    const res = await axios.post(
-      `${process.env.SERVER_URL}/api/v1/opportunity/${currentOffer.id}`,
-      opportunity
-    );
-    setCurrentOffer(opportunity);
-    console.log(res);
+  if (!currentOffer) {
+    currentOffer = { userOpportunity: {}, businessLines: [] };
   }
 
+  const { status, bookmarked, note, archived } = currentOffer.userOpportunity;
+  const [noteBuffer, setNoteBuffer] = useState(note);
+  const [loading, setLoading] = useState(false);
+
+  const updateOpportunityUser = async (opportunityUser) => {
+    const res = await axios.put(
+      `${process.env.SERVER_URL}/api/v1/opportunity/join`,
+      opportunityUser
+    );
+    setCurrentOffer({ ...currentOffer, opportunityUser });
+  };
+
   useEffect(() => {
-    const interval = setInterval(async () => {
-      if (noteChanged) {
-        setNoteChanged(false);
-        console.log('update offer note', note);
-
-        updateOpportunity({
-          ...currentOffer,
-          note,
-        });
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, []);
+    setNoteBuffer(note);
+  }, [currentOffer]);
 
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">
       <div className="uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl">
         <CloseButtonNoSSR className="uk-modal-close-default" />
-        <div className="uk-modal-body">
-          <GridNoSSR gap="small" between middle>
-            <GridNoSSR middle>
-              <h3 className="uk-text-bold">{currentOffer.title}</h3>
-              <Select
-                id="modal-offer-status"
-                title="Statuts"
-                name="status"
-                placeholder="statut"
-                options={[
-                  { value: 'contacté', text: 'Contacté' },
-                  { value: "phase d'entretien", text: "Phase d'entretien" },
-                  { value: 'embauche', text: 'Embauche' },
-                  { value: 'refus', text: 'Refus' },
-                  { value: 'standby', text: 'Standby' },
-                  { value: 'relance', text: 'Relance' },
-                ]}
-                defaultValue={currentOffer.status}
-                onChange={async (event) => {
-                  updateOpportunity({
-                    ...currentOffer,
-                    status: event.target.value,
-                  });
-                }}
-              />
+        {!currentOffer ? null : (
+          <div className="uk-modal-body">
+            <GridNoSSR gap="small" between middle>
+              <div>
+                <h3 className="uk-text-bold uk-margin-remove-bottom">
+                  {currentOffer.title}
+                </h3>
+                <span>{translateCategory(currentOffer.category)}</span>
+              </div>
+              <List className="uk-iconnav uk-grid-medium">
+                <ButtonIcon
+                  name="pull"
+                  className={archived ? 'ent-color-amber' : undefined}
+                  onClick={() => {
+                    const { userOpportunity } = currentOffer;
+                    userOpportunity.archived = !archived;
+                    updateOpportunityUser(userOpportunity);
+                  }}
+                />
+                <ButtonIcon
+                  name="star"
+                  className={bookmarked ? 'ent-color-amber' : undefined}
+                  onClick={() => {
+                    const { userOpportunity } = currentOffer;
+                    userOpportunity.bookmarked = !bookmarked;
+                    updateOpportunityUser(userOpportunity);
+                  }}
+                />
+              </List>
             </GridNoSSR>
-            <List className="uk-iconnav uk-grid-medium">
-              <ButtonIcon
-                name="pull"
-                className={
-                  currentOffer.archived ? 'ent-color-amber' : undefined
-                }
-                onClick={() => {
-                  setCurrentOffer({
-                    ...currentOffer,
-                    archived: !currentOffer.archived,
-                  });
-                }}
-              />
-              <ButtonIcon
-                name="star"
-                className={
-                  currentOffer.bookmarked ? 'ent-color-amber' : undefined
-                }
-                onClick={() => {
-                  setCurrentOffer({
-                    ...currentOffer,
-                    bookmarked: !currentOffer.bookmarked,
-                  });
-                }}
-              />
-            </List>
-          </GridNoSSR>
-          <hr />
-          <GridNoSSR
-            className="uk-margin-bottom"
-            eachWidths={['1-3@s', '2-3@s']}
-            items={[
-              <GridNoSSR gap="medium">
-                <OfferInfoContainer
-                  items={[
-                    <Button disabled>
-                      <span style={{ color: '#666' }}>
-                        {currentOffer.businessLine}
-                      </span>
-                    </Button>,
-                  ]}
-                />
-                <OfferInfoContainer
-                  icon="hashtag"
-                  title="Entreprise"
-                  items={[currentOffer.company]}
-                />
-                <OfferInfoContainer
-                  icon="user"
-                  title="Recruteur"
-                  items={[
-                    currentOffer.recruiterName,
-                    currentOffer.recruiterEmail,
-                    currentOffer.recruiterPhone,
+            <hr />
+            <GridNoSSR
+              className="uk-margin-bottom"
+              eachWidths={['1-3@s', '2-3@s']}
+              items={[
+                <GridNoSSR gap="medium">
+                  <Select
+                    id="modal-offer-status"
+                    title="Statut"
+                    name="status"
+                    placeholder="statut"
+                    options={[
+                      { value: 0, text: 'Contacté' },
+                      { value: 1, text: "Phase d'entretien" },
+                      { value: 2, text: 'Embauche' },
+                      { value: 3, text: 'Refus' },
+                      { value: 4, text: 'Standby' },
+                      { value: 5, text: 'Relance' },
+                    ]}
+                    defaultValue={status}
+                    onChange={(event) => {
+                      const { userOpportunity } = currentOffer;
+                      userOpportunity.status = event.target.value;
+                      updateOpportunityUser(userOpportunity);
+                    }}
+                  />
+                  {/* <OfferInfoContainer>
+                  <Button disabled>
+                    <span style={{ color: '#666' }}>
+                      {currentOffer.userOpportunity.status}
+                    </span>
+                  </Button>
+                </OfferInfoContainer> */}
+                  <OfferInfoContainer icon="hashtag" title="Entreprise">
+                    {currentOffer.company}
+                  </OfferInfoContainer>
+                  <OfferInfoContainer icon="user" title="Recruteur">
+                    {currentOffer.recruiterName}
+                    {currentOffer.recruiterEmail}
+                    {currentOffer.recruiterPhone}
                     <span className="uk-text-italic">
-                      offre soumise le {currentOffer.createdAt}
-                    </span>,
-                  ]}
-                />
-                <OfferInfoContainer
-                  icon="location"
-                  title={currentOffer.location}
-                />
-              </GridNoSSR>,
-              <OfferInfoContainer
-                icon="comment"
-                title="Message"
-                items={[currentOffer.description]}
-              />,
-            ]}
-          />
-          <div>
-            <Textarea
-              id="modal-offer-comment"
-              name="modal-offer-comment"
-              title="Ecrivez un commentaire à propos de cette opportunité..."
-              type="text"
-              defaultValue={note}
-              onChange={(e) => {
-                setNote(e.target.value);
-              }}
+                      offre soumise le {currentOffer.date}
+                    </span>
+                  </OfferInfoContainer>
+                  <OfferInfoContainer
+                    icon="location"
+                    title={currentOffer.location}
+                  />
+                </GridNoSSR>,
+                <GridNoSSR gap="medium">
+                  <OfferInfoContainer icon="comment" title="Message">
+                    {currentOffer.description}
+                  </OfferInfoContainer>
+                  {currentOffer.businessLines && (
+                    <GridNoSSR center>
+                      {currentOffer.businessLines.map((businessLine) => (
+                        <Button disabled>
+                          <span style={{ color: '#666' }}>{businessLine}</span>
+                        </Button>
+                      ))}
+                    </GridNoSSR>
+                  )}
+                </GridNoSSR>,
+              ]}
             />
+            <div>
+              <Textarea
+                id="modal-offer-comment"
+                name="modal-offer-comment"
+                title="Ecrivez un commentaire à propos de cette opportunité..."
+                type="text"
+                defaultValue={note}
+                onChange={(e) => setNoteBuffer(e.target.value)}
+              />
+              {noteBuffer === note || (note === null && noteBuffer === '') ? (
+                <Button style="default" disabled>
+                  Enregistré
+                </Button>
+              ) : (
+                <Button
+                  style="default"
+                  onClick={async () => {
+                    setLoading(true);
+                    console.log('update offer note', noteBuffer);
+                    const { userOpportunity } = currentOffer;
+                    userOpportunity.note = noteBuffer;
+                    await updateOpportunityUser(userOpportunity);
+                    setLoading(false);
+                  }}
+                >
+                  Enregistrer
+                  {loading ? (
+                    <div
+                      data-uk-spinner="ratio: 0.5"
+                      className="uk-margin-small-left"
+                    />
+                  ) : null}
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
 };
 ModalOffer.propTypes = {
-  currentOffer: PropsType.objectOf({
+  currentOffer: PropsType.shape({
     title: PropsType.string,
-    status: PropsType.string,
     company: PropsType.string,
     description: PropsType.string,
     recruiterName: PropsType.string,
+    category: PropsType.string,
     recruiterEmail: PropsType.string,
     recruiterPhone: PropsType.string,
-    businessLine: PropsType.string,
-    bookmarked: PropsType.string,
+    businessLines: PropsType.arrayOf(PropsType.string),
     date: PropsType.string,
     location: PropsType.string,
-    archived: PropsType.string,
+    userOpportunity: PropsType.shape({
+      status: PropsType.string,
+      bookmarked: PropsType.string,
+      note: PropsType.string,
+      archived: PropsType.string,
+    }),
   }),
   setCurrentOffer: PropsType.func.isRequired,
 };
 ModalOffer.defaultProps = {
-  currentOffer: {},
+  currentOffer: { userOpportunity: {}, businessLines: [] },
 };
 
 export default ModalOffer;

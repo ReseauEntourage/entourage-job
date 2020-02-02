@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { Section } from '../components/utils';
 import schema from '../components/forms/schema/formLogin';
@@ -6,7 +7,16 @@ import FormWithValidation from '../components/forms/FormWithValidation';
 import { UserContext } from '../components/store/UserProvider';
 
 const Login = () => {
-  const { login } = useContext(UserContext);
+  const { login, user } = useContext(UserContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      console.log('/login -> /cv/edit');
+      router.push('/backoffice/cv/edit');
+    }
+  }, [user]);
+
   return (
     <Layout title="Connexion - LinkedOut">
       <Section size="large" style="muted">

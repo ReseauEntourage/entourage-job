@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 
-const { models } = require('../db/models');
+const { models, Sequelize } = require('../db/models');
 const { cleanOpportunity, controlText } = require('./tools');
 
 const INCLUDE_OPPORTUNITY_COMPLETE = [
@@ -17,13 +17,11 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
       'id',
       'UserId',
       'status',
-      'seen',
+      // 'seen',
       'bookmarked',
       'archived',
       'note',
     ],
-    // through: {
-    // },
   },
 ];
 
@@ -76,42 +74,75 @@ const getOpportunity = async (id) => {
   return cleanOpportunity(model);
 };
 
-const getOpportunities = async (category) => {
+const getOpportunities = async () => {
+  const opportunities = await models.Opportunity.findAll({
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
+  });
+
+  return opportunities.map((model) => cleanOpportunity(model));
+};
+
+const getPublicOpportunities = async () => {
   const opportunities = await models.Opportunity.findAll({
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
-      category,
+      category: 'Public',
     },
   });
 
   return opportunities.map((model) => cleanOpportunity(model));
 };
-// private: category='Private'
-// public: category='Public'
-// all: category=undefined
-const getUserOpportunities = async (userId, category = undefined) => {
+
+const getPrivateUserOpportunities = async (userId) => {
   console.log(`getOpportunities - Récupérer les opportunités`);
   const opportunityUsers = await models.Opportunity_User.findAll({
     where: { UserId: userId },
     attributes: ['OpportunityId'],
   });
-  const where = {
-    id: opportunityUsers.map((model) => model.OpportunityId),
-  };
-  if (category !== undefined) {
-    where.category = category;
-  }
-
-  // recupere trop de donné ( sur les autre utilisateurs)
   const opportunities = await models.Opportunity.findAll({
     include: INCLUDE_OPPORTUNITY_COMPLETE,
-    where,
+    where: {
+      id: opportunityUsers.map((model) => model.OpportunityId),
+      category: 'Private',
+    },
   });
+  return opportunities.map((model) => {
+    const opportunity = cleanOpportunity(model);
+    opportunity.userOpportunity = opportunity.userOpportunity.find(
+      ({ UserId }) => UserId === userId
+    );
+    return opportunity;
+  });
+};
+
+const getAllUserOpportunities = async (userId) => {
+  // private
+  const opportunityUsers = await models.Opportunity_User.findAll({
+    where: { UserId: userId },
+    attributes: ['OpportunityId'],
+  });
+
+  const opportunities = await models.Opportunity.findAll({
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    where: {
+      [Sequelize.Op.or]: [
+        { category: 'Public' },
+        {
+          id: opportunityUsers.map((model) => model.OpportunityId),
+          category: 'Private',
+        },
+      ],
+    },
+  });
+
   return opportunities.map((model) => {
     const opportunity = cleanOpportunity(model);
     opportunity.userOpportunity = opportunity.userOpportunity.find(
       (uo) => uo.UserId === userId
     );
+    if (!opportunity.userOpportunity) {
+      delete opportunity.userOpportunity;
+    }
     return opportunity;
   });
 };
@@ -122,16 +153,20 @@ const addUserToOpportunity = (opportunityId, userId) =>
     UserId: userId, // to rename in userId
   });
 
+const updateOpportunityUser = async (opportunityUser) => {
+  await models.Opportunity_User.update(opportunityUser, {
+    where: { id: opportunityUser.id },
+  });
+  return models.Opportunity_User.findByPk(opportunityUser.id, {
+    attributes: ['id', 'UserId', 'status', 'bookmarked', 'archived', 'note'],
+  });
+};
+
 const updateOpportunity = (opportunity) => {
   return models.CV.update(opportunity, {
     where: { id: opportunity.id },
   });
 };
-
-const updateOpportunityUser = (opportunityUser) =>
-  models.Opportunity_User.update(opportunityUser, {
-    where: { id: opportunityUser.id },
-  });
 
 module.exports = {
   createOpportunity,
@@ -140,7 +175,9 @@ module.exports = {
 
   getOpportunity,
   getOpportunities,
-  getUserOpportunities,
+  getPublicOpportunities,
+  getPrivateUserOpportunities,
+  getAllUserOpportunities,
 
   updateOpportunityUser,
   updateOpportunity,

@@ -25,17 +25,22 @@ const toUpperFirstLetter = (text) => {
 };
 
 const Edit = () => {
-  const context = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [cv, setCV] = useState(undefined);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const resCV = await Api.get(`${process.env.SERVER_URL}/api/v1/cv/edit`);
-      if (!resCV.data) {
-        setCV(null);
+      try {
+        const { data } = await Api.get(
+          `${process.env.SERVER_URL}/api/v1/cv/edit`
+        );
+        setCV(data || null);
+      } catch (err) {
+        console.error(err);
+        setError('Une erreur est survenue durant le chargement du CV');
       }
-      setCV(resCV.data);
     })();
   }, []);
 
@@ -74,16 +79,26 @@ const Edit = () => {
             <Button
               onClick={() =>
                 Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                  userId: context.user.id,
-                  firstName: context.user.firstName,
-                  lastName: context.user.lastName,
-                  gender: context.user.gender,
+                  userId: user.id,
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                  gender: user.gender,
                 }).then(({ data }) => setCV(data))
               }
             >
               Creer votre CV
             </Button>
           </>
+        )}
+        {error && (
+          <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
+            <div
+              className="uk-position-absolute uk-transform-center uk-text-center"
+              style={{ left: '50%', top: '50%' }}
+            >
+              <h2 className="uk-text-bold">{error}</h2>
+            </div>
+          </div>
         )}
         {cv === undefined ? (
           <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
