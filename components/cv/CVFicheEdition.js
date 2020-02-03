@@ -20,8 +20,7 @@ const CVFicheEdition = ({ cv, onChange }) => (
       <GridNoSSR childWidths={['1-1']}>
         <CVEditCatchphrase catchphrase={cv.catchphrase} onChange={onChange} />
         <CVEditCareerPath
-          careerPath0={cv.careerPath0}
-          careerPath1={cv.careerPath1}
+          ambitions={cv.ambitions}
           careerPathOpen={cv.careerPathOpen}
           gender={cv.gender}
           onChange={onChange}
@@ -57,7 +56,23 @@ const CVFicheEdition = ({ cv, onChange }) => (
 );
 
 CVFicheEdition.propTypes = {
-  cv: PropTypes.shape().isRequired,
+  cv: PropTypes.shape({
+    devise: PropTypes.string,
+    catchphrase: PropTypes.string,
+    story: PropTypes.string,
+    location: PropTypes.string,
+    availability: PropTypes.string,
+    gender: PropTypes.number,
+    careerPathOpen: PropTypes.bool,
+    contracts: PropTypes.array,
+    ambitions: PropTypes.array,
+    languages: PropTypes.array,
+    transport: PropTypes.array,
+    skills: PropTypes.array,
+    passions: PropTypes.array,
+    reviews: PropTypes.array,
+    experiences: PropTypes.array,
+  }).isRequired,
   onChange: PropTypes.func,
 };
 

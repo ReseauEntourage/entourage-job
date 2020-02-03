@@ -11,8 +11,8 @@ module.exports = {
       queryInterface.addColumn('CVs', 'urlImg', Sequelize.STRING),
       queryInterface.addColumn('CVs', 'catchphrase', Sequelize.STRING),
       queryInterface.addColumn('CVs', 'devise', Sequelize.STRING),
-      queryInterface.addColumn('CVs', 'careerPath0', Sequelize.STRING),
-      queryInterface.addColumn('CVs', 'careerPath1', Sequelize.STRING),
+      // queryInterface.addColumn('CVs', 'careerPath0', Sequelize.STRING),
+      // queryInterface.addColumn('CVs', 'careerPath1', Sequelize.STRING),
       queryInterface.addColumn('Users', 'hiden', {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
@@ -41,8 +41,8 @@ module.exports = {
       queryInterface.removeColumn('Users', 'hiden'),
       queryInterface.removeColumn('CVs', 'catchphrase'),
       queryInterface.removeColumn('CVs', 'devise'),
-      queryInterface.removeColumn('CVs', 'careerPath0'),
-      queryInterface.removeColumn('CVs', 'careerPath1'),
+      // queryInterface.removeColumn('CVs', 'careerPath0'),
+      // queryInterface.removeColumn('CVs', 'careerPath1'),
       queryInterface.removeColumn('CVs', 'careerPathOpen'),
       queryInterface.removeColumn('CVs', 'urlImg'),
       queryInterface.addColumn('CVs', 'firstName', {

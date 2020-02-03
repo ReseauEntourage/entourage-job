@@ -74,8 +74,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       catchphrase: DataTypes.STRING,
       devise: DataTypes.STRING,
-      careerPath0: DataTypes.STRING,
-      careerPath1: DataTypes.STRING,
       careerPathOpen: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
