@@ -92,12 +92,17 @@ const Opportunites = () => {
           data.sort((a, b) => {
             if (a.userOpportunity || b.userOpportunity) {
               if (a.userOpportunity && b.userOpportunity) {
+                if (
+                  b.userOpportunity.bookmarked &&
+                  a.userOpportunity.bookmarked
+                ) {
+                  return new Date(b.date) - new Date(a.date);
+                }
                 return (
                   b.userOpportunity.bookmarked - a.userOpportunity.bookmarked
                 );
               }
               if (b.userOpportunity) return b.userOpportunity.bookmarked;
-              return false;
             }
             return new Date(b.date) - new Date(a.date);
           })
@@ -122,10 +127,10 @@ const Opportunites = () => {
         ) : (
           <div uk-filter="target: #opportunitees">
             <ul className="uk-subnav ent-subnav">
-              <li uk-filter-control=".tag-private" className="uk-active">
+              <li uk-filter-control=".tag-private">
                 <a href="#">Mes offres</a>
               </li>
-              <li uk-filter-control=".tag-public">
+              <li uk-filter-control=".tag-public" className="uk-active">
                 <a href="#">Offres générales</a>
               </li>
               <li uk-filter-control=".tag-archive">
@@ -141,6 +146,7 @@ const Opportunites = () => {
               {offers.map((offer, i) => {
                 return (
                   <li key={i} className={getTag(offer)}>
+                    {offer.date}
                     <a
                       className="uk-link-reset"
                       onClick={async () => {
