@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   Passion.beforeCreate((passion, _) => {
-    console.log('ici Passion', passion);
     return (passion.id = uuid());
   });
   Passion.associate = function(models) {
