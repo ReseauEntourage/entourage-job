@@ -8,12 +8,8 @@ const CandidatListPartial = () => {
   const nb = 11;
 
   useEffect(() => {
-    console.log(Api);
-
     const req = Api.get(`/api/v1/cv/cards/random?nb=${nb}`)
-      .then((res) => {
-        setCVs(res.data);
-      })
+      .then(({ data }) => setCVs(data))
       .catch(() => console.error('Impossible de récupérer les CVs.'));
     console.log(req);
   }, [nb]);
@@ -41,14 +37,14 @@ const CandidatListPartial = () => {
               childWidths={['1-1', '1-2@s', '1-3@m']}
               gap="small"
               items={cvs
-                .filter((cv) => cv.user)
+                // .filter((cv) => cv.user)
                 .map((cv) => (
                   <CandidatCard
                     url={cv.url}
                     imgSrc="static/img/arthur.png"
                     imgAlt={cv.user.firstName}
                     firstName={cv.user.firstName}
-                    ambitions={cv.ambitions.slice(0, 2)}
+                    ambitions={cv.ambitions}
                   />
                 ))}
             />

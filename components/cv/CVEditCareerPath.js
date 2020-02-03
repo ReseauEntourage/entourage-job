@@ -69,10 +69,10 @@ const CVEditCareerPath = ({ ambitions, careerPathOpen, gender, onChange }) => (
           careerPath1: ambitions.length > 1 ? ambitions[1] : null,
           careerPathOpen,
         }}
-        onSubmit={({ careerPathOpen, careerPath0, careerPath1 }) => {
+        onSubmit={({ careerPathOpen: isOpen, careerPath0, careerPath1 }) => {
           onChange({
             ambitions: [careerPath0, careerPath1].filter((a) => a || null),
-            careerPathOpen,
+            careerPathOpen: isOpen,
           });
         }}
       />
