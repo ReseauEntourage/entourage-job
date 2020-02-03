@@ -73,10 +73,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: true,
         allowNull: false,
       },
-      url: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+      url: DataTypes.STRING,
     },
     {}
   );
@@ -86,11 +83,11 @@ module.exports = (sequelize, DataTypes) => {
     user.id = uuid();
     user.firstName = u.firstName.toLowerCase();
     user.lastName = u.lastName.toLowerCase();
-    user.url = [user.firstName, '-', user.userId.substring(0, 8)].join();
+    user.url = [user.firstName, '-', user.id.substring(0, 8)].join();
     return user;
   });
 
-  User.associate = function(models) {
+  User.associate = (models) => {
     User.belongsToMany(models.Opportunity, {
       through: 'Opportunity_Users',
       as: 'opportunities',

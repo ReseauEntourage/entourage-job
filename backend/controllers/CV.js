@@ -267,7 +267,10 @@ const getRandomShortCVs = async (nb) => {
     ],
   });
   return getUnique(
-    modelCVs.map((modelCV) => cleanCV(modelCV)).slice(0, nb || 11),
+    modelCVs
+      .map(cleanCV)
+      .filter((cv) => cv.user) // filter those who do not have binded user
+      .slice(0, nb || 11),
     'url'
   ).sort(() => Math.random() - 0.5);
 };

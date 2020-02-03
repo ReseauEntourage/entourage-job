@@ -8,8 +8,7 @@ const PORT = process.env.PORT || 3001;
 const TIMEOUT = 20000;
 
 const CV_EXAMPLE = {
-  firstName: 'Test',
-  lastName: 'Ament',
+  url: 'Test-Ament',
   userId: '27272727-aaaa-bbbb-cccc-012345678927',
   intro: 'Je suis une intro',
   location: 'Paris et Proche Banlieue',
@@ -61,9 +60,17 @@ const USER_EXAMPLE = {
 };
 
 describe('Tests des routes API - Partie CV', () => {
+  let user;
   before((done) => {
     server.prepare();
-    server.start(PORT).then(done);
+    server.start(PORT).then(() => {
+      Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE).then(
+        ({ data }) => {
+          user = data;
+          done();
+        }
+      );
+    });
   });
 
   after(() => {
@@ -75,8 +82,12 @@ describe('Tests des routes API - Partie CV', () => {
 
     describe('C - Create 1 CV', () => {
       it('doit créer le CV dans la base de données', () => {
-        const newCV = { ...CV_EXAMPLE, visibility: true, status: 'Published' };
-        return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, newCV)
+        return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+          ...CV_EXAMPLE,
+          visibility: true,
+          status: 'Published',
+          userId: user.id,
+        })
           .then((res) => {
             cv = res.data;
             assert.isObject(res.data, 'CV retourné');
@@ -122,16 +133,19 @@ describe('Tests des routes API - Partie CV', () => {
           ...CV_EXAMPLE,
           visibility: true,
           status: 'Published',
+          userId: user.id,
         }),
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
           ...CV_EXAMPLE,
           visibility: true,
           status: 'Published',
+          userId: user.id,
         }),
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
           ...CV_EXAMPLE,
           visibility: true,
           status: 'Published',
+          userId: user.id,
         }),
       ];
       return Promise.all(create3CVs)

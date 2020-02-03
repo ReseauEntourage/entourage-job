@@ -18,10 +18,7 @@ module.exports = {
         defaultValue: true,
         allowNull: false,
       }),
-      queryInterface.addColumn('Users', 'url', {
-        type: Sequelize.STRING,
-        allowNull: false,
-      }),
+      queryInterface.addColumn('Users', 'url', Sequelize.STRING),
       queryInterface.addColumn('CVs', 'careerPathOpen', {
         type: Sequelize.BOOLEAN,
         allowNull: false,

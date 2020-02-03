@@ -36,17 +36,15 @@ const CandidatListPartial = () => {
             <GridNoSSR
               childWidths={['1-1', '1-2@s', '1-3@m']}
               gap="small"
-              items={cvs
-                // .filter((cv) => cv.user)
-                .map((cv) => (
-                  <CandidatCard
-                    url={cv.url}
-                    imgSrc="static/img/arthur.png"
-                    imgAlt={cv.user.firstName}
-                    firstName={cv.user.firstName}
-                    ambitions={cv.ambitions}
-                  />
-                ))}
+              items={cvs.map((cv) => (
+                <CandidatCard
+                  url={cv.url}
+                  imgSrc="static/img/arthur.png"
+                  imgAlt={cv.user.firstName}
+                  firstName={cv.user.firstName}
+                  ambitions={cv.ambitions}
+                />
+              ))}
             />
           </div>
         )}
