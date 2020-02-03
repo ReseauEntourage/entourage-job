@@ -223,18 +223,35 @@ const getCVs = async () => {
   return modelCVs.map((modelCV) => cleanCV(modelCV));
 };
 
+// BIDOUILLE
+// TODO Revoir cette query pour prendre les dernieres version et les melanger
+// utiliser distinct
 const getRandomShortCVs = async (nb) => {
   console.log(
     `getRandomShortCVs - Récupère des CVs au format court de manière aléatoire`
   );
+  function getUnique(arr, comp) {
+    return (
+      arr
+        .map((e) => e[comp])
+
+        // store the keys of the unique objects
+        .map((e, i, final) => final.indexOf(e) === i && i)
+
+        // eliminate the dead keys & store unique objects
+        .filter((e) => arr[e])
+        .map((e) => arr[e])
+    );
+  }
   const modelCVs = await models.CV.findAll({
     where: {
       status: 'Published',
       visibility: true,
     },
-    order: sequelize.random(),
-    limit: nb || 11,
-    attributes: ['id', 'url'],
+    // order: sequelize.random(),
+    order: [['version', 'DESC']],
+    // limit: nb || 11,
+    attributes: ['id', 'url', 'version'], // [Sequelize.fn('DISTINCT', Sequelize.col('version')) ,'version']
     include: [
       {
         model: models.Ambition,
@@ -249,7 +266,10 @@ const getRandomShortCVs = async (nb) => {
       },
     ],
   });
-  return modelCVs.map((modelCV) => cleanCV(modelCV));
+  return getUnique(
+    modelCVs.map((modelCV) => cleanCV(modelCV)).slice(0, nb || 11),
+    'url'
+  ).sort(() => Math.random() - 0.5);
 };
 
 const getVisibility = (userId) => {
