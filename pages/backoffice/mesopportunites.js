@@ -146,7 +146,6 @@ const Opportunites = () => {
               {offers.map((offer, i) => {
                 return (
                   <li key={i} className={getTag(offer)}>
-                    {offer.date}
                     <a
                       className="uk-link-reset"
                       onClick={async () => {

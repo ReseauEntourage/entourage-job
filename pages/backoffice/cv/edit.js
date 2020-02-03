@@ -70,80 +70,90 @@ const Edit = () => {
       })
       .finally(() => setLoading(false));
   };
+
+  function content() {
+    if (cv === null) {
+      return (
+        <>
+          <CVEditNoCandidat />
+          <Button
+            onClick={() =>
+              Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                userId: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                gender: user.gender,
+              }).then(({ data }) => setCV(data))
+            }
+          >
+            Creer votre CV
+          </Button>
+        </>
+      );
+    }
+    if (error) {
+      return (
+        <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
+          <div
+            className="uk-position-absolute uk-transform-center uk-text-center"
+            style={{ left: '50%', top: '50%' }}
+          >
+            <h2 className="uk-text-bold">{error}</h2>
+          </div>
+        </div>
+      );
+    }
+    if (cv === undefined) {
+      return (
+        <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
+          <div
+            className="uk-position-absolute uk-transform-center uk-text-center"
+            style={{ left: '50%', top: '50%' }}
+          >
+            <h2 className="uk-text-bold">loading ...</h2>
+            <div data-uk-spinner />
+          </div>
+        </div>
+      );
+    }
+    return (
+      <>
+        <CVEditWelcome cv={cv} />
+        <GridNoSSR between middle>
+          <div>Statut : {translate(cv.status)}</div>
+          <GridNoSSR>
+            <Button style="default">Prévisualiser la page</Button>
+            <Button
+              style="primary"
+              onClick={() => {
+                if (!loading) submitCV();
+              }}
+            >
+              <div className="uk-flex uk-flex-middle">
+                Publier
+                {loading ? (
+                  <div
+                    className="uk-margin-small-left"
+                    data-uk-spinner="ratio: .5"
+                  />
+                ) : null}
+              </div>
+            </Button>
+          </GridNoSSR>
+        </GridNoSSR>
+        <CVFicheEdition
+          cv={cv}
+          onChange={(fields) => {
+            setCV({ ...cv, ...fields });
+          }}
+        />
+      </>
+    );
+  }
+
   return (
     <LayoutBackOffice title="Edition du CV">
-      <Section>
-        {cv === null && (
-          <>
-            <CVEditNoCandidat />
-            <Button
-              onClick={() =>
-                Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                  userId: user.id,
-                  firstName: user.firstName,
-                  lastName: user.lastName,
-                  gender: user.gender,
-                }).then(({ data }) => setCV(data))
-              }
-            >
-              Creer votre CV
-            </Button>
-          </>
-        )}
-        {error && (
-          <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
-            <div
-              className="uk-position-absolute uk-transform-center uk-text-center"
-              style={{ left: '50%', top: '50%' }}
-            >
-              <h2 className="uk-text-bold">{error}</h2>
-            </div>
-          </div>
-        )}
-        {cv === undefined ? (
-          <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
-            <div
-              className="uk-position-absolute uk-transform-center uk-text-center"
-              style={{ left: '50%', top: '50%' }}
-            >
-              <h2 className="uk-text-bold">loading ...</h2>
-              <div data-uk-spinner />
-            </div>
-          </div>
-        ) : (
-          <>
-            <CVEditWelcome cv={cv} />
-            <GridNoSSR between middle>
-              <div>Statut : {translate(cv.status)}</div>
-              <GridNoSSR>
-                <Button style="default">Prévisualiser la page</Button>
-                <Button
-                  style="primary"
-                  onClick={() => {
-                    if (!loading) submitCV();
-                  }}
-                >
-                  <div className="uk-flex uk-flex-middle">
-                    Publier
-                    {loading ? (
-                      <div
-                        className="uk-margin-small-left"
-                        data-uk-spinner="ratio: .5"
-                      />
-                    ) : null}
-                  </div>
-                </Button>
-              </GridNoSSR>
-            </GridNoSSR>
-            <CVFicheEdition
-              cv={cv}
-              onChange={(fields) => {
-                setCV({ ...cv, ...fields });
-              }}
-            />
-          </>
-        )}
-      </Section>
+      <Section>{content()}</Section>
     </LayoutBackOffice>
   );
 };

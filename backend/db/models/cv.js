@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const CV = sequelize.define(
     'CV',
     {
-      userId: {
+      UserId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
@@ -141,6 +141,8 @@ module.exports = (sequelize, DataTypes) => {
 
     CV.belongsTo(models.User, {
       as: 'user',
+      foreignKey: 'UserId',
+      targetKey: 'id',
     });
   };
   return CV;

@@ -75,8 +75,8 @@ router.get('/edit', auth.required, (req, res) => {
         res.status(200).json(cv);
       })
       .catch((err) => {
-        console.log(`Aucun CV trouvé`);
-        res.status(401).send(err);
+        console.log(err);
+        res.status(401).send(`Aucun CV trouvé`);
       });
   }
 });

@@ -28,6 +28,7 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING,
       }),
+      queryInterface.renameColumn('CVs', 'userId', 'UserId'),
       // queryInterface.removeColumn('CVs', 'visibility'),
       // queryInterface.removeColumn('CVs', 'url'),
     ]),
@@ -50,6 +51,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       }),
+      queryInterface.renameColumn('CVs', 'UserId', 'userId'),
       // queryInterface.addColumn(
       //   'CVs',
       //   'url',

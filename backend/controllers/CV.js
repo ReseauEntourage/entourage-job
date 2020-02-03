@@ -1,4 +1,5 @@
 /* eslint-disable no-restricted-globals */
+/* eslint no-param-reassign: ["error", { "props": false }] */
 const { models, sequelize } = require('../db/models');
 const { cleanCV, controlText } = require('./tools');
 
@@ -52,6 +53,10 @@ const INCLUDE_CV_COMPLETE = [
 
 const createCV = async (data) => {
   console.log(`createCV - Création du CV`);
+  if (data.userId) {
+    data.UserId = data.userId;
+    delete data.userId;
+  }
 
   const modelCV = await models.CV.create(data);
 
@@ -153,17 +158,17 @@ const createCV = async (data) => {
   }
 
   // si possible le faire à la creation du cv
-  const { firstName } = await models.User.findByPk(data.userId, {
+  const { firstName } = await models.User.findByPk(data.UserId, {
     attributes: ['firstName'],
   });
   modelCV.update({
-    url: `${firstName.toLowerCase()}-${data.userId.substring(0, 8)}`,
+    url: `${firstName.toLowerCase()}-${data.UserId.substring(0, 8)}`,
   });
 
   // renvoie du cv complet
   console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
   const completeCV = await models.CV.findByPk(modelCV.id, {
-    exclude: ['userId'],
+    exclude: ['UserId'],
     include: INCLUDE_CV_COMPLETE,
   });
   return cleanCV(completeCV);
@@ -194,18 +199,18 @@ const getVisibleCVbyUrl = async (url) => {
 
   const modelCV = await models.CV.findOne({
     include: INCLUDE_CV_COMPLETE,
-    where: { status: 'Published', userId: modelUser.id },
+    where: { status: 'Published', UserId: modelUser.id },
     order: [['version', 'DESC']],
   });
 
   return cleanCV(modelCV);
 };
 
-const getCVbyUserId = async (userId) => {
+const getCVbyUserId = async (UserId) => {
   console.log(`getCV - Récupérer un CV non publié à partir du userId`);
   const modelCV = await models.CV.findOne({
     include: INCLUDE_CV_COMPLETE,
-    where: { userId },
+    where: { UserId },
     order: [['version', 'DESC']],
   });
   return cleanCV(modelCV);
@@ -275,7 +280,7 @@ const getRandomShortCVs = async (nb) => {
   ).sort(() => Math.random() - 0.5);
 };
 
-const getVisibility = (userId) => {
+const getVisibility = (UserId) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getVisibility -';
     console.log(
@@ -284,7 +289,7 @@ const getVisibility = (userId) => {
     models.CV.findOne({
       where: {
         status: 'Published',
-        userId,
+        UserId,
       },
       attributes: ['visibility', sequelize.fn('max', sequelize.col('version'))],
       group: ['visibility'],
@@ -306,7 +311,7 @@ const setCV = (id, cv) => {
   });
 };
 
-const setVisibility = (userId, cv) => {
+const setVisibility = (UserId, cv) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'setVisibility -';
     console.log(
@@ -315,14 +320,14 @@ const setVisibility = (userId, cv) => {
     models.CV.max('version', {
       where: {
         status: 'Published',
-        userId,
+        UserId,
       },
     })
       .then((max) => {
         return models.CV.update(cv, {
           where: {
             status: 'Published',
-            userId,
+            UserId,
             version: max,
           },
           fields: ['visibility'],
