@@ -19,7 +19,7 @@ const HeaderConnected = ({ isHome }) => {
       name: 'Mes opportunités',
       icon: 'list',
     },
-    { href: '#', name: 'Mur du love', icon: 'heart' },
+    // { href: '#', name: 'Mur du love', icon: 'heart' },
   ];
 
   return (
