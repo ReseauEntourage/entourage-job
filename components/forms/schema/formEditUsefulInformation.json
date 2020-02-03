@@ -2,8 +2,8 @@
   "id": "form-catchphrase",
   "fields": [
     {
-      "id": "Contracts",
-      "name": "Contracts",
+      "id": "contracts",
+      "name": "contracts",
       "component": "input",
       "type": "text",
       "title": "Type de poste recherché"
@@ -23,8 +23,8 @@
       "title": "Disponibilité de travail possibles"
     },
     {
-      "id": "Languages",
-      "name": "Languages",
+      "id": "languages",
+      "name": "languages",
       "component": "input",
       "type": "text",
       "title": "Langues parlées"
@@ -39,7 +39,7 @@
   ],
   "rules": [
     {
-      "field": "Contracts",
+      "field": "contracts",
       "method": "isLength",
       "args": [
         {
@@ -72,7 +72,7 @@
       "message": "40 caractères maximum"
     },
     {
-      "field": "Languages",
+      "field": "languages",
       "method": "isLength",
       "args": [
         {

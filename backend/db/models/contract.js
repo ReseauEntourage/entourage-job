@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     return (contract.id = uuid());
   });
   Contract.associate = function(models) {
-    // associations can be defined here
     Contract.belongsToMany(models.CV, {
       through: 'CV_Contract',
       as: 'CVs',

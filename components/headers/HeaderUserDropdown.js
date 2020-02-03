@@ -4,8 +4,10 @@ import { IconNoSSR, SimpleLink } from '../utils';
 import './Header.less';
 
 const HeaderUserDropdown = () => {
-  const userContext = useContext(UserContext);
-
+  const { user, logout } = useContext(UserContext);
+  if (!user) {
+    return null;
+  }
   return (
     <div
       id="headerUserDropdown"
@@ -24,9 +26,7 @@ const HeaderUserDropdown = () => {
           alt="Menu"
           style={{ height: '40px' }}
         />
-        <span className="uk-margin-small-left">
-          Salut {userContext.user.firstName}
-        </span>
+        <span className="uk-margin-small-left">Salut {user.firstName}</span>
         <IconNoSSR name="triangle-down" />
       </button>
       <div uk-dropdown="mode: click">
@@ -39,7 +39,7 @@ const HeaderUserDropdown = () => {
           </li>
           <li className="uk-nav-divider" />
           <li>
-            <a href="#" onClick={userContext.logout}>
+            <a href="#" onClick={logout}>
               Se déconnecter
             </a>
           </li>

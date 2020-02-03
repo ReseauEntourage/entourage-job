@@ -70,7 +70,7 @@ const JeVeuxRecruter = () => {
   ];
 
   return (
-    <Layout title="Je veux recruter - Entourage Jobs">
+    <Layout title="Je veux recruter - LinkedOut">
       <Section id="recruter1">
         <h1 className="uk-text-bold uk-text-center">
           Vous souhaitez <span className="uk-text-primary">recruter</span> un
@@ -218,7 +218,7 @@ const JeVeuxRecruter = () => {
                     .catch((error) => {
                       console.error(error);
                       UIkit.notification(
-                        "Une erreur c'est produite lors de l'envoie de l'offre",
+                        "Une erreur s'est produite lors de l'envoie de l'offre",
                         { pos: 'bottom-center', status: 'danger' }
                       );
                     });

@@ -7,6 +7,7 @@
     "dev": "nodemon -r dotenv/config ./backend/serveur-next.js",
     "dev-server": "nodemon --watch ./backend/* -r dotenv/config ./backend/serveur-next.js",
     "dev-front": "node -r dotenv/config ./backend/serveur-next.js",
+    "dev-debug": "nodemon --inspect --watch ./backend/* -r dotenv/config ./backend/serveur-next.js",
     "pretest": "mv ./test/justForMocha.babelrc .babelrc",
     "test": "mocha --require @babel/register './test/*.test.js' || npm run posttest",
     "posttest": "mv .babelrc ./test/justForMocha.babelrc",

@@ -27,7 +27,7 @@ const JeVeuxTravailler = () => {
   ];
 
   return (
-    <Layout title="Je veux travailler - Entourage Jobs">
+    <Layout title="Je veux travailler - LinkedOut">
       <Section id="travailler1">
         <h1 className="uk-h1 uk-text-bold uk-text-center">
           Vous souhaitez <span className="uk-text-primary">travailler</span> ?

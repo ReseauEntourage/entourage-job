@@ -27,8 +27,6 @@ export default function withValidation(WrappedForm, validatorRules) {
       setValue(name, fieldValue); // enregistre la valeur du champs
       const validation = validator.validate(getValues()); // envoie une copie des champs pour que le state ne soit pas altéré
 
-      console.log('ok');
-
       // enregistre la raison de la validation {isInvalid: boolean, message: string}
       if (validation[name] !== undefined) {
         setValid(name, validation[name]);
@@ -47,7 +45,6 @@ export default function withValidation(WrappedForm, validatorRules) {
     handleSubmit() {
       return new Promise((resolve, reject) => {
         const { getValues, setValid } = this.state;
-
         const values = getValues();
         /* Validators control before submit */
         const validation = validator.validate(values);

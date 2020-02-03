@@ -2,15 +2,15 @@
   "id": "form-offer",
   "fields": [
     {
-      "id": "firstname",
-      "name": "firstname",
+      "id": "firstName",
+      "name": "firstName",
       "component": "input",
       "type": "text",
       "title": "Prenom*"
     },
     {
-      "id": "lastname",
-      "name": "lastname",
+      "id": "lastName",
+      "name": "lastName",
       "component": "input",
       "type": "text",
       "title": "Nom*"
@@ -30,16 +30,16 @@
       "title": "Téléphone"
     },
     {
-      "id": "title",
-      "name": "title",
+      "id": "job",
+      "name": "job",
       "component": "input",
       "type": "text",
       "title": "Nom du poste proposé*"
     },
     {
-      "id": "type",
+      "id": "businessLine",
+      "name": "businessLine",
       "title": "Secteur d'activité*",
-      "name": "type",
       "component": "select",
       "options": [
         { "value": null, "text": "Sélectionnez un secteur d'activité" },
@@ -69,8 +69,8 @@
       "title": "Entreprise"
     },
     {
-      "id": "location",
-      "name": "location",
+      "id": "localization",
+      "name": "localization",
       "component": "input",
       "type": "text",
       "title": "Localisation*"

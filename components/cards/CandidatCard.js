@@ -40,8 +40,9 @@ const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
               gap="collapse"
               className="uk-text-lowercase uk-text-bold uk-text-primary"
             >
+              {/* ICI !!! */}
               {ambitions.slice(0, 2).map((a, index) => (
-                <span key={index}>{doEllipsis(a.name, 15)}</span>
+                <span key={index}>{doEllipsis(a, 15)}</span>
               ))}
             </GridNoSSR>
             <p>
@@ -86,9 +87,9 @@ const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
               />
             </li>
           </ul>
-          <span className="uk-text-primary">
+          {/* <span className="uk-text-primary">
             | <span className="uk-text-bold">XXX</span>
-          </span>
+          </span> */}
         </GridNoSSR>
       </GridNoSSR>
     </div>

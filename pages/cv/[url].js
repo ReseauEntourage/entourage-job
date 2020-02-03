@@ -1,84 +1,67 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import { DiscoverPartial, ContactPartial } from '../../components/partials';
 import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
+import { Section } from '../../components/utils';
 
-class CVPage extends Component {
-  static get defaultProps() {
-    return {
-      cv: {
-        firstName: '',
-        intro: '',
-        Ambitions: [],
-        Contracts: [],
-        Languages: [],
-        Passions: [],
-        Skills: [],
-        Experiences: [],
-        url: '',
-      },
-      router: {
-        asPath: '',
-      },
-    };
-  }
-
-  static get propTypes() {
-    return {
-      cv: PropTypes.shape({
-        firstName: PropTypes.string.isRequired,
-        intro: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired,
-      }),
-      router: PropTypes.shape({
-        asPath: PropTypes.string.isRequired,
-      }),
-    };
-  }
-
-  static async getInitialProps({ query }) {
-    return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
-      .then((res) => {
-        return { cv: res.data };
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log(
-          `CVPage - getInitialProps error : ${error.response.status}`
-        );
-        return { cv: {} };
-      });
-  }
-
-  render() {
-    const { cv, router } = this.props;
-    const hostname = process.env.SERVER_URL;
-    console.log(process);
-    const firstName =
-      cv.firstName.charAt(0).toUpperCase() +
-      cv.firstName.slice(1).toLowerCase();
-    const title = `${firstName} - Entourage Jobs`;
+const CVPage = ({ cv, router }) => {
+  if (!cv) {
     return (
-      <Layout
-        title={title}
-        metaTitle={`Aidez ${firstName} en partageant son CV.`}
-        metaUrl={`${hostname}${router.asPath}`}
-        metaDescription={cv.intro}
-        metaImage={`${hostname}/static/img/cv/${cv.url}-preview.jpg`}
-        metaType="profile"
-      >
-        <div style={{ position: 'relative' }}>
-          <CVBackground url="/static/img/arthur-background.jpg" />
-          <CVFiche cv={cv} />
-          <ContactPartial />
-          <DiscoverPartial />
-        </div>
+      <Layout title="Page introuvable - LinkedOut">
+        <Section className="uk-text-center" size="large">
+          <h2>Ce profil n’est pas disponible</h2>
+          <p>
+            Le lien que vous avez suivi est peut-être rompu, ou la page a été
+            supprimée.
+          </p>
+        </Section>
+        <ContactPartial />
+        <DiscoverPartial />
       </Layout>
     );
   }
-}
+
+  const name =
+    cv.user.firstName.charAt(0).toUpperCase() + cv.user.firstName.slice(1).toLowerCase();
+  return (
+    <Layout
+      title={`${name} - LinkedOut`}
+      metaTitle={`Aidez ${name} en partageant son CV.`}
+      metaUrl={`${process.env.SERVER_URL}${router.asPath}`}
+      metaDescription={cv.intro}
+      metaImage={`${process.env.SERVER_URL}/static/img/cv/${cv.url}-preview.jpg`}
+      metaType="profile"
+    >
+      <CVBackground url="/static/img/arthur-background.jpg" />
+      <CVFiche cv={cv} />
+      <ContactPartial />
+      <DiscoverPartial />
+    </Layout>
+  );
+};
+CVPage.getInitialProps = async ({ query }) => {
+  const res = await Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`);
+  const data = await res.data;
+  return { cv: data };
+};
+CVPage.propTypes = {
+  cv: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    intro: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+  }),
+  router: PropTypes.shape({
+    asPath: PropTypes.string.isRequired,
+  }),
+};
+CVPage.defaultProps = {
+  cv: null,
+  router: {
+    asPath: '',
+  },
+};
 
 export default withRouter(CVPage);

@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const CV = sequelize.define(
     'CV',
     {
-      userId: {
+      UserId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
@@ -16,32 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      firstName: {
-        type: DataTypes.STRING,
-        validate: {
-          len: {
-            args: [1, 30],
-            msg: '30 caractères maximum pour le prénom',
-          },
-          notEmpty: {
-            args: true,
-            msg: 'Un prénom est requis',
-          },
-        },
-      },
-      lastName: {
-        type: DataTypes.STRING,
-        /* validate: {
-          len: {
-            args: [1, 30],
-            msg: '30 caractères maximum pour le nom',
-          },
-          notEmpty: {
-            args: true,
-            msg: 'Un nom est requis',
-          },
-        }, */
-      },
+      urlImg: DataTypes.STRING,
       intro: {
         type: DataTypes.TEXT,
         /* validate: {
@@ -97,6 +72,13 @@ module.exports = (sequelize, DataTypes) => {
           },
         }, */
       },
+      catchphrase: DataTypes.STRING,
+      devise: DataTypes.STRING,
+      careerPathOpen: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       status: DataTypes.STRING,
       visibility: {
         type: DataTypes.BOOLEAN,
@@ -113,12 +95,13 @@ module.exports = (sequelize, DataTypes) => {
   );
   CV.beforeValidate((cv) => {
     const cvToCreate = cv;
-    if (cvToCreate.firstName && cvToCreate.userId) {
-      cvToCreate.url = `${cvToCreate.firstName.toLowerCase()}-${cvToCreate.userId.substring(
-        0,
-        8
-      )}`;
-    }
+    // mover to controller
+    // if (cvToCreate.firstName && cvToCreate.userId) {
+    //   cvToCreate.url = `${cvToCreate.firstName.toLowerCase()}-${cvToCreate.userId.substring(
+    //     0,
+    //     8
+    //   )}`;
+    // }
     return cvToCreate;
   });
   CV.beforeCreate((cv) => {
@@ -127,35 +110,39 @@ module.exports = (sequelize, DataTypes) => {
     return cvToCreate;
   });
   CV.associate = function(models) {
-    CV.belongsToMany(models.Skill, {
-      through: 'CV_Skill',
-      as: 'Skills',
-      foreignKey: 'CVId',
-      otherKey: 'SkillId',
+    // link and rename for association
+    CV.belongsToMany(models.Ambition, {
+      through: 'CV_Ambitions',
+      as: 'ambitions',
+    });
+    CV.belongsToMany(models.Contract, {
+      through: 'CV_Contracts',
+      as: 'contracts',
     });
     CV.belongsToMany(models.Language, {
       through: 'CV_Language',
-      as: 'Languages',
-      foreignKey: 'CVId',
-      otherKey: 'LanguageId',
+      as: 'languages',
     });
-    CV.belongsToMany(models.Contract, {
-      through: 'CV_Contract',
-      as: 'Contracts',
-      foreignKey: 'CVId',
-      otherKey: 'ContractId',
+    CV.belongsToMany(models.Skill, {
+      through: 'CV_Skills',
+      as: 'skills',
     });
     CV.belongsToMany(models.Passion, {
-      through: 'CV_Passion',
-      as: 'Passions',
-      foreignKey: 'CVId',
-      otherKey: 'PassionId',
+      through: 'CV_Passions',
+      as: 'passions',
     });
-    CV.belongsToMany(models.Ambitions, {
-      through: 'CV_Ambition',
-      as: 'Ambitions',
-      foreignKey: 'CVId',
-      otherKey: 'AmbitionId',
+
+    CV.hasMany(models.Experience, {
+      as: 'experiences',
+    });
+    CV.hasMany(models.Review, {
+      as: 'reviews',
+    });
+
+    CV.belongsTo(models.User, {
+      as: 'user',
+      foreignKey: 'UserId',
+      targetKey: 'id',
     });
   };
   return CV;

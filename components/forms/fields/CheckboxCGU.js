@@ -1,55 +1,50 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
-export default class CheckboxCGU extends Component {
-  static get propTypes() {
-    return {
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      onChange: PropTypes.func.isRequired,
-      title: PropTypes.node.isRequired,
-      valid: PropTypes.shape({
-        isInvalid: PropTypes.boolean,
-        message: PropTypes.boolean,
-      }),
-    };
-  }
+const CheckboxCGU = ({ id, name, defaultValue, onChange, title, valid }) => {
+  const [checked, setChecked] = useState(defaultValue);
 
-  static get defaultProps() {
-    return {
-      valid: undefined,
-    };
-  }
-
-  getValidClass() {
-    const { valid } = this.props;
-    if (valid !== undefined) {
-      if (!valid.isInvalid) return '';
-      return 'uk-form-danger';
-    }
-    return '';
-  }
-
-  render() {
-    const { id, name, onChange, title, valid } = this.props;
-
-    const addClasses = this.getValidClass();
-
-    return (
-      <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+  return (
+    <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+      <label htmlFor={id}>
         <input
           id={id}
           name={name}
           type="checkbox"
-          onChange={onChange}
-          className={`uk-checkbox ${addClasses}`}
+          className={`uk-checkbox${
+            valid !== undefined && valid.isInvalid ? ' uk-form-danger' : ''
+          }`}
+          checked={checked}
+          // defaultChecked={defaultValue}
+          onChange={() => {
+            onChange({
+              target: { name, checked: !checked, type: 'checkbox' },
+            });
+            setChecked(!checked);
+          }}
         />
-        <label htmlFor={id} style={{ paddingLeft: '10px' }}>
-          {title}
-        </label>
-        <FormValidatorErrorMessage validObj={valid} />
-      </div>
-    );
-  }
-}
+        <span style={{ paddingLeft: '10px' }}>{title}</span>
+      </label>
+      <FormValidatorErrorMessage validObj={valid} />
+    </div>
+  );
+};
+
+CheckboxCGU.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  defaultValue: PropTypes.bool,
+  title: PropTypes.node.isRequired,
+  valid: PropTypes.shape({
+    isInvalid: PropTypes.bool,
+    message: PropTypes.bool,
+  }),
+};
+CheckboxCGU.defaultProps = {
+  valid: undefined,
+  defaultValue: false,
+};
+
+export default CheckboxCGU;

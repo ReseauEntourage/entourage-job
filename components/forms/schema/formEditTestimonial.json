@@ -13,7 +13,7 @@
       "name": "status",
       "component": "input",
       "type": "text",
-      "title": "Status *"
+      "title": "Statut *"
     },
     {
       "id": "text",

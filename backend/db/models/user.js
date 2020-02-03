@@ -63,14 +63,39 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      gender: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      hiden: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
+      url: DataTypes.STRING,
     },
     {}
   );
-  User.beforeCreate((user) => {
-    return (user.id = uuid());
+
+  User.beforeCreate((u) => {
+    const user = u;
+    user.id = uuid();
+    user.firstName = u.firstName.toLowerCase();
+    user.lastName = u.lastName.toLowerCase();
+    user.url = [user.firstName, '-', user.id.substring(0, 8)].join();
+    return user;
   });
-  User.associate = function(models) {
-    // associations can be defined here
+
+  User.associate = (models) => {
+    User.belongsToMany(models.Opportunity, {
+      through: 'Opportunity_Users',
+      as: 'opportunities',
+    });
+    User.hasMany(models.CV, {
+      as: 'cvs',
+    });
   };
+
   return User;
 };

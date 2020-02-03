@@ -51,7 +51,7 @@ const PassionsCard = ({ list, onChange }) => {
             }, {})}
             onSubmit={(fields) => {
               const fieldsTransform = {
-                Passions: Object.values(fields).filter((val) => {
+                passions: Object.values(fields).filter((val) => {
                   return typeof val === 'string' && val !== '';
                 }),
               };

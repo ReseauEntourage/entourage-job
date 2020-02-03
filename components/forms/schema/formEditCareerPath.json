@@ -14,6 +14,12 @@
       "component": "input",
       "type": "text",
       "title": "Domaine 2"
+    },
+    {
+      "id": "careerPathOpen",
+      "name": "careerPathOpen",
+      "component": "checkbox",
+      "title": "Ouvert à toutes proposition ?"
     }
   ],
   "rules": [
@@ -22,11 +28,22 @@
       "method": "isLength",
       "args": [
         {
-          "max": 150
+          "max": 32
         }
       ],
       "validWhen": true,
-      "message": "150 caractères maximum"
+      "message": "32 caractères maximum"
+    },
+    {
+      "field": "careerPath1",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 32
+        }
+      ],
+      "validWhen": true,
+      "message": "32 caractères maximum"
     }
   ]
 }

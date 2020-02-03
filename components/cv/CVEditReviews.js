@@ -8,8 +8,8 @@ import schemaTestimonial from '../forms/schema/formEditTestimonial';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalConfirm from '../modals/ModalConfirm';
 
-const MAX_REVIEWS = 3;
 const CVEditReviews = ({ reviews, onChange }) => {
+  const MAX_REVIEWS = 3;
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentDefaultValue, setCurrentDefaultValue] = useState({});
 
@@ -79,7 +79,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
         formSchema={schemaTestimonial}
         onSubmit={(fields) =>
           onChange({
-            Reviews: [...reviews, fields],
+            reviews: [...reviews, fields],
           })
         }
       />
@@ -91,7 +91,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
         onSubmit={(fields) => {
           const newReviews = reviews;
           newReviews[currentIndex] = fields;
-          onChange({ Reviews: newReviews });
+          onChange({ reviews: newReviews });
         }}
       />
       <ModalConfirm
@@ -100,7 +100,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
         buttonText="supprimer"
         onConfirm={() => {
           reviews.splice(currentIndex, 1);
-          onChange({ Reviews: reviews });
+          onChange({ reviews });
         }}
       />
     </div>

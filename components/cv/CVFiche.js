@@ -13,90 +13,50 @@ import {
 } from '../cards';
 import { CVPresentationCard } from '.';
 
-const CVFiche = ({ cv }) => {
-  const arrayContracts =
-    cv.Contracts &&
-    cv.Contracts.map((contract) => {
-      return contract.name;
-    });
-  const arrayLanguages =
-    cv.Languages &&
-    cv.Languages.map((language) => {
-      return (
-        language.name.charAt(0).toUpperCase() +
-        language.name.slice(1).toLowerCase()
-      );
-    });
-  const arraySkills =
-    cv.Skills &&
-    cv.Skills.map((skill) => {
-      return (
-        skill.name.charAt(0).toUpperCase() + skill.name.slice(1).toLowerCase()
-      );
-    });
-  const arrayPassions =
-    cv.Passions &&
-    cv.Passions.map((passion) => {
-      return (
-        passion.name.charAt(0).toUpperCase() +
-        passion.name.slice(1).toLowerCase()
-      );
-    });
-
-  return (
-    <Section>
-      <CVPresentationCard
-        firstName={cv.firstName}
-        userId={cv.userId}
-        intro={cv.intro}
-      />
-      <GridNoSSR
-        childWidths={['1-2@s']}
-        match
-        items={[
-          <InfoProfileCard
-            contract={arrayContracts}
-            location={cv.location}
-            availability={cv.availability}
-            language={arrayLanguages}
-            transport={cv.transport}
-          />,
-          <GridNoSSR
-            childWidths={['1-2@m']}
-            match
-            items={[
-              <SkillsCard list={arraySkills} />,
-              <PassionsCard list={arrayPassions} />,
-            ]}
-          />,
-        ]}
-      />
-      <GridNoSSR
-        childWidths={['1-2@s']}
-        items={[
-          <GridNoSSR
-            items={[
-              <StoryProfileCard description={cv.story} />,
-              <ReviewCard
-                picture="/static/img/arthur.png"
-                review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
-                author="Hervé"
-                role="Assistant social"
-              />,
-              <ReviewCard
-                picture="/static/img/arthur.png"
-                review="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum sed diam eu pulvinar."
-                author="Hervé"
-                role="Assistant social"
-              />,
-            ]}
-          />,
-          <ExperiencesProfileCard experiences={cv.Experiences} />,
-        ]}
-      />
-    </Section>
-  );
-};
+const CVFiche = ({ cv }) => (
+  <Section>
+    <CVPresentationCard
+      firstName={cv.user.firstName}
+      userId={cv.userId}
+      intro={cv.intro}
+    />
+    <GridNoSSR
+      childWidths={['1-2@s']}
+      match
+      items={[
+        <InfoProfileCard
+          contracts={cv.contracts}
+          location={cv.location}
+          availability={cv.availability}
+          languages={cv.languages}
+          transport={cv.transport}
+        />,
+        <GridNoSSR
+          childWidths={['1-2@m']}
+          match
+          items={[
+            <SkillsCard list={cv.skills} />,
+            <PassionsCard list={cv.passions} />,
+          ]}
+        />,
+      ]}
+    />
+    <GridNoSSR childWidths={['1-2@s']}>
+      <GridNoSSR column childWidths={['1-1']}>
+        <StoryProfileCard description={cv.story} />
+        {cv.reviews.map((review) => (
+          <ReviewCard
+            picture="/static/img/arthur.png"
+            review={review.text}
+            author={review.name}
+            role={review.status}
+          />
+        ))}
+      </GridNoSSR>
+      <ExperiencesProfileCard experiences={cv.experiences} />
+    </GridNoSSR>
+  </Section>
+);
 
 CVFiche.propTypes = {
   cv: PropTypes.shape().isRequired,

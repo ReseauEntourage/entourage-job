@@ -5,6 +5,11 @@ import HeaderBackoffice from '../headers/HeaderBackoffice';
 
 const CVEditWelcome = ({ cvFirstName }) => {
   const userContext = useContext(UserContext);
+  if (userContext.user === null) {
+    console.log('no ctx: CVEditWelcome');
+
+    return null;
+  }
   return (
     <HeaderBackoffice
       title={

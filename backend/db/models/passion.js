@@ -12,10 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     return (passion.id = uuid());
   });
   Passion.associate = function(models) {
-    // associations can be defined here
     Passion.belongsToMany(models.CV, {
       through: 'CV_Passion',
-      as: 'Passions',
+      // as: 'Passions',
+      // foreignKey: 'PassionId',
+      // otherKey: 'CVId',
+      as: 'CVs',
       foreignKey: 'PassionId',
       otherKey: 'CVId',
     });

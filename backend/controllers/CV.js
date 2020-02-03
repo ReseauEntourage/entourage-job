@@ -1,336 +1,295 @@
 /* eslint-disable no-restricted-globals */
-const sequelize = require('sequelize');
-const db = require('../db/config/databaseConnect');
-const CV = require('../db/models/cv')(db, sequelize.DataTypes);
-const Ambition = require('../db/models/ambition')(db, sequelize.DataTypes);
-const Contract = require('../db/models/contract')(db, sequelize.DataTypes);
-const Experience = require('../db/models/experience')(db, sequelize.DataTypes);
-const Language = require('../db/models/language')(db, sequelize.DataTypes);
-const Passion = require('../db/models/passion')(db, sequelize.DataTypes);
-const Skill = require('../db/models/skill')(db, sequelize.DataTypes);
-
-const { Op } = sequelize;
+/* eslint no-param-reassign: ["error", { "props": false }] */
+const { models, sequelize } = require('../db/models');
+const { cleanCV, controlText } = require('./tools');
 
 const INCLUDE_CV_COMPLETE = [
   {
-    model: Contract,
+    model: models.Contract,
+    as: 'contracts',
     through: { attributes: [] },
     attributes: ['id', 'name'],
   },
   {
-    model: Experience,
+    model: models.Language,
+    as: 'languages',
+    through: { attributes: [] },
+    attributes: ['id', 'name'],
+  },
+  {
+    model: models.Passion,
+    as: 'passions',
+    through: { attributes: [] },
+    attributes: ['id', 'name'],
+  },
+  {
+    model: models.Skill,
+    as: 'skills',
+    through: { attributes: [] },
+    attributes: ['id', 'name'],
+  },
+  {
+    model: models.Ambition,
+    as: 'ambitions',
+    through: { attributes: [] },
+    attributes: ['id', 'name'],
+  },
+  {
+    model: models.Experience,
+    as: 'experiences',
     attributes: ['id', 'dateStart', 'dateEnd', 'title', 'description'],
   },
   {
-    model: Language,
-    through: { attributes: [] },
-    attributes: ['id', 'name'],
+    model: models.Review,
+    as: 'reviews',
+    attributes: ['id', 'text', 'status', 'name'],
   },
   {
-    model: Passion,
-    through: { attributes: [] },
-    attributes: ['id', 'name'],
-  },
-  {
-    model: Skill,
-    through: { attributes: [] },
-    attributes: ['id', 'name'],
-  },
-  {
-    model: Ambition,
-    through: { attributes: [] },
-    attributes: ['id', 'name'],
+    model: models.User,
+    as: 'user',
+    attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
   },
 ];
 
-CV.belongsToMany(Ambition, { through: 'CV_Ambitions' });
-CV.belongsToMany(Contract, { through: 'CV_Contracts' });
-CV.belongsToMany(Language, { through: 'CV_Languages' });
-CV.belongsToMany(Passion, { through: 'CV_Passions' });
-CV.belongsToMany(Skill, { through: 'CV_Skills' });
-CV.hasMany(Experience);
-Experience.belongsTo(CV);
+const createCV = async (data) => {
+  console.log(`createCV - Création du CV`);
+  if (data.userId) {
+    data.UserId = data.userId;
+    delete data.userId;
+  }
 
-const createCV = (newCV) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'createCV -';
-    console.log(`${infoLog} Création du CV`);
+  const modelCV = await models.CV.create(data);
 
-    let cvCreated;
+  // Skills
+  if (data.skills) {
+    console.log(`createCV - Etape 2 - Skills`);
+    const skills = await Promise.all(
+      // pour chaque competence
+      data.skills.map((name) =>
+        // on trouve ou créé la donné
+        models.Skill.findOrCreate({
+          where: { name: controlText(name) },
+        })
+          // on recupere de model retourné
+          .then((model) => model[0])
+      )
+    );
+    // on ajoute toutes les competences
+    modelCV.addSkills(skills);
+  }
 
-    console.log(`${infoLog} Etape 1 - Création du CV de base`);
-    CV.create({
-      userId: newCV.userId,
-      firstName: newCV.firstName,
-      lastName: newCV.lastName || '',
-      intro: newCV.intro || '',
-      location: newCV.location || '',
-      story: newCV.story || '',
-      status: newCV.status || 'Pending',
-      transport: newCV.transport || '',
-      availability: newCV.availability || '',
-      visibility: newCV.visibility || false,
-    })
-      .then((cv) => {
-        cvCreated = cv;
-        console.log(`${infoLog} Etape 2 - Skills`);
-        if (newCV.skills) {
-          console.log(`${infoLog} Skills présents à contrôler ou créer`);
-          const skillsPromise = newCV.skills.map((skill) => {
-            return Skill.findOrCreate({ where: { name: skill } });
-          });
-          return Promise.all(skillsPromise);
-        }
-        return Promise.resolve([]);
+  // languages
+  if (data.languages) {
+    console.log(`createCV - Etape 4 - Langues`);
+    const languages = await Promise.all(
+      data.languages.map((name) =>
+        models.Language.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0])
+      )
+    );
+    modelCV.addLanguages(languages);
+  }
+
+  // Contracts
+  if (data.contracts) {
+    console.log(`createCV - Etape 6 - Contrats`);
+    const contracts = await Promise.all(
+      data.contracts.map((name) => {
+        return models.Contract.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0]);
       })
-      .then((skills) => {
-        console.log(`${infoLog} Etape 3 - Relation CV / Skills`);
-        if (skills) {
-          console.log(`${infoLog} Skills trouvés ou créés`);
-          const listSkills = skills.map((skill) => {
-            return skill[0];
-          });
-          console.log(`${infoLog} Ajout de la relation avec le CV`);
-          return cvCreated.addSkills(listSkills);
-        }
-        return Promise.resolve();
+    );
+    modelCV.addContracts(contracts);
+  }
+
+  // Passions
+  if (data.passions) {
+    console.log(`createCV - Etape 8 - Passions`);
+    const passions = await Promise.all(
+      data.passions.map((name) => {
+        return models.Passion.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0]);
       })
-      .then(() => {
-        console.log(`${infoLog} Etape 4 - Langues`);
-        if (newCV.languages) {
-          console.log(`${infoLog} Langues présentes à contrôler ou créer`);
-          const languagesPromise = newCV.languages.map((language) => {
-            return Language.findOrCreate({ where: { name: language } });
-          });
-          return Promise.all(languagesPromise);
-        }
-        return Promise.resolve([]);
+    );
+    modelCV.addPassions(passions);
+  }
+
+  // Ambitions
+  if (data.ambitions) {
+    console.log(`createCV - Etape 10 - Ambitions`);
+    const ambitions = await Promise.all(
+      data.ambitions.map((name) => {
+        return models.Ambition.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0]);
       })
-      .then((languages) => {
-        console.log(`${infoLog} Etape 5 - Relation CV / Langues :`);
-        if (languages) {
-          console.log(`${infoLog} Langues trouvés ou créés`);
-          const listLanguages = languages.map((language) => {
-            return language[0];
-          });
-          console.log(`${infoLog} Ajout de la relation avec le CV`);
-          return cvCreated.addLanguages(listLanguages);
-        }
-        return Promise.resolve();
+    );
+    modelCV.addAmbitions(ambitions);
+  }
+
+  // Experiences
+  if (data.experiences) {
+    console.log(`createCV - Etape 11 - Expériences`);
+    data.experiences.forEach((experience) =>
+      models.Experience.create({
+        CVId: modelCV.id,
+        dateStart: experience.dateStart,
+        dateEnd: experience.dateEnd,
+        title: experience.title,
+        description: experience.description,
       })
-      .then(() => {
-        console.log(`${infoLog} Etape 6 - Contrats`);
-        if (newCV.contracts) {
-          console.log(`${infoLog} Contrats présents à contrôler ou créer`);
-          const contractsPromise = newCV.contracts.map((contract) => {
-            return Contract.findOrCreate({ where: { name: contract } });
-          });
-          return Promise.all(contractsPromise);
-        }
-        return Promise.resolve([]);
+    );
+  }
+
+  // Reviews
+  if (data.reviews) {
+    console.log(`createCV - Etape 11 - Expériences`);
+    data.reviews.forEach((review) =>
+      models.Review.create({
+        CVId: modelCV.id,
+        text: review.text,
+        status: review.status,
+        name: review.name,
       })
-      .then((contracts) => {
-        console.log(`${infoLog} Etape 7 - Relation CV / Contrats`);
-        if (contracts) {
-          console.log(`${infoLog} Contrats trouvés ou créés`);
-          const listContracts = contracts.map((contract) => {
-            return contract[0];
-          });
-          console.log(`${infoLog} Ajout de la relation avec le CV`);
-          return cvCreated.addContracts(listContracts);
-        }
-        return Promise.resolve();
-      })
-      .then(() => {
-        console.log(`${infoLog} Etape 8 - Passions`);
-        if (newCV.passions) {
-          console.log(`${infoLog} Passions présents à contrôler ou créer`);
-          const passionsPromise = newCV.passions.map((passion) => {
-            return Passion.findOrCreate({ where: { name: passion } });
-          });
-          return Promise.all(passionsPromise);
-        }
-        return Promise.resolve([]);
-      })
-      .then((passions) => {
-        console.log(`${infoLog} Etape 9 - Relation CV / Passions`);
-        if (passions) {
-          console.log(`${infoLog} Passions trouvés ou créés`);
-          const listPassions = passions.map((passion) => {
-            return passion[0];
-          });
-          console.log(`${infoLog} Ajout de la relation avec le CV`);
-          return cvCreated.addPassions(listPassions);
-        }
-        return Promise.resolve();
-      })
-      .then(() => {
-        console.log(`${infoLog} Etape 10 - Ambitions`);
-        if (newCV.ambitions) {
-          console.log(`${infoLog} Ambitions présentes à contrôler ou créer`);
-          const ambitionsPromise = newCV.ambitions.map((ambition) => {
-            return Ambition.findOrCreate({ where: { name: ambition } });
-          });
-          return Promise.all(ambitionsPromise);
-        }
-        return Promise.resolve([]);
-      })
-      .then((ambitions) => {
-        console.log(`${infoLog} Etape 11 - Relation CV / Ambitions`);
-        if (ambitions) {
-          console.log(`${infoLog} Ambitions trouvés ou créés`);
-          const listAmbitions = ambitions.map((ambition) => {
-            return ambition[0];
-          });
-          console.log(`${infoLog} Ajout de la relation avec le CV`);
-          return cvCreated.addAmbitions(listAmbitions);
-        }
-        return Promise.resolve();
-      })
-      .then(() => {
-        console.log(`${infoLog} Etape 11 - Expériences`);
-        if (newCV.experiences) {
-          console.log(`${infoLog} Expériences présentes à créer`);
-          const experiencesPromise = newCV.experiences.map((experience) => {
-            return Experience.findOrCreate({
-              where: {
-                CVId: cvCreated.dataValues.id,
-                dateStart: experience.dateStart,
-                dateEnd: experience.dateEnd,
-                title: experience.title,
-                description: experience.description,
-              },
-            });
-          });
-          return Promise.all(experiencesPromise);
-        }
-        return Promise.resolve([]);
-      })
-      .then(() => {
-        console.log(
-          `${infoLog} Etape finale - Reprendre le CV complet à retourner`
-        );
-        return CV.findByPk(cvCreated.dataValues.id, {
-          include: INCLUDE_CV_COMPLETE,
-        });
-      })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+    );
+  }
+
+  // si possible le faire à la creation du cv
+  const { firstName } = await models.User.findByPk(data.UserId, {
+    attributes: ['firstName'],
   });
+  modelCV.update({
+    url: `${firstName.toLowerCase()}-${data.UserId.substring(0, 8)}`,
+  });
+
+  // renvoie du cv complet
+  console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
+  const completeCV = await models.CV.findByPk(modelCV.id, {
+    exclude: ['UserId'],
+    include: INCLUDE_CV_COMPLETE,
+  });
+  return cleanCV(completeCV);
 };
 
 const deleteCV = (id) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'deleteCV -';
-    console.log(`${infoLog} Suppression d'un CV à partir de son id`);
-    CV.destroy({
-      where: { id },
-    })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+  console.log(`deleteCV - Suppression d'un CV à partir de son id`);
+  return models.CV.destroy({
+    where: { id },
   });
 };
 
-const getCVbyUrl = (url) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getCVbyUrl -';
-    console.log(`${infoLog} Récupérer un CV à partir de son url`);
-    CV.max('version', {
-      where: {
-        status: 'Published',
-        url,
-      },
-    })
-      .then((version) => {
-        if (isNaN(version)) {
-          return Promise.resolve(null);
-        }
-        return CV.findOne({
-          where: { url, status: 'Published', version, visibility: true },
-          include: INCLUDE_CV_COMPLETE,
-        });
-      })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+const getCVbyUrl = async (url) => {
+  console.log(`getCVbyUrl - Récupérer un CV à partir de son url`);
+  const modelCV = await models.CV.findOne({
+    include: INCLUDE_CV_COMPLETE,
+    where: { url, status: 'Published', visibility: true },
+    order: [['version', 'DESC']],
   });
+  return cleanCV(modelCV);
 };
 
-const getCVbyUserId = (userId) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getCV -';
-    console.log(`${infoLog} Récupérer un CV non publié à partir du userId`);
-    CV.max('version', {
-      where: {
-        userId,
-      },
-    })
-      .then((version) => {
-        if (isNaN(version)) {
-          return Promise.resolve(null);
-        }
-        return CV.findOne({
-          where: { userId, version },
-          include: INCLUDE_CV_COMPLETE,
-        });
-      })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+const getVisibleCVbyUrl = async (url) => {
+  const modelUser = await models.User.findOne({
+    where: { url, hiden: false },
+    attributes: ['id'],
   });
+
+  const modelCV = await models.CV.findOne({
+    include: INCLUDE_CV_COMPLETE,
+    where: { status: 'Published', UserId: modelUser.id },
+    order: [['version', 'DESC']],
+  });
+
+  return cleanCV(modelCV);
 };
 
-const getCVs = () => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getCVs -';
-    console.log(`${infoLog} Récupérer les CVs`);
-    CV.findAll({
-      where: {
-        status: 'Published',
-        visibility: true,
-      },
-      include: INCLUDE_CV_COMPLETE,
-    })
-      .then((listeCVs) => resolve(listeCVs))
-      .catch((err) => reject(err));
+const getCVbyUserId = async (UserId) => {
+  console.log(`getCV - Récupérer un CV non publié à partir du userId`);
+  const modelCV = await models.CV.findOne({
+    include: INCLUDE_CV_COMPLETE,
+    where: { UserId },
+    order: [['version', 'DESC']],
   });
+  return cleanCV(modelCV);
 };
 
-const getRandomShortCVs = (nb) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getRandomShortCVs -';
-    console.log(
-      `${infoLog} Récupère des CVs au format court de manière aléatoire`
+const getCVs = async () => {
+  console.log(`getCVs - Récupérer les CVs`);
+  const modelCVs = await models.CV.findAll({
+    where: {
+      status: 'Published',
+      visibility: true,
+    },
+    include: INCLUDE_CV_COMPLETE,
+  });
+  return modelCVs.map((modelCV) => cleanCV(modelCV));
+};
+
+// BIDOUILLE
+// TODO Revoir cette query pour prendre les dernieres version et les melanger
+// utiliser distinct
+const getRandomShortCVs = async (nb) => {
+  console.log(
+    `getRandomShortCVs - Récupère des CVs au format court de manière aléatoire`
+  );
+  function getUnique(arr, comp) {
+    return (
+      arr
+        .map((e) => e[comp])
+
+        // store the keys of the unique objects
+        .map((e, i, final) => final.indexOf(e) === i && i)
+
+        // eliminate the dead keys & store unique objects
+        .filter((e) => arr[e])
+        .map((e) => arr[e])
     );
-    CV.findAll({
-      where: {
-        status: 'Published',
-        visibility: true,
+  }
+  const modelCVs = await models.CV.findAll({
+    where: {
+      status: 'Published',
+      visibility: true,
+    },
+    // order: sequelize.random(),
+    order: [['version', 'DESC']],
+    // limit: nb || 11,
+    attributes: ['id', 'url', 'version'], // [Sequelize.fn('DISTINCT', Sequelize.col('version')) ,'version']
+    include: [
+      {
+        model: models.Ambition,
+        as: 'ambitions',
+        through: { attributes: [] },
+        attributes: ['name'],
       },
-      order: db.random(),
-      limit: nb || 11,
-      attributes: ['id', 'url', 'firstName'],
-      include: [
-        {
-          model: Ambition,
-          through: { attributes: [] },
-          attributes: ['name'],
-        },
-      ],
-    })
-      .then((listeCVs) => resolve(listeCVs))
-      .catch((err) => reject(err));
+      {
+        model: models.User,
+        as: 'user',
+        attributes: ['firstName'],
+      },
+    ],
   });
+  return getUnique(
+    modelCVs
+      .map(cleanCV)
+      .filter((cv) => cv.user) // filter those who do not have binded user
+      .slice(0, nb || 11),
+    'url'
+  ).sort(() => Math.random() - 0.5);
 };
 
-const getVisibility = (userId) => {
+const getVisibility = (UserId) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getVisibility -';
     console.log(
       `${infoLog} Recherche de l'état visibility du dernier CV publié de l'utilisateur`
     );
-    CV.findOne({
+    models.CV.findOne({
       where: {
         status: 'Published',
-        userId,
+        UserId,
       },
       attributes: ['visibility', sequelize.fn('max', sequelize.col('version'))],
       group: ['visibility'],
@@ -344,7 +303,7 @@ const setCV = (id, cv) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'setCV -';
     console.log(`${infoLog} Modification du CV`);
-    CV.update(cv, {
+    models.CV.update(cv, {
       where: { id },
     })
       .then((result) => resolve(result))
@@ -352,23 +311,23 @@ const setCV = (id, cv) => {
   });
 };
 
-const setVisibility = (userId, cv) => {
+const setVisibility = (UserId, cv) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'setVisibility -';
     console.log(
       `${infoLog} Recherche de l'état visibility du dernier CV publié de l'utilisateur`
     );
-    CV.max('version', {
+    models.CV.max('version', {
       where: {
         status: 'Published',
-        userId,
+        UserId,
       },
     })
       .then((max) => {
-        return CV.update(cv, {
+        return models.CV.update(cv, {
           where: {
             status: 'Published',
-            userId,
+            UserId,
             version: max,
           },
           fields: ['visibility'],

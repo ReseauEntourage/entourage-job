@@ -26,30 +26,26 @@ router.get('/', (req, res) => {
  * Description : Créé le CV
  */
 router.post('/', (req, res) => {
-  let cvCreated;
-
   CVController.createCV(req.body)
     .then((cv) => {
-      cvCreated = cv;
       // creation de l'image de preview cv
       // console.log(req.body);
       generateCVPreview(
-        cvCreated.firstName.toUpperCase(),
+        cv.user.firstName.toUpperCase(),
         "A besoin d'un coup de pouce pour travailler dans...",
         /* cvCreated.ambitions.length > 0
           ? cvCreated.ambitions.join('. ').toUpperCase()
           :  */ '',
         `../../../../static/img/arthur.png`,
-        `../../../../static/img/${cvCreated.url}-preview.jpg`
+        `../../../../static/img/${cv.user.firstName}-preview.jpg`
       )
         .then((resu) => console.log(resu))
         .catch((err) => console.log(err));
-      return Promise.resolve();
+      return res.status(200).json(cv);
     })
-    .then(() => res.status(200).json(cvCreated))
     .catch((err) => {
-      console.log(`Une erreur est survenue`);
-      res.status(401).send(err);
+      console.log(err);
+      res.status(401).send(`Une erreur est survenue`);
     });
 });
 
@@ -79,8 +75,8 @@ router.get('/edit', auth.required, (req, res) => {
         res.status(200).json(cv);
       })
       .catch((err) => {
-        console.log(`Aucun CV trouvé`);
-        res.status(401).send(err);
+        console.log(err);
+        res.status(401).send(`Aucun CV trouvé`);
       });
   }
 });
@@ -147,7 +143,7 @@ router.get('/:url', (req, res) => {
         res.status(200).json(cv);
       } else {
         console.log(`Aucun CV trouvé`);
-        res.status(204).json(cv);
+        res.status(204).send(null);
       }
     })
     .catch((err) => {

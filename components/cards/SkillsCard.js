@@ -50,7 +50,7 @@ const SkillCard = ({ list, onChange }) => {
           }, {})}
           onSubmit={(fields) => {
             const fieldsTransform = {
-              Skills: Object.values(fields).filter((val) => {
+              skills: Object.values(fields).filter((val) => {
                 return typeof val === 'string' && val !== '';
               }),
             };

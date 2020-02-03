@@ -30,7 +30,7 @@ const content = [
 ];
 
 const JeVeuxAider = () => (
-  <Layout title="Je veux aider - Entourage Jobs">
+  <Layout title="Je veux aider - LinkedOut">
     <Section id="titre">
       <h1 className="uk-heading-medium@s uk-text-bold uk-text-center uk-align-center uk-width-3-4">
         Vous souhaitez <span className="uk-text-primary">aider ?</span>

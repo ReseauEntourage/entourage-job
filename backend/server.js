@@ -8,6 +8,7 @@ const routeMessage = require('./routes/api/v1/Message');
 const routeAuth = require('./routes/api/v1/Auth');
 const routeUser = require('./routes/api/v1/User');
 const routeMail = require('./routes/api/v1/Mail');
+const routeOpportunity = require('./routes/api/v1/Opportunity');
 
 const app = express();
 
@@ -39,6 +40,7 @@ module.exports.prepare = () => {
   app.use('/api/v1/cv', routeCV);
   app.use('/api/v1/mail', routeMail);
   app.use('/api/v1/message', routeMessage);
+  app.use('/api/v1/opportunity', routeOpportunity);
   app.use('/api/v1/user', routeUser);
 
   // restricting access to some routes
