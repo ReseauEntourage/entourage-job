@@ -1,6 +1,7 @@
 {
   "id": "form-catchphrase",
   "fields": [
+    { "title": "Modifier l'adresse mail", "component": "text" },
     {
       "id": "oldEmail",
       "name": "oldEmail",
@@ -22,11 +23,13 @@
       "type": "email",
       "title": "Verifiez votre nouvel email "
     },
+    { "title": "Modifier le numéro de téléphone", "component": "text" },
     {
       "id": "phone",
       "name": "phone",
       "component": "input",
       "type": "phone",
+      "disabled": true,
       "title": "Tapez votre numero de telephone "
     }
   ],
