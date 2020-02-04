@@ -9,23 +9,22 @@ import ModalEdit from '../../components/modals/ModalEdit';
 import ButtonIcon from '../../components/utils/ButtonIcon';
 import schemaPersonalData from '../../components/forms/schema/formPersonalData';
 import Api from '../../Axios';
+import FormWithValidation from '../../components/forms/FormWithValidation';
+import schemaChangePassword from '../../components/forms/schema/formChangePassword';
 
 const Parametres = () => {
   const title = `Mes Paramètres`;
-  const { isAuthentificated, user } = useContext(UserContext);
-  if (!isAuthentificated) {
-    // Router.push('/login');
-    return null;
-  }
-  return (
-    <LayoutBackOffice title={title}>
-      <Section>
-        <HeaderBackoffice
-          title="Mes paramètres"
-          description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
-        />
+  const { user } = useContext(UserContext);
+
+  const Content = () => {
+    if (!user) return null;
+    console.log(user);
+
+    return (
+      <>
         <ParamCVVisible />
-        <div className="uk-width-1-2">
+
+        <GridNoSSR childWidths={['1-2@m']}>
           <div className="uk-card uk-card-default uk-card-body">
             <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
               <h3 className="uk-card-title">Informations personelles</h3>
@@ -58,30 +57,77 @@ const Parametres = () => {
               </GridNoSSR>
             </GridNoSSR>
           </div>
-        </div>
-      </Section>
-      <ModalEdit
-        id="modal-personal-data"
-        title="Édition - Informations personelles"
-        defaultValues={['', '', '', '', user.phone]}
-        formSchema={schemaPersonalData}
-        onSubmit={async ({ phone, oldEmail, newEmail0, newEmail1 }) => {
-          const u = user;
-          if (phone !== u.phone) {
-            const { data } = await Api.put(`/api/v1/user/${user.id}`, {
-              phone,
-            });
-            console.log(data);
-          }
+          <div className="uk-card uk-card-default uk-card-body">
+            <h3 className="uk-card-title">Changer de mot de passe</h3>
+            <FormWithValidation
+              submitText="Modifier"
+              formSchema={schemaChangePassword}
+              onSubmit={({ newPassword, oldPassword, confirmPassword }) => {
+                if (
+                  newPassword !== oldPassword &&
+                  newPassword === confirmPassword
+                ) {
+                  Api.put('/api/v1/user/change-pwd', {
+                    newPassword,
+                    oldPassword,
+                  })
+                    .then(() => {
+                      UIkit.notification(
+                        'Nouveau mot de passe enregistré',
+                        'success'
+                      );
+                    })
+                    .catch((err) => {
+                      console.error(err);
 
-          if (user.email === oldEmail && newEmail0 === newEmail1) {
-            const { data } = await Api.put(`/api/v1/user/${user.id}`, {
-              email: newEmail0,
-            });
-            console.log(data);
-          }
-        }}
-      />
+                      UIkit.notification(
+                        "Problème lors de l'enregistrement du nouveau mot de passe",
+                        'danger'
+                      );
+                    });
+                } else {
+                  UIkit.notification('Nouveau mot de passe erroné', 'warning');
+                }
+              }}
+            />
+          </div>
+        </GridNoSSR>
+        <ModalEdit
+          id="modal-personal-data"
+          title="Édition - Informations personelles"
+          defaultValues={['', '', '', '', user.phone]}
+          formSchema={schemaPersonalData}
+          onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }) => {
+            const u = user;
+            if (phone !== u.phone) {
+              Api.put(`/api/v1/user/${user.id}`, {
+                phone,
+              }).then(({ data }) => {
+                console.log(data);
+              });
+            }
+
+            if (user.email === oldEmail && newEmail0 === newEmail1) {
+              Api.put(`/api/v1/user/${user.id}`, {
+                email: newEmail0,
+              }).then(({ data }) => {
+                console.log(data);
+              });
+            }
+          }}
+        />
+      </>
+    );
+  };
+  return (
+    <LayoutBackOffice title={title}>
+      <Section>
+        <HeaderBackoffice
+          title="Mes paramètres"
+          description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
+        />
+        <Content />
+      </Section>
     </LayoutBackOffice>
   );
 };

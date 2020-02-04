@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
-import './formStyle.css';
 
 const Select = ({
   id,
@@ -11,6 +10,7 @@ const Select = ({
   options,
   defaultValue,
   onChange,
+  disabled,
 }) => {
   useEffect(() => {
     if (defaultValue) {
@@ -61,6 +61,7 @@ const Select = ({
             paddingLeft: 0,
             border: 'initial',
           }}
+          disabled
         >
           {options.map(({ value, text }, i) => (
             <option value={value} key={i}>
@@ -76,9 +77,11 @@ const Select = ({
 Select.defaultProps = {
   valid: undefined,
   defaultValue: undefined,
+  disabled: false,
   onChange: () => {},
 };
 Select.propTypes = {
+  disabled: PropTypes.bool,
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func,

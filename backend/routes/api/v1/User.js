@@ -1,5 +1,6 @@
 const validator = require('validator');
 const express = require('express');
+const { auth } = require('../../../controllers/Auth');
 
 const router = express.Router();
 const UserController = require('../../../controllers/User');
@@ -60,6 +61,43 @@ router.get('/:identifier', (req, res) => {
     .catch((err) => {
       console.log(`Aucun User trouvé`);
       res.status(401).send(err);
+    });
+});
+
+/**
+ * Route : PUT /api/<VERSION>/user/<ID>
+ * Description : Modifie le User associé à l'<ID> fournit
+ */
+router.put('/change-pwd', auth.required, (req, res) => {
+  UserController.getUser(req.payload.id)
+    .then(({ salt: oldSalt, password }) => {
+      const validated = AuthController.validatePassword(
+        req.body.oldPassword,
+        password,
+        oldSalt
+      );
+      if (validated) {
+        const { hash, salt } = AuthController.encryptPassword(
+          req.body.newPassword
+        );
+        UserController.setUser(req.payload.id, {
+          password: hash,
+          salt,
+        })
+          .then((user) => {
+            console.log(`User modifié`);
+            res.status(200).json(user);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(401).send(`Une erreur est survenue`);
+          });
+      } else {
+        res.status(401).send('Mot de passe invalide');
+      }
+    })
+    .catch(() => {
+      res.status(401).send('Utilisateur inaccessible');
     });
 });
 

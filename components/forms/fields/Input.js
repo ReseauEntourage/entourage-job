@@ -23,6 +23,7 @@ export default class Input extends Component {
         message: PropTypes.boolean,
       }),
       defaultValue: PropTypes.string,
+      disabled: PropTypes.bool,
     };
   }
 
@@ -31,6 +32,7 @@ export default class Input extends Component {
       placeholder: 'Tapez votre texte',
       valid: undefined,
       defaultValue: '',
+      disabled: false,
     };
   }
 
@@ -76,6 +78,7 @@ export default class Input extends Component {
       type,
       valid,
       defaultValue,
+      disabled,
     } = this.props;
     const { labelClass } = this.state;
 
@@ -94,6 +97,7 @@ export default class Input extends Component {
           placeholder={placeholder || 'Tapez votre texte'}
           onChange={(event) => this.handleChange(event)}
           className={`uk-input uk-form-large ${addClasses}`}
+          disabled={disabled}
         />
         <FormValidatorErrorMessage validObj={valid} />
       </div>

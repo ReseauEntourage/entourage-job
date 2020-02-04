@@ -43,30 +43,23 @@ const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const accessToken = localStorage.getItem('access-token');
-      if (accessToken) {
-        try {
-          console.log('token found', accessToken);
-          const { data } = await Api.get('/api/v1/auth/current');
-          localStorage.setItem('access-token', data.token);
-          setUser(data);
-          setIsAuthentificated(true);
-        } catch (err) {
-          console.error(err);
-          localStorage.removeItem('access-token');
-          setUser(null);
-          setIsAuthentificated(false);
-          Router.push('/login');
-        }
-      } else {
-        console.log('token not found');
-        setUser(null);
-        setIsAuthentificated(false);
-      }
-    };
+    const accessToken = localStorage.getItem('access-token');
+    if (accessToken) {
+      console.log('token found: ', accessToken);
+      Api.get('/api/v1/auth/current')
+        .then(({ data }) => {
+          localStorage.setItem('access-token', data.user.token);
 
-    fetchUser();
+          setUser(data.user);
+        })
+        .catch((err) => {
+          console.log(err);
+          localStorage.removeItem('access-token');
+          Router.push('/login');
+        });
+    } else {
+      console.log('no token');
+    }
   }, []);
 
   return (

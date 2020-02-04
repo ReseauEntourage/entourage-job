@@ -41,6 +41,7 @@ export default class FieldFactory {
           type={data.type}
           valid={this.getValid(data.name)}
           onChange={this.handleChange}
+          disabled={data.disabled}
         />
       );
     }
@@ -57,6 +58,7 @@ export default class FieldFactory {
           pattern={data.pattern}
           min={data.min}
           max={data.max}
+          disabled={data.disabled}
         />
       );
     }
@@ -91,6 +93,7 @@ export default class FieldFactory {
           options={options}
           valid={this.getValid(data.name)}
           onChange={this.handleChange}
+          disabled={data.disabled}
         />
       );
     }
@@ -106,6 +109,7 @@ export default class FieldFactory {
           placeholder={data.placeholder}
           valid={this.getValid(data.name)}
           onChange={this.handleChange}
+          disabled={data.disabled}
         />
       );
     }
@@ -118,6 +122,7 @@ export default class FieldFactory {
           defaultValue={this.defaultValues[data.id]}
           valid={this.getValid(data.name)}
           onChange={this.handleChange}
+          disabled={data.disabled}
         />
       );
     }
@@ -136,7 +141,15 @@ export default class FieldFactory {
           }
           valid={this.getValid(data.name)}
           onChange={this.handleChange}
+          disabled={data.disabled}
         />
+      );
+    }
+    if (data.component === 'text') {
+      return (
+        <p className="uk-heading-divider uk-margin-top uk-margin-remove-bottom">
+          {data.title}
+        </p>
       );
     }
     throw `component ${data.component} does not exist`; // eslint-disable-line no-throw-literal

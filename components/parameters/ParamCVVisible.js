@@ -1,3 +1,4 @@
+/* global UIkit */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Api from '../../Axios';
@@ -7,62 +8,58 @@ import ModalGeneric from '../modals/ModalGeneric';
 import HeaderModal from '../modals/HeaderModal';
 
 const ParamCVVisible = () => {
-  const [cv, setCV] = useState({});
+  const [cv, setCV] = useState(null);
   const [error, setError] = useState(null);
 
-  function hideCV(hiden) {
-    Api.put(`${process.env.SERVER_URL}/api/v1/cv/visibility`, {
-      ...cv,
-      visibility: !hiden,
-    })
-      .then((res) => {
-        setCV(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError('Une erreur est survenue');
-      });
-  }
+  const hideCV = async (hiden) => {
+    try {
+      const { data } = await Api.put(
+        `${process.env.SERVER_URL}/api/v1/cv/visibility`,
+        {
+          ...cv,
+          visibility: !hiden,
+        }
+      );
+      setCV(data);
+    } catch (err) {
+      console.error(err);
+      setError('Une erreur est survenue');
+    }
+  };
 
   useEffect(() => {
     Api.get(`${process.env.SERVER_URL}/api/v1/cv/visibility`)
-      .then((res) => {
-        console.log(res);
-        if (res.data) {
-          setCV(res.data);
-        } else {
-          console.log('No CV');
-        }
-      })
+      .then(({ data }) => setCV(data))
       .catch(console.error);
   }, []);
 
   return (
     <div className="uk-padding uk-padding-remove-left">
-      <p className="uk-inline ">
-        Masquer mon CV du site LinkedOut :
-        <span className="uk-form-controls uk-padding">
-          <label className="ent-toggle" htmlFor="ent-toggle-visibility">
-            {cv.visibility ? (
+      {cv ? (
+        <p className="uk-inline ">
+          Masquer mon CV du site LinkedOut :
+          <span className="uk-form-controls uk-padding">
+            <label className="ent-toggle" htmlFor="ent-toggle-visibility">
               <input
                 id="ent-toggle-visibility"
                 type="checkbox"
-                data-uk-toggle="target:#modal-confirm-visibility"
-                checked={false}
+                checked={cv.visibility}
+                onChange={() => {
+                  if (cv.visibility) {
+                    UIkit.modal('#modal-confirm-visibility').show();
+                  } else {
+                    hideCV(false);
+                  }
+                }}
               />
-            ) : (
-              <input
-                id="ent-toggle-visibility"
-                type="checkbox"
-                checked
-                onChange={() => hideCV(false)}
-              />
-            )}
-            <span className="ent-slider round" />
-          </label>
-        </span>
-        {error && <span className="uk-text-danger">{error}</span>}
-      </p>
+              <span className="ent-slider round" />
+            </label>
+          </span>
+          {error && <span className="uk-text-danger">{error}</span>}
+        </p>
+      ) : (
+        <p>Vous n&rsquo;etes lié à aucun CV</p>
+      )}
       <ModalGeneric id="modal-confirm-visibility">
         {(closeModal) => (
           <>
