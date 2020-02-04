@@ -81,7 +81,10 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
 
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">
-      <div className="uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl">
+      <div
+        className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${archived &&
+          'uk-light uk-background-secondary'}`}
+      >
         <CloseButtonNoSSR className="uk-modal-close-default" />
         {!currentOffer ? null : (
           <div className="uk-modal-body">
@@ -135,7 +138,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                     defaultValue={status}
                     onChange={(event) => {
                       const { userOpportunity } = currentOffer;
-                      userOpportunity.status = event.target.value;
+                      userOpportunity.status = Number(event.target.value);
                       updateOpportunityUser(userOpportunity);
                     }}
                   />

@@ -1,3 +1,4 @@
+/* global UIkit */
 import React, { useContext, useEffect, useState } from 'react';
 import { CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
@@ -31,66 +32,87 @@ const Edit = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    (async () => {
+    const fetchEdit = async () => {
       try {
         const { data } = await Api.get(
           `${process.env.SERVER_URL}/api/v1/cv/edit`
         );
-        setCV(data || null);
+        if (data) {
+          setCV(data);
+        }
       } catch (err) {
         console.error(err);
-        setError('Une erreur est survenue durant le chargement du CV');
+        setError('Une erreur est survenue durant le chargement du CV.');
       }
-    })();
+    };
+    fetchEdit();
   }, []);
 
-  const submitCV = () => {
+  const submitCV = async () => {
     setLoading(true);
-
-    Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-      ...cv,
-      id: undefined,
-      status: 'Pending',
-      version: cv.version + 1,
-    })
-      .then((res) => {
-        console.log(res);
-        setCV(res.data);
-        UIkit.notification('Le profil a été mis à jour', {
-          pos: 'bottom-center',
-          status: 'info',
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-        UIkit.notification("Une erreur s'est produite", {
-          pos: 'bottom-center',
-          status: 'danger',
-        });
-      })
-      .finally(() => setLoading(false));
+    try {
+      const { data } = await Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+        ...cv,
+        id: undefined,
+        status: 'Pending',
+        version: cv.version + 1,
+      });
+      console.log(data);
+      setCV(data);
+      UIkit.notification('Le profil a été mis à jour', {
+        pos: 'bottom-center',
+        status: 'info',
+      });
+    } catch (err) {
+      console.error(err);
+      UIkit.notification("Une erreur s'est produite", {
+        pos: 'bottom-center',
+        status: 'danger',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  function content() {
+  const Content = () => {
+    // aucun CV
     if (cv === null) {
       return (
         <>
-          <CVEditNoCandidat />
-          <Button
-            onClick={() =>
-              Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                userId: user.id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                gender: user.gender,
-              }).then(({ data }) => setCV(data))
-            }
-          >
-            Creer votre CV
-          </Button>
+          <Section>
+            <div
+              className="uk-width-1-1"
+              data-uk-height-viewport="expand: true"
+            >
+              <div
+                className="uk-position-absolute uk-transform-center uk-text-center"
+                style={{ left: '50%', top: '50%' }}
+              >
+                <h2 className="uk-text-bold">
+                  <span className="uk-text-primary">Aucun candidat</span>{' '}
+                  n&apos;est rattaché à ton compte coach.
+                </h2>
+                <p>
+                  Il peut y avoir plusieurs raisons à ce sujet. Contacte
+                  l&apos;équipe LinkedOut pour en savoir plus.
+                </p>
+                <Button
+                  style="primary"
+                  onClick={() =>
+                    Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                      userId: user.id,
+                    }).then(({ data }) => setCV(data))
+                  }
+                >
+                  Creer votre CV
+                </Button>
+              </div>
+            </div>
+          </Section>
         </>
       );
     }
+    // erreur pendant la requete
     if (error) {
       return (
         <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
@@ -98,11 +120,19 @@ const Edit = () => {
             className="uk-position-absolute uk-transform-center uk-text-center"
             style={{ left: '50%', top: '50%' }}
           >
-            <h2 className="uk-text-bold">{error}</h2>
+            <div className="ukuk-width-xlarge">
+              <h2 className="uk-text-bold uk-margin-remove">{error}</h2>
+              <p>
+                Contacte{' '}
+                <span className="uk-text-primary">l&apos;équipe LinkedOut</span>{' '}
+                pour en savoir plus.
+              </p>
+            </div>
           </div>
         </div>
       );
     }
+    // chargement
     if (cv === undefined) {
       return (
         <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
@@ -116,6 +146,7 @@ const Edit = () => {
         </div>
       );
     }
+    // affichage du CV
     return (
       <>
         <CVEditWelcome cv={cv} />
@@ -149,11 +180,13 @@ const Edit = () => {
         />
       </>
     );
-  }
+  };
 
   return (
     <LayoutBackOffice title="Edition du CV">
-      <Section>{content()}</Section>
+      <Section>
+        <Content />
+      </Section>
     </LayoutBackOffice>
   );
 };

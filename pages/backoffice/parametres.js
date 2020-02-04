@@ -1,10 +1,14 @@
+/* global UIkit */
 import React, { useContext } from 'react';
-import Router from 'next/router';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
 import { Section, GridNoSSR, IconNoSSR } from '../../components/utils';
 import ParamCVVisible from '../../components/parameters/ParamCVVisible';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
+import ModalEdit from '../../components/modals/ModalEdit';
+import ButtonIcon from '../../components/utils/ButtonIcon';
+import schemaPersonalData from '../../components/forms/schema/formPersonalData';
+import Api from '../../Axios';
 
 const Parametres = () => {
   const title = `Mes Paramètres`;
@@ -22,8 +26,17 @@ const Parametres = () => {
         />
         <ParamCVVisible />
         <div className="uk-width-1-2">
-          <div className="uk-card uk-card-hover uk-card-default uk-card-body">
-            <h3 className="uk-card-title">Informations personelles</h3>
+          <div className="uk-card uk-card-default uk-card-body">
+            <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+              <h3 className="uk-card-title">Informations personelles</h3>
+              <ButtonIcon
+                name="pencil"
+                onClick={() => {
+                  UIkit.modal(`#modal-personal-data`).show();
+                }}
+              />
+            </GridNoSSR>
+
             <GridNoSSR column gap="small">
               <GridNoSSR row gap="small">
                 <IconNoSSR name="user" />
@@ -47,6 +60,28 @@ const Parametres = () => {
           </div>
         </div>
       </Section>
+      <ModalEdit
+        id="modal-personal-data"
+        title="Édition - Informations personelles"
+        defaultValues={['', '', '', '', user.phone]}
+        formSchema={schemaPersonalData}
+        onSubmit={async ({ phone, oldEmail, newEmail0, newEmail1 }) => {
+          const u = user;
+          if (phone !== u.phone) {
+            const { data } = await Api.put(`/api/v1/user/${user.id}`, {
+              phone,
+            });
+            console.log(data);
+          }
+
+          if (user.email === oldEmail && newEmail0 === newEmail1) {
+            const { data } = await Api.put(`/api/v1/user/${user.id}`, {
+              email: newEmail0,
+            });
+            console.log(data);
+          }
+        }}
+      />
     </LayoutBackOffice>
   );
 };

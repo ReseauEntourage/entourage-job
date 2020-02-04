@@ -17,66 +17,56 @@ const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthentificated, setIsAuthentificated] = useState(false);
 
-  const logout = () => {
-    if (user) {
-      console.log('logout: start', user);
-      Api.post('/api/v1/auth/logout')
-        .catch(console.error)
-        .finally((res) => {
-          console.log('logout: completed ', res);
-          localStorage.removeItem('access-token');
-          setIsAuthentificated(false);
-          setUser(null);
-          Router.push('/login');
-        });
-    } else {
-      console.error('logout: no user');
+  const logout = async () => {
+    try {
+      await Api.post('/api/v1/auth/logout');
+    } finally {
+      localStorage.removeItem('access-token');
+      setIsAuthentificated(false);
+      setUser(null);
+      Router.push('/login');
     }
   };
 
-  const login = (email, password) => {
-    return new Promise((resolve, reject) => {
-      console.log('Start login');
-      Api.post('/api/v1/auth/login', {
-        email,
-        password,
-      })
-        .then(({ data }) => {
-          localStorage.setItem('access-token', data.user.token);
-          console.log('login success');
-          console.log(data.user);
-
-          setUser(data.user);
-          setIsAuthentificated(true);
-          Router.push('/backoffice/cv/edit');
-          resolve();
-        })
-        .catch((error) => {
-          console.error(error);
-          reject("Une erreur s'est produite");
-        });
+  const login = async (email, password) => {
+    console.log('Start login');
+    const { data } = await Api.post('/api/v1/auth/login', {
+      email,
+      password,
     });
+    localStorage.setItem('access-token', data.user.token);
+    console.log('login successful', data.user);
+
+    setUser(data.user);
+    setIsAuthentificated(true);
+    Router.push('/backoffice/cv/edit');
   };
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('access-token');
-    if (accessToken) {
-      console.log('token found: ', accessToken);
-      Api.get('/api/v1/auth/current')
-        .then(({ data }) => {
-          localStorage.setItem('access-token', data.user.token);
-
-          setUser(data.user);
+    const fetchUser = async () => {
+      const accessToken = localStorage.getItem('access-token');
+      if (accessToken) {
+        try {
+          console.log('token found', accessToken);
+          const { data } = await Api.get('/api/v1/auth/current');
+          localStorage.setItem('access-token', data.token);
+          setUser(data);
           setIsAuthentificated(true);
-        })
-        .catch((err) => {
-          console.log(err);
+        } catch (err) {
+          console.error(err);
           localStorage.removeItem('access-token');
+          setUser(null);
+          setIsAuthentificated(false);
           Router.push('/login');
-        });
-    } else {
-      console.log('no token');
-    }
+        }
+      } else {
+        console.log('token not found');
+        setUser(null);
+        setIsAuthentificated(false);
+      }
+    };
+
+    fetchUser();
   }, []);
 
   return (

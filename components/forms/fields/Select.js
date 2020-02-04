@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
+import './formStyle.css';
 
 const Select = ({
   id,
@@ -21,26 +22,16 @@ const Select = ({
   }, [defaultValue]);
 
   return (
-    <div>
+    <>
       <div
-        className="uk-form-controls"
+        className="uk-form-controls ent-select"
         style={
           title
             ? {
-                backgroundColor: '#e5e5e5',
-                borderRadius: '7px 7px 0 0',
-                fontSize: '1rem',
-                border: '0px',
-                borderBottom: '2px solid grey',
-                paddingTop: '15px',
-                paddingLeft: '12px',
-                paddingRight: '12px',
-                paddingBottom: '2px',
-              }
-            : {
                 paddingTop: '15px',
                 paddingBottom: '2px',
               }
+            : {}
         }
       >
         {title ? (
@@ -71,13 +62,15 @@ const Select = ({
             border: 'initial',
           }}
         >
-          {options.map(({ value, text }) => (
-            <option value={value}>{text}</option>
+          {options.map(({ value, text }, i) => (
+            <option value={value} key={i}>
+              {text}
+            </option>
           ))}
         </select>
       </div>
       <FormValidatorErrorMessage validObj={valid} />
-    </div>
+    </>
   );
 };
 Select.defaultProps = {
