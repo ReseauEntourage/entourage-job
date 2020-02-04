@@ -1,0 +1,34 @@
+{
+  "id": "form-catchphrase",
+  "fields": [
+    {
+      "id": "oldEmail",
+      "name": "oldEmail",
+      "component": "input",
+      "type": "email",
+      "title": "Tapez votre ancien email "
+    },
+    {
+      "id": "newEmail0",
+      "name": "newEmail0",
+      "component": "input",
+      "type": "email",
+      "title": "Tapez votre nouvel email "
+    },
+    {
+      "id": "newEmail1",
+      "name": "newEmail1",
+      "component": "input",
+      "type": "email",
+      "title": "Verifiez votre nouvel email "
+    },
+    {
+      "id": "phone",
+      "name": "phone",
+      "component": "input",
+      "type": "phone",
+      "title": "Tapez votre numero de telephone "
+    }
+  ],
+  "rules": []
+}

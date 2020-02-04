@@ -7,15 +7,14 @@ import FormWithValidation from '../components/forms/FormWithValidation';
 import { UserContext } from '../components/store/UserProvider';
 
 const Login = () => {
-  const { login, user } = useContext(UserContext);
+  const { login, isAuthentificated } = useContext(UserContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (user) {
-      console.log('/login -> /cv/edit');
+    if (isAuthentificated) {
       router.push('/backoffice/cv/edit');
     }
-  }, [user]);
+  }, [isAuthentificated]);
 
   return (
     <Layout title="Connexion - LinkedOut">

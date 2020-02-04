@@ -51,9 +51,9 @@ OfferInfoContainer.defaultProps = {
   children: [],
 };
 function translateCategory(category) {
-  if (category === 'Private') return 'Personnel';
-  if (category === 'Public') return 'public';
-  return 'Unknown';
+  if (category === 'Private') return 'Offre personnelle';
+  if (category === 'Public') return 'Offre générale';
+  return 'Offre inconnue';
 }
 const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
@@ -65,20 +65,26 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
   const [loading, setLoading] = useState(false);
 
   const updateOpportunityUser = async (opportunityUser) => {
-    const res = await axios.put(
+    await axios.put(
       `${process.env.SERVER_URL}/api/v1/opportunity/join`,
       opportunityUser
     );
     setCurrentOffer({ ...currentOffer, opportunityUser });
   };
 
-  useEffect(() => {
-    setNoteBuffer(note);
-  }, [currentOffer]);
+  useEffect(() => setNoteBuffer(note), [currentOffer]);
+
+  // futur: use moment
+  const date = new Date(currentOffer.date);
+  const formatDate = `${date.getMonth() +
+    1}/${date.getDate()}/${date.getFullYear()}`;
 
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">
-      <div className="uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl">
+      <div
+        className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${archived &&
+          'uk-light uk-background-secondary'}`}
+      >
         <CloseButtonNoSSR className="uk-modal-close-default" />
         {!currentOffer ? null : (
           <div className="uk-modal-body">
@@ -115,7 +121,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
               className="uk-margin-bottom"
               eachWidths={['1-3@s', '2-3@s']}
               items={[
-                <GridNoSSR gap="medium">
+                <GridNoSSR column gap="medium">
                   <Select
                     id="modal-offer-status"
                     title="Statut"
@@ -132,17 +138,10 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                     defaultValue={status}
                     onChange={(event) => {
                       const { userOpportunity } = currentOffer;
-                      userOpportunity.status = event.target.value;
+                      userOpportunity.status = Number(event.target.value);
                       updateOpportunityUser(userOpportunity);
                     }}
                   />
-                  {/* <OfferInfoContainer>
-                  <Button disabled>
-                    <span style={{ color: '#666' }}>
-                      {currentOffer.userOpportunity.status}
-                    </span>
-                  </Button>
-                </OfferInfoContainer> */}
                   <OfferInfoContainer icon="hashtag" title="Entreprise">
                     {currentOffer.company}
                   </OfferInfoContainer>
@@ -151,7 +150,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                     {currentOffer.recruiterEmail}
                     {currentOffer.recruiterPhone}
                     <span className="uk-text-italic">
-                      offre soumise le {currentOffer.date}
+                      offre soumise le {formatDate}
                     </span>
                   </OfferInfoContainer>
                   <OfferInfoContainer
