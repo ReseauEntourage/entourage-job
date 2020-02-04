@@ -93,7 +93,7 @@ describe('Tests des routes API - Partie CV', () => {
           .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
       }).timeout(TIMEOUT);
     });
-    describe('R - Read 1 CV', () => {
+    describe.skip('R - Read 1 CV', () => {
       it("doit retourner un CV à l'appel API", () => {
         return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${cv.user.url}`)
           .then((res) => {
