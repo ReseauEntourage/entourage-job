@@ -10,8 +10,8 @@ import axios from '../../Axios';
 
 const List = ({ className, children }) => (
   <ul className={`uk-nav ${className}`}>
-    {children.map((item) => (
-      <li>{item}</li>
+    {children.map((item, i) => (
+      <li key={i}>{item}</li>
     ))}
   </ul>
 );
