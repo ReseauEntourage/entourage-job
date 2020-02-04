@@ -88,10 +88,10 @@ const Opportunites = () => {
           <>
             <div uk-filter="target: #opportunitees">
               <ul className="uk-subnav ent-subnav">
-                <li uk-filter-control=".tag-private">
+                <li uk-filter-control=".tag-private" className="uk-active">
                   <a href="#">Mes offres</a>
                 </li>
-                <li uk-filter-control=".tag-public" className="uk-active">
+                <li uk-filter-control=".tag-public">
                   <a href="#">Offres générales</a>
                 </li>
                 <li uk-filter-control=".tag-archive">
