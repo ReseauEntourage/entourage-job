@@ -61,7 +61,7 @@ const Select = ({
             paddingLeft: 0,
             border: 'initial',
           }}
-          disabled
+          disabled={disabled}
         >
           {options.map(({ value, text }, i) => (
             <option value={value} key={i}>
