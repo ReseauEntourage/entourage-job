@@ -8,9 +8,17 @@ const doEllipsis = (text, max) =>
     .map((mot) => (mot.length > max ? mot.slice(0, max - 1).concat('…') : mot))
     .join(' ');
 
-const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
-  <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
-    <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small">
+const CandidatCard = ({
+  url,
+  imgSrc,
+  imgAlt,
+  firstName,
+  ambitions,
+  skills,
+  catchphrase,
+}) => (
+  <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small uk-text-left">
+    <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
       <div className="uk-cover-container uk-height-medium uk-margin-bottom">
         <img src={imgSrc} alt={imgAlt} data-uk-cover />
 
@@ -31,9 +39,7 @@ const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
               <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold">
                 {firstName}
               </h5>
-              <p className="uk-margin-remove">
-                A besoin d&apos;un coup de pouce pour travailler dans...
-              </p>
+              <p className="uk-margin-remove">{catchphrase}</p>
             </div>
             <GridNoSSR
               column
@@ -41,7 +47,7 @@ const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
               className="uk-text-lowercase uk-text-bold uk-text-primary"
             >
               {/* ICI !!! */}
-              {ambitions.slice(0, 2).map((a, index) => (
+              {skills.slice(0, 2).map((a, index) => (
                 <span key={index}>{doEllipsis(a, 15)}</span>
               ))}
             </GridNoSSR>
@@ -49,51 +55,40 @@ const CandidatCard = ({ url, imgSrc, imgAlt, firstName, ambitions }) => (
               Il souhaite <br />
               travailler dans :
               <GridNoSSR className="uk-grid-row-collapse uk-grid-column-small">
-                <span className="uk-label uk-label-primary uk-text-lowercase">
-                  menuiserie
-                </span>
-                <span className="uk-label uk-label-primary uk-text-lowercase">
-                  peinture
-                </span>
+                {ambitions.slice(0, 3).map((a, index) => (
+                  <span
+                    key={index}
+                    className="uk-label uk-label-primary uk-text-lowercase"
+                  >
+                    {doEllipsis(a, 15)}
+                  </span>
+                ))}
               </GridNoSSR>
             </p>
           </GridNoSSR>
         </div>
       </div>
-      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+    </SimpleLink>
+    <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+      <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
         <u className="uk-text-link uk-text-primary">Voir le CV</u>
-        <GridNoSSR middle center gap="small">
-          <span>Partager :</span>
-          <ul className="uk-iconnav">
-            <li>
-              <IconNoSSR
-                className="uk-text-primary"
-                name="facebook"
-                ratio=".8"
-              />
-            </li>
-            <li>
-              <IconNoSSR
-                className="uk-text-primary"
-                name="twitter"
-                ratio=".8"
-              />
-            </li>
-            <li>
-              <IconNoSSR
-                className="uk-text-primary"
-                name="linkedin"
-                ratio=".8"
-              />
-            </li>
-          </ul>
-          {/* <span className="uk-text-primary">
-            | <span className="uk-text-bold">XXX</span>
-          </span> */}
-        </GridNoSSR>
+      </SimpleLink>
+      <GridNoSSR middle center gap="small">
+        <span>Partager :</span>
+        <ul className="uk-iconnav">
+          <li>
+            <IconNoSSR className="uk-text-primary" name="facebook" ratio=".9" />
+          </li>
+          <li>
+            <IconNoSSR className="uk-text-primary" name="twitter" ratio=".9" />
+          </li>
+          <li>
+            <IconNoSSR className="uk-text-primary" name="linkedin" ratio=".9" />
+          </li>
+        </ul>
       </GridNoSSR>
-    </div>
-  </SimpleLink>
+    </GridNoSSR>
+  </div>
 );
 CandidatCard.propTypes = {
   url: PropTypes.string.isRequired,
@@ -101,6 +96,7 @@ CandidatCard.propTypes = {
   ambitions: PropTypes.arrayOf(PropTypes.shape).isRequired,
   imgSrc: PropTypes.string.isRequired,
   imgAlt: PropTypes.string.isRequired,
+  catchphrase: PropTypes.string.isRequired,
+  skills: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
-
 export default CandidatCard;

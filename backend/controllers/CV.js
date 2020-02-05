@@ -256,11 +256,17 @@ const getRandomShortCVs = async (nb) => {
     // order: sequelize.random(),
     order: [['version', 'DESC']],
     // limit: nb || 11,
-    attributes: ['id', 'url', 'version'], // [Sequelize.fn('DISTINCT', Sequelize.col('version')) ,'version']
+    attributes: ['id', 'url', 'version', 'catchphrase'], // [Sequelize.fn('DISTINCT', Sequelize.col('version')) ,'version']
     include: [
       {
         model: models.Ambition,
         as: 'ambitions',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      {
+        model: models.Skill,
+        as: 'skills',
         through: { attributes: [] },
         attributes: ['name'],
       },
@@ -271,13 +277,11 @@ const getRandomShortCVs = async (nb) => {
       },
     ],
   });
-  return getUnique(
-    modelCVs
-      .map(cleanCV)
-      .filter((cv) => cv.user) // filter those who do not have binded user
-      .slice(0, nb || 11),
+  const cvs = getUnique(
+    modelCVs.map(cleanCV).filter((cv) => cv.user), // filter those who do not have binded user
     'url'
-  ).sort(() => Math.random() - 0.5);
+  );
+  return cvs.sort(() => Math.random() - 0.5).slice(0, nb); // shuffle and take the nb first
 };
 
 const getVisibility = (UserId) => {

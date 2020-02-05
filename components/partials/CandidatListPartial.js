@@ -32,6 +32,8 @@ const CandidatListPartial = () => {
                 imgAlt={cv.user.firstName}
                 firstName={cv.user.firstName}
                 ambitions={cv.ambitions}
+                skills={cv.skills}
+                catchphrase={cv.catchphrase}
               />
             ))}
           />
