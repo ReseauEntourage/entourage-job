@@ -99,7 +99,9 @@ const Opportunites = () => {
                 </li>
               </ul>
               {loading ? (
-                <p className="uk-text-center">loading...</p>
+                <div className="uk-height-medium uk-flex uk-flex-center uk-flex-middle">
+                  <div data-uk-spinner="" />
+                </div>
               ) : (
                 <ul
                   id="opportunitees"
@@ -137,7 +139,6 @@ const Opportunites = () => {
                               title={offer.title}
                               from={offer.recruiterName}
                               shortDescription={offer.company}
-                              type={offer.businessLines}
                               archived={
                                 offer.userOpportunity &&
                                 offer.userOpportunity.archived

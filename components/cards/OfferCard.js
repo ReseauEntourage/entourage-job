@@ -9,7 +9,7 @@ function translateStatus(status) {
   if (status === 3) return 'Refus';
   if (status === 4) return 'En attente';
   if (status === 5) return 'Relance';
-  return 'Undefined';
+  return 'Non défini';
 }
 
 const OfferCard = ({
