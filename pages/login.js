@@ -27,7 +27,7 @@ const Login = () => {
               formSchema={schema}
               onSubmit={({ email, password }, setError) => {
                 login(email, password)
-                  .then(() => console.log('Connexion réussie'))
+                  .then(() => router.push('/backoffice/cv/edit'))
                   .catch(() => {
                     setError(
                       'Erreur de connexion. Identifiant ou mot de passe invalide.'
