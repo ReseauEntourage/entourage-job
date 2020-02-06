@@ -6,6 +6,7 @@ import FooterForm from '../utils/FooterForm';
 import withValidation from './withValidation';
 import FieldFactory from './fields/FieldFactory';
 
+// TODO REFACTOR parceque cest illisible !
 export class Form extends Component {
   static get propTypes() {
     return {
@@ -89,7 +90,7 @@ export class Form extends Component {
         this.setState(
           this.constructor.initializeForm(fieldsInfo, defaultValues)
         );
-        afterSubmit(fields, (error) => this.setState({ error }));
+        afterSubmit(fields, (error) => this.setState({ error })); // c'est le props onsubmit de FormWithValidation
       })
       .catch(console.error);
   }
@@ -97,7 +98,7 @@ export class Form extends Component {
   createState({ handleChange, handleSubmit, fieldsInfo, defaultValues }) {
     // todo revoir la structure du state
     return {
-      error: '',
+      error: null,
       handleChange: handleChange.bind(this),
       handleSubmit: handleSubmit.bind(this),
       onSubmit: this.onSubmit.bind(this),

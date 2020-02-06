@@ -1,3 +1,4 @@
+/* global UIkit */
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
@@ -20,16 +21,17 @@ const Login = () => {
     <Layout title="Connexion - LinkedOut">
       <Section size="large" style="muted">
         <div className="uk-flex uk-flex-center">
-          <div className="uk-width-1-2 uk-card uk-card-default uk-card-body">
+          <div className="uk-width-1-2@m uk-card uk-card-default uk-card-body">
             <h1>Connexion</h1>
             <FormWithValidation
               formSchema={schema}
               onSubmit={({ email, password }, setError) => {
                 login(email, password)
                   .then(() => console.log('Connexion réussie'))
-                  .catch((error) => {
-                    console.error(error);
-                    setError(error);
+                  .catch(() => {
+                    setError(
+                      'Erreur de connexion. Identifiant ou mot de passe invalide.'
+                    );
                   });
               }}
             />

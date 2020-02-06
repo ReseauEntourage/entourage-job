@@ -6,7 +6,7 @@ import { GridNoSSR } from '.';
 const FooterForm = ({ error, onSubmit, onCancel, submitText }) => {
   return (
     <>
-      {error ? (
+      {error && (
         <div className="uk-width-1-1">
           <span
             className="uk-text-danger uk-margin-right"
@@ -15,8 +15,6 @@ const FooterForm = ({ error, onSubmit, onCancel, submitText }) => {
             {error}
           </span>
         </div>
-      ) : (
-        <></>
       )}
       <GridNoSSR
         className="uk-margin uk-grid-small"
