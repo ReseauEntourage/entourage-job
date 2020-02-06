@@ -22,7 +22,6 @@ const CVFicheEdition = ({ cv, onChange }) => (
         <CVEditCareerPath
           ambitions={cv.ambitions}
           careerPathOpen={cv.careerPathOpen}
-          gender={cv.gender}
           onChange={onChange}
         />
       </GridNoSSR>
