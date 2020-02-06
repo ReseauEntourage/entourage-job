@@ -63,7 +63,9 @@ const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, isAuthentificated, login, logout }}>
+    <UserContext.Provider
+      value={{ user, setUser, isAuthentificated, login, logout }}
+    >
       {children}
     </UserContext.Provider>
   );

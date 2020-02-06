@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
 import { Section, GridNoSSR, IconNoSSR } from '../../components/utils';
@@ -14,8 +14,7 @@ import schemaChangePassword from '../../components/forms/schema/formChangePasswo
 
 const Parametres = () => {
   const title = `Mes Paramètres`;
-  const { user } = useContext(UserContext);
-
+  const { user, setUser } = useContext(UserContext);
   const Content = () => {
     if (!user) return null;
     console.log(user);
@@ -79,7 +78,6 @@ const Parametres = () => {
                     })
                     .catch((err) => {
                       console.error(err);
-
                       UIkit.notification(
                         "Problème lors de l'enregistrement du nouveau mot de passe",
                         'danger'
@@ -93,6 +91,7 @@ const Parametres = () => {
           </div>
         </GridNoSSR>
         <ModalEdit
+          submitText="Envoyer"
           id="modal-personal-data"
           title="Édition - Informations personelles"
           defaultValues={['', '', '', '', user.phone]}
@@ -102,17 +101,41 @@ const Parametres = () => {
             if (phone !== u.phone) {
               Api.put(`/api/v1/user/${user.id}`, {
                 phone,
-              }).then(({ data }) => {
-                console.log(data);
-              });
+              })
+                .then(() => {
+                  setUser({ ...user, phone });
+                  UIkit.notification(
+                    'Votre numéro de téléphone a bien été mis à jour',
+                    'success'
+                  );
+                })
+                .catch((err) => {
+                  console.error(err);
+                  UIkit.notification(
+                    "Une erreur c'est produite lors de la mise à jour de votre email",
+                    'danger'
+                  );
+                });
             }
 
             if (user.email === oldEmail && newEmail0 === newEmail1) {
               Api.put(`/api/v1/user/${user.id}`, {
                 email: newEmail0,
-              }).then(({ data }) => {
-                console.log(data);
-              });
+              })
+                .then(() => {
+                  setUser({ ...user, email: newEmail0 });
+                  UIkit.notification(
+                    'Votre email a bien été mis à jour',
+                    'success'
+                  );
+                })
+                .catch((err) => {
+                  console.error(err);
+                  UIkit.notification(
+                    "Une erreur c'est produite lors de la mise à jour de votre email",
+                    'danger'
+                  );
+                });
             }
           }}
         />
