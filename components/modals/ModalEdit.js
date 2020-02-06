@@ -40,7 +40,7 @@ const ModalEdit = ({
           defaultValues={defaultValues}
           onCancel={closeModal}
           onSubmit={(fields) => {
-            closeModal();
+            closeModal(); // TODO revoir le fonctionnement. si on fait une requete ferme la modal mais process toujours la reponse server
             onSubmit(fields);
           }}
         />

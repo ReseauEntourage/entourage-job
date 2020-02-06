@@ -13,26 +13,35 @@ import FormWithValidation from '../../components/forms/FormWithValidation';
 import schemaChangePassword from '../../components/forms/schema/formChangePassword';
 
 const Parametres = () => {
-  const title = `Mes Paramètres`;
   const { user, setUser } = useContext(UserContext);
-  const Content = () => {
-    if (!user) return null;
-    console.log(user);
+  const [loadingPersonal, setLoadingPersonal] = useState(false);
+  const [loadingPassword, setLoadingPassword] = useState(false);
 
-    return (
-      <>
+  if (!user) return null;
+
+  return (
+    <LayoutBackOffice title="Mes Paramètres">
+      <Section>
+        <HeaderBackoffice
+          title="Mes paramètres"
+          description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
+        />
         <ParamCVVisible />
 
         <GridNoSSR childWidths={['1-2@m']}>
           <div className="uk-card uk-card-default uk-card-body">
             <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
               <h3 className="uk-card-title">Informations personelles</h3>
-              <ButtonIcon
-                name="pencil"
-                onClick={() => {
-                  UIkit.modal(`#modal-personal-data`).show();
-                }}
-              />
+              {loadingPersonal ? (
+                <div data-uk-spinner="ratio: .8" />
+              ) : (
+                <ButtonIcon
+                  name="pencil"
+                  onClick={() => {
+                    UIkit.modal(`#modal-personal-data`).show();
+                  }}
+                />
+              )}
             </GridNoSSR>
 
             <GridNoSSR column gap="small">
@@ -57,15 +66,22 @@ const Parametres = () => {
             </GridNoSSR>
           </div>
           <div className="uk-card uk-card-default uk-card-body">
-            <h3 className="uk-card-title">Changer de mot de passe</h3>
+            <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+              <h3 className="uk-card-title">Changer de mot de passe</h3>
+              {loadingPassword ? <div data-uk-spinner="ratio: .8" /> : <></>}
+            </GridNoSSR>
             <FormWithValidation
               submitText="Modifier"
               formSchema={schemaChangePassword}
-              onSubmit={({ newPassword, oldPassword, confirmPassword }) => {
+              onSubmit={(
+                { newPassword, oldPassword, confirmPassword },
+                setError
+              ) => {
                 if (
                   newPassword !== oldPassword &&
                   newPassword === confirmPassword
                 ) {
+                  setLoadingPassword(true);
                   Api.put('/api/v1/user/change-pwd', {
                     newPassword,
                     oldPassword,
@@ -75,16 +91,17 @@ const Parametres = () => {
                         'Nouveau mot de passe enregistré',
                         'success'
                       );
+                      setLoadingPassword(false); // lorsque utilisation de finaly => erreur de node/child
                     })
                     .catch((err) => {
                       console.error(err);
-                      UIkit.notification(
-                        "Problème lors de l'enregistrement du nouveau mot de passe",
-                        'danger'
+                      setError(
+                        "Problème lors de l'enregistrement du nouveau mot de passe"
                       );
+                      setLoadingPassword(false);
                     });
                 } else {
-                  UIkit.notification('Nouveau mot de passe erroné', 'warning');
+                  setError('Nouveau mot de passe erroné');
                 }
               }}
             />
@@ -99,6 +116,7 @@ const Parametres = () => {
           onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }) => {
             const u = user;
             if (phone !== u.phone) {
+              setLoadingPersonal(true);
               Api.put(`/api/v1/user/${user.id}`, {
                 phone,
               })
@@ -115,10 +133,12 @@ const Parametres = () => {
                     "Une erreur c'est produite lors de la mise à jour de votre email",
                     'danger'
                   );
-                });
+                })
+                .finally(() => setLoadingPersonal(false));
             }
 
             if (user.email === oldEmail && newEmail0 === newEmail1) {
+              setLoadingPersonal(true);
               Api.put(`/api/v1/user/${user.id}`, {
                 email: newEmail0,
               })
@@ -135,21 +155,11 @@ const Parametres = () => {
                     "Une erreur c'est produite lors de la mise à jour de votre email",
                     'danger'
                   );
-                });
+                })
+                .finally(() => setLoadingPersonal(false));
             }
           }}
         />
-      </>
-    );
-  };
-  return (
-    <LayoutBackOffice title={title}>
-      <Section>
-        <HeaderBackoffice
-          title="Mes paramètres"
-          description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
-        />
-        <Content />
       </Section>
     </LayoutBackOffice>
   );
