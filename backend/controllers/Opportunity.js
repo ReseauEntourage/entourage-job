@@ -156,6 +156,7 @@ const addUserToOpportunity = (opportunityId, userId) =>
 const updateOpportunityUser = async (opportunityUser) => {
   await models.Opportunity_User.update(opportunityUser, {
     where: { id: opportunityUser.id },
+    individualHooks: true,
   });
   return models.Opportunity_User.findByPk(opportunityUser.id, {
     attributes: ['id', 'UserId', 'status', 'bookmarked', 'archived', 'note'],
