@@ -186,6 +186,15 @@ router.get('/cards/random', (req, res) => {
     });
 });
 
+router.post('/image', auth.required, (req, res) => {
+  CVController.uploadToBucket(req.body.file, req.payload.id)
+    .then((data) => res.status(200).json(data))
+    .catch((err) => {
+      console.error(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
 /**
  * Route : DELETE /api/<VERSION>/cv/<ID>
  * Description : Supprime le CV correspondant à l'<id> fournit dans l'URL.

@@ -25,7 +25,7 @@ const CVFicheEdition = ({ cv, onChange }) => (
           onChange={onChange}
         />
       </GridNoSSR>
-      <CVEditPicture onChange={onChange} />
+      <CVEditPicture urlImg={cv.urlImg || undefined} onChange={onChange} />
     </GridNoSSR>
     <GridNoSSR childWidths={['1-2@s']} match>
       <InfoProfileCard
@@ -61,6 +61,7 @@ CVFicheEdition.propTypes = {
     story: PropTypes.string,
     location: PropTypes.string,
     availability: PropTypes.string,
+    urlImg: PropTypes.string,
     gender: PropTypes.number,
     careerPathOpen: PropTypes.bool,
     contracts: PropTypes.array,

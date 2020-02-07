@@ -1,7 +1,9 @@
 /* eslint-disable no-restricted-globals */
 /* eslint no-param-reassign: ["error", { "props": false }] */
+
 const { models, sequelize } = require('../db/models');
 const { cleanCV, controlText } = require('./tools');
+const { uploadFile } = require('./aws');
 
 const INCLUDE_CV_COMPLETE = [
   {
@@ -248,6 +250,28 @@ const getRandomShortCVs = async (nb) => {
         .map((e) => arr[e])
     );
   }
+  /**
+   * // TODO
+    SELECT cv.*
+    FROM "CVs" as cv
+    INNER JOIN (
+      SELECT "UserId", MAX(version) AS version
+      FROM "CVs" c
+      WHERE status = 'Published'
+      AND visibility = true
+      GROUP BY "UserId"
+    ) groupedCV
+    ON cv."UserId" = groupedCV."UserId"
+    AND cv.version = groupedCV.version;
+   */
+  // const cvs = await sequelize.query(
+  //   'SELECT * FROM "CV_Last_Version_Published"',
+  //   {
+  //     model: models.CV,
+  //     mapToModel: true, // pass true here if you have any mapped fields
+  //   }
+  // );
+
   const modelCVs = await models.CV.findAll({
     where: {
       status: 'Published',
@@ -345,6 +369,10 @@ const setVisibility = (UserId, cv) => {
   });
 };
 
+const uploadToBucket = (file, UserId) => {
+  return uploadFile(file, UserId);
+};
+
 module.exports = {
   createCV,
   deleteCV,
@@ -355,4 +383,5 @@ module.exports = {
   getVisibility,
   setCV,
   setVisibility,
+  uploadToBucket,
 };
