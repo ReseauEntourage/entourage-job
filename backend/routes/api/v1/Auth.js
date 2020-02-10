@@ -58,16 +58,16 @@ router.post('/logout', auth.required, (req, res, next) => {
 });
 
 // GET current route (required, only authenticated users have access)
-router.get('/current', auth.required, (req, res, next) => {
+router.get('/current', auth.required, async (req, res, next) => {
   const {
     payload: { id },
   } = req;
-  return UserController.getUser(id).then((user) => {
-    if (!user) {
-      return res.sendStatus(400);
-    }
-    return res.json({ user: AuthController.toAuthJSON(user) });
-  });
+  const user = await UserController.getUser(id);
+  if (!user) {
+    return res.sendStatus(400);
+  }
+  UserController.setUser(id, { lastConnection: Date.now() });
+  return res.json({ user: AuthController.toAuthJSON(user) });
 });
 
 module.exports = router;

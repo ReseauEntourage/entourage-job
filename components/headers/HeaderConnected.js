@@ -14,12 +14,12 @@ import HeaderUserDropdown from './HeaderUserDropdown';
 const HeaderConnected = ({ isHome }) => {
   const LINKS_CONNECTED = [
     { href: '/backoffice/cv/edit', name: 'Mon espace', icon: 'user' },
+    { href: '/backoffice/members', name: 'Les membres', icon: 'users' },
     {
       href: '/backoffice/mesopportunites',
       name: 'Mes opportunités',
       icon: 'list',
     },
-    // { href: '#', name: 'Mur du love', icon: 'heart' },
   ];
 
   return (

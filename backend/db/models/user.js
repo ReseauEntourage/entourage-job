@@ -74,6 +74,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       url: DataTypes.STRING,
+      lastConnection: DataTypes.DATE,
     },
     {}
   );
