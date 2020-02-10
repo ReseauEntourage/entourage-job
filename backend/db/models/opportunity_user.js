@@ -3,6 +3,17 @@
 
 const { sendMail } = require('../../controllers/mail');
 
+const sendMailEmbauche = async (toEmail, firstName, title) => {
+  const link = `${process.env.SERVER_URL}/login`;
+  return sendMail({
+    toEmail,
+    subject: `${firstName} a retrouvé un emploi`,
+    text: `
+    ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
+    Vous pouvez maintenant l'archiver en cliquant ici : ${link}.`,
+  });
+};
+
 module.exports = (sequelize, DataTypes) => {
   const Opportunity_User = sequelize.define('Opportunity_User', {
     OpportunityId: {
@@ -41,7 +52,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
   });
-  Opportunity_User.associate = function(models) {
+
+  Opportunity_User.associate = (models) => {
     Opportunity_User.belongsTo(models.User);
 
     Opportunity_User.beforeUpdate(async (instance, option) => {
@@ -54,31 +66,32 @@ module.exports = (sequelize, DataTypes) => {
         nextData.status !== previousData.status &&
         nextData.status === 2
       ) {
-        // mail admin
-        sendMail({
-          toEmail: 'johann.hospice@accenture.com',
-          subject: 'Embauche',
-          text: 'TO DEFINE avec un lien',
-        });
-        // mail coach
-        const { data } = await models.User.findOne({
-          where: {
-            id: nextData.UserId,
-          },
-          attributes: ['userToCoach'],
-        });
-        if (data) {
-          const { coachData } = await models.User.findOne({
-            where: {
-              id: data.userToCoach,
-            },
-            attributes: ['email'],
-          });
-          sendMail({
-            toEmail: coachData.email,
-            subject: 'Embauche',
-            text: 'TO DEFINE avec un lien',
-          });
+        try {
+          const [{ firstName, userToCoach }, { title }] = await Promise.all([
+            models.User.findByPk(nextData.UserId, {
+              attributes: ['firstName', 'userToCoach'],
+            }),
+            models.Opportunity.findByPk(nextData.OpportunityId, {
+              attributes: ['title'],
+            }),
+          ]);
+
+          // mail admin
+          sendMailEmbauche(process.env.MAILJET_TO_EMAIL, firstName, title);
+          if (userToCoach) {
+            // mail coach
+            const { email } = await models.User.findByPk(userToCoach, {
+              attributes: ['email'],
+            });
+            sendMailEmbauche(email, firstName, title);
+          }
+        } catch (err) {
+          console.error(
+            `Probleme lors de l'envoie du mail d'embauche validée.`,
+            `UserId: ${nextData.UserId}`,
+            `OpportunityId: ${nextData.OpportunityId}`,
+            err
+          );
         }
       }
     });
