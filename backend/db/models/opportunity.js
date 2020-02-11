@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      category: {
-        type: DataTypes.STRING,
+      isPublic: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: 'Public',
+        defaultValue: true,
       },
       company: {
         type: DataTypes.STRING,

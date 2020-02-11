@@ -24,15 +24,13 @@ const CVPage = ({ cv, router }) => {
     );
   }
 
-  const name =
-    cv.user.firstName.charAt(0).toUpperCase() + cv.user.firstName.slice(1).toLowerCase();
   return (
     <Layout
-      title={`${name} - LinkedOut`}
-      metaTitle={`Aidez ${name} en partageant son CV.`}
+      title={`${cv.user.firstName} - LinkedOut`}
+      metaTitle={`Aidez ${cv.user.firstName} en partageant son CV.`}
       metaUrl={`${process.env.SERVER_URL}${router.asPath}`}
       metaDescription={cv.intro}
-      metaImage={`${process.env.SERVER_URL}/static/img/cv/${cv.url}-preview.jpg`}
+      metaImage={`${process.env.SERVER_URL}/static/img/cv/${cv.user.url}-preview.jpg`}
       metaType="profile"
     >
       <CVBackground url="/static/img/arthur-background.jpg" />
@@ -49,9 +47,11 @@ CVPage.getInitialProps = async ({ query }) => {
 };
 CVPage.propTypes = {
   cv: PropTypes.shape({
-    firstName: PropTypes.string.isRequired,
     intro: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
+    user: PropTypes.shape({
+      firstName: PropTypes.string,
+      url: PropTypes.string,
+    }),
   }),
   router: PropTypes.shape({
     asPath: PropTypes.string.isRequired,

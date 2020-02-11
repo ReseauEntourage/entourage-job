@@ -12,7 +12,7 @@ function getTag(offer) {
   if (offer.userOpportunity && offer.userOpportunity.archived) {
     return 'tag-archive';
   }
-  return `tag-${offer.category.toLowerCase()}`;
+  return `tag-${offer.isPublic ? 'public' : 'private'}`;
 }
 const Opportunites = () => {
   const [currentOffer, setCurrentOffer] = useState(null);

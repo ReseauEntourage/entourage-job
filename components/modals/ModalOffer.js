@@ -50,9 +50,9 @@ OfferInfoContainer.defaultProps = {
   icon: undefined,
   children: [],
 };
-function translateCategory(category) {
-  if (category === 'Private') return 'Offre personnelle';
-  if (category === 'Public') return 'Offre générale';
+function translateCategory(isPublic) {
+  if (!isPublic) return 'Offre personnelle';
+  if (isPublic) return 'Offre générale';
   return 'Offre inconnue';
 }
 const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
@@ -93,7 +93,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                 <h3 className="uk-text-bold uk-margin-remove-bottom">
                   {currentOffer.title}
                 </h3>
-                <span>{translateCategory(currentOffer.category)}</span>
+                <span>{translateCategory(currentOffer.isPublic)}</span>
               </div>
               <List className="uk-iconnav uk-grid-medium">
                 <ButtonIcon
@@ -221,7 +221,7 @@ ModalOffer.propTypes = {
     company: PropsType.string,
     description: PropsType.string,
     recruiterName: PropsType.string,
-    category: PropsType.string,
+    isPublic: PropsType.bool,
     recruiterEmail: PropsType.string,
     recruiterPhone: PropsType.string,
     businessLines: PropsType.arrayOf(PropsType.string),

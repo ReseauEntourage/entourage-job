@@ -86,7 +86,7 @@ const getPublicOpportunities = async () => {
   const opportunities = await models.Opportunity.findAll({
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
-      category: 'Public',
+      isPublic: true,
     },
   });
 
@@ -103,7 +103,7 @@ const getPrivateUserOpportunities = async (userId) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       id: opportunityUsers.map((model) => model.OpportunityId),
-      category: 'Private',
+      isPublic: false,
     },
   });
   return opportunities.map((model) => {
@@ -126,10 +126,10 @@ const getAllUserOpportunities = async (userId) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       [Sequelize.Op.or]: [
-        { category: 'Public' },
+        { isPublic: true },
         {
           id: opportunityUsers.map((model) => model.OpportunityId),
-          category: 'Private',
+          isPublic: false,
         },
       ],
     },

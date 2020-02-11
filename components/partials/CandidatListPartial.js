@@ -27,7 +27,7 @@ const CandidatListPartial = () => {
             gap="small"
             items={cvs.map((cv) => (
               <CandidatCard
-                url={cv.url}
+                url={cv.user.url}
                 imgSrc="static/img/arthur.png"
                 imgAlt={cv.user.firstName}
                 firstName={cv.user.firstName}

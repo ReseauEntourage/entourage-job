@@ -80,11 +80,6 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: true,
       },
       status: DataTypes.STRING,
-      visibility: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
-      },
       version: {
         type: DataTypes.INTEGER,
         defaultValue: 1,
