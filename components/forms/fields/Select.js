@@ -25,14 +25,11 @@ const Select = ({
     <>
       <div
         className="uk-form-controls ent-select"
-        style={
-          title
-            ? {
-                paddingTop: '15px',
-                paddingBottom: '2px',
-              }
-            : {}
-        }
+        style={{
+          paddingTop: '15px',
+          paddingBottom: '2px',
+          margin: '15px 0',
+        }}
       >
         {title ? (
           <label

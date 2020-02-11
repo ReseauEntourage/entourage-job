@@ -6,24 +6,16 @@
       "name": "firstName",
       "type": "text",
       "component": "input",
-      "placeholder": "Tapez votre adresse mail",
-      "title": "Adresse mail*"
+      "placeholder": "Tapez le prénom",
+      "title": "Prénom*"
     },
     {
       "id": "lastName",
       "name": "lastName",
       "type": "text",
       "component": "input",
-      "placeholder": "Tapez votre adresse mail",
-      "title": "Adresse mail*"
-    },
-    {
-      "id": "email",
-      "name": "email",
-      "type": "email",
-      "component": "input",
-      "placeholder": "Tapez votre adresse mail",
-      "title": "Adresse mail*"
+      "placeholder": "Tapez le nom",
+      "title": "Nom*"
     },
     {
       "id": "gender",
@@ -37,6 +29,14 @@
       ]
     },
     {
+      "id": "email",
+      "name": "email",
+      "type": "email",
+      "component": "input",
+      "placeholder": "Tapez votre adresse mail",
+      "title": "Adresse mail*"
+    },
+    {
       "id": "role",
       "title": "Role*",
       "name": "role",
@@ -47,6 +47,14 @@
         { "value": "Coach", "text": "Coach" },
         { "value": "Admin", "text": "Admin" }
       ]
+    },
+    {
+      "id": "userToCoach",
+      "name": "userToCoach",
+      "type": "text",
+      "component": "input",
+      "placeholder": "Tapez si candidat son coach et si coach son candidat",
+      "title": "Coach ou candidat lié"
     }
   ],
   "rules": [

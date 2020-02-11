@@ -50,13 +50,12 @@ const getUserByEmail = (email) => {
   });
 };
 
-const getUsers = () => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getUsers -';
-    console.log(`${infoLog} Récupérer les Users`);
-    User.findAll()
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+const getUsers = (limit, offset, order) => {
+  console.log(`getUsers - Récupérer les Users`);
+  return User.findAll({
+    offset,
+    limit,
+    order,
   });
 };
 

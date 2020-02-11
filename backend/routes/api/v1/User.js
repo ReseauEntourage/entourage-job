@@ -1,6 +1,7 @@
 const validator = require('validator');
 const express = require('express');
 const { auth } = require('../../../controllers/Auth');
+const { sendMail } = require('../../../controllers/mail');
 
 const router = express.Router();
 const UserController = require('../../../controllers/User');
@@ -11,7 +12,8 @@ const AuthController = require('../../../controllers/Auth');
  * Description : Récupère tous les Users
  */
 router.get('/', (req, res) => {
-  UserController.getUsers()
+  const order = [['firstName', 'ASC']];
+  UserController.getUsers(req.query.limit, req.query.offset, order)
     .then((users) => {
       console.log(`Users récupérés (Total : ${users.length})`);
       res.status(200).json(users);
@@ -27,13 +29,34 @@ router.get('/', (req, res) => {
  * Description : Créé le User
  */
 router.post('/', (req, res) => {
-  const newUser = req.body;
-  const objPassword = AuthController.encryptPassword(newUser.password);
-  newUser.password = objPassword.hash;
-  newUser.salt = objPassword.salt;
-  UserController.createUser(newUser)
+  function fakePassword() {
+    return Math.random() // Generate random number, eg: 0.123456
+      .toString(36) // Convert  to base-36 : "0.4fzyo82mvyr"
+      .slice(-8); // Cut off last 8 characters : "yo82mvyr"
+  }
+  const userPassword = req.body.password || fakePassword();
+  const { hash, salt } = AuthController.encryptPassword(userPassword);
+
+  UserController.createUser({ ...req.body, password: hash, salt })
     .then((users) => {
-      console.log(`User créé`);
+      console.log(
+        '# User créé',
+        `login : ${req.body.email}`,
+        `password: ${userPassword}`
+      );
+      sendMail({
+        toEmail: req.body.email,
+        subject: 'Bienvenue chez LinkedOut',
+        text:
+          'Bonjour,\n' +
+          `Tu es maintenant inscrit sur le site LinkedOut. Tu peux accéder à ton espace personnel depuis la plateforme en renseignant ton adresse mail et le mot de passe suivant : ${userPassword}` +
+          "Depuis cette espace, tu peux rédiger ton CV avec l'aide de ton bénévole-coach et gérer les opportunités que tu reçois.\n" +
+          "N'hésite pas à aller changer ton mot de passe directement dans tes paramètres afin d'en créer un facile à retenir pour toi.\n\n" +
+          'A bientôt,\n\n' +
+          "L'équipe Entourage",
+      });
+
+      // todo: send mail to created user
       res.status(200).json(users);
     })
     .catch((err) => {
