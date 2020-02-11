@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3001;
 const TIMEOUT = 20000;
 
 const CV_EXAMPLE = {
-  url: 'Test-Ament',
+  // url: 'Test-Ament',
   userId: '27272727-aaaa-bbbb-cccc-012345678927',
   intro: 'Je suis une intro',
   location: 'Paris et Proche Banlieue',
@@ -82,7 +82,6 @@ describe('Tests des routes API - Partie CV', () => {
       it('doit créer le CV dans la base de données', () => {
         return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
           ...CV_EXAMPLE,
-          visibility: true,
           status: 'Published',
           userId: user.id,
         })
@@ -129,19 +128,16 @@ describe('Tests des routes API - Partie CV', () => {
       const create3CVs = [
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
           ...CV_EXAMPLE,
-          visibility: true,
           status: 'Published',
           userId: user.id,
         }),
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
           ...CV_EXAMPLE,
-          visibility: true,
           status: 'Published',
           userId: user.id,
         }),
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
           ...CV_EXAMPLE,
-          visibility: true,
           status: 'Published',
           userId: user.id,
         }),
@@ -188,7 +184,7 @@ describe('Tests des routes API - Partie CV', () => {
       }).timeout(TIMEOUT);
     });
 
-    describe('Récupérer la visibilité de son CV', () => {
+    describe.skip('Récupérer la visibilité de son CV', () => {
       describe('sans être connecté', () => {
         it('doit retourner une erreur car non connecté', () => {
           return Api.get(`${process.env.SERVER_URL}/api/v1/cv/visibility`)
@@ -229,7 +225,6 @@ describe('Tests des routes API - Partie CV', () => {
               token = res.data.user.token;
               return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
                 ...CV_EXAMPLE,
-                visibility: true,
                 status: 'Published',
                 userId,
               });
@@ -244,7 +239,7 @@ describe('Tests des routes API - Partie CV', () => {
             .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
         });
 
-        it("doit retourner l'état du CV", () => {
+        it.skip("doit retourner l'état du CV", () => {
           return Api.get(`${process.env.SERVER_URL}/api/v1/cv/visibility`, {
             headers: { authorization: `Token ${token}` },
           })
@@ -278,7 +273,7 @@ describe('Tests des routes API - Partie CV', () => {
 
     describe('Modifier la visibilité de son CV', () => {
       describe('sans être connecté', () => {
-        it('doit retourner une erreur car non connecté', () => {
+        it.skip('doit retourner une erreur car non connecté', () => {
           return Api.put(`${process.env.SERVER_URL}/api/v1/cv/visibility`, {
             visibility: false,
           })
@@ -319,7 +314,6 @@ describe('Tests des routes API - Partie CV', () => {
               token = res.data.user.token;
               return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
                 ...CV_EXAMPLE,
-                visibility: true,
                 status: 'Published',
                 userId,
               });
@@ -334,28 +328,31 @@ describe('Tests des routes API - Partie CV', () => {
             .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
         });
 
-        it('doit modifier et retourner la nouvelle visibilité du CV', () => {
-          return Api.put(
-            `${process.env.SERVER_URL}/api/v1/cv/visibility`,
-            { visibility: false },
-            {
-              headers: { authorization: `Token ${token}` },
-            }
-          )
-            .then((res) => {
-              console.log(res.data);
-              assert.isBoolean(
-                res.data.visibility,
-                'La visibilité du CV actuel est retourné'
-              );
-              assert.strictEqual(
-                res.data.visibility,
-                false,
-                'Le nouvel état a bien été pris en compte'
-              );
-            })
-            .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-        }).timeout(TIMEOUT);
+        it.skip(
+          'doit modifier et retourner la nouvelle visibilité du CV',
+          () => {
+            return Api.put(
+              `${process.env.SERVER_URL}/api/v1/cv/visibility`,
+              { visibility: false },
+              {
+                headers: { authorization: `Token ${token}` },
+              }
+            )
+              .then((res) => {
+                console.log(res.data);
+                assert.isBoolean(
+                  res.data.visibility,
+                  'La visibilité du CV actuel est retourné'
+                );
+                assert.strictEqual(
+                  res.data.visibility,
+                  false,
+                  'Le nouvel état a bien été pris en compte'
+                );
+              })
+              .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+          }
+        ).timeout(TIMEOUT);
 
         after(() => {
           return Api.delete(`${process.env.SERVER_URL}/api/v1/cv/${CVId}`)
