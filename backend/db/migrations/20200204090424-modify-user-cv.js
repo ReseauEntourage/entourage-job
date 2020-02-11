@@ -9,8 +9,8 @@ module.exports = {
         defaultValue: false,
         allowNull: false,
       }),
-      queryInterface.removeColumn('Opportunites', 'category'),
-      queryInterface.addColumn('Opportunites', 'isPublic', {
+      queryInterface.removeColumn('Opportunities', 'category'),
+      queryInterface.addColumn('Opportunities', 'isPublic', {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
         allowNull: false,
@@ -36,12 +36,12 @@ module.exports = {
         allowNull: false,
       }),
       queryInterface.removeColumn('Opportunity_Users', 'adminValidated'),
-      queryInterface.addColumn('Opportunites', 'category', {
+      queryInterface.addColumn('Opportunities', 'category', {
         type: Sequelize.STRING,
         allowNull: false,
         defaultValue: 'Public',
       }),
-      queryInterface.removeColumn('Opportunites', 'isPublic'),
+      queryInterface.removeColumn('Opportunities', 'isPublic'),
       // queryInterface.removeColumn('Users', 'verified'),
       queryInterface.removeColumn('Users', 'lastConnection'),
     ]),
