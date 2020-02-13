@@ -6,22 +6,6 @@ const CVController = require('../../../controllers/CV');
 const generateCVPreview = require('../../../shareImage');
 
 /**
- * Route : GET /api/<VERSION>/cv
- * Description : Récupère tous les CVs complets
- */
-router.get('/', (req, res) => {
-  CVController.getCVs()
-    .then((listeCVs) => {
-      console.log(`CVs récupérés (Total : ${listeCVs.length}`);
-      res.status(200).json(listeCVs);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(401).send('Une erreur est survenue');
-    });
-});
-
-/**
  * Route : POST /api/<VERSION>/cv
  * Description : Créé le CV
  */
@@ -46,6 +30,26 @@ router.post('/', (req, res) => {
     .catch((err) => {
       console.log(err);
       res.status(401).send(`Une erreur est survenue`);
+    });
+});
+
+/**
+ * Route : GET /api/<VERSION>/cv
+ * Description : Récupère tous les CVs complets
+ */
+router.get('/', (req, res) => {
+  console.log(req.query);
+
+  (req.query.userId
+    ? CVController.getCVbyUserId(req.query.userId)
+    : CVController.getCVs()
+  ) // todo bizare getCVs
+    .then((listeCVs) => {
+      res.status(200).json(listeCVs);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
     });
 });
 
@@ -82,6 +86,24 @@ router.get('/edit', auth.required, (req, res) => {
 });
 
 /**
+ * Route : GET /api/<VERSION>/cv/cards/random
+ * Description : Retourne <nb> CV(s) pour des cartes de manière aléatoire
+ * Paramètre :
+ * - nb : Nombre de CVs à retourner (11 par défaut)
+ * Exemple : <server_url>/api/v1/cv/cards/random?nb=2
+ */
+router.get('/cards/random', (req, res) => {
+  CVController.getRandomShortCVs(req.query.nb)
+    .then((listeCVs) => {
+      res.status(200).json(listeCVs);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
  * Route : GET /api/<VERSION>/cv/<URL>
  * Description : Récupère le CV associé à l'<URL> fournit
  */
@@ -115,24 +137,6 @@ router.put('/:id', (req, res) => {
     .catch((err) => {
       console.log(`Une erreur est survenue`);
       res.status(401).send(err);
-    });
-});
-
-/**
- * Route : GET /api/<VERSION>/cv/cards/random
- * Description : Retourne <nb> CV(s) pour des cartes de manière aléatoire
- * Paramètre :
- * - nb : Nombre de CVs à retourner (11 par défaut)
- * Exemple : <server_url>/api/v1/cv/cards/random?nb=2
- */
-router.get('/cards/random', (req, res) => {
-  CVController.getRandomShortCVs(req.query.nb)
-    .then((listeCVs) => {
-      res.status(200).json(listeCVs);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(401).send('Une erreur est survenue');
     });
 });
 

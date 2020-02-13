@@ -1,8 +1,180 @@
-import React from 'react';
+/* global UIkit */
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
-import { Section } from '../../../components/utils';
+import {
+  Section,
+  SimpleLink,
+  GridNoSSR,
+  IconNoSSR,
+  Button,
+} from '../../../components/utils';
+import { CVFicheEdition } from '../../../components/cv';
+
+function translate(status) {
+  if (status === 'Pending') {
+    return 'En attente';
+  }
+  if (status === 'Published') {
+    return 'Publié';
+  }
+  if (status === 'New') {
+    return 'Nouveau';
+  }
+  return status;
+}
+const Content = ({ userId }) => {
+  const [cv, setCV] = useState(undefined);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchEdit = async () => {
+      try {
+        const { data } = await Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
+          params: {
+            userId,
+          },
+        });
+        if (data) {
+          setCV(data);
+        } else {
+          setCV(null);
+        }
+      } catch (err) {
+        console.error(err);
+        setError('Une erreur est survenue durant le chargement du CV.');
+      }
+    };
+    fetchEdit();
+  }, [userId]);
+
+  const publishCV = async () => {
+    setLoading(true);
+    try {
+      // put
+      const { data } = await Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+        ...cv,
+        id: undefined,
+        status: 'Published',
+        version: cv.version + 1,
+      });
+      console.log(data);
+      setCV(data);
+      UIkit.notification('Le profil a été mis à jour', {
+        pos: 'bottom-center',
+        status: 'info',
+      });
+    } catch (err) {
+      console.error(err);
+      UIkit.notification("Une erreur s'est produite", {
+        pos: 'bottom-center',
+        status: 'danger',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  // aucun CV
+  if (cv === null) {
+    return (
+      <>
+        <Section>
+          <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
+            <div
+              className="uk-position-absolute uk-transform-center uk-text-center"
+              style={{ left: '50%', top: '50%' }}
+            >
+              <h2 className="uk-text-bold">
+                <span className="uk-text-primary">Aucun candidat</span>{' '}
+                n&apos;est rattaché à ton compte coach.
+              </h2>
+              <p>
+                Il peut y avoir plusieurs raisons à ce sujet. Contacte
+                l&apos;équipe LinkedOut pour en savoir plus.
+              </p>
+              <Button
+                style="primary"
+                onClick={() =>
+                  Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                    userId,
+                  }).then(({ data }) => setCV(data))
+                }
+              >
+                Creer votre CV
+              </Button>
+            </div>
+          </div>
+        </Section>
+      </>
+    );
+  }
+  // erreur pendant la requete
+  if (error) {
+    return (
+      <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
+        <div
+          className="uk-position-absolute uk-transform-center uk-text-center"
+          style={{ left: '50%', top: '50%' }}
+        >
+          <div className="ukuk-width-xlarge">
+            <h2 className="uk-text-bold uk-margin-remove">{error}</h2>
+            <p>
+              Contacte{' '}
+              <span className="uk-text-primary">l&apos;équipe LinkedOut</span>{' '}
+              pour en savoir plus.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  // chargement
+  if (cv === undefined) {
+    return (
+      <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
+        <div
+          className="uk-position-absolute uk-transform-center uk-text-center"
+          style={{ left: '50%', top: '50%' }}
+        >
+          <h2 className="uk-text-bold">loading ...</h2>
+          <div data-uk-spinner />
+        </div>
+      </div>
+    );
+  }
+  // affichage du CV
+  return (
+    <>
+      <GridNoSSR between middle>
+        <div>Statut : {translate(cv.status)}</div>
+        <Button
+          style="primary"
+          onClick={() => {
+            if (!loading) publishCV();
+          }}
+        >
+          <div className="uk-flex uk-flex-middle">
+            Publier
+            {loading ? (
+              <div
+                className="uk-margin-small-left"
+                data-uk-spinner="ratio: .5"
+              />
+            ) : null}
+          </div>
+        </Button>
+      </GridNoSSR>
+      <CVFicheEdition
+        cv={cv}
+        onChange={(fields) => {
+          setCV({ ...cv, ...fields });
+        }}
+      />
+    </>
+  );
+};
 
 const CVPage = ({ member }) => {
   if (!member) {
@@ -19,36 +191,69 @@ const CVPage = ({ member }) => {
     );
   }
 
-  const name =
-    member.firstName.charAt(0).toUpperCase() +
-    member.firstName.slice(1).toLowerCase();
   return (
-    <LayoutBackOffice title="Gestion des menmbres">
-      <Section>{name}</Section>
+    <LayoutBackOffice title={`${member.firstName} - Gestion des menmbres`}>
+      <Section>
+        <GridNoSSR column gap="large">
+          <SimpleLink href="/backoffice/members" className="uk-link-reset">
+            <IconNoSSR name="chevron-left" />
+            retour à la liste
+          </SimpleLink>
+
+          <div>
+            <GridNoSSR row gap="small" middle>
+              <img
+                className="uk-preserve-width uk-border-circle"
+                src="/static/img/arthur.png"
+                width="48"
+                style={{ height: '48px' }}
+                alt={`${member.firsName} profil`}
+              />
+              <GridNoSSR column gap="collapse">
+                <h3 className="uk-text-bold">
+                  {member.firstName} {member.lastName}
+                </h3>
+                <span>{member.role}</span>
+              </GridNoSSR>
+            </GridNoSSR>
+            <hr className="ent-divier-backoffice uk-margin-large-top " />
+          </div>
+
+          <GridNoSSR eachWidths={['expand', 'auto']}>
+            <ul className="uk-subnav" data-uk-switcher>
+              <li className="uk-active">
+                <a href="#" onClick={() => {}}>
+                  CV
+                </a>
+              </li>
+              <li>
+                <a href="#" onClick={() => {}}>
+                  Opportunités
+                </a>
+              </li>
+              <li>
+                <a href="#" onClick={() => {}}>
+                  Paramètres
+                </a>
+              </li>
+            </ul>
+            <div />
+          </GridNoSSR>
+          <Content userId={member.id} />
+        </GridNoSSR>
+      </Section>
     </LayoutBackOffice>
   );
 };
 CVPage.getInitialProps = async ({ query }) => {
-  const res = await Api.get(
+  const { data } = await Api.get(
     `${process.env.SERVER_URL}/api/v1/user/${query.id}`
   );
-  return { member: res.data };
+  return { member: data };
 };
 CVPage.propTypes = {
-  member: PropTypes.shape({
-    firstName: PropTypes.string.isRequired,
-    intro: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-  }).isRequired,
-  router: PropTypes.shape({
-    asPath: PropTypes.string.isRequired,
-  }),
+  member: PropTypes.shape().isRequired,
 };
-CVPage.defaultProps = {
-  member: null,
-  router: {
-    asPath: '',
-  },
-};
+CVPage.defaultProps = {};
 
 export default CVPage;
