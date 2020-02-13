@@ -8,23 +8,6 @@ const UserController = require('../../../controllers/User');
 const AuthController = require('../../../controllers/Auth');
 
 /**
- * Route : GET /api/<VERSION>/user
- * Description : Récupère tous les Users
- */
-router.get('/', (req, res) => {
-  const order = [['firstName', 'ASC']];
-  UserController.getUsers(req.query.limit, req.query.offset, order)
-    .then((users) => {
-      console.log(`Users récupérés (Total : ${users.length})`);
-      res.status(200).json(users);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(401).send('Une erreur est survenue');
-    });
-});
-
-/**
  * Route : POST /api/<VERSION>/user
  * Description : Créé le User
  */
@@ -57,6 +40,41 @@ router.post('/', (req, res) => {
       });
 
       // todo: send mail to created user
+      res.status(200).json(users);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Route : GET /api/<VERSION>/user
+ * Description : Récupère tous les Users
+ */
+router.get('/', (req, res) => {
+  const order = [['firstName', 'ASC']];
+  UserController.getUsers(req.query.limit, req.query.offset, order)
+    .then((users) => {
+      console.log(`Users récupérés (Total : ${users.length})`);
+      res.status(200).json(users);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Route : GET /api/<VERSION>/user
+ * Description : Récupère tous les Users
+ */
+router.get('/search', (req, res) => {
+  console.log(req.query);
+
+  UserController.searchUsers(req.query.query)
+    .then((users) => {
+      console.log(`Users récupérés (Total : ${users.length})`);
       res.status(200).json(users);
     })
     .catch((err) => {

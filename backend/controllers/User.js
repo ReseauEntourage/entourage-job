@@ -1,6 +1,6 @@
-const sequelize = require('sequelize');
+const { DataTypes, Op, fn, col, where } = require('sequelize');
 const db = require('../db/config/databaseConnect');
-const User = require('../db/models/user')(db, sequelize.DataTypes);
+const User = require('../db/models/user')(db, DataTypes);
 
 const createUser = (newUser) => {
   return new Promise((resolve, reject) => {
@@ -59,6 +59,26 @@ const getUsers = (limit, offset, order) => {
   });
 };
 
+const searchUsers = (query) => {
+  const lowerCaseQuery = query.toLowerCase();
+  return User.findAll({
+    where: {
+      [Op.or]: [
+        { email: { [Op.like]: `%${lowerCaseQuery}%` } },
+        where(
+          fn(
+            'concat',
+            fn('lower', col('firstName')),
+            ' ',
+            fn('lower', col('lastName'))
+          ),
+          { [Op.like]: `%${lowerCaseQuery}%` }
+        ),
+      ],
+    },
+  });
+};
+
 const setUser = (id, user) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'setUser -';
@@ -78,4 +98,5 @@ module.exports = {
   getUserByEmail,
   getUsers,
   setUser,
+  searchUsers,
 };

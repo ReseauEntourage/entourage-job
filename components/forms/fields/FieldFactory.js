@@ -2,6 +2,9 @@
 /* eslint-disable default-case */
 import React from 'react';
 import Link from 'next/link';
+import AsyncSelect from 'react-select/async';
+
+import axios from '../../../Axios';
 import DatePicker from './DatePicker';
 import Select from './Select';
 import FieldGroup from './FieldGroup';
@@ -143,6 +146,30 @@ export default class FieldFactory {
           onChange={this.handleChange}
           disabled={data.disabled}
         />
+      );
+    }
+    if (data.component === 'select-request') {
+      return (
+        <div>
+          {data.title && (
+            <label className="uk-form-label" htmlFor={data.id}>
+              {data.title}
+            </label>
+          )}
+          <AsyncSelect
+            cacheOptions
+            isClearable
+            defaultOptions
+            openMenuOnClic={false}
+            placeholder={data.placeholder}
+            loadOptions={data.loadOptions}
+            onChange={({ value }) =>
+              this.handleChange({
+                target: { name: data.name, value, type: data.type },
+              })
+            }
+          />
+        </div>
       );
     }
     if (data.component === 'text') {

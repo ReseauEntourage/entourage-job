@@ -84,7 +84,7 @@ module.exports = (sequelize, DataTypes) => {
     user.id = uuid();
     user.firstName = u.firstName.toLowerCase();
     user.lastName = u.lastName.toLowerCase();
-    user.url = [user.firstName, '-', user.id.substring(0, 8)].join();
+    user.url = `${user.firstName}-${user.id.substring(0, 8)}`;
     return user;
   });
 

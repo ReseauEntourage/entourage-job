@@ -76,7 +76,7 @@ Button.defaultProps = {
   visible: undefined,
   style: undefined,
   size: undefined,
-  href: undefined,
+  href: '#',
   widths: [],
   isExternal: false,
   newTab: false,
