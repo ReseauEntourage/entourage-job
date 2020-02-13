@@ -12,9 +12,9 @@ import {
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
 import ModalEdit from '../../components/modals/ModalEdit';
 import ButtonIcon from '../../components/utils/ButtonIcon';
-import schemaPersonalData from '../../components/forms/schema/formPersonalData';
 import Api from '../../Axios';
 import FormWithValidation from '../../components/forms/FormWithValidation';
+import schemaPersonalData from '../../components/forms/schema/formPersonalData';
 import schemaChangePassword from '../../components/forms/schema/formChangePassword';
 import ModalGeneric from '../../components/modals/ModalGeneric';
 import HeaderModal from '../../components/modals/HeaderModal';
@@ -31,8 +31,11 @@ const Parametres = () => {
     })
       .then(() => {
         setUser({ ...user, hidden });
+
         UIkit.notification(
-          'Votre numéro de téléphone a bien été mis à jour',
+          hidden
+            ? 'Votre CV est désormais masqué'
+            : 'Votre CV est désormais visible',
           'success'
         );
       })
@@ -67,9 +70,9 @@ const Parametres = () => {
                   checked={user.hidden}
                   onChange={() => {
                     if (user.hidden) {
-                      UIkit.modal('#modal-confirm-hide').show();
-                    } else {
                       hideCV(false);
+                    } else {
+                      UIkit.modal('#modal-confirm-hide').show();
                     }
                   }}
                 />

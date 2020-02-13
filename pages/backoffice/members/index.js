@@ -164,19 +164,30 @@ const MembersAdmin = () => {
               description="Merci de renseigner quelques informations afin de créer le membre"
               submitText="Créer le membre"
               onSubmit={async (fields) => {
-                const { data } = await axios.post('api/v1/user', fields);
-                if (data) {
-                  setMembers(
-                    [...members, data].sort((a, b) =>
-                      a.firstName > b.firstName
-                        ? 1
-                        : b.firstName > a.firstName
-                        ? -1
-                        : 0
-                    )
+                try {
+                  const { data } = await axios.post('api/v1/user', fields);
+                  if (data) {
+                    UIkit.notification('Le membre a bien été créé', 'success');
+                    setMembers(
+                      [...members, data].sort((a, b) => {
+                        if (a.firstName > b.firstName) {
+                          return 1;
+                        }
+                        if (b.firstName > a.firstName) {
+                          return -1;
+                        }
+                        return 0;
+                      })
+                    );
+                  } else {
+                    throw new Error('réponse de la requete vide');
+                  }
+                } catch (error) {
+                  console.error(error);
+                  UIkit.notification(
+                    "Une erreur c'est produite lors de la création du membre",
+                    'danger'
                   );
-                } else {
-                  setHasError(true);
                 }
               }}
             />
