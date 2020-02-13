@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
-      url: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       urlImg: DataTypes.STRING,
       intro: {
         type: DataTypes.TEXT,
@@ -79,7 +75,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: true,
       },
-      status: DataTypes.STRING,
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: 'New',
+      },
       version: {
         type: DataTypes.INTEGER,
         defaultValue: 1,

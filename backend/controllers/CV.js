@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-globals */
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
+const { QueryTypes } = require('sequelize');
 const { models, sequelize } = require('../db/models');
 const { cleanCV, controlText } = require('./tools');
 const { uploadFile } = require('./aws');
@@ -64,6 +65,26 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER = [
   ...INCLUDES_COMPLETE_CV_WITHOUT_USER,
   INCLUDE_ALL_USERS,
 ];
+
+// todo: revoir !!!
+const queryConditionCV = (attribute, value, allowHidden) =>
+  `
+SELECT cv.id
+FROM "CVs" cv
+inner join (
+  select "UserId", MAX(version) as version
+  from "CVs"
+  where "CVs".status = 'Published'
+  group by "UserId") groupCVs
+on cv."UserId" = groupCVs."UserId"
+and cv."version" =  groupCVs.version
+inner join (
+  select distinct id, "firstName", url
+  from "Users"
+  where ${allowHidden ? '' : ` hidden = false `}
+  ${attribute && value && !allowHidden ? ' and ' : ''}
+  ${attribute && value ? ` ${attribute} = '${value}'` : ''}) groupUsers
+on cv."UserId" = groupUsers.id`;
 
 const createCV = async (data) => {
   console.log(`createCV - Création du CV`);
@@ -171,14 +192,6 @@ const createCV = async (data) => {
     );
   }
 
-  // si possible le faire à la creation du cv
-  const { firstName } = await models.User.findByPk(data.UserId, {
-    attributes: ['firstName'],
-  });
-  modelCV.update({
-    url: `${firstName.toLowerCase()}-${data.UserId.substring(0, 8)}`,
-  });
-
   // renvoie du cv complet
   console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
   const completeCV = await models.CV.findByPk(modelCV.id, {
@@ -195,12 +208,22 @@ const deleteCV = (id) => {
   });
 };
 
+// todo: revoir
 const getCVbyUrl = async (url) => {
-  console.log(`getCVbyUrl - Récupérer un CV à partir de son url`);
-  const modelCV = await models.CV.findOne({
-    include: INCLUDES_COMPLETE_CV_WITH_NOT_HIDDEN_USER,
-    where: { url, status: 'Published' },
-    order: [['version', 'DESC']],
+  console.log(`getCVbyUrl - Récupérer un CV ${url}`);
+  const cvs = await sequelize.query(queryConditionCV('url', url), {
+    type: QueryTypes.SELECT,
+  });
+
+  const modelCV = await models.CV.findByPk(cvs[0].id, {
+    include: [
+      ...INCLUDES_COMPLETE_CV_WITHOUT_USER,
+      {
+        model: models.User,
+        as: 'user',
+        attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
+      },
+    ],
   });
   return cleanCV(modelCV);
 };
@@ -220,11 +243,14 @@ const getVisibleCVbyUrl = async (url) => {
   return cleanCV(modelCV);
 };
 
-const getCVbyUserId = async (UserId) => {
-  console.log(`getCV - Récupérer un CV non publié à partir du userId`);
+// todo: revoir
+const getCVbyUserId = async (userId) => {
+  console.log(`getCVByUserId ${userId}`);
   const modelCV = await models.CV.findOne({
     include: INCLUDES_COMPLETE_CV_WITH_ALL_USER,
-    where: { UserId },
+    where: {
+      UserId: userId,
+    },
     order: [['version', 'DESC']],
   });
   return cleanCV(modelCV);
@@ -248,49 +274,13 @@ const getRandomShortCVs = async (nb) => {
   console.log(
     `getRandomShortCVs - Récupère des CVs au format court de manière aléatoire`
   );
-  function getUnique(arr, comp) {
-    return (
-      arr
-        .map((e) => e[comp])
 
-        // store the keys of the unique objects
-        .map((e, i, final) => final.indexOf(e) === i && i)
-
-        // eliminate the dead keys & store unique objects
-        .filter((e) => arr[e])
-        .map((e) => arr[e])
-    );
-  }
-  /**
-   * // TODO
-    SELECT cv.*
-    FROM "CVs" as cv
-    INNER JOIN (
-      SELECT "UserId", MAX(version) AS version
-      FROM "CVs" c
-      WHERE status = 'Published'
-      AND visibility = true
-      GROUP BY "UserId"
-    ) groupedCV
-    ON cv."UserId" = groupedCV."UserId"
-    AND cv.version = groupedCV.version;
-   */
-  // const cvs = await sequelize.query(
-  //   'SELECT * FROM "CV_Last_Version_Published"',
-  //   {
-  //     model: models.CV,
-  //     mapToModel: true, // pass true here if you have any mapped fields
-  //   }
-  // );
-
+  const cvs = await sequelize.query(queryConditionCV(), {
+    type: QueryTypes.SELECT,
+  });
   const modelCVs = await models.CV.findAll({
-    where: {
-      status: 'Published',
-    },
-    // order: sequelize.random(),
-    order: [['version', 'DESC']],
-    // limit: nb || 11,
-    attributes: ['id', 'url', 'version', 'catchphrase'], // [Sequelize.fn('DISTINCT', Sequelize.col('version')) ,'version']
+    where: { id: cvs.map((cv) => cv.id) },
+    attributes: ['catchphrase'],
     include: [
       {
         model: models.Ambition,
@@ -307,16 +297,15 @@ const getRandomShortCVs = async (nb) => {
       {
         model: models.User,
         as: 'user',
-        attributes: ['firstName'],
-        where: { hidden: false },
+        attributes: ['firstName', 'url'],
       },
     ],
   });
-  const cvs = getUnique(
-    modelCVs.map(cleanCV).filter((cv) => cv.user), // filter those who do not have binded user
-    'url'
-  );
-  return cvs.sort(() => Math.random() - 0.5).slice(0, nb); // shuffle and take the nb first
+
+  return modelCVs
+    .map(cleanCV)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, nb); // shuffle and take the nb first
 };
 
 const setCV = (id, cv) => {

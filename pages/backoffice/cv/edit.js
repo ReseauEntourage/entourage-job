@@ -15,6 +15,9 @@ function translate(status) {
   if (status === 'Published') {
     return 'Publié';
   }
+  if (status === 'New') {
+    return 'Nouveau';
+  }
   return status;
 }
 
@@ -39,6 +42,8 @@ const Edit = () => {
         );
         if (data) {
           setCV(data);
+        } else {
+          setCV(null);
         }
       } catch (err) {
         console.error(err);

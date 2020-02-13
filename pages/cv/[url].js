@@ -41,21 +41,14 @@ const CVPage = ({ cv, router }) => {
   );
 };
 CVPage.getInitialProps = async ({ query }) => {
-  const res = await Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`);
-  const data = await res.data;
+  const { data } = await Api.get(
+    `${process.env.SERVER_URL}/api/v1/cv/${query.url}`
+  );
   return { cv: data };
 };
 CVPage.propTypes = {
-  cv: PropTypes.shape({
-    intro: PropTypes.string.isRequired,
-    user: PropTypes.shape({
-      firstName: PropTypes.string,
-      url: PropTypes.string,
-    }),
-  }),
-  router: PropTypes.shape({
-    asPath: PropTypes.string.isRequired,
-  }),
+  cv: PropTypes.shape(),
+  router: PropTypes.shape(),
 };
 CVPage.defaultProps = {
   cv: null,
