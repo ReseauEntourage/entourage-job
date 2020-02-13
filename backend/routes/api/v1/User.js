@@ -69,6 +69,29 @@ router.get('/', (req, res) => {
  * Route : GET /api/<VERSION>/user
  * Description : Récupère tous les Users
  */
+router.get('/members', (req, res) => {
+  const order = [['firstName', 'ASC']];
+  UserController.getMembers(
+    req.query.limit,
+    req.query.offset,
+    order,
+    req.query.role,
+    req.query.query
+  )
+    .then((users) => {
+      console.log(`Users récupérés (Total : ${users.length})`);
+      res.status(200).json(users);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Route : GET /api/<VERSION>/user
+ * Description : Récupère tous les Users
+ */
 router.get('/search', (req, res) => {
   console.log(req.query);
 

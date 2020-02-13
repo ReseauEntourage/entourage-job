@@ -60,7 +60,7 @@ export default {
           .get('api/v1/user/search', {
             params: {
               query: inputValue,
-              role: 'Coach',
+              role: 'Coach', // un certain role, faudra trouver un moyen de le rendre dynamique au changement du field role
             },
           })
           .then(({ data }) =>

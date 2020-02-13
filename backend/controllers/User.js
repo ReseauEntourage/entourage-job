@@ -1,6 +1,7 @@
-const { DataTypes, Op, fn, col, where } = require('sequelize');
-const db = require('../db/config/databaseConnect');
-const User = require('../db/models/user')(db, DataTypes);
+const { Op, fn, col, where } = require('sequelize');
+const {
+  models: { User, CV },
+} = require('../db/models');
 
 const createUser = (newUser) => {
   return new Promise((resolve, reject) => {
@@ -59,6 +60,64 @@ const getUsers = (limit, offset, order) => {
   });
 };
 
+const getMembers = (limit, offset, order, role, query) => {
+  const options = {
+    offset,
+    limit,
+    order,
+    where: {},
+    attributes: [
+      'firstName',
+      'lastName',
+      'email',
+      'role',
+      'lastConnection',
+      'url',
+    ],
+    include: [
+      {
+        model: User,
+        as: 'linkedUser',
+        attributes: ['firstName', 'lastName'],
+      },
+    ],
+  };
+  // recherche de l'utilisateur
+  if (query) {
+    const lowerCaseQuery = query.toLowerCase();
+    options.where = {
+      [Op.or]: [
+        { email: { [Op.like]: `%${lowerCaseQuery}%` } },
+        where(
+          fn(
+            'concat',
+            fn('lower', col('User.firstName')),
+            ' ',
+            fn('lower', col('User.lastName'))
+          ),
+          { [Op.like]: `%${lowerCaseQuery}%` }
+        ),
+      ],
+    };
+  }
+
+  // filtre par role
+  if (role === 'Candidat' || role === 'Coach') {
+    options.where.role = role;
+    // recuperer la derniere version de cv
+    // todo trouver un moyen d'ameliorer la recuperation
+    if (role === 'Candidat') {
+      options.include.push({
+        model: CV,
+        as: 'cvs',
+        attributes: ['version', 'status'],
+      });
+      options.order = [[{ model: CV, as: 'cvs' }, 'version', 'desc']];
+    }
+  }
+  return User.findAll(options);
+};
+
 const searchUsers = (query) => {
   const lowerCaseQuery = query.toLowerCase();
   return User.findAll({
@@ -99,4 +158,5 @@ module.exports = {
   getUsers,
   setUser,
   searchUsers,
+  getMembers,
 };

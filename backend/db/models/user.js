@@ -82,9 +82,10 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeCreate((u) => {
     const user = u;
     user.id = uuid();
-    user.firstName = u.firstName.toLowerCase();
-    user.lastName = u.lastName.toLowerCase();
-    user.url = `${user.firstName}-${user.id.substring(0, 8)}`;
+    user.url = `${u.firstName.toLowerCase().firstName}-${user.id.substring(
+      0,
+      8
+    )}`;
     return user;
   });
 
@@ -95,6 +96,11 @@ module.exports = (sequelize, DataTypes) => {
     });
     User.hasMany(models.CV, {
       as: 'cvs',
+    });
+    User.belongsTo(models.User, {
+      as: 'linkedUser',
+      foreignKey: 'userToCoach',
+      sourceKey: 'id',
     });
   };
 
