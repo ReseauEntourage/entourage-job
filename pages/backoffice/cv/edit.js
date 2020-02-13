@@ -1,5 +1,6 @@
 /* global UIkit */
 import React, { useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types'
 import { CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
@@ -179,6 +180,9 @@ const Content = ({ id }) => {
       />
     </>
   );
+};
+Content.propTypes = {
+  id: PropTypes.string.isRequired,
 };
 
 const Edit = () => {
