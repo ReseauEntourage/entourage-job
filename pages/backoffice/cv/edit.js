@@ -1,6 +1,6 @@
 /* global UIkit */
 import React, { useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
@@ -190,9 +190,7 @@ const Edit = () => {
 
   return (
     <LayoutBackOffice title="Edition du CV">
-      <Section>
-        <Content id={user.id} />
-      </Section>
+      <Section>{user && <Content id={user.id} />}</Section>
     </LayoutBackOffice>
   );
 };
