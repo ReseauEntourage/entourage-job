@@ -7,7 +7,6 @@ import {
   NavbarLogo,
   IconNoSSR,
   OffcanvasNoSSR,
-  Nav,
   SimpleLink,
 } from '../utils';
 import './Header.less';
@@ -15,7 +14,14 @@ import HeaderUserDropdown from './HeaderUserDropdown';
 import { UserContext } from '../store/UserProvider';
 
 const LINKS_CONNECTED = {
-  admin: [{ href: '/backoffice/members', name: 'Les membres', icon: 'users' }],
+  admin: [
+    { href: '/backoffice/members', name: 'Les membres', icon: 'users' },
+    {
+      href: '/backoffice/lesopportunites',
+      name: 'Les opportunités',
+      icon: 'list',
+    },
+  ],
   member: [
     { href: '/backoffice/cv/edit', name: 'Mon espace', icon: 'user' },
     {

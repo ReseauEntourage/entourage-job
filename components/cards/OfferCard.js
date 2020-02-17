@@ -26,8 +26,7 @@ const OfferCard = ({
       archived ? 'secondary' : 'default'
     }`}
   >
-    {isNew ? <div className="ent-offer-badge" /> : undefined}
-
+    {isNew && <div className="ent-offer-badge" />}
     <GridNoSSR
       gap="medium"
       childWidths={['1-1']}
@@ -36,10 +35,14 @@ const OfferCard = ({
           eachWidths={['expand', 'auto']}
           items={[
             <h5 className="uk-text-bold">{title}</h5>,
-            <IconNoSSR
-              name="star"
-              className={`${isStared ? 'ent-color-amber' : undefined}`}
-            />,
+            isStared === undefined ? (
+              <></>
+            ) : (
+              <IconNoSSR
+                name="star"
+                className={`${isStared ? 'ent-color-amber' : undefined}`}
+              />
+            ),
           ]}
         />,
         <GridNoSSR
@@ -56,9 +59,13 @@ const OfferCard = ({
           gap="small"
           between
           items={[
-            <Button disabled>
-              <span style={{ color: '#666' }}>{translateStatus(status)}</span>
-            </Button>,
+            status === undefined ? (
+              <></>
+            ) : (
+              <Button disabled>
+                <span style={{ color: '#666' }}>{translateStatus(status)}</span>
+              </Button>
+            ),
             <u className="uk-link-muted">voir l&rsquo;offre</u>,
           ]}
         />,
@@ -70,14 +77,16 @@ OfferCard.propTypes = {
   title: PropTypes.string.isRequired,
   from: PropTypes.string.isRequired,
   shortDescription: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired,
+  status: PropTypes.string,
   isStared: PropTypes.bool,
   isNew: PropTypes.bool,
-  archived: PropTypes.bool.isRequired,
+  archived: PropTypes.bool,
 };
 
 OfferCard.defaultProps = {
-  isStared: false,
-  isNew: true,
+  isStared: undefined,
+  isNew: undefined,
+  archived: undefined,
+  status: undefined,
 };
 export default OfferCard;

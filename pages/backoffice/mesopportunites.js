@@ -7,13 +7,8 @@ import OfferCard from '../../components/cards/OfferCard';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
 import ModalOffer from '../../components/modals/ModalOffer';
 import Api from '../../Axios';
+import Filter from '../../components/utils/Filter';
 
-function getTag(offer) {
-  if (offer.userOpportunity && offer.userOpportunity.archived) {
-    return 'tag-archive';
-  }
-  return `tag-${offer.isPublic ? 'public' : 'private'}`;
-}
 const Opportunites = () => {
   const [currentOffer, setCurrentOffer] = useState(null);
   const [offers, setOffers] = useState(undefined);
@@ -21,42 +16,67 @@ const Opportunites = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (user) {
-        setLoading(true);
-        try {
-          const { data } = await Api.get(
-            `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${user.id}`
-          );
-
-          // sorted by bookmark and date
-          const sortedOffers = data.sort((a, b) => {
-            if (a.userOpportunity || b.userOpportunity) {
-              if (a.userOpportunity && b.userOpportunity) {
-                if (
-                  b.userOpportunity.bookmarked &&
-                  a.userOpportunity.bookmarked
-                ) {
-                  return new Date(b.date) - new Date(a.date);
-                }
-                return (
-                  b.userOpportunity.bookmarked - a.userOpportunity.bookmarked
-                );
-              }
-              if (b.userOpportunity) return b.userOpportunity.bookmarked;
-            }
-            return new Date(b.date) - new Date(a.date);
-          });
-          setOffers(sortedOffers);
-          setLoading(false);
-        } catch (err) {
-          console.error(err);
-          setLoading(false);
-          setHasError(true);
+  const onClickOpportunityCard = async (offer) => {
+    const opportunity = offer;
+    // si jamais ouvert
+    if (!offer.userOpportunity) {
+      const { data } = await Api.post(
+        `${process.env.SERVER_URL}/api/v1/opportunity/join`,
+        {
+          opportunityId: offer.id,
+          userId: user.id,
         }
-      } else console.log('no user');
-    };
+      );
+      opportunity.userOpportunity = data;
+    }
+    setCurrentOffer(opportunity);
+    UIkit.modal('#modal-offer').show();
+  };
+
+  const getTag = (offer) => {
+    if (offer.userOpportunity && offer.userOpportunity.archived) {
+      return 'tag-archive';
+    }
+    return `tag-${offer.isPublic ? 'public' : 'private'}`;
+  };
+
+  const fetchData = async () => {
+    if (user) {
+      setLoading(true);
+      try {
+        const { data } = await Api.get(
+          `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${user.id}`
+        );
+
+        // sorted by bookmark and date
+        const sortedOffers = data.sort((a, b) => {
+          if (a.userOpportunity || b.userOpportunity) {
+            if (a.userOpportunity && b.userOpportunity) {
+              if (
+                b.userOpportunity.bookmarked &&
+                a.userOpportunity.bookmarked
+              ) {
+                return new Date(b.date) - new Date(a.date);
+              }
+              return (
+                b.userOpportunity.bookmarked - a.userOpportunity.bookmarked
+              );
+            }
+            if (b.userOpportunity) return b.userOpportunity.bookmarked;
+          }
+          return new Date(b.date) - new Date(a.date);
+        });
+        setOffers(sortedOffers);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setLoading(false);
+        setHasError(true);
+      }
+    } else console.log('no user');
+  };
+
+  useEffect(() => {
     fetchData();
   }, [user, currentOffer]);
 
@@ -86,80 +106,48 @@ const Opportunites = () => {
           </Section>
         ) : (
           <>
-            <div uk-filter="target: #opportunitees">
-              <ul className="uk-subnav ent-subnav">
-                <li uk-filter-control=".tag-private" className="uk-active">
-                  <a href="#">Mes offres</a>
-                </li>
-                <li uk-filter-control=".tag-public">
-                  <a href="#">Offres générales</a>
-                </li>
-                <li uk-filter-control=".tag-archive">
-                  <a href="#">Offres archivées</a>
-                </li>
-              </ul>
-              {loading ? (
-                <div className="uk-height-medium uk-flex uk-flex-center uk-flex-middle">
-                  <div data-uk-spinner="" />
-                </div>
-              ) : (
-                <ul
-                  id="opportunitees"
-                  className="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-3@l"
-                  data-uk-grid=""
-                  uk-height-match="target: > li .uk-card"
-                >
-                  {offers &&
-                    offers.map((offer, i) => {
-                      return (
-                        <li key={i} className={getTag(offer)}>
-                          <a
-                            className="uk-link-reset"
-                            onClick={async () => {
-                              const opportunity = offer;
-                              // si jamais ouvert
-                              if (!offer.userOpportunity) {
-                                const { data } = await Api.post(
-                                  `${process.env.SERVER_URL}/api/v1/opportunity/join`,
-                                  {
-                                    opportunityId: offer.id,
-                                    userId: user.id,
-                                  }
-                                );
-                                opportunity.userOpportunity = data;
-                              }
-
-                              setCurrentOffer(opportunity);
-                              UIkit.modal('#modal-offer').show();
-                            }}
-                            aria-hidden
-                            role="button"
-                          >
-                            <OfferCard
-                              title={offer.title}
-                              from={offer.recruiterName}
-                              shortDescription={offer.company}
-                              archived={
-                                offer.userOpportunity &&
-                                offer.userOpportunity.archived
-                              }
-                              isNew={!offer.userOpportunity}
-                              isStared={
-                                offer.userOpportunity &&
-                                offer.userOpportunity.bookmarked
-                              }
-                              status={
-                                offer.userOpportunity &&
-                                offer.userOpportunity.status
-                              }
-                            />
-                          </a>
-                        </li>
-                      );
-                    })}
-                </ul>
-              )}
-            </div>
+            <Filter
+              id="opportunitees"
+              loading={loading}
+              filters={[
+                { tag: 'private', title: 'Mes offres' },
+                { tag: 'public', title: 'Offres générales' },
+                { tag: 'archive', title: 'Offres archivées' },
+              ]}
+            >
+              {offers &&
+                offers.map((offer, i) => {
+                  return (
+                    <li key={i} className={getTag(offer)}>
+                      <a
+                        aria-hidden
+                        role="button"
+                        className="uk-link-reset"
+                        onClick={() => onClickOpportunityCard(offer)}
+                      >
+                        <OfferCard
+                          title={offer.title}
+                          from={offer.recruiterName}
+                          shortDescription={offer.company}
+                          archived={
+                            offer.userOpportunity &&
+                            offer.userOpportunity.archived
+                          }
+                          isNew={!offer.userOpportunity}
+                          isStared={
+                            offer.userOpportunity &&
+                            offer.userOpportunity.bookmarked
+                          }
+                          status={
+                            offer.userOpportunity &&
+                            offer.userOpportunity.status
+                          }
+                        />
+                      </a>
+                    </li>
+                  );
+                })}
+            </Filter>
             <ModalOffer
               currentOffer={currentOffer}
               setCurrentOffer={(offer) => {
