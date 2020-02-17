@@ -13,15 +13,15 @@ const upload = (data, outputPath) => {
     s3.upload(
       {
         Bucket: process.env.AWSS3_BUCKET_NAME,
-        Key: `images/${outputPath}`, // File name you want to save as in S3
+        Key: `${process.env.AWSS3_DIRECTORY}${outputPath}`, // File name you want to save as in S3
         Body: data,
         ACL: 'public-read', // allow public reading access to the file
       },
-      (err, data) => {
+      (err, { Location }) => {
         if (err) {
           reject(err);
         } else {
-          resolve(data.Location);
+          resolve(Location);
         }
       }
     );
