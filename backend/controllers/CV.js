@@ -92,7 +92,7 @@ const createCV = async (data) => {
     delete data.userId;
   }
 
-  const modelCV = await models.CV.create(data);
+  const modelCV = await models.CV.create(data); // TODO VERIFIER LES ENTREES
 
   // Skills
   if (data.skills) {
@@ -279,7 +279,7 @@ const getRandomShortCVs = async (nb) => {
   });
   const modelCVs = await models.CV.findAll({
     where: { id: cvs.map((cv) => cv.id) },
-    attributes: ['catchphrase'],
+    attributes: ['catchphrase', 'urlImg'],
     include: [
       {
         model: models.Ambition,
