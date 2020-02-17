@@ -71,7 +71,7 @@ const MembersAdmin = () => {
       <Section>
         <HeaderBackoffice
           title="Gestion des membres"
-          description="Ici tu peux à toutes les opportunités et valider les offres qui se retrouveront ensuite dans les tableaux des candidats."
+          description="Ici tu peux accéder à tous les profils des coachs et candidats afin d'effectuer un suivi individuel de leur avancée."
         >
           <button
             type="button"
