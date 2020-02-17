@@ -1,6 +1,6 @@
-const { Op, fn, col, where } = require('sequelize');
 const {
   models: { User, CV },
+  Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 
 const createUser = (newUser) => {

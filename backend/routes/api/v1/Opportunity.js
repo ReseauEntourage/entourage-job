@@ -21,27 +21,12 @@ router.post('/', auth.required, (req, res) => {
  * Route : GET /api/<VERSION>/opportunity
  * Description : Récupère toutes les opportunités
  */
-router.get('/', auth.required, (req, res) => {
-  OpportunityController.getOpportunities()
+router.get('/admin', auth.required, (req, res) => {
+  OpportunityController.getOpportunities(req.query.query)
     .then((listeOpportunities) => {
       console.log(
         `Opportunités récupérés (Total : ${listeOpportunities.length}`
       );
-      res.status(200).json(listeOpportunities);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(401).send('Une erreur est survenue');
-    });
-});
-
-/**
- * Route : GET /api/<VERSION>/...
- * Description : ...
- */
-router.get('/public', auth.required, (req, res) => {
-  OpportunityController.getOpportunities('Public')
-    .then((listeOpportunities) => {
       res.status(200).json(listeOpportunities);
     })
     .catch((err) => {

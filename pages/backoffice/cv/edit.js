@@ -56,12 +56,26 @@ const Content = ({ id }) => {
   const submitCV = async () => {
     setLoading(true);
     try {
-      const { data } = await Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+      const formData = new FormData();
+      formData.append('image', cv.profileImg);
+      const obj = {
         ...cv,
         id: undefined,
         status: 'Pending',
         version: cv.version + 1,
-      });
+        profileImg: undefined,
+      };
+      Object.keys(obj).forEach((key) => formData.append(key, obj[key]));
+
+      const { data } = await Api.post(
+        `${process.env.SERVER_URL}/api/v1/cv`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
       console.log(data);
       setCV(data);
       UIkit.notification('Le profil a été mis à jour', {

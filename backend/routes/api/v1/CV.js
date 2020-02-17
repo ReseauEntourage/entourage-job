@@ -1,15 +1,37 @@
 // eslint-disable-next-line import/newline-after-import
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
+const multer = require('multer');
+const sharp = require('sharp');
+
 const { auth } = require('../../../controllers/Auth');
 const CVController = require('../../../controllers/CV');
+const { uploadFile } = require('../../../controllers/aws');
 const generateCVPreview = require('../../../shareImage');
+
+const upload = multer({ dest: 'uploads/' });
 
 /**
  * Route : POST /api/<VERSION>/cv
  * Description : Créé le CV
  */
-router.post('/', (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
+  console.log(req.file, req.body);
+  if (req.file) {
+    try {
+      const { path } = req.file;
+      const fileBuffer = sharp(path)
+        .resize({ width: 720 })
+        .webp()
+        .toBuffer();
+
+      const { data } = await uploadFile(path, `${req.body.UserId}.webp`);
+      console.log(data);
+      req.body.imgUrl = `${req.body.UserId}.webp`;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   CVController.createCV(req.body)
     .then((cv) => {
       // creation de l'image de preview cv

@@ -1,39 +1,32 @@
-const S3 = require('aws-s3');
+const S3 = require('aws-sdk/clients/s3');
+const fs = require('fs');
+// The name of the bucket that you have created
+const BUCKET_NAME = 'Entourage';
 
-const S3Client = new S3({
-  bucketName: 'Entourage',
-  dirName: 'images' /* optional */,
-  region: 'eu-west-1',
+const s3 = new S3({
   accessKeyId: process.env.AWSS3_ID,
   secretAccessKey: process.env.AWSS3_SECRET,
-  s3Url:
-    'https://s3.console.aws.amazon.com/s3/buckets/entourage-job-preprod/' /* optional */,
+  Bucket: BUCKET_NAME,
 });
-/*  Notice that if you don't provide a dirName, the file will be automatically uploaded to the root of your bucket */
 
-/* This is optional */
-const uploadFile = (file, fileName) => {
-  S3Client.uploadFile(file, fileName)
-    .then((data) => console.log(data))
-    .catch((err) => console.error(err));
+const uploadFile = (input, output) => {
+  // Read content from the file
+  const fileContent = fs.readFileSync(input);
+
+  // Setting up S3 upload parameters
+  const params = {
+    Key: output, // File name you want to save as in S3
+    Body: fileContent,
+  };
+
+  // Uploading files to the bucket
+  s3.upload(params, (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(`File uploaded successfully. ${data.Location}`);
+  });
 };
 
-const deleteFile = (fileName) => {
-  S3Client.deleteFile(fileName)
-    .then((response) => console.log(response))
-    .catch((err) => console.error(err));
-};
-/**
- * {
- *   Response: {
- *     bucket: "your-bucket-name",
- *     key: "photos/image.jpg",
- *     location: "https://your-bucket.s3.amazonaws.com/photos/image.jpg"
- *   }
- * }
- */
-
-module.exports = {
-  uploadFile,
-  deleteFile,
-};
+module.exports = { uploadFile };

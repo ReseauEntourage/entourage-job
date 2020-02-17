@@ -4,7 +4,6 @@
 const { QueryTypes } = require('sequelize');
 const { models, sequelize } = require('../db/models');
 const { cleanCV, controlText } = require('./tools');
-const { uploadFile } = require('./aws');
 
 const INCLUDE_ALL_USERS = {
   model: models.User,
@@ -320,10 +319,6 @@ const setCV = (id, cv) => {
   });
 };
 
-const uploadToBucket = (file, UserId) => {
-  return uploadFile(file, UserId);
-};
-
 module.exports = {
   createCV,
   deleteCV,
@@ -332,5 +327,4 @@ module.exports = {
   getCVs,
   getRandomShortCVs,
   setCV,
-  uploadToBucket,
 };

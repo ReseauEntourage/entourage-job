@@ -1,33 +1,35 @@
 /* global UIkit */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from '../../Axios';
 
 const CVEditPicture = ({ urlImg, onChange }) => {
+  const [image, setImage] = useState(urlImg);
   return (
     <div
       className="uk-card uk-height-1-1 uk-background-cover "
-      style={{ backgroundImage: `url(${urlImg})`, minHeight: '300px' }}
+      style={{ backgroundImage: `url(${image})`, minHeight: '300px' }}
     >
       <div className="uk-overlay-default uk-position-cover" data-uk-form-custom>
         <div className="uk-position-center">
           <input
             type="file"
             onChange={({ target }) => {
+              console.log(target);
               const file = target.files[0];
-              axios
-                .post('/api/v1/cv/image', { file })
-                .then(({ data }) => {
-                  onChange({ urlImg: data.urlImg });
-                  UIkit.notification('Photo enregistrée', 'success');
-                })
-                .catch((err) => {
-                  console.error(err);
-                  UIkit.notification(
-                    "Erreur lors de l'enregistrement de la photo",
-                    'danger'
-                  );
-                });
+              onChange({ profileImg: file });
+              // axios
+              //   .post('/api/v1/cv/image', { file })
+              //   .then(({ data }) => {
+              //     UIkit.notification('Photo enregistrée', 'success');
+              //   })
+              //   .catch((err) => {
+              //     console.error(err);
+              //     UIkit.notification(
+              //       "Erreur lors de l'enregistrement de la photo",
+              //       'danger'
+              //     );
+              //   });
             }}
           />
           <button
@@ -36,7 +38,7 @@ const CVEditPicture = ({ urlImg, onChange }) => {
             tabIndex="-1"
             on
           >
-            Select
+            Mettre à jour
           </button>
         </div>
       </div>
