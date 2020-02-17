@@ -37,7 +37,7 @@ const Filter = ({ id, loading, filters, children, search }) => (
     ) : (
       <ul
         id={id}
-        className="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-3@l"
+        className="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l"
         data-uk-grid=""
         uk-height-match="target: > li .uk-card"
       >

@@ -86,10 +86,18 @@ const getOpportunities = async (search) => {
     const lowerCaseSearch = search.toLowerCase();
     options.where = {
       [Op.or]: [
-        { title: { [Op.like]: `%${lowerCaseSearch}%` } },
-        { recruiterName: { [Op.like]: `%${lowerCaseSearch}%` } },
-        { location: { [Op.like]: `%${lowerCaseSearch}%` } },
-        { company: { [Op.like]: `%${lowerCaseSearch}%` } },
+        where(fn('lower', col('Opportunity.title')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.recruiterName')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.location')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.company')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
       ],
     };
   }

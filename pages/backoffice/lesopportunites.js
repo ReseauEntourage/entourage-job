@@ -170,6 +170,7 @@ const Opportunites = () => {
                           from={offer.recruiterName}
                           shortDescription={offer.company}
                           archived={offer.isArchived}
+                          isPublic={offer.isPublic}
                         />
                       </a>
                     </li>

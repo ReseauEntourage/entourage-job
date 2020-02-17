@@ -20,57 +20,55 @@ const OfferCard = ({
   isStared,
   isNew,
   archived,
+  isPublic,
 }) => (
   <div
-    className={`ent-offer uk-card uk-card-hover uk-card-body uk-card-${
+    className={`ent-offer uk-card uk-card- uk-card-hover uk-card-body uk-card-${
       archived ? 'secondary' : 'default'
     }`}
   >
     {isNew && <div className="ent-offer-badge" />}
-    <GridNoSSR
-      gap="medium"
-      childWidths={['1-1']}
-      items={[
-        <GridNoSSR
-          eachWidths={['expand', 'auto']}
-          items={[
-            <h5 className="uk-text-bold">{title}</h5>,
-            isStared === undefined ? (
-              <></>
-            ) : (
-              <IconNoSSR
-                name="star"
-                className={`${isStared ? 'ent-color-amber' : undefined}`}
-              />
-            ),
-          ]}
-        />,
-        <GridNoSSR
-          gap="small"
-          eachWidths={['auto', 'expand']}
-          items={[<IconNoSSR name="user" />, <p>{from}</p>]}
-        />,
-        <GridNoSSR
-          gap="small"
-          eachWidths={['auto', 'expand']}
-          items={[<IconNoSSR name="hashtag" />, <p>{shortDescription}</p>]}
-        />,
-        <GridNoSSR
-          gap="small"
-          between
-          items={[
-            status === undefined ? (
-              <></>
-            ) : (
-              <Button disabled>
-                <span style={{ color: '#666' }}>{translateStatus(status)}</span>
-              </Button>
-            ),
-            <u className="uk-link-muted">voir l&rsquo;offre</u>,
-          ]}
-        />,
-      ]}
-    />
+    <GridNoSSR gap="medium" childWidths={['1-1']}>
+      <GridNoSSR eachWidths={['expand', 'auto']}>
+        <h5 className="uk-text-bold">{title}</h5>
+        {isStared === undefined ? (
+          <></>
+        ) : (
+          <IconNoSSR
+            name="star"
+            className={`${isStared ? 'ent-color-amber' : undefined}`}
+          />
+        )}
+      </GridNoSSR>
+      <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
+        <IconNoSSR name="user" />
+        <p>{from}</p>
+      </GridNoSSR>
+      <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
+        <IconNoSSR name="world" />
+        <p>{shortDescription}</p>
+      </GridNoSSR>
+      {isPublic !== undefined && (
+        <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
+          <IconNoSSR name="info" />
+          <p>{isPublic ? 'Offre générale' : 'Offre privée'}</p>
+        </GridNoSSR>
+      )}
+      <GridNoSSR
+        gap="small"
+        between
+        items={[
+          status === undefined ? (
+            <></>
+          ) : (
+            <Button disabled>
+              <span style={{ color: '#666' }}>{translateStatus(status)}</span>
+            </Button>
+          ),
+          <u className="uk-link-muted">voir l&rsquo;offre</u>,
+        ]}
+      />
+    </GridNoSSR>
   </div>
 );
 OfferCard.propTypes = {
@@ -81,6 +79,7 @@ OfferCard.propTypes = {
   isStared: PropTypes.bool,
   isNew: PropTypes.bool,
   archived: PropTypes.bool,
+  isPublic: PropTypes.bool,
 };
 
 OfferCard.defaultProps = {
@@ -88,5 +87,6 @@ OfferCard.defaultProps = {
   isNew: undefined,
   archived: undefined,
   status: undefined,
+  isPublic: undefined,
 };
 export default OfferCard;
