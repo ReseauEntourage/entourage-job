@@ -233,6 +233,9 @@ const updateOpportunity = async (opportunity) => {
     where: { id: opportunity.id },
   });
 
+  const modelOpportunity = await Opportunity.findByPk(opportunity.id, {
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
+  });
   if (opportunity.businessLines) {
     await Opportunity_BusinessLine.destroy({
       where: {
@@ -247,8 +250,26 @@ const updateOpportunity = async (opportunity) => {
         }).then((model) => model[0])
       )
     );
-    const modelOpportunity = await Opportunity.findByPk(opportunity.id);
     await modelOpportunity.addBusinessLines(businessLines);
+  }
+
+  if (opportunity.usersId) {
+    const differenceId = modelOpportunity.userOpportunity
+      .filter(({ UserId }) => !opportunity.usersId.includes(UserId))
+      .map(({ id }) => id);
+
+    await Opportunity_BusinessLine.destroy({
+      where: {
+        OpportunityId: differenceId,
+      },
+      truncate: true,
+    });
+    opportunity.usersId.forEach((userId) =>
+      Opportunity_User.create({
+        OpportunityId: modelOpportunity.id,
+        UserId: userId, // to rename in userId
+      })
+    );
   }
 
   return getOpportunity(opportunity.id);

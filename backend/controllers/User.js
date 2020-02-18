@@ -140,14 +140,10 @@ const searchUsers = (query) => {
 };
 
 const setUser = (id, user) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'setUser -';
-    console.log(`${infoLog} Modification du User`);
-    User.update(user, {
-      where: { id },
-    })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+  const infoLog = 'setUser -';
+  console.log(`${infoLog} Modification du User`);
+  return User.update(user, {
+    where: { id },
   });
 };
 

@@ -21,7 +21,6 @@ const OfferCard = ({
   isNew,
   archived,
   isPublic,
-  customBadge,
   specifiedOffer,
 }) => (
   <div
@@ -29,7 +28,6 @@ const OfferCard = ({
       archived ? 'secondary' : 'default'
     }`}
   >
-    {customBadge}
     {isNew && <div className="ent-offer-badge" />}
     <GridNoSSR gap="medium" childWidths={['1-1']}>
       <GridNoSSR eachWidths={['expand', 'auto']}>
@@ -89,7 +87,6 @@ OfferCard.propTypes = {
   isNew: PropTypes.bool,
   archived: PropTypes.bool,
   isPublic: PropTypes.bool,
-  customBadge: PropTypes.element,
   specifiedOffer: PropTypes.string,
 };
 
@@ -99,7 +96,6 @@ OfferCard.defaultProps = {
   archived: undefined,
   status: undefined,
   isPublic: undefined,
-  customBadge: undefined,
   specifiedOffer: undefined,
 };
 export default OfferCard;

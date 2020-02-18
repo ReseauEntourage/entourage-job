@@ -37,7 +37,7 @@ const Content = ({ userId, user }) => {
       try {
         const { data } = await Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
           params: {
-            userId,
+            userId: user.role === 'Coach' ? user.userToCoach : userId,
           },
         });
         if (data) {
@@ -126,6 +126,20 @@ const Content = ({ userId, user }) => {
               Il peut y avoir plusieurs raisons à ce sujet. Contacte
               l&apos;équipe LinkedOut pour en savoir plus.
             </p>
+            {user.userToCoach && (
+              <Button
+                style="primary"
+                onClick={() =>
+                  Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                    cv: {
+                      userId: user.userToCoach,
+                    },
+                  }).then(({ data }) => setCV(data))
+                }
+              >
+                Creer votre CV
+              </Button>
+            )}
           </GridNoSSR>
         );
       }

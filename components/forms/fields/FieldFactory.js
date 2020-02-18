@@ -161,6 +161,7 @@ export default class FieldFactory {
             cacheOptions
             isClearable
             defaultOptions
+            defaultValue={this.defaultValues[data.id]}
             isMulti={data.isMulti}
             openMenuOnClic={false}
             placeholder={data.placeholder}
