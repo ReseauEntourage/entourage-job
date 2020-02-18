@@ -82,12 +82,15 @@ const Header = ({ isHome }) => {
         }
       />
       <OffcanvasNoSSR id="offcanvas">
-        <Nav
-          navbar={false}
-          items={LINKS.filter(({ href }) => href !== '#').map((value) => (
-            <SimpleLink href={value.href}>{value.name}</SimpleLink>
-          ))}
-        />
+        <ul className="uk-nav uk-nav-default">
+          {LINKS.filter(({ href }) => href !== '#').map(
+            ({ href, name }, index) => (
+              <li key={index}>
+                <SimpleLink href={href}>{name}</SimpleLink>
+              </li>
+            )
+          )}
+        </ul>
       </OffcanvasNoSSR>
     </header>
   );

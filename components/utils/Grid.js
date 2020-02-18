@@ -40,7 +40,15 @@ const Grid = ({
   if (row) classBuffer += ' uk-flex-row';
 
   if (className) classBuffer += ` ${className}`;
-  const content = items !== undefined ? items : children;
+  const content = (() => {
+    if (items !== undefined) {
+      return items;
+    }
+    if (Array.isArray(children)) {
+      return children;
+    }
+    return [children];
+  })();
   return (
     <div className={classBuffer} data-uk-grid={gridBuffer}>
       {content.map((item, index) => (
