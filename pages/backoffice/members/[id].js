@@ -106,7 +106,7 @@ const Content = ({ userId, user }) => {
               style="primary"
               onClick={() =>
                 Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                  userId,
+                  cv: { userId },
                 }).then(({ data }) => setCV(data))
               }
             >

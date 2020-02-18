@@ -39,7 +39,7 @@ const Textarea = ({
     if (defaultValue) {
       setValue(defaultValue);
       setLabelClass(defaultValue.length > 0 && ' stay-small');
-      onChange({ target: { name, defaultValue, type: 'textarea' } });
+      onChange({ target: { name, value: defaultValue, type: 'textarea' } });
     }
   }, [defaultValue]);
 

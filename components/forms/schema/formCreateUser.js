@@ -54,7 +54,7 @@ export default {
       id: 'userToCoach',
       name: 'userToCoach',
       type: 'text',
-      component: 'select-request',
+      component: 'select-request-async',
       loadOptions: (inputValue, callback) => {
         axios
           .get('api/v1/user/search', {

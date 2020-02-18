@@ -2,7 +2,13 @@
 /* eslint-disable camelcase */
 
 const {
-  models: { BusinessLine, Opportunity_User, Opportunity },
+  models: {
+    BusinessLine,
+    Opportunity_User,
+    Opportunity_BusinessLine,
+    Opportunity,
+    User,
+  },
   Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 const { cleanOpportunity, controlText } = require('./tools');
@@ -80,7 +86,39 @@ const getOpportunity = async (id) => {
 
 const getOpportunities = async (search) => {
   const options = {
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    include: [
+      {
+        model: BusinessLine,
+        as: 'businessLines',
+        attributes: ['name'],
+        through: { attributes: [] },
+      },
+      {
+        model: Opportunity_User,
+        as: 'userOpportunity',
+        include: [
+          {
+            model: User,
+            attributes: [
+              'id',
+              'email',
+              'firstName',
+              'lastName',
+              'gender',
+              'email',
+            ],
+          },
+        ],
+        attributes: [
+          'id',
+          'UserId',
+          'status',
+          'bookmarked',
+          'archived',
+          'note',
+        ],
+      },
+    ],
   };
   if (search) {
     const lowerCaseSearch = search.toLowerCase();
@@ -111,6 +149,7 @@ const getPublicOpportunities = async () => {
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       isPublic: true,
+      isValidated: true,
     },
   });
 
@@ -128,6 +167,7 @@ const getPrivateUserOpportunities = async (userId) => {
     where: {
       id: opportunityUsers.map((model) => model.OpportunityId),
       isPublic: false,
+      isValidated: true,
     },
   });
   return opportunities.map((model) => {
@@ -150,10 +190,11 @@ const getAllUserOpportunities = async (userId) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       [Op.or]: [
-        { isPublic: true },
+        { isPublic: true, isValidated: true },
         {
           id: opportunityUsers.map((model) => model.OpportunityId),
           isPublic: false,
+          isValidated: true,
         },
       ],
     },
@@ -187,10 +228,30 @@ const updateOpportunityUser = async (opportunityUser) => {
   });
 };
 
-const updateOpportunity = (opportunity) => {
-  return Opportunity.update(opportunity, {
+const updateOpportunity = async (opportunity) => {
+  await Opportunity.update(opportunity, {
     where: { id: opportunity.id },
   });
+
+  if (opportunity.businessLines) {
+    await Opportunity_BusinessLine.destroy({
+      where: {
+        OpportunityId: opportunity.id,
+      },
+      truncate: true,
+    });
+    const businessLines = await Promise.all(
+      opportunity.businessLines.map((name) =>
+        BusinessLine.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0])
+      )
+    );
+    const modelOpportunity = await Opportunity.findByPk(opportunity.id);
+    await modelOpportunity.addBusinessLines(businessLines);
+  }
+
+  return getOpportunity(opportunity.id);
 };
 
 module.exports = {

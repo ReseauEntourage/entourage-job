@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import AsyncSelect from 'react-select/async';
+import ReactSelect from 'react-select';
 
 import axios from '../../../Axios';
 import DatePicker from './DatePicker';
@@ -148,7 +149,7 @@ export default class FieldFactory {
         />
       );
     }
-    if (data.component === 'select-request') {
+    if (data.component === 'select-request-async') {
       return (
         <div>
           {data.title && (
@@ -160,6 +161,7 @@ export default class FieldFactory {
             cacheOptions
             isClearable
             defaultOptions
+            isMulti={data.isMulti}
             openMenuOnClic={false}
             placeholder={data.placeholder}
             loadOptions={data.loadOptions}
@@ -168,6 +170,46 @@ export default class FieldFactory {
                 target: { name: data.name, value, type: data.type },
               })
             }
+          />
+        </div>
+      );
+    }
+    if (data.component === 'select-request') {
+      return (
+        <div>
+          {data.title && (
+            <label className="uk-form-label" htmlFor={data.id}>
+              {data.title}
+            </label>
+          )}
+          <ReactSelect
+            isMulti={data.isMulti}
+            name={data.name}
+            defaultValue={this.defaultValues[data.id].map((value) => ({
+              value,
+              label: value,
+            }))}
+            options={data.options}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            placeholder={data.placeholder}
+            onChange={(obj) => {
+              if (obj) {
+                let valueToReturn = obj;
+                if (Array.isArray(obj)) {
+                  valueToReturn = obj.map(({ value }) => value);
+                } else {
+                  valueToReturn = obj.value;
+                }
+                this.handleChange({
+                  target: {
+                    name: data.name,
+                    value: valueToReturn,
+                    type: data.type,
+                  },
+                });
+              } else console.log('pb here reactselect');
+            }}
           />
         </div>
       );

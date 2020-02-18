@@ -102,6 +102,17 @@ router.post('/join', auth.required, (req, res) => {
     });
 });
 
+router.put('/', auth.required, (req, res) => {
+  OpportunityController.updateOpportunity(req.body)
+    .then((opp) => {
+      res.status(200).json(opp);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send(`Une erreur est survenue`);
+    });
+});
+
 router.put('/join', auth.required, (req, res) => {
   OpportunityController.updateOpportunityUser(req.body)
     .then((oppUs) => {

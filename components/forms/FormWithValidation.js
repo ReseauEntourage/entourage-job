@@ -118,7 +118,9 @@ export class Form extends Component {
           onSubmit={onSubmit}
         >
           <fieldset className="uk-fieldset uk-width-1-1">
-            {fieldsInfo.map(this.fieldFactory.generate)}
+            {fieldsInfo.map((value, i) => (
+              <li key={i}>{this.fieldFactory.generate(value)}</li>
+            ))}
           </fieldset>
           <div>
             <FooterForm

@@ -8,11 +8,11 @@ import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import axios from '../../Axios';
 
-const List = ({ className, children }) => (
+export const List = ({ className, children }) => (
   <ul className={`uk-nav ${className}`}>
-    {children.map((item, i) => (
-      <li key={i}>{item}</li>
-    ))}
+    {Array.isArray(children)
+      ? children.map((item, i) => <li key={i}>{item}</li>)
+      : children}
   </ul>
 );
 List.propTypes = {
@@ -23,7 +23,7 @@ List.defaultProps = {
   className: undefined,
 };
 
-const OfferInfoContainer = ({ icon, title, children }) => {
+export const OfferInfoContainer = ({ icon, title, children }) => {
   if (!children.map) {
     children = [children];
   }
@@ -50,7 +50,8 @@ OfferInfoContainer.defaultProps = {
   icon: undefined,
   children: [],
 };
-function translateCategory(isPublic) {
+
+export function translateCategory(isPublic) {
   if (!isPublic) return 'Offre personnelle';
   if (isPublic) return 'Offre générale';
   return 'Offre inconnue';

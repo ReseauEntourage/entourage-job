@@ -4,11 +4,11 @@ import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { Section } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
-import ModalOffer from '../../components/modals/ModalOffer';
+import ModalOfferAdmin from '../../components/modals/ModalOfferAdmin';
 import Filter from '../../components/utils/Filter';
 import Axios from '../../Axios';
 
-const Opportunites = () => {
+const LesOpportunites = () => {
   const [currentOffer, setCurrentOffer] = useState(null);
   const [offers, setOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
@@ -33,11 +33,6 @@ const Opportunites = () => {
     return tag.map((t) => `tag-${t}`).join(' ');
   };
 
-  const onClickOpportunityCard = async (offer) => {
-    setCurrentOffer(offer);
-    UIkit.modal('#modal-offer').show();
-  };
-
   const fetchData = async (query) => {
     setLoading(true);
     try {
@@ -49,7 +44,9 @@ const Opportunites = () => {
           },
         }
       );
+      console.log(data);
       setOffers(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
+
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -92,41 +89,6 @@ const Opportunites = () => {
             />
             Nouvelle opportunité
           </button>
-          {/* <ModalEdit
-
-          id="add-opportunity"
-          // formSchema={schemaCreateUser}
-          title="Création d'offre"
-          description="Merci de renseigner quelques informations afin de créer le membre"
-          submitText="Créer l'offre"
-          onSubmit={async (fields) => {
-            // try {
-            //   const { data } = await Axios.post('api/v1/user', fields);
-            //   if (data) {
-            //     UIkit.notification('Le membre a bien été créé', 'success');
-            //     setMembers(
-            //       [...members, data].sort((a, b) => {
-            //         if (a.firstName > b.firstName) {
-            //           return 1;
-            //         }
-            //         if (b.firstName > a.firstName) {
-            //           return -1;
-            //         }
-            //         return 0;
-            //       })
-            //     );
-            //   } else {
-            //     throw new Error('réponse de la requete vide');
-            //   }
-            // } catch (error) {
-            //   console.error(error);
-            //   UIkit.notification(
-            //     "Une erreur c'est produite lors de la création du membre",
-            //     'danger'
-            //   );
-            // }
-          }}
-        /> */}
         </HeaderBackoffice>
         {hasError ? (
           <Section className="uk-width-1-1">
@@ -163,7 +125,10 @@ const Opportunites = () => {
                         aria-hidden
                         role="button"
                         className="uk-link-reset"
-                        onClick={() => onClickOpportunityCard(offer)}
+                        onClick={() => {
+                          setCurrentOffer(offer);
+                          UIkit.modal('#modal-offer-admin').show();
+                        }}
                       >
                         <OfferCard
                           title={offer.title}
@@ -171,16 +136,43 @@ const Opportunites = () => {
                           shortDescription={offer.company}
                           archived={offer.isArchived}
                           isPublic={offer.isPublic}
+                          specifiedOffer={
+                            !offer.isPublic &&
+                            offer.userOpportunity &&
+                            offer.userOpportunity[0] &&
+                            offer.userOpportunity[0].User &&
+                            offer.userOpportunity[0].User.firstName
+                          }
+                          customBadge={(() => {
+                            let className = ' uk-label-warning';
+                            let content = 'En attente';
+                            if (offer.isValidated) {
+                              content = 'Validé';
+                              className = ' uk-label-success';
+                            }
+                            if (offer.isArchived) {
+                              content = 'Archivé';
+                              className = ' uk-label-danger';
+                            }
+                            return (
+                              <div
+                                className={`uk-card-badge uk-label${className}`}
+                              >
+                                {content}
+                              </div>
+                            );
+                          })()}
                         />
                       </a>
                     </li>
                   );
                 })}
             </Filter>
-            <ModalOffer
+            <ModalOfferAdmin
               currentOffer={currentOffer}
               setCurrentOffer={(offer) => {
                 setCurrentOffer(offer);
+                fetchData();
               }}
             />
           </>
@@ -189,4 +181,4 @@ const Opportunites = () => {
     </LayoutBackOffice>
   );
 };
-export default Opportunites;
+export default LesOpportunites;
