@@ -27,7 +27,7 @@ function translate(status) {
       return status;
   }
 }
-const Content = ({ userId }) => {
+const Content = ({ userId, user }) => {
   const [cv, setCV] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -94,37 +94,42 @@ const Content = ({ userId }) => {
   };
   // aucun CV
   if (cv === null) {
-    return (
-      <>
-        <Section>
-          <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
-            <div
-              className="uk-position-absolute uk-transform-center uk-text-center"
-              style={{ left: '50%', top: '50%' }}
+    if (user) {
+      if (user.role === 'Candidat') {
+        return (
+          <GridNoSSR column middle>
+            <h2 className="uk-text-bold">
+              <span className="uk-text-primary">Aucun CV</span> n&apos;est
+              rattaché à ce compte candidat.
+            </h2>
+            <Button
+              style="primary"
+              onClick={() =>
+                Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                  userId,
+                }).then(({ data }) => setCV(data))
+              }
             >
-              <h2 className="uk-text-bold">
-                <span className="uk-text-primary">Aucun candidat</span>{' '}
-                n&apos;est rattaché à ton compte coach.
-              </h2>
-              <p>
-                Il peut y avoir plusieurs raisons à ce sujet. Contacte
-                l&apos;équipe LinkedOut pour en savoir plus.
-              </p>
-              <Button
-                style="primary"
-                onClick={() =>
-                  Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                    userId,
-                  }).then(({ data }) => setCV(data))
-                }
-              >
-                Creer votre CV
-              </Button>
-            </div>
-          </div>
-        </Section>
-      </>
-    );
+              Creer votre CV
+            </Button>
+          </GridNoSSR>
+        );
+      }
+      if (user.role === 'Coach') {
+        return (
+          <GridNoSSR column middle>
+            <h2 className="uk-text-bold">
+              <span className="uk-text-primary">Aucun candidat</span> n&apos;est
+              rattaché à ce compte coach.
+            </h2>
+            <p>
+              Il peut y avoir plusieurs raisons à ce sujet. Contacte
+              l&apos;équipe LinkedOut pour en savoir plus.
+            </p>
+          </GridNoSSR>
+        );
+      }
+    }
   }
   // erreur pendant la requete
   if (error) {
@@ -206,6 +211,15 @@ const Content = ({ userId }) => {
     </>
   );
 };
+Content.propTypes = {
+  userId: PropTypes.string,
+  user: PropTypes.shape,
+};
+
+Content.defaultProps = {
+  userId: null,
+  user: null,
+};
 
 const CVPage = ({ member }) => {
   if (!member) {
@@ -280,7 +294,9 @@ const CVPage = ({ member }) => {
             </ul>
             <div />
           </GridNoSSR>
-          <Content userId={member.id} />
+          {member.coach !== 'Admin' && (
+            <Content userId={member.id} user={member} />
+          )}
         </GridNoSSR>
       </Section>
     </LayoutBackOffice>

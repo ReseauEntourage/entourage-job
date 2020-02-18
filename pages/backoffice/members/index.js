@@ -1,6 +1,7 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import { Section, GridNoSSR } from '../../../components/utils';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
@@ -27,8 +28,12 @@ const MembersAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [allLoaded, setAllLoaded] = useState(false);
   const [offset, setOffset] = useState(0);
-  const [role, setRole] = useState('All');
   const LIMIT = 10;
+  const router = useRouter();
+  const {
+    query: { role },
+  } = router;
+  console.log(role);
 
   const fetchData = async (doReset, query) => {
     setLoading(true);
@@ -39,7 +44,12 @@ const MembersAdmin = () => {
       const { data } = await axios.get(
         `${process.env.SERVER_URL}/api/v1/user/members`,
         {
-          params: { limit: LIMIT, offset: doReset ? 0 : offset, role, query },
+          params: {
+            limit: LIMIT,
+            offset: doReset ? 0 : offset,
+            role,
+            query,
+          },
         }
       );
       if (doReset) {
@@ -151,18 +161,46 @@ const MembersAdmin = () => {
           <>
             <GridNoSSR eachWidths={['expand', 'auto']}>
               <ul className="uk-subnav" data-uk-switcher>
-                <li className="uk-active">
-                  <a href="#" onClick={() => setRole('All')}>
+                <li
+                  className={
+                    role !== 'Candidat' && role !== 'Coach' && 'uk-active'
+                  }
+                >
+                  <a
+                    href="#"
+                    onClick={() =>
+                      router.push({
+                        pathname: '/backoffice/members',
+                        query: { role: 'All' },
+                      })
+                    }
+                  >
                     Tous les membres
                   </a>
                 </li>
-                <li>
-                  <a href="#" onClick={() => setRole('Candidat')}>
+                <li className={role === 'Candidat' && 'uk-active'}>
+                  <a
+                    href="#"
+                    onClick={() =>
+                      router.push({
+                        pathname: '/backoffice/members',
+                        query: { role: 'Candidat' },
+                      })
+                    }
+                  >
                     Candidats
                   </a>
                 </li>
-                <li>
-                  <a href="#" onClick={() => setRole('Coach')}>
+                <li className={role === 'Coach' && 'uk-active'}>
+                  <a
+                    href="#"
+                    onClick={() =>
+                      router.push({
+                        pathname: '/backoffice/members',
+                        query: { role: 'Coach' },
+                      })
+                    }
+                  >
                     Coachs
                   </a>
                 </li>
