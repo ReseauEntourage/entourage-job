@@ -37,8 +37,8 @@ const UserProvider = ({ children }) => {
     localStorage.setItem('access-token', data.user.token);
     console.log('login successful', data.user);
 
-    setUser(data.user);
     setIsAuthentificated(true);
+    setUser(data.user);
     Router.push('/backoffice/cv/edit');
   };
 
@@ -50,6 +50,7 @@ const UserProvider = ({ children }) => {
         .then(({ data }) => {
           localStorage.setItem('access-token', data.user.token);
 
+          setIsAuthentificated(true);
           setUser(data.user);
         })
         .catch((err) => {

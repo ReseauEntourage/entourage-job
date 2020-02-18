@@ -112,11 +112,11 @@ const HeaderConnected = ({ isHome }) => {
                 </span>
               </a>
             </li>
-            <HamburgerNoSSR href="#offcanvas-connected" hidden="m" />
+            <HamburgerNoSSR href="#offcanvas" hidden="m" />
           </ul>
         }
       />
-      <OffcanvasNoSSR id="offcanvas-connected">
+      <OffcanvasNoSSR id="offcanvas">
         <ul className="uk-nav uk-nav-default">
           <li>
             <SimpleLink href="/">
