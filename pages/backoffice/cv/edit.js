@@ -29,11 +29,12 @@ const toUpperFirstLetter = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 };
 
+// TODO fuse with members/[id]
 const Content = ({ id }) => {
   const [cv, setCV] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-
+  const { user } = useContext(UserContext);
   useEffect(() => {
     const fetchEdit = async () => {
       try {
@@ -57,16 +58,15 @@ const Content = ({ id }) => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append('image', cv.profileImg);
       const obj = {
         ...cv,
-        id: undefined,
-        status: 'Pending',
+        status: user.role === 'Candidat' ? 'Pending' : 'Published', // todo à mettre dans le back la decision ne doit pas etre pris par le front
         version: cv.version + 1,
-        profileImg: undefined,
       };
-      Object.keys(obj).forEach((key) => formData.append(key, obj[key]));
-
+      delete obj.id;
+      delete obj.profileImg;
+      formData.append('cv', JSON.stringify(obj));
+      formData.append('profileImage', cv.profileImage);
       const { data } = await Api.post(
         `${process.env.SERVER_URL}/api/v1/cv`,
         formData,
@@ -163,7 +163,7 @@ const Content = ({ id }) => {
   // affichage du CV
   return (
     <>
-      <CVEditWelcome cv={cv} />
+      <CVEditWelcome />
       <GridNoSSR between middle>
         <div>Statut : {translate(cv.status)}</div>
         <GridNoSSR>
