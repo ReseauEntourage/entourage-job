@@ -36,11 +36,11 @@ const Textarea = ({
   }
 
   useEffect(() => {
-    if (defaultValue) {
-      setValue(defaultValue);
-      setLabelClass(defaultValue.length > 0 && ' stay-small');
-      onChange({ target: { name, value: defaultValue, type: 'textarea' } });
-    }
+    setValue(defaultValue || '');
+    setLabelClass(
+      (defaultValue && defaultValue.length > 0 && ' stay-small') || ''
+    );
+    onChange({ target: { name, value: defaultValue || '', type: 'textarea' } });
   }, [defaultValue]);
 
   return (
@@ -48,6 +48,7 @@ const Textarea = ({
       <label className={`uk-form-label ${labelClass}`} htmlFor={id}>
         {title}
       </label>
+      {value}
       <textarea
         id={id}
         name={name}

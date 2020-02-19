@@ -27,7 +27,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
       'id',
       'UserId',
       'status',
-      // 'seen',
+      'seen',
       'bookmarked',
       'archived',
       'note',
@@ -116,6 +116,7 @@ const getOpportunities = async (search) => {
           'bookmarked',
           'archived',
           'note',
+          'seen',
         ],
       },
     ],
@@ -224,7 +225,15 @@ const updateOpportunityUser = async (opportunityUser) => {
     individualHooks: true,
   });
   return Opportunity_User.findByPk(opportunityUser.id, {
-    attributes: ['id', 'UserId', 'status', 'bookmarked', 'archived', 'note'],
+    attributes: [
+      'id',
+      'UserId',
+      'status',
+      'bookmarked',
+      'archived',
+      'note',
+      'seen',
+    ],
   });
 };
 

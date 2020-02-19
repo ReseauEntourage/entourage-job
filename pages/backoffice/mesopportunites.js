@@ -6,7 +6,7 @@ import { Section } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
 import ModalOffer from '../../components/modals/ModalOffer';
-import Api from '../../Axios';
+import axios from '../../Axios';
 import Filter from '../../components/utils/Filter';
 
 const Opportunites = () => {
@@ -16,35 +16,11 @@ const Opportunites = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
 
-  const onClickOpportunityCard = async (offer) => {
-    const opportunity = offer;
-    // si jamais ouvert
-    if (!offer.userOpportunity) {
-      const { data } = await Api.post(
-        `${process.env.SERVER_URL}/api/v1/opportunity/join`,
-        {
-          opportunityId: offer.id,
-          userId: user.id,
-        }
-      );
-      opportunity.userOpportunity = data;
-    }
-    setCurrentOffer(opportunity);
-    UIkit.modal('#modal-offer').show();
-  };
-
-  const getTag = (offer) => {
-    if (offer.userOpportunity && offer.userOpportunity.archived) {
-      return 'tag-archive';
-    }
-    return `tag-${offer.isPublic ? 'public' : 'private'}`;
-  };
-
   const fetchData = async () => {
     if (user) {
       setLoading(true);
       try {
-        const { data } = await Api.get(
+        const { data } = await axios.get(
           `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${user.id}`
         );
 
@@ -76,9 +52,48 @@ const Opportunites = () => {
     } else console.log('no user');
   };
 
+  const onClickOpportunityCard = async (offer) => {
+    const opportunity = offer;
+    // si jamais ouvert
+    if (!offer.userOpportunity || !opportunity.userOpportunity.seen) {
+      if (!offer.userOpportunity) {
+        const { data } = await axios.post(
+          `${process.env.SERVER_URL}/api/v1/opportunity/join`,
+          {
+            opportunityId: offer.id,
+            userId: user.id,
+            seen: true,
+          }
+        );
+        opportunity.userOpportunity = data;
+      }
+      // si pas vue
+      if (!opportunity.userOpportunity.seen) {
+        const { data } = await axios.put(
+          `${process.env.SERVER_URL}/api/v1/opportunity/join`,
+          {
+            ...opportunity.userOpportunity,
+            seen: true,
+          }
+        );
+        opportunity.userOpportunity = data;
+      }
+      fetchData();
+    }
+    setCurrentOffer(opportunity);
+    UIkit.modal('#modal-offer').show();
+  };
+
+  const getTag = (offer) => {
+    if (offer.userOpportunity && offer.userOpportunity.archived) {
+      return 'tag-archive';
+    }
+    return `tag-${offer.isPublic ? 'public' : 'private'}`;
+  };
+
   useEffect(() => {
     fetchData();
-  }, [user, currentOffer]);
+  }, [user]);
 
   return (
     <LayoutBackOffice title="Mes opportunités">
@@ -133,7 +148,10 @@ const Opportunites = () => {
                             offer.userOpportunity &&
                             offer.userOpportunity.archived
                           }
-                          isNew={!offer.userOpportunity}
+                          isNew={
+                            !offer.userOpportunity ||
+                            !offer.userOpportunity.seen
+                          }
                           isStared={
                             offer.userOpportunity &&
                             offer.userOpportunity.bookmarked
@@ -152,6 +170,7 @@ const Opportunites = () => {
               currentOffer={currentOffer}
               setCurrentOffer={(offer) => {
                 setCurrentOffer(offer);
+                fetchData();
               }}
             />
           </>
