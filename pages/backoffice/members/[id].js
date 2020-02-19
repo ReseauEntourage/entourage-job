@@ -273,16 +273,18 @@ const CVPage = ({ member }) => {
                   {member.firstName} {member.lastName}
                 </h3>
                 <span>{member.role}</span>
-                <SimpleLink
-                  className="uk-link-text"
-                  target="_blank"
-                  href={`${process.env.SERVER_URL}/cv/${member.url}`}
-                >
-                  <IconNoSSR name="link" />
-                  <span>
-                    {process.env.SERVER_URL}/cv/{member.url}
-                  </span>
-                </SimpleLink>
+                {member.role === 'Candidat' && (
+                  <SimpleLink
+                    className="uk-link-text"
+                    target="_blank"
+                    href={`${process.env.SERVER_URL}/cv/${member.url}`}
+                  >
+                    <IconNoSSR name="link" />
+                    <span>
+                      {process.env.SERVER_URL}/cv/{member.url}
+                    </span>
+                  </SimpleLink>
+                )}
               </GridNoSSR>
             </GridNoSSR>
             <hr className="ent-divier-backoffice uk-margin-large-top " />
@@ -308,7 +310,7 @@ const CVPage = ({ member }) => {
             </ul>
             <div />
           </GridNoSSR>
-          {member.coach !== 'Admin' && (
+          {member.role !== 'Admin' && (
             <Content userId={member.id} user={member} />
           )}
         </GridNoSSR>
