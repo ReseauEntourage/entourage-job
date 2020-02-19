@@ -56,7 +56,7 @@ const OfferCard = ({
             {isPublic
               ? 'Offre générale'
               : specifiedOffer
-              ? `Offer pour ${specifiedOffer}`
+              ? `Offre pour ${specifiedOffer}`
               : 'Offre privée'}
           </p>
         </GridNoSSR>

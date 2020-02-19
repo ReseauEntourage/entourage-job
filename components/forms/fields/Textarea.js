@@ -48,7 +48,6 @@ const Textarea = ({
       <label className={`uk-form-label ${labelClass}`} htmlFor={id}>
         {title}
       </label>
-      {value}
       <textarea
         id={id}
         name={name}
