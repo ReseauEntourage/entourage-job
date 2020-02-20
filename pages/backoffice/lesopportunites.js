@@ -1,5 +1,6 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { Section } from '../../components/utils';
 import OfferCard from '../../components/cards/OfferCard';
@@ -13,11 +14,14 @@ const LesOpportunites = () => {
   const [offers, setOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const {
+    query: { q: opportunityId },
+  } = useRouter();
 
   const filters = [
     { tag: 'all', title: 'Toutes les offres' },
-    { tag: 'pending', title: 'Offres en attente' },
-    { tag: 'validated', title: 'Offres validées' },
+    { tag: 'pending', title: 'Offres à valider' },
+    { tag: 'validated', title: 'Offres publiées' },
     { tag: 'archived', title: 'Offres archivées' },
   ];
 
@@ -46,8 +50,8 @@ const LesOpportunites = () => {
       );
       console.log(data);
       setOffers(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
-
       setLoading(false);
+      return data;
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -56,14 +60,21 @@ const LesOpportunites = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData().then((data) => {
+      const offer = data.find((o) => o.id === opportunityId);
+      if (offer) {
+        console.log(offer);
+        setCurrentOffer(offer);
+        UIkit.modal('#modal-offer-admin').show();
+      }
+    });
+  }, [opportunityId]);
 
   return (
-    <LayoutBackOffice title="Gestion des offres d'emploi">
+    <LayoutBackOffice title="Modération des offres d'emploi">
       <Section>
         <HeaderBackoffice
-          title="Gestion des offres d'emploi"
+          title="Modération des offres d'emploi"
           description="Ici tu peux accéder à toutes les opportunités et valider les offres qui se retrouveront ensuite dans les tableaux des candidats."
         >
           <button
