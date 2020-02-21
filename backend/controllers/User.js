@@ -65,7 +65,9 @@ const getMembers = (limit, offset, order, role, query) => {
     offset,
     limit,
     order,
-    where: {},
+    where: {
+      role: { [Op.not]: 'Admin' },
+    },
     attributes: [
       'id',
       'firstName',
@@ -86,6 +88,7 @@ const getMembers = (limit, offset, order, role, query) => {
   if (query) {
     const lowerCaseQuery = query.toLowerCase();
     options.where = {
+      ...options.where,
       [Op.or]: [
         { email: { [Op.like]: `%${lowerCaseQuery}%` } },
         where(
@@ -103,7 +106,10 @@ const getMembers = (limit, offset, order, role, query) => {
 
   // filtre par role
   if (role === 'Candidat' || role === 'Coach') {
-    options.where.role = role;
+    options.where = {
+      ...options.where,
+      role,
+    };
     // recuperer la derniere version de cv
     // todo trouver un moyen d'ameliorer la recuperation
     if (role === 'Candidat') {
