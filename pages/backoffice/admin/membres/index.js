@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
-import { Section, GridNoSSR } from '../../../../components/utils';
+import { Section, GridNoSSR, Button } from '../../../../components/utils';
 import HeaderBackoffice from '../../../../components/headers/HeaderBackoffice';
 import axios from '../../../../Axios';
 import ModalEdit from '../../../../components/modals/ModalEdit';
@@ -309,14 +309,13 @@ const MembersAdmin = () => {
                     style={{ borderTop: '1px solid #e5e5e5' }}
                     className="uk-text-center uk-width-1-1 uk-padding"
                   >
-                    <a
-                      className="uk-link-text"
-                      href="#"
-                      type="button"
+                    <Button
+                      style="text"
                       onClick={() => fetchData()}
+                      href={null}
                     >
                       Voir plus...
-                    </a>
+                    </Button>
                   </div>
                 );
               }
