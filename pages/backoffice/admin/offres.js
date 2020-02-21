@@ -1,13 +1,13 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
-import { Section } from '../../components/utils';
-import OfferCard from '../../components/cards/OfferCard';
-import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
-import ModalOfferAdmin from '../../components/modals/ModalOfferAdmin';
-import Filter from '../../components/utils/Filter';
-import Axios from '../../Axios';
+import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
+import { Section } from '../../../components/utils';
+import OfferCard from '../../../components/cards/OfferCard';
+import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
+import ModalOfferAdmin from '../../../components/modals/ModalOfferAdmin';
+import Filter from '../../../components/utils/Filter';
+import Axios from '../../../Axios';
 
 const LesOpportunites = () => {
   const [currentOffer, setCurrentOffer] = useState(null);

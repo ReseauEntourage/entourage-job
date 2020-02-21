@@ -17,6 +17,18 @@ const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthentificated, setIsAuthentificated] = useState(false);
 
+  // la restriction devrait etre faite des le serveur !
+  const restrictAccessByRole = (role) => {
+    if (
+      (Router.pathname.includes('/backoffice/admin') && role !== 'Admin') ||
+      (Router.pathname.includes('/backoffice/candidat') &&
+        role !== 'Candidat' &&
+        role !== 'Coach')
+    ) {
+      Router.push('/login');
+    }
+  };
+
   const logout = async () => {
     try {
       await Api.post('/api/v1/auth/logout');
@@ -39,29 +51,31 @@ const UserProvider = ({ children }) => {
 
     setIsAuthentificated(true);
     setUser(data.user);
-    Router.push('/backoffice/cv/edit');
+    Router.push('/backoffice/candidat/cv');
   };
-
-  useEffect(() => {
+  const current = async () => {
     const accessToken = localStorage.getItem('access-token');
     if (accessToken) {
-      console.log('token found: ', accessToken);
-      Api.get('/api/v1/auth/current')
-        .then(({ data }) => {
-          localStorage.setItem('access-token', data.user.token);
+      try {
+        console.log('token found: ', accessToken);
+        const { data } = await Api.get('/api/v1/auth/current');
+        localStorage.setItem('access-token', data.user.token);
 
-          setIsAuthentificated(true);
-          setUser(data.user);
-        })
-        .catch((err) => {
-          console.log(err);
-          localStorage.removeItem('access-token');
-          Router.push('/login');
-        });
+        setIsAuthentificated(true);
+        setUser(data.user);
+        restrictAccessByRole(data.user.role);
+      } catch (err) {
+        console.log(err);
+        localStorage.removeItem('access-token');
+        Router.push('/login');
+      }
     } else {
       console.log('no token');
     }
-  }, []);
+  };
+  useEffect(() => {
+    current();
+  }, [children]);
 
   return (
     <UserContext.Provider

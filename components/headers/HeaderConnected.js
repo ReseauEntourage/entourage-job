@@ -15,20 +15,21 @@ import { UserContext } from '../store/UserProvider';
 
 const LINKS_CONNECTED = {
   admin: [
-    { href: '/backoffice/members', name: 'Les membres', icon: 'users' },
+    { href: '/backoffice/admin/membres', name: 'Les membres', icon: 'users' },
     {
-      href: '/backoffice/lesopportunites',
+      href: '/backoffice/admin/offres',
       name: 'Les opportunités',
       icon: 'list',
     },
   ],
   member: [
-    { href: '/backoffice/cv/edit', name: 'Mon espace', icon: 'user' },
     {
-      href: '/backoffice/mesopportunites',
-      name: 'Mes opportunités',
+      href: '/backoffice/candidat/mesoffres',
+      name: 'Mes offres',
       icon: 'list',
     },
+    { href: '/backoffice/candidat/cv', name: 'Mon CV', icon: 'user' },
+    { href: '/backoffice/trace', name: 'Mon Suivi', icon: 'list' },
   ],
 };
 

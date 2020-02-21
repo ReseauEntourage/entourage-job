@@ -55,7 +55,7 @@ module.exports = (sequelize, DataTypes) => {
         text: `
         ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
         Vous pouvez maintenant l'archiver en cliquant ici :
-        ${process.env.SERVER_URL}/backoffice/lesopportunites?q=${opportunityId}.`,
+        ${process.env.SERVER_URL}/backoffice/admin/offres?q=${opportunityId}.`,
       });
 
     Opportunity_User.belongsTo(models.User);

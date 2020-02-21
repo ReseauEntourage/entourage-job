@@ -1,17 +1,16 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Link from 'next/link';
-import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
-import Api from '../../../Axios';
+import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
+import Api from '../../../../Axios';
 import {
   Section,
   SimpleLink,
   GridNoSSR,
   IconNoSSR,
   Button,
-} from '../../../components/utils';
-import { CVFicheEdition } from '../../../components/cv';
+} from '../../../../components/utils';
+import { CVFicheEdition } from '../../../../components/cv';
 
 function translate(status) {
   switch (status) {
@@ -254,7 +253,10 @@ const CVPage = ({ member }) => {
     <LayoutBackOffice title={`${member.firstName} - Gestion des menmbres`}>
       <Section>
         <GridNoSSR column gap="large">
-          <SimpleLink href="/backoffice/members" className="uk-link-reset">
+          <SimpleLink
+            href="/backoffice/admin/membres"
+            className="uk-link-reset"
+          >
             <IconNoSSR name="chevron-left" />
             retour à la liste
           </SimpleLink>

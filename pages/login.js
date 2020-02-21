@@ -13,9 +13,11 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthentificated && user) {
-      router.push(
-        user.role === 'Admin' ? '/backoffice/members' : '/backoffice/cv/edit'
-      );
+      if (user.role === 'Admin') {
+        router.push('/backoffice/admin/membres');
+      } else {
+        router.push('/backoffice/candidat/cv');
+      }
     }
   }, [isAuthentificated, user]);
 
@@ -28,13 +30,11 @@ const Login = () => {
             <FormWithValidation
               formSchema={schema}
               onSubmit={({ email, password }, setError) => {
-                login(email, password)
-                  .then(() => router.push('/backoffice/cv/edit'))
-                  .catch(() => {
-                    setError(
-                      'Erreur de connexion. Identifiant ou mot de passe invalide.'
-                    );
-                  });
+                login(email, password).catch(() => {
+                  setError(
+                    'Erreur de connexion. Identifiant ou mot de passe invalide.'
+                  );
+                });
               }}
             />
           </div>

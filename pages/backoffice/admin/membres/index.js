@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
-import { Section, GridNoSSR } from '../../../components/utils';
-import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
-import axios from '../../../Axios';
-import ModalEdit from '../../../components/modals/ModalEdit';
-import schemaCreateUser from '../../../components/forms/schema/formCreateUser';
+import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
+import { Section, GridNoSSR } from '../../../../components/utils';
+import HeaderBackoffice from '../../../../components/headers/HeaderBackoffice';
+import axios from '../../../../Axios';
+import ModalEdit from '../../../../components/modals/ModalEdit';
+import schemaCreateUser from '../../../../components/forms/schema/formCreateUser';
 
 function translateStatusCV(status) {
   if (status === 'Pending') {
@@ -170,7 +170,7 @@ const MembersAdmin = () => {
                     href="#"
                     onClick={() =>
                       router.push({
-                        pathname: '/backoffice/members',
+                        pathname: '/backoffice/admin/membres',
                         query: { role: 'All' },
                       })
                     }
@@ -183,7 +183,7 @@ const MembersAdmin = () => {
                     href="#"
                     onClick={() =>
                       router.push({
-                        pathname: '/backoffice/members',
+                        pathname: '/backoffice/admin/membres',
                         query: { role: 'Candidat' },
                       })
                     }
@@ -196,7 +196,7 @@ const MembersAdmin = () => {
                     href="#"
                     onClick={() =>
                       router.push({
-                        pathname: '/backoffice/members',
+                        pathname: '/backoffice/admin/membres',
                         query: { role: 'Coach' },
                       })
                     }
@@ -238,7 +238,7 @@ const MembersAdmin = () => {
                 </thead>
                 <tbody>
                   {members.map((member) => (
-                    <Link href={`/backoffice/members/${member.id}`}>
+                    <Link href={`/backoffice/admin/membres/${member.id}`}>
                       <tr
                         className="uk-text-reset"
                         aria-hidden="true"
