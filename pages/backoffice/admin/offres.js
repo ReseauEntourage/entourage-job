@@ -20,7 +20,7 @@ const LesOpportunites = () => {
 
   const filters = [
     { tag: 'all', title: 'Toutes les offres' },
-    { tag: 'pending', title: 'Offres à valider' },
+    { tag: 'pending', title: 'Offres à valider', active: true },
     { tag: 'validated', title: 'Offres publiées' },
     { tag: 'archived', title: 'Offres archivées' },
   ];
@@ -145,6 +145,7 @@ const LesOpportunites = () => {
                           title={offer.title}
                           from={offer.recruiterName}
                           shortDescription={offer.company}
+                          date={offer.date}
                           archived={offer.isArchived}
                           isPublic={offer.isPublic}
                           specifiedOffer={

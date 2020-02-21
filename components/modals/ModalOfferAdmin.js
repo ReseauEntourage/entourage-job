@@ -1,6 +1,7 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
 import PropsType from 'prop-types';
+import moment from 'moment';
 import axios from '../../Axios';
 import schema from '../forms/schema/formEditOpportunity';
 import FormWithValidation from '../forms/FormWithValidation';
@@ -30,11 +31,6 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   useEffect(() => {
     setIsEditing(false);
   }, [currentOffer]);
-
-  // futur: use moment
-  const date = new Date(currentOffer.date);
-  const formatDate = `${date.getMonth() +
-    1}/${date.getDate()}/${date.getFullYear()}`;
 
   return (
     <div id="modal-offer-admin" data-uk-modal="bg-close:false">
@@ -118,10 +114,11 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                       </OfferInfoContainer>
                       <OfferInfoContainer icon="user" title="Recruteur">
                         {currentOffer.recruiterName}
-                        {currentOffer.recruiterEmail}
+                        {currentOffer.recruiterMail}
                         {currentOffer.recruiterPhone}
                         <span className="uk-text-italic">
-                          offre soumise le {formatDate}
+                          offre soumise le{' '}
+                          {moment(currentOffer.date).format('DD/MM/YYYY')}
                         </span>
                       </OfferInfoContainer>
                       <OfferInfoContainer
@@ -210,7 +207,7 @@ ModalOfferAdmin.propTypes = {
     isPublic: PropsType.bool,
     isArchived: PropsType.bool,
     isValidated: PropsType.bool,
-    recruiterEmail: PropsType.string,
+    recruiterMail: PropsType.string,
     recruiterPhone: PropsType.string,
     businessLines: PropsType.arrayOf(PropsType.string),
     date: PropsType.string,

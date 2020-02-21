@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { GridNoSSR, Button, IconNoSSR } from '../utils';
+
+moment.locale('fr');
 
 function translateStatus(status) {
   if (status === 0) return 'Contacté';
@@ -22,6 +25,7 @@ const OfferCard = ({
   archived,
   isPublic,
   specifiedOffer,
+  date,
 }) => (
   <div
     className={`ent-offer uk-card uk-card- uk-card-hover uk-card-body uk-card-${
@@ -61,6 +65,16 @@ const OfferCard = ({
           </p>
         </GridNoSSR>
       )}
+      {date && (
+        <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
+          <IconNoSSR name="calendar" />
+          <p>
+            {moment(date)
+              .startOf('day')
+              .fromNow()}
+          </p>
+        </GridNoSSR>
+      )}
       <GridNoSSR
         gap="small"
         between
@@ -88,6 +102,7 @@ OfferCard.propTypes = {
   archived: PropTypes.bool,
   isPublic: PropTypes.bool,
   specifiedOffer: PropTypes.string,
+  date: PropTypes.string,
 };
 
 OfferCard.defaultProps = {
@@ -97,5 +112,6 @@ OfferCard.defaultProps = {
   status: undefined,
   isPublic: undefined,
   specifiedOffer: undefined,
+  date: undefined,
 };
 export default OfferCard;
