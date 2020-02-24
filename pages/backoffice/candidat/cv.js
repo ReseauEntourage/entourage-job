@@ -1,6 +1,6 @@
 /* global UIkit */
 import React, { useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { CVFicheEdition } from '../../../components/cv';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../Axios';
@@ -29,11 +29,12 @@ const toUpperFirstLetter = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 };
 
+// TODO fuse with members/[id] when coach
 const Content = ({ id }) => {
   const [cv, setCV] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-
+  const { user } = useContext(UserContext);
   useEffect(() => {
     const fetchEdit = async () => {
       try {
@@ -56,12 +57,24 @@ const Content = ({ id }) => {
   const submitCV = async () => {
     setLoading(true);
     try {
-      const { data } = await Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+      const formData = new FormData();
+      const obj = {
         ...cv,
-        id: undefined,
-        status: 'Pending',
         version: cv.version + 1,
-      });
+      };
+      delete obj.id;
+      delete obj.profileImg;
+      formData.append('cv', JSON.stringify(obj));
+      formData.append('profileImage', cv.profileImage);
+      const { data } = await Api.post(
+        `${process.env.SERVER_URL}/api/v1/cv`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
       console.log(data);
       setCV(data);
       UIkit.notification('Le profil a été mis à jour', {
@@ -100,7 +113,7 @@ const Content = ({ id }) => {
                 style="primary"
                 onClick={() =>
                   Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                    userId: id,
+                    cv: { userId: id },
                   }).then(({ data }) => setCV(data))
                 }
               >
@@ -149,7 +162,7 @@ const Content = ({ id }) => {
   // affichage du CV
   return (
     <>
-      <CVEditWelcome cv={cv} />
+      <CVEditWelcome />
       <GridNoSSR between middle>
         <div>Statut : {translate(cv.status)}</div>
         <GridNoSSR>
@@ -190,9 +203,7 @@ const Edit = () => {
 
   return (
     <LayoutBackOffice title="Edition du CV">
-      <Section>
-        <Content id={user.id} />
-      </Section>
+      <Section>{user && <Content id={user.id} />}</Section>
     </LayoutBackOffice>
   );
 };

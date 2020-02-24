@@ -94,9 +94,13 @@ CandidatCard.propTypes = {
   url: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
   ambitions: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  imgSrc: PropTypes.string.isRequired,
+  imgSrc: PropTypes.string,
   imgAlt: PropTypes.string.isRequired,
   catchphrase: PropTypes.string.isRequired,
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+CandidatCard.defaultProps = {
+  imgSrc: 'static/img/arthur.png',
 };
 export default CandidatCard;

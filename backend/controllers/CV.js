@@ -4,7 +4,6 @@
 const { QueryTypes } = require('sequelize');
 const { models, sequelize } = require('../db/models');
 const { cleanCV, controlText } = require('./tools');
-const { uploadFile } = require('./aws');
 
 const INCLUDE_ALL_USERS = {
   model: models.User,
@@ -93,7 +92,7 @@ const createCV = async (data) => {
     delete data.userId;
   }
 
-  const modelCV = await models.CV.create(data);
+  const modelCV = await models.CV.create(data); // TODO VERIFIER LES ENTREES
 
   // Skills
   if (data.skills) {
@@ -280,7 +279,7 @@ const getRandomShortCVs = async (nb) => {
   });
   const modelCVs = await models.CV.findAll({
     where: { id: cvs.map((cv) => cv.id) },
-    attributes: ['catchphrase'],
+    attributes: ['catchphrase', 'urlImg'],
     include: [
       {
         model: models.Ambition,
@@ -320,10 +319,6 @@ const setCV = (id, cv) => {
   });
 };
 
-const uploadToBucket = (file, UserId) => {
-  return uploadFile(file, UserId);
-};
-
 module.exports = {
   createCV,
   deleteCV,
@@ -332,5 +327,4 @@ module.exports = {
   getCVs,
   getRandomShortCVs,
   setCV,
-  uploadToBucket,
 };

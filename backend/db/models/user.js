@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
@@ -79,16 +80,6 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
 
-  User.beforeCreate((u) => {
-    const user = u;
-    user.id = uuid();
-    user.url = `${u.firstName.toLowerCase().firstName}-${user.id.substring(
-      0,
-      8
-    )}`;
-    return user;
-  });
-
   User.associate = (models) => {
     User.belongsToMany(models.Opportunity, {
       through: 'Opportunity_Users',
@@ -102,7 +93,49 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userToCoach',
       sourceKey: 'id',
     });
-  };
 
+    const linkUsers = (user) => {
+      try {
+        User.update(
+          { userToCoach: null },
+          {
+            where: { userToCoach: user.id },
+          }
+        );
+        if (user.userToCoach) {
+          User.update(
+            { userToCoach: user.id },
+            {
+              where: { id: user.userToCoach },
+            }
+          );
+        }
+      } catch (error) {
+        console.error('linkUsers', error);
+      }
+    };
+
+    User.beforeCreate((u) => {
+      const user = u;
+      user.id = uuid();
+      user.url = `${u.firstName.toLowerCase().firstName}-${user.id.substring(
+        0,
+        8
+      )}`;
+      linkUsers(user);
+      return user;
+    });
+    User.beforeUpdate(async (instance, option) => {
+      const nextData = instance.dataValues;
+      const previousData = instance._previousDataValues;
+      if (
+        nextData &&
+        previousData &&
+        nextData.userToCoach !== previousData.userToCoach
+      ) {
+        linkUsers(nextData);
+      }
+    });
+  };
   return User;
 };

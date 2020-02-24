@@ -1,30 +1,32 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
-import Api from '../../../Axios';
+import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
+import Api from '../../../../Axios';
 import {
   Section,
   SimpleLink,
   GridNoSSR,
   IconNoSSR,
   Button,
-} from '../../../components/utils';
-import { CVFicheEdition } from '../../../components/cv';
+} from '../../../../components/utils';
+import { CVFicheEdition } from '../../../../components/cv';
 
 function translate(status) {
-  if (status === 'Pending') {
-    return 'En attente';
+  switch (status) {
+    case 'Pending':
+      return 'En attente';
+    case 'Published':
+      return 'Publié';
+    case 'New':
+      return 'Nouveau';
+    case 'Draft':
+      return 'Brouillon';
+    default:
+      return status;
   }
-  if (status === 'Published') {
-    return 'Publié';
-  }
-  if (status === 'New') {
-    return 'Nouveau';
-  }
-  return status;
 }
-const Content = ({ userId }) => {
+const Content = ({ userId, user }) => {
   const [cv, setCV] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -34,7 +36,7 @@ const Content = ({ userId }) => {
       try {
         const { data } = await Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
           params: {
-            userId,
+            userId: user.role === 'Coach' ? user.userToCoach : userId,
           },
         });
         if (data) {
@@ -54,12 +56,24 @@ const Content = ({ userId }) => {
     setLoading(true);
     try {
       // put
-      const { data } = await Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+      const formData = new FormData();
+      const obj = {
         ...cv,
-        id: undefined,
-        status: 'Published',
         version: cv.version + 1,
-      });
+        profileImage: undefined,
+      };
+      delete obj.id;
+      formData.append('cv', JSON.stringify(obj));
+      formData.append('profileImage', cv.profileImage);
+      const { data } = await Api.post(
+        `${process.env.SERVER_URL}/api/v1/cv`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
       console.log(data);
       setCV(data);
       UIkit.notification('Le profil a été mis à jour', {
@@ -78,37 +92,56 @@ const Content = ({ userId }) => {
   };
   // aucun CV
   if (cv === null) {
-    return (
-      <>
-        <Section>
-          <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
-            <div
-              className="uk-position-absolute uk-transform-center uk-text-center"
-              style={{ left: '50%', top: '50%' }}
+    if (user) {
+      if (user.role === 'Candidat') {
+        return (
+          <GridNoSSR column middle>
+            <h2 className="uk-text-bold">
+              <span className="uk-text-primary">Aucun CV</span> n&apos;est
+              rattaché à ce compte candidat.
+            </h2>
+            <Button
+              style="primary"
+              onClick={() =>
+                Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                  cv: { userId },
+                }).then(({ data }) => setCV(data))
+              }
             >
-              <h2 className="uk-text-bold">
-                <span className="uk-text-primary">Aucun candidat</span>{' '}
-                n&apos;est rattaché à ton compte coach.
-              </h2>
-              <p>
-                Il peut y avoir plusieurs raisons à ce sujet. Contacte
-                l&apos;équipe LinkedOut pour en savoir plus.
-              </p>
+              Creer votre CV
+            </Button>
+          </GridNoSSR>
+        );
+      }
+      if (user.role === 'Coach') {
+        return (
+          <GridNoSSR column middle>
+            <h2 className="uk-text-bold">
+              <span className="uk-text-primary">Aucun candidat</span> n&apos;est
+              rattaché à ce compte coach.
+            </h2>
+            <p>
+              Il peut y avoir plusieurs raisons à ce sujet. Contacte
+              l&apos;équipe LinkedOut pour en savoir plus.
+            </p>
+            {user.userToCoach && (
               <Button
                 style="primary"
                 onClick={() =>
                   Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                    userId,
+                    cv: {
+                      userId: user.userToCoach,
+                    },
                   }).then(({ data }) => setCV(data))
                 }
               >
                 Creer votre CV
               </Button>
-            </div>
-          </div>
-        </Section>
-      </>
-    );
+            )}
+          </GridNoSSR>
+        );
+      }
+    }
   }
   // erreur pendant la requete
   if (error) {
@@ -133,14 +166,8 @@ const Content = ({ userId }) => {
   // chargement
   if (cv === undefined) {
     return (
-      <div className="uk-width-1-1" data-uk-height-viewport="expand: true">
-        <div
-          className="uk-position-absolute uk-transform-center uk-text-center"
-          style={{ left: '50%', top: '50%' }}
-        >
-          <h2 className="uk-text-bold">loading ...</h2>
-          <div data-uk-spinner />
-        </div>
+      <div className="uk-height-small uk-flex uk-flex-middle uk-flex-center">
+        <div data-uk-spinner />
       </div>
     );
   }
@@ -148,7 +175,28 @@ const Content = ({ userId }) => {
   return (
     <>
       <GridNoSSR between middle>
-        <div>Statut : {translate(cv.status)}</div>
+        <GridNoSSR column gap="collapse">
+          <div>
+            Statut :{' '}
+            <span
+              className={`uk-text-${(() => {
+                switch (cv.status) {
+                  case 'Draft':
+                    return 'warning';
+                  case 'Published':
+                    return 'success';
+                  case 'New':
+                    return 'info';
+                  default:
+                    return 'muted';
+                }
+              })()}`}
+            >
+              {translate(cv.status)}
+            </span>
+          </div>
+          <div>Version : {cv.version}</div>
+        </GridNoSSR>
         <Button
           style="primary"
           onClick={() => {
@@ -169,11 +217,20 @@ const Content = ({ userId }) => {
       <CVFicheEdition
         cv={cv}
         onChange={(fields) => {
-          setCV({ ...cv, ...fields });
+          setCV({ ...cv, ...fields, status: 'Draft' });
         }}
       />
     </>
   );
+};
+Content.propTypes = {
+  userId: PropTypes.string,
+  user: PropTypes.shape,
+};
+
+Content.defaultProps = {
+  userId: null,
+  user: null,
 };
 
 const CVPage = ({ member }) => {
@@ -195,7 +252,10 @@ const CVPage = ({ member }) => {
     <LayoutBackOffice title={`${member.firstName} - Gestion des menmbres`}>
       <Section>
         <GridNoSSR column gap="large">
-          <SimpleLink href="/backoffice/members" className="uk-link-reset">
+          <SimpleLink
+            href="/backoffice/admin/membres"
+            className="uk-link-reset"
+          >
             <IconNoSSR name="chevron-left" />
             retour à la liste
           </SimpleLink>
@@ -204,7 +264,7 @@ const CVPage = ({ member }) => {
             <GridNoSSR row gap="small" middle>
               <img
                 className="uk-preserve-width uk-border-circle"
-                src="/static/img/arthur.png"
+                src={member.urlImg || '/static/img/arthur.png'}
                 width="48"
                 style={{ height: '48px' }}
                 alt={`${member.firsName} profil`}
@@ -214,6 +274,18 @@ const CVPage = ({ member }) => {
                   {member.firstName} {member.lastName}
                 </h3>
                 <span>{member.role}</span>
+                {member.role === 'Candidat' && (
+                  <SimpleLink
+                    className="uk-link-text"
+                    target="_blank"
+                    href={`${process.env.SERVER_URL}/cv/${member.url}`}
+                  >
+                    <IconNoSSR name="link" />
+                    <span>
+                      {process.env.SERVER_URL}/cv/{member.url}
+                    </span>
+                  </SimpleLink>
+                )}
               </GridNoSSR>
             </GridNoSSR>
             <hr className="ent-divier-backoffice uk-margin-large-top " />
@@ -239,7 +311,9 @@ const CVPage = ({ member }) => {
             </ul>
             <div />
           </GridNoSSR>
-          <Content userId={member.id} />
+          {member.role !== 'Admin' && (
+            <Content userId={member.id} user={member} />
+          )}
         </GridNoSSR>
       </Section>
     </LayoutBackOffice>

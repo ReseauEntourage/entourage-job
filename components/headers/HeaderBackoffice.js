@@ -4,7 +4,7 @@ import { GridNoSSR } from '../utils';
 
 const HeaderBackoffice = ({ title, description, children }) => (
   <div className="uk-margin-large-bottom">
-    <GridNoSSR gap="small" row eachWidths={['expand', 'auto']}>
+    <GridNoSSR gap="small" row eachWidths={['expand@s', 'auto']}>
       <div>
         <h2 className="uk-text-bold">{title}</h2>
         <p className="uk-text-lead uk-width-2-3@m">{description}</p>

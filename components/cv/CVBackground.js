@@ -35,7 +35,10 @@ const CVBackground = ({ url }) => (
   </div>
 );
 CVBackground.propTypes = {
-  url: PropTypes.string.isRequired,
+  url: PropTypes.string,
+};
+CVBackground.defaultProps = {
+  url: '/static/img/arthur-background.jpg',
 };
 
 export default CVBackground;

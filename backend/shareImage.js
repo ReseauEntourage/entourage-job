@@ -16,7 +16,7 @@ function createSVGOption(fontSize, color) {
 }
 
 // permet de générer une carte entourage pour le partage. output: sortie de l'image selon le format voulue
-function generateCVPreview(name, description, ambition, imagePath, output) {
+function generateCVPreview({ name, description, ambition, input }) {
   const ratio = 1.3;
   // todo: variables a mettre en options
   const imageWidth = Math.trunc(520 * ratio);
@@ -57,7 +57,7 @@ function generateCVPreview(name, description, ambition, imagePath, output) {
   );
 
   // creation de l'image
-  return sharp(imagePath)
+  return sharp(input)
     .resize(imageWidth, imageHeight)
     .composite([
       // masque de couleur entourage
@@ -101,8 +101,7 @@ function generateCVPreview(name, description, ambition, imagePath, output) {
         left: Math.trunc(imageWidth / 2 - texts.metrics[2].width / 2),
       },
     ])
-    .sharpen()
-    .toFile(output);
+    .sharpen();
 }
 
 // const users = require('./users.json');

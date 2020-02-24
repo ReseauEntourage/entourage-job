@@ -1,43 +1,33 @@
 /* global UIkit */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import axios from '../../Axios';
 
 const CVEditPicture = ({ urlImg, onChange }) => {
+  const [url, setUrl] = useState(urlImg);
+  useEffect(() => {
+    setUrl(urlImg);
+  }, [urlImg]);
   return (
     <div
-      className="uk-card uk-height-1-1 uk-background-cover "
-      style={{ backgroundImage: `url(${urlImg})`, minHeight: '300px' }}
+      className="uk-card uk-height-1-1 uk-background-cover"
+      style={{ backgroundImage: `url(${url})`, minHeight: '300px' }}
     >
-      <div className="uk-overlay-default uk-position-cover" data-uk-form-custom>
-        <div className="uk-position-center">
-          <input
-            type="file"
-            onChange={({ target }) => {
-              const file = target.files[0];
-              axios
-                .post('/api/v1/cv/image', { file })
-                .then(({ data }) => {
-                  onChange({ urlImg: data.urlImg });
-                  UIkit.notification('Photo enregistrée', 'success');
-                })
-                .catch((err) => {
-                  console.error(err);
-                  UIkit.notification(
-                    "Erreur lors de l'enregistrement de la photo",
-                    'danger'
-                  );
-                });
-            }}
-          />
-          <button
-            className="uk-button uk-button-default"
-            type="button"
-            tabIndex="-1"
-            on
-          >
-            Select
-          </button>
+      <div className=" uk-position-center " data-uk-form-custom>
+        <div
+          className="uk-overlay uk-overlay-default uk-box-shadow-hover-small"
+          style={{ cursor: 'pointer' }}
+        >
+          <label className="uk-text-uppercase" htmlFor="image-upload">
+            <input
+              id="image-upload"
+              type="file"
+              onChange={({ target }) => {
+                onChange({ profileImage: target.files[0] });
+                setUrl(URL.createObjectURL(target.files[0]));
+              }}
+            />
+            Mettre à jour
+          </label>
         </div>
       </div>
     </div>

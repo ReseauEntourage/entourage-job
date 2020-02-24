@@ -3,17 +3,6 @@
 
 const { sendMail } = require('../../controllers/mail');
 
-const sendMailEmbauche = async (toEmail, firstName, title) => {
-  const link = `${process.env.SERVER_URL}/login`;
-  return sendMail({
-    toEmail,
-    subject: `${firstName} a retrouvé un emploi`,
-    text: `
-    ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
-    Vous pouvez maintenant l'archiver en cliquant ici : ${link}.`,
-  });
-};
-
 module.exports = (sequelize, DataTypes) => {
   const Opportunity_User = sequelize.define('Opportunity_User', {
     OpportunityId: {
@@ -37,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
     },
+    seen: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     bookmarked: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
@@ -54,6 +48,16 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Opportunity_User.associate = (models) => {
+    const sendMailEmbauche = async (toEmail, firstName, title, opportunityId) =>
+      sendMail({
+        toEmail,
+        subject: `${firstName} a retrouvé un emploi`,
+        text: `
+        ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
+        Vous pouvez maintenant l'archiver en cliquant ici :
+        ${process.env.SERVER_URL}/backoffice/admin/offres?q=${opportunityId}.`,
+      });
+
     Opportunity_User.belongsTo(models.User);
 
     Opportunity_User.beforeUpdate(async (instance, option) => {
@@ -77,13 +81,18 @@ module.exports = (sequelize, DataTypes) => {
           ]);
 
           // mail admin
-          sendMailEmbauche(process.env.MAILJET_TO_EMAIL, firstName, title);
+          sendMailEmbauche(
+            process.env.MAILJET_TO_EMAIL,
+            firstName,
+            title,
+            nextData.OpportunityId
+          );
           if (userToCoach) {
             // mail coach
             const { email } = await models.User.findByPk(userToCoach, {
               attributes: ['email'],
             });
-            sendMailEmbauche(email, firstName, title);
+            sendMailEmbauche(email, firstName, title, nextData.OpportunityId);
           }
         } catch (err) {
           console.error(

@@ -1,23 +1,33 @@
 /* eslint-disable no-restricted-globals */
+/* eslint-disable camelcase */
 
-const { models, Sequelize } = require('../db/models');
+const {
+  models: {
+    BusinessLine,
+    Opportunity_User,
+    Opportunity_BusinessLine,
+    Opportunity,
+    User,
+  },
+  Sequelize: { Op, fn, col, where },
+} = require('../db/models');
 const { cleanOpportunity, controlText } = require('./tools');
 
 const INCLUDE_OPPORTUNITY_COMPLETE = [
   {
-    model: models.BusinessLine,
+    model: BusinessLine,
     as: 'businessLines',
     attributes: ['name'],
     through: { attributes: [] },
   },
   {
-    model: models.Opportunity_User,
+    model: Opportunity_User,
     as: 'userOpportunity',
     attributes: [
       'id',
       'UserId',
       'status',
-      // 'seen',
+      'seen',
       'bookmarked',
       'archived',
       'note',
@@ -29,13 +39,13 @@ const createOpportunity = async (data) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
   console.log(`Etape 1 - Création de l'opportunité de base`);
-  const modelOpportunity = await models.Opportunity.create(data);
+  const modelOpportunity = await Opportunity.create(data);
 
   if (data.businessLines) {
     console.log(`Etape 2 - BusinessLine`);
     const businessLines = await Promise.all(
       data.businessLines.map((name) =>
-        models.BusinessLine.findOrCreate({
+        BusinessLine.findOrCreate({
           where: { name: controlText(name) },
         }).then((model) => model[0])
       )
@@ -46,7 +56,7 @@ const createOpportunity = async (data) => {
   if (data.usersId) {
     console.log(`Etape 4 - Déterminer les Users à qui l'opportunité s'adresse`);
     data.usersId.forEach((userId) =>
-      models.Opportunity_User.create({
+      Opportunity_User.create({
         OpportunityId: modelOpportunity.id,
         UserId: userId, // to rename in userId
       })
@@ -62,31 +72,85 @@ const deleteOpportunity = (id) => {
   console.log(
     `deleteOpportunity - Suppression d'une opportunité à partir de son id`
   );
-  return models.Opportunity.destroy({
+  return Opportunity.destroy({
     where: { id },
   });
 };
 
 const getOpportunity = async (id) => {
-  const model = await models.Opportunity.findByPk(id, {
+  const model = await Opportunity.findByPk(id, {
     include: INCLUDE_OPPORTUNITY_COMPLETE,
   });
   return cleanOpportunity(model);
 };
 
-const getOpportunities = async () => {
-  const opportunities = await models.Opportunity.findAll({
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
-  });
+const getOpportunities = async (search) => {
+  const options = {
+    include: [
+      {
+        model: BusinessLine,
+        as: 'businessLines',
+        attributes: ['name'],
+        through: { attributes: [] },
+      },
+      {
+        model: Opportunity_User,
+        as: 'userOpportunity',
+        include: [
+          {
+            model: User,
+            attributes: [
+              'id',
+              'email',
+              'firstName',
+              'lastName',
+              'gender',
+              'email',
+            ],
+          },
+        ],
+        attributes: [
+          'id',
+          'UserId',
+          'status',
+          'bookmarked',
+          'archived',
+          'note',
+          'seen',
+        ],
+      },
+    ],
+  };
+  if (search) {
+    const lowerCaseSearch = search.toLowerCase();
+    options.where = {
+      [Op.or]: [
+        where(fn('lower', col('Opportunity.title')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.recruiterName')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.location')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.company')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+      ],
+    };
+  }
+  const opportunities = await Opportunity.findAll(options);
 
   return opportunities.map((model) => cleanOpportunity(model));
 };
 
 const getPublicOpportunities = async () => {
-  const opportunities = await models.Opportunity.findAll({
+  const opportunities = await Opportunity.findAll({
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       isPublic: true,
+      isValidated: true,
     },
   });
 
@@ -95,15 +159,16 @@ const getPublicOpportunities = async () => {
 
 const getPrivateUserOpportunities = async (userId) => {
   console.log(`getOpportunities - Récupérer les opportunités`);
-  const opportunityUsers = await models.Opportunity_User.findAll({
+  const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
     attributes: ['OpportunityId'],
   });
-  const opportunities = await models.Opportunity.findAll({
+  const opportunities = await Opportunity.findAll({
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       id: opportunityUsers.map((model) => model.OpportunityId),
       isPublic: false,
+      isValidated: true,
     },
   });
   return opportunities.map((model) => {
@@ -117,19 +182,20 @@ const getPrivateUserOpportunities = async (userId) => {
 
 const getAllUserOpportunities = async (userId) => {
   // private
-  const opportunityUsers = await models.Opportunity_User.findAll({
+  const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
     attributes: ['OpportunityId'],
   });
 
-  const opportunities = await models.Opportunity.findAll({
+  const opportunities = await Opportunity.findAll({
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
-      [Sequelize.Op.or]: [
-        { isPublic: true },
+      [Op.or]: [
+        { isPublic: true, isValidated: true },
         {
           id: opportunityUsers.map((model) => model.OpportunityId),
           isPublic: false,
+          isValidated: true,
         },
       ],
     },
@@ -148,25 +214,74 @@ const getAllUserOpportunities = async (userId) => {
 };
 
 const addUserToOpportunity = (opportunityId, userId) =>
-  models.Opportunity_User.create({
+  Opportunity_User.create({
     OpportunityId: opportunityId,
     UserId: userId, // to rename in userId
   });
 
 const updateOpportunityUser = async (opportunityUser) => {
-  await models.Opportunity_User.update(opportunityUser, {
+  await Opportunity_User.update(opportunityUser, {
     where: { id: opportunityUser.id },
     individualHooks: true,
   });
-  return models.Opportunity_User.findByPk(opportunityUser.id, {
-    attributes: ['id', 'UserId', 'status', 'bookmarked', 'archived', 'note'],
+  return Opportunity_User.findByPk(opportunityUser.id, {
+    attributes: [
+      'id',
+      'UserId',
+      'status',
+      'bookmarked',
+      'archived',
+      'note',
+      'seen',
+    ],
   });
 };
 
-const updateOpportunity = (opportunity) => {
-  return models.CV.update(opportunity, {
+const updateOpportunity = async (opportunity) => {
+  await Opportunity.update(opportunity, {
     where: { id: opportunity.id },
   });
+
+  const modelOpportunity = await Opportunity.findByPk(opportunity.id, {
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
+  });
+  if (opportunity.businessLines) {
+    await Opportunity_BusinessLine.destroy({
+      where: {
+        OpportunityId: opportunity.id,
+      },
+      truncate: true,
+    });
+    const businessLines = await Promise.all(
+      opportunity.businessLines.map((name) =>
+        BusinessLine.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0])
+      )
+    );
+    await modelOpportunity.addBusinessLines(businessLines);
+  }
+
+  if (opportunity.usersId) {
+    const differenceId = modelOpportunity.userOpportunity
+      .filter(({ UserId }) => !opportunity.usersId.includes(UserId))
+      .map(({ id }) => id);
+
+    await Opportunity_BusinessLine.destroy({
+      where: {
+        OpportunityId: differenceId,
+      },
+      truncate: true,
+    });
+    opportunity.usersId.forEach((userId) =>
+      Opportunity_User.create({
+        OpportunityId: modelOpportunity.id,
+        UserId: userId, // to rename in userId
+      })
+    );
+  }
+
+  return getOpportunity(opportunity.id);
 };
 
 module.exports = {

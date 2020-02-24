@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
         subject: 'Bienvenue chez LinkedOut',
         text:
           'Bonjour,\n' +
-          `Tu es maintenant inscrit sur le site LinkedOut. Tu peux accéder à ton espace personnel depuis la plateforme en renseignant ton adresse mail et le mot de passe suivant : ${userPassword}` +
+          `Tu es maintenant inscrit sur le site LinkedOut. Tu peux accéder à ton espace personnel depuis la plateforme en renseignant ton adresse mail et le mot de passe suivant : ${userPassword}\n` +
           "Depuis cette espace, tu peux rédiger ton CV avec l'aide de ton bénévole-coach et gérer les opportunités que tu reçois.\n" +
           "N'hésite pas à aller changer ton mot de passe directement dans tes paramètres afin d'en créer un facile à retenir pour toi.\n\n" +
           'A bientôt,\n\n' +

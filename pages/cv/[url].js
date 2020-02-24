@@ -30,10 +30,14 @@ const CVPage = ({ cv, router }) => {
       metaTitle={`Aidez ${cv.user.firstName} en partageant son CV.`}
       metaUrl={`${process.env.SERVER_URL}${router.asPath}`}
       metaDescription={cv.intro}
-      metaImage={`${process.env.SERVER_URL}/static/img/cv/${cv.user.url}-preview.jpg`}
+      metaImage={
+        cv.urlImg
+          ? `https://entourage-job-preprod.s3.eu-west-3.amazonaws.com/images/${cv.UserId}-preview.webp`
+          : `${process.env.SERVER_URL}/static/img/cv/arthur-preview-preview.jpg`
+      }
       metaType="profile"
     >
-      <CVBackground url="/static/img/arthur-background.jpg" />
+      <CVBackground url={cv.urlImg || undefined} />
       <CVFiche cv={cv} />
       <ContactPartial />
       <DiscoverPartial />

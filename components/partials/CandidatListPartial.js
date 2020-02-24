@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GridNoSSR, Section } from '../utils';
 import { CandidatCard } from '../cards';
-import Api from '../../Axios';
+import axios from '../../Axios';
 
 const CandidatListPartial = () => {
   const [cvs, setCVs] = useState(undefined);
@@ -9,13 +9,13 @@ const CandidatListPartial = () => {
   const nb = 11;
 
   useEffect(() => {
-    const req = Api.get(`/api/v1/cv/cards/random?nb=${nb}`)
+    axios
+      .get(`/api/v1/cv/cards/random?nb=${nb}`)
       .then(({ data }) => setCVs(data))
       .catch((err) => {
         console.error(err);
         setError('Impossible de récupérer les CVs.');
       });
-    console.log(req);
   }, [nb]);
 
   const Content = () => {
@@ -28,7 +28,7 @@ const CandidatListPartial = () => {
             items={cvs.map((cv) => (
               <CandidatCard
                 url={cv.user.url}
-                imgSrc="static/img/arthur.png"
+                imgSrc={cv.urlImg || 'static/img/arthur.png'}
                 imgAlt={cv.user.firstName}
                 firstName={cv.user.firstName}
                 ambitions={cv.ambitions}

@@ -1,37 +1,87 @@
 // eslint-disable-next-line import/newline-after-import
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
+const multer = require('multer');
+const sharp = require('sharp');
+const fs = require('fs');
 const { auth } = require('../../../controllers/Auth');
 const CVController = require('../../../controllers/CV');
-const generateCVPreview = require('../../../shareImage');
+const S3 = require('../../../controllers/aws');
+const createPreviewImage = require('../../../shareImage');
+
+const upload = multer({ dest: 'uploads/' });
 
 /**
  * Route : POST /api/<VERSION>/cv
  * Description : Créé le CV
  */
-router.post('/', (req, res) => {
-  CVController.createCV(req.body)
-    .then((cv) => {
-      // creation de l'image de preview cv
-      // console.log(req.body);
-      generateCVPreview(
-        cv.user.firstName.toUpperCase(),
-        "A besoin d'un coup de pouce pour travailler dans...",
-        /* cvCreated.ambitions.length > 0
-          ? cvCreated.ambitions.join('. ').toUpperCase()
-          :  */ '',
-        `../../../../static/img/arthur.png`,
-        `../../../../static/img/${cv.user.firstName}-preview.jpg`
-      )
-        .then((resu) => console.log(resu))
-        .catch((err) => console.log(err));
+router.post(
+  '/',
+  auth.required,
+  upload.single('profileImage'),
+  async (req, res) => {
+    // si le cv est une string json le parser, sinon prendre l'objet
+    const reqCV =
+      typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
+
+    switch (req.payload.role) {
+      case 'Candidat':
+        reqCV.status = 'Pending';
+        break;
+      case 'Coach':
+      case 'Admin':
+        reqCV.status = 'Published';
+        break;
+      default:
+        reqCV.status = 'Unknown';
+        break;
+    }
+    // uploading image and generating preview image
+    if (req.file) {
+      const { path } = req.file;
+      try {
+        const fileBuffer = await sharp(path)
+          .trim()
+          .webp()
+          .toBuffer();
+        reqCV.urlImg = await S3.upload(fileBuffer, `${reqCV.UserId}.webp`);
+        console.log('image uploaded: ', reqCV.urlImg);
+
+        // todo load by its self user firstname and ambitions
+        const previewBuffer = await createPreviewImage({
+          input: fileBuffer,
+          name: reqCV.user.firstName.toUpperCase(),
+          description: reqCV.catchphrase,
+          ambition:
+            reqCV.ambitions && reqCV.ambitions.length > 0
+              ? reqCV.ambitions
+                  .slice(0, 2)
+                  .map((ambition) => ambition.toUpperCase())
+                  .join('. ')
+              : '',
+        }).toBuffer();
+        const previewUrl = await S3.upload(
+          previewBuffer,
+          `${reqCV.UserId}-preview.webp`
+        );
+        console.log('preview uploaded: ', previewUrl);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        fs.unlinkSync(path); // remove image localy after upload to S3
+      }
+    } else {
+      console.log('no file');
+    }
+
+    try {
+      const cv = await CVController.createCV(reqCV);
       return res.status(200).json(cv);
-    })
-    .catch((err) => {
+    } catch (err) {
       console.log(err);
-      res.status(401).send(`Une erreur est survenue`);
-    });
-});
+      return res.status(401).send(`Une erreur est survenue`);
+    }
+  }
+);
 
 /**
  * Route : GET /api/<VERSION>/cv

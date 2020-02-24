@@ -8,14 +8,18 @@ import FormWithValidation from '../components/forms/FormWithValidation';
 import { UserContext } from '../components/store/UserProvider';
 
 const Login = () => {
-  const { login, isAuthentificated } = useContext(UserContext);
+  const { login, isAuthentificated, user } = useContext(UserContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (isAuthentificated) {
-      router.push('/backoffice/cv/edit');
+    if (isAuthentificated && user) {
+      if (user.role === 'Admin') {
+        router.push('/backoffice/admin/membres');
+      } else {
+        router.push('/backoffice/candidat/cv');
+      }
     }
-  }, [isAuthentificated]);
+  }, [isAuthentificated, user]);
 
   return (
     <Layout title="Connexion - LinkedOut">
@@ -26,13 +30,11 @@ const Login = () => {
             <FormWithValidation
               formSchema={schema}
               onSubmit={({ email, password }, setError) => {
-                login(email, password)
-                  .then(() => router.push('/backoffice/cv/edit'))
-                  .catch(() => {
-                    setError(
-                      'Erreur de connexion. Identifiant ou mot de passe invalide.'
-                    );
-                  });
+                login(email, password).catch(() => {
+                  setError(
+                    'Erreur de connexion. Identifiant ou mot de passe invalide.'
+                  );
+                });
               }}
             />
           </div>
