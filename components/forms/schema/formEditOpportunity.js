@@ -1,4 +1,4 @@
-// import axios from '../../../Axios';
+import axios from '../../../Axios';
 
 export default {
   id: 'form-offer',
@@ -133,31 +133,32 @@ export default {
       component: 'checkbox',
       title: "L'offre est elle générale ?",
     },
-    // {
-    //   id: 'linkedUser',
-    //   name: 'linkedUser',
-    //   isMulti: true,
-    //   type: 'text',
-    //   title: 'Si oui, tapez la candidat lié',
-    //   placeholder: 'Tapez un candidat',
-    //   component: 'select-request-async',
-    //   loadOptions: (inputValue, callback) => {
-    //     axios
-    //       .get('api/v1/user/search', {
-    //         params: {
-    //           query: inputValue,
-    //           role: 'Candidat',
-    //         },
-    //       })
-    //       .then(({ data }) =>
-    //         data.map((u) => ({
-    //           value: u.id,
-    //           label: `${u.firstName} ${u.lastName}`,
-    //         }))
-    //       )
-    //       .then(callback);
-    //   },
-    // },
+    {
+      id: 'userId',
+      name: 'userId',
+      // isMulti: true,
+      type: 'text',
+      title: 'Si oui, tapez la candidat lié',
+      placeholder: 'Tapez un candidat',
+      component: 'select-request-async',
+      disable: (getValue) => getValue('isPublic') === true,
+      loadOptions: (inputValue, callback) => {
+        axios
+          .get('api/v1/user/search', {
+            params: {
+              query: inputValue,
+              role: 'Candidat',
+            },
+          })
+          .then(({ data }) =>
+            data.map((u) => ({
+              value: u.id,
+              label: `${u.firstName} ${u.lastName}`,
+            }))
+          )
+          .then(callback);
+      },
+    },
   ],
   rules: [
     {
