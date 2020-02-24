@@ -279,7 +279,7 @@ const getRandomShortCVs = async (nb) => {
   });
   const modelCVs = await models.CV.findAll({
     where: { id: cvs.map((cv) => cv.id) },
-    attributes: ['catchphrase', 'urlImg'],
+    attributes: ['id', 'catchphrase', 'urlImg'],
     include: [
       {
         model: models.Ambition,
