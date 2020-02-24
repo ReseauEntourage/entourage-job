@@ -16,7 +16,7 @@ const Login = () => {
       if (user.role === 'Admin') {
         router.push('/backoffice/admin/membres');
       } else {
-        router.push('/backoffice/candidat/cv');
+        router.push('/backoffice/candidat/offres');
       }
     }
   }, [isAuthentificated, user]);

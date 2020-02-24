@@ -51,8 +51,8 @@ const UserProvider = ({ children }) => {
 
     setIsAuthentificated(true);
     setUser(data.user);
-    Router.push('/backoffice/candidat/cv');
   };
+
   const current = async () => {
     const accessToken = localStorage.getItem('access-token');
     if (accessToken) {
