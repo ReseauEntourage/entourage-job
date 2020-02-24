@@ -29,7 +29,7 @@ const toUpperFirstLetter = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 };
 
-// TODO fuse with members/[id]
+// TODO fuse with members/[id] when coach
 const Content = ({ id }) => {
   const [cv, setCV] = useState(undefined);
   const [loading, setLoading] = useState(false);
@@ -60,7 +60,6 @@ const Content = ({ id }) => {
       const formData = new FormData();
       const obj = {
         ...cv,
-        status: user.role === 'Candidat' ? 'Pending' : 'Published', // todo à mettre dans le back la decision ne doit pas etre pris par le front
         version: cv.version + 1,
       };
       delete obj.id;

@@ -59,7 +59,6 @@ const Content = ({ userId, user }) => {
       const formData = new FormData();
       const obj = {
         ...cv,
-        status: 'Published',
         version: cv.version + 1,
         profileImage: undefined,
       };
