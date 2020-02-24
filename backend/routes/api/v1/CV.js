@@ -4,8 +4,10 @@ const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs');
 const { auth } = require('../../../controllers/Auth');
+const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
 const S3 = require('../../../controllers/aws');
+const { sendMail } = require('../../../controllers/mail');
 const createPreviewImage = require('../../../shareImage');
 
 const upload = multer({ dest: 'uploads/' });
@@ -74,7 +76,29 @@ router.post(
     }
 
     try {
+      // création du corps du CV
       const cv = await CVController.createCV(reqCV);
+      // notification mail to coach and admin
+      if (req.payload.role === 'Candidat') {
+        const mailSubject = 'Soumission CV';
+        const mailText = `Bonjour,\n\n
+        ${req.payload.firstName} vient de soumettre son CV.\n
+        Rendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\n
+        Merci de veillez tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\n
+        L'équipe Entourage.`;
+        // notification de l'admin
+        sendMail({
+          toEmail: process.env.MAILJET_TO_EMAIL,
+          subject: mailSubject,
+          text: mailText,
+        });
+        // Récupération de l'email du coach pour l'envoie du mail
+        UserController.getUser(req.payload.userToCoach)
+          .then(({ email }) =>
+            sendMail({ toEmail: email, subject: mailSubject, text: mailText })
+          )
+          .catch((err) => console.log('Pas de coach rattaché au candidat'));
+      }
       return res.status(200).json(cv);
     } catch (err) {
       console.log(err);
