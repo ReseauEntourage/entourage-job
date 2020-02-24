@@ -24,7 +24,7 @@ const LINKS_CONNECTED = {
   ],
   member: [
     {
-      href: '/backoffice/candidat/mesoffres',
+      href: '/backoffice/candidat/offres',
       name: 'Mes offres',
       icon: 'list',
     },
