@@ -55,21 +55,32 @@ export default {
       name: 'userToCoach',
       type: 'text',
       component: 'select-request-async',
-      loadOptions: (inputValue, callback) => {
-        axios
-          .get('api/v1/user/search', {
-            params: {
-              query: inputValue,
-              role: 'Coach', // un certain role, faudra trouver un moyen de le rendre dynamique au changement du field role
-            },
-          })
-          .then(({ data }) =>
-            data.map((u) => ({
-              value: u.id,
-              label: `${u.firstName} ${u.lastName}`,
-            }))
-          )
-          .then(callback);
+      disable: (getValue) =>
+        getValue('role') !== 'Candidat' && getValue('role') !== 'Coach',
+      loadOptions: (inputValue, callback, getValue) => {
+        if (inputValue.length > 0) {
+          const role = getValue('role') === 'Coach' ? 'Candidat' : 'Coach';
+          axios
+            .get('api/v1/user/search', {
+              params: {
+                query: inputValue,
+                role, // un certain role
+              },
+            })
+            .then(({ data }) =>
+              data.map((u) => ({
+                value: u.id,
+                label: `${u.firstName} ${u.lastName}`,
+              }))
+            )
+            .then((m) => {
+              console.log(m);
+              return m;
+            })
+            .then(callback);
+        } else {
+          callback([]);
+        }
       },
       placeholder: 'Tapez si candidat son coach et si coach son candidat',
       title: 'Coach ou candidat lié',

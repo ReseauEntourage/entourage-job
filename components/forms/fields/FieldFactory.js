@@ -14,13 +14,14 @@ import Textarea from './Textarea';
 import CheckboxCGU from './CheckboxCGU';
 
 export default class FieldFactory {
-  constructor(id, fields, defaultValues, handleChange, getValid) {
+  constructor(id, fields, defaultValues, handleChange, getValid, getValue) {
     this.generate = this.generate.bind(this);
     this.id = id;
     this.fields = fields;
     this.handleChange = handleChange;
     this.defaultValues = defaultValues;
     this.getValid = getValid;
+    this.getValue = getValue;
   }
 
   generate(data) {
@@ -158,17 +159,26 @@ export default class FieldFactory {
             </label>
           )}
           <AsyncSelect
-            cacheOptions
+            cacheOptions={
+              data.cacheOptions === undefined ? true : data.cacheOptions
+            }
             isClearable
             defaultOptions
             defaultValue={this.defaultValues[data.id]}
             isMulti={data.isMulti}
             openMenuOnClic={false}
             placeholder={data.placeholder}
-            loadOptions={data.loadOptions}
-            onChange={({ value }) =>
+            loadOptions={(inputValue, callback) =>
+              data.loadOptions(inputValue, callback, this.getValue)
+            }
+            isDisabled={data.disable(this.getValue)}
+            onChange={(e) =>
               this.handleChange({
-                target: { name: data.name, value, type: data.type },
+                target: {
+                  name: data.name,
+                  value: e ? e.value : '',
+                  type: data.type,
+                },
               })
             }
           />

@@ -124,9 +124,9 @@ const getMembers = (limit, offset, order, role, query) => {
   return User.findAll(options);
 };
 
-const searchUsers = (query) => {
+const searchUsers = (query, role) => {
   const lowerCaseQuery = query.toLowerCase();
-  return User.findAll({
+  const options = {
     attributes: ['id', 'firstName', 'lastName', 'email'],
     where: {
       [Op.or]: [
@@ -142,7 +142,11 @@ const searchUsers = (query) => {
         ),
       ],
     },
-  });
+  };
+  if (role) {
+    options.where.role = role;
+  }
+  return User.findAll(options);
 };
 
 const setUser = (id, user) => {

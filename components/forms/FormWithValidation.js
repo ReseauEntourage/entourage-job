@@ -71,13 +71,14 @@ export class Form extends Component {
     this.state = this.createState(props);
 
     const { id, defaultValues } = this.props;
-    const { handleChange, fields, getValid } = this.state;
+    const { handleChange, fields, getValid, getValue } = this.state;
     this.fieldFactory = new FieldFactory(
       id,
       fields,
       defaultValues,
       handleChange,
-      getValid
+      getValid,
+      getValue
     );
   }
 
