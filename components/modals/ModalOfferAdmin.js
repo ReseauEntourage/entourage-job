@@ -12,7 +12,7 @@ import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
-    currentOffer = { userOpportunity: {}, businessLines: [] };
+    currentOffer = { userOpportunity: [], businessLines: [] };
   }
 
   const [loading, setLoading] = useState(false);
@@ -58,6 +58,9 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                         ...currentOffer,
                         ...fields,
                       };
+                      if (fields.candidatId) {
+                        tmpOpportunity.usersId = [fields.candidatId];
+                      }
                       updateOpportunity(tmpOpportunity);
                       setIsEditing(false);
                     }}
@@ -125,6 +128,11 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                         icon="location"
                         title={currentOffer.location}
                       />
+                      <OfferInfoContainer icon="users" title="Candidat liés">
+                        {currentOffer.userOpportunity.map(({ UserId }) => (
+                          <span>{UserId}</span>
+                        ))}
+                      </OfferInfoContainer>
                     </GridNoSSR>
                     <GridNoSSR gap="medium">
                       <OfferInfoContainer icon="comment" title="Message">
@@ -212,12 +220,14 @@ ModalOfferAdmin.propTypes = {
     businessLines: PropsType.arrayOf(PropsType.string),
     date: PropsType.string,
     location: PropsType.string,
-    userOpportunity: PropsType.shape({
-      status: PropsType.string,
-      bookmarked: PropsType.string,
-      note: PropsType.string,
-      archived: PropsType.string,
-    }),
+    userOpportunity: PropsType.arrayOf(
+      PropsType.shape({
+        status: PropsType.string,
+        bookmarked: PropsType.string,
+        note: PropsType.string,
+        archived: PropsType.string,
+      })
+    ),
   }),
   setCurrentOffer: PropsType.func.isRequired,
 };

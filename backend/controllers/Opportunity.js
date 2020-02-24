@@ -263,21 +263,33 @@ const updateOpportunity = async (opportunity) => {
   }
 
   if (opportunity.usersId) {
+    // Les liens entre user et opportunites qui ne seront plus present apres update
     const differenceId = modelOpportunity.userOpportunity
       .filter(({ UserId }) => !opportunity.usersId.includes(UserId))
       .map(({ id }) => id);
 
-    await Opportunity_BusinessLine.destroy({
+    // // suppression des secteurs d'activité non inclus dans les liens user->opportunité
+    // await Opportunity_BusinessLine.destroy({
+    //   where: {
+    //     OpportunityId: differenceId,
+    //   },
+    //   truncate: true,
+    // });
+    await Opportunity_User.destroy({
       where: {
-        OpportunityId: differenceId,
+        id: differenceId,
       },
       truncate: true,
     });
-    opportunity.usersId.forEach((userId) =>
-      Opportunity_User.create({
-        OpportunityId: modelOpportunity.id,
-        UserId: userId, // to rename in userId
-      })
+    await Promise.all(
+      opportunity.usersId.map((userId) =>
+        Opportunity_User.findOrCreate({
+          where: {
+            OpportunityId: modelOpportunity.id,
+            UserId: userId, // to rename in userId
+          },
+        })
+      )
     );
   }
 
