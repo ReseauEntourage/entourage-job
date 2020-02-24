@@ -81,11 +81,7 @@ router.post(
       // notification mail to coach and admin
       if (req.payload.role === 'Candidat') {
         const mailSubject = 'Soumission CV';
-        const mailText = `Bonjour,\n\n
-        ${req.payload.firstName} vient de soumettre son CV.\n
-        Rendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\n
-        Merci de veillez tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\n
-        L'équipe Entourage.`;
+        const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veillez tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
         // notification de l'admin
         sendMail({
           toEmail: process.env.MAILJET_TO_EMAIL,
