@@ -77,7 +77,7 @@ const Content = ({ id }) => {
       );
       console.log(data);
       setCV(data);
-      UIkit.notification('Le profil a été mis à jour', {
+      UIkit.notification('Votre demande de modification a bien été envoyée', {
         pos: 'bottom-center',
         status: 'info',
       });
