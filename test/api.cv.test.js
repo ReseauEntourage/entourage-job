@@ -61,14 +61,16 @@ const USER_EXAMPLE = {
 
 describe('Tests des routes API - Partie CV', () => {
   let user;
-  before(async () => {
+
+  before((done) => {
     server.prepare();
-    await server.start(PORT);
-    const { data } = await Api.post(
-      `${process.env.SERVER_URL}/api/v1/user`,
-      USER_EXAMPLE
-    );
-    user = data;
+    return server
+      .start(PORT)
+      .then(() =>
+        Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
+      )
+      .then(({ data }) => (user = data))
+      .then(done);
   });
 
   after(() => {
