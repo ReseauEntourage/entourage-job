@@ -81,9 +81,11 @@ describe('Tests des routes API - Partie CV', () => {
     describe('C - Create 1 CV', () => {
       it('doit créer le CV dans la base de données', () => {
         return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-          ...CV_EXAMPLE,
-          status: 'Published',
-          userId: user.id,
+          cv: {
+            ...CV_EXAMPLE,
+            status: 'Published',
+            userId: user.id,
+          },
         })
           .then((res) => {
             cv = res.data;
@@ -127,19 +129,25 @@ describe('Tests des routes API - Partie CV', () => {
     before(() => {
       const create3CVs = [
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-          ...CV_EXAMPLE,
-          status: 'Published',
-          userId: user.id,
+          cv: {
+            ...CV_EXAMPLE,
+            status: 'Published',
+            userId: user.id,
+          },
         }),
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-          ...CV_EXAMPLE,
-          status: 'Published',
-          userId: user.id,
+          cv: {
+            ...CV_EXAMPLE,
+            status: 'Published',
+            userId: user.id,
+          },
         }),
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-          ...CV_EXAMPLE,
-          status: 'Published',
-          userId: user.id,
+          cv: {
+            ...CV_EXAMPLE,
+            status: 'Published',
+            userId: user.id,
+          },
         }),
       ];
       return Promise.all(create3CVs)
@@ -224,9 +232,11 @@ describe('Tests des routes API - Partie CV', () => {
               }
               token = res.data.user.token;
               return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                ...CV_EXAMPLE,
-                status: 'Published',
-                userId,
+                cv: {
+                  ...CV_EXAMPLE,
+                  status: 'Published',
+                  userId,
+                },
               });
             })
             .then((res) => {
@@ -313,9 +323,11 @@ describe('Tests des routes API - Partie CV', () => {
               }
               token = res.data.user.token;
               return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                ...CV_EXAMPLE,
-                status: 'Published',
-                userId,
+                cv: {
+                  ...CV_EXAMPLE,
+                  status: 'Published',
+                  userId,
+                },
               });
             })
             .then((res) => {
