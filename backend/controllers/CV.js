@@ -76,7 +76,8 @@ inner join (
   where "CVs".status = 'Published'
   group by "UserId") groupCVs
 on cv."UserId" = groupCVs."UserId"
-and cv."version" =  groupCVs.version
+and cv.version =  groupCVs.version
+and cv.status = 'Published'
 inner join (
   select distinct id, "firstName", url
   from "Users"
