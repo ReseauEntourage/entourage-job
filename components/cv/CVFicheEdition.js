@@ -13,7 +13,7 @@ import { CVEditCatchphrase, CVEditPicture, CVEditReviews } from '.';
 import CVEditDevise from './CVEditDevise';
 import CVEditCareerPath from './CVEditCareerPath';
 
-const CVFicheEdition = ({ cv, onChange }) => (
+const CVFicheEdition = ({ cv, onChange, disablePicture }) => (
   <GridNoSSR childWidths={['1-1']}>
     <CVEditDevise devise={cv.devise} onChange={onChange} />
     <GridNoSSR childWidths={['1-2@s']} match>
@@ -25,7 +25,11 @@ const CVFicheEdition = ({ cv, onChange }) => (
           onChange={onChange}
         />
       </GridNoSSR>
-      <CVEditPicture urlImg={cv.urlImg || undefined} onChange={onChange} />
+      <CVEditPicture
+        urlImg={cv.urlImg || undefined}
+        onChange={onChange}
+        disable={disablePicture}
+      />
     </GridNoSSR>
     <GridNoSSR childWidths={['1-2@s']} match>
       <InfoProfileCard
@@ -74,10 +78,12 @@ CVFicheEdition.propTypes = {
     experiences: PropTypes.array,
   }).isRequired,
   onChange: PropTypes.func,
+  disablePicture: PropTypes.bool,
 };
 
 CVFicheEdition.defaultProps = {
   onChange: console.log('Aucune fonction de modification associé'),
+  disablePicture: false,
 };
 
 export default CVFicheEdition;
