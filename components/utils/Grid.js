@@ -49,21 +49,24 @@ const Grid = ({
     }
     return [children];
   })();
+  // on filtre les elemnt vide
   return (
     <div className={classBuffer} data-uk-grid={gridBuffer}>
-      {content.map((item, index) => (
-        <div
-          // todo optimize
-          className={
-            index < eachWidths.length
-              ? `uk-width-${eachWidths[index]}`
-              : undefined
-          }
-          key={index}
-        >
-          {item}
-        </div>
-      ))}
+      {content
+        .filter((_) => _)
+        .map((item, index) => (
+          <div
+            // todo optimize
+            className={
+              index < eachWidths.length
+                ? `uk-width-${eachWidths[index]}`
+                : undefined
+            }
+            key={index}
+          >
+            {item}
+          </div>
+        ))}
     </div>
   );
 };

@@ -8,6 +8,8 @@ import CVEditNoCandidat from '../../../components/cv/CVEditNoCandidat';
 import { Section, Button, GridNoSSR } from '../../../components/utils';
 import CVEditWelcome from '../../../components/cv/CVEditWelcome';
 import { UserContext } from '../../../components/store/UserProvider';
+import CVPageContent from '../../../components/backoffice/cv/CVPageContent';
+import CandidatHeader from '../../../components/backoffice/cv/CandidatHeader';
 
 function translate(status) {
   if (status === 'Pending') {
@@ -200,10 +202,22 @@ Content.propTypes = {
 
 const Edit = () => {
   const { user } = useContext(UserContext);
+  const [candidatForCoach, setCandidatForCoach] = useState(null);
+
+  useEffect(() => {
+    if (user && user.userToCoach) {
+      Api.get(
+        `${process.env.SERVER_URL}/api/v1/user/${user.userToCoach}`
+      ).then(({ data }) => setCandidatForCoach(data));
+    }
+  }, [user]);
 
   return (
     <LayoutBackOffice title="Edition du CV">
-      <Section>{user && <Content id={user.id} />}</Section>
+      <Section>
+        <CVEditWelcome user={user} candidatForCoach={candidatForCoach} />
+        <CVPageContent member={user} />
+      </Section>
     </LayoutBackOffice>
   );
 };

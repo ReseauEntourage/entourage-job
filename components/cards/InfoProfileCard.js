@@ -69,20 +69,20 @@ const InfoProfileCard = ({
           location,
           availability,
           transport,
-          contracts: contracts[0],
-          languages: languages[0],
+          contracts,
+          languages,
         }}
         onSubmit={(fields) =>
           onChange({
             ...fields,
-            contracts: fields.contracts
-              .split('/')
-              .map((s) => s.trim())
-              .filter((s) => s.length > 0),
-            languages: fields.languages
-              .split('/')
-              .map((s) => s.trim())
-              .filter((s) => s.length > 0),
+            // contracts: fields.contracts
+            //   .split('/')
+            //   .map((s) => s.trim())
+            //   .filter((s) => s.length > 0),
+            // languages: fields.languages
+            //   .split('/')
+            //   .map((s) => s.trim())
+            //   .filter((s) => s.length > 0),
           })
         }
       />

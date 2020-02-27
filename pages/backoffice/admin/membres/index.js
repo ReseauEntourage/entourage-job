@@ -237,8 +237,11 @@ const MembersAdmin = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {members.map((member) => (
-                    <Link href={`/backoffice/admin/membres/${member.id}`}>
+                  {members.map((member, key) => (
+                    <Link
+                      key={key}
+                      href={`/backoffice/admin/membres/${member.id}`}
+                    >
                       <tr
                         className="uk-text-reset"
                         aria-hidden="true"
@@ -295,39 +298,30 @@ const MembersAdmin = () => {
                 </tbody>
               </table>
             </div>
-            {(() => {
-              if (loading) {
-                return (
-                  <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
-                    <div data-uk-spinner="" />
-                  </div>
-                );
-              }
-              if (!allLoaded) {
-                return (
-                  <div
-                    style={{ borderTop: '1px solid #e5e5e5' }}
-                    className="uk-text-center uk-width-1-1 uk-padding"
-                  >
-                    <Button
-                      style="text"
-                      onClick={() => fetchData()}
-                      href={null}
-                    >
-                      Voir plus...
-                    </Button>
-                  </div>
-                );
-              }
-              if (members.length <= 0) {
-                return (
-                  <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
-                    <p className="uk-text-italic">Aucuns membres trouvé</p>
-                  </div>
-                );
-              }
-              return null;
-            })()}
+            {loading && (
+              <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
+                <div data-uk-spinner="" />
+              </div>
+            )}
+            {!loading && !allLoaded && (
+              <div
+                style={{ borderTop: '1px solid #e5e5e5' }}
+                className="uk-text-center uk-width-1-1 uk-padding"
+              >
+                <button
+                  className="uk-button uk-button-text"
+                  type="button"
+                  onClick={() => fetchData()}
+                >
+                  Voir plus...
+                </button>
+              </div>
+            )}
+            {!loading && allLoaded && members.length <= 0 && (
+              <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
+                <p className="uk-text-italic">Aucuns membres trouvé</p>
+              </div>
+            )}
           </>
         )}
       </Section>

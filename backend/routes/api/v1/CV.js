@@ -31,7 +31,10 @@ router.post(
         break;
       case 'Coach':
       case 'Admin':
-        reqCV.status = 'Published';
+        // on laisse la permission au coach et à l'admin de choisir le statut à enregistrer
+        if (!reqCV.status) {
+          reqCV.status = 'Published';
+        }
         break;
       default:
         reqCV.status = 'Unknown';

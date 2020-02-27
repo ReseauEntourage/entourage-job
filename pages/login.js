@@ -14,7 +14,7 @@ const Login = () => {
   useEffect(() => {
     if (isAuthentificated && user) {
       if (user.role === 'Admin') {
-        router.push('/backoffice/admin/membres');
+        router.push('/backoffice/admin/offres');
       } else {
         router.push('/backoffice/candidat/offres');
       }

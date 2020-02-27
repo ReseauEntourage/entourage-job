@@ -1,35 +1,34 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { UserContext } from '../store/UserProvider';
 import HeaderBackoffice from '../headers/HeaderBackoffice';
+import CandidatHeader from '../backoffice/cv/CandidatHeader';
 
-const CVEditWelcome = () => {
-  const userContext = useContext(UserContext);
-  if (userContext.user === null) {
-    console.log('no ctx: CVEditWelcome');
-
+const CVEditWelcome = ({ user, candidatForCoach }) => {
+  if (user === null) {
     return null;
   }
   return (
     <HeaderBackoffice
-      title={
-        userContext.user.role === 'Candidat'
-          ? `Ravi de te revoir, ${userContext.user.firstName} !`
-          : `Ravi de te revoir, coach ${userContext.user.firstName} !`
-      }
+      childrenBottom
+      title={`Ravi de te revoir,${user.role === 'Coach' && ' coach'} ${
+        user.firstName
+      } !`}
       description={
-        userContext.user.role === 'Candidat'
+        user.role === 'Candidat'
           ? "Bienvenue dans ton espace personnel, depuis lequel tu peux modifier les informations qui s'affichent dans ta page profil candidat sur LinkedOut."
-          : `Bienvenue dans l'espace personnel de ton candidat rattaché, depuis lequel tu peux modifier avec lui ses informations qui s&apos;affichent dans la page profil candidat sur LinkedOut.`
+          : `Bienvenue dans l'espace personnel de ton candidat rattaché, depuis lequel tu peux modifier avec lui ses informations qui s'affichent dans la page profil candidat sur LinkedOut.`
       }
-    />
+    >
+      {user.role === 'Coach' && <CandidatHeader member={candidatForCoach} />}
+    </HeaderBackoffice>
   );
 };
 CVEditWelcome.propTypes = {
-  cvFirstName: PropTypes.string,
+  user: PropTypes.shape().isRequired,
+  candidatForCoach: PropTypes.shape(),
 };
 CVEditWelcome.defaultProps = {
-  cvFirstName: undefined,
+  candidatForCoach: undefined,
 };
 
 export default CVEditWelcome;

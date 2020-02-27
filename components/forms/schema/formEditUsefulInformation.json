@@ -4,9 +4,10 @@
     {
       "id": "contracts",
       "name": "contracts",
-      "component": "input",
+      "title": "Type de poste recherché",
       "type": "text",
-      "title": "Type de poste recherché"
+      "component": "select-request-creatable",
+      "isMulti": true
     },
     {
       "id": "location",
@@ -25,9 +26,10 @@
     {
       "id": "languages",
       "name": "languages",
-      "component": "input",
       "type": "text",
-      "title": "Langues parlées"
+      "title": "Langues parlées",
+      "component": "select-request-creatable",
+      "isMulti": true
     },
     {
       "id": "transport",
