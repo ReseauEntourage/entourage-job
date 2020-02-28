@@ -10,7 +10,7 @@ const CVEditWelcome = ({ user, candidatForCoach }) => {
   return (
     <HeaderBackoffice
       childrenBottom
-      title={`Ravi de te revoir,${user.role === 'Coach' && ' coach'} ${
+      title={`Ravi de te revoir,${user.role === 'Coach' ? ' coach' : ''} ${
         user.firstName
       } !`}
       description={

@@ -68,27 +68,31 @@ router.post(
       }
     }
 
-    // Génération de la photo de preview
-    S3.download(reqCV.urlImg)
-      .then(({ Body }) =>
-        createPreviewImage({
-          input: Body,
-          name: reqCV.user.firstName.toUpperCase(),
-          description: reqCV.catchphrase,
-          ambition:
-            reqCV.ambitions && reqCV.ambitions.length > 0
-              ? reqCV.ambitions
-                  .slice(0, 2)
-                  .map((ambition) => ambition.toUpperCase())
-                  .join('. ')
-              : 'OUVERT À TOUTES PROPOSITIONS',
-        }).toBuffer()
-      )
-      .then((buffer) =>
-        S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.webp`)
-      )
-      .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
-      .catch(console.error);
+    UserController.getUser(reqCV.UserId).then((user) => {
+      // Génération de la photo de preview
+      S3.download(reqCV.urlImg)
+        .then(({ Body }) =>
+          createPreviewImage({
+            input: Body,
+            name: user.firstName.toUpperCase(),
+            description:
+              reqCV.catchphrase ||
+              'EN GALÈRE, CHERCHE UN JOB POUR S’EN SORTIR.',
+            ambition:
+              reqCV.ambitions && reqCV.ambitions.length > 0
+                ? reqCV.ambitions
+                    .slice(0, 2)
+                    .map((ambition) => ambition.toUpperCase())
+                    .join('. ')
+                : 'OUVERT À TOUTES PROPOSITIONS',
+          }).toBuffer()
+        )
+        .then((buffer) =>
+          S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.webp`)
+        )
+        .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
+        .catch(console.error);
+    });
 
     try {
       // création du corps du CV
