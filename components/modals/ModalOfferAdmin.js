@@ -142,15 +142,15 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               <SimpleLink
                 href={`mailto:${currentOffer.recruiterMail}`}
                 className="uk-link-muted"
-                target="_blank"
+                isExternal
               >
                 <span>{currentOffer.recruiterMail}</span>
                 <IconNoSSR name="mail" ratio="0.8" />
               </SimpleLink>
               <SimpleLink
-                href={`telto:${currentOffer.recruiterPhone}`}
+                href={`tel:${currentOffer.recruiterPhone}`}
                 className="uk-link-muted"
-                target="_blank"
+                isExternal
               >
                 <span>{currentOffer.recruiterPhone}</span>
                 <IconNoSSR name="phone" ratio="0.8" />
