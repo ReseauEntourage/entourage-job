@@ -26,7 +26,7 @@ const CVFicheEdition = ({ cv, onChange, disablePicture }) => (
         />
       </GridNoSSR>
       <CVEditPicture
-        urlImg={cv.urlImg || undefined}
+        urlImg={process.env.AWSS3_URL + cv.urlImg || undefined}
         onChange={onChange}
         disable={disablePicture}
       />
@@ -50,10 +50,33 @@ const CVFicheEdition = ({ cv, onChange, disablePicture }) => (
         <StoryProfileCard description={cv.story} onChange={onChange} />
         <CVEditReviews reviews={cv.reviews} onChange={onChange} />
       </GridNoSSR>
-      <ExperiencesProfileCard
-        experiences={cv.experiences}
-        onChange={onChange}
-      />
+      <GridNoSSR childWidths={['1-1']}>
+        <ExperiencesProfileCard
+          experiences={cv.experiences}
+          onChange={onChange}
+        />
+        <div className="uk-card uk-card-default">
+          <div className="uk-card-body">
+            <h3 className="uk-card-title">
+              Photo de <span className="uk-text-primary">partage</span>
+            </h3>
+          </div>
+          <div className="uk-card-media-bottom">
+            <div
+              className={`uk-card uk-card-default uk-height-medium uk-background-contain uk-background-center ${
+                cv.status === 'Draft'
+                  ? 'uk-background-blend-multiply uk-background-secondary'
+                  : ''
+              }`}
+              style={{
+                backgroundImage: `url("${
+                  process.env.AWSS3_URL
+                }${cv.urlImg.replace('.webp', '.preview.webp')}")`,
+              }}
+            />
+          </div>
+        </div>
+      </GridNoSSR>
     </GridNoSSR>
   </GridNoSSR>
 );
@@ -76,6 +99,7 @@ CVFicheEdition.propTypes = {
     passions: PropTypes.array,
     reviews: PropTypes.array,
     experiences: PropTypes.array,
+    status: PropTypes.string,
   }).isRequired,
   onChange: PropTypes.func,
   disablePicture: PropTypes.bool,

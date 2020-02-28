@@ -83,8 +83,14 @@ const CVPageContent = ({ member }) => {
         'Content-Type': 'multipart/form-data',
       },
     })
+      .then(() =>
+        Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
+          params: {
+            userId: member.id,
+          },
+        })
+      )
       .then(({ data }) => {
-        console.log(data);
         setCV(data);
         UIkit.notification(
           user.role === 'Candidat'

@@ -45,11 +45,11 @@
       "method": "isLength",
       "args": [
         {
-          "max": 40
+          "max": 120
         }
       ],
       "validWhen": true,
-      "message": "40 caractères maximum"
+      "message": "120 caractères maximum"
     },
     {
       "field": "location",

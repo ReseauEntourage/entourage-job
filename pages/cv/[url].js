@@ -32,12 +32,15 @@ const CVPage = ({ cv, router }) => {
       metaDescription={cv.intro}
       metaImage={
         cv.urlImg
-          ? `https://entourage-job-preprod.s3.eu-west-3.amazonaws.com/images/${cv.UserId}-preview.webp`
+          ? `${process.env.AWSS3_URL}${cv.urlImg.replace(
+              '.webp',
+              '.preview.webp'
+            )}`
           : `${process.env.SERVER_URL}/static/img/cv/arthur-preview-preview.jpg`
       }
       metaType="profile"
     >
-      <CVBackground url={cv.urlImg || undefined} />
+      <CVBackground url={process.env.AWSS3_URL + cv.urlImg || undefined} />
       <CVFiche cv={cv} />
       <ContactPartial />
       <DiscoverPartial />
@@ -45,10 +48,14 @@ const CVPage = ({ cv, router }) => {
   );
 };
 CVPage.getInitialProps = async ({ query }) => {
-  const { data } = await Api.get(
-    `${process.env.SERVER_URL}/api/v1/cv/${query.url}`
-  );
-  return { cv: data };
+  return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
+    .then(({ data }) => {
+      return { cv: data };
+    })
+    .catch((err) => {
+      console.log(err);
+      return { cv: null };
+    });
 };
 CVPage.propTypes = {
   cv: PropTypes.shape(),

@@ -48,12 +48,32 @@ router.post(
           .trim()
           .webp()
           .toBuffer();
-        reqCV.urlImg = await S3.upload(fileBuffer, `${reqCV.UserId}.webp`);
-        console.log('image uploaded: ', reqCV.urlImg);
+        reqCV.urlImg = await S3.upload(
+          fileBuffer,
+          `${reqCV.UserId}.${reqCV.status}.webp`
+        );
+      } catch (error) {
+        console.error(error);
+      } finally {
+        fs.unlinkSync(path); // remove image localy after upload to S3
+      }
+    }
 
-        // todo load by its self user firstname and ambitions
-        const previewBuffer = await createPreviewImage({
-          input: fileBuffer,
+    if (reqCV.status === 'Published') {
+      try {
+        const { Body } = await S3.download(reqCV.urlImg);
+        reqCV.urlImg = await S3.upload(Body, `${reqCV.UserId}.Published.webp`);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    S3.download(reqCV.urlImg)
+      // ne devrait pas etre ici. en dehors du block charger limage depuis le s3 puis générer
+      // todo load by its self user firstname and ambitions
+      .then(({ Body }) =>
+        createPreviewImage({
+          input: Body,
           name: reqCV.user.firstName.toUpperCase(),
           description: reqCV.catchphrase,
           ambition:
@@ -62,21 +82,14 @@ router.post(
                   .slice(0, 2)
                   .map((ambition) => ambition.toUpperCase())
                   .join('. ')
-              : '',
-        }).toBuffer();
-        const previewUrl = await S3.upload(
-          previewBuffer,
-          `${reqCV.UserId}-preview.webp`
-        );
-        console.log('preview uploaded: ', previewUrl);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        fs.unlinkSync(path); // remove image localy after upload to S3
-      }
-    } else {
-      console.log('no file');
-    }
+              : 'OUVERT À TOUTES PROPOSITIONS',
+        }).toBuffer()
+      )
+      .then((buffer) =>
+        S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.webp`)
+      )
+      .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
+      .catch(console.error);
 
     try {
       // création du corps du CV
@@ -84,7 +97,7 @@ router.post(
       // notification mail to coach and admin
       if (req.payload.role === 'Candidat') {
         const mailSubject = 'Soumission CV';
-        const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veillez tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
+        const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
         // notification de l'admin
         sendMail({
           toEmail: process.env.MAILJET_TO_EMAIL,
