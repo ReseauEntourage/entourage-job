@@ -37,9 +37,6 @@ const MembersAdmin = () => {
 
   const fetchData = async (doReset, query) => {
     setLoading(true);
-    if (doReset) {
-      setMembers([]);
-    }
     try {
       const { data } = await axios.get(
         `${process.env.SERVER_URL}/api/v1/user/members`,
@@ -116,17 +113,7 @@ const MembersAdmin = () => {
                 const { data } = await axios.post('api/v1/user', fields);
                 if (data) {
                   UIkit.notification('Le membre a bien été créé', 'success');
-                  setMembers(
-                    [...members, data].sort((a, b) => {
-                      if (a.firstName > b.firstName) {
-                        return 1;
-                      }
-                      if (b.firstName > a.firstName) {
-                        return -1;
-                      }
-                      return 0;
-                    })
-                  );
+                  fetchData(true);
                 } else {
                   throw new Error('réponse de la requete vide');
                 }

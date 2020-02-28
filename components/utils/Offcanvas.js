@@ -9,7 +9,7 @@ export const OffcanvasNoSSR = dynamic(() => import('./Offcanvas'), {
 });
 
 const Offcanvas = ({ id, children }) => (
-  <div data-uk-offcanvas="mode: push; overlay: true" id={id}>
+  <div data-uk-offcanvas="overlay: true; flip: true" id={id}>
     <div className="uk-offcanvas-bar">
       <CloseButtonNoSSR />
       {children}
