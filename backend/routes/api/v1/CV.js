@@ -68,9 +68,8 @@ router.post(
       }
     }
 
+    // Génération de la photo de preview
     S3.download(reqCV.urlImg)
-      // ne devrait pas etre ici. en dehors du block charger limage depuis le s3 puis générer
-      // todo load by its self user firstname and ambitions
       .then(({ Body }) =>
         createPreviewImage({
           input: Body,

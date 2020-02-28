@@ -197,10 +197,14 @@ export default class FieldFactory {
           <ReactSelect
             isMulti={data.isMulti}
             name={data.name}
-            defaultValue={this.defaultValues[data.id].map((value) => ({
-              value,
-              label: value,
-            }))}
+            defaultValue={
+              this.defaultValues &&
+              this.defaultValues[data.id] &&
+              this.defaultValues[data.id].map((value) => ({
+                value,
+                label: value,
+              }))
+            }
             options={data.options}
             className="basic-multi-select"
             classNamePrefix="select"
@@ -237,10 +241,14 @@ export default class FieldFactory {
           <CreatableSelect
             isMulti={data.isMulti}
             name={data.name}
-            defaultValue={this.defaultValues[data.id].map((value) => ({
-              value,
-              label: value,
-            }))}
+            defaultValue={
+              this.defaultValues &&
+              this.defaultValues[data.id] &&
+              this.defaultValues[data.id].map((value) => ({
+                value,
+                label: value,
+              }))
+            }
             options={data.options}
             className="basic-multi-select"
             classNamePrefix="select"
