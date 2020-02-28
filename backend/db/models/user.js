@@ -94,6 +94,7 @@ module.exports = (sequelize, DataTypes) => {
       sourceKey: 'id',
     });
 
+    // lie un coach un utilisateur à son nouveau coach et délie un coach à son ancien user
     const linkUsers = (user) => {
       try {
         User.update(
@@ -118,6 +119,7 @@ module.exports = (sequelize, DataTypes) => {
     User.beforeCreate((u) => {
       const user = u;
       user.id = uuid();
+      user.email = user.email.toLowerCase();
       user.url = `${u.firstName.toLowerCase().firstName}-${user.id.substring(
         0,
         8
