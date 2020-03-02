@@ -71,6 +71,7 @@ const UserProvider = ({ children }) => {
       }
     } else {
       console.log('no token');
+      Router.push('/login');
     }
   };
   useEffect(() => {
