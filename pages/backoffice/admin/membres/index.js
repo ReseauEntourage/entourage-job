@@ -1,9 +1,10 @@
 /* global UIkit */
+import moment from 'moment';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
-import { Section, GridNoSSR, Button } from '../../../../components/utils';
+import { Section, GridNoSSR } from '../../../../components/utils';
 import HeaderBackoffice from '../../../../components/headers/HeaderBackoffice';
 import axios from '../../../../Axios';
 import ModalEdit from '../../../../components/modals/ModalEdit';
@@ -272,7 +273,7 @@ const MembersAdmin = () => {
                         </td>
                         <td>
                           {member.lastConnection ? (
-                            member.lastConnection
+                            moment(member.lastConnection).format('DD/MM/YYYY')
                           ) : (
                             <span className="uk-text-italic">
                               Aucune connexion
