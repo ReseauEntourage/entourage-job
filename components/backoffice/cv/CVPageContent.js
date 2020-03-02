@@ -178,7 +178,7 @@ const CVPageContent = ({ member }) => {
       </GridNoSSR>
       <CVFicheEdition
         cv={cv}
-        disablePicture={user.role === 'Candidat'}
+        disablePicture={user.role === 'Candidat' || user.role === 'Coach'}
         onChange={(fields) => setCV({ ...cv, ...fields, status: 'Draft' })}
       />
     </div>
