@@ -6,44 +6,37 @@ import Api from '../../Axios';
 import ModalGeneric from '../modals/ModalGeneric';
 import HeaderModal from '../modals/HeaderModal';
 
-// Masquer profil
-const HideUser = ({ userId }) => {
-  const [hide, setHide] = useState(false);
-  const hideCV = (hidden) =>
+// Profil a retrouvé un emploi
+const FoundJobUser = ({ userId }) => {
+  const [found, setFound] = useState(false);
+
+  const foundJob = (employed) =>
     Api.put(`/api/v1/user/${userId}`, {
-      hidden,
+      employed,
     })
       .then(() => {
-        setHide(hidden);
-        UIkit.notification(
-          hidden
-            ? 'Votre CV est désormais masqué'
-            : 'Votre CV est désormais visible',
-          'success'
-        );
+        setFound(employed);
+        UIkit.notification('Votre profil a été mis à jour !', 'success');
       })
       .catch((err) => {
         console.error(err);
-        UIkit.notification(
-          'Une erreur est survenue lors du masquage de votre profil',
-          'danger'
-        );
+        UIkit.notification('Une erreur est survenue', 'danger');
       });
   return (
     <div className="uk-padding uk-padding-remove-left">
       <p className="uk-inline ">
-        Masquer mon CV du site LinkedOut :
+        J&apos;ai retrouvé un emploi :
         <span className="uk-form-controls uk-padding">
-          <label className="ent-toggle" htmlFor="ent-toggle-hide">
+          <label className="ent-toggle" htmlFor="ent-toggle-employed">
             <input
-              id="ent-toggle-hide"
+              id="ent-toggle-employed"
               type="checkbox"
-              checked={hide}
+              checked={found}
               onChange={() => {
-                if (hide) {
-                  hideCV(false);
+                if (found) {
+                  foundJob(false);
                 } else {
-                  UIkit.modal('#modal-confirm-hide').show();
+                  UIkit.modal('#modal-confirm-employed').show();
                 }
               }}
             />
@@ -51,11 +44,11 @@ const HideUser = ({ userId }) => {
           </label>
         </span>
       </p>
-      <ModalGeneric id="modal-confirm-hide">
+      <ModalGeneric id="modal-confirm-employed">
         {(closeModal) => (
           <>
             <CloseButtonNoSSR className="uk-modal-close-default" />
-            <HeaderModal>Changer la visibilité du CV en ligne ?</HeaderModal>
+            <HeaderModal>Vous avez retrouvé un emploi ?</HeaderModal>
             <p
               className="uk-text-lead"
               style={{
@@ -64,10 +57,10 @@ const HideUser = ({ userId }) => {
                 fontWeight: '500',
               }}
             >
-              En masquant ton CV de LinkedOut, il ne sera plus visible par les
+              {/* En masquant ton CV de LinkedOut, il ne sera plus visible par les
               utilisateurs du site.
               <br />
-              Tu pourras le remettre en ligne à tout moment.
+              Tu pourras le remettre en ligne à tout moment. */}
             </p>
             <GridNoSSR
               className="uk-grid-small uk-flex-center uk-margin-large-top"
@@ -78,11 +71,11 @@ const HideUser = ({ userId }) => {
                 <Button
                   style="primary"
                   onClick={() => {
-                    hideCV(true);
+                    foundJob(true);
                     closeModal();
                   }}
                 >
-                  Oui, masquer mon CV
+                  Oui, j&apos;ai retrouvé un emploi
                 </Button>,
               ]}
             />
@@ -92,8 +85,7 @@ const HideUser = ({ userId }) => {
     </div>
   );
 };
-HideUser.propTypes = {
+FoundJobUser.propTypes = {
   userId: PropTypes.string.isRequired,
 };
-
-export default HideUser;
+export default FoundJobUser;

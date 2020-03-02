@@ -36,6 +36,7 @@ const CandidatListPartial = () => {
                 ambitions={cv.ambitions}
                 skills={cv.skills}
                 catchphrase={cv.catchphrase}
+                employed={cv.user.employed}
               />
             ))}
           />

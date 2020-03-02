@@ -11,6 +11,7 @@ import FormWithValidation from '../../components/forms/FormWithValidation';
 import schemaPersonalData from '../../components/forms/schema/formPersonalData.json';
 import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
 import HideUser from '../../components/backoffice/HideUser';
+import FoundJobUser from '../../components/backoffice/FoundJobUser';
 
 const Parametres = () => {
   const { user, setUser } = useContext(UserContext);
@@ -27,7 +28,12 @@ const Parametres = () => {
           title="Mes paramètres"
           description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
         />
-        {(user.role === 'Candidat' || user.role === 'Coach') && <HideUser />}
+        {(user.role === 'Candidat' || user.role === 'Coach') && (
+          <>
+            <HideUser userId={user.id} />
+            <FoundJobUser userId={user.id} />
+          </>
+        )}
         <GridNoSSR childWidths={['1-2@m']}>
           {/* Informations personnelles */}
           <div className="uk-card uk-card-default uk-card-body">

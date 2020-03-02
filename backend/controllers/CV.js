@@ -8,7 +8,7 @@ const { cleanCV, controlText } = require('./tools');
 const INCLUDE_ALL_USERS = {
   model: models.User,
   as: 'user',
-  attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
+  attributes: ['id', 'firstName', 'lastName', 'gender', 'email', 'employed'],
 };
 const INCLUDE_NOT_HIDDEN_USERS = {
   ...INCLUDE_ALL_USERS,
@@ -297,7 +297,7 @@ const getRandomShortCVs = async (nb) => {
       {
         model: models.User,
         as: 'user',
-        attributes: ['firstName', 'url'],
+        attributes: ['firstName', 'url', 'employed'],
       },
     ],
   });

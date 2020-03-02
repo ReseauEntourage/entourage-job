@@ -76,6 +76,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       url: DataTypes.STRING,
       lastConnection: DataTypes.DATE,
+      employed: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
     },
     {}
   );

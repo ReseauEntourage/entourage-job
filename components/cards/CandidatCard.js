@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SimpleLink, GridNoSSR, IconNoSSR } from '../utils';
+import { SimpleLink, GridNoSSR, IconNoSSR, ImgNoSSR } from '../utils';
 
 const doEllipsis = (text, max) =>
   text
@@ -16,12 +16,30 @@ const CandidatCard = ({
   ambitions,
   skills,
   catchphrase,
+  employed,
 }) => (
   <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small uk-text-left">
     <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
       <div className="uk-cover-container uk-height-medium uk-margin-bottom">
         <img src={imgSrc} alt={imgAlt} data-uk-cover />
-
+        {employed && (
+          <div
+            style={{
+              backgroundColor: 'rgba(245, 95, 36, .7)',
+            }}
+            className="uk-width-1-1 uk-position-cover uk-flex uk-flex-middle uk-flex-right"
+          >
+            <div className="uk-width-1-2 uk-padding-small uk-text-center">
+              <ImgNoSSR src="/static/img/logo-white.png" alt="logo entourage" />
+              <p
+                className="uk-text-uppercase"
+                style={{ color: '#FFF', marginTop: '8px' }}
+              >
+                a retrouvé un emploi
+              </p>
+            </div>
+          </div>
+        )}
         <div
           style={{
             borderRadius: '0px 2px 2px 0px',
@@ -98,6 +116,7 @@ CandidatCard.propTypes = {
   imgAlt: PropTypes.string.isRequired,
   catchphrase: PropTypes.string.isRequired,
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
+  employed: PropTypes.bool.isRequired,
 };
 
 CandidatCard.defaultProps = {

@@ -32,6 +32,8 @@ function generateJWT(user) {
       gender: user.gender,
       role: user.role,
       userToCoach: user.userToCoach,
+      hidden: user.hidden,
+      employed: user.employed,
       exp: parseInt(expirationDate.getTime() / 1000, 10),
     },
     'secret'
@@ -47,6 +49,8 @@ function toAuthJSON(user) {
     gender: user.gender,
     userToCoach: user.userToCoach,
     role: user.role,
+    hidden: user.hidden,
+    employed: user.employed,
     token: generateJWT(user),
   };
 }
