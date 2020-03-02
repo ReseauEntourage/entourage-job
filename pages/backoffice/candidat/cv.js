@@ -9,21 +9,25 @@ import CVPageContent from '../../../components/backoffice/cv/CVPageContent';
 
 const Edit = () => {
   const { user } = useContext(UserContext);
-  const [candidatForCoach, setCandidatForCoach] = useState(null);
+  const [candidat, setCandidat] = useState({});
 
   useEffect(() => {
-    if (user && user.userToCoach) {
-      Api.get(
-        `${process.env.SERVER_URL}/api/v1/user/${user.userToCoach}`
-      ).then(({ data }) => setCandidatForCoach(data));
+    if (user) {
+      if (user.role === 'Coach' && user.userToCoach) {
+        Api.get(
+          `${process.env.SERVER_URL}/api/v1/user/${user.userToCoach}`
+        ).then(({ data }) => setCandidat(data));
+      } else {
+        setCandidat(user);
+      }
     }
   }, [user]);
 
   return (
     <LayoutBackOffice title="Edition du CV">
       <Section>
-        <CVEditWelcome user={user} candidatForCoach={candidatForCoach} />
-        <CVPageContent member={user} />
+        <CVEditWelcome user={user} candidatForCoach={candidat} />
+        <CVPageContent candidatId={candidat.id} />
       </Section>
     </LayoutBackOffice>
   );

@@ -13,14 +13,17 @@ import CVPageContent from '../../../../components/backoffice/cv/CVPageContent';
 import CandidatHeader from '../../../../components/backoffice/cv/CandidatHeader';
 
 const CVPage = ({ member }) => {
-  const [candidatForCoach, setCandidatForCoach] = useState(null);
+  const [candidat, setCandidat] = useState({});
   useEffect(() => {
-    if (member.userToCoach) {
-      Api.get(
-        `${process.env.SERVER_URL}/api/v1/user/${member.userToCoach}`
-      ).then(({ data }) => {
-        setCandidatForCoach(data);
-      });
+    if (member) {
+      if (member.role === 'Coach' && member.userToCoach) {
+        Api.get(
+          `${process.env.SERVER_URL}/api/v1/user/${member.userToCoach}`
+        ).then(({ data }) => setCandidat(data));
+      }
+      if (member.role === 'Candidat') {
+        setCandidat(member);
+      }
     }
   }, [member]);
 
@@ -51,10 +54,7 @@ const CVPage = ({ member }) => {
           </SimpleLink>
 
           <div>
-            <CandidatHeader
-              member={member}
-              candidatForCoach={candidatForCoach}
-            />
+            <CandidatHeader member={member} candidatForCoach={candidat} />
             <hr className="ent-divier-backoffice uk-margin-large-top " />
           </div>
 
@@ -78,7 +78,7 @@ const CVPage = ({ member }) => {
             </ul>
             <div />
           </GridNoSSR>
-          <CVPageContent member={member} />
+          <CVPageContent candidatId={candidat.id} />
         </GridNoSSR>
       </Section>
     </LayoutBackOffice>

@@ -38,17 +38,19 @@ function translateStatus(status) {
   }
 }
 
-const CVPageContent = ({ member }) => {
+const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
     // fetch CV
-    if (member) {
+    setLoading(true);
+    if (candidatId) {
       Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
         params: {
-          userId: member.id,
+          userId: candidatId,
         },
       })
         .then(({ data }) => {
@@ -61,9 +63,13 @@ const CVPageContent = ({ member }) => {
         .catch((err) => {
           console.error(err);
           setError('Une erreur est survenue durant le chargement du CV.');
-        });
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setCV(null);
+      setLoading(false);
     }
-  }, [member]);
+  }, [candidatId]);
 
   const postCV = (status) => {
     // prepare data
@@ -86,7 +92,7 @@ const CVPageContent = ({ member }) => {
       .then(() =>
         Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
           params: {
-            userId: member.id,
+            userId: candidatId,
           },
         })
       )
@@ -112,17 +118,63 @@ const CVPageContent = ({ member }) => {
   };
 
   if (user === null) return null;
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
   // aucun CV
   if (cv === null) {
     return (
-      <NoCV
-        user={member}
-        createCV={() =>
-          Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-            cv: { userId: member.id },
-          }).then(({ data }) => setCV(data))
-        }
-      />
+      <GridNoSSR column middle>
+        {user.role === 'Candidat' && (
+          <div>
+            <h2 className="uk-text-bold">
+              <span className="uk-text-primary">Aucun CV</span> n&apos;est
+              rattaché à votre compte candidat.
+            </h2>
+            <Button
+              style="primary"
+              onClick={() =>
+                Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                  cv: { userId: candidatId },
+                }).then(({ data }) => setCV(data))
+              }
+            >
+              Creer votre CV
+            </Button>
+          </div>
+        )}
+        {user.role === 'Coach' && !user.userToCoach && (
+          <div>
+            <h2 className="uk-text-bold">
+              <span className="uk-text-primary">Aucun candidat</span> n&apos;est
+              rattaché à ce compte coach.
+            </h2>
+            <p>
+              Il peut y avoir plusieurs raisons à ce sujet. Contacte
+              l&apos;équipe LinkedOut pour en savoir plus.
+            </p>
+          </div>
+        )}
+        {user.role === 'Coach' && user.userToCoach && (
+          <div>
+            <h2 className="uk-text-bold">
+              <span className="uk-text-primary">Aucun CV</span> n&apos;est
+              rattaché à ce compte candidat.
+            </h2>
+            <Button
+              style="primary"
+              onClick={() =>
+                Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                  cv: { userId: candidatId },
+                }).then(({ data }) => setCV(data))
+              }
+            >
+              Créer son CV
+            </Button>
+          </div>
+        )}
+      </GridNoSSR>
     );
   }
   // erreur pendant la requete
@@ -185,11 +237,7 @@ const CVPageContent = ({ member }) => {
   );
 };
 CVPageContent.propTypes = {
-  member: PropTypes.shape(),
-};
-
-CVPageContent.defaultProps = {
-  member: null,
+  candidatId: PropTypes.string.isRequired,
 };
 
 export default CVPageContent;

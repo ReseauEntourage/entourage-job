@@ -71,7 +71,9 @@ const UserProvider = ({ children }) => {
       }
     } else {
       console.log('no token');
-      Router.push('/login');
+      if (!Router.pathname.includes('/login')) {
+        Router.push('/login');
+      }
     }
   };
   useEffect(() => {
