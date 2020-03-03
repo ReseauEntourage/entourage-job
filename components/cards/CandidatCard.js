@@ -62,32 +62,39 @@ const CandidatCard = ({
               <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold">
                 {firstName}
               </h5>
-              <p className="uk-margin-remove">{catchphrase}</p>
+              {catchphrase ? (
+                <p className="uk-margin-remove">{catchphrase}</p>
+              ) : (
+                "cherche un job pour s'en sortir"
+              )}
             </div>
             <GridNoSSR
               column
               gap="collapse"
               className="uk-text-lowercase uk-text-bold uk-text-primary"
-            >
-              {/* ICI !!! */}
-              {skills.slice(0, 2).map((a, index) => (
+              items={skills.slice(0, 2).map((a, index) => (
                 <span key={index}>{doEllipsis(a, 15)}</span>
               ))}
-            </GridNoSSR>
-            <p>
-              Il souhaite <br />
-              travailler dans :
-              <GridNoSSR className="uk-grid-row-collapse uk-grid-column-small">
-                {ambitions.slice(0, 3).map((a, index) => (
-                  <span
-                    key={index}
-                    className="uk-label uk-label-primary uk-text-lowercase"
-                  >
-                    {doEllipsis(a, 15)}
-                  </span>
-                ))}
-              </GridNoSSR>
-            </p>
+            />
+            {ambitions && ambitions.length > 0 && (
+              <>
+                <p>
+                  Il souhaite <br />
+                  travailler dans :
+                </p>
+                <GridNoSSR
+                  className="uk-grid-row-collapse uk-grid-column-small"
+                  items={ambitions.slice(0, 3).map((a, index) => (
+                    <span
+                      key={index}
+                      className="uk-label uk-label-primary uk-text-lowercase"
+                    >
+                      {doEllipsis(a, 15)}
+                    </span>
+                  ))}
+                />
+              </>
+            )}
           </GridNoSSR>
         </div>
       </div>
@@ -109,7 +116,7 @@ const CandidatCard = ({
               style={{ cursor: 'pointer' }}
               className="uk-icon-link uk-text-primary"
             >
-              <IconNoSSR name="facebook" ratio=".9" />
+              <IconNoSSR name="facebook" ratio={0.9} />
             </FacebookShareButton>
           </li>
           <li>
@@ -123,7 +130,7 @@ const CandidatCard = ({
               style={{ cursor: 'pointer' }}
               className="uk-icon-link uk-text-primary"
             >
-              <IconNoSSR name="twitter" ratio=".9" />
+              <IconNoSSR name="twitter" ratio={0.9} />
             </TwitterShareButton>
           </li>
           <li>
@@ -137,7 +144,7 @@ const CandidatCard = ({
               style={{ cursor: 'pointer' }}
               className="uk-icon-link uk-text-primary"
             >
-              <IconNoSSR name="linkedin" ratio=".9" />
+              <IconNoSSR name="linkedin" ratio={0.9} />
             </LinkedinShareButton>
           </li>
         </ul>
@@ -151,12 +158,14 @@ CandidatCard.propTypes = {
   ambitions: PropTypes.arrayOf(PropTypes.shape).isRequired,
   imgSrc: PropTypes.string,
   imgAlt: PropTypes.string.isRequired,
-  catchphrase: PropTypes.string.isRequired,
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
-  employed: PropTypes.bool.isRequired,
+  catchphrase: PropTypes.string,
+  employed: PropTypes.bool,
 };
 
 CandidatCard.defaultProps = {
   imgSrc: 'static/img/arthur.png',
+  employed: false,
+  catchphrase: "cherche un job pour s'en sortir",
 };
 export default CandidatCard;

@@ -56,10 +56,13 @@ const AssociationEntourage = () => (
             gap="small"
             eachWidths={['auto uk-flex-last uk-flex-first@m', 'auto']}
           >
-            <ImgNoSSR src="/static/img/app-screenshot.png" />
+            <ImgNoSSR
+              src="/static/img/app-screenshot.png"
+              alt="app-screenshot entourage"
+            />
             <GridNoSSR column gap="small">
-              <ImgNoSSR src="/static/img/BTAndroid.png" />
-              <ImgNoSSR src="/static/img/BTApple.png" />
+              <ImgNoSSR src="/static/img/BTAndroid.png" alt="android" />
+              <ImgNoSSR src="/static/img/BTApple.png" alt="ios" />
             </GridNoSSR>
           </GridNoSSR>
         </GridNoSSR>

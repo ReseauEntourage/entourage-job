@@ -150,7 +150,7 @@ const MembersAdmin = () => {
               <ul className="uk-subnav" data-uk-switcher>
                 <li
                   className={
-                    role !== 'Candidat' && role !== 'Coach' && 'uk-active'
+                    role !== 'Candidat' && role !== 'Coach' ? 'uk-active' : ''
                   }
                 >
                   <a
@@ -165,7 +165,7 @@ const MembersAdmin = () => {
                     Tous les membres
                   </a>
                 </li>
-                <li className={role === 'Candidat' && 'uk-active'}>
+                <li className={role === 'Candidat' ? 'uk-active' : ''}>
                   <a
                     href="#"
                     onClick={() =>
@@ -178,7 +178,7 @@ const MembersAdmin = () => {
                     Candidats
                   </a>
                 </li>
-                <li className={role === 'Coach' && 'uk-active'}>
+                <li className={role === 'Coach' ? 'uk-active' : ''}>
                   <a
                     href="#"
                     onClick={() =>
@@ -259,8 +259,13 @@ const MembersAdmin = () => {
                         {role === 'Candidat' && (
                           <>
                             <td>
+                              <span className="uk-hidden@s">
+                                {!member.employed
+                                  ? "En recherche d'emploi"
+                                  : 'A trouvé un emploi'}
+                              </span>
                               <input
-                                className="uk-checkbox"
+                                className="uk-checkbox uk-visible@s"
                                 type="checkbox"
                                 defaultChecked={member.employed}
                               />
@@ -275,8 +280,11 @@ const MembersAdmin = () => {
                               )}
                             </td>
                             <td>
+                              <span className="uk-hidden@s">
+                                {member.hidden ? 'Masqué' : 'Visible'}
+                              </span>
                               <input
-                                className="uk-checkbox"
+                                className="uk-checkbox uk-visible@s"
                                 type="checkbox"
                                 defaultChecked={member.hidden}
                               />

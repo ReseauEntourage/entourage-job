@@ -15,7 +15,7 @@ const Icon = ({ name, ratio, flip, className }) => (
 );
 Icon.propTypes = {
   name: PropTypes.string.isRequired,
-  ratio: PropTypes.number,
+  ratio: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   className: PropTypes.string,
   flip: PropTypes.bool,
 };

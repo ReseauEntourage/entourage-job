@@ -79,9 +79,18 @@ Grid.propTypes = {
   divider: PropTypes.bool,
   eachWidths: PropTypes.arrayOf(PropTypes.string),
   gap: PropTypes.oneOf(['small', 'medium', 'large', 'collapse']),
-  items: PropTypes.arrayOf(PropTypes.element),
-  children: PropTypes.arrayOf(PropTypes.element),
+  items: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.element, PropTypes.bool])
+  ),
+  children: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.element, PropTypes.bool])
+  ),
   className: PropTypes.string,
+  around: PropTypes.bool,
+  middle: PropTypes.bool,
+  column: PropTypes.bool,
+  row: PropTypes.bool,
+  masonry: PropTypes.bool,
 };
 Grid.defaultProps = {
   match: false,
@@ -95,5 +104,10 @@ Grid.defaultProps = {
   items: undefined,
   children: [],
   className: undefined,
+  around: false,
+  middle: false,
+  column: false,
+  row: false,
+  masonry: false,
 };
 export default Grid;

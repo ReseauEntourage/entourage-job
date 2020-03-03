@@ -145,7 +145,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 isExternal
               >
                 <span>{currentOffer.recruiterMail}</span>
-                <IconNoSSR name="mail" ratio="0.8" />
+                <IconNoSSR name="mail" ratio={0.8} />
               </SimpleLink>
               <SimpleLink
                 href={`tel:${currentOffer.recruiterPhone}`}
@@ -153,7 +153,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 isExternal
               >
                 <span>{currentOffer.recruiterPhone}</span>
-                <IconNoSSR name="phone" ratio="0.8" />
+                <IconNoSSR name="phone" ratio={0.8} />
               </SimpleLink>
               <span className="uk-text-italic">
                 offre soumise le{' '}
@@ -172,7 +172,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                         target="_blank"
                       >
                         <span>{`${firstName} ${lastName}`}</span>
-                        <IconNoSSR name="link" ratio="0.8" />
+                        <IconNoSSR name="link" ratio={0.8} />
                       </SimpleLink>
                     )
                   )}

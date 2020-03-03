@@ -77,6 +77,8 @@ const UserProvider = ({ children }) => {
     }
   };
   useEffect(() => {
+    console.log('here !');
+
     current();
   }, [children]);
 
