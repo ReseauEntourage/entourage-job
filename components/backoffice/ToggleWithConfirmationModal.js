@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { GridNoSSR, CloseButtonNoSSR, Button } from '../utils';
 import ModalGeneric from '../modals/ModalGeneric';
 import HeaderModal from '../modals/HeaderModal';
+import '../../static/css/Toggle.less';
 
 const ToggleWithConfirmationModal = ({
   id,
@@ -20,26 +21,26 @@ const ToggleWithConfirmationModal = ({
   }, [defaultValue]);
   return (
     <>
-      <p className="uk-inline ">
-        {title}
-        <span className="uk-form-controls uk-padding">
-          <label className="ent-toggle" htmlFor={`ent-toggle-${id}`}>
-            <input
-              id={`ent-toggle-${id}`}
-              type="checkbox"
-              checked={toggle}
-              onChange={() => {
-                if (toggle) {
-                  onToggle(false).then(() => setToggle(false));
-                } else {
-                  UIkit.modal(`#modal-confirm-${id}`).show();
-                }
-              }}
-            />
-            <span className="ent-slider round" />
-          </label>
-        </span>
-      </p>
+      <div className="uk-form-controls uk-margin-top">
+        <div className="ent-toggle">
+          <input
+            id={`ent-toggle-${id}`}
+            type="checkbox"
+            checked={toggle}
+            onChange={() => {
+              if (toggle) {
+                onToggle(false).then(() => setToggle(false));
+              } else {
+                UIkit.modal(`#modal-confirm-${id}`).show();
+              }
+            }}
+          />
+          <span className="ent-slider round" />
+        </div>
+        <label className="uk-margin-small-left" htmlFor={`ent-toggle-${id}`}>
+          {title}
+        </label>
+      </div>
       <ModalGeneric id={`modal-confirm-${id}`}>
         {(closeModal) => (
           <>
