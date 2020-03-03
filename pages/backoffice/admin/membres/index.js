@@ -210,7 +210,7 @@ const MembersAdmin = () => {
               <table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-responsive">
                 <thead>
                   <tr>
-                    <th className="uk-table-shrink">Membre</th>
+                    <th className="">Membre</th>
                     {role === 'All' && <th className="uk-width-small">Role</th>}
                     {role === 'Candidat' && (
                       <>
@@ -219,7 +219,7 @@ const MembersAdmin = () => {
                         <th className="uk-width-small">CV masqué</th>
                       </>
                     )}
-                    <th className="uk-width-small uk-text-nowrap">
+                    <th className="uk-table-shrink uk-text-nowrap">
                       Coach/Candidat associé
                     </th>
                     <th className="uk-table-shrink uk-text-nowrap">
