@@ -12,6 +12,7 @@ import schemaPersonalData from '../../components/forms/schema/formPersonalData.j
 import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
 import HideUser from '../../components/backoffice/HideUser';
 import FoundJobUser from '../../components/backoffice/FoundJobUser';
+import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
 
 const Parametres = () => {
   const { user, setUser } = useContext(UserContext);
@@ -28,10 +29,63 @@ const Parametres = () => {
           title="Mes paramètres"
           description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
         />
-        {(user.role === 'Candidat' || user.role === 'Coach') && (
+        {user.role === 'Candidat' && (
           <>
-            <HideUser userId={user.id} />
-            <FoundJobUser userId={user.id} />
+            <ToggleWithConfirmationModal
+              id="hidden"
+              title="Masquer mon CV du site LinkedOut :"
+              modalTitle="Changer la visibilité du CV en ligne ?"
+              modalDescription={
+                <>
+                  En masquant ton CV de LinkedOut, il ne sera plus visible par
+                  les utilisateurs du site.
+                  <br />
+                  Tu pourras le remettre en ligne à tout moment.
+                </>
+              }
+              modalConfirmation="Oui, masquer mon CV"
+              defaultValue={user.hidden}
+              onToggle={(hidden) =>
+                Api.put(`/api/v1/user/${user.id}`, {
+                  hidden,
+                })
+                  .then(() =>
+                    UIkit.notification(
+                      hidden
+                        ? 'Votre CV est désormais masqué'
+                        : 'Votre CV est désormais visible',
+                      'success'
+                    )
+                  )
+                  .catch(() =>
+                    UIkit.notification(
+                      'Une erreur est survenue lors du masquage de votre profil',
+                      'danger'
+                    )
+                  )
+              }
+            />
+            <ToggleWithConfirmationModal
+              id="employed"
+              title="J'ai retrouvé un emploi :"
+              modalTitle="Vous avez retrouvé un emploi ?"
+              modalConfirmation="Oui, j'ai retrouvé un emploi"
+              defaultValue={user.employed}
+              onToggle={(employed) =>
+                Api.put(`/api/v1/user/${user.id}`, {
+                  employed,
+                })
+                  .then(() =>
+                    UIkit.notification(
+                      'Votre profil a été mis à jour !',
+                      'success'
+                    )
+                  )
+                  .catch(() =>
+                    UIkit.notification('Une erreur est survenue', 'danger')
+                  )
+              }
+            />
           </>
         )}
         <GridNoSSR childWidths={['1-2@m']}>
