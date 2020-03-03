@@ -8,7 +8,15 @@ const { cleanCV, controlText } = require('./tools');
 const INCLUDE_ALL_USERS = {
   model: models.User,
   as: 'user',
-  attributes: ['id', 'firstName', 'lastName', 'gender', 'email', 'employed'],
+  attributes: [
+    'id',
+    'firstName',
+    'lastName',
+    'gender',
+    'email',
+    'employed',
+    'hidden',
+  ],
 };
 const INCLUDE_NOT_HIDDEN_USERS = {
   ...INCLUDE_ALL_USERS,
@@ -221,7 +229,14 @@ const getCVbyUrl = async (url) => {
       {
         model: models.User,
         as: 'user',
-        attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
+        attributes: [
+          'id',
+          'firstName',
+          'lastName',
+          'gender',
+          'email',
+          'employed',
+        ],
       },
     ],
   });

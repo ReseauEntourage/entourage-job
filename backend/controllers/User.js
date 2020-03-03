@@ -75,6 +75,8 @@ const getMembers = (limit, offset, order, role, query) => {
       'email',
       'role',
       'lastConnection',
+      'employed',
+      'hidden',
     ],
     include: [
       {
@@ -127,7 +129,7 @@ const getMembers = (limit, offset, order, role, query) => {
 const searchUsers = (query, role) => {
   const lowerCaseQuery = query.toLowerCase();
   const options = {
-    attributes: ['id', 'firstName', 'lastName', 'email'],
+    attributes: ['id', 'firstName', 'lastName', 'email', 'employed', 'hidden'],
     where: {
       [Op.or]: [
         { email: { [Op.like]: `%${lowerCaseQuery}%` } },

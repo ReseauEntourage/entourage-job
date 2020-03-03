@@ -34,7 +34,6 @@ const MembersAdmin = () => {
   const {
     query: { role },
   } = router;
-  console.log(role);
 
   const fetchData = async (doReset, query) => {
     setLoading(true);
@@ -214,7 +213,11 @@ const MembersAdmin = () => {
                     <th className="uk-table-shrink">Membre</th>
                     {role === 'All' && <th className="uk-width-small">Role</th>}
                     {role === 'Candidat' && (
-                      <th className="uk-width-small">Statut du dernier CV</th>
+                      <>
+                        <th className="uk-width-small">À retrouvé un emploi</th>
+                        <th className="uk-width-small">Statut du dernier CV</th>
+                        <th className="uk-width-small">CV masqué</th>
+                      </>
                     )}
                     <th className="uk-width-small uk-text-nowrap">
                       Coach/Candidat associé
@@ -254,15 +257,31 @@ const MembersAdmin = () => {
                         </td>
                         {role === 'All' && <td>{member.role}</td>}
                         {role === 'Candidat' && (
-                          <td>
-                            {member.cvs && member.cvs.length > 0 ? (
-                              translateStatusCV(member.cvs[0].status)
-                            ) : (
-                              <span className="uk-text-italic uk-text-danger">
-                                Aucun CV
-                              </span>
-                            )}
-                          </td>
+                          <>
+                            <td>
+                              <input
+                                className="uk-checkbox"
+                                type="checkbox"
+                                defaultChecked={member.employed}
+                              />
+                            </td>
+                            <td>
+                              {member.cvs && member.cvs.length > 0 ? (
+                                translateStatusCV(member.cvs[0].status)
+                              ) : (
+                                <span className="uk-text-italic uk-text-danger">
+                                  Aucun CV
+                                </span>
+                              )}
+                            </td>
+                            <td>
+                              <input
+                                className="uk-checkbox"
+                                type="checkbox"
+                                defaultChecked={member.hidden}
+                              />
+                            </td>
+                          </>
                         )}
                         <td>
                           {member.linkedUser ? (
