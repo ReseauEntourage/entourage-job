@@ -1,5 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  LinkedinShareButton,
+  TwitterShareButton,
+  FacebookShareButton,
+} from 'react-share';
 import { SimpleLink, GridNoSSR, IconNoSSR, ImgNoSSR } from '../utils';
 
 const doEllipsis = (text, max) =>
@@ -95,13 +100,45 @@ const CandidatCard = ({
         <span>Partager :</span>
         <ul className="uk-iconnav">
           <li>
-            <IconNoSSR className="uk-text-primary" name="facebook" ratio=".9" />
+            <FacebookShareButton
+              url={`${process.env.SERVER_URL}/cv/${url}`}
+              quote={
+                "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
+              }
+              hashtags={['LinkedOut']}
+              style={{ cursor: 'pointer' }}
+              className="uk-icon-link uk-text-primary"
+            >
+              <IconNoSSR name="facebook" ratio=".9" />
+            </FacebookShareButton>
           </li>
           <li>
-            <IconNoSSR className="uk-text-primary" name="twitter" ratio=".9" />
+            <TwitterShareButton
+              url={`${process.env.SERVER_URL}/cv/${url}`}
+              title={
+                "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
+              }
+              hashtags={['LinkedOut']}
+              via="R_Entourage"
+              style={{ cursor: 'pointer' }}
+              className="uk-icon-link uk-text-primary"
+            >
+              <IconNoSSR name="twitter" ratio=".9" />
+            </TwitterShareButton>
           </li>
           <li>
-            <IconNoSSR className="uk-text-primary" name="linkedin" ratio=".9" />
+            <LinkedinShareButton
+              url={`${process.env.SERVER_URL}/cv/${url}`}
+              title={`${firstName.charAt(0).toUpperCase() +
+                firstName.slice(1).toLowerCase()} - Entourage Jobs`}
+              description={
+                "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
+              }
+              style={{ cursor: 'pointer' }}
+              className="uk-icon-link uk-text-primary"
+            >
+              <IconNoSSR name="linkedin" ratio=".9" />
+            </LinkedinShareButton>
           </li>
         </ul>
       </GridNoSSR>
