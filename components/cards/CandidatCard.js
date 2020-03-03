@@ -27,13 +27,13 @@ const CandidatCard = ({
             style={{
               backgroundColor: 'rgba(245, 95, 36, .7)',
             }}
-            className="uk-width-1-1 uk-position-cover uk-flex uk-flex-middle uk-flex-right"
+            className="uk-width-1-1 uk-position-bottom uk-flex uk-flex-middle uk-flex-right" // uk-position-cover
           >
             <div className="uk-width-1-2 uk-padding-small uk-text-center">
               <ImgNoSSR src="/static/img/logo-white.png" alt="logo entourage" />
               <p
                 className="uk-text-uppercase"
-                style={{ color: '#FFF', marginTop: '8px' }}
+                style={{ color: '#FFF', margin: '8px 0 0 0' }}
               >
                 a retrouvé un emploi
               </p>
@@ -43,7 +43,7 @@ const CandidatCard = ({
         <div
           style={{
             borderRadius: '0px 2px 2px 0px',
-            background: 'linear-gradient(90deg, white 50%, transparent 200%)',
+            background: 'white', // 'linear-gradient(90deg, white 50%, transparent 200%)',
           }}
           // ent-gradiant-default
           className="uk-width-1-2 uk-position-center-left"
