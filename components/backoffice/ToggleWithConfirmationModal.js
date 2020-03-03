@@ -22,23 +22,23 @@ const ToggleWithConfirmationModal = ({
   return (
     <>
       <div className="uk-form-controls uk-margin-top">
-        <div className="ent-toggle">
-          <input
-            id={`ent-toggle-${id}`}
-            type="checkbox"
-            checked={toggle}
-            onChange={() => {
-              if (toggle) {
-                onToggle(false).then(() => setToggle(false));
-              } else {
-                UIkit.modal(`#modal-confirm-${id}`).show();
-              }
-            }}
-          />
-          <span className="ent-slider round" />
-        </div>
-        <label className="uk-margin-small-left" htmlFor={`ent-toggle-${id}`}>
-          {title}
+        <label htmlFor={`ent-toggle-${id}`}>
+          <div className="ent-toggle">
+            <input
+              id={`ent-toggle-${id}`}
+              type="checkbox"
+              checked={toggle}
+              onChange={() => {
+                if (toggle) {
+                  onToggle(false).then(() => setToggle(false));
+                } else {
+                  UIkit.modal(`#modal-confirm-${id}`).show();
+                }
+              }}
+            />
+            <span className="ent-slider round" />
+          </div>
+          <span className="uk-margin-small-left">{title}</span>
         </label>
       </div>
       <ModalGeneric id={`modal-confirm-${id}`}>
