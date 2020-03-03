@@ -21,9 +21,13 @@ const Layout = ({
     <Head>
       <title>{title}</title>
       <link rel="icon" type="image/png" href="/static/img/fav.png" />
-      <meta property="og:title" content={metaTitle} />
-      <meta property="og:description" content={metaDescription} />
-      <meta property="og:image" content={metaImage} />
+      <meta name="title" property="og:title" content={metaTitle} />
+      <meta
+        name="description"
+        property="og:description"
+        content={metaDescription}
+      />
+      <meta name="image" property="og:image" content={metaImage} />
       <meta property="og:type" content={metaType} />
       <meta property="og:url" content={metaUrl} />
       <meta name="twitter:card" content="summary_large_image" />
