@@ -13,7 +13,7 @@ import CVPageContent from '../../../../components/backoffice/cv/CVPageContent';
 import CandidatHeader from '../../../../components/backoffice/cv/CandidatHeader';
 
 const CVPage = ({ member }) => {
-  const [candidat, setCandidat] = useState({});
+  const [candidat, setCandidat] = useState(null);
   useEffect(() => {
     if (member) {
       if (member.role === 'Coach' && member.userToCoach) {
@@ -46,7 +46,7 @@ const CVPage = ({ member }) => {
       <Section>
         <GridNoSSR column gap="large">
           <SimpleLink
-            href="/backoffice/admin/membres"
+            href={`/backoffice/admin/membres?role=${member.role}`}
             className="uk-link-reset"
           >
             <IconNoSSR name="chevron-left" />
@@ -78,7 +78,21 @@ const CVPage = ({ member }) => {
             </ul>
             <div />
           </GridNoSSR>
-          <CVPageContent candidatId={candidat.id} />
+          {candidat ? (
+            <CVPageContent candidatId={candidat.id} />
+          ) : (
+            'Aucun candidat lié'
+          )}
+          {/*
+              <h2 className="uk-text-bold">
+                <span className="uk-text-primary">Aucun candidat</span>{' '}
+                n&apos;est rattaché à ce compte coach.
+              </h2>
+              <p>
+                Il peut y avoir plusieurs raisons à ce sujet. Contacte
+                l&apos;équipe LinkedOut pour en savoir plus.
+              </p>
+               */}
         </GridNoSSR>
       </Section>
     </LayoutBackOffice>

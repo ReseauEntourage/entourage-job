@@ -119,71 +119,54 @@ const CVPageContent = ({ candidatId }) => {
 
   if (user === null) return null;
 
+  // chargement
   if (loading) {
     return <LoadingScreen />;
-  }
-  // aucun CV
-  if (cv === null) {
-    return (
-      <GridNoSSR column middle>
-        {user.role === 'Candidat' && (
-          <div>
-            <h2 className="uk-text-bold">
-              <span className="uk-text-primary">Aucun CV</span> n&apos;est
-              rattaché à votre compte candidat.
-            </h2>
-            <Button
-              style="primary"
-              onClick={() =>
-                Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                  cv: { userId: candidatId },
-                }).then(({ data }) => setCV(data))
-              }
-            >
-              Creer votre CV
-            </Button>
-          </div>
-        )}
-        {user.role === 'Coach' && !user.userToCoach && (
-          <div>
-            <h2 className="uk-text-bold">
-              <span className="uk-text-primary">Aucun candidat</span> n&apos;est
-              rattaché à ce compte coach.
-            </h2>
-            <p>
-              Il peut y avoir plusieurs raisons à ce sujet. Contacte
-              l&apos;équipe LinkedOut pour en savoir plus.
-            </p>
-          </div>
-        )}
-        {user.role === 'Coach' && user.userToCoach && (
-          <div>
-            <h2 className="uk-text-bold">
-              <span className="uk-text-primary">Aucun CV</span> n&apos;est
-              rattaché à ce compte candidat.
-            </h2>
-            <Button
-              style="primary"
-              onClick={() =>
-                Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                  cv: { userId: candidatId },
-                }).then(({ data }) => setCV(data))
-              }
-            >
-              Créer son CV
-            </Button>
-          </div>
-        )}
-      </GridNoSSR>
-    );
   }
   // erreur pendant la requete
   if (error) {
     return <ErrorMessage error={error} />;
   }
-  // chargement
-  if (cv === undefined) {
-    return <LoadingScreen />;
+  // aucun CV
+  if (cv === null) {
+    return (
+      <GridNoSSR column middle>
+        <div>
+          {user.role === 'Coach' && !user.userToCoach && (
+            <>
+              <h2 className="uk-text-bold">
+                <span className="uk-text-primary">Aucun candidat</span>{' '}
+                n&apos;est rattaché à ce compte coach.
+              </h2>
+              <p>
+                Il peut y avoir plusieurs raisons à ce sujet. Contacte
+                l&apos;équipe LinkedOut pour en savoir plus.
+              </p>
+            </>
+          )}
+          {(user.role === 'Admin' ||
+            user.role === 'Candidat' ||
+            (user.role === 'Coach' && user.userToCoach)) && (
+            <>
+              <h2 className="uk-text-bold">
+                <span className="uk-text-primary">Aucun CV</span> n&apos;est
+                rattaché à ce compte.
+              </h2>
+              <Button
+                style="primary"
+                onClick={() =>
+                  Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                    cv: { userId: candidatId },
+                  }).then(({ data }) => setCV(data))
+                }
+              >
+                Creer le CV
+              </Button>
+            </>
+          )}
+        </div>
+      </GridNoSSR>
+    );
   }
   // affichage du CV
   return (

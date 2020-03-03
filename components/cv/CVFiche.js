@@ -18,7 +18,7 @@ const CVFiche = ({ cv }) => (
     <CVPresentationCard
       firstName={cv.user.firstName}
       userId={cv.userId}
-      intro={cv.intro}
+      intro={cv.catchphrase}
     />
     <GridNoSSR
       childWidths={['1-2@s']}
