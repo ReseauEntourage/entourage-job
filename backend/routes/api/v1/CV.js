@@ -85,10 +85,12 @@ router.post(
                     .map((ambition) => ambition.toUpperCase())
                     .join('. ')
                 : 'OUVERT À TOUTES PROPOSITIONS',
-          }).toBuffer()
+          })
+            .jpeg()
+            .toBuffer()
         )
         .then((buffer) =>
-          S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.webp`)
+          S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
         )
         .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
         .catch(console.error);

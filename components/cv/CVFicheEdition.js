@@ -19,7 +19,7 @@ const CVFicheEdition = ({ cv, onChange, disablePicture }) => {
   useEffect(() => {
     if (cv.status !== 'Draft') {
       setPreviewUrl(
-        `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${cv.UserId}.${cv.status}.preview.webp`
+        `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${cv.UserId}.${cv.status}.preview.jpg`
       );
     }
   }, [cv]);
