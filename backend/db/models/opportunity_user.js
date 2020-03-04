@@ -48,14 +48,20 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Opportunity_User.associate = (models) => {
-    const sendMailEmbauche = async (toEmail, firstName, title, opportunityId) =>
+    const sendMailEmbauche = async (
+      toEmail,
+      firstName,
+      title,
+      opportunityId,
+      roleMin
+    ) =>
       sendMail({
         toEmail,
         subject: `${firstName} a retrouvé un emploi`,
         text: `
         ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
         Vous pouvez maintenant l'archiver en cliquant ici :
-        ${process.env.SERVER_URL}/backoffice/admin/offres?q=${opportunityId}.`,
+        ${process.env.SERVER_URL}/backoffice/${roleMin}/offres?q=${opportunityId}.`,
       });
 
     Opportunity_User.belongsTo(models.User);
@@ -85,14 +91,21 @@ module.exports = (sequelize, DataTypes) => {
             process.env.MAILJET_TO_EMAIL,
             firstName,
             title,
-            nextData.OpportunityId
+            nextData.OpportunityId,
+            'admin'
           );
           if (userToCoach) {
             // mail coach
             const { email } = await models.User.findByPk(userToCoach, {
               attributes: ['email'],
             });
-            sendMailEmbauche(email, firstName, title, nextData.OpportunityId);
+            sendMailEmbauche(
+              email,
+              firstName,
+              title,
+              nextData.OpportunityId,
+              'candidat'
+            );
           }
         } catch (err) {
           console.error(

@@ -51,30 +51,30 @@ const UserProvider = ({ children }) => {
 
     setIsAuthentificated(true);
     setUser(data.user);
-    Router.push('/backoffice/candidat/cv');
   };
-  const current = async () => {
+
+  useEffect(() => {
     const accessToken = localStorage.getItem('access-token');
     if (accessToken) {
-      try {
-        console.log('token found: ', accessToken);
-        const { data } = await Api.get('/api/v1/auth/current');
-        localStorage.setItem('access-token', data.user.token);
-
-        setIsAuthentificated(true);
-        setUser(data.user);
-        restrictAccessByRole(data.user.role);
-      } catch (err) {
-        console.log(err);
-        localStorage.removeItem('access-token');
-        Router.push('/login');
-      }
+      console.log('token found: ', accessToken);
+      Api.get('/api/v1/auth/current')
+        .then(({ data }) => {
+          localStorage.setItem('access-token', data.user.token);
+          setIsAuthentificated(true);
+          setUser(data.user);
+          restrictAccessByRole(data.user.role);
+        })
+        .catch((err) => {
+          console.log(err);
+          localStorage.removeItem('access-token');
+          Router.push('/login');
+        });
     } else {
       console.log('no token');
+      if (Router.pathname.includes('/backoffice')) {
+        Router.push('/login');
+      }
     }
-  };
-  useEffect(() => {
-    current();
   }, [children]);
 
   return (

@@ -1,4 +1,4 @@
-// import axios from '../../../Axios';
+import axios from '../../../Axios';
 
 export default {
   id: 'form-offer',
@@ -8,7 +8,7 @@ export default {
       name: 'title',
       component: 'input',
       type: 'text',
-      title: 'Titre du poste proposé**',
+      title: 'Titre du poste proposé*',
     },
     {
       id: 'recruiterName',
@@ -35,7 +35,7 @@ export default {
       id: 'businessLines',
       name: 'businessLines',
       title: "Secteur d'activité*",
-      placeholder: "Selectionnez les secteurs d'activité",
+      placeholder: "Sélectionnez les secteurs d'activité",
       type: 'text',
       component: 'select-request',
       isMulti: true,
@@ -131,33 +131,34 @@ export default {
       id: 'isPublic',
       name: 'isPublic',
       component: 'checkbox',
-      title: "L'offre est elle générale ?",
+      title: "L'offre est-elle générale?",
     },
-    // {
-    //   id: 'linkedUser',
-    //   name: 'linkedUser',
-    //   isMulti: true,
-    //   type: 'text',
-    //   title: 'Si oui, tapez la candidat lié',
-    //   placeholder: 'Tapez un candidat',
-    //   component: 'select-request-async',
-    //   loadOptions: (inputValue, callback) => {
-    //     axios
-    //       .get('api/v1/user/search', {
-    //         params: {
-    //           query: inputValue,
-    //           role: 'Candidat',
-    //         },
-    //       })
-    //       .then(({ data }) =>
-    //         data.map((u) => ({
-    //           value: u.id,
-    //           label: `${u.firstName} ${u.lastName}`,
-    //         }))
-    //       )
-    //       .then(callback);
-    //   },
-    // },
+    {
+      id: 'candidatId',
+      name: 'candidatId',
+      // isMulti: true,
+      type: 'text',
+      title: "Si non, renseignez le candidat à qui l'adresser",
+      placeholder: 'Tapez un candidat',
+      component: 'select-request-async',
+      disable: (getValue) => getValue('isPublic') === true,
+      loadOptions: (inputValue, callback) => {
+        axios
+          .get('api/v1/user/search', {
+            params: {
+              query: inputValue,
+              role: 'Candidat',
+            },
+          })
+          .then(({ data }) =>
+            data.map((u) => ({
+              value: u.id,
+              label: `${u.firstName} ${u.lastName}`,
+            }))
+          )
+          .then(callback);
+      },
+    },
   ],
   rules: [
     {

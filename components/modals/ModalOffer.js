@@ -1,7 +1,8 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
 import PropsType, { func } from 'prop-types';
-import { GridNoSSR, Button, IconNoSSR } from '../utils';
+import moment from 'moment';
+import { GridNoSSR, Button, IconNoSSR, SimpleLink } from '../utils';
 import Textarea from '../forms/fields/Textarea';
 import Select from '../forms/fields/Select';
 import ButtonIcon from '../utils/ButtonIcon';
@@ -160,10 +161,25 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                   </OfferInfoContainer>
                   <OfferInfoContainer icon="user" title="Recruteur">
                     {currentOffer.recruiterName}
-                    {currentOffer.recruiterEmail}
-                    {currentOffer.recruiterPhone}
+                    <SimpleLink
+                      href={`mailto:${currentOffer.recruiterMail}`}
+                      className="uk-link-muted"
+                      isExternal
+                    >
+                      <span>{currentOffer.recruiterMail}</span>
+                      <IconNoSSR name="mail" ratio={0.8} />
+                    </SimpleLink>
+                    <SimpleLink
+                      href={`tel:${currentOffer.recruiterPhone}`}
+                      className="uk-link-muted"
+                      isExternal
+                    >
+                      <span>{currentOffer.recruiterPhone}</span>
+                      <IconNoSSR name="phone" ratio={0.8} />
+                    </SimpleLink>
                     <span className="uk-text-italic">
-                      offre soumise le {formatDate}
+                      offre soumise le{' '}
+                      {moment(currentOffer.date).format('DD/MM/YYYY')}
                     </span>
                   </OfferInfoContainer>
                   <OfferInfoContainer
@@ -235,7 +251,7 @@ ModalOffer.propTypes = {
     description: PropsType.string,
     recruiterName: PropsType.string,
     isPublic: PropsType.bool,
-    recruiterEmail: PropsType.string,
+    recruiterMail: PropsType.string,
     recruiterPhone: PropsType.string,
     businessLines: PropsType.arrayOf(PropsType.string),
     date: PropsType.string,

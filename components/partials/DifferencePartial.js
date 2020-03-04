@@ -138,8 +138,8 @@ const DifferencePartial = () => (
               title: 'LinkedIn',
               href: 'https://www.linkedin.com/company/association-entourage/',
             },
-          ].map(({ name, title, href }) => (
-            <Link href={href}>
+          ].map(({ name, title, href }, key) => (
+            <Link href={href} key={key}>
               <a
                 className="uk-button uk-button-primary"
                 target="_blank"

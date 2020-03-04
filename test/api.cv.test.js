@@ -9,7 +9,7 @@ const TIMEOUT = 20000;
 
 const CV_EXAMPLE = {
   // url: 'Test-Ament',
-  userId: '27272727-aaaa-bbbb-cccc-012345678927',
+  UserId: '27272727-aaaa-bbbb-cccc-012345678927',
   intro: 'Je suis une intro',
   location: 'Paris et Proche Banlieue',
   story:
@@ -64,13 +64,22 @@ describe('Tests des routes API - Partie CV', () => {
 
   before((done) => {
     server.prepare();
-    return server
+    server
       .start(PORT)
       .then(() =>
         Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
       )
-      .then(({ data }) => (user = data))
-      .then(done);
+      .then(() =>
+        Api.post(`${process.env.SERVER_URL}/api/v1/auth/login`, {
+          email: USER_EXAMPLE.email,
+          password: USER_EXAMPLE.password,
+        })
+      )
+      .then(({ data }) => {
+        console.log(data);
+        user = { ...data.user, password: USER_EXAMPLE.password };
+        done();
+      });
   });
 
   after(() => {
@@ -82,18 +91,27 @@ describe('Tests des routes API - Partie CV', () => {
 
     describe('C - Create 1 CV', () => {
       it('doit créer le CV dans la base de données', () => {
-        return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-          cv: {
-            ...CV_EXAMPLE,
-            status: 'Published',
-            userId: user.id,
+        return Api.post(
+          `${process.env.SERVER_URL}/api/v1/cv`,
+          {
+            cv: JSON.stringify({
+              ...CV_EXAMPLE,
+              status: 'Published',
+              UserId: user.id,
+            }),
           },
-        })
+          {
+            headers: {
+              authorization: `Token ${user.token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        )
           .then((res) => {
             cv = res.data;
             assert.isObject(res.data, 'CV retourné');
           })
-          .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+          .catch(assert.fail);
       }).timeout(TIMEOUT);
     });
     describe.skip('R - Read 1 CV', () => {
@@ -134,21 +152,21 @@ describe('Tests des routes API - Partie CV', () => {
           cv: {
             ...CV_EXAMPLE,
             status: 'Published',
-            userId: user.id,
+            UserId: user.id,
           },
         }),
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
           cv: {
             ...CV_EXAMPLE,
             status: 'Published',
-            userId: user.id,
+            UserId: user.id,
           },
         }),
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
           cv: {
             ...CV_EXAMPLE,
             status: 'Published',
-            userId: user.id,
+            UserId: user.id,
           },
         }),
       ];
@@ -237,7 +255,7 @@ describe('Tests des routes API - Partie CV', () => {
                 cv: {
                   ...CV_EXAMPLE,
                   status: 'Published',
-                  userId,
+                  UserId: userId,
                 },
               });
             })
@@ -328,7 +346,7 @@ describe('Tests des routes API - Partie CV', () => {
                 cv: {
                   ...CV_EXAMPLE,
                   status: 'Published',
-                  userId,
+                  UserId: userId,
                 },
               });
             })

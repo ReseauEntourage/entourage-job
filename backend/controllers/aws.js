@@ -17,11 +17,30 @@ const upload = (data, outputPath) => {
         Body: data,
         ACL: 'public-read', // allow public reading access to the file
       },
-      (err, { Location }) => {
+      (err, { Key }) => {
         if (err) {
           reject(err);
         } else {
-          resolve(Location);
+          resolve(Key);
+        }
+      }
+    );
+  });
+};
+
+const download = (key) => {
+  return new Promise((resolve, reject) => {
+    // Uploading files to the bucket
+    s3.getObject(
+      {
+        Bucket: process.env.AWSS3_BUCKET_NAME,
+        Key: key, // File name you want to save as in S3
+      },
+      (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
         }
       }
     );
@@ -34,4 +53,4 @@ const uploadFile = (path, outputPath) => {
   return upload(fileContent, outputPath);
 };
 
-module.exports = { upload, uploadFile };
+module.exports = { upload, uploadFile, download };

@@ -19,6 +19,7 @@ const SimpleLink = ({
     <a
       href={href}
       target={target ? '_blank' : ''}
+      className={classBuffer}
       rel={target ? 'noopener noreferrer' : ''}
     >
       {children}

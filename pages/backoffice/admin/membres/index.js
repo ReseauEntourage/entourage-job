@@ -1,9 +1,10 @@
 /* global UIkit */
+import moment from 'moment';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
-import { Section, GridNoSSR, Button } from '../../../../components/utils';
+import { Section, GridNoSSR } from '../../../../components/utils';
 import HeaderBackoffice from '../../../../components/headers/HeaderBackoffice';
 import axios from '../../../../Axios';
 import ModalEdit from '../../../../components/modals/ModalEdit';
@@ -33,13 +34,9 @@ const MembersAdmin = () => {
   const {
     query: { role },
   } = router;
-  console.log(role);
 
   const fetchData = async (doReset, query) => {
     setLoading(true);
-    if (doReset) {
-      setMembers([]);
-    }
     try {
       const { data } = await axios.get(
         `${process.env.SERVER_URL}/api/v1/user/members`,
@@ -116,17 +113,7 @@ const MembersAdmin = () => {
                 const { data } = await axios.post('api/v1/user', fields);
                 if (data) {
                   UIkit.notification('Le membre a bien été créé', 'success');
-                  setMembers(
-                    [...members, data].sort((a, b) => {
-                      if (a.firstName > b.firstName) {
-                        return 1;
-                      }
-                      if (b.firstName > a.firstName) {
-                        return -1;
-                      }
-                      return 0;
-                    })
-                  );
+                  fetchData(true);
                 } else {
                   throw new Error('réponse de la requete vide');
                 }
@@ -163,7 +150,7 @@ const MembersAdmin = () => {
               <ul className="uk-subnav" data-uk-switcher>
                 <li
                   className={
-                    role !== 'Candidat' && role !== 'Coach' && 'uk-active'
+                    role !== 'Candidat' && role !== 'Coach' ? 'uk-active' : ''
                   }
                 >
                   <a
@@ -178,7 +165,7 @@ const MembersAdmin = () => {
                     Tous les membres
                   </a>
                 </li>
-                <li className={role === 'Candidat' && 'uk-active'}>
+                <li className={role === 'Candidat' ? 'uk-active' : ''}>
                   <a
                     href="#"
                     onClick={() =>
@@ -191,7 +178,7 @@ const MembersAdmin = () => {
                     Candidats
                   </a>
                 </li>
-                <li className={role === 'Coach' && 'uk-active'}>
+                <li className={role === 'Coach' ? 'uk-active' : ''}>
                   <a
                     href="#"
                     onClick={() =>
@@ -223,12 +210,16 @@ const MembersAdmin = () => {
               <table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-responsive">
                 <thead>
                   <tr>
-                    <th className="uk-table-shrink">Membre</th>
+                    <th className="">Membre</th>
                     {role === 'All' && <th className="uk-width-small">Role</th>}
                     {role === 'Candidat' && (
-                      <th className="uk-width-small">Statut du dernier CV</th>
+                      <>
+                        <th className="uk-width-small">À retrouvé un emploi</th>
+                        <th className="uk-width-small">Statut du dernier CV</th>
+                        <th className="uk-width-small">CV masqué</th>
+                      </>
                     )}
-                    <th className="uk-width-small uk-text-nowrap">
+                    <th className="uk-table-shrink uk-text-nowrap">
                       Coach/Candidat associé
                     </th>
                     <th className="uk-table-shrink uk-text-nowrap">
@@ -237,8 +228,11 @@ const MembersAdmin = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {members.map((member) => (
-                    <Link href={`/backoffice/admin/membres/${member.id}`}>
+                  {members.map((member, key) => (
+                    <Link
+                      key={key}
+                      href={`/backoffice/admin/membres/${member.id}`}
+                    >
                       <tr
                         className="uk-text-reset"
                         aria-hidden="true"
@@ -263,15 +257,39 @@ const MembersAdmin = () => {
                         </td>
                         {role === 'All' && <td>{member.role}</td>}
                         {role === 'Candidat' && (
-                          <td>
-                            {member.cvs && member.cvs.length > 0 ? (
-                              translateStatusCV(member.cvs[0].status)
-                            ) : (
-                              <span className="uk-text-italic uk-text-danger">
-                                Aucun CV
+                          <>
+                            <td>
+                              <span className="uk-hidden@s">
+                                {!member.employed
+                                  ? "En recherche d'emploi"
+                                  : 'A trouvé un emploi'}
                               </span>
-                            )}
-                          </td>
+                              <input
+                                className="uk-checkbox uk-visible@s"
+                                type="checkbox"
+                                defaultChecked={member.employed}
+                              />
+                            </td>
+                            <td>
+                              {member.cvs && member.cvs.length > 0 ? (
+                                translateStatusCV(member.cvs[0].status)
+                              ) : (
+                                <span className="uk-text-italic uk-text-danger">
+                                  Aucun CV
+                                </span>
+                              )}
+                            </td>
+                            <td>
+                              <span className="uk-hidden@s">
+                                {member.hidden ? 'Masqué' : 'Visible'}
+                              </span>
+                              <input
+                                className="uk-checkbox uk-visible@s"
+                                type="checkbox"
+                                defaultChecked={member.hidden}
+                              />
+                            </td>
+                          </>
                         )}
                         <td>
                           {member.linkedUser ? (
@@ -282,7 +300,7 @@ const MembersAdmin = () => {
                         </td>
                         <td>
                           {member.lastConnection ? (
-                            member.lastConnection
+                            moment(member.lastConnection).format('DD/MM/YYYY')
                           ) : (
                             <span className="uk-text-italic">
                               Aucune connexion
@@ -295,39 +313,30 @@ const MembersAdmin = () => {
                 </tbody>
               </table>
             </div>
-            {(() => {
-              if (loading) {
-                return (
-                  <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
-                    <div data-uk-spinner="" />
-                  </div>
-                );
-              }
-              if (!allLoaded) {
-                return (
-                  <div
-                    style={{ borderTop: '1px solid #e5e5e5' }}
-                    className="uk-text-center uk-width-1-1 uk-padding"
-                  >
-                    <Button
-                      style="text"
-                      onClick={() => fetchData()}
-                      href={null}
-                    >
-                      Voir plus...
-                    </Button>
-                  </div>
-                );
-              }
-              if (members.length <= 0) {
-                return (
-                  <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
-                    <p className="uk-text-italic">Aucuns membres trouvé</p>
-                  </div>
-                );
-              }
-              return null;
-            })()}
+            {loading && (
+              <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
+                <div data-uk-spinner="" />
+              </div>
+            )}
+            {!loading && !allLoaded && (
+              <div
+                style={{ borderTop: '1px solid #e5e5e5' }}
+                className="uk-text-center uk-width-1-1 uk-padding"
+              >
+                <button
+                  className="uk-button uk-button-text"
+                  type="button"
+                  onClick={() => fetchData()}
+                >
+                  Voir plus...
+                </button>
+              </div>
+            )}
+            {!loading && allLoaded && members.length <= 0 && (
+              <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
+                <p className="uk-text-italic">Aucuns membres trouvé</p>
+              </div>
+            )}
           </>
         )}
       </Section>

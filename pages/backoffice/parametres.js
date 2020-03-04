@@ -2,51 +2,21 @@
 import React, { useContext, useState } from 'react';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
-import {
-  Section,
-  GridNoSSR,
-  IconNoSSR,
-  CloseButtonNoSSR,
-  Button,
-} from '../../components/utils';
+import { Section, GridNoSSR, IconNoSSR } from '../../components/utils';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
 import ModalEdit from '../../components/modals/ModalEdit';
 import ButtonIcon from '../../components/utils/ButtonIcon';
 import Api from '../../Axios';
 import FormWithValidation from '../../components/forms/FormWithValidation';
-import schemaPersonalData from '../../components/forms/schema/formPersonalData';
-import schemaChangePassword from '../../components/forms/schema/formChangePassword';
-import ModalGeneric from '../../components/modals/ModalGeneric';
-import HeaderModal from '../../components/modals/HeaderModal';
+import schemaPersonalData from '../../components/forms/schema/formPersonalData.json';
+import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
+import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
 
 const Parametres = () => {
   const { user, setUser } = useContext(UserContext);
 
   const [loadingPersonal, setLoadingPersonal] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
-
-  const hideCV = async (hidden) => {
-    Api.put(`/api/v1/user/${user.id}`, {
-      hidden,
-    })
-      .then(() => {
-        setUser({ ...user, hidden });
-
-        UIkit.notification(
-          hidden
-            ? 'Votre CV est désormais masqué'
-            : 'Votre CV est désormais visible',
-          'success'
-        );
-      })
-      .catch((err) => {
-        console.error(err);
-        UIkit.notification(
-          'Une erreur est survenue lors du masquage de votre profil',
-          'danger'
-        );
-      });
-  };
 
   if (!user) return null;
 
@@ -57,109 +27,105 @@ const Parametres = () => {
           title="Mes paramètres"
           description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
         />
-
-        {/* Masquer profil */}
-        <div className="uk-padding uk-padding-remove-left">
-          <p className="uk-inline ">
-            Masquer mon CV du site LinkedOut :
-            <span className="uk-form-controls uk-padding">
-              <label className="ent-toggle" htmlFor="ent-toggle-hide">
-                <input
-                  id="ent-toggle-hide"
-                  type="checkbox"
-                  checked={user.hidden}
-                  onChange={() => {
-                    if (user.hidden) {
-                      hideCV(false);
-                    } else {
-                      UIkit.modal('#modal-confirm-hide').show();
-                    }
-                  }}
+        <GridNoSSR childWidths={['1-2@m']} match>
+          <GridNoSSR childWidths={['1-1']}>
+            {/* Preferences du CV */}
+            {user.role === 'Candidat' && (
+              <div className="uk-card uk-card-default uk-card-body">
+                <h3 className="uk-card-title">Préférences du CV</h3>
+                <ToggleWithConfirmationModal
+                  id="employed"
+                  title="J'ai retrouvé un emploi"
+                  modalTitle="Vous avez retrouvé un emploi ?"
+                  modalConfirmation="Oui, j'ai retrouvé un emploi"
+                  defaultValue={user.employed}
+                  onToggle={(employed) =>
+                    Api.put(`/api/v1/user/${user.id}`, {
+                      employed,
+                    })
+                      .then(() =>
+                        UIkit.notification(
+                          'Votre profil a été mis à jour !',
+                          'success'
+                        )
+                      )
+                      .catch(() =>
+                        UIkit.notification('Une erreur est survenue', 'danger')
+                      )
+                  }
                 />
-                <span className="ent-slider round" />
-              </label>
-            </span>
-          </p>
-          <ModalGeneric id="modal-confirm-hide">
-            {(closeModal) => (
-              <>
-                <CloseButtonNoSSR className="uk-modal-close-default" />
-                <HeaderModal>
-                  Changer la visibilité du CV en ligne ?
-                </HeaderModal>
-                <p
-                  className="uk-text-lead"
-                  style={{
-                    lineHeight: '1.2',
-                    fontSize: '1.2rem',
-                    fontWeight: '500',
-                  }}
-                >
-                  En masquant ton CV de LinkedOut, il ne sera plus visible par
-                  les utilisateurs du site.
-                  <br />
-                  Tu pourras le remettre en ligne à tout moment.
-                </p>
-                <GridNoSSR
-                  className="uk-grid-small uk-flex-center uk-margin-large-top"
-                  items={[
-                    <Button style="default" onClick={closeModal}>
-                      Annuler
-                    </Button>,
-                    <Button
-                      style="primary"
-                      onClick={() => {
-                        hideCV(true);
-                        closeModal();
-                      }}
-                    >
-                      Oui, masquer mon CV
-                    </Button>,
-                  ]}
+                <ToggleWithConfirmationModal
+                  id="hidden"
+                  title="Je masque mon CV"
+                  modalTitle="Changer la visibilité du CV en ligne ?"
+                  modalDescription={
+                    <>
+                      En masquant ton CV de LinkedOut, il ne sera plus visible
+                      par les utilisateurs du site.
+                      <br />
+                      Tu pourras le remettre en ligne à tout moment.
+                    </>
+                  }
+                  modalConfirmation="Oui, masquer mon CV"
+                  defaultValue={user.hidden}
+                  onToggle={(hidden) =>
+                    Api.put(`/api/v1/user/${user.id}`, {
+                      hidden,
+                    })
+                      .then(() =>
+                        UIkit.notification(
+                          hidden
+                            ? 'Votre CV est désormais masqué'
+                            : 'Votre CV est désormais visible',
+                          'success'
+                        )
+                      )
+                      .catch(() =>
+                        UIkit.notification(
+                          'Une erreur est survenue lors du masquage de votre profil',
+                          'danger'
+                        )
+                      )
+                  }
                 />
-              </>
+              </div>
             )}
-          </ModalGeneric>
-        </div>
-
-        <GridNoSSR childWidths={['1-2@m']}>
-          {/* Informations personnelles */}
-          <div className="uk-card uk-card-default uk-card-body">
-            <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
-              <h3 className="uk-card-title">Informations personelles</h3>
-              {loadingPersonal ? (
-                <div data-uk-spinner="ratio: .8" />
-              ) : (
-                <ButtonIcon
-                  name="pencil"
-                  onClick={() => {
-                    UIkit.modal(`#modal-personal-data`).show();
-                  }}
-                />
-              )}
-            </GridNoSSR>
-
-            <GridNoSSR column gap="small">
-              <GridNoSSR row gap="small">
-                <IconNoSSR name="user" />
-                <span>{`${user.firstName} ${user.lastName}`}</span>
-              </GridNoSSR>
-              <GridNoSSR row gap="small">
-                <IconNoSSR name="mail" />
-                <span>{user.email}</span>
-              </GridNoSSR>
-              <GridNoSSR row gap="small">
-                <IconNoSSR name="phone" />
-                {user.phone ? (
-                  <span>{user.phone}</span>
+            {/* Informations personnelles */}
+            <div className="uk-card uk-card-default uk-card-body">
+              <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+                <h3 className="uk-card-title">Informations personelles</h3>
+                {loadingPersonal ? (
+                  <div data-uk-spinner="ratio: .8" />
                 ) : (
-                  <span className="uk-text-italic">
-                    Numéro de téléphone non renseigné
-                  </span>
+                  <ButtonIcon
+                    name="pencil"
+                    onClick={() => UIkit.modal(`#modal-personal-data`).show()}
+                  />
                 )}
               </GridNoSSR>
-            </GridNoSSR>
-          </div>
+
+              <GridNoSSR column gap="small">
+                <GridNoSSR row gap="small">
+                  <IconNoSSR name="user" />
+                  <span>{`${user.firstName} ${user.lastName}`}</span>
+                </GridNoSSR>
+                <GridNoSSR row gap="small">
+                  <IconNoSSR name="mail" />
+                  <span>{user.email}</span>
+                </GridNoSSR>
+                <GridNoSSR row gap="small">
+                  <IconNoSSR name="phone" />
+                  {user.phone ? (
+                    <span>{user.phone}</span>
+                  ) : (
+                    <span className="uk-text-italic">
+                      Numéro de téléphone non renseigné
+                    </span>
+                  )}
+                </GridNoSSR>
+              </GridNoSSR>
+            </div>
+          </GridNoSSR>
 
           {/* Changement de mot de passe */}
           <div className="uk-card uk-card-default uk-card-body">

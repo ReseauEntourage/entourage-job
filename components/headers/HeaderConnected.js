@@ -10,7 +10,7 @@ import {
   SimpleLink,
 } from '../utils';
 import './Header.less';
-import HeaderUserDropdown from './HeaderUserDropdown';
+import { HeaderUserDropdownNoSSR } from './HeaderUserDropdown';
 import { UserContext } from '../store/UserProvider';
 
 const LINKS_CONNECTED = {
@@ -24,7 +24,7 @@ const LINKS_CONNECTED = {
   ],
   member: [
     {
-      href: '/backoffice/candidat/mesoffres',
+      href: '/backoffice/candidat/offres',
       name: 'Mes offres',
       icon: 'list',
     },
@@ -53,6 +53,7 @@ const HeaderConnected = ({ isHome }) => {
   return (
     <header>
       <NavbarNoSSR
+        mode="click"
         className={`uk-background-default uk-navbar-transparent ${
           isHome ? 'ent-home' : 'ent-header-shadow'
         }`}
@@ -96,7 +97,7 @@ const HeaderConnected = ({ isHome }) => {
               className="uk-visible@m"
               style={{ borderLeft: '1px solid lightgray' }}
             >
-              <HeaderUserDropdown />
+              <HeaderUserDropdownNoSSR />
             </li>
             <li style={{ borderLeft: '1px solid lightgray' }}>
               <a

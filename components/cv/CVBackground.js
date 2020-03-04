@@ -20,7 +20,7 @@ const CVBackground = ({ url }) => (
       }}
     >
       <div
-        className="uk-background-cover uk-background-top-center"
+        className="uk-background-cover uk-background-center"
         style={{
           backgroundImage: `url("${url}")`,
           position: 'absolute',

@@ -114,13 +114,13 @@ const NumberPartial = () => (
                         flip
                         className="uk-text-primary"
                         name="quote-right"
-                        ratio="1.4"
+                        ratio={1.4}
                       />
                       <p className="uk-margin-remove">{description}</p>
                       <IconNoSSR
                         className="uk-text-muted uk-width-1-1 uk-text-right"
                         name="quote-right"
-                        ratio=".8"
+                        ratio={0.8}
                       />
                     </div>
                     <div className="uk-card-title">
@@ -148,7 +148,7 @@ const NumberPartial = () => (
             <IconNoSSR
               className="uk-text-primary uk-icon-button uk-overlay-default"
               name="chevron-left"
-              ratio="2"
+              ratio={2}
             />
           </a>
           <a
@@ -159,7 +159,7 @@ const NumberPartial = () => (
             <IconNoSSR
               className="uk-text-primary uk-icon-button uk-overlay-default"
               name="chevron-right"
-              ratio="2"
+              ratio={2}
             />
           </a>
         </div>
@@ -172,7 +172,7 @@ const NumberPartial = () => (
             <IconNoSSR
               className="uk-text-primary"
               name="chevron-left"
-              ratio="2"
+              ratio={2}
             />
           </a>
           <a
@@ -183,7 +183,7 @@ const NumberPartial = () => (
             <IconNoSSR
               className="uk-text-primary"
               name="chevron-right"
-              ratio="2"
+              ratio={2}
             />
           </a>
         </div>

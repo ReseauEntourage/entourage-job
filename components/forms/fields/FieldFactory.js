@@ -2,8 +2,9 @@
 /* eslint-disable default-case */
 import React from 'react';
 import Link from 'next/link';
-import AsyncSelect from 'react-select/async';
 import ReactSelect from 'react-select';
+import AsyncSelect from 'react-select/async';
+import CreatableSelect from 'react-select/creatable';
 
 import axios from '../../../Axios';
 import DatePicker from './DatePicker';
@@ -14,13 +15,14 @@ import Textarea from './Textarea';
 import CheckboxCGU from './CheckboxCGU';
 
 export default class FieldFactory {
-  constructor(id, fields, defaultValues, handleChange, getValid) {
+  constructor(id, fields, defaultValues, handleChange, getValid, getValue) {
     this.generate = this.generate.bind(this);
     this.id = id;
     this.fields = fields;
     this.handleChange = handleChange;
     this.defaultValues = defaultValues;
     this.getValid = getValid;
+    this.getValue = getValue;
   }
 
   generate(data) {
@@ -158,17 +160,26 @@ export default class FieldFactory {
             </label>
           )}
           <AsyncSelect
-            cacheOptions
+            cacheOptions={
+              data.cacheOptions === undefined ? true : data.cacheOptions
+            }
             isClearable
             defaultOptions
             defaultValue={this.defaultValues[data.id]}
             isMulti={data.isMulti}
             openMenuOnClic={false}
             placeholder={data.placeholder}
-            loadOptions={data.loadOptions}
-            onChange={({ value }) =>
+            loadOptions={(inputValue, callback) =>
+              data.loadOptions(inputValue, callback, this.getValue)
+            }
+            isDisabled={data.disable(this.getValue)}
+            onChange={(e) =>
               this.handleChange({
-                target: { name: data.name, value, type: data.type },
+                target: {
+                  name: data.name,
+                  value: e ? e.value : '',
+                  type: data.type,
+                },
               })
             }
           />
@@ -186,10 +197,14 @@ export default class FieldFactory {
           <ReactSelect
             isMulti={data.isMulti}
             name={data.name}
-            defaultValue={this.defaultValues[data.id].map((value) => ({
-              value,
-              label: value,
-            }))}
+            defaultValue={
+              this.defaultValues &&
+              this.defaultValues[data.id] &&
+              this.defaultValues[data.id].map((value) => ({
+                value,
+                label: value,
+              }))
+            }
             options={data.options}
             className="basic-multi-select"
             classNamePrefix="select"
@@ -215,6 +230,51 @@ export default class FieldFactory {
         </div>
       );
     }
+    if (data.component === 'select-request-creatable') {
+      return (
+        <div>
+          {data.title && (
+            <label className="uk-form-label" htmlFor={data.id}>
+              {data.title}
+            </label>
+          )}
+          <CreatableSelect
+            isMulti={data.isMulti}
+            name={data.name}
+            defaultValue={
+              this.defaultValues &&
+              this.defaultValues[data.id] &&
+              this.defaultValues[data.id].map((value) => ({
+                value,
+                label: value,
+              }))
+            }
+            options={data.options}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            placeholder={data.placeholder}
+            onChange={(obj) => {
+              if (obj) {
+                let valueToReturn = obj;
+                if (Array.isArray(obj)) {
+                  valueToReturn = obj.map(({ value }) => value);
+                } else {
+                  valueToReturn = obj.value;
+                }
+                this.handleChange({
+                  target: {
+                    name: data.name,
+                    value: valueToReturn,
+                    type: data.type,
+                  },
+                });
+              } else console.log('pb here reactselect');
+            }}
+          />
+        </div>
+      );
+    }
+
     if (data.component === 'text') {
       return (
         <p className="uk-heading-divider uk-margin-top uk-margin-remove-bottom">

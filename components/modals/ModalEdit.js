@@ -50,7 +50,7 @@ const ModalEdit = ({
 );
 ModalEdit.propTypes = {
   id: PropTypes.string.isRequired,
-  title: PropTypes.element.isRequired,
+  title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   formSchema: PropTypes.shape({
     id: PropTypes.string,
     fields: PropTypes.object,
@@ -58,7 +58,7 @@ ModalEdit.propTypes = {
   }).isRequired,
   onSubmit: PropTypes.func.isRequired,
   defaultValues: PropTypes.arrayOf(PropTypes.string),
-  description: PropTypes.string,
+  description: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   submitText: PropTypes.string,
 };
 ModalEdit.defaultProps = {

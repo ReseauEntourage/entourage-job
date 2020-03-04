@@ -4,8 +4,10 @@ const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs');
 const { auth } = require('../../../controllers/Auth');
+const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
 const S3 = require('../../../controllers/aws');
+const { sendMail } = require('../../../controllers/mail');
 const createPreviewImage = require('../../../shareImage');
 
 const upload = multer({ dest: 'uploads/' });
@@ -29,7 +31,10 @@ router.post(
         break;
       case 'Coach':
       case 'Admin':
-        reqCV.status = 'Published';
+        // on laisse la permission au coach et à l'admin de choisir le statut à enregistrer
+        if (!reqCV.status) {
+          reqCV.status = 'Published';
+        }
         break;
       default:
         reqCV.status = 'Unknown';
@@ -43,38 +48,74 @@ router.post(
           .trim()
           .webp()
           .toBuffer();
-        reqCV.urlImg = await S3.upload(fileBuffer, `${reqCV.UserId}.webp`);
-        console.log('image uploaded: ', reqCV.urlImg);
-
-        // todo load by its self user firstname and ambitions
-        const previewBuffer = await createPreviewImage({
-          input: fileBuffer,
-          name: reqCV.user.firstName.toUpperCase(),
-          description: reqCV.catchphrase,
-          ambition:
-            reqCV.ambitions && reqCV.ambitions.length > 0
-              ? reqCV.ambitions
-                  .slice(0, 2)
-                  .map((ambition) => ambition.toUpperCase())
-                  .join('. ')
-              : '',
-        }).toBuffer();
-        const previewUrl = await S3.upload(
-          previewBuffer,
-          `${reqCV.UserId}-preview.webp`
+        reqCV.urlImg = await S3.upload(
+          fileBuffer,
+          `${reqCV.UserId}.${reqCV.status}.webp`
         );
-        console.log('preview uploaded: ', previewUrl);
       } catch (error) {
         console.error(error);
       } finally {
         fs.unlinkSync(path); // remove image localy after upload to S3
       }
-    } else {
-      console.log('no file');
     }
 
+    if (reqCV.status === 'Published') {
+      try {
+        const { Body } = await S3.download(reqCV.urlImg);
+        reqCV.urlImg = await S3.upload(Body, `${reqCV.UserId}.Published.webp`);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    UserController.getUser(reqCV.UserId).then((user) => {
+      // Génération de la photo de preview
+      S3.download(reqCV.urlImg)
+        .then(({ Body }) =>
+          createPreviewImage({
+            input: Body,
+            name: user.firstName.toUpperCase(),
+            description:
+              reqCV.catchphrase ||
+              'EN GALÈRE, CHERCHE UN JOB POUR S’EN SORTIR.',
+            ambition:
+              reqCV.ambitions && reqCV.ambitions.length > 0
+                ? reqCV.ambitions
+                    .slice(0, 2)
+                    .map((ambition) => ambition.toUpperCase())
+                    .join('. ')
+                : 'OUVERT À TOUTES PROPOSITIONS',
+          })
+            .jpeg()
+            .toBuffer()
+        )
+        .then((buffer) =>
+          S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
+        )
+        .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
+        .catch(console.error);
+    });
+
     try {
+      // création du corps du CV
       const cv = await CVController.createCV(reqCV);
+      // notification mail to coach and admin
+      if (req.payload.role === 'Candidat') {
+        const mailSubject = 'Soumission CV';
+        const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
+        // notification de l'admin
+        sendMail({
+          toEmail: process.env.MAILJET_TO_EMAIL,
+          subject: mailSubject,
+          text: mailText,
+        });
+        // Récupération de l'email du coach pour l'envoie du mail
+        UserController.getUser(req.payload.userToCoach)
+          .then(({ email }) =>
+            sendMail({ toEmail: email, subject: mailSubject, text: mailText })
+          )
+          .catch((err) => console.log('Pas de coach rattaché au candidat'));
+      }
       return res.status(200).json(cv);
     } catch (err) {
       console.log(err);

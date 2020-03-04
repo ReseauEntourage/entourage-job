@@ -32,6 +32,12 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
       'archived',
       'note',
     ],
+    include: [
+      {
+        model: User,
+        attributes: ['id', 'email', 'firstName', 'lastName', 'gender', 'email'],
+      },
+    ],
   },
 ];
 
@@ -238,7 +244,7 @@ const updateOpportunityUser = async (opportunityUser) => {
 };
 
 const updateOpportunity = async (opportunity) => {
-  await Opportunity.update(opportunity, {
+  Opportunity.update(opportunity, {
     where: { id: opportunity.id },
   });
 
@@ -246,12 +252,6 @@ const updateOpportunity = async (opportunity) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE,
   });
   if (opportunity.businessLines) {
-    await Opportunity_BusinessLine.destroy({
-      where: {
-        OpportunityId: opportunity.id,
-      },
-      truncate: true,
-    });
     const businessLines = await Promise.all(
       opportunity.businessLines.map((name) =>
         BusinessLine.findOrCreate({
@@ -260,25 +260,39 @@ const updateOpportunity = async (opportunity) => {
       )
     );
     await modelOpportunity.addBusinessLines(businessLines);
-  }
-
-  if (opportunity.usersId) {
-    const differenceId = modelOpportunity.userOpportunity
-      .filter(({ UserId }) => !opportunity.usersId.includes(UserId))
-      .map(({ id }) => id);
-
     await Opportunity_BusinessLine.destroy({
       where: {
-        OpportunityId: differenceId,
+        OpportunityId: opportunity.id,
+        BusinessLineId: { [Op.not]: businessLines.map((bl) => bl.id) },
       },
-      truncate: true,
     });
-    opportunity.usersId.forEach((userId) =>
-      Opportunity_User.create({
+  }
+
+  // maybe in trigger
+  if (opportunity.isPublic) {
+    await Opportunity_User.destroy({
+      where: {
         OpportunityId: modelOpportunity.id,
-        UserId: userId, // to rename in userId
-      })
+      },
+    });
+  } else if (opportunity.usersId) {
+    const opportunityUsers = await Promise.all(
+      opportunity.usersId.map((userId) =>
+        Opportunity_User.findOrCreate({
+          where: {
+            OpportunityId: modelOpportunity.id,
+            UserId: userId, // to rename in userId
+          },
+        }).then((model) => model[0])
+      )
     );
+    // suppression des secteurs d'activité non inclus dans les liens user->opportunité
+    await Opportunity_User.destroy({
+      where: {
+        OpportunityId: modelOpportunity.id,
+        UserId: { [Op.not]: opportunityUsers.map((bl) => bl.UserId) },
+      },
+    });
   }
 
   return getOpportunity(opportunity.id);

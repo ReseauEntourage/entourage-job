@@ -8,7 +8,15 @@ const { cleanCV, controlText } = require('./tools');
 const INCLUDE_ALL_USERS = {
   model: models.User,
   as: 'user',
-  attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
+  attributes: [
+    'id',
+    'firstName',
+    'lastName',
+    'gender',
+    'email',
+    'employed',
+    'hidden',
+  ],
 };
 const INCLUDE_NOT_HIDDEN_USERS = {
   ...INCLUDE_ALL_USERS,
@@ -76,7 +84,8 @@ inner join (
   where "CVs".status = 'Published'
   group by "UserId") groupCVs
 on cv."UserId" = groupCVs."UserId"
-and cv."version" =  groupCVs.version
+and cv.version =  groupCVs.version
+and cv.status = 'Published'
 inner join (
   select distinct id, "firstName", url
   from "Users"
@@ -157,7 +166,7 @@ const createCV = async (data) => {
     const ambitions = await Promise.all(
       data.ambitions.map((name) => {
         return models.Ambition.findOrCreate({
-          where: { name: controlText(name) },
+          where: { name }, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
         }).then((model) => model[0]);
       })
     );
@@ -220,7 +229,14 @@ const getCVbyUrl = async (url) => {
       {
         model: models.User,
         as: 'user',
-        attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
+        attributes: [
+          'id',
+          'firstName',
+          'lastName',
+          'gender',
+          'email',
+          'employed',
+        ],
       },
     ],
   });
@@ -279,7 +295,7 @@ const getRandomShortCVs = async (nb) => {
   });
   const modelCVs = await models.CV.findAll({
     where: { id: cvs.map((cv) => cv.id) },
-    attributes: ['catchphrase', 'urlImg'],
+    attributes: ['id', 'catchphrase', 'urlImg'],
     include: [
       {
         model: models.Ambition,
@@ -296,7 +312,7 @@ const getRandomShortCVs = async (nb) => {
       {
         model: models.User,
         as: 'user',
-        attributes: ['firstName', 'url'],
+        attributes: ['firstName', 'url', 'employed'],
       },
     ],
   });

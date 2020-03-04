@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { GridNoSSR, Button, IconNoSSR } from '../utils';
 
-moment.locale('fr');
-
 function translateStatus(status) {
   if (status === 0) return 'Contacté';
   if (status === 1) return "Phase d'entretien";
@@ -68,11 +66,7 @@ const OfferCard = ({
       {date && (
         <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
           <IconNoSSR name="calendar" />
-          <p>
-            {moment(date)
-              .startOf('day')
-              .fromNow()}
-          </p>
+          <p>{moment(date).format('DD/MM/YYYY')}</p>
         </GridNoSSR>
       )}
       <GridNoSSR

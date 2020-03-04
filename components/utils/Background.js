@@ -4,12 +4,13 @@ import { UIKIT_STYLES, UIKIT_BLENDS } from '../variables';
 
 const Background = ({ src, position, blend, fixed, children }) => {
   let classBuffer = 'uk-background-cover';
+  const styleBuffer = {};
   if (position) classBuffer += ` uk-background-${position}`;
   if (blend.mode) classBuffer += ` uk-background-blend-${blend.mode}`;
   if (fixed) classBuffer += ` uk-background-fixed`;
-  const styleBuffer = {
-    backgroundImage: `url(${src})`,
-  };
+  if (src) {
+    styleBuffer.backgroundImage = `url(${src})`;
+  }
   if (blend.color) {
     classBuffer += ` uk-background-${blend.color}`;
   } else if (blend.colorHex) {
@@ -23,7 +24,7 @@ const Background = ({ src, position, blend, fixed, children }) => {
 };
 Background.propTypes = {
   position: PropTypes.string,
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
   children: PropTypes.element.isRequired,
   blend: PropTypes.shape({
     color: PropTypes.oneOf(UIKIT_STYLES),
@@ -36,6 +37,7 @@ Background.defaultProps = {
   position: undefined,
   blend: {},
   fixed: false,
+  src: undefined,
 };
 
 export default Background;

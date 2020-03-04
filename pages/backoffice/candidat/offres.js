@@ -1,5 +1,6 @@
 /* global UIkit */
 import React, { useState, useEffect, useContext } from 'react';
+import { useRouter } from 'next/router';
 import { UserContext } from '../../../components/store/UserProvider';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import { Section } from '../../../components/utils';
@@ -10,11 +11,15 @@ import axios from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
 
 const Opportunites = () => {
+  const { user } = useContext(UserContext);
+  const {
+    query: { q: opportunityId },
+  } = useRouter();
+
   const [currentOffer, setCurrentOffer] = useState(null);
   const [offers, setOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(UserContext);
 
   const fetchData = async () => {
     if (user) {
@@ -44,12 +49,14 @@ const Opportunites = () => {
         });
         setOffers(sortedOffers);
         setLoading(false);
+        return data;
       } catch (err) {
         console.error(err);
         setLoading(false);
         setHasError(true);
       }
     } else console.log('no user');
+    return null;
   };
 
   const onClickOpportunityCard = async (offer) => {
@@ -92,8 +99,18 @@ const Opportunites = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [user]);
+    fetchData().then((data) => {
+      if (data) {
+        const offer = data.find((o) => o.id === opportunityId);
+        if (offer) {
+          console.log(offer);
+          setCurrentOffer(offer);
+          UIkit.modal('#modal-offer-admin').show();
+        }
+      }
+    });
+  }, [user, opportunityId]);
+  if (!user) return null;
 
   return (
     <LayoutBackOffice title="Mes opportunités">

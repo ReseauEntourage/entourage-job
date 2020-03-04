@@ -17,8 +17,8 @@ const CVFiche = ({ cv }) => (
   <Section>
     <CVPresentationCard
       firstName={cv.user.firstName}
-      userId={cv.userId}
-      intro={cv.intro}
+      userId={cv.UserId}
+      intro={cv.catchphrase}
     />
     <GridNoSSR
       childWidths={['1-2@s']}
@@ -42,17 +42,21 @@ const CVFiche = ({ cv }) => (
       ]}
     />
     <GridNoSSR childWidths={['1-2@s']}>
-      <GridNoSSR column childWidths={['1-1']}>
-        <StoryProfileCard description={cv.story} />
-        {cv.reviews.map((review) => (
-          <ReviewCard
-            picture="/static/img/arthur.png"
-            review={review.text}
-            author={review.name}
-            role={review.status}
-          />
-        ))}
-      </GridNoSSR>
+      <GridNoSSR
+        column
+        childWidths={['1-1']}
+        items={[
+          <StoryProfileCard description={cv.story} />,
+          ...cv.reviews.map((review) => (
+            <ReviewCard
+              picture="/static/img/arthur.png"
+              review={review.text}
+              author={review.name}
+              role={review.status}
+            />
+          )),
+        ]}
+      />
       <ExperiencesProfileCard experiences={cv.experiences} />
     </GridNoSSR>
   </Section>

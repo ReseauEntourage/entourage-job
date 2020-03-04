@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/aria-role */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR } from '../utils/Grid';
 import {
@@ -12,47 +12,95 @@ import {
 import { CVEditCatchphrase, CVEditPicture, CVEditReviews } from '.';
 import CVEditDevise from './CVEditDevise';
 import CVEditCareerPath from './CVEditCareerPath';
+import { ImgNoSSR } from '../utils';
 
-const CVFicheEdition = ({ cv, onChange }) => (
-  <GridNoSSR childWidths={['1-1']}>
-    <CVEditDevise devise={cv.devise} onChange={onChange} />
-    <GridNoSSR childWidths={['1-2@s']} match>
-      <GridNoSSR childWidths={['1-1']}>
-        <CVEditCatchphrase catchphrase={cv.catchphrase} onChange={onChange} />
-        <CVEditCareerPath
-          ambitions={cv.ambitions}
-          careerPathOpen={cv.careerPathOpen}
+const CVFicheEdition = ({ cv, onChange, disablePicture }) => {
+  const [previewUrl, setPreviewUrl] = useState(undefined);
+  useEffect(() => {
+    if (cv.status !== 'Draft') {
+      setPreviewUrl(
+        `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${cv.UserId}.${cv.status}.preview.jpg`
+      );
+    }
+  }, [cv]);
+  return (
+    <GridNoSSR childWidths={['1-1']}>
+      <CVEditDevise devise={cv.devise} onChange={onChange} />
+      <GridNoSSR childWidths={['1-2@s']} match>
+        <GridNoSSR childWidths={['1-1']}>
+          <CVEditCatchphrase catchphrase={cv.catchphrase} onChange={onChange} />
+          <CVEditCareerPath
+            ambitions={cv.ambitions}
+            careerPathOpen={cv.careerPathOpen}
+            onChange={onChange}
+          />
+        </GridNoSSR>
+        <CVEditPicture
+          urlImg={process.env.AWSS3_URL + cv.urlImg || undefined}
           onChange={onChange}
+          disablePicture={disablePicture}
         />
       </GridNoSSR>
-      <CVEditPicture urlImg={cv.urlImg || undefined} onChange={onChange} />
-    </GridNoSSR>
-    <GridNoSSR childWidths={['1-2@s']} match>
-      <InfoProfileCard
-        contracts={cv.contracts}
-        location={cv.location}
-        availability={cv.availability}
-        languages={cv.languages}
-        transport={cv.transport}
-        onChange={onChange}
-      />
-      <GridNoSSR childWidths={['1-2@m']} match>
-        <SkillsCard list={cv.skills} onChange={onChange} />
-        <PassionsCard list={cv.passions} onChange={onChange} />
+      <GridNoSSR childWidths={['1-2@s']} match>
+        <InfoProfileCard
+          contracts={cv.contracts}
+          location={cv.location}
+          availability={cv.availability}
+          languages={cv.languages}
+          transport={cv.transport}
+          onChange={onChange}
+        />
+        <GridNoSSR childWidths={['1-2@m']} match>
+          <SkillsCard list={cv.skills} onChange={onChange} />
+          <PassionsCard list={cv.passions} onChange={onChange} />
+        </GridNoSSR>
+      </GridNoSSR>
+      <GridNoSSR childWidths={['1-2@s']}>
+        <GridNoSSR childWidths={['1-1']}>
+          <StoryProfileCard description={cv.story} onChange={onChange} />
+          <CVEditReviews reviews={cv.reviews} onChange={onChange} />
+        </GridNoSSR>
+        <GridNoSSR childWidths={['1-1']}>
+          <ExperiencesProfileCard
+            experiences={cv.experiences}
+            onChange={onChange}
+          />
+          {cv.urlImg && (
+            <div className="uk-card uk-card-default">
+              <div className="uk-card-body">
+                <h3 className="uk-card-title">
+                  Photo de <span className="uk-text-primary">partage</span>
+                </h3>
+              </div>
+              <div className="uk-card-media-bottom">
+                <div className="uk-inline">
+                  <ImgNoSSR
+                    className="uk-height-medium"
+                    src={previewUrl}
+                    alt="Preview"
+                  />
+                  {cv.status === 'Draft' && (
+                    <>
+                      <div
+                        className="uk-position-cover"
+                        style={{
+                          background: 'rgba(0, 0, 0, 0.8)',
+                        }}
+                      />
+                      <div className="uk-overlay uk-position-center uk-light">
+                        <p>Veuillez sauvegarder ou publier le CV</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </GridNoSSR>
       </GridNoSSR>
     </GridNoSSR>
-    <GridNoSSR childWidths={['1-2@s']}>
-      <GridNoSSR childWidths={['1-1']}>
-        <StoryProfileCard description={cv.story} onChange={onChange} />
-        <CVEditReviews reviews={cv.reviews} onChange={onChange} />
-      </GridNoSSR>
-      <ExperiencesProfileCard
-        experiences={cv.experiences}
-        onChange={onChange}
-      />
-    </GridNoSSR>
-  </GridNoSSR>
-);
+  );
+};
 
 CVFicheEdition.propTypes = {
   cv: PropTypes.shape({
@@ -72,12 +120,16 @@ CVFicheEdition.propTypes = {
     passions: PropTypes.array,
     reviews: PropTypes.array,
     experiences: PropTypes.array,
+    status: PropTypes.string,
+    UserId: PropTypes.number,
   }).isRequired,
   onChange: PropTypes.func,
+  disablePicture: PropTypes.bool,
 };
 
 CVFicheEdition.defaultProps = {
   onChange: console.log('Aucune fonction de modification associé'),
+  disablePicture: false,
 };
 
 export default CVFicheEdition;

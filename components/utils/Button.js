@@ -41,18 +41,20 @@ const Button = ({
       {children}
     </button>
   );
-
-  return isExternal ? (
-    <a
-      href={href}
-      target={newTab ? '_blank' : ''}
-      rel={newTab ? 'noopener noreferrer' : ''}
-    >
-      {buttonComponent}
-    </a>
-  ) : (
-    <Link href={href}>{buttonComponent}</Link>
-  );
+  if (href) {
+    return isExternal ? (
+      <a
+        href={href}
+        target={newTab ? '_blank' : ''}
+        rel={newTab ? 'noopener noreferrer' : ''}
+      >
+        {buttonComponent}
+      </a>
+    ) : (
+      <Link href={href}>{buttonComponent}</Link>
+    );
+  }
+  return buttonComponent;
 };
 Button.propTypes = {
   children: PropTypes.oneOfType([
@@ -76,7 +78,7 @@ Button.defaultProps = {
   visible: undefined,
   style: undefined,
   size: undefined,
-  href: '#',
+  href: undefined,
   widths: [],
   isExternal: false,
   newTab: false,

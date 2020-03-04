@@ -27,10 +27,7 @@ const Footer = () => {
           eachWidths={['expand', 'auto@m']}
           gap="small"
         >
-          <ul
-            className="uk-subnav uk-subnav-divider uk-flex-left@m uk-flex-center"
-            uk-margin
-          >
+          <ul className="uk-subnav uk-subnav-divider uk-flex-left@m uk-flex-center">
             <li className="uk-text-capitalize">
               <SimpleLink href="/">Mentions légales</SimpleLink>
             </li>

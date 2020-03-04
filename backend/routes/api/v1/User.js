@@ -95,7 +95,7 @@ router.get('/members', (req, res) => {
 router.get('/search', (req, res) => {
   console.log(req.query);
 
-  UserController.searchUsers(req.query.query)
+  UserController.searchUsers(req.query.query, req.query.role)
     .then((users) => {
       console.log(`Users récupérés (Total : ${users.length})`);
       res.status(200).json(users);
