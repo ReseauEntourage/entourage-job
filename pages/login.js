@@ -8,18 +8,19 @@ import FormWithValidation from '../components/forms/FormWithValidation';
 import { UserContext } from '../components/store/UserProvider';
 
 const Login = () => {
-  const { login, isAuthentificated, user } = useContext(UserContext);
+  const { login, user } = useContext(UserContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (isAuthentificated && user) {
+    if (user) {
       if (user.role === 'Admin') {
         router.push('/backoffice/admin/offres');
-      } else {
+      }
+      if (user.role === 'Candidat' || user.role === 'Coach') {
         router.push('/backoffice/candidat/offres');
       }
     }
-  }, [isAuthentificated, user]);
+  }, [user]);
 
   return (
     <Layout title="Connexion - LinkedOut">

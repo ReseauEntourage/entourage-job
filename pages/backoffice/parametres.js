@@ -34,6 +34,27 @@ const Parametres = () => {
               <div className="uk-card uk-card-default uk-card-body">
                 <h3 className="uk-card-title">Préférences du CV</h3>
                 <ToggleWithConfirmationModal
+                  id="employed"
+                  title="J'ai retrouvé un emploi"
+                  modalTitle="Vous avez retrouvé un emploi ?"
+                  modalConfirmation="Oui, j'ai retrouvé un emploi"
+                  defaultValue={user.employed}
+                  onToggle={(employed) =>
+                    Api.put(`/api/v1/user/${user.id}`, {
+                      employed,
+                    })
+                      .then(() =>
+                        UIkit.notification(
+                          'Votre profil a été mis à jour !',
+                          'success'
+                        )
+                      )
+                      .catch(() =>
+                        UIkit.notification('Une erreur est survenue', 'danger')
+                      )
+                  }
+                />
+                <ToggleWithConfirmationModal
                   id="hidden"
                   title="Je masque mon CV"
                   modalTitle="Changer la visibilité du CV en ligne ?"
@@ -64,27 +85,6 @@ const Parametres = () => {
                           'Une erreur est survenue lors du masquage de votre profil',
                           'danger'
                         )
-                      )
-                  }
-                />
-                <ToggleWithConfirmationModal
-                  id="employed"
-                  title="J'ai retrouvé un emploi"
-                  modalTitle="Vous avez retrouvé un emploi ?"
-                  modalConfirmation="Oui, j'ai retrouvé un emploi"
-                  defaultValue={user.employed}
-                  onToggle={(employed) =>
-                    Api.put(`/api/v1/user/${user.id}`, {
-                      employed,
-                    })
-                      .then(() =>
-                        UIkit.notification(
-                          'Votre profil a été mis à jour !',
-                          'success'
-                        )
-                      )
-                      .catch(() =>
-                        UIkit.notification('Une erreur est survenue', 'danger')
                       )
                   }
                 />
