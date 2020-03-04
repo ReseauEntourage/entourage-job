@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import { Section } from '../../../components/utils';
@@ -8,15 +8,18 @@ import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOfferAdmin from '../../../components/modals/ModalOfferAdmin';
 import Filter from '../../../components/utils/Filter';
 import Axios from '../../../Axios';
+import { UserContext } from '../../../components/store/UserProvider';
 
 const LesOpportunites = () => {
+  const { user } = useContext(UserContext);
+  const {
+    query: { q: opportunityId },
+  } = useRouter();
+
   const [currentOffer, setCurrentOffer] = useState(null);
   const [offers, setOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
-  const {
-    query: { q: opportunityId },
-  } = useRouter();
 
   const filters = [
     { tag: 'all', title: 'Toutes les offres' },
@@ -38,37 +41,44 @@ const LesOpportunites = () => {
   };
 
   const fetchData = async (query) => {
-    setLoading(true);
-    try {
-      const { data } = await Axios.get(
-        `${process.env.SERVER_URL}/api/v1/opportunity/admin`,
-        {
-          params: {
-            query,
-          },
-        }
-      );
-      console.log(data);
-      setOffers(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
-      setLoading(false);
-      return data;
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-      setHasError(true);
+    if (user) {
+      try {
+        setLoading(true);
+        const { data } = await Axios.get(
+          `${process.env.SERVER_URL}/api/v1/opportunity/admin`,
+          {
+            params: {
+              query,
+            },
+          }
+        );
+        console.log(data);
+        setOffers(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
+        setLoading(false);
+        return data;
+      } catch (err) {
+        console.error(err);
+        setLoading(false);
+        setHasError(true);
+      }
     }
+    return null;
   };
 
   useEffect(() => {
     fetchData().then((data) => {
-      const offer = data.find((o) => o.id === opportunityId);
-      if (offer) {
-        console.log(offer);
-        setCurrentOffer(offer);
-        UIkit.modal('#modal-offer-admin').show();
+      if (data) {
+        const offer = data.find((o) => o.id === opportunityId);
+        if (offer) {
+          console.log(offer);
+          setCurrentOffer(offer);
+          UIkit.modal('#modal-offer-admin').show();
+        }
       }
     });
-  }, [opportunityId]);
+  }, [user, opportunityId]);
+
+  if (!user) return null;
 
   return (
     <LayoutBackOffice title="Modération des offres d'emploi">
