@@ -55,6 +55,7 @@ export default {
       name: 'userToCoach',
       type: 'text',
       component: 'select-request-async',
+      cacheOptions: false,
       disable: (getValue) =>
         getValue('role') !== 'Candidat' && getValue('role') !== 'Coach',
       loadOptions: (inputValue, callback, getValue) => {
