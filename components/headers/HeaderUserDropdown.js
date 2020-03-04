@@ -19,6 +19,7 @@ const HeaderUserDropdown = () => {
   return (
     <>
       <a
+        href="#"
         style={{
           fontWeight: 500,
           fontSize: '1rem',
