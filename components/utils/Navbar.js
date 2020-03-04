@@ -4,10 +4,10 @@ import dynamic from 'next/dynamic';
 
 export const NavbarNoSSR = dynamic(() => import('./Navbar.js'), { ssr: false });
 
-const Navbar = ({ id, left, center, right, sticky, className }) => (
+const Navbar = ({ id, left, center, right, sticky, className, mode }) => (
   <nav
     className={`uk-navbar-container ${className}`}
-    data-uk-navbar
+    data-uk-navbar={mode ? `mode: ${mode}` : ''}
     data-uk-sticky={sticky}
     id={id}
   >
@@ -23,6 +23,7 @@ Navbar.propTypes = {
   right: PropTypes.element,
   sticky: PropTypes.string,
   className: PropTypes.string,
+  mode: PropTypes.string,
 };
 Navbar.defaultProps = {
   id: undefined,
@@ -31,5 +32,6 @@ Navbar.defaultProps = {
   right: undefined,
   sticky: undefined,
   className: undefined,
+  mode: undefined,
 };
 export default Navbar;
