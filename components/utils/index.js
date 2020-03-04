@@ -14,4 +14,4 @@ export { default as SimpleLink } from './SimpleLink';
 export * from './Slider';
 export { default as Text } from './Text';
 export { ImgNoSSR } from './Img';
-export { default as Dropdown } from './Dropdown';
+export * from './Dropdown';
