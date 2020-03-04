@@ -166,7 +166,7 @@ const createCV = async (data) => {
     const ambitions = await Promise.all(
       data.ambitions.map((name) => {
         return models.Ambition.findOrCreate({
-          where: { name: controlText(name) },
+          where: { name }, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
         }).then((model) => model[0]);
       })
     );
