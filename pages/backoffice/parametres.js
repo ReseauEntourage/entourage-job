@@ -1,8 +1,13 @@
 /* global UIkit */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
-import { Section, GridNoSSR, IconNoSSR } from '../../components/utils';
+import {
+  Section,
+  GridNoSSR,
+  IconNoSSR,
+  SimpleLink,
+} from '../../components/utils';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
 import ModalEdit from '../../components/modals/ModalEdit';
 import ButtonIcon from '../../components/utils/ButtonIcon';
@@ -17,7 +22,19 @@ const Parametres = () => {
 
   const [loadingPersonal, setLoadingPersonal] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
+  const [linkedUser, setLinkedUser] = useState();
+  const [loadingLinkedUser, setLoadingLinkedUser] = useState();
 
+  useEffect(() => {
+    if (user && user.userToCoach) {
+      setLoadingLinkedUser(true);
+      Api.get(`/api/v1/user/${user.userToCoach}`)
+        .then(({ data }) => {
+          setLinkedUser(data);
+        })
+        .finally(() => setLoadingLinkedUser(false));
+    }
+  }, [user]);
   if (!user) return null;
 
   return (
@@ -125,6 +142,59 @@ const Parametres = () => {
                 </GridNoSSR>
               </GridNoSSR>
             </div>
+
+            {(user.role === 'Candidat' || user.role === 'Coach') && (
+              <div className="uk-card uk-card-secondary uk-card-body">
+                <h3 className="uk-card-title">
+                  Coordonnées de
+                  {user.role === 'Coach'
+                    ? ' mon candidat'
+                    : ' mon bénévole coach'}
+                </h3>
+                {loadingLinkedUser ? (
+                  <div data-uk-spinner />
+                ) : linkedUser ? (
+                  <GridNoSSR column gap="small">
+                    <GridNoSSR row gap="small">
+                      <IconNoSSR name="user" />
+                      <span>{`${linkedUser.firstName} ${linkedUser.lastName}`}</span>
+                    </GridNoSSR>
+
+                    <SimpleLink
+                      href={`mailto:${linkedUser.email}`}
+                      className="uk-link-muted"
+                      isExternal
+                    >
+                      <GridNoSSR row gap="small">
+                        <IconNoSSR name="mail" />
+                        <span>{linkedUser.email}</span>
+                      </GridNoSSR>
+                    </SimpleLink>
+                    {linkedUser.phone ? (
+                      <SimpleLink
+                        href={`tel:${linkedUser.phone}`}
+                        className="uk-link-muted"
+                        isExternal
+                      >
+                        <GridNoSSR row gap="small">
+                          <IconNoSSR name="phone" />
+                          <span>{linkedUser.phone}</span>
+                        </GridNoSSR>
+                      </SimpleLink>
+                    ) : (
+                      <GridNoSSR row gap="small">
+                        <IconNoSSR name="phone" />
+                        <span className="uk-text-italic">
+                          Numéro de téléphone non renseigné
+                        </span>
+                      </GridNoSSR>
+                    )}
+                  </GridNoSSR>
+                ) : (
+                  <span className="uk-text-italic">Aucun membre lié</span>
+                )}
+              </div>
+            )}
           </GridNoSSR>
 
           {/* Changement de mot de passe */}
