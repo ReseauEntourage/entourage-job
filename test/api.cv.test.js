@@ -146,7 +146,7 @@ describe.skip('Tests des routes API - Partie CV', () => {
   describe('Routes CV supplémentaires', () => {
     const arrayCVId = [];
 
-    before.skip(() => {
+    before(() => {
       const create3CVs = [
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
           cv: {
