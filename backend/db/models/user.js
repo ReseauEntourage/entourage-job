@@ -125,10 +125,7 @@ module.exports = (sequelize, DataTypes) => {
       const user = u;
       user.id = uuid();
       user.email = user.email.toLowerCase();
-      user.url = `${u.firstName.toLowerCase().firstName}-${user.id.substring(
-        0,
-        8
-      )}`;
+      user.url = `${u.firstName.toLowerCase()}-${user.id.substring(0, 8)}`;
       linkUsers(user);
       return user;
     });
