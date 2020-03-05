@@ -1,4 +1,4 @@
-/*! UIkit 3.2.4 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.3.3 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -34,7 +34,7 @@
 
                 addStyle();
 
-                var children = uikitUtil.toNodes(this.target.children);
+                var children = uikitUtil.children(this.target);
                 var propsFrom = children.map(function (el) { return getProps(el, true); });
 
                 var oldHeight = uikitUtil.height(this.target);
@@ -51,7 +51,7 @@
 
                 var newHeight = uikitUtil.height(this.target);
 
-                children = children.concat(uikitUtil.toNodes(this.target.children).filter(function (el) { return !uikitUtil.includes(children, el); }));
+                children = children.concat(uikitUtil.children(this.target).filter(function (el) { return !uikitUtil.includes(children, el); }));
 
                 var propsTo = children.map(function (el, i) { return el.parentNode && i in propsFrom
                         ? propsFrom[i]
@@ -185,8 +185,19 @@
                 },
 
                 watch: function() {
+                    var this$1 = this;
+
+
                     this.updateState();
-                }
+
+                    if (this.selActive !== false) {
+                        var actives = uikitUtil.$$(this.selActive, this.$el);
+                        this.toggles.forEach(function (el) { return uikitUtil.toggleClass(el, this$1.cls, uikitUtil.includes(actives, el)); });
+                    }
+
+                },
+
+                immediate: true
 
             },
 
@@ -199,7 +210,7 @@
             children: {
 
                 get: function() {
-                    return uikitUtil.toNodes(this.target && this.target.children);
+                    return uikitUtil.children(this.target);
                 },
 
                 watch: function(list, old) {
@@ -231,19 +242,6 @@
             }
 
         ],
-
-        connected: function() {
-            var this$1 = this;
-
-
-            this.updateState();
-
-            if (this.selActive !== false) {
-                var actives = uikitUtil.$$(this.selActive, this.$el);
-                this.toggles.forEach(function (el) { return uikitUtil.toggleClass(el, this$1.cls, uikitUtil.includes(actives, el)); });
-            }
-
-        },
 
         methods: {
 
@@ -387,8 +385,6 @@
     function sortItems(nodes, sort, order) {
         return uikitUtil.assign([], nodes).sort(function (a, b) { return uikitUtil.data(a, sort).localeCompare(uikitUtil.data(b, sort), undefined, {numeric: true}) * (order === 'asc' || -1); });
     }
-
-    /* global UIkit, 'filter' */
 
     if (typeof window !== 'undefined' && window.UIkit) {
         window.UIkit.component('filter', Component);

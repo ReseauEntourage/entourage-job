@@ -1,4 +1,4 @@
-/*! UIkit 3.2.4 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.3.3 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -144,14 +144,12 @@
         methods: {
 
             start: function() {
-                var this$1 = this;
-
 
                 this.stop();
 
                 if (this.date && this.units.length) {
-                    this.$emit();
-                    this.timer = setInterval(function () { return this$1.$emit(); }, 1000);
+                    this.$update();
+                    this.timer = setInterval(this.$update, 1000);
                 }
 
             },
@@ -181,8 +179,6 @@
             days: total / 1000 / 60 / 60 / 24
         };
     }
-
-    /* global UIkit, 'countdown' */
 
     if (typeof window !== 'undefined' && window.UIkit) {
         window.UIkit.component('countdown', Component);
