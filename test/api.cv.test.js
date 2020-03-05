@@ -59,7 +59,7 @@ const USER_EXAMPLE = {
   password: 'azerty',
 };
 
-describe('Tests des routes API - Partie CV', () => {
+describe.skip('Tests des routes API - Partie CV', () => {
   let user;
 
   before((done) => {
@@ -146,7 +146,7 @@ describe('Tests des routes API - Partie CV', () => {
   describe('Routes CV supplémentaires', () => {
     const arrayCVId = [];
 
-    before(() => {
+    before.skip(() => {
       const create3CVs = [
         Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
           cv: {
