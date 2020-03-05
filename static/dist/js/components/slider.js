@@ -1,4 +1,4 @@
-/*! UIkit 3.2.4 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.3.3 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -550,7 +550,7 @@
                     return;
                 }
 
-                var prevIndex = this.index;
+                var prevIndex = this.getIndex(this.index);
                 var prev = uikitUtil.hasClass(this.slides, this.clsActive) && this.slides[prevIndex];
                 var nextIndex = this.getIndex(index, this.index);
                 var next = this.slides[nextIndex];
@@ -878,7 +878,7 @@
     }
 
     function slides(list) {
-        return uikitUtil.toNodes(list.children);
+        return uikitUtil.children(list);
     }
 
     var Component = {
@@ -1136,8 +1136,6 @@
         }
 
     };
-
-    /* global UIkit, 'slider' */
 
     if (typeof window !== 'undefined' && window.UIkit) {
         window.UIkit.component('slider', Component);

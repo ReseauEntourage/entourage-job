@@ -10,7 +10,7 @@ import {
   SimpleLink,
 } from '../utils';
 import './Header.less';
-import { HeaderUserDropdownNoSSR } from './HeaderUserDropdown';
+import HeaderUserDropdown from './HeaderUserDropdown';
 import { UserContext } from '../store/UserProvider';
 
 const LINKS_CONNECTED = {
@@ -97,7 +97,7 @@ const HeaderConnected = ({ isHome }) => {
               className="uk-visible@m"
               style={{ borderLeft: '1px solid lightgray' }}
             >
-              <HeaderUserDropdownNoSSR />
+              <HeaderUserDropdown />
             </li>
             <li style={{ borderLeft: '1px solid lightgray' }}>
               <a

@@ -6,10 +6,13 @@ export const DropdownNoSSR = dynamic(() => import('./Dropdown'), {
   ssr: false,
 });
 
-const Dropdown = ({ children, headers, dividers, active }) => (
+const Dropdown = ({ children, headers, dividers, active, id, boundaryId }) => (
   <div
+    id={id}
     style={{ minWidth: '10px' }}
-    data-uk-dropdown="mode: click; pos: bottom-justify; boundary: #untruc; boundary-align: true"
+    data-uk-dropdown={`mode: click; pos: bottom-justify; ${
+      boundaryId ? `boundary: #${boundaryId}; boundary-align: true ` : ''
+    }`}
   >
     <ul className="uk-nav uk-navbar-dropdown-nav">
       {(Array.isArray(children) ? children : [children]).map((item, key) => {
@@ -34,10 +37,14 @@ Dropdown.propTypes = {
   headers: PropTypes.arrayOf(PropTypes.number),
   dividers: PropTypes.arrayOf(PropTypes.number),
   active: PropTypes.number,
+  id: PropTypes.string,
+  boundaryId: PropTypes.string,
 };
 Dropdown.defaultProps = {
   headers: [],
   dividers: [],
   active: undefined,
+  id: 'dropdown',
+  boundaryId: undefined,
 };
 export default Dropdown;

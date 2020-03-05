@@ -1,4 +1,4 @@
-/*! UIkit 3.2.4 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.3.3 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -93,17 +93,17 @@
                     targets = uikitUtil.toNodes(targets);
 
                     var all = function (targets) { return uikitUtil.Promise.all(targets.map(function (el) { return this$1._toggleElement(el, show, animate); })); };
-                    var toggled = targets.filter(function (el) { return this$1.isToggled(el); });
-                    var untoggled = targets.filter(function (el) { return !uikitUtil.includes(toggled, el); });
 
                     var p;
 
                     if (!this$1.queued || !uikitUtil.isUndefined(animate) || !uikitUtil.isUndefined(show) || !this$1.hasAnimation || targets.length < 2) {
 
-                        p = all(untoggled.concat(toggled));
+                        p = all(targets);
 
                     } else {
 
+                        var toggled = targets.filter(function (el) { return this$1.isToggled(el); });
+                        var untoggled = targets.filter(function (el) { return !uikitUtil.includes(toggled, el); });
                         var body = document.body;
                         var scroll = body.scrollTop;
                         var el = toggled[0];
@@ -128,9 +128,7 @@
             },
 
             toggleNow: function(targets, show) {
-                var this$1 = this;
-
-                return new uikitUtil.Promise(function (resolve) { return uikitUtil.Promise.all(uikitUtil.toNodes(targets).map(function (el) { return this$1._toggleElement(el, show, false); })).then(resolve, uikitUtil.noop); });
+                return this.toggleElement(targets, show, false);
             },
 
             isToggled: function(el) {
@@ -396,16 +394,7 @@
                 this._unbind = uikitUtil.on(document, uikitUtil.pointerUp, function (e) { return !uikitUtil.within(e.target, this$1.$el) && this$1.hide(); });
 
                 clearTimeout(this.showTimer);
-                this.showTimer = setTimeout(function () {
-                    this$1._show();
-                    this$1.hideTimer = setInterval(function () {
-
-                        if (!uikitUtil.isVisible(this$1.$el)) {
-                            this$1.hide();
-                        }
-
-                    }, 150);
-                }, this.delay);
+                this.showTimer = setTimeout(this._show, this.delay);
             },
 
             hide: function() {
@@ -427,9 +416,11 @@
             },
 
             _show: function() {
+                var this$1 = this;
+
 
                 this.tooltip = uikitUtil.append(this.container,
-                    ("<div class=\"" + (this.clsPos) + "\" aria-expanded=\"true\" aria-hidden> <div class=\"" + (this.clsPos) + "-inner\">" + (this.title) + "</div> </div>")
+                    ("<div class=\"" + (this.clsPos) + " " + (this.cls) + "\" aria-expanded=\"true\" aria-hidden> <div class=\"" + (this.clsPos) + "-inner\">" + (this.title) + "</div> </div>")
                 );
 
                 this.positionAt(this.tooltip, this.$el);
@@ -439,6 +430,8 @@
                     : ((this.align) + "-" + (uikitUtil.flipPosition(this.dir)));
 
                 this.toggleElement(this.tooltip, true);
+
+                this.hideTimer = setInterval(function () { return !uikitUtil.isVisible(this$1.$el) && this$1.hide(); }, 150);
 
             },
 
@@ -470,8 +463,6 @@
             }, obj )
 
     };
-
-    /* global UIkit, 'tooltip' */
 
     if (typeof window !== 'undefined' && window.UIkit) {
         window.UIkit.component('tooltip', Component);
