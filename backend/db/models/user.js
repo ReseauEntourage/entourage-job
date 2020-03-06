@@ -48,14 +48,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 'Candidat',
       },
-      userToCoach: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-          model: 'Users',
-          key: 'id',
-        },
-      },
       password: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -79,18 +71,8 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      hidden: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-        allowNull: false,
-      },
       url: DataTypes.STRING,
       lastConnection: DataTypes.DATE,
-      employed: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
-      },
     },
     {}
   );
