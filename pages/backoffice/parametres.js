@@ -1,5 +1,6 @@
 /* global UIkit */
 import React, { useContext, useState, useEffect } from 'react';
+import { PropTypes } from 'prop-types';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
 import {
@@ -7,6 +8,7 @@ import {
   GridNoSSR,
   IconNoSSR,
   SimpleLink,
+  Card,
 } from '../../components/utils';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
 import ModalEdit from '../../components/modals/ModalEdit';
@@ -17,25 +19,87 @@ import schemaPersonalData from '../../components/forms/schema/formPersonalData.j
 import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
 
-const Parametres = () => {
-  const { user, setUser } = useContext(UserContext);
-
-  const [loadingPersonal, setLoadingPersonal] = useState(false);
-  const [loadingPassword, setLoadingPassword] = useState(false);
+const UserInformationCard = ({ title, userId }) => {
   const [linkedUser, setLinkedUser] = useState();
-  const [loadingLinkedUser, setLoadingLinkedUser] = useState();
+  const [loadingLinkedUser, setLoadingLinkedUser] = useState(true);
 
   useEffect(() => {
-    if (user && user.userToCoach) {
-      setLoadingLinkedUser(true);
-      Api.get(`/api/v1/user/${user.userToCoach}`)
-        .then(({ data }) => {
-          setLinkedUser(data);
-        })
-        .finally(() => setLoadingLinkedUser(false));
-    }
-  }, [user]);
-  if (!user) return null;
+    setLoadingLinkedUser(true);
+    Api.get(`/api/v1/user/${userId}`)
+      .then(({ data }) => {
+        setLinkedUser(data);
+      })
+      .finally(() => setLoadingLinkedUser(false));
+  }, [userId]);
+  if (!userId) return null;
+
+  // si chargement
+  if (loadingLinkedUser) {
+    return (
+      <Card style="secondary" title={title}>
+        <div data-uk-spinner />
+      </Card>
+    );
+  }
+  // si membre lié
+  if (linkedUser) {
+    return (
+      <Card style="secondary" title={title}>
+        <GridNoSSR column gap="small">
+          <GridNoSSR row gap="small">
+            <IconNoSSR name="user" />
+            <span>{`${linkedUser.firstName} ${linkedUser.lastName}`}</span>
+          </GridNoSSR>
+
+          <SimpleLink
+            href={`mailto:${linkedUser.email}`}
+            className="uk-link-muted"
+            isExternal
+          >
+            <GridNoSSR row gap="small">
+              <IconNoSSR name="mail" />
+              <span>{linkedUser.email}</span>
+            </GridNoSSR>
+          </SimpleLink>
+          {linkedUser.phone ? (
+            <SimpleLink
+              href={`tel:${linkedUser.phone}`}
+              className="uk-link-muted"
+              isExternal
+            >
+              <GridNoSSR row gap="small">
+                <IconNoSSR name="phone" />
+                <span>{linkedUser.phone}</span>
+              </GridNoSSR>
+            </SimpleLink>
+          ) : (
+            <GridNoSSR row gap="small">
+              <IconNoSSR name="phone" />
+              <span className="uk-text-italic">
+                Numéro de téléphone non renseigné
+              </span>
+            </GridNoSSR>
+          )}
+        </GridNoSSR>
+      </Card>
+    );
+  }
+  // si pas de membre lié
+  return (
+    <Card style="secondary" title={title}>
+      <span className="uk-text-italic">Aucun membre lié</span>
+    </Card>
+  );
+};
+UserInformationCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
+};
+
+const Parametres = () => {
+  const { user, setUser } = useContext(UserContext);
+  const [loadingPersonal, setLoadingPersonal] = useState(false);
+  const [loadingPassword, setLoadingPassword] = useState(false);
 
   return (
     <LayoutBackOffice title="Mes Paramètres">
@@ -48,8 +112,7 @@ const Parametres = () => {
           <GridNoSSR childWidths={['1-1']}>
             {/* Preferences du CV */}
             {user.role === 'Candidat' && (
-              <div className="uk-card uk-card-default uk-card-body">
-                <h3 className="uk-card-title">Préférences du CV</h3>
+              <Card title="Préférences du CV">
                 <ToggleWithConfirmationModal
                   id="employed"
                   title="J'ai retrouvé un emploi"
@@ -105,7 +168,7 @@ const Parametres = () => {
                       )
                   }
                 />
-              </div>
+              </Card>
             )}
             {/* Informations personnelles */}
             <div className="uk-card uk-card-default uk-card-body">
@@ -144,57 +207,15 @@ const Parametres = () => {
             </div>
 
             {(user.role === 'Candidat' || user.role === 'Coach') && (
-              <div className="uk-card uk-card-secondary uk-card-body">
-                <h3 className="uk-card-title">
-                  Coordonnées de
-                  {user.role === 'Coach'
-                    ? ' mon candidat'
-                    : ' mon bénévole coach'}
-                </h3>
-                {loadingLinkedUser ? (
-                  <div data-uk-spinner />
-                ) : linkedUser ? (
-                  <GridNoSSR column gap="small">
-                    <GridNoSSR row gap="small">
-                      <IconNoSSR name="user" />
-                      <span>{`${linkedUser.firstName} ${linkedUser.lastName}`}</span>
-                    </GridNoSSR>
-
-                    <SimpleLink
-                      href={`mailto:${linkedUser.email}`}
-                      className="uk-link-muted"
-                      isExternal
-                    >
-                      <GridNoSSR row gap="small">
-                        <IconNoSSR name="mail" />
-                        <span>{linkedUser.email}</span>
-                      </GridNoSSR>
-                    </SimpleLink>
-                    {linkedUser.phone ? (
-                      <SimpleLink
-                        href={`tel:${linkedUser.phone}`}
-                        className="uk-link-muted"
-                        isExternal
-                      >
-                        <GridNoSSR row gap="small">
-                          <IconNoSSR name="phone" />
-                          <span>{linkedUser.phone}</span>
-                        </GridNoSSR>
-                      </SimpleLink>
-                    ) : (
-                      <GridNoSSR row gap="small">
-                        <IconNoSSR name="phone" />
-                        <span className="uk-text-italic">
-                          Numéro de téléphone non renseigné
-                        </span>
-                      </GridNoSSR>
-                    )}
-                  </GridNoSSR>
-                ) : (
-                  <span className="uk-text-italic">Aucun membre lié</span>
-                )}
-              </div>
-            )}
+              <UserInformationCard
+              title={`Coordonnées de ${
+                user.role === 'Coach'
+                ? ' mon candidat'
+                : ' mon bénévole coach'
+              }`}
+              userId={user.userToCoach}
+              />
+              )}
           </GridNoSSR>
 
           {/* Changement de mot de passe */}
