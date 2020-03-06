@@ -31,7 +31,6 @@ const UserInformationCard = ({ title, userId }) => {
       })
       .finally(() => setLoadingLinkedUser(false));
   }, [userId]);
-  if (!userId) return null;
 
   // si chargement
   if (loadingLinkedUser) {
@@ -100,6 +99,8 @@ const Parametres = () => {
   const { user, setUser } = useContext(UserContext);
   const [loadingPersonal, setLoadingPersonal] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
+
+  if (!user) return null;
 
   return (
     <LayoutBackOffice title="Mes Paramètres">
@@ -208,14 +209,14 @@ const Parametres = () => {
 
             {(user.role === 'Candidat' || user.role === 'Coach') && (
               <UserInformationCard
-              title={`Coordonnées de ${
-                user.role === 'Coach'
-                ? ' mon candidat'
-                : ' mon bénévole coach'
-              }`}
-              userId={user.userToCoach}
+                title={`Coordonnées de ${
+                  user.role === 'Coach'
+                    ? ' mon candidat'
+                    : ' mon bénévole coach'
+                }`}
+                userId={user.userToCoach}
               />
-              )}
+            )}
           </GridNoSSR>
 
           {/* Changement de mot de passe */}
@@ -265,7 +266,7 @@ const Parametres = () => {
           submitText="Envoyer"
           id="modal-personal-data"
           title="Édition - Informations personelles"
-          defaultValues={['', '', '', '', user.phone]}
+          defaultValues={{ phone: user.phone }}
           formSchema={schemaPersonalData}
           onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }) => {
             const u = user;

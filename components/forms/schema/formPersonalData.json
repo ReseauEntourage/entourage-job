@@ -29,9 +29,20 @@
       "name": "phone",
       "component": "input",
       "type": "phone",
-      "disabled": true,
       "title": "Tapez votre numero de telephone "
     }
   ],
-  "rules": []
+  "rules": [
+    {
+      "field": "phone",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 30
+        }
+      ],
+      "validWhen": true,
+      "message": "30 caractères maximum"
+    }
+  ]
 }

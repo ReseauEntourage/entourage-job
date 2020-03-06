@@ -69,6 +69,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 0,
       },
+      phone: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          len: {
+            args: [0, 30],
+            msg: '30 caractères maximum pour le numéro de téléphone',
+          },
+        },
+      },
       hidden: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
