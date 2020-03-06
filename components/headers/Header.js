@@ -1,4 +1,6 @@
+/* global UIkit */
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { UserContext } from '../store/UserProvider';
@@ -20,7 +22,7 @@ const Header = ({ isHome }) => {
     { href: '#', name: '|' },
     { href: '/jeveuxaider', name: 'Aider' },
   ];
-
+  const router = useRouter();
   return (
     <header>
       <NavbarNoSSR
@@ -76,20 +78,43 @@ const Header = ({ isHome }) => {
                   Voir les candidats &gt;
                 </button>
               </div>,
-              <HamburgerNoSSR href="#offcanvas" hidden="s" />,
+              <HamburgerNoSSR targetId="offcanvas-guest" hidden="s" />,
             ]}
           />
         }
       />
-      <OffcanvasNoSSR id="offcanvas">
+      <OffcanvasNoSSR id="offcanvas-guest">
         <ul className="uk-nav uk-nav-default">
-          {LINKS.filter(({ href }) => href !== '#').map(
-            ({ href, name }, index) => (
-              <li key={index}>
-                <SimpleLink href={href}>{name}</SimpleLink>
-              </li>
-            )
-          )}
+          {[
+            <li>
+              <a
+                aria-hidden="true"
+                onClick={() => {
+                  router.push('/');
+                  UIkit.offcanvas('#offcanvas-guest').hide();
+                }}
+              >
+                Accueil
+              </a>
+            </li>,
+            ...LINKS.filter(({ href }) => href !== '#').map(
+              ({ href, name }, index) => (
+                <li key={index}>
+                  <a
+                    aria-hidden="true"
+                    onClick={() => {
+                      router.push(href);
+                      UIkit.offcanvas('#offcanvas-guest').hide();
+                    }}
+                  >
+                    {name}
+                  </a>
+                  {/* <SimpleLink scroll={false} href={href}>
+                </SimpleLink> */}
+                </li>
+              )
+            ),
+          ]}
         </ul>
       </OffcanvasNoSSR>
     </header>

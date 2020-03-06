@@ -29,7 +29,7 @@ const LINKS_CONNECTED = {
       icon: 'list',
     },
     { href: '/backoffice/candidat/cv', name: 'Mon CV', icon: 'user' },
-    { href: '/backoffice/trace', name: 'Mon Suivi', icon: 'list' },
+    { href: '/backoffice/trace', name: 'Mon Suivi', icon: 'file-text' },
   ],
 };
 
@@ -114,11 +114,11 @@ const HeaderConnected = ({ isHome }) => {
                 </span>
               </a>
             </li>
-            <HamburgerNoSSR href="#offcanvas" hidden="m" />
+            <HamburgerNoSSR targetId="offcanvas-logged" hidden="m" />
           </ul>
         }
       />
-      <OffcanvasNoSSR id="offcanvas">
+      <OffcanvasNoSSR id="offcanvas-logged">
         <ul className="uk-nav uk-nav-default">
           <li>
             <SimpleLink href="/">

@@ -7,15 +7,16 @@ export const HamburgerNoSSR = dynamic(() => import('./Hamburger'), {
   ssr: false,
 });
 
-const Hamburger = ({ hidden, visible }) => {
+const Hamburger = ({ hidden, targetId, visible }) => {
   let classBuffer = '';
   if (hidden) classBuffer += `uk-hidden@${hidden}`;
   if (visible) classBuffer += `uk-visible@${visible}`;
   return (
     <button
       type="button"
+      aria-label="hamburger"
       className={`uk-navbar-toggle ${classBuffer}`}
-      data-uk-toggle="target: #offcanvas"
+      data-uk-toggle={`target: #${targetId}`}
       data-uk-navbar-toggle-icon
     />
   );
@@ -23,6 +24,7 @@ const Hamburger = ({ hidden, visible }) => {
 Hamburger.propTypes = {
   hidden: PropTypes.oneOf(UIKIT_SCREENS),
   visible: PropTypes.oneOf(UIKIT_SCREENS),
+  targetId: PropTypes.string.isRequired,
 };
 Hamburger.defaultProps = { hidden: undefined, visible: undefined };
 export default Hamburger;

@@ -9,6 +9,7 @@ const SimpleLink = ({
   children,
   className,
   target,
+  scroll,
   isExternal,
 }) => {
   let classBuffer = '';
@@ -25,7 +26,7 @@ const SimpleLink = ({
       {children}
     </a>
   ) : (
-    <Link href={href}>
+    <Link scroll={scroll} href={href}>
       <a
         target={target}
         className={classBuffer}
@@ -46,11 +47,13 @@ SimpleLink.propTypes = {
   className: PropTypes.string,
   target: PropTypes.string,
   isExternal: PropTypes.bool,
+  scroll: PropTypes.bool,
 };
 SimpleLink.defaultProps = {
   className: '',
   visible: undefined,
   target: undefined,
   isExternal: false,
+  scroll: undefined,
 };
 export default SimpleLink;
