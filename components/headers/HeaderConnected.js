@@ -28,8 +28,12 @@ const LINKS_CONNECTED = {
       name: 'Mes offres',
       icon: 'list',
     },
+    {
+      href: '/backoffice/candidat/suivi',
+      name: 'Mon Suivi',
+      icon: 'file-text',
+    },
     { href: '/backoffice/candidat/cv', name: 'Mon CV', icon: 'user' },
-    { href: '/backoffice/trace', name: 'Mon Suivi', icon: 'file-text' },
   ],
 };
 
