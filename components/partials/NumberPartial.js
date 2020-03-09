@@ -1,12 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { GridNoSSR, Section, IconNoSSR } from '../utils';
 import { NumberCard } from '../cards';
 
 const numbers = [
-  { value: 15, description: 'Candidats accompagnés' },
-  { value: 342, description: 'CVs partagés' },
-  { value: 5, description: 'Personnes réinsérées' },
+  { value: 73, description: '% des candidats ont retrouvé un job' },
+  { value: 40000, description: 'Partages sur les réseaux de leur CV' },
+  { value: 300, description: 'Entreprises solidaires' },
 ];
 const data = [
   {
@@ -58,12 +57,12 @@ const NumberPartial = () => (
     <GridNoSSR gap="large" column middle eachWidths={['1-1', '1-1', '1-2@s']}>
       <GridNoSSR center eachWidths={['auto', '2-3@s']}>
         <h2 className="uk-text-bold">
-          <span className="uk-text-primary">Linked Out</span>, un programme qui
-          fonctionne
+          Et le mieux c&apos;est que{' '}
+          <span className="uk-text-primary">ça marche</span> !
         </h2>
         <p className="uk-text-center">
-          Depuis son lancement en juin 2019, de belles rencontres ont emmergé
-          grace aux multiples partages.
+          Miah, Abdul, Anais, Manuel,... ont retrouvé un emploi grâce à
+          LinkedOut
         </p>
       </GridNoSSR>
       <GridNoSSR
@@ -78,9 +77,9 @@ const NumberPartial = () => (
           </div>
         ))}
       />
-      <p className="uk-text-center">
-        Linked Out est plébiscité par les candidats et aussi par les recuteurs.
-      </p>
+      {/* <p className="uk-text-center">
+        Linked Out est plébiscité par les candidats et aussi par les recruteurs.
+      </p> */}
 
       <div className="uk-hidden@s uk-card uk-card-body uk-card-secondary">
         Slider désactivé
