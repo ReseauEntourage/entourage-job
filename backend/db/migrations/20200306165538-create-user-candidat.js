@@ -11,10 +11,18 @@ module.exports = {
         candidatId: {
           type: Sequelize.UUID,
           allowNull: false,
+          references: {
+            model: 'Users',
+            key: 'id',
+          },
         },
         coachId: {
           type: Sequelize.UUID,
           allowNull: true,
+          references: {
+            model: 'Users',
+            key: 'id',
+          },
         },
         employed: {
           type: Sequelize.BOOLEAN,
@@ -26,7 +34,7 @@ module.exports = {
           defaultValue: true,
           allowNull: false,
         },
-        tracking: {
+        note: {
           type: Sequelize.TEXT,
         },
         createdAt: {

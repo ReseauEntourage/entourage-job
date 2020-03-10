@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 module.exports = (sequelize, DataTypes) => {
   const UserCandidat = sequelize.define(
     'User_Candidat',
@@ -28,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: true,
         allowNull: false,
       },
-      tracking: DataTypes.TEXT,
+      note: DataTypes.TEXT,
     },
     {}
   );
@@ -43,6 +44,42 @@ module.exports = (sequelize, DataTypes) => {
       as: 'coach',
       foreignKey: 'coachId',
       sourceKey: 'id',
+    });
+
+    // / TODO
+    // lie un coach un utilisateur à son nouveau coach et délie un coach à son ancien user
+    const linkUsers = (userCandidat) => {
+      console.log('TODO UPDATE UserCandidat.beforeUpdate');
+      UserCandidat.update(
+        { coachId: null },
+        {
+          where: { coachId: userCandidat.coachId },
+        }
+      )
+        .then(() => {
+          if (userCandidat.coachId) {
+            UserCandidat.update(
+              { coachId: userCandidat.id },
+              {
+                where: { id: userCandidat.coachId },
+              }
+            );
+          }
+        })
+        .catch((error) => {
+          console.error('linkUsers', error);
+        });
+    };
+    UserCandidat.beforeCreate((u) => {
+      linkUsers(u);
+      return u;
+    });
+    UserCandidat.beforeUpdate((instance, option) => {
+      const nextData = instance.dataValues;
+      const previousData = instance._previousDataValues;
+      if (nextData && previousData && nextData.coachId !== previousData.v) {
+        linkUsers(nextData);
+      }
     });
   };
   return UserCandidat;

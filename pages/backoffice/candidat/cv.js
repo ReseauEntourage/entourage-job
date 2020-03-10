@@ -9,30 +9,38 @@ import CVPageContent from '../../../components/backoffice/cv/CVPageContent';
 
 const Edit = () => {
   const { user } = useContext(UserContext);
-  const [candidat, setCandidat] = useState({});
+  const [candidat, setCandidat] = useState();
   const [candidatId, setCandidatId] = useState(null);
 
   useEffect(() => {
     if (user) {
       if (user.role === 'Coach') {
-        if (user.userToCoach) {
-          Api.get(
-            `${process.env.SERVER_URL}/api/v1/user/${user.userToCoach}`
-          ).then(({ data }) => {
-            setCandidat(data);
-            setCandidatId(data.id);
+        Api.get(`/api/v1/user/candidat/`, {
+          params: { coachId: user.id },
+        })
+          .then(({ data }) => {
+            if (data) {
+              setCandidat(data.candidat);
+              setCandidatId(data.candidat.id);
+            } else {
+              setCandidat(null);
+              setCandidatId(null);
+            }
+          })
+          .catch(() => {
+            UIkit.notification('Erreur lors du chargement du suivi', 'danger');
           });
-        } else {
-          setCandidat(null);
-          setCandidatId(null);
-        }
       }
+
       if (user.role === 'Candidat') {
         setCandidat(user);
         setCandidatId(user.id);
       }
     }
   }, [user]);
+
+  if (!candidat || !candidatId)
+    return <LayoutBackOffice title="Edition du CV" />;
 
   return (
     <LayoutBackOffice title="Edition du CV">

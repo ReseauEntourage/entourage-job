@@ -1,7 +1,52 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable camelcase */
+
 const {
-  models: { User, CV },
+  models: { User, User_Candidat, CV },
   Sequelize: { Op, fn, col, where },
 } = require('../db/models');
+
+const ATTRIBUTES_USER = [
+  'id',
+  'firstName',
+  'lastName',
+  'email',
+  'phone',
+  'role',
+  'gender',
+  'lastConnection',
+  'url',
+];
+const INCLUDE_USER_CANDIDAT = [
+  {
+    model: User_Candidat,
+    as: 'candidat',
+    attributes: ['employed', 'hidden', 'note'],
+    include: [
+      {
+        model: User,
+        as: 'coach',
+        // todo: add where not the same role as the huser
+        attributes: [
+          'id',
+          'firstName',
+          'lastName',
+          'email',
+          'phone',
+          'role',
+          'gender',
+          'lastConnection',
+        ],
+      },
+      {
+        model: User,
+        as: 'candidat',
+        // todo: add where not the same role as the huser
+        attributes: ATTRIBUTES_USER,
+      },
+    ],
+  },
+];
 
 const createUser = (newUser) => {
   return new Promise((resolve, reject) => {
@@ -27,28 +72,27 @@ const deleteUser = (id) => {
   });
 };
 
+// avec mot de passe
 const getUser = (id) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getUser -';
     console.log(`${infoLog} Récupérer un User à partir de son id`);
-    User.findOne({
-      where: { id },
+    User.findByPk(id, {
+      attributes: [...ATTRIBUTES_USER, 'password', 'salt'],
+      include: INCLUDE_USER_CANDIDAT,
     })
       .then((result) => resolve(result))
       .catch((err) => reject(err));
   });
 };
 
-const getUserByEmail = (email) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getUserByEmail -';
-    console.log(`${infoLog} Récupérer un User à partir de son adresse email`);
-    User.findOne({
-      where: { email },
-    })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+const getUserByEmail = async (email) => {
+  const user = await User.findOne({
+    where: { email },
+    attributes: [...ATTRIBUTES_USER, 'password', 'salt'],
+    include: INCLUDE_USER_CANDIDAT,
   });
+  return user;
 };
 
 const getUsers = (limit, offset, order) => {
@@ -68,23 +112,8 @@ const getMembers = (limit, offset, order, role, query) => {
     where: {
       role: { [Op.not]: 'Admin' },
     },
-    attributes: [
-      'id',
-      'firstName',
-      'lastName',
-      'email',
-      'role',
-      'lastConnection',
-      'employed',
-      'hidden',
-    ],
-    include: [
-      {
-        model: User,
-        as: 'linkedUser',
-        attributes: ['firstName', 'lastName'],
-      },
-    ],
+    attributes: ATTRIBUTES_USER,
+    include: INCLUDE_USER_CANDIDAT,
   };
   // recherche de l'utilisateur
   if (query) {
@@ -129,7 +158,7 @@ const getMembers = (limit, offset, order, role, query) => {
 const searchUsers = (query, role) => {
   const lowerCaseQuery = query.toLowerCase();
   const options = {
-    attributes: ['id', 'firstName', 'lastName', 'email', 'employed', 'hidden'],
+    attributes: ATTRIBUTES_USER,
     where: {
       [Op.or]: [
         { email: { [Op.like]: `%${lowerCaseQuery}%` } },
@@ -151,13 +180,84 @@ const searchUsers = (query, role) => {
   return User.findAll(options);
 };
 
-const setUser = (id, user) => {
-  const infoLog = 'setUser -';
-  console.log(`${infoLog} Modification du User`);
-  return User.update(user, {
+const setUser = async (id, user) =>
+  User.update(user, {
     where: { id },
   });
+
+const setUserCandidat = async (candidatId, candidat) => {
+  return User_Candidat.update(candidat, {
+    where: { candidatId },
+  });
 };
+
+const getUserCandidat = async (candidatId) => {
+  return User_Candidat.findOne({
+    where: { candidatId },
+    attributes: ['employed', 'hidden', 'note'],
+    include: [
+      {
+        model: User,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER,
+      },
+      {
+        model: User,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER,
+      },
+    ],
+  });
+};
+
+const getUserCandidatOpt = async ({ candidatId, coachId }) => {
+  // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: Error: WHERE parameter "coachId" has invalid "undefined" value
+  const findWhere = {};
+  if (candidatId) {
+    findWhere.candidatId = candidatId;
+  }
+  if (coachId) {
+    findWhere.coachId = coachId;
+  }
+  return User_Candidat.findOne({
+    where: findWhere,
+    attributes: ['employed', 'hidden', 'note'],
+    include: [
+      {
+        model: User,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER,
+      },
+      {
+        model: User,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER,
+      },
+    ],
+  });
+};
+
+const getUserCandidats = async () => {
+  return User_Candidat.findAll({
+    attributes: ['employed', 'hidden', 'note'],
+    include: [
+      {
+        model: User,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER,
+      },
+      {
+        model: User,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER,
+      },
+    ],
+  });
+};
+getUserCandidatOpt({
+  candidatId: '2d5ddeb3-97c4-48dc-b25a-add83a920745',
+  coachId: null,
+});
 
 module.exports = {
   createUser,
@@ -168,4 +268,8 @@ module.exports = {
   setUser,
   searchUsers,
   getMembers,
+  setUserCandidat,
+  getUserCandidat,
+  getUserCandidatOpt,
+  getUserCandidats,
 };

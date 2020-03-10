@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
@@ -71,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      url: DataTypes.STRING,
+      url: DataTypes.STRING, // go to usecandidat
       lastConnection: DataTypes.DATE,
     },
     {}
@@ -82,55 +81,16 @@ module.exports = (sequelize, DataTypes) => {
       through: 'Opportunity_Users',
       as: 'opportunities',
     });
-    User.hasMany(models.CV, {
-      as: 'cvs',
+    User.hasOne(models.User_Candidat, {
+      as: 'candidat',
     });
-    User.belongsTo(models.User, {
-      as: 'linkedUser',
-      foreignKey: 'userToCoach',
-      sourceKey: 'id',
-    });
-
-    // lie un coach un utilisateur à son nouveau coach et délie un coach à son ancien user
-    const linkUsers = (user) => {
-      try {
-        User.update(
-          { userToCoach: null },
-          {
-            where: { userToCoach: user.id },
-          }
-        );
-        if (user.userToCoach) {
-          User.update(
-            { userToCoach: user.id },
-            {
-              where: { id: user.userToCoach },
-            }
-          );
-        }
-      } catch (error) {
-        console.error('linkUsers', error);
-      }
-    };
 
     User.beforeCreate((u) => {
       const user = u;
       user.id = uuid();
       user.email = user.email.toLowerCase();
       user.url = `${u.firstName.toLowerCase()}-${user.id.substring(0, 8)}`;
-      linkUsers(user);
       return user;
-    });
-    User.beforeUpdate(async (instance, option) => {
-      const nextData = instance.dataValues;
-      const previousData = instance._previousDataValues;
-      if (
-        nextData &&
-        previousData &&
-        nextData.userToCoach !== previousData.userToCoach
-      ) {
-        linkUsers(nextData);
-      }
     });
   };
   return User;

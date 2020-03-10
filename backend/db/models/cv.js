@@ -132,11 +132,10 @@ module.exports = (sequelize, DataTypes) => {
     CV.hasMany(models.Review, {
       as: 'reviews',
     });
-
-    CV.belongsTo(models.User, {
+    CV.belongsTo(models.User_Candidat, {
       as: 'user',
       foreignKey: 'UserId',
-      targetKey: 'id',
+      targetKey: 'candidatId',
     });
   };
   return CV;

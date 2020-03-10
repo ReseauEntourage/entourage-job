@@ -7,6 +7,11 @@ const router = express.Router();
 const UserController = require('../../../controllers/User');
 const AuthController = require('../../../controllers/Auth');
 
+/* !!! TODO !!!
+ * RESTRICTION DES ROUTE AUX ROLES ET A LA CONNEXION
+ * !!! TODO !!!
+ */
+
 /**
  * Route : POST /api/<VERSION>/user
  * Description : Créé le User
@@ -110,6 +115,36 @@ router.get('/search', (req, res) => {
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
+router.get('/candidat', (req, res) => {
+  UserController.getUserCandidatOpt(req.query)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
+ * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
+ */
+router.get('/candidat/:id', (req, res) => {
+  UserController.getUserCandidat(req.params.id)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
+ * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
+ */
 router.get('/:identifier', (req, res) => {
   let getUser;
   if (validator.isEmail(req.params.identifier)) {
@@ -162,6 +197,21 @@ router.put('/change-pwd', auth.required, (req, res) => {
     })
     .catch(() => {
       res.status(401).send('Utilisateur inaccessible');
+    });
+});
+
+/**
+ * Route : PUT /api/<VERSION>/user/<ID>
+ * Description : Modifie le User associé à l'<ID> fournit
+ */
+router.put('/candidat/:id', (req, res) => {
+  UserController.setUserCandidat(req.params.id, req.body)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(401).send('Une erreur est survenue');
     });
 });
 
