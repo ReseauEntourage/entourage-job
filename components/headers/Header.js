@@ -32,11 +32,11 @@ const Header = ({ isHome }) => {
           <>
             <NavbarLogo
               href="/"
-              src="/static/img/logo-linkedout-by-entourage.png"
+              src="/static/img/03-linkedout-blanc-complet.png"
               alt="Linkedout"
               alwaysVisible={!isHome}
               style={{
-                width: '170px',
+                width: '210px',
                 marginTop: '8px',
               }}
             />

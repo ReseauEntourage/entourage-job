@@ -28,7 +28,7 @@ const LandingPagePartial = () => {
         <Section container="large">
           <GridNoSSR middle column>
             <ImgNoSSR
-              src="/static/img/logo-linkedout-by-entourage.png"
+              src="/static/img/03-linkedout-blanc-complet.png"
               alt="LinkedOut by entourage"
               className="uk-width-medium"
               // width="300"
