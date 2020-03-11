@@ -16,11 +16,11 @@ import './Header.less';
 
 const Header = ({ isHome }) => {
   const LINKS = [
-    { href: '/jeveuxtravailler', name: 'Travailler' },
+    { href: '/jeveuxaider', name: 'Aider' },
     { href: '#', name: '|' },
     { href: '/jeveuxrecruter', name: 'Recruter' },
     { href: '#', name: '|' },
-    { href: '/jeveuxaider', name: 'Aider' },
+    { href: '/jeveuxtravailler', name: 'Travailler' },
   ];
   const router = useRouter();
   return (
@@ -75,7 +75,7 @@ const Header = ({ isHome }) => {
                     borderRadius: '2px',
                   }}
                 >
-                  Voir les candidats &gt;
+                  Je partage un CV &gt;
                 </button>
               </div>,
               <HamburgerNoSSR targetId="offcanvas-guest" hidden="s" />,

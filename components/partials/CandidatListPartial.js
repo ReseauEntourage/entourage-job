@@ -57,13 +57,20 @@ const CandidatListPartial = () => {
     <Section style="muted" container="" id="candidat">
       <GridNoSSR gap="large" column middle eachWidths={['2-3@s', '1-1']}>
         <div className="uk-text-center">
-          <h2 className="uk-text-bold">
-            Ils viennent de{' '}
-            <span className="uk-text-primary">s&apos;inscrire</span>
+          <h2 className="uk-text-bold uk-margin-remove-bottom">
+            Ils sont <span className="uk-text-primary">motivés</span> pour
+            travailler
           </h2>
+          <h3 className="uk-text-bold uk-margin-remove-top">
+            Votre partage peut tout{' '}
+            <span className="uk-text-primary">changer</span>
+          </h3>
           <p>
-            Ils sont disponibles pour travailler. Découvrez leurs profils,
-            partagez ou contactez-les.
+            Eux ont du talent. Vous, vous avez du réseau.
+            <br />
+            Si vous pensez comme nous que l&apos;exclusion ne doit pas être un
+            frein, partagez votre réseau professionnel à ceux qui en ont le plus
+            besoin.
           </p>
         </div>
         <Content />
@@ -81,10 +88,12 @@ const CandidatListPartial = () => {
               borderRadius: '2px',
             }}
           >
-            Voir les candidats &gt;
+            Voir tous les candidats &gt;
           </button>
           <p style={{ marginTop: '20px' }}>
-            En 2020, le projet est expérimenté à Paris et en Seine-Saint-Denis.
+            Tous ces candidats cherchent un travail en Île de France, si vous
+            êtes sur un autre territoire, contactez-nous à
+            contact-linkedout@entourage.social
           </p>
         </GridNoSSR>
       </GridNoSSR>

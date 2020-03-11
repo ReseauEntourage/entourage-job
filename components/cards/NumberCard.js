@@ -5,12 +5,12 @@ import { GridNoSSR } from '../utils/Grid';
 // todo: les cartes sont un petit peu decallés à cause du jeu expand auto
 // recentrer les cartes
 const NumberCard = ({ value, description }) => (
-  <div className="uk-card uk-card-body uk-card-small">
+  <div className="uk-card uk-width-1-1 uk-card-body uk-card-small">
     <GridNoSSR
       middle
       center
       gap="small"
-      eachWidths={['auto', 'auto', 'expand']}
+      eachWidths={['1-3', '1-6', '1-2']}
       items={[
         <div className="uk-text-right uk-text-primary">
           <span className="uk-h1 uk-text-primary">{value}</span>

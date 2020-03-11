@@ -17,7 +17,9 @@ const Grid = ({
   eachWidths,
   gap,
   children,
+  top,
   middle,
+  bottom,
   column,
   row,
   masonry,
@@ -35,7 +37,9 @@ const Grid = ({
   if (center) classBuffer += ' uk-flex-center';
   if (between) classBuffer += ' uk-flex-between';
   if (around) classBuffer += ' uk-flex-around';
+  if (top) classBuffer += ' uk-flex-top';
   if (middle) classBuffer += ' uk-flex-middle';
+  if (bottom) classBuffer += ' uk-flex-bottom';
   if (column) classBuffer += ' uk-flex-column';
   if (row) classBuffer += ' uk-flex-row';
 
@@ -87,7 +91,9 @@ Grid.propTypes = {
   ),
   className: PropTypes.string,
   around: PropTypes.bool,
+  top: PropTypes.bool,
   middle: PropTypes.bool,
+  bottom: PropTypes.bool,
   column: PropTypes.bool,
   row: PropTypes.bool,
   masonry: PropTypes.bool,
@@ -105,7 +111,9 @@ Grid.defaultProps = {
   children: [],
   className: undefined,
   around: false,
+  top: false,
   middle: false,
+  bottom: false,
   column: false,
   row: false,
   masonry: false,
