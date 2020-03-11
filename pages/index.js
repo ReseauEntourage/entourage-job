@@ -1,9 +1,9 @@
 import React from 'react';
 import Layout from '../components/Layout';
 import {
+  ActionPartial,
   CandidatListPartial,
   ContactPartial,
-  DifferencePartial,
   EmphasePartial,
   LandingPagePartial,
   NumberPartial,
@@ -19,7 +19,7 @@ const Index = () => {
       <CandidatListPartial />
       <EmphasePartial />
       <NumberPartial />
-      <DifferencePartial />
+      <ActionPartial />
       <ContactPartial />
       <SharePartial />
     </Layout>
