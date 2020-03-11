@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       candidatId: {
         type: DataTypes.UUID,
         allowNull: false,
+        primaryKey: true,
         references: {
           model: 'Users',
           key: 'id',
@@ -30,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       note: DataTypes.TEXT,
+      url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {}
   );
@@ -44,6 +49,14 @@ module.exports = (sequelize, DataTypes) => {
       as: 'coach',
       foreignKey: 'coachId',
       sourceKey: 'id',
+    });
+
+    UserCandidat.beforeCreate(async (u) => {
+      const user = await models.User.findByPk(u.candidatId, {
+        attributes: ['id', 'firstname'],
+      });
+      user.url = `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`;
+      return user;
     });
 
     // / TODO

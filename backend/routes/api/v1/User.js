@@ -145,14 +145,11 @@ router.get('/candidat/:id', (req, res) => {
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/:identifier', (req, res) => {
-  let getUser;
-  if (validator.isEmail(req.params.identifier)) {
-    getUser = UserController.getUserByEmail(req.params.identifier);
-  } else {
-    getUser = UserController.getUser(req.params.identifier);
-  }
-  getUser
+router.get('/:id', (req, res) => {
+  (validator.isEmail(req.params.id)
+    ? UserController.getUserByEmail(req.params.id)
+    : UserController.getUser(req.params.id)
+  )
     .then((user) => {
       console.log(`User trouvé`);
       res.status(200).json(user);

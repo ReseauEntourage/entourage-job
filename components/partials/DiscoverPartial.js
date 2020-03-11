@@ -24,7 +24,7 @@ const DiscoverPartial = () => {
         childWidths={['1-2@s']}
         items={cvs.map((cv) => (
           <CandidatCard
-            url={cv.user && cv.user.candidat.url}
+            url={cv.user && cv.user.url}
             imgSrc={
               (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) || undefined
             }

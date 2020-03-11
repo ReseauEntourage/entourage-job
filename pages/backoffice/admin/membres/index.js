@@ -260,14 +260,14 @@ const MembersAdmin = () => {
                           <>
                             <td>
                               <span className="uk-hidden@s">
-                                {!member.employed
+                                {!member.candidat.employed
                                   ? "En recherche d'emploi"
                                   : 'A trouvé un emploi'}
                               </span>
                               <input
                                 className="uk-checkbox uk-visible@s"
                                 type="checkbox"
-                                defaultChecked={member.employed}
+                                defaultChecked={member.candidat.employed}
                               />
                             </td>
                             <td>
@@ -281,12 +281,12 @@ const MembersAdmin = () => {
                             </td>
                             <td>
                               <span className="uk-hidden@s">
-                                {member.hidden ? 'Masqué' : 'Visible'}
+                                {member.candidat.hidden ? 'Masqué' : 'Visible'}
                               </span>
                               <input
                                 className="uk-checkbox uk-visible@s"
                                 type="checkbox"
-                                defaultChecked={member.hidden}
+                                defaultChecked={member.candidat.hidden}
                               />
                             </td>
                           </>

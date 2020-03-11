@@ -40,14 +40,14 @@ function translateStatus(status) {
 
 const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
-  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
     // fetch CV
-    setLoading(true);
     if (candidatId) {
+      setLoading(true);
       Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
         params: {
           userId: candidatId,
@@ -58,6 +58,7 @@ const CVPageContent = ({ candidatId }) => {
             setCV(data);
           } else {
             setCV(null);
+            console.log('pas de cv');
           }
         })
         .catch((err) => {

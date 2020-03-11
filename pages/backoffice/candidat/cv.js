@@ -10,37 +10,34 @@ import CVPageContent from '../../../components/backoffice/cv/CVPageContent';
 const Edit = () => {
   const { user } = useContext(UserContext);
   const [candidat, setCandidat] = useState();
-  const [candidatId, setCandidatId] = useState(null);
+  const [candidatId, setCandidatId] = useState();
 
   useEffect(() => {
     if (user) {
+      const params = {};
       if (user.role === 'Coach') {
-        Api.get(`/api/v1/user/candidat/`, {
-          params: { coachId: user.id },
-        })
-          .then(({ data }) => {
-            if (data) {
-              setCandidat(data.candidat);
-              setCandidatId(data.candidat.id);
-            } else {
-              setCandidat(null);
-              setCandidatId(null);
-            }
-          })
-          .catch(() => {
-            UIkit.notification('Erreur lors du chargement du suivi', 'danger');
-          });
+        params.coachId = user.id;
       }
-
       if (user.role === 'Candidat') {
-        setCandidat(user);
-        setCandidatId(user.id);
+        params.candidatId = user.id;
       }
+      Api.get(`/api/v1/user/candidat/`, {
+        params,
+      })
+        .then(({ data }) => {
+          if (data) {
+            setCandidat(data);
+            setCandidatId(data.candidat.id);
+          } else {
+            setCandidat(null);
+            setCandidatId(null);
+          }
+        })
+        .catch(() => {
+          UIkit.notification('Erreur lors du chargement du suivi', 'danger');
+        });
     }
   }, [user]);
-
-  if (!candidat || !candidatId)
-    return <LayoutBackOffice title="Edition du CV" />;
 
   return (
     <LayoutBackOffice title="Edition du CV">

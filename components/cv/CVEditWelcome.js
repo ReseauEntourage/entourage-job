@@ -19,7 +19,16 @@ const CVEditWelcome = ({ user, candidatForCoach }) => {
           : `Bienvenue dans l'espace personnel de ton candidat rattaché, depuis lequel tu peux modifier avec lui ses informations qui s'affichent dans la page profil candidat sur LinkedOut.`
       }
     >
-      {user.role === 'Coach' && <CandidatHeader member={candidatForCoach} />}
+      {user.role === 'Coach' && (
+        <CandidatHeader
+          member={
+            candidatForCoach && {
+              ...candidatForCoach.candidat,
+              url: candidatForCoach.url,
+            }
+          }
+        />
+      )}
     </HeaderBackoffice>
   );
 };

@@ -8,7 +8,7 @@ const { cleanCV, controlText } = require('./tools');
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
   as: 'user',
-  attributes: ['employed', 'hidden'],
+  attributes: ['employed', 'hidden', 'url'],
   include: [
     {
       model: models.User,
@@ -18,14 +18,13 @@ const INCLUDE_ALL_USERS = {
     {
       model: models.User,
       as: 'candidat',
-      attributes: ['id', 'firstName', 'lastName', 'gender', 'email', 'url'],
+      attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
     },
   ],
 };
-
 const INCLUDE_NOT_HIDDEN_USERS = {
   ...INCLUDE_ALL_USERS,
-  // where: { hidden: false },
+  where: { hidden: false },
 };
 const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
   {
@@ -234,21 +233,6 @@ const getCVbyUrl = async (url) => {
   return cleanCV(modelCV);
 };
 
-const getVisibleCVbyUrl = async (url) => {
-  const modelUser = await models.User.findOne({
-    where: { url, hiden: false },
-    attributes: ['id'],
-  });
-
-  const modelCV = await models.CV.findOne({
-    include: INCLUDES_COMPLETE_CV_WITH_ALL_USER,
-    where: { status: 'Published', UserId: modelUser.id },
-    order: [['version', 'DESC']],
-  });
-
-  return cleanCV(modelCV);
-};
-
 // todo: revoir
 const getCVbyUserId = async (userId) => {
   console.log(`getCVByUserId ${userId}`);
@@ -321,7 +305,6 @@ const setCV = (id, cv) => {
       .catch((err) => reject(err));
   });
 };
-getCVbyUserId('2d5ddeb3-97c4-48dc-b25a-add83a920745').then(console.log);
 
 module.exports = {
   createCV,

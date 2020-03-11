@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 'Candidat',
       },
       password: {
+        // hash
         type: DataTypes.TEXT,
         allowNull: false,
       },
@@ -70,7 +71,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      url: DataTypes.STRING, // go to usecandidat
       lastConnection: DataTypes.DATE,
     },
     {}
@@ -85,11 +85,16 @@ module.exports = (sequelize, DataTypes) => {
       as: 'candidat',
     });
 
-    User.beforeCreate((u) => {
-      const user = u;
-      user.id = uuid();
-      user.email = user.email.toLowerCase();
-      user.url = `${u.firstName.toLowerCase()}-${user.id.substring(0, 8)}`;
+    User.beforeCreate((user) => ({
+      ...user,
+      id: uuid(),
+      email: user.email.toLowerCase(),
+    }));
+
+    User.afterCreate((user) => {
+      if (user.role === 'Candidat') {
+        models.User_Candidat.create({ candidatId: user.id });
+      }
       return user;
     });
   };

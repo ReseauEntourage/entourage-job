@@ -87,16 +87,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  CV.beforeValidate((cv) => {
-    const cvToCreate = cv;
-    // mover to controller
-    // if (cvToCreate.firstName && cvToCreate.userId) {
-    //   cvToCreate.url = `${cvToCreate.firstName.toLowerCase()}-${cvToCreate.userId.substring(
-    //     0,
-    //     8
-    //   )}`;
-    // }
-    return cvToCreate;
+  CV.beforeValidate(() => {
+    return cv;
   });
   CV.beforeCreate((cv) => {
     const cvToCreate = cv;

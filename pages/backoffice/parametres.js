@@ -20,19 +20,32 @@ import schemaChangePassword from '../../components/forms/schema/formChangePasswo
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
 
 // userId du candidat ou coach lié
-const UserInformationCard = ({ title, userId }) => {
+const UserInformationCard = ({ title, user }) => {
   // données du candidat ou coach lié
   const [linkedUser, setLinkedUser] = useState();
   const [loadingLinkedUser, setLoadingLinkedUser] = useState(true);
-
+  const [candidatInfo, setCandidatInfo] = useState();
   useEffect(() => {
-    setLoadingLinkedUser(true);
-    Api.get(`/api/v1/user/${userId}`)
-      .then(({ data }) => {
-        setLinkedUser(data);
+    if (user) {
+      setLoadingLinkedUser(true);
+      // probleme de recuperation de candidat dans cette route => solution brutale : requete
+      Api.get(`/api/v1/user/candidat`, {
+        params:
+          user.role === 'Coach'
+            ? {
+                coachId: user.id,
+              }
+            : { candidatId: user.id },
       })
-      .finally(() => setLoadingLinkedUser(false));
-  }, [userId]);
+        .then(({ data }) => {
+          if (user.role === 'Coach') {
+            setCandidatInfo(data);
+          }
+          setLinkedUser(user.role === 'Coach' ? data.candidat : data.coach);
+        })
+        .finally(() => setLoadingLinkedUser(false));
+    }
+  }, [user]);
 
   // si chargement
   if (loadingLinkedUser) {
@@ -81,6 +94,28 @@ const UserInformationCard = ({ title, userId }) => {
               </span>
             </GridNoSSR>
           )}
+          {candidatInfo && (
+            <>
+              <GridNoSSR row gap="small">
+                <IconNoSSR name="link" />
+                <span className="uk-text-italic">{candidatInfo.url}</span>
+              </GridNoSSR>
+              <GridNoSSR row gap="small">
+                <IconNoSSR name="cog" />
+                <span className="uk-text-italic">
+                  {candidatInfo.hidden ? 'CV caché' : 'CV visible'}
+                </span>
+              </GridNoSSR>
+              <GridNoSSR row gap="small">
+                <IconNoSSR name="cog" />
+                <span className="uk-text-italic">
+                  {candidatInfo.employed
+                    ? 'A retrouvé un emploi'
+                    : "N'a pas retrouvé d'emploi"}
+                </span>
+              </GridNoSSR>
+            </>
+          )}
         </GridNoSSR>
       </Card>
     );
@@ -94,7 +129,7 @@ const UserInformationCard = ({ title, userId }) => {
 };
 UserInformationCard.propTypes = {
   title: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired,
+  user: PropTypes.shape.isRequired,
 };
 
 const Parametres = () => {
@@ -231,11 +266,7 @@ const Parametres = () => {
                     ? ' mon candidat'
                     : ' mon bénévole coach'
                 }`}
-                userId={
-                  userData.role === 'Coach'
-                    ? userData.candidat.candidatId
-                    : userData.candidat.coachId
-                }
+                user={userData}
               />
             )}
           </GridNoSSR>

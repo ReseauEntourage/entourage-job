@@ -6,6 +6,7 @@ const {
   Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 
+const ATTRIBUTES_USER_CANDIDAT = ['employed', 'hidden', 'note', 'url'];
 const ATTRIBUTES_USER = [
   'id',
   'firstName',
@@ -15,28 +16,18 @@ const ATTRIBUTES_USER = [
   'role',
   'gender',
   'lastConnection',
-  'url',
 ];
 const INCLUDE_USER_CANDIDAT = [
   {
     model: User_Candidat,
     as: 'candidat',
-    attributes: ['employed', 'hidden', 'note'],
+    attributes: ATTRIBUTES_USER_CANDIDAT,
     include: [
       {
         model: User,
         as: 'coach',
         // todo: add where not the same role as the huser
-        attributes: [
-          'id',
-          'firstName',
-          'lastName',
-          'email',
-          'phone',
-          'role',
-          'gender',
-          'lastConnection',
-        ],
+        attributes: ATTRIBUTES_USER,
       },
       {
         model: User,
@@ -73,12 +64,13 @@ const deleteUser = (id) => {
 };
 
 // avec mot de passe
+// Je narrive pas a recuperer candidat depuis l'id dun utilisateur coach
 const getUser = (id) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getUser -';
     console.log(`${infoLog} Récupérer un User à partir de son id`);
     User.findByPk(id, {
-      attributes: [...ATTRIBUTES_USER, 'password', 'salt'],
+      attributes: ATTRIBUTES_USER,
       include: INCLUDE_USER_CANDIDAT,
     })
       .then((result) => resolve(result))
@@ -89,7 +81,7 @@ const getUser = (id) => {
 const getUserByEmail = async (email) => {
   const user = await User.findOne({
     where: { email },
-    attributes: [...ATTRIBUTES_USER, 'password', 'salt'],
+    attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
     include: INCLUDE_USER_CANDIDAT,
   });
   return user;
@@ -194,7 +186,7 @@ const setUserCandidat = async (candidatId, candidat) => {
 const getUserCandidat = async (candidatId) => {
   return User_Candidat.findOne({
     where: { candidatId },
-    attributes: ['employed', 'hidden', 'note'],
+    attributes: ATTRIBUTES_USER_CANDIDAT,
     include: [
       {
         model: User,
@@ -221,7 +213,7 @@ const getUserCandidatOpt = async ({ candidatId, coachId }) => {
   }
   return User_Candidat.findOne({
     where: findWhere,
-    attributes: ['employed', 'hidden', 'note'],
+    attributes: ATTRIBUTES_USER_CANDIDAT,
     include: [
       {
         model: User,
@@ -239,7 +231,7 @@ const getUserCandidatOpt = async ({ candidatId, coachId }) => {
 
 const getUserCandidats = async () => {
   return User_Candidat.findAll({
-    attributes: ['employed', 'hidden', 'note'],
+    attributes: ATTRIBUTES_USER_CANDIDAT,
     include: [
       {
         model: User,
@@ -254,10 +246,6 @@ const getUserCandidats = async () => {
     ],
   });
 };
-getUserCandidatOpt({
-  candidatId: '2d5ddeb3-97c4-48dc-b25a-add83a920745',
-  coachId: null,
-});
 
 module.exports = {
   createUser,
