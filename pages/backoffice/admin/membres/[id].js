@@ -16,9 +16,9 @@ const CVPage = ({ member }) => {
   const [candidat, setCandidat] = useState(null);
   useEffect(() => {
     if (member) {
-      if (member.role === 'Coach' && member.userToCoach) {
+      if (member.role === 'Coach' && member.coach) {
         Api.get(
-          `${process.env.SERVER_URL}/api/v1/user/${member.userToCoach}`
+          `${process.env.SERVER_URL}/api/v1/user/${member.coach.candidat.id}`
         ).then(({ data }) => setCandidat(data));
       }
       if (member.role === 'Candidat') {

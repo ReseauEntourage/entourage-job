@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'Users',
-          key: 'id',
+          model: 'User_Candidat',
+          key: 'candidatId',
         },
       },
       urlImg: DataTypes.STRING,

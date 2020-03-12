@@ -32,10 +32,10 @@ const CandidatHeader = ({ member, candidatForCoach }) => {
           <SimpleLink
             className="uk-link-text"
             target="_blank"
-            href={`${process.env.SERVER_URL}/cv/${member.url}`}
+            href={`${process.env.SERVER_URL}/cv/${member.candidat.url}`}
           >
             <span>
-              {process.env.SERVER_URL}/cv/{member.url}
+              {process.env.SERVER_URL}/cv/{member.candidat.url}
             </span>
             <IconNoSSR name="link" />
           </SimpleLink>

@@ -81,8 +81,14 @@ module.exports = (sequelize, DataTypes) => {
       through: 'Opportunity_Users',
       as: 'opportunities',
     });
+    // si candidat regarder candidat
     User.hasOne(models.User_Candidat, {
       as: 'candidat',
+    });
+    // si coach regarder coach
+    User.hasOne(models.User_Candidat, {
+      as: 'coach',
+      foreignKey: 'coachId',
     });
 
     User.beforeCreate((user) => ({

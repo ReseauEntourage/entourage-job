@@ -26,13 +26,18 @@ const INCLUDE_USER_CANDIDAT = [
       {
         model: User,
         as: 'coach',
-        // todo: add where not the same role as the huser
         attributes: ATTRIBUTES_USER,
       },
+    ],
+  },
+  {
+    model: User_Candidat,
+    as: 'coach',
+    attributes: ATTRIBUTES_USER_CANDIDAT,
+    include: [
       {
         model: User,
         as: 'candidat',
-        // todo: add where not the same role as the huser
         attributes: ATTRIBUTES_USER,
       },
     ],
@@ -82,7 +87,20 @@ const getUserByEmail = async (email) => {
   const user = await User.findOne({
     where: { email },
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
-    include: INCLUDE_USER_CANDIDAT,
+    include: [
+      {
+        model: User_Candidat,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER_CANDIDAT,
+        include: [
+          {
+            model: User,
+            as: 'coach',
+            attributes: ATTRIBUTES_USER,
+          },
+        ],
+      },
+    ],
   });
   return user;
 };
@@ -105,7 +123,32 @@ const getMembers = (limit, offset, order, role, query) => {
       role: { [Op.not]: 'Admin' },
     },
     attributes: ATTRIBUTES_USER,
-    include: INCLUDE_USER_CANDIDAT,
+    include: [
+      {
+        model: User_Candidat,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER_CANDIDAT,
+        include: [
+          {
+            model: User,
+            as: 'coach',
+            attributes: ATTRIBUTES_USER,
+          },
+        ],
+      },
+      {
+        model: User_Candidat,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER_CANDIDAT,
+        include: [
+          {
+            model: User,
+            as: 'candidat',
+            attributes: ATTRIBUTES_USER,
+          },
+        ],
+      },
+    ],
   };
   // recherche de l'utilisateur
   if (query) {
@@ -133,16 +176,45 @@ const getMembers = (limit, offset, order, role, query) => {
       ...options.where,
       role,
     };
-    // recuperer la derniere version de cv
-    // todo trouver un moyen d'ameliorer la recuperation
-    if (role === 'Candidat') {
-      options.include.push({
-        model: CV,
-        as: 'cvs',
-        attributes: ['version', 'status'],
-      });
-      options.order = [[{ model: CV, as: 'cvs' }, 'version', 'desc']];
-    }
+  }
+  // recuperer la derniere version de cv
+  // todo trouver un moyen d'ameliorer la recuperation
+  if (role === 'Candidat') {
+    options.include = [
+      {
+        model: User_Candidat,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER_CANDIDAT,
+        include: [
+          {
+            model: CV,
+            as: 'cvs',
+            attributes: ['version', 'status'],
+          },
+          {
+            model: User,
+            as: 'coach',
+            attributes: ATTRIBUTES_USER,
+          },
+        ],
+      },
+    ];
+  }
+  if (role === 'Coach') {
+    options.include = [
+      {
+        model: User_Candidat,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER_CANDIDAT,
+        include: [
+          {
+            model: User,
+            as: 'candidat',
+            attributes: ATTRIBUTES_USER,
+          },
+        ],
+      },
+    ];
   }
   return User.findAll(options);
 };

@@ -85,7 +85,16 @@ router.get('/members', (req, res) => {
   )
     .then((users) => {
       console.log(`Users récupérés (Total : ${users.length})`);
-      res.status(200).json(users);
+      res.status(200).json(
+        users.map((u) => {
+          const user = u.toJSON();
+          // sort by version desc
+          user.candidat.cvs = user.candidat.cvs.sort(
+            (a, b) => b.version - a.version
+          );
+          return user;
+        })
+      );
     })
     .catch((err) => {
       console.log(err);

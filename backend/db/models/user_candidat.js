@@ -50,6 +50,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'coachId',
       sourceKey: 'id',
     });
+    UserCandidat.hasMany(models.CV, {
+      as: 'cvs',
+      sourceKey: 'candidatId',
+      foreignKey: 'UserId',
+    });
 
     UserCandidat.beforeCreate(async (u) => {
       const user = await models.User.findByPk(u.candidatId, {
