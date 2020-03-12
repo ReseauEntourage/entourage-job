@@ -54,8 +54,8 @@ const CandidatListPartial = () => {
   };
 
   return (
-    <Section style="muted" container="" id="candidat">
-      <GridNoSSR gap="large" column middle eachWidths={['2-3@s', '1-1']}>
+    <Section style="muted" id="candidat" className="uk-padding">
+      <GridNoSSR column middle eachWidths={['2-3@s', '1-1']}>
         <div className="uk-text-center">
           <h2 className="uk-text-bold uk-margin-remove-bottom">
             Ils sont <span className="uk-text-primary">motivés</span> pour
@@ -65,7 +65,7 @@ const CandidatListPartial = () => {
             Votre partage peut tout{' '}
             <span className="uk-text-primary">changer</span>
           </h3>
-          <p>
+          <p className="uk-margin-remove-bottom">
             Eux ont du talent. Vous, vous avez du réseau.
             <br />
             Si vous pensez comme nous que l&apos;exclusion ne doit pas être un

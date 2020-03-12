@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   LinkedinShareButton,
   FacebookShareButton,
@@ -17,13 +16,13 @@ const LandingPagePartial = () => {
   const viaTwitter = 'R_Entourage';
   return (
     <Background
-      blend={{ mode: 'soft-light', color: 'secondary' }}
+      blend={{ mode: 'soft-light', colorHex: 'rgba(0,0,0,0.4)' }}
       src="/static/img/cover-linkedout.jpg"
       position="top-center"
     >
       <div
         className="uk-flex uk-flex-1 uk-flex-center uk-flex-middle"
-        uk-height-viewport="offset-bottom: 80px"
+        data-uk-height-viewport="offset-bottom: 40"
       >
         <Section container="large">
           <GridNoSSR middle column>
@@ -67,10 +66,20 @@ const LandingPagePartial = () => {
                 hashtags={hashtags}
                 via={viaTwitter}
                 style={{ cursor: 'pointer' }}
-                className="uk-icon-button uk-icon-link uk-text-primary primary uk-margin-right"
+                className="uk-icon-button uk-icon-link uk-text-primary primary"
               >
                 <IconNoSSR name="twitter" />
               </TwitterShareButton>
+            </div>
+            <div>
+              <a
+                className="uk-link-muted"
+                href="#header"
+                /* style={{ color: 'white' }} */
+                data-uk-scroll="offset: -1"
+              >
+                <IconNoSSR name="chevron-down" ratio="2.5" />
+              </a>
             </div>
           </GridNoSSR>
         </Section>
