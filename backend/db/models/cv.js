@@ -87,9 +87,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  CV.beforeValidate(() => {
-    return cv;
-  });
   CV.beforeCreate((cv) => {
     const cvToCreate = cv;
     cvToCreate.id = uuid();

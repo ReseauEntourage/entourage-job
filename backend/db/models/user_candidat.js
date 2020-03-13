@@ -40,6 +40,18 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   UserCandidat.associate = (models) => {
+    // lie un coach un utilisateur à son nouveau coach et délie un coach à son ancien user
+    const linkUsers = (userCandidat) => {
+      if (userCandidat.coachId) {
+        UserCandidat.update(
+          { coachId: null },
+          {
+            where: { coachId: userCandidat.coachId },
+          }
+        );
+      }
+    };
+
     UserCandidat.belongsTo(models.User, {
       as: 'candidat',
       foreignKey: 'candidatId',
@@ -56,41 +68,17 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'UserId',
     });
 
-    UserCandidat.beforeCreate(async (u) => {
-      const user = await models.User.findByPk(u.candidatId, {
-        attributes: ['id', 'firstname'],
+    UserCandidat.beforeCreate(async (newUserCandidat) => {
+      const user = await models.User.findByPk(newUserCandidat.candidatId, {
+        attributes: ['id', 'firstName'],
       });
-      user.url = `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`;
-      return user;
-    });
-
-    // / TODO
-    // lie un coach un utilisateur à son nouveau coach et délie un coach à son ancien user
-    const linkUsers = (userCandidat) => {
-      console.log('TODO UPDATE UserCandidat.beforeUpdate');
-      UserCandidat.update(
-        { coachId: null },
-        {
-          where: { coachId: userCandidat.coachId },
-        }
-      )
-        .then(() => {
-          if (userCandidat.coachId) {
-            UserCandidat.update(
-              { coachId: userCandidat.id },
-              {
-                where: { id: userCandidat.coachId },
-              }
-            );
-          }
-        })
-        .catch((error) => {
-          console.error('linkUsers', error);
-        });
-    };
-    UserCandidat.beforeCreate((u) => {
-      linkUsers(u);
-      return u;
+      const userCandidat = newUserCandidat;
+      userCandidat.url = `${user.firstName.toLowerCase()}-${user.id.substring(
+        0,
+        8
+      )}`;
+      linkUsers(userCandidat);
+      return userCandidat;
     });
     UserCandidat.beforeUpdate((instance, option) => {
       const nextData = instance.dataValues;

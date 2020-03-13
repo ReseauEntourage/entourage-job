@@ -91,15 +91,19 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'coachId',
     });
 
-    User.beforeCreate((user) => ({
-      ...user,
-      id: uuid(),
-      email: user.email.toLowerCase(),
-    }));
+    User.beforeCreate((u) => {
+      const user = u;
+      user.id = uuid();
+      user.email = user.email.toLowerCase();
+      return user;
+    });
 
-    User.afterCreate((user) => {
+    User.afterCreate(async (user) => {
       if (user.role === 'Candidat') {
-        models.User_Candidat.create({ candidatId: user.id });
+        await models.User_Candidat.create({
+          candidatId: user.id,
+          url: `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`,
+        });
       }
       return user;
     });

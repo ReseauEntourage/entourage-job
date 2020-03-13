@@ -157,7 +157,7 @@ const CVPageContent = ({ candidatId }) => {
                 style="primary"
                 onClick={() =>
                   Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                    cv: { userId: candidatId },
+                    cv: { userId: candidatId, status: 'Pending' },
                   }).then(({ data }) => setCV(data))
                 }
               >

@@ -45,14 +45,30 @@ const INCLUDE_USER_CANDIDAT = [
 ];
 
 const createUser = (newUser) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'createUser -';
-    console.log(`${infoLog} Création du User`);
-    const userToCreate = { ...newUser };
-    userToCreate.role = newUser.role || 'Candidat';
-    User.create(userToCreate)
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+  const infoLog = 'createUser -';
+  console.log(`${infoLog} Création du User`);
+
+  const userToCreate = { ...newUser };
+  userToCreate.role = newUser.role || 'Candidat';
+
+  return User.create(userToCreate).then(async (res) => {
+    if (userToCreate.userToCoach && res.role === 'Coach') {
+      await User_Candidat.update(
+        { candidatId: userToCreate.userToCoach, coachId: res.id },
+        {
+          where: { candidatId: userToCreate.userToCoach },
+        }
+      );
+    }
+    if (userToCreate.userToCoach && res.role === 'Candidat') {
+      await User_Candidat.update(
+        { candidatId: res.id, coachId: userToCreate.userToCoach },
+        {
+          where: { candidatId: res.id },
+        }
+      );
+    }
+    return res;
   });
 };
 

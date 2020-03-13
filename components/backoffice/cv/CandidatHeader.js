@@ -1,53 +1,45 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR, SimpleLink, IconNoSSR } from '../../utils';
+import { UserContext } from '../../store/UserProvider';
 
-const CandidatHeader = ({ member, candidatForCoach }) => {
-  if (!member) return null;
+const CandidatHeader = ({ user }) => {
+  if (!user) return null;
   return (
     <GridNoSSR row gap="small" middle>
       <img
         className="uk-preserve-width uk-border-circle"
-        src={member.urlImg || '/static/img/arthur.png'}
+        src={user.urlImg || '/static/img/arthur.png'}
         width="48"
         style={{ height: '48px' }}
-        alt={`${member.firsName} profil`}
+        alt={`${user.firstName} profil`}
       />
       <GridNoSSR column gap="collapse">
         <h3 className="uk-text-bold">
-          {member.firstName} {member.lastName}
+          {user.firstName} {user.lastName}
         </h3>
 
-        {member.role === 'Coach' && candidatForCoach ? (
+        {user.role === 'Coach' ? (
           <span>
             Coach de{' '}
             <span className="uk-text-italic">
-              {candidatForCoach.firstName} {candidatForCoach.lastName}
+              {user.coach.candidat.firstName} {user.coach.candidat.lastName}
             </span>
           </span>
         ) : (
-          <span>{member.role}</span>
+          <span>{user.role}</span>
         )}
-        {member.role === 'Candidat' && (
+        {(user.role === 'Candidat' || user.role === 'Coach') && (
           <SimpleLink
             className="uk-link-text"
             target="_blank"
-            href={`${process.env.SERVER_URL}/cv/${member.candidat.url}`}
+            href={`${process.env.SERVER_URL}/cv/${
+              user[user.role === 'Candidat' ? 'candidat' : 'coach'].url
+            }`}
           >
             <span>
-              {process.env.SERVER_URL}/cv/{member.candidat.url}
-            </span>
-            <IconNoSSR name="link" />
-          </SimpleLink>
-        )}
-        {member.role === 'Coach' && candidatForCoach && (
-          <SimpleLink
-            className="uk-link-text"
-            target="_blank"
-            href={`${process.env.SERVER_URL}/cv/${candidatForCoach.url}`}
-          >
-            <span>
-              {process.env.SERVER_URL}/cv/{candidatForCoach.url}
+              {process.env.SERVER_URL}/cv/
+              {user[user.role === 'Candidat' ? 'candidat' : 'coach'].url}
             </span>
             <IconNoSSR name="link" />
           </SimpleLink>
@@ -57,15 +49,26 @@ const CandidatHeader = ({ member, candidatForCoach }) => {
   );
 };
 CandidatHeader.propTypes = {
-  member: PropTypes.shape().isRequired,
-  candidatForCoach: PropTypes.shape({
+  user: PropTypes.shape({
     firstName: PropTypes.string,
     lastName: PropTypes.string,
-    url: PropTypes.string,
-  }),
-};
-CandidatHeader.defaultProps = {
-  candidatForCoach: null,
+    urlImg: PropTypes.string,
+    role: PropTypes.string,
+    candidat: PropTypes.shape({
+      url: PropTypes.string,
+      coach: PropTypes.shape({
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+      }),
+    }),
+    coach: PropTypes.shape({
+      url: PropTypes.string,
+      candidat: PropTypes.shape({
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+      }),
+    }),
+  }).isRequired,
 };
 
 export default CandidatHeader;

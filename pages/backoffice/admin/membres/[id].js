@@ -54,7 +54,7 @@ const CVPage = ({ member }) => {
           </SimpleLink>
 
           <div>
-            <CandidatHeader member={member} candidatForCoach={candidat} />
+            <CandidatHeader user={candidat} />
             <hr className="ent-divier-backoffice uk-margin-large-top " />
           </div>
 
