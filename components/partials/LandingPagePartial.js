@@ -21,11 +21,11 @@ const LandingPagePartial = () => {
       position="top-center"
     >
       <div
-        className="uk-flex uk-flex-1 uk-flex-center uk-flex-middle"
+        className="uk-flex uk-flex-1 uk-flex-center"
         data-uk-height-viewport="offset-bottom: 40"
       >
-        <Section container="large">
-          <GridNoSSR middle column>
+        <Section container="large" className="uk-padding-remove-bottom">
+          <GridNoSSR middle column gap="medium">
             <ImgNoSSR
               src="/static/img/03-linkedout-blanc-complet.png"
               alt="LinkedOut by entourage"
@@ -33,7 +33,7 @@ const LandingPagePartial = () => {
               // width="300"
             />
             <h1
-              className="uk-heading-small uk-text-bold uk-text-center uk-width-xxlarge@m"
+              className="uk-text-bold uk-text-center uk-width-xlarge@m"
               style={{ color: 'white' }}
             >
               <span>Partagez votre </span>
@@ -73,7 +73,7 @@ const LandingPagePartial = () => {
             </div>
             <div>
               <a
-                className="uk-link-muted"
+                className="ent-link-muted"
                 href="#header"
                 /* style={{ color: 'white' }} */
                 data-uk-scroll="offset: -1"

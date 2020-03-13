@@ -55,7 +55,7 @@ const CandidatListPartial = () => {
 
   return (
     <Section style="muted" id="candidat" className="uk-padding">
-      <GridNoSSR column middle eachWidths={['2-3@s', '1-1']}>
+      <GridNoSSR column middle eachWidths={['2-3@m', '1-1']}>
         <div className="uk-text-center">
           <h2 className="uk-text-bold uk-margin-remove-bottom">
             Ils sont <span className="uk-text-primary">motivés</span> pour
@@ -66,11 +66,9 @@ const CandidatListPartial = () => {
             <span className="uk-text-primary">changer</span>
           </h3>
           <p className="uk-margin-remove-bottom">
-            Eux ont du talent. Vous, vous avez du réseau.
-            <br />
-            Si vous pensez comme nous que l&apos;exclusion ne doit pas être un
-            frein, partagez votre réseau professionnel à ceux qui en ont le plus
-            besoin.
+            Eux ont du talent. Vous, vous avez du réseau. Si vous pensez comme
+            nous que l&apos;exclusion ne doit pas être un frein, partagez votre
+            réseau professionnel à ceux qui en ont le plus besoin.
           </p>
         </div>
         <Content />
