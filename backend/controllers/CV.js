@@ -2,7 +2,11 @@
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
 const { QueryTypes } = require('sequelize');
-const { models, sequelize } = require('../db/models');
+const {
+  models,
+  sequelize,
+  Sequelize: { Op, fn, col, where },
+} = require('../db/models');
 const { cleanCV, controlText } = require('./tools');
 
 const INCLUDE_ALL_USERS = {
@@ -260,14 +264,38 @@ const getCVs = async () => {
 // BIDOUILLE
 // TODO Revoir cette query pour prendre les dernieres version et les melanger
 // utiliser distinct
-const getRandomShortCVs = async (nb) => {
+const getRandomShortCVs = async (nb, query) => {
   console.log(
     `getRandomShortCVs - Récupère des CVs au format court de manière aléatoire`
   );
 
-  const cvs = await sequelize.query(queryConditionCV(), {
-    type: QueryTypes.SELECT,
-  });
+  const cvs = await sequelize.query(
+    `
+    SELECT cv.id
+    FROM "CVs" cv
+    inner join (
+      select "UserId", MAX(version) as version
+      from "CVs"
+      where "CVs".status = 'Published'
+      group by "UserId") groupCVs
+    on cv."UserId" = groupCVs."UserId"
+    and cv.version =  groupCVs.version
+    and cv.status = 'Published'
+    inner join (
+      select "candidatId"
+      from "User_Candidats", "Users"
+      where  hidden = false
+      and "User_Candidats"."candidatId" = "Users"."id"
+      ${
+        query
+          ? ` and concat(lower("Users"."firstName"), ' ', lower("Users"."lastName")) like '%${query.toLowerCase()}%'`
+          : ''
+      }) groupUsers
+    on cv."UserId" = groupUsers."candidatId"`,
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
   const modelCVs = await models.CV.findAll({
     where: { id: cvs.map((cv) => cv.id) },
     attributes: ['id', 'catchphrase', 'urlImg'],

@@ -184,7 +184,7 @@ router.get('/edit', auth.required, (req, res) => {
  * Exemple : <server_url>/api/v1/cv/cards/random?nb=2
  */
 router.get('/cards/random', (req, res) => {
-  CVController.getRandomShortCVs(req.query.nb)
+  CVController.getRandomShortCVs(req.query.nb, req.query.q)
     .then((listeCVs) => {
       res.status(200).json(listeCVs);
     })

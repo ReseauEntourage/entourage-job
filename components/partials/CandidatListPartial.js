@@ -1,73 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import Link from 'next/link';
 import { GridNoSSR, Section } from '../utils';
-import { CandidatCard } from '../cards';
-import axios from '../../Axios';
+import CVList from '../cv/CVList';
 
-const CandidatListPartial = () => {
-  const [cvs, setCVs] = useState(undefined);
-  const [error, setError] = useState(undefined);
-  const nb = 11;
-
-  useEffect(() => {
-    axios
-      .get(`/api/v1/cv/cards/random?nb=${nb}`)
-      .then(({ data }) => setCVs(data))
-      .catch((err) => {
-        console.error(err);
-        setError('Impossible de récupérer les CVs.');
-      });
-  }, [nb]);
-
-  const Content = () => {
-    if (cvs) {
-      return (
-        <div uk-scrollspy="cls:uk-animation-slide-bottom-small; target: .uk-card; delay: 50">
-          <GridNoSSR
-            childWidths={['1-1', '1-2@s', '1-3@m']}
-            gap="small"
-            items={cvs.map((cv) => (
-              <CandidatCard
-                url={cv.user.url}
-                imgSrc={
-                  (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) || undefined
-                }
-                imgAlt={cv.user.candidat.firstName}
-                firstName={cv.user.candidat.firstName}
-                ambitions={cv.ambitions}
-                skills={cv.skills}
-                catchphrase={cv.catchphrase}
-                employed={cv.user.employed}
-              />
-            ))}
-          />
-        </div>
-      );
-    }
-    if (error) {
-      return <p className="uk-text-center uk-text-italic">{error}</p>;
-    }
-    return (
+const CandidatListPartial = () => (
+  <Section style="muted" container="" id="candidat">
+    <GridNoSSR gap="large" column middle eachWidths={['2-3@s', '1-1']}>
       <div className="uk-text-center">
-        <div data-uk-spinner />
+        <h2 className="uk-text-bold">
+          Ils viennent de{' '}
+          <span className="uk-text-primary">s&apos;inscrire</span>
+        </h2>
+        <p>
+          Ils sont disponibles pour travailler. Découvrez leurs profils,
+          partagez ou contactez-les.
+        </p>
       </div>
-    );
-  };
-
-  return (
-    <Section style="muted" container="" id="candidat">
-      <GridNoSSR gap="large" column middle eachWidths={['2-3@s', '1-1']}>
-        <div className="uk-text-center">
-          <h2 className="uk-text-bold">
-            Ils viennent de{' '}
-            <span className="uk-text-primary">s&apos;inscrire</span>
-          </h2>
-          <p>
-            Ils sont disponibles pour travailler. Découvrez leurs profils,
-            partagez ou contactez-les.
-          </p>
-        </div>
-        <Content />
-        <GridNoSSR middle column gap="collapse">
+      <CVList nb={9} />
+      <GridNoSSR middle column gap="collapse">
+        <Link href="/lescandidats">
           <button
             type="button"
             className="uk-button uk-button-primary"
@@ -83,13 +34,13 @@ const CandidatListPartial = () => {
           >
             Voir les candidats &gt;
           </button>
-          <p style={{ marginTop: '20px' }}>
-            En 2020, le projet est expérimenté à Paris et en Seine-Saint-Denis.
-          </p>
-        </GridNoSSR>
+        </Link>
+        <p style={{ marginTop: '20px' }}>
+          En 2020, le projet est expérimenté à Paris et en Seine-Saint-Denis.
+        </p>
       </GridNoSSR>
-    </Section>
-  );
-};
+    </GridNoSSR>
+  </Section>
+);
 
 export default CandidatListPartial;
