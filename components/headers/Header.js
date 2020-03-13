@@ -1,30 +1,28 @@
 /* global UIkit */
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import { UserContext } from '../store/UserProvider';
 import {
   Nav,
   NavbarNoSSR,
   OffcanvasNoSSR,
   HamburgerNoSSR,
-  SimpleLink,
   NavbarLogo,
 } from '../utils';
 import './Header.less';
 
 const Header = ({ isHome }) => {
   const LINKS = [
-    { href: '/jeveuxtravailler', name: 'Travailler' },
+    { href: '/jeveuxaider', name: 'Aider' },
     { href: '#', name: '|' },
     { href: '/jeveuxrecruter', name: 'Recruter' },
     { href: '#', name: '|' },
-    { href: '/jeveuxaider', name: 'Aider' },
+    { href: '/jeveuxtravailler', name: 'Travailler' },
   ];
   const router = useRouter();
   return (
-    <header>
+    <header id="header">
       <NavbarNoSSR
         sticky=""
         className="uk-background-secondary uk-navbar-transparent uk-light ent-home"
@@ -32,12 +30,12 @@ const Header = ({ isHome }) => {
           <>
             <NavbarLogo
               href="/"
-              src="/static/img/logo-linkedout-by-entourage.png"
+              src="/static/img/03-linkedout-blanc-complet.png"
               alt="Linkedout"
               alwaysVisible={!isHome}
               style={{
-                width: '170px',
-                marginTop: '8px',
+                width: '210px',
+                /* marginTop: '8px', */
               }}
             />
           </>
@@ -76,7 +74,7 @@ const Header = ({ isHome }) => {
                       borderRadius: '2px',
                     }}
                   >
-                    Voir les candidats &gt;
+                  Je partage un CV &gt;
                   </button>
                 </Link>
               </div>,
