@@ -23,38 +23,21 @@ import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithC
 const UserInformationCard = ({ title, user }) => {
   // données du candidat ou coach lié
   const [linkedUser, setLinkedUser] = useState();
-  const [loadingLinkedUser, setLoadingLinkedUser] = useState(true);
-  const [candidatInfo, setCandidatInfo] = useState();
+  const [userCandidat, setUserCandidat] = useState();
+
   useEffect(() => {
     if (user) {
-      setLoadingLinkedUser(true);
-      // probleme de recuperation de candidat dans cette route => solution brutale : requete
-      Api.get(`/api/v1/user/candidat`, {
-        params:
-          user.role === 'Coach'
-            ? {
-                coachId: user.id,
-              }
-            : { candidatId: user.id },
-      })
-        .then(({ data }) => {
-          if (user.role === 'Coach') {
-            setCandidatInfo(data);
-          }
-          setLinkedUser(user.role === 'Coach' ? data.candidat : data.coach);
-        })
-        .finally(() => setLoadingLinkedUser(false));
+      if (user.role === 'Coach' && user.coach) {
+        setLinkedUser(user.coach.candidat);
+        setUserCandidat(user.coach);
+      }
+      if (user.role === 'Candidat' && user.candidat) {
+        setLinkedUser(user.candidat.coach);
+        setUserCandidat(user.candidat);
+      }
     }
   }, [user]);
 
-  // si chargement
-  if (loadingLinkedUser) {
-    return (
-      <Card style="secondary" title={title}>
-        <div data-uk-spinner />
-      </Card>
-    );
-  }
   // si membre lié
   if (linkedUser) {
     return (
@@ -94,27 +77,35 @@ const UserInformationCard = ({ title, user }) => {
               </span>
             </GridNoSSR>
           )}
-          {candidatInfo && (
-            <>
+          {user.role === 'Coach' && (
+            <SimpleLink
+              className="uk-link-muted"
+              target="_blank"
+              href={`/cv/${userCandidat.url}`}
+            >
               <GridNoSSR row gap="small">
                 <IconNoSSR name="link" />
-                <span className="uk-text-italic">{candidatInfo.url}</span>
+                <span className="uk-text-italic">{userCandidat.url}</span>
               </GridNoSSR>
-              <GridNoSSR row gap="small">
-                <IconNoSSR name="cog" />
-                <span className="uk-text-italic">
-                  {candidatInfo.hidden ? 'CV caché' : 'CV visible'}
-                </span>
-              </GridNoSSR>
-              <GridNoSSR row gap="small">
-                <IconNoSSR name="cog" />
-                <span className="uk-text-italic">
-                  {candidatInfo.employed
-                    ? 'A retrouvé un emploi'
-                    : "N'a pas retrouvé d'emploi"}
-                </span>
-              </GridNoSSR>
-            </>
+            </SimpleLink>
+          )}
+          {user.role === 'Coach' && (
+            <GridNoSSR row gap="small">
+              <IconNoSSR name="cog" />
+              <span className="uk-text-italic">
+                {userCandidat.hidden ? 'CV caché' : 'CV visible'}
+              </span>
+            </GridNoSSR>
+          )}
+          {user.role === 'Coach' && (
+            <GridNoSSR row gap="small">
+              <IconNoSSR name="cog" />
+              <span className="uk-text-italic">
+                {userCandidat.employed
+                  ? 'A retrouvé un emploi'
+                  : "N'a pas retrouvé d'emploi"}
+              </span>
+            </GridNoSSR>
           )}
         </GridNoSSR>
       </Card>

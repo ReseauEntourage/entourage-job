@@ -26,13 +26,34 @@ const Edit = () => {
         {userCompleteData && (
           <>
             <CVEditWelcome user={userCompleteData} />
-            <CVPageContent
-              candidatId={
-                userCompleteData.role === 'Coach'
-                  ? userCompleteData.coach.candidat.id
-                  : userCompleteData.id
-              }
-            />
+            {userCompleteData.role === 'Coach' &&
+              (userCompleteData.coach ? (
+                <CVPageContent
+                  candidatId={
+                    userCompleteData.role === 'Coach'
+                      ? userCompleteData.coach.candidat.id
+                      : userCompleteData.id
+                  }
+                />
+              ) : (
+                <>
+                  <h2 className="uk-text-bold">
+                    <span className="uk-text-primary">
+                      {user.role === 'Coach'
+                        ? 'Aucun candidat'
+                        : 'Aucun bénévole coach'}
+                    </span>{' '}
+                    n&apos;est rattaché à ce compte.
+                  </h2>
+                  <p>
+                    Il peut y avoir plusieurs raisons à ce sujet. Contacte
+                    l&apos;équipe LinkedOut pour en savoir plus.
+                  </p>
+                </>
+              ))}
+            {userCompleteData.role === 'Candidat' && (
+              <CVPageContent candidatId={userCompleteData.id} />
+            )}
           </>
         )}
       </Section>

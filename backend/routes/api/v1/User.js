@@ -89,7 +89,7 @@ router.get('/members', (req, res) => {
         users.map((u) => {
           const user = u.toJSON();
           // sort by version desc
-          if (req.query.role === 'Candidat') {
+          if (user.role === 'Candidat' && user.candidat.cvs) {
             user.candidat.cvs = user.candidat.cvs.sort(
               (a, b) => b.version - a.version
             );

@@ -22,18 +22,23 @@ const CandidatHeader = ({ user }) => {
         {user.role === 'Coach' ? (
           <span>
             Coach de{' '}
-            <span className="uk-text-italic">
-              {user.coach.candidat.firstName} {user.coach.candidat.lastName}
-            </span>
+            {user.coach && user.coach.candidat ? (
+              <span className="uk-text-italic">
+                {user.coach.candidat.firstName} {user.coach.candidat.lastName}
+              </span>
+            ) : (
+              'personne'
+            )}
           </span>
         ) : (
           <span>{user.role}</span>
         )}
-        {(user.role === 'Candidat' || user.role === 'Coach') && (
+        {(user.role === 'Candidat' ||
+          (user.role === 'Coach' && user.coach)) && (
           <SimpleLink
             className="uk-link-text"
             target="_blank"
-            href={`${process.env.SERVER_URL}/cv/${
+            href={`/cv/${
               user[user.role === 'Candidat' ? 'candidat' : 'coach'].url
             }`}
           >
