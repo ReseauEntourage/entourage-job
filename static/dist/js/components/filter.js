@@ -1,4 +1,4 @@
-/*! UIkit 3.3.3 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.3.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -46,7 +46,7 @@
                 children.forEach(uikitUtil.Transition.cancel);
 
                 reset(this.target);
-                this.$update(this.target);
+                this.$update(this.target, 'resize');
                 uikitUtil.fastdom.flush();
 
                 var newHeight = uikitUtil.height(this.target);
@@ -89,13 +89,14 @@
                 uikitUtil.css(this.target, 'height', oldHeight);
                 uikitUtil.scrollTop(window, oldScrollY);
 
-                return uikitUtil.Promise.all(children.map(function (el, i) { return propsFrom[i] && propsTo[i]
-                        ? uikitUtil.Transition.start(el, propsTo[i], this$1.animation, 'ease')
-                        : uikitUtil.Promise.resolve(); }
-                ).concat(uikitUtil.Transition.start(this.target, {height: newHeight}, this.animation, 'ease'))).then(function () {
+                return uikitUtil.Promise.all(
+                    children.map(function (el, i) { return ['top', 'left', 'height', 'width'].some(function (prop) { return propsFrom[i][prop] !== propsTo[i][prop]; }
+                        ) && uikitUtil.Transition.start(el, propsTo[i], this$1.animation, 'ease'); }
+                    ).concat(oldHeight !== newHeight && uikitUtil.Transition.start(this.target, {height: newHeight}, this.animation, 'ease'))
+                ).then(function () {
                     children.forEach(function (el, i) { return uikitUtil.css(el, {display: propsTo[i].opacity === 0 ? 'none' : '', zIndex: ''}); });
                     reset(this$1.target);
-                    this$1.$update(this$1.target);
+                    this$1.$update(this$1.target, 'resize');
                     uikitUtil.fastdom.flush(); // needed for IE11
                 }, uikitUtil.noop);
 
