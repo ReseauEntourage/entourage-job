@@ -16,7 +16,7 @@ import { CVPresentationCard } from '.';
 const CVFiche = ({ cv }) => (
   <Section>
     <CVPresentationCard
-      firstName={cv.user.firstName}
+      firstName={cv.user.candidat.firstName}
       userId={cv.UserId}
       intro={cv.catchphrase}
     />

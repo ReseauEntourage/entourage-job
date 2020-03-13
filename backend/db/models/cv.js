@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'Users',
-          key: 'id',
+          model: 'User_Candidat',
+          key: 'candidatId',
         },
       },
       urlImg: DataTypes.STRING,
@@ -87,17 +87,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  CV.beforeValidate((cv) => {
-    const cvToCreate = cv;
-    // mover to controller
-    // if (cvToCreate.firstName && cvToCreate.userId) {
-    //   cvToCreate.url = `${cvToCreate.firstName.toLowerCase()}-${cvToCreate.userId.substring(
-    //     0,
-    //     8
-    //   )}`;
-    // }
-    return cvToCreate;
-  });
   CV.beforeCreate((cv) => {
     const cvToCreate = cv;
     cvToCreate.id = uuid();
@@ -132,11 +121,10 @@ module.exports = (sequelize, DataTypes) => {
     CV.hasMany(models.Review, {
       as: 'reviews',
     });
-
-    CV.belongsTo(models.User, {
+    CV.belongsTo(models.User_Candidat, {
       as: 'user',
       foreignKey: 'UserId',
-      targetKey: 'id',
+      targetKey: 'candidatId',
     });
   };
   return CV;

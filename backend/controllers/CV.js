@@ -6,16 +6,20 @@ const { models, sequelize } = require('../db/models');
 const { cleanCV, controlText } = require('./tools');
 
 const INCLUDE_ALL_USERS = {
-  model: models.User,
+  model: models.User_Candidat,
   as: 'user',
-  attributes: [
-    'id',
-    'firstName',
-    'lastName',
-    'gender',
-    'email',
-    'employed',
-    'hidden',
+  attributes: ['employed', 'hidden', 'url'],
+  include: [
+    {
+      model: models.User,
+      as: 'coach',
+      attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
+    },
+    {
+      model: models.User,
+      as: 'candidat',
+      attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
+    },
   ],
 };
 const INCLUDE_NOT_HIDDEN_USERS = {
@@ -87,12 +91,12 @@ on cv."UserId" = groupCVs."UserId"
 and cv.version =  groupCVs.version
 and cv.status = 'Published'
 inner join (
-  select distinct id, "firstName", url
-  from "Users"
+  select distinct "candidatId"
+  from "User_Candidats"
   where ${allowHidden ? '' : ` hidden = false `}
   ${attribute && value && !allowHidden ? ' and ' : ''}
   ${attribute && value ? ` ${attribute} = '${value}'` : ''}) groupUsers
-on cv."UserId" = groupUsers.id`;
+on cv."UserId" = groupUsers."candidatId"`;
 
 const createCV = async (data) => {
   console.log(`createCV - Création du CV`);
@@ -224,37 +228,8 @@ const getCVbyUrl = async (url) => {
   });
 
   const modelCV = await models.CV.findByPk(cvs[0].id, {
-    include: [
-      ...INCLUDES_COMPLETE_CV_WITHOUT_USER,
-      {
-        model: models.User,
-        as: 'user',
-        attributes: [
-          'id',
-          'firstName',
-          'lastName',
-          'gender',
-          'email',
-          'employed',
-        ],
-      },
-    ],
+    include: [...INCLUDES_COMPLETE_CV_WITHOUT_USER, INCLUDE_ALL_USERS],
   });
-  return cleanCV(modelCV);
-};
-
-const getVisibleCVbyUrl = async (url) => {
-  const modelUser = await models.User.findOne({
-    where: { url, hiden: false },
-    attributes: ['id'],
-  });
-
-  const modelCV = await models.CV.findOne({
-    include: INCLUDES_COMPLETE_CV_WITH_ALL_USER,
-    where: { status: 'Published', UserId: modelUser.id },
-    order: [['version', 'DESC']],
-  });
-
   return cleanCV(modelCV);
 };
 
@@ -309,11 +284,7 @@ const getRandomShortCVs = async (nb) => {
         through: { attributes: [] },
         attributes: ['name'],
       },
-      {
-        model: models.User,
-        as: 'user',
-        attributes: ['firstName', 'url', 'employed'],
-      },
+      INCLUDE_ALL_USERS,
     ],
   });
 

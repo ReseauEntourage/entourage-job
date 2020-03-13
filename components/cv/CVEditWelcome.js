@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import HeaderBackoffice from '../headers/HeaderBackoffice';
 import CandidatHeader from '../backoffice/cv/CandidatHeader';
+import { UserContext } from '../store/UserProvider';
 
-const CVEditWelcome = ({ user, candidatForCoach }) => {
+const CVEditWelcome = ({ user }) => {
   if (user === null) {
     return null;
   }
@@ -19,16 +20,15 @@ const CVEditWelcome = ({ user, candidatForCoach }) => {
           : `Bienvenue dans l'espace personnel de ton candidat rattaché, depuis lequel tu peux modifier avec lui ses informations qui s'affichent dans la page profil candidat sur LinkedOut.`
       }
     >
-      {user.role === 'Coach' && <CandidatHeader member={candidatForCoach} />}
+      {user.role === 'Coach' && <CandidatHeader user={user} />}
     </HeaderBackoffice>
   );
 };
 CVEditWelcome.propTypes = {
-  user: PropTypes.shape().isRequired,
-  candidatForCoach: PropTypes.shape(),
+  user: PropTypes.shape(),
 };
 CVEditWelcome.defaultProps = {
-  candidatForCoach: undefined,
+  user: undefined,
 };
 
 export default CVEditWelcome;

@@ -2,19 +2,22 @@ module.exports = {
   up: (queryInterface, Sequelize) =>
     Promise.all([
       queryInterface.createTable('User_Candidats', {
-        id: {
-          allowNull: false,
-          autoIncrement: true,
-          primaryKey: true,
-          type: Sequelize.INTEGER,
-        },
         candidatId: {
           type: Sequelize.UUID,
           allowNull: false,
+          primaryKey: true,
+          references: {
+            model: 'Users',
+            key: 'id',
+          },
         },
         coachId: {
           type: Sequelize.UUID,
           allowNull: true,
+          references: {
+            model: 'Users',
+            key: 'id',
+          },
         },
         employed: {
           type: Sequelize.BOOLEAN,
@@ -26,8 +29,12 @@ module.exports = {
           defaultValue: true,
           allowNull: false,
         },
-        tracking: {
+        note: {
           type: Sequelize.TEXT,
+        },
+        url: {
+          type: Sequelize.STRING,
+          allowNull: false,
         },
         createdAt: {
           allowNull: false,
@@ -40,6 +47,7 @@ module.exports = {
       }),
       queryInterface.removeColumn('Users', 'employed'),
       queryInterface.removeColumn('Users', 'hidden'),
+      queryInterface.removeColumn('Users', 'url'),
       queryInterface.removeColumn('Users', 'userToCoach'),
     ]),
   down: (queryInterface, Sequelize) =>
@@ -52,6 +60,11 @@ module.exports = {
       }),
       queryInterface.addColumn('Users', 'hidden', {
         type: Sequelize.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      }),
+      queryInterface.addColumn('Users', 'url', {
+        type: Sequelize.STRING,
         defaultValue: true,
         allowNull: false,
       }),

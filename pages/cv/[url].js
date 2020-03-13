@@ -26,8 +26,8 @@ const CVPage = ({ cv, router }) => {
 
   return (
     <Layout
-      title={`${cv.user.firstName} - LinkedOut`}
-      metaTitle={`Aidez ${cv.user.firstName} en partageant son CV.`}
+      title={`${cv.user.candidat.firstName} - LinkedOut`}
+      metaTitle={`Aidez ${cv.user.candidat.firstName} en partageant son CV.`}
       metaUrl={`${process.env.SERVER_URL}${router.asPath}`}
       metaDescription={cv.intro}
       metaImage={

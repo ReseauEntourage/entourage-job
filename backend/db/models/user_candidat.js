@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 module.exports = (sequelize, DataTypes) => {
   const UserCandidat = sequelize.define(
     'User_Candidat',
@@ -5,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       candidatId: {
         type: DataTypes.UUID,
         allowNull: false,
+        primaryKey: true,
         references: {
           model: 'Users',
           key: 'id',
@@ -28,12 +30,28 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: true,
         allowNull: false,
       },
-      tracking: DataTypes.TEXT,
+      note: DataTypes.TEXT,
+      url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {}
   );
 
   UserCandidat.associate = (models) => {
+    // lie un coach un utilisateur à son nouveau coach et délie un coach à son ancien user
+    const linkUsers = (userCandidat) => {
+      if (userCandidat.coachId) {
+        UserCandidat.update(
+          { coachId: null },
+          {
+            where: { coachId: userCandidat.coachId },
+          }
+        );
+      }
+    };
+
     UserCandidat.belongsTo(models.User, {
       as: 'candidat',
       foreignKey: 'candidatId',
@@ -43,6 +61,31 @@ module.exports = (sequelize, DataTypes) => {
       as: 'coach',
       foreignKey: 'coachId',
       sourceKey: 'id',
+    });
+    UserCandidat.hasMany(models.CV, {
+      as: 'cvs',
+      sourceKey: 'candidatId',
+      foreignKey: 'UserId',
+    });
+
+    UserCandidat.beforeCreate(async (newUserCandidat) => {
+      const user = await models.User.findByPk(newUserCandidat.candidatId, {
+        attributes: ['id', 'firstName'],
+      });
+      const userCandidat = newUserCandidat;
+      userCandidat.url = `${user.firstName.toLowerCase()}-${user.id.substring(
+        0,
+        8
+      )}`;
+      linkUsers(userCandidat);
+      return userCandidat;
+    });
+    UserCandidat.beforeUpdate((instance, option) => {
+      const nextData = instance.dataValues;
+      const previousData = instance._previousDataValues;
+      if (nextData && previousData && nextData.coachId !== previousData.v) {
+        linkUsers(nextData);
+      }
     });
   };
   return UserCandidat;

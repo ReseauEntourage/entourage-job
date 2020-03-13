@@ -23,7 +23,7 @@ function translateStatusCV(status) {
   return <span className="uk-text-">Inconnu</span>;
 }
 
-const MembersAdmin = () => {
+const MembersAdmin = ({ query: { role } }) => {
   const [members, setMembers] = useState([]);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -31,24 +31,19 @@ const MembersAdmin = () => {
   const [offset, setOffset] = useState(0);
   const LIMIT = 10;
   const router = useRouter();
-  const {
-    query: { role },
-  } = router;
 
   const fetchData = async (doReset, query) => {
     setLoading(true);
+    setHasError(false);
     try {
-      const { data } = await axios.get(
-        `${process.env.SERVER_URL}/api/v1/user/members`,
-        {
-          params: {
-            limit: LIMIT,
-            offset: doReset ? 0 : offset,
-            role,
-            query,
-          },
-        }
-      );
+      const { data } = await axios.get('/api/v1/user/members', {
+        params: {
+          limit: LIMIT,
+          offset: doReset ? 0 : offset,
+          role,
+          query,
+        },
+      });
       if (doReset) {
         setMembers(data);
         setOffset(LIMIT);
@@ -256,23 +251,25 @@ const MembersAdmin = () => {
                           </GridNoSSR>
                         </td>
                         {role === 'All' && <td>{member.role}</td>}
-                        {role === 'Candidat' && (
+                        {role === 'Candidat' && member.candidat && (
                           <>
                             <td>
-                              <span className="uk-hidden@s">
-                                {!member.employed
-                                  ? "En recherche d'emploi"
-                                  : 'A trouvé un emploi'}
+                              <span className="uk-hidden@m">
+                                {member.candidat.employed
+                                  ? 'A trouvé un emploi'
+                                  : "En recherche d'emploi"}
                               </span>
                               <input
-                                className="uk-checkbox uk-visible@s"
+                                className="uk-checkbox uk-visible@m"
                                 type="checkbox"
-                                defaultChecked={member.employed}
+                                defaultChecked={member.candidat.employed}
                               />
                             </td>
                             <td>
-                              {member.cvs && member.cvs.length > 0 ? (
-                                translateStatusCV(member.cvs[0].status)
+                              {member.candidat &&
+                              member.candidat.cvs &&
+                              member.candidat.cvs.length > 0 ? (
+                                translateStatusCV(member.candidat.cvs[0].status)
                               ) : (
                                 <span className="uk-text-italic uk-text-danger">
                                   Aucun CV
@@ -280,24 +277,35 @@ const MembersAdmin = () => {
                               )}
                             </td>
                             <td>
-                              <span className="uk-hidden@s">
-                                {member.hidden ? 'Masqué' : 'Visible'}
+                              <span className="uk-hidden@m">
+                                {member.candidat.hidden ? 'Masqué' : 'Visible'}
                               </span>
                               <input
-                                className="uk-checkbox uk-visible@s"
+                                className="uk-checkbox uk-visible@m"
                                 type="checkbox"
-                                defaultChecked={member.hidden}
+                                defaultChecked={member.candidat.hidden}
                               />
                             </td>
                           </>
                         )}
-                        <td>
-                          {member.linkedUser ? (
-                            `${member.linkedUser.firstName} ${member.linkedUser.lastName}`
-                          ) : (
-                            <span className="uk-text-italic">Non lié</span>
-                          )}
-                        </td>
+                        {member.role === 'Candidat' && (
+                          <td>
+                            {member.candidat && member.candidat.coach ? (
+                              `${member.candidat.coach.firstName} ${member.candidat.coach.lastName}`
+                            ) : (
+                              <span className="uk-text-italic">Non lié</span>
+                            )}
+                          </td>
+                        )}
+                        {member.role === 'Coach' && (
+                          <td>
+                            {member.coach && member.coach.candidat ? (
+                              `${member.coach.candidat.firstName} ${member.coach.candidat.lastName}`
+                            ) : (
+                              <span className="uk-text-italic">Non lié</span>
+                            )}
+                          </td>
+                        )}
                         <td>
                           {member.lastConnection ? (
                             moment(member.lastConnection).format('DD/MM/YYYY')
@@ -342,5 +350,8 @@ const MembersAdmin = () => {
       </Section>
     </LayoutBackOffice>
   );
+};
+MembersAdmin.getInitialProps = ({ query }) => {
+  return { query };
 };
 export default MembersAdmin;

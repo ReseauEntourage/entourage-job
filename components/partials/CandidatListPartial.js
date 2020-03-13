@@ -31,8 +31,8 @@ const CandidatListPartial = () => {
                 imgSrc={
                   (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) || undefined
                 }
-                imgAlt={cv.user.firstName}
-                firstName={cv.user.firstName}
+                imgAlt={cv.user.candidat.firstName}
+                firstName={cv.user.candidat.firstName}
                 ambitions={cv.ambitions}
                 skills={cv.skills}
                 catchphrase={cv.catchphrase}

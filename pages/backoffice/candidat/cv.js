@@ -9,36 +9,53 @@ import CVPageContent from '../../../components/backoffice/cv/CVPageContent';
 
 const Edit = () => {
   const { user } = useContext(UserContext);
-  const [candidat, setCandidat] = useState({});
-  const [candidatId, setCandidatId] = useState(null);
+  const [userCompleteData, setUserCompleteData] = useState();
 
   useEffect(() => {
     if (user) {
-      if (user.role === 'Coach') {
-        if (user.userToCoach) {
-          Api.get(
-            `${process.env.SERVER_URL}/api/v1/user/${user.userToCoach}`
-          ).then(({ data }) => {
-            setCandidat(data);
-            setCandidatId(data.id);
-          });
-        } else {
-          setCandidat(null);
-          setCandidatId(null);
-        }
-      }
-      if (user.role === 'Candidat') {
-        setCandidat(user);
-        setCandidatId(user.id);
-      }
+      Api.get(`/api/v1/user/${user.id}`)
+        .then(({ data }) => setUserCompleteData(data))
+        .catch(() => {
+          UIkit.notification('Erreur lors du chargement du suivi', 'danger');
+        });
     }
   }, [user]);
-
   return (
     <LayoutBackOffice title="Edition du CV">
       <Section>
-        <CVEditWelcome user={user} candidatForCoach={candidat} />
-        <CVPageContent candidatId={candidatId} />
+        {userCompleteData && (
+          <>
+            <CVEditWelcome user={userCompleteData} />
+            {userCompleteData.role === 'Coach' &&
+              (userCompleteData.coach ? (
+                <CVPageContent
+                  candidatId={
+                    userCompleteData.role === 'Coach'
+                      ? userCompleteData.coach.candidat.id
+                      : userCompleteData.id
+                  }
+                />
+              ) : (
+                <>
+                  <h2 className="uk-text-bold">
+                    <span className="uk-text-primary">
+                      {user.role === 'Coach'
+                        ? 'Aucun candidat'
+                        : 'Aucun bénévole coach'}
+                    </span>{' '}
+                    n&apos;est rattaché à ce compte.
+                  </h2>
+                  <p>
+                    Il peut y avoir plusieurs raisons à ce sujet. Contacte
+                    l&apos;équipe LinkedOut pour en savoir plus.
+                  </p>
+                </>
+              ))}
+            {userCompleteData.role === 'Candidat' && (
+              <CVPageContent candidatId={userCompleteData.id} />
+            )}
+          </>
+        )}
       </Section>
     </LayoutBackOffice>
   );

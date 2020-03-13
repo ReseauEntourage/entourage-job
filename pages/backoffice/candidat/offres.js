@@ -10,6 +10,13 @@ import ModalOffer from '../../../components/modals/ModalOffer';
 import axios from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
 
+const getTag = (offer) => {
+  if (offer.userOpportunity && offer.userOpportunity.archived) {
+    return 'tag-archive';
+  }
+  return `tag-${offer.isPublic ? 'public' : 'private'}`;
+};
+
 const Opportunites = () => {
   const { user } = useContext(UserContext);
   const {
@@ -20,13 +27,14 @@ const Opportunites = () => {
   const [offers, setOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [candidatId, setCandidatId] = useState();
 
-  const fetchData = async () => {
+  const fetchData = async (userId) => {
     if (user) {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${user.id}`
+          `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${userId}`
         );
 
         // sorted by bookmark and date
@@ -68,7 +76,7 @@ const Opportunites = () => {
           `${process.env.SERVER_URL}/api/v1/opportunity/join`,
           {
             opportunityId: offer.id,
-            userId: user.id,
+            userId: candidatId,
             seen: true,
           }
         );
@@ -85,30 +93,49 @@ const Opportunites = () => {
         );
         opportunity.userOpportunity = data;
       }
-      fetchData();
+      fetchData(candidatId);
     }
     setCurrentOffer(opportunity);
     UIkit.modal('#modal-offer').show();
   };
 
-  const getTag = (offer) => {
-    if (offer.userOpportunity && offer.userOpportunity.archived) {
-      return 'tag-archive';
-    }
-    return `tag-${offer.isPublic ? 'public' : 'private'}`;
-  };
-
   useEffect(() => {
-    fetchData().then((data) => {
-      if (data) {
-        const offer = data.find((o) => o.id === opportunityId);
-        if (offer) {
-          console.log(offer);
-          setCurrentOffer(offer);
-          UIkit.modal('#modal-offer-admin').show();
+    // récupére les offres et si id en url ouvre loffre en question
+    const fetchAndAct = (id) =>
+      fetchData(id).then((data) => {
+        if (data) {
+          const offer = data.find((o) => o.id === opportunityId);
+          if (offer) {
+            console.log(offer);
+            setCurrentOffer(offer);
+            UIkit.modal('#modal-offer-admin').show();
+          }
         }
+      });
+
+    if (user) {
+      if (user.role === 'Candidat') {
+        setCandidatId(user.id);
+        fetchAndAct(user.id);
       }
-    });
+      if (user.role === 'Coach') {
+        axios
+          .get(`/api/v1/user/candidat/`, {
+            params: {
+              coachId: user.id,
+            },
+          })
+          .then(({ data }) => {
+            if (data) {
+              setCandidatId(data.candidat.id);
+              fetchAndAct(data.candidat.id);
+            } else {
+              setHasError(true);
+            }
+          })
+          .catch(() => setHasError(true));
+      }
+    }
   }, [user, opportunityId]);
   if (!user) return null;
 
@@ -187,7 +214,7 @@ const Opportunites = () => {
               currentOffer={currentOffer}
               setCurrentOffer={(offer) => {
                 setCurrentOffer(offer);
-                fetchData();
+                fetchData(candidatId);
               }}
             />
           </>

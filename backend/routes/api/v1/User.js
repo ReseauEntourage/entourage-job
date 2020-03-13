@@ -7,6 +7,11 @@ const router = express.Router();
 const UserController = require('../../../controllers/User');
 const AuthController = require('../../../controllers/Auth');
 
+/* !!! TODO !!!
+ * RESTRICTION DES ROUTE AUX ROLES ET A LA CONNEXION
+ * !!! TODO !!!
+ */
+
 /**
  * Route : POST /api/<VERSION>/user
  * Description : Créé le User
@@ -80,7 +85,18 @@ router.get('/members', (req, res) => {
   )
     .then((users) => {
       console.log(`Users récupérés (Total : ${users.length})`);
-      res.status(200).json(users);
+      res.status(200).json(
+        users.map((u) => {
+          const user = u.toJSON();
+          // sort by version desc
+          if (user.role === 'Candidat' && user.candidat.cvs) {
+            user.candidat.cvs = user.candidat.cvs.sort(
+              (a, b) => b.version - a.version
+            );
+          }
+          return user;
+        })
+      );
     })
     .catch((err) => {
       console.log(err);
@@ -110,14 +126,41 @@ router.get('/search', (req, res) => {
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/:identifier', (req, res) => {
-  let getUser;
-  if (validator.isEmail(req.params.identifier)) {
-    getUser = UserController.getUserByEmail(req.params.identifier);
-  } else {
-    getUser = UserController.getUser(req.params.identifier);
-  }
-  getUser
+router.get('/candidat', (req, res) => {
+  UserController.getUserCandidatOpt(req.query)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
+ * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
+ */
+router.get('/candidat/:id', (req, res) => {
+  UserController.getUserCandidat(req.params.id)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
+ * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
+ */
+router.get('/:id', (req, res) => {
+  (validator.isEmail(req.params.id)
+    ? UserController.getUserByEmail(req.params.id)
+    : UserController.getUser(req.params.id)
+  )
     .then((user) => {
       console.log(`User trouvé`);
       res.status(200).json(user);
@@ -162,6 +205,21 @@ router.put('/change-pwd', auth.required, (req, res) => {
     })
     .catch(() => {
       res.status(401).send('Utilisateur inaccessible');
+    });
+});
+
+/**
+ * Route : PUT /api/<VERSION>/user/<ID>
+ * Description : Modifie le User associé à l'<ID> fournit
+ */
+router.put('/candidat/:id', (req, res) => {
+  UserController.setUserCandidat(req.params.id, req.body)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(401).send('Une erreur est survenue');
     });
 });
 

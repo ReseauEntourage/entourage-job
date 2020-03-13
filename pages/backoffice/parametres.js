@@ -19,27 +19,25 @@ import schemaPersonalData from '../../components/forms/schema/formPersonalData.j
 import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
 
-const UserInformationCard = ({ title, userId }) => {
+// userId du candidat ou coach lié
+const UserInformationCard = ({ title, user }) => {
+  // données du candidat ou coach lié
   const [linkedUser, setLinkedUser] = useState();
-  const [loadingLinkedUser, setLoadingLinkedUser] = useState(true);
+  const [userCandidat, setUserCandidat] = useState();
 
   useEffect(() => {
-    setLoadingLinkedUser(true);
-    Api.get(`/api/v1/user/${userId}`)
-      .then(({ data }) => {
-        setLinkedUser(data);
-      })
-      .finally(() => setLoadingLinkedUser(false));
-  }, [userId]);
+    if (user) {
+      if (user.role === 'Coach' && user.coach) {
+        setLinkedUser(user.coach.candidat);
+        setUserCandidat(user.coach);
+      }
+      if (user.role === 'Candidat' && user.candidat) {
+        setLinkedUser(user.candidat.coach);
+        setUserCandidat(user.candidat);
+      }
+    }
+  }, [user]);
 
-  // si chargement
-  if (loadingLinkedUser) {
-    return (
-      <Card style="secondary" title={title}>
-        <div data-uk-spinner />
-      </Card>
-    );
-  }
   // si membre lié
   if (linkedUser) {
     return (
@@ -79,6 +77,36 @@ const UserInformationCard = ({ title, userId }) => {
               </span>
             </GridNoSSR>
           )}
+          {user.role === 'Coach' && (
+            <SimpleLink
+              className="uk-link-muted"
+              target="_blank"
+              href={`/cv/${userCandidat.url}`}
+            >
+              <GridNoSSR row gap="small">
+                <IconNoSSR name="link" />
+                <span className="uk-text-italic">{userCandidat.url}</span>
+              </GridNoSSR>
+            </SimpleLink>
+          )}
+          {user.role === 'Coach' && (
+            <GridNoSSR row gap="small">
+              <IconNoSSR name="cog" />
+              <span className="uk-text-italic">
+                {userCandidat.hidden ? 'CV caché' : 'CV visible'}
+              </span>
+            </GridNoSSR>
+          )}
+          {user.role === 'Coach' && (
+            <GridNoSSR row gap="small">
+              <IconNoSSR name="cog" />
+              <span className="uk-text-italic">
+                {userCandidat.employed
+                  ? 'A retrouvé un emploi'
+                  : "N'a pas retrouvé d'emploi"}
+              </span>
+            </GridNoSSR>
+          )}
         </GridNoSSR>
       </Card>
     );
@@ -92,13 +120,25 @@ const UserInformationCard = ({ title, userId }) => {
 };
 UserInformationCard.propTypes = {
   title: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired,
+  user: PropTypes.shape.isRequired,
 };
 
 const Parametres = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const [userData, setUserData] = useState(false);
   const [loadingPersonal, setLoadingPersonal] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setLoadingPersonal(true);
+      Api.get(`/api/v1/user/${user.id}`)
+        .then(({ data }) => {
+          setUserData(data);
+        })
+        .finally(() => setLoadingPersonal(false));
+    }
+  }, [user]);
 
   if (!user) return null;
 
@@ -112,16 +152,16 @@ const Parametres = () => {
         <GridNoSSR childWidths={['1-2@m']} match>
           <GridNoSSR childWidths={['1-1']}>
             {/* Preferences du CV */}
-            {user.role === 'Candidat' && (
+            {userData.role === 'Candidat' && (
               <Card title="Préférences du CV">
                 <ToggleWithConfirmationModal
                   id="employed"
                   title="J'ai retrouvé un emploi"
                   modalTitle="Vous avez retrouvé un emploi ?"
                   modalConfirmation="Oui, j'ai retrouvé un emploi"
-                  defaultValue={user.employed}
+                  defaultValue={userData.candidat.employed}
                   onToggle={(employed) =>
-                    Api.put(`/api/v1/user/${user.id}`, {
+                    Api.put(`/api/v1/user/candidat/${userData.id}`, {
                       employed,
                     })
                       .then(() =>
@@ -148,9 +188,9 @@ const Parametres = () => {
                     </>
                   }
                   modalConfirmation="Oui, masquer mon CV"
-                  defaultValue={user.hidden}
+                  defaultValue={userData.candidat.hidden}
                   onToggle={(hidden) =>
-                    Api.put(`/api/v1/user/${user.id}`, {
+                    Api.put(`/api/v1/user/candidat/${userData.id}`, {
                       hidden,
                     })
                       .then(() =>
@@ -184,37 +224,40 @@ const Parametres = () => {
                   />
                 )}
               </GridNoSSR>
-
-              <GridNoSSR column gap="small">
-                <GridNoSSR row gap="small">
-                  <IconNoSSR name="user" />
-                  <span>{`${user.firstName} ${user.lastName}`}</span>
+              {userData ? (
+                <GridNoSSR column gap="small">
+                  <GridNoSSR row gap="small">
+                    <IconNoSSR name="user" />
+                    <span>{`${userData.firstName} ${userData.lastName}`}</span>
+                  </GridNoSSR>
+                  <GridNoSSR row gap="small">
+                    <IconNoSSR name="mail" />
+                    <span>{userData.email}</span>
+                  </GridNoSSR>
+                  <GridNoSSR row gap="small">
+                    <IconNoSSR name="phone" />
+                    {userData.phone ? (
+                      <span>{userData.phone}</span>
+                    ) : (
+                      <span className="uk-text-italic">
+                        Numéro de téléphone non renseigné
+                      </span>
+                    )}
+                  </GridNoSSR>
                 </GridNoSSR>
-                <GridNoSSR row gap="small">
-                  <IconNoSSR name="mail" />
-                  <span>{user.email}</span>
-                </GridNoSSR>
-                <GridNoSSR row gap="small">
-                  <IconNoSSR name="phone" />
-                  {user.phone ? (
-                    <span>{user.phone}</span>
-                  ) : (
-                    <span className="uk-text-italic">
-                      Numéro de téléphone non renseigné
-                    </span>
-                  )}
-                </GridNoSSR>
-              </GridNoSSR>
+              ) : (
+                undefined
+              )}
             </div>
 
-            {(user.role === 'Candidat' || user.role === 'Coach') && (
+            {(userData.role === 'Candidat' || userData.role === 'Coach') && (
               <UserInformationCard
                 title={`Coordonnées de ${
-                  user.role === 'Coach'
+                  userData.role === 'Coach'
                     ? ' mon candidat'
                     : ' mon bénévole coach'
                 }`}
-                userId={user.userToCoach}
+                user={userData}
               />
             )}
           </GridNoSSR>
@@ -266,17 +309,16 @@ const Parametres = () => {
           submitText="Envoyer"
           id="modal-personal-data"
           title="Édition - Informations personelles"
-          defaultValues={{ phone: user.phone }}
+          defaultValues={{ phone: userData.phone }}
           formSchema={schemaPersonalData}
           onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }) => {
-            const u = user;
-            if (phone !== u.phone) {
+            if (phone !== userData.phone) {
               setLoadingPersonal(true);
-              Api.put(`/api/v1/user/${user.id}`, {
+              Api.put(`/api/v1/user/${userData.id}`, {
                 phone,
               })
                 .then(() => {
-                  setUser({ ...user, phone });
+                  setUserData({ ...userData, phone });
                   UIkit.notification(
                     'Votre numéro de téléphone a bien été mis à jour',
                     'success'
@@ -292,13 +334,13 @@ const Parametres = () => {
                 .finally(() => setLoadingPersonal(false));
             }
 
-            if (user.email === oldEmail && newEmail0 === newEmail1) {
+            if (userData.email === oldEmail && newEmail0 === newEmail1) {
               setLoadingPersonal(true);
-              Api.put(`/api/v1/user/${user.id}`, {
+              Api.put(`/api/v1/user/${userData.id}`, {
                 email: newEmail0,
               })
                 .then(() => {
-                  setUser({ ...user, email: newEmail0 });
+                  setUserData({ ...userData, email: newEmail0 });
                   UIkit.notification(
                     'Votre email a bien été mis à jour',
                     'success'

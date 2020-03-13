@@ -28,8 +28,8 @@ const DiscoverPartial = () => {
             imgSrc={
               (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) || undefined
             }
-            imgAlt={cv.user && cv.user.firstName}
-            firstName={cv.user && cv.user.firstName}
+            imgAlt={cv.user && cv.user.candidat.firstName}
+            firstName={cv.user && cv.user.candidat.firstName}
             ambitions={cv.ambitions}
             skills={cv.skills}
             catchphrase={cv.catchphrase}

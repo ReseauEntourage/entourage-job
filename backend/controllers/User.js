@@ -1,17 +1,74 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable camelcase */
+
 const {
-  models: { User, CV },
+  models: { User, User_Candidat, CV },
   Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 
+const ATTRIBUTES_USER_CANDIDAT = ['employed', 'hidden', 'note', 'url'];
+const ATTRIBUTES_USER = [
+  'id',
+  'firstName',
+  'lastName',
+  'email',
+  'phone',
+  'role',
+  'gender',
+  'lastConnection',
+];
+const INCLUDE_USER_CANDIDAT = [
+  {
+    model: User_Candidat,
+    as: 'candidat',
+    attributes: ATTRIBUTES_USER_CANDIDAT,
+    include: [
+      {
+        model: User,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER,
+      },
+    ],
+  },
+  {
+    model: User_Candidat,
+    as: 'coach',
+    attributes: ATTRIBUTES_USER_CANDIDAT,
+    include: [
+      {
+        model: User,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER,
+      },
+    ],
+  },
+];
+
 const createUser = (newUser) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'createUser -';
-    console.log(`${infoLog} Création du User`);
-    const userToCreate = { ...newUser };
-    userToCreate.role = newUser.role || 'Candidat';
-    User.create(userToCreate)
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+  const infoLog = 'createUser -';
+  console.log(`${infoLog} Création du User`);
+
+  const userToCreate = { ...newUser };
+  userToCreate.role = newUser.role || 'Candidat';
+
+  return User.create(userToCreate).then(async (res) => {
+    if (userToCreate.userToCoach && res.role === 'Coach') {
+      await User_Candidat.update(
+        { candidatId: userToCreate.userToCoach, coachId: res.id },
+        {
+          where: { candidatId: userToCreate.userToCoach },
+        }
+      );
+    }
+    if (userToCreate.userToCoach && res.role === 'Candidat') {
+      await User_Candidat.update(
+        { candidatId: res.id, coachId: userToCreate.userToCoach },
+        {
+          where: { candidatId: res.id },
+        }
+      );
+    }
+    return res;
   });
 };
 
@@ -27,28 +84,41 @@ const deleteUser = (id) => {
   });
 };
 
+// avec mot de passe
+// Je narrive pas a recuperer candidat depuis l'id dun utilisateur coach
 const getUser = (id) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getUser -';
     console.log(`${infoLog} Récupérer un User à partir de son id`);
-    User.findOne({
-      where: { id },
+    User.findByPk(id, {
+      attributes: ATTRIBUTES_USER,
+      include: INCLUDE_USER_CANDIDAT,
     })
       .then((result) => resolve(result))
       .catch((err) => reject(err));
   });
 };
 
-const getUserByEmail = (email) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getUserByEmail -';
-    console.log(`${infoLog} Récupérer un User à partir de son adresse email`);
-    User.findOne({
-      where: { email },
-    })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+const getUserByEmail = async (email) => {
+  const user = await User.findOne({
+    where: { email },
+    attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
+    include: [
+      {
+        model: User_Candidat,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER_CANDIDAT,
+        include: [
+          {
+            model: User,
+            as: 'coach',
+            attributes: ATTRIBUTES_USER,
+          },
+        ],
+      },
+    ],
   });
+  return user;
 };
 
 const getUsers = (limit, offset, order) => {
@@ -68,21 +138,31 @@ const getMembers = (limit, offset, order, role, query) => {
     where: {
       role: { [Op.not]: 'Admin' },
     },
-    attributes: [
-      'id',
-      'firstName',
-      'lastName',
-      'email',
-      'role',
-      'lastConnection',
-      'employed',
-      'hidden',
-    ],
+    attributes: ATTRIBUTES_USER,
     include: [
       {
-        model: User,
-        as: 'linkedUser',
-        attributes: ['firstName', 'lastName'],
+        model: User_Candidat,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER_CANDIDAT,
+        include: [
+          {
+            model: User,
+            as: 'coach',
+            attributes: ATTRIBUTES_USER,
+          },
+        ],
+      },
+      {
+        model: User_Candidat,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER_CANDIDAT,
+        include: [
+          {
+            model: User,
+            as: 'candidat',
+            attributes: ATTRIBUTES_USER,
+          },
+        ],
       },
     ],
   };
@@ -112,16 +192,45 @@ const getMembers = (limit, offset, order, role, query) => {
       ...options.where,
       role,
     };
-    // recuperer la derniere version de cv
-    // todo trouver un moyen d'ameliorer la recuperation
-    if (role === 'Candidat') {
-      options.include.push({
-        model: CV,
-        as: 'cvs',
-        attributes: ['version', 'status'],
-      });
-      options.order = [[{ model: CV, as: 'cvs' }, 'version', 'desc']];
-    }
+  }
+  // recuperer la derniere version de cv
+  // todo trouver un moyen d'ameliorer la recuperation
+  if (role === 'Candidat') {
+    options.include = [
+      {
+        model: User_Candidat,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER_CANDIDAT,
+        include: [
+          {
+            model: CV,
+            as: 'cvs',
+            attributes: ['version', 'status'],
+          },
+          {
+            model: User,
+            as: 'coach',
+            attributes: ATTRIBUTES_USER,
+          },
+        ],
+      },
+    ];
+  }
+  if (role === 'Coach') {
+    options.include = [
+      {
+        model: User_Candidat,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER_CANDIDAT,
+        include: [
+          {
+            model: User,
+            as: 'candidat',
+            attributes: ATTRIBUTES_USER,
+          },
+        ],
+      },
+    ];
   }
   return User.findAll(options);
 };
@@ -129,7 +238,7 @@ const getMembers = (limit, offset, order, role, query) => {
 const searchUsers = (query, role) => {
   const lowerCaseQuery = query.toLowerCase();
   const options = {
-    attributes: ['id', 'firstName', 'lastName', 'email', 'employed', 'hidden'],
+    attributes: ATTRIBUTES_USER,
     where: {
       [Op.or]: [
         { email: { [Op.like]: `%${lowerCaseQuery}%` } },
@@ -151,11 +260,78 @@ const searchUsers = (query, role) => {
   return User.findAll(options);
 };
 
-const setUser = (id, user) => {
-  const infoLog = 'setUser -';
-  console.log(`${infoLog} Modification du User`);
-  return User.update(user, {
+const setUser = async (id, user) =>
+  User.update(user, {
     where: { id },
+  });
+
+const setUserCandidat = async (candidatId, candidat) => {
+  return User_Candidat.update(candidat, {
+    where: { candidatId },
+  });
+};
+
+const getUserCandidat = async (candidatId) => {
+  return User_Candidat.findOne({
+    where: { candidatId },
+    attributes: ATTRIBUTES_USER_CANDIDAT,
+    include: [
+      {
+        model: User,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER,
+      },
+      {
+        model: User,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER,
+      },
+    ],
+  });
+};
+
+const getUserCandidatOpt = async ({ candidatId, coachId }) => {
+  // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: Error: WHERE parameter "coachId" has invalid "undefined" value
+  const findWhere = {};
+  if (candidatId) {
+    findWhere.candidatId = candidatId;
+  }
+  if (coachId) {
+    findWhere.coachId = coachId;
+  }
+  return User_Candidat.findOne({
+    where: findWhere,
+    attributes: ATTRIBUTES_USER_CANDIDAT,
+    include: [
+      {
+        model: User,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER,
+      },
+      {
+        model: User,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER,
+      },
+    ],
+  });
+};
+
+const getUserCandidats = async () => {
+  return User_Candidat.findAll({
+    attributes: ATTRIBUTES_USER_CANDIDAT,
+    include: [
+      {
+        model: User,
+        as: 'coach',
+        attributes: ATTRIBUTES_USER,
+      },
+      {
+        model: User,
+        as: 'candidat',
+        attributes: ATTRIBUTES_USER,
+      },
+    ],
   });
 };
 
@@ -168,4 +344,8 @@ module.exports = {
   setUser,
   searchUsers,
   getMembers,
+  setUserCandidat,
+  getUserCandidat,
+  getUserCandidatOpt,
+  getUserCandidats,
 };

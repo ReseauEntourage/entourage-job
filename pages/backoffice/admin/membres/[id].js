@@ -1,5 +1,4 @@
-/* global UIkit */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../../Axios';
@@ -12,22 +11,8 @@ import {
 import CVPageContent from '../../../../components/backoffice/cv/CVPageContent';
 import CandidatHeader from '../../../../components/backoffice/cv/CandidatHeader';
 
-const CVPage = ({ member }) => {
-  const [candidat, setCandidat] = useState(null);
-  useEffect(() => {
-    if (member) {
-      if (member.role === 'Coach' && member.userToCoach) {
-        Api.get(
-          `${process.env.SERVER_URL}/api/v1/user/${member.userToCoach}`
-        ).then(({ data }) => setCandidat(data));
-      }
-      if (member.role === 'Candidat') {
-        setCandidat(member);
-      }
-    }
-  }, [member]);
-
-  if (!member) {
+const CVPage = ({ user }) => {
+  if (!user) {
     return (
       <LayoutBackOffice title="Page introuvable - Gestion des menmbres">
         <Section className="uk-text-center" size="large">
@@ -40,24 +25,21 @@ const CVPage = ({ member }) => {
       </LayoutBackOffice>
     );
   }
-
   return (
-    <LayoutBackOffice title={`${member.firstName} - Gestion des menmbres`}>
+    <LayoutBackOffice title={`${user.firstName} - Gestion des menmbres`}>
       <Section>
         <GridNoSSR column gap="large">
           <SimpleLink
-            href={`/backoffice/admin/membres?role=${member.role}`}
+            href={`/backoffice/admin/membres?role=${user.role}`}
             className="uk-link-reset"
           >
             <IconNoSSR name="chevron-left" />
             retour à la liste
           </SimpleLink>
-
           <div>
-            <CandidatHeader member={member} candidatForCoach={candidat} />
+            <CandidatHeader user={user} />
             <hr className="ent-divier-backoffice uk-margin-large-top " />
           </div>
-
           <GridNoSSR eachWidths={['expand', 'auto']}>
             <ul className="uk-subnav" data-uk-switcher>
               <li className="uk-active">
@@ -78,21 +60,22 @@ const CVPage = ({ member }) => {
             </ul>
             <div />
           </GridNoSSR>
-          {candidat ? (
-            <CVPageContent candidatId={candidat.id} />
-          ) : (
-            'Aucun candidat lié'
-          )}
-          {/*
-              <h2 className="uk-text-bold">
-                <span className="uk-text-primary">Aucun candidat</span>{' '}
-                n&apos;est rattaché à ce compte coach.
-              </h2>
-              <p>
-                Il peut y avoir plusieurs raisons à ce sujet. Contacte
-                l&apos;équipe LinkedOut pour en savoir plus.
-              </p>
-               */}
+          {user.role === 'Coach' &&
+            (user.coach ? (
+              <CVPageContent candidatId={user.coach.candidat.id} />
+            ) : (
+              <>
+                <h2 className="uk-text-bold">
+                  <span className="uk-text-primary">Aucun candidat</span>{' '}
+                  n&apos;est rattaché à ce compte coach.
+                </h2>
+                <p>
+                  Il peut y avoir plusieurs raisons à ce sujet. Contacte
+                  l&apos;équipe LinkedOut pour en savoir plus.
+                </p>
+              </>
+            ))}
+          {user.role === 'Candidat' && <CVPageContent candidatId={user.id} />}
         </GridNoSSR>
       </Section>
     </LayoutBackOffice>
@@ -100,16 +83,35 @@ const CVPage = ({ member }) => {
 };
 CVPage.getInitialProps = async ({ query }) => {
   try {
-    const { data } = await Api.get(
-      `${process.env.SERVER_URL}/api/v1/user/${query.id}`
-    );
-    return { member: data };
+    const { data } = await Api.get(`/api/v1/user/${query.id}`);
+    return { user: data };
   } catch (error) {
-    return { member: null };
+    return { user: null };
   }
 };
 CVPage.propTypes = {
-  member: PropTypes.shape().isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    urlImg: PropTypes.string,
+    role: PropTypes.string,
+    candidat: PropTypes.shape({
+      url: PropTypes.string,
+      coach: PropTypes.shape({
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+      }),
+    }),
+    coach: PropTypes.shape({
+      url: PropTypes.string,
+      candidat: PropTypes.shape({
+        id: PropTypes.string,
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+      }),
+    }),
+  }).isRequired,
 };
 CVPage.defaultProps = {};
 
