@@ -8,7 +8,7 @@ const OpportunityController = require('../../../controllers/Opportunity');
  * Route : POST /api/<VERSION>/opportunity
  * Description : Créé l'opportunité
  */
-router.post('/', auth.required, (req, res) => {
+router.post('/', auth.optional, (req, res) => {
   OpportunityController.createOpportunity(req.body)
     .then((opportunity) => res.status(200).json(opportunity))
     .catch((err) => {
