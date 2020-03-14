@@ -60,21 +60,23 @@ const Header = ({ isHome }) => {
                 </Link>
               )),
               <div className="uk-navbar-item uk-visible@s">
-                <button
-                  type="button"
-                  className="uk-button uk-button-primary"
-                  style={{
-                    color: 'white',
-                    backgroundColor: '#F55F24',
-                    backgroundImage: 'none',
-                    textTransform: 'none',
-                    boder: null,
-                    padding: '0px 20px',
-                    borderRadius: '2px',
-                  }}
-                >
+                <Link href="/lescandidats">
+                  <button
+                    type="button"
+                    className="uk-button uk-button-primary"
+                    style={{
+                      color: 'white',
+                      backgroundColor: '#F55F24',
+                      backgroundImage: 'none',
+                      textTransform: 'none',
+                      boder: null,
+                      padding: '0px 20px',
+                      borderRadius: '2px',
+                    }}
+                  >
                   Je partage un CV &gt;
-                </button>
+                  </button>
+                </Link>
               </div>,
               <HamburgerNoSSR targetId="offcanvas-guest" hidden="s" />,
             ]}
