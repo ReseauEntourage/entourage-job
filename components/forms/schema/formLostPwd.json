@@ -1,0 +1,32 @@
+{
+  "id": "form-lost-pwd",
+  "fields": [
+    {
+      "id": "email",
+      "name": "email",
+      "type": "email",
+      "component": "input",
+      "placeholder": "Tapez votre adresse mail",
+      "title": "Adresse mail*"
+    }
+  ],
+  "rules": [
+    {
+      "field": "email",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "email",
+      "method": "isEmail",
+      "validWhen": true,
+      "message": "Adresse e-mail invalide"
+    }
+  ]
+}
