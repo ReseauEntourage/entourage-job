@@ -1,4 +1,4 @@
-/*! UIkit 3.3.3 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.3.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 /* ========================================================================
    Component: Base
  ========================================================================== */
@@ -40,7 +40,7 @@ a:hover {
  */
 a,
 .uk-link {
-  color: #F55F24;
+  color: #f55f24;
   text-decoration: none;
   cursor: pointer;
 }
@@ -502,7 +502,7 @@ a.uk-link-heading:hover,
 .uk-link-heading a:hover,
 .uk-link-toggle:hover .uk-link-heading,
 .uk-link-toggle:focus .uk-link-heading {
-  color: #F55F24;
+  color: #f55f24;
   text-decoration: none;
 }
 /* Reset
@@ -1478,7 +1478,7 @@ button.uk-icon:not(:disabled) {
   outline: none;
   background-color: #fff;
   color: #666;
-  border-color: #F55F24;
+  border-color: #f55f24;
 }
 /* Disabled */
 .uk-input:disabled,
@@ -1674,7 +1674,7 @@ select.uk-form-width-xsmall {
 .uk-radio:focus,
 .uk-checkbox:focus {
   outline: none;
-  border-color: #F55F24;
+  border-color: #f55f24;
 }
 /*
  * Checked
@@ -1682,7 +1682,7 @@ select.uk-form-width-xsmall {
 .uk-radio:checked,
 .uk-checkbox:checked,
 .uk-checkbox:indeterminate {
-  background-color: #F55F24;
+  background-color: #f55f24;
   border-color: transparent;
 }
 /* Focus */
@@ -1978,8 +1978,8 @@ select.uk-form-width-xsmall {
 .uk-button-primary {
   color: #fff;
   border: 1px solid transparent;
-  background-color: #F55F24;
-  background-image: linear-gradient(#F58F00, #F55F24);
+  background-color: #f55f24;
+  background-image: linear-gradient(#f58f00, #f55f24);
 }
 /* Hover + Focus */
 .uk-button-primary:hover,
@@ -1987,7 +1987,7 @@ select.uk-form-width-xsmall {
   background-color: #f44d0c;
   color: #fff;
   background-image: none;
-  background-color: #F55F24;
+  background-color: #f55f24;
 }
 /* OnClick + Active */
 .uk-button-primary:active,
@@ -2111,7 +2111,7 @@ select.uk-form-width-xsmall {
   line-height: 1.5;
   background: none;
   /* 2 */
-  color: #F55F24;
+  color: #f55f24;
 }
 /* Hover + Focus */
 .uk-button-link:hover,
@@ -2259,7 +2259,7 @@ select.uk-form-width-xsmall {
  * Primary
  */
 .uk-section-primary {
-  background: #F55F24;
+  background: #f55f24;
 }
 /*
  * Secondary
@@ -2908,7 +2908,7 @@ select.uk-form-width-xsmall {
  * Primary
  */
 .uk-tile-primary {
-  background: #F55F24;
+  background: #f55f24;
 }
 /*
  * Secondary
@@ -3032,7 +3032,7 @@ select.uk-form-width-xsmall {
  * Primary
  */
 .uk-card-primary {
-  background: #F55F24;
+  background: #f55f24;
   color: #fff;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
@@ -3040,7 +3040,7 @@ select.uk-form-width-xsmall {
   color: #fff;
 }
 .uk-card-primary.uk-card-hover:hover {
-  background-color: #F55F24;
+  background-color: #f55f24;
   box-shadow: 0 14px 25px rgba(0, 0, 0, 0.16);
 }
 /*
@@ -3320,7 +3320,7 @@ select.uk-form-width-xsmall {
  */
 .uk-alert-primary {
   background: #fde6dd;
-  color: #F55F24;
+  color: #f55f24;
 }
 /*
  * Success
@@ -3377,7 +3377,7 @@ select.uk-form-width-xsmall {
   border-radius: 500px;
   vertical-align: middle;
   /* 1 */
-  background: #F55F24;
+  background: #f55f24;
   color: #fff;
   font-size: 0.875rem;
   /* 2 */
@@ -3400,7 +3400,7 @@ select.uk-form-width-xsmall {
 .uk-label {
   display: inline-block;
   padding: 0 10px;
-  background: #F55F24;
+  background: #f55f24;
   line-height: 1.5;
   font-size: 0.875rem;
   color: #fff;
@@ -4456,7 +4456,7 @@ ul.uk-nav-sub {
 }
 /* Active */
 .uk-subnav-pill > .uk-active > a {
-  background-color: #F55F24;
+  background-color: #f55f24;
   color: #fff;
 }
 /* Disabled
@@ -4642,7 +4642,7 @@ ul.uk-nav-sub {
 /* Active */
 .uk-tab > .uk-active > a {
   color: #333;
-  border-color: #F55F24;
+  border-color: #f55f24;
 }
 /* Disabled */
 .uk-tab > .uk-disabled > a {
@@ -6040,7 +6040,7 @@ ul.uk-nav-sub {
  * Primary
  */
 .uk-notification-message-primary {
-  color: #F55F24;
+  color: #f55f24;
 }
 /*
  * Success
@@ -6184,14 +6184,14 @@ ul.uk-nav-sub {
  * 1. Remove right border in IE11 and Edge
  */
 .uk-progress::-webkit-progress-value {
-  background-color: #F55F24;
+  background-color: #f55f24;
   transition: width 0.6s ease;
 }
 .uk-progress::-moz-progress-bar {
-  background-color: #F55F24;
+  background-color: #f55f24;
 }
 .uk-progress::-ms-fill {
-  background-color: #F55F24;
+  background-color: #f55f24;
   transition: width 0.6s ease;
   /* 1 */
   border: 0;
@@ -6217,7 +6217,7 @@ ul.uk-nav-sub {
 /* Drag
  ========================================================================== */
 .uk-sortable-drag {
-  position: absolute !important;
+  position: fixed !important;
   z-index: 1050 !important;
   pointer-events: none;
 }
@@ -7288,7 +7288,7 @@ ul.uk-nav-sub {
   color: #333 !important;
 }
 .uk-text-primary {
-  color: #F55F24 !important;
+  color: #f55f24 !important;
 }
 .uk-text-secondary {
   color: #222 !important;
@@ -7317,11 +7317,11 @@ ul.uk-nav-sub {
   /* 2 */
   display: inline-block;
   /* 3 */
-  color: #F55F24 !important;
+  color: #f55f24 !important;
 }
 @supports (-webkit-background-clip: text) {
   .uk-text-background {
-    background-color: #F55F24;
+    background-color: #f55f24;
   }
 }
 /* Alignment modifiers
@@ -7620,7 +7620,7 @@ iframe.uk-cover {
   background-color: #f8f8f8;
 }
 .uk-background-primary {
-  background-color: #F55F24;
+  background-color: #f55f24;
 }
 .uk-background-secondary {
   background-color: #222;
@@ -12425,6 +12425,12 @@ iframe.uk-cover {
     page-break-after: avoid;
   }
 }
+.ent-link-muted {
+  color: white;
+}
+.ent-link-muted:hover {
+  color: #f55f24;
+}
 .ent-list {
   margin-left: 30px !important;
 }
@@ -12439,7 +12445,7 @@ iframe.uk-cover {
   bottom: 0;
   left: -24px;
   width: 2px;
-  background-color: #F55F24;
+  background-color: #f55f24;
   content: '';
 }
 .ent-list > li::after {
@@ -12449,7 +12455,7 @@ iframe.uk-cover {
   height: 10px;
   width: 10px;
   border-radius: 150%;
-  border: 2px solid #F55F24;
+  border: 2px solid #f55f24;
   background: #fff;
   content: '';
   z-index: 1;
@@ -12481,7 +12487,7 @@ iframe.uk-cover {
   right: -35px;
   width: 110px;
   height: 10px;
-  background-color: #F55F24;
+  background-color: #f55f24;
   transform: rotate(45deg);
 }
 .ent-divier-backoffice {

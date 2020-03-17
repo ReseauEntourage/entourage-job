@@ -1,12 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { GridNoSSR, Section, IconNoSSR } from '../utils';
 import { NumberCard } from '../cards';
 
 const numbers = [
-  { value: 15, description: 'Candidats accompagnés' },
-  { value: 342, description: 'CVs partagés' },
-  { value: 5, description: 'Personnes réinsérées' },
+  { value: 73, description: '% des candidats ont retrouvé un job' },
+  { value: 40000, description: 'Partages sur les réseaux de leur CV' },
+  { value: 300, description: 'Entreprises solidaires' },
 ];
 const data = [
   {
@@ -55,20 +54,27 @@ const data = [
 
 const NumberPartial = () => (
   <Section style="muted" container="" id="profiles">
-    <GridNoSSR gap="large" column middle eachWidths={['1-1', '1-1', '1-2@s']}>
-      <GridNoSSR center eachWidths={['auto', '2-3@s']}>
+    <GridNoSSR
+      gap="large"
+      column
+      middle
+      eachWidths={['1-1', '1-1', '1-1', '1-1']}
+    >
+      {/* <GridNoSSR center eachWidths={['auto', '2-3@s']}> */}
+      <div className="uk-text-center">
         <h2 className="uk-text-bold">
-          <span className="uk-text-primary">Linked Out</span>, un programme qui
-          fonctionne
+          Et le mieux c&apos;est que{' '}
+          <span className="uk-text-primary">ça marche</span> !
         </h2>
         <p className="uk-text-center">
-          Depuis son lancement en juin 2019, de belles rencontres ont emmergé
-          grace aux multiples partages.
+          Miah, Abdul, Anais, Manuel,... ont retrouvé un emploi grâce à
+          LinkedOut
         </p>
-      </GridNoSSR>
+      </div>
+      {/* </GridNoSSR> */}
       <GridNoSSR
         center
-        childWidths={['1-1', '1-3@s']}
+        childWidths={['1-1', '1-2@s', '1-3@l']}
         items={numbers.map((content) => (
           <div className="uk-flex uk-flex-center">
             <NumberCard
@@ -78,16 +84,22 @@ const NumberPartial = () => (
           </div>
         ))}
       />
-      <p className="uk-text-center">
-        Linked Out est plébiscité par les candidats et aussi par les recuteurs.
-      </p>
+      {/* <p className="uk-text-center">
+        Linked Out est plébiscité par les candidats et aussi par les recruteurs.
+      </p> */}
 
-      <div className="uk-hidden@s uk-card uk-card-body uk-card-secondary">
-        Slider désactivé
-      </div>
+      <iframe
+        src="https://www.youtube.com/embed/1cfmgC2IqWs"
+        width="1280"
+        height="720"
+        frameBorder="0"
+        allowFullScreen
+        data-uk-responsive
+        data-uk-video="automute: true; autoplay: inview"
+        title="linkedout"
+      />
 
-      {/* probleme avec slider qui decale la fenetre  */}
-      <div className="uk-position-relative uk-visible@s" data-uk-slider="">
+      <div className="uk-position-relative" data-uk-slider="">
         <div className="uk-slider-container">
           <ul className="uk-slider-items uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small">
             {data.map(({ title, description, role, imgSrc, imgAlt }) => (

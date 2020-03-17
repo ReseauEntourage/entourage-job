@@ -14,7 +14,7 @@ const datas = [
     imgSrc: '/static/img/illustrations/flyer_sharing.png',
     imgAlt: 'partage',
     number: '2',
-    title: 'Partagez leurs cv, ouvrez leur votre réseau',
+    title: 'Partagez leur CV',
     description:
       'Chaque candidat dévoile ses talents, aspirations et motivations à se réinsérer. En partageant leurs CVs avec vos proches, vous leur donnez de la visibilité.',
   },
@@ -22,7 +22,7 @@ const datas = [
     imgSrc: '/static/img/illustrations/friendship.png',
     imgAlt: 'échange',
     number: '3',
-    title: 'Permettez leur de trouver un travail',
+    title: 'Laissez la puissance du réseau opérer',
     description:
       'Des dizaines de candidats ont déjà pu trouver un emploi grace à Linked Out. Un recruteur fait peut-être partie de votre réseau, alors à vos partages !',
   },
@@ -32,15 +32,16 @@ const EmphasePartial = () => (
     <GridNoSSR gap="large" column middle eachWidths={['2-3@s', '1-1']}>
       <div className="uk-text-center">
         <h2 className="uk-text-bold">
-          Un partage peut tout <span className="uk-text-primary">changer</span>
+          LinkedOut en <span className="uk-text-primary">trois</span> étapes
+          {/* Un partage peut tout <span className="uk-text-primary">changer</span> */}
         </h2>
-        <p>
+        {/* <p>
           Lorsque l’on est désocialisé, on devient invisible.
           <br />
           Les chances de retrouver un travail sont faible.
           <br />
           Faites un don de visibilité.
-        </p>
+        </p> */}
       </div>
       <GridNoSSR
         childWidths={['1-3@s']}
@@ -63,7 +64,7 @@ const EmphasePartial = () => (
                   // className="uk-divider-small"
                   style={{ borderTopColor: '#F55F24', width: '100px' }}
                 />
-                <p>{value.description}</p>
+                {/* <p>{value.description}</p> */}
               </GridNoSSR>
             </GridNoSSR>
           </div>

@@ -55,7 +55,7 @@ const HeaderConnected = ({ isHome }) => {
   if (!user) return null;
 
   return (
-    <header>
+    <header id="header">
       <NavbarNoSSR
         mode="click"
         className={`uk-background-default uk-navbar-transparent ${

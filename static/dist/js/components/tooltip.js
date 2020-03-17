@@ -1,4 +1,4 @@
-/*! UIkit 3.3.3 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.3.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -96,7 +96,7 @@
 
                     var p;
 
-                    if (!this$1.queued || !uikitUtil.isUndefined(animate) || !uikitUtil.isUndefined(show) || !this$1.hasAnimation || targets.length < 2) {
+                    if (!this$1.queued || !uikitUtil.isUndefined(show) || !this$1.hasAnimation || targets.length < 2) {
 
                         p = all(targets);
 
@@ -125,10 +125,6 @@
                     p.then(resolve, uikitUtil.noop);
 
                 });
-            },
-
-            toggleNow: function(targets, show) {
-                return this.toggleElement(targets, show, false);
             },
 
             isToggled: function(el) {
@@ -200,7 +196,11 @@
                 uikitUtil.$$('[autofocus]', el).some(function (el) { return uikitUtil.isVisible(el) ? el.focus() || true : el.blur(); });
 
                 this.updateAria(el);
-                changed && this.$update(el);
+
+                if (changed) {
+                    uikitUtil.trigger(el, 'toggled', [this]);
+                    this.$update(el);
+                }
             }
 
         }
@@ -243,22 +243,21 @@
         };
     }
 
-    function toggleAnimation(ref) {
-        var animation = ref.animation;
-        var duration = ref.duration;
-        var origin = ref.origin;
-        var _toggle = ref._toggle;
-
+    function toggleAnimation(cmp) {
         return function (el, show) {
 
             uikitUtil.Animation.cancel(el);
 
+            var animation = cmp.animation;
+            var duration = cmp.duration;
+            var _toggle = cmp._toggle;
+
             if (show) {
                 _toggle(el, true);
-                return uikitUtil.Animation.in(el, animation[0], duration, origin);
+                return uikitUtil.Animation.in(el, animation[0], duration, cmp.origin);
             }
 
-            return uikitUtil.Animation.out(el, animation[1] || animation[0], duration, origin).then(function () { return _toggle(el, false); });
+            return uikitUtil.Animation.out(el, animation[1] || animation[0], duration, cmp.origin).then(function () { return _toggle(el, false); });
         };
     }
 
@@ -398,21 +397,23 @@
             },
 
             hide: function() {
+                var this$1 = this;
+
 
                 if (!this.isActive() || uikitUtil.matches(this.$el, 'input:focus')) {
                     return;
                 }
 
-                actives.splice(actives.indexOf(this), 1);
+                this.toggleElement(this.tooltip, false, false).then(function () {
 
-                clearTimeout(this.showTimer);
-                clearInterval(this.hideTimer);
-                uikitUtil.attr(this.$el, 'aria-expanded', false);
-                this.toggleElement(this.tooltip, false);
-                this.tooltip && uikitUtil.remove(this.tooltip);
-                this.tooltip = false;
-                this._unbind();
+                    actives.splice(actives.indexOf(this$1), 1);
 
+                    clearTimeout(this$1.showTimer);
+                    clearInterval(this$1.hideTimer);
+
+                    this$1.tooltip = uikitUtil.remove(this$1.tooltip);
+                    this$1._unbind();
+                });
             },
 
             _show: function() {
@@ -420,14 +421,25 @@
 
 
                 this.tooltip = uikitUtil.append(this.container,
-                    ("<div class=\"" + (this.clsPos) + " " + (this.cls) + "\" aria-expanded=\"true\" aria-hidden> <div class=\"" + (this.clsPos) + "-inner\">" + (this.title) + "</div> </div>")
+                    ("<div class=\"" + (this.clsPos) + "\"> <div class=\"" + (this.clsPos) + "-inner\">" + (this.title) + "</div> </div>")
                 );
 
-                this.positionAt(this.tooltip, this.$el);
+                uikitUtil.on(this.tooltip, 'toggled', function () {
 
-                this.origin = this.getAxis() === 'y'
-                    ? ((uikitUtil.flipPosition(this.dir)) + "-" + (this.align))
-                    : ((this.align) + "-" + (uikitUtil.flipPosition(this.dir)));
+                    var toggled = this$1.isToggled(this$1.tooltip);
+
+                    uikitUtil.attr(this$1.$el, 'aria-expanded', toggled);
+
+                    if (!toggled) {
+                        return;
+                    }
+
+                    this$1.positionAt(this$1.tooltip, this$1.$el);
+
+                    this$1.origin = this$1.getAxis() === 'y'
+                        ? ((uikitUtil.flipPosition(this$1.dir)) + "-" + (this$1.align))
+                        : ((this$1.align) + "-" + (uikitUtil.flipPosition(this$1.dir)));
+                });
 
                 this.toggleElement(this.tooltip, true);
 

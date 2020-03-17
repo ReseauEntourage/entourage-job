@@ -1,11 +1,13 @@
 import React from 'react';
 import Layout from '../components/Layout';
 import {
-  LandingPagePartial,
-  EmphasePartial,
+  ActionPartial,
   CandidatListPartial,
-  DifferencePartial,
+  ContactPartial,
+  EmphasePartial,
+  LandingPagePartial,
   NumberPartial,
+  SharePartial,
 } from '../components/partials';
 import Header from '../components/headers/Header';
 
@@ -17,7 +19,9 @@ const Index = () => {
       <CandidatListPartial />
       <EmphasePartial />
       <NumberPartial />
-      <DifferencePartial />
+      <ActionPartial />
+      <ContactPartial />
+      <SharePartial />
     </Layout>
   );
 };
