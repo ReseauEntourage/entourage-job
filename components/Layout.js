@@ -6,6 +6,7 @@ import Footer from './Footer';
 import Header from './headers/Header';
 import HeaderConnected from './headers/HeaderConnected';
 import { UserContext } from './store/UserProvider';
+import ModalShareCV from './modals/ModalShareCV';
 
 const Layout = ({
   children,
