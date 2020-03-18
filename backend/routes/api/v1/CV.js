@@ -8,6 +8,7 @@ const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
 const S3 = require('../../../controllers/aws');
 const { sendMail } = require('../../../controllers/mail');
+const { airtable } = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
 
 const upload = multer({ dest: 'uploads/' });
@@ -123,6 +124,32 @@ router.post(
     }
   }
 );
+
+/**
+ * Route : POST /api/<VERSION>/cv
+ * Description : Prise d'info partageur
+ */
+router.post('/share', (req, res) => {
+  return airtable('newsletter').create(
+    [
+      {
+        fields: {
+          email: req.body.email,
+        },
+      },
+    ],
+    (err, records) => {
+      if (err) {
+        console.error(err);
+        return res.status(401).send(`Une erreur est survenue`);
+      }
+      records.forEach((record) => {
+        console.log(record.getId());
+      });
+      return res.status(200).json(records);
+    }
+  );
+});
 
 /**
  * Route : GET /api/<VERSION>/cv

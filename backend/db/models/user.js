@@ -84,6 +84,8 @@ module.exports = (sequelize, DataTypes) => {
     // si candidat regarder candidat
     User.hasOne(models.User_Candidat, {
       as: 'candidat',
+      hooks: true,
+      onDelete: 'cascade',
     });
     // si coach regarder coach
     User.hasOne(models.User_Candidat, {

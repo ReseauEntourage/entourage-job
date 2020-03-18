@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {
@@ -12,6 +12,7 @@ import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
 import schema from '../forms/schema/formEditOpportunity';
 import Axios from '../../Axios';
+import ModalShareCV from '../modals/ModalShareCV';
 
 const CVPresentationCard = ({ firstName, intro, userId }) => {
   const hashtags = ['LinkedOut'];
@@ -42,6 +43,8 @@ const CVPresentationCard = ({ firstName, intro, userId }) => {
       UIkit.notification(`Une erreur est survenue.`, 'danger');
     }
   };
+  const openNewsletterModal = () =>
+    UIkit.modal(`#info-share-${firstName}`).show();
 
   return (
     <div className="uk-card uk-card-default uk-card-body uk-text-center uk-margin-medium ">
@@ -86,6 +89,7 @@ const CVPresentationCard = ({ firstName, intro, userId }) => {
       <p>partagez le CV de {firstName} sur vos réseaux</p>
       <div className="uk-flex uk-flex-row uk-flex-center">
         <LinkedinShareButton
+          onShareWindowClose={openNewsletterModal}
           url={link}
           title={title}
           description={sharedDescription}
@@ -95,6 +99,7 @@ const CVPresentationCard = ({ firstName, intro, userId }) => {
           <IconNoSSR name="linkedin" ratio={1.5} />
         </LinkedinShareButton>
         <FacebookShareButton
+          onShareWindowClose={openNewsletterModal}
           url={link}
           quote={sharedDescription}
           hashtags={hashtags}
@@ -104,6 +109,7 @@ const CVPresentationCard = ({ firstName, intro, userId }) => {
           <IconNoSSR name="facebook" ratio={1.5} />
         </FacebookShareButton>
         <TwitterShareButton
+          onShareWindowClose={openNewsletterModal}
           url={link}
           title={sharedDescription}
           hashtags={hashtags}
@@ -114,6 +120,7 @@ const CVPresentationCard = ({ firstName, intro, userId }) => {
           <IconNoSSR name="twitter" ratio={1.5} />
         </TwitterShareButton>
         <WhatsappShareButton
+          onShareWindowClose={openNewsletterModal}
           url={link}
           title={sharedDescription}
           style={{ cursor: 'pointer' }}
@@ -122,6 +129,7 @@ const CVPresentationCard = ({ firstName, intro, userId }) => {
           <IconNoSSR name="whatsapp" ratio={1.5} />
         </WhatsappShareButton>
       </div>
+      <ModalShareCV id={`info-share-${firstName}`} firstName={firstName} />
     </div>
   );
 };
