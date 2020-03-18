@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       hidden: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true,
+        defaultValue: false,
         allowNull: false,
       },
       note: DataTypes.TEXT,
@@ -56,6 +56,8 @@ module.exports = (sequelize, DataTypes) => {
       as: 'candidat',
       foreignKey: 'candidatId',
       sourceKey: 'id',
+      hooks: true,
+      onDelete: 'cascade',
     });
     UserCandidat.belongsTo(models.User, {
       as: 'coach',
