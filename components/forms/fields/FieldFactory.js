@@ -297,7 +297,7 @@ export default class FieldFactory {
                   formSchema={lostPwdSchema}
                   onCancel={closeModal}
                   onSubmit={(fields, setError) => {
-                    Api.post('/api/v1/lostPwd', fields)
+                    Api.post('/api/v1/auth/forgot', fields)
                       .then(() => nextStep())
                       .catch(() => setError("Une erreur s'est produite"));
                   }}

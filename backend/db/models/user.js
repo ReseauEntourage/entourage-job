@@ -72,6 +72,14 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       lastConnection: DataTypes.DATE,
+      hashReset: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      saltReset: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {}
   );
