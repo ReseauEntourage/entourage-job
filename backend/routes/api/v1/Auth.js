@@ -103,8 +103,7 @@ router.post('/forgot', (req, res, next) => {
         text:
           'Bonjour,\n\n' +
           'Pour réinitialiser votre mot de passe, cliquer ici sur ce lien : \n' +
-          `${process.env.SERVER_URL}/reset/${user.id}/${token}\n` +
-          'Notez le quelque part pour ne pas le perdre.\n\n' +
+          `${process.env.SERVER_URL}/reset/${user.id}/${token}\n\n` +
           'Cordialement,\n\n' +
           `L'équipe LinkedOut`,
       });
