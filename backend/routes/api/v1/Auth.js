@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const { auth } = require('../../../controllers/Auth');
+const { sendMail } = require('../../../controllers/mail');
 const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 
@@ -55,6 +56,64 @@ router.post('/logout', auth.required, (req, res, next) => {
 
   // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
   res.redirect(process.env.SERVER_URL);
+});
+
+router.post('/forgot', (req, res, next) => {
+  let token = null;
+  let user = null;
+  const { email } = req.body;
+  console.log(email);
+
+  if (!email) {
+    return res.status(422).json({
+      errors: {
+        email: 'is required',
+      },
+    });
+  }
+  UserController.getUserByEmail(email)
+    .then((userFound) => {
+      console.log('user');
+      user = userFound;
+      console.log(user);
+      if (!user) {
+        return res.status(200).send('Demande envoyée');
+      }
+      const endDate = Date.now() + 1000 * 60 * 60 * 24;
+      token = AuthController.generateJWT(user, endDate);
+      console.log(token);
+      const { hash, salt } = AuthController.encryptPassword(token);
+      console.log(hash);
+      console.log(salt);
+      return UserController.setUser(user.id, {
+        hashReset: hash,
+        saltReset: salt,
+      });
+    })
+    .then((reee) => {
+      console.log('user');
+      console.log(reee);
+      console.log(
+        `Demande de réinitialisation du mot de passe demandée par user.id = ${user.id}`
+      );
+      // Envoi du mail
+      sendMail({
+        toEmail: user.email,
+        subject: 'Réinitialisation mot de passe',
+        text:
+          'Bonjour,\n\n' +
+          'Pour réinitialiser votre mot de passe, cliquer ici sur ce lien : \n' +
+          `${process.env.SERVER_URL}/reset/${user.id}/${token}\n` +
+          'Notez le quelque part pour ne pas le perdre.\n\n' +
+          'Cordialement,\n\n' +
+          `L'équipe LinkedOut`,
+      });
+      return res.status(200).send('Demande envoyée');
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(401).send(`Une erreur est survenue`);
+    });
 });
 
 // GET current route (required, only authenticated users have access)

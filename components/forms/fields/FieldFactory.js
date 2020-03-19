@@ -5,14 +5,17 @@ import Link from 'next/link';
 import ReactSelect from 'react-select';
 import AsyncSelect from 'react-select/async';
 import CreatableSelect from 'react-select/creatable';
-
-import axios from '../../../Axios';
+import Api from '../../../Axios';
 import DatePicker from './DatePicker';
 import Select from './Select';
 import FieldGroup from './FieldGroup';
 import Input from './Input';
 import Textarea from './Textarea';
 import CheckboxCGU from './CheckboxCGU';
+import StepperModal from '../../modals/StepperModal';
+import SuccessModalContent from '../../modals/SuccessModalContent';
+import FormWithValidation from '../FormWithValidation';
+import lostPwdSchema from '../schema/formLostPwd.json';
 
 export default class FieldFactory {
   constructor(id, fields, defaultValues, handleChange, getValid, getValue) {
@@ -274,7 +277,43 @@ export default class FieldFactory {
         </div>
       );
     }
-
+    if (data.component === 'lost-pwd') {
+      return (
+        <div>
+          <a
+            className="uk-text-small uk-margin-remove"
+            href="#"
+            data-uk-toggle="target: #modal-lost-pwd"
+          >
+            {data.title}
+          </a>
+          <StepperModal
+            id="modal-lost-pwd"
+            title="Mot de passe oublié ?"
+            composers={[
+              (closeModal, nextStep) => (
+                <FormWithValidation
+                  submitText="Envoyer"
+                  formSchema={lostPwdSchema}
+                  onCancel={closeModal}
+                  onSubmit={(fields, setError) => {
+                    Api.post('/api/v1/auth/forgot', fields)
+                      .then(() => nextStep())
+                      .catch(() => setError("Une erreur s'est produite"));
+                  }}
+                />
+              ),
+              (closeModal) => (
+                <SuccessModalContent
+                  closeModal={closeModal}
+                  text="Un e-mail vient d'être envoyé à l'adresse indiquée."
+                />
+              ),
+            ]}
+          />
+        </div>
+      );
+    }
     if (data.component === 'text') {
       return (
         <p className="uk-heading-divider uk-margin-top uk-margin-remove-bottom">

@@ -16,6 +16,12 @@
       "component": "input",
       "placeholder": "Tapez votre mot de passe",
       "title": "Mot de passe*"
+    },
+    {
+      "id": "lostPassword",
+      "name": "lostPassword",
+      "component": "lost-pwd",
+      "title": "Mot de passe oublié ?"
     }
   ],
   "rules": [

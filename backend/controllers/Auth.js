@@ -18,7 +18,8 @@ function validatePassword(password, hash, salt) {
   return passwordHash === hash;
 }
 
-function generateJWT(user) {
+// param expiration est la date de fin en secondes
+function generateJWT(user, expiration) {
   const today = new Date();
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + 60);
@@ -32,7 +33,7 @@ function generateJWT(user) {
       phone: user.phone,
       gender: user.gender,
       role: user.role,
-      exp: parseInt(expirationDate.getTime() / 1000, 10),
+      exp: parseInt((expiration || expirationDate.getTime()) / 1000, 10),
     },
     'secret'
   );
@@ -80,7 +81,7 @@ const auth = {
 module.exports = {
   auth,
   encryptPassword,
-  validatePassword,
   generateJWT,
   toAuthJSON,
+  validatePassword,
 };
