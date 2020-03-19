@@ -73,9 +73,10 @@ router.post('/forgot', (req, res, next) => {
   }
   UserController.getUserByEmail(email)
     .then((userFound) => {
-      console.log('user');
       user = userFound;
-      console.log(user);
+      console.log(
+        `Demande de réinitialisation du mot de passe demandée par user.id = ${user.id}`
+      );
       if (!user) {
         return res.status(200).send('Demande envoyée');
       }
@@ -90,12 +91,11 @@ router.post('/forgot', (req, res, next) => {
         saltReset: salt,
       });
     })
-    .then((reee) => {
-      console.log('user');
-      console.log(reee);
-      console.log(
-        `Demande de réinitialisation du mot de passe demandée par user.id = ${user.id}`
-      );
+    .then((nbUpdate) => {
+      console.log(`Nombre de User mis à jour : ${nbUpdate}`);
+      if (!nbUpdate[0]) {
+        return res.status(401).send(`Une erreur est survenue`);
+      }
       // Envoi du mail
       sendMail({
         toEmail: user.email,
