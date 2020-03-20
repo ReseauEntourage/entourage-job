@@ -1,5 +1,7 @@
+/* global UIkit */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {
   NavbarNoSSR,
@@ -13,44 +15,50 @@ import './Header.less';
 import HeaderUserDropdown from './HeaderUserDropdown';
 import { UserContext } from '../store/UserProvider';
 
-const LINKS_CONNECTED = {
-  admin: [
-    { href: '/backoffice/admin/membres', name: 'Les membres', icon: 'users' },
-    {
-      href: '/backoffice/admin/offres',
-      name: 'Les opportunités',
-      icon: 'list',
-    },
-  ],
-  member: [
-    {
-      href: '/backoffice/candidat/offres',
-      name: 'Mes offres',
-      icon: 'list',
-    },
-    {
-      href: '/backoffice/candidat/suivi',
-      name: 'Mon Suivi',
-      icon: 'file-text',
-    },
-    { href: '/backoffice/candidat/cv', name: 'Mon CV', icon: 'user' },
-  ],
-};
-
 const HeaderConnected = ({ isHome }) => {
   const { user, logout } = useContext(UserContext);
-  const [links, setLinks] = useState([]);
+  const router = useRouter();
 
-  useEffect(() => {
-    if (user) {
-      if (user.role === 'Admin') {
-        setLinks(LINKS_CONNECTED.admin);
-      }
-      if (user.role === 'Candidat' || user.role === 'Coach') {
-        setLinks(LINKS_CONNECTED.member);
-      }
-    }
-  }, [user]);
+  const LINKS_CONNECTED = {
+    admin: [
+      {
+        href: '/backoffice/admin/membres',
+        name: 'Les membres',
+        icon: 'users',
+      },
+      {
+        href: '/backoffice/admin/offres',
+        name: 'Les opportunités',
+        icon: 'list',
+      },
+    ],
+    dropdown: [
+      { icon: 'user', name: 'Mon profil' },
+      {
+        href: '/backoffice/parametres',
+        icon: 'settings',
+        name: 'Paramètres',
+      },
+      {
+        onClick: logout,
+        icon: 'sign-out',
+        name: 'Se déconnecter',
+      },
+    ],
+    member: [
+      {
+        href: '/backoffice/candidat/offres',
+        name: 'Mes offres',
+        icon: 'list',
+      },
+      {
+        href: '/backoffice/candidat/suivi',
+        name: 'Mon Suivi',
+        icon: 'file-text',
+      },
+      { href: '/backoffice/candidat/cv', name: 'Mon CV', icon: 'user' },
+    ],
+  };
 
   if (!user) return null;
 
@@ -72,7 +80,10 @@ const HeaderConnected = ({ isHome }) => {
               className="uk-navbar-nav"
               style={{ borderLeft: '1px solid lightgray' }}
             >
-              {links.map((link, index) => (
+              {(user.role === 'Admin'
+                ? LINKS_CONNECTED.admin
+                : LINKS_CONNECTED.member
+              ).map((link, index) => (
                 <li key={index} style={{ borderRight: '1px solid lightgray' }}>
                   <Link href={link.href}>
                     <a
@@ -133,17 +144,26 @@ const HeaderConnected = ({ isHome }) => {
               Accueil
             </SimpleLink>
           </li>
-          {links
+          {(user.role === 'Admin'
+            ? LINKS_CONNECTED.admin
+            : LINKS_CONNECTED.member
+          )
             .filter(({ href }) => href !== '#')
             .map(({ href, icon, name }, index) => (
               <li key={index}>
-                <SimpleLink href={href}>
+                <a
+                  aria-hidden="true"
+                  onClick={() => {
+                    router.push(href);
+                    UIkit.offcanvas('#offcanvas-logged').hide();
+                  }}
+                >
                   <span
                     className="uk-margin-small-right"
                     data-uk-icon={`icon: ${icon}`}
                   />
                   {name}
-                </SimpleLink>
+                </a>
               </li>
             ))}
           <li className="uk-nav-header uk-flex uk-flex-middle">
@@ -156,34 +176,30 @@ const HeaderConnected = ({ isHome }) => {
             />
             <span className="uk-margin-small-left">Salut {user.firstName}</span>
           </li>
-          <li>
-            <a href="#">
-              <span
-                className="uk-margin-small-right"
-                data-uk-icon="icon: user"
-              />
-              Mon profil
-            </a>
-          </li>
-          <li>
-            <SimpleLink href="/backoffice/parametres">
-              <span
-                className="uk-margin-small-right"
-                data-uk-icon="icon: settings"
-              />
-              Paramètres
-            </SimpleLink>
-          </li>
-          <li className="uk-nav-divider" />
-          <li>
-            <a href="#" onClick={logout}>
-              <span
-                className="uk-margin-small-right"
-                data-uk-icon="icon: sign-out"
-              />
-              Se déconnecter
-            </a>
-          </li>
+          {LINKS_CONNECTED.dropdown.map(
+            ({ href, icon, name, onClick }, index) => (
+              <li key={index}>
+                <a
+                  aria-hidden="true"
+                  onClick={() => {
+                    if (href) {
+                      router.push(href);
+                    }
+                    if (onClick) {
+                      onClick();
+                    }
+                    UIkit.offcanvas('#offcanvas-logged').hide();
+                  }}
+                >
+                  <span
+                    className="uk-margin-small-right"
+                    data-uk-icon={`icon: ${icon}`}
+                  />
+                  {name}
+                </a>
+              </li>
+            )
+          )}
         </ul>
       </OffcanvasNoSSR>
     </header>
