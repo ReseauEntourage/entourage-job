@@ -19,6 +19,7 @@ const CandidatCard = ({
   url,
   imgSrc,
   imgAlt,
+  gender,
   firstName,
   ambitions,
   skills,
@@ -92,7 +93,7 @@ const CandidatCard = ({
               {ambitions && ambitions.length > 0 && (
                 <>
                   <p>
-                    Il souhaite <br />
+                    {gender === 1 ? 'Elle' : 'Il'} souhaite <br />
                     travailler dans :
                   </p>
                   <GridNoSSR
@@ -181,11 +182,13 @@ CandidatCard.propTypes = {
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
   catchphrase: PropTypes.string,
   employed: PropTypes.bool,
+  gender: PropTypes.number,
 };
 
 CandidatCard.defaultProps = {
   imgSrc: 'static/img/arthur.png',
   employed: false,
   catchphrase: "cherche un job pour s'en sortir",
+  gender: 0,
 };
 export default CandidatCard;

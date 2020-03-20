@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
-import schemaUsefulInformation from '../forms/schema/formEditUsefulInformation';
+import schemaUsefulInformation from '../forms/schema/formEditUsefulInformation.json';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
 
@@ -43,11 +43,13 @@ const InfoProfileCard = ({
       </li>
       <li>
         <IconNoSSR name="location" />{' '}
-        {location !== '' ? location : 'Localisation non renseignée'}
+        {location && location !== '' ? location : 'Localisation non renseignée'}
       </li>
       <li>
         <IconNoSSR name="calendar" />{' '}
-        {availability !== '' ? availability : 'Disponibilité non renseignée'}
+        {availability && availability !== ''
+          ? availability
+          : 'Disponibilité non renseignée'}
       </li>
       <li>
         <IconNoSSR name="users" />{' '}
@@ -57,7 +59,9 @@ const InfoProfileCard = ({
       </li>
       <li>
         <IconNoSSR name="hashtag" />{' '}
-        {transport !== '' ? transport : 'Moyen de transport non renseigné'}
+        {transport && transport !== ''
+          ? transport
+          : 'Moyen de transport non renseigné'}
       </li>
     </ul>
     {onChange && (
@@ -75,14 +79,6 @@ const InfoProfileCard = ({
         onSubmit={(fields) =>
           onChange({
             ...fields,
-            // contracts: fields.contracts
-            //   .split('/')
-            //   .map((s) => s.trim())
-            //   .filter((s) => s.length > 0),
-            // languages: fields.languages
-            //   .split('/')
-            //   .map((s) => s.trim())
-            //   .filter((s) => s.length > 0),
           })
         }
       />
