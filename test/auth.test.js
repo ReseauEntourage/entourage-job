@@ -85,7 +85,7 @@ describe('Auth', () => {
       it("doit connecter l'utilisateur en lui renvoyant un token", () => {
         return Api.post(`${process.env.SERVER_URL}/api/v1/auth/login`, {
           email: USER_EXAMPLE.email,
-          password: 'azertyuiop',
+          password: USER_EXAMPLE.password,
         })
           .then((res) => {
             assert.isObject(res.data.user, 'User retourné');
@@ -149,7 +149,13 @@ describe('Auth', () => {
           .then((res) => {
             assert.strictEqual(res.status, 422, "L'adresse était bien vide");
           })
-          .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+          .catch((err) =>
+            assert.strictEqual(
+              err.response.status,
+              422,
+              "L'adresse était bien vide"
+            )
+          );
       });
     }).timeout(TIMEOUT);
 

@@ -74,12 +74,12 @@ router.post('/forgot', (req, res, next) => {
   UserController.getUserByEmail(email)
     .then((userFound) => {
       user = userFound;
-      console.log(
-        `Demande de réinitialisation du mot de passe demandée par user.id = ${user.id}`
-      );
       if (!user) {
         return res.status(200).send('Demande envoyée');
       }
+      console.log(
+        `Demande de réinitialisation du mot de passe demandée par user.id = ${user.id}`
+      );
       const endDate = Date.now() + 1000 * 60 * 60 * 24;
       token = AuthController.generateJWT(user, endDate);
       console.log(token);
