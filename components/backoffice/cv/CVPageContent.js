@@ -213,6 +213,7 @@ const CVPageContent = ({ candidatId }) => {
         </GridNoSSR>
       </GridNoSSR>
       <CVFicheEdition
+        gender={cv.user.candidat.gender}
         cv={cv}
         disablePicture={user.role === 'Candidat' || user.role === 'Coach'}
         onChange={(fields) => setCV({ ...cv, ...fields, status: 'Draft' })}

@@ -182,13 +182,12 @@ CandidatCard.propTypes = {
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
   catchphrase: PropTypes.string,
   employed: PropTypes.bool,
-  gender: PropTypes.number,
+  gender: PropTypes.number.isRequired,
 };
 
 CandidatCard.defaultProps = {
   imgSrc: 'static/img/arthur.png',
   employed: false,
   catchphrase: "cherche un job pour s'en sortir",
-  gender: 0,
 };
 export default CandidatCard;

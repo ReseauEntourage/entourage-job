@@ -14,7 +14,7 @@ import CVEditDevise from './CVEditDevise';
 import CVEditCareerPath from './CVEditCareerPath';
 import { ImgNoSSR } from '../utils';
 
-const CVFicheEdition = ({ cv, onChange, disablePicture }) => {
+const CVFicheEdition = ({ cv, gender, onChange, disablePicture }) => {
   const [previewUrl, setPreviewUrl] = useState(undefined);
   useEffect(() => {
     if (cv.status !== 'Draft') {
@@ -32,6 +32,7 @@ const CVFicheEdition = ({ cv, onChange, disablePicture }) => {
           <CVEditCareerPath
             ambitions={cv.ambitions}
             careerPathOpen={cv.careerPathOpen}
+            gender={gender}
             onChange={onChange}
           />
         </GridNoSSR>
@@ -125,6 +126,7 @@ CVFicheEdition.propTypes = {
   }).isRequired,
   onChange: PropTypes.func,
   disablePicture: PropTypes.bool,
+  gender: PropTypes.number.isRequired,
 };
 
 CVFicheEdition.defaultProps = {
