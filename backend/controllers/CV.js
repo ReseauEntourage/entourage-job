@@ -288,7 +288,7 @@ const getRandomShortCVs = async (nb, query) => {
       and "User_Candidats"."candidatId" = "Users"."id"
       ${
         query
-          ? ` and concat(lower("Users"."firstName"), ' ', lower("Users"."lastName")) like '%${query.toLowerCase()}%'`
+          ? ` and lower("Users"."firstName") like '%${query.toLowerCase()}%'`
           : ''
       }) groupUsers
     on cv."UserId" = groupUsers."candidatId"`,
