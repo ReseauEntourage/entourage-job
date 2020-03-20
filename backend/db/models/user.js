@@ -112,6 +112,7 @@ module.exports = (sequelize, DataTypes) => {
       if (user.role === 'Candidat') {
         await models.User_Candidat.create({
           candidatId: user.id,
+          url: `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`,
         });
       }
       return user;
