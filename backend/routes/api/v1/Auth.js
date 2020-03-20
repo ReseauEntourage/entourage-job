@@ -73,12 +73,13 @@ router.post('/forgot', (req, res, next) => {
   }
   UserController.getUserByEmail(email)
     .then((userFound) => {
-      console.log('user');
       user = userFound;
-      console.log(user);
       if (!user) {
         return res.status(200).send('Demande envoyée');
       }
+      console.log(
+        `Demande de réinitialisation du mot de passe demandée par user.id = ${user.id}`
+      );
       const endDate = Date.now() + 1000 * 60 * 60 * 24;
       token = AuthController.generateJWT(user, endDate);
       console.log(token);
@@ -90,12 +91,11 @@ router.post('/forgot', (req, res, next) => {
         saltReset: salt,
       });
     })
-    .then((reee) => {
-      console.log('user');
-      console.log(reee);
-      console.log(
-        `Demande de réinitialisation du mot de passe demandée par user.id = ${user.id}`
-      );
+    .then((nbUpdate) => {
+      console.log(`Nombre de User mis à jour : ${nbUpdate}`);
+      if (!nbUpdate[0]) {
+        return res.status(401).send(`Une erreur est survenue`);
+      }
       // Envoi du mail
       sendMail({
         toEmail: user.email,
@@ -103,8 +103,7 @@ router.post('/forgot', (req, res, next) => {
         text:
           'Bonjour,\n\n' +
           'Pour réinitialiser votre mot de passe, cliquer ici sur ce lien : \n' +
-          `${process.env.SERVER_URL}/reset/${user.id}/${token}\n` +
-          'Notez le quelque part pour ne pas le perdre.\n\n' +
+          `${process.env.SERVER_URL}/reset/${user.id}/${token}\n\n` +
           'Cordialement,\n\n' +
           `L'équipe LinkedOut`,
       });

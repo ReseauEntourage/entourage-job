@@ -85,13 +85,77 @@ describe('Auth', () => {
       it("doit connecter l'utilisateur en lui renvoyant un token", () => {
         return Api.post(`${process.env.SERVER_URL}/api/v1/auth/login`, {
           email: USER_EXAMPLE.email,
-          password: 'azertyuiop',
+          password: USER_EXAMPLE.password,
         })
           .then((res) => {
             assert.isObject(res.data.user, 'User retourné');
             assert.hasAnyKeys(res.data.user, 'token', 'contient un token');
           })
           .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+      });
+    }).timeout(TIMEOUT);
+
+    describe('#forgot', () => {
+      let user;
+      before(() => {
+        return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
+          .then((res) => {
+            user = res.data;
+          })
+          .catch(() => {
+            throw new Error("Erreur lors de la creation de l'utilisateur");
+          });
+      });
+
+      after(() => {
+        return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
+          .then(() => {})
+          .catch(() => {
+            throw new Error("Erreur lors de la suppression de l'utilisateur");
+          });
+      });
+
+      it('doit retourner un code retour 200 avec une adresse mail connue', () => {
+        return Api.post(`${process.env.SERVER_URL}/api/v1/auth/forgot`, {
+          email: USER_EXAMPLE.email,
+        })
+          .then((res) => {
+            assert.strictEqual(
+              res.status,
+              200,
+              'Un mail a normalement été envoyé'
+            );
+          })
+          .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+      });
+
+      it('doit retourner un code retour 200 avec une adresse mail inconnue', () => {
+        return Api.post(`${process.env.SERVER_URL}/api/v1/auth/forgot`, {
+          email: 'inconnu-test@cesttropsuper.com',
+        })
+          .then((res) => {
+            assert.strictEqual(
+              res.status,
+              200,
+              'Un mail a normalement été envoyé'
+            );
+          })
+          .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+      });
+      it('doit retourner un code retour 422 avec une adresse mail vide', () => {
+        return Api.post(`${process.env.SERVER_URL}/api/v1/auth/forgot`, {
+          email: '',
+        })
+          .then((res) => {
+            assert.strictEqual(res.status, 422, "L'adresse était bien vide");
+          })
+          .catch((err) =>
+            assert.strictEqual(
+              err.response.status,
+              422,
+              "L'adresse était bien vide"
+            )
+          );
       });
     }).timeout(TIMEOUT);
 
