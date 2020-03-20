@@ -212,7 +212,7 @@ router.put('/change-pwd', auth.required, (req, res) => {
  * Route : PUT /api/<VERSION>/user/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
-router.put('/candidat/:id', (req, res) => {
+router.put('/candidat/:id', auth.required, (req, res) => {
   UserController.setUserCandidat(req.params.id, req.body)
     .then((user) => {
       res.status(200).json(user);

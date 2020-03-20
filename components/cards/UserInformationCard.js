@@ -16,15 +16,25 @@ const UserInformationCard = ({ user, onChange }) => {
   const [loading, setLoading] = useState(false);
 
   const assignUser = (userToAssign) => {
-    if (userToAssign.role === 'Coach' && userToAssign.coach) {
-      setLinkedUser(userToAssign.coach.candidat);
-      setUserCandidat(userToAssign.coach);
+    if (userToAssign.role === 'Coach') {
+      if (userToAssign.coach) {
+        setLinkedUser(userToAssign.coach.candidat);
+        setUserCandidat(userToAssign.coach);
+      } else {
+        setLinkedUser(null);
+        setUserCandidat(null);
+      }
       // customisation du schema en fonction de l'utilisateur
       schema.fields[1].title = 'Candidat lié';
     }
-    if (userToAssign.role === 'Candidat' && userToAssign.candidat) {
-      setLinkedUser(userToAssign.candidat.coach);
-      setUserCandidat(userToAssign.candidat);
+    if (userToAssign.role === 'Candidat') {
+      if (userToAssign.candidat) {
+        setLinkedUser(userToAssign.candidat.coach);
+        setUserCandidat(userToAssign.candidat);
+      } else {
+        setLinkedUser(null);
+        setUserCandidat(null);
+      }
       schema.fields[1].title = 'Coach lié';
     }
   };
@@ -72,7 +82,7 @@ const UserInformationCard = ({ user, onChange }) => {
           </span>
         </GridNoSSR>
       )}
-      {user.role === 'Coach' && (
+      {user.role === 'Coach' && userCandidat && (
         <SimpleLink
           className="uk-link-muted"
           target="_blank"
@@ -84,7 +94,7 @@ const UserInformationCard = ({ user, onChange }) => {
           </GridNoSSR>
         </SimpleLink>
       )}
-      {user.role === 'Coach' && (
+      {user.role === 'Coach' && userCandidat && (
         <GridNoSSR row gap="small">
           <IconNoSSR name="cog" />
           <span className="uk-text-italic">
@@ -92,7 +102,7 @@ const UserInformationCard = ({ user, onChange }) => {
           </span>
         </GridNoSSR>
       )}
-      {user.role === 'Coach' && (
+      {user.role === 'Coach' && userCandidat && (
         <GridNoSSR row gap="small">
           <IconNoSSR name="cog" />
           <span className="uk-text-italic">
