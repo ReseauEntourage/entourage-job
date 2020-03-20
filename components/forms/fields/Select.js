@@ -11,6 +11,7 @@ const Select = ({
   defaultValue,
   onChange,
   disabled,
+  hidden,
 }) => {
   useEffect(() => {
     if (defaultValue) {
@@ -24,7 +25,7 @@ const Select = ({
   return (
     <>
       <div
-        className="uk-form-controls ent-select"
+        className={`uk-form-controls ent-select${hidden ? ' uk-hidden' : ''}`}
         style={{
           paddingTop: '15px',
           paddingBottom: '2px',
@@ -76,6 +77,7 @@ Select.defaultProps = {
   defaultValue: undefined,
   disabled: false,
   onChange: () => {},
+  hidden: false,
 };
 Select.propTypes = {
   disabled: PropTypes.bool,
@@ -98,5 +100,6 @@ Select.propTypes = {
       text: PropTypes.string,
     })
   ).isRequired,
+  hidden: PropTypes.bool,
 };
 export default Select;

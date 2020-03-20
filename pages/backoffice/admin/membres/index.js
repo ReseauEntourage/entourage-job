@@ -142,14 +142,14 @@ const MembersAdmin = ({ query: { role } }) => {
         ) : (
           <>
             <GridNoSSR eachWidths={['expand', 'auto']}>
-              <ul className="uk-subnav" data-uk-switcher>
+              <ul className="uk-subnav">
                 <li
                   className={
                     role !== 'Candidat' && role !== 'Coach' ? 'uk-active' : ''
                   }
                 >
                   <a
-                    href="#"
+                    aria-hidden="true"
                     onClick={() =>
                       router.push({
                         pathname: '/backoffice/admin/membres',
@@ -162,7 +162,7 @@ const MembersAdmin = ({ query: { role } }) => {
                 </li>
                 <li className={role === 'Candidat' ? 'uk-active' : ''}>
                   <a
-                    href="#"
+                    aria-hidden="true"
                     onClick={() =>
                       router.push({
                         pathname: '/backoffice/admin/membres',
@@ -175,7 +175,7 @@ const MembersAdmin = ({ query: { role } }) => {
                 </li>
                 <li className={role === 'Coach' ? 'uk-active' : ''}>
                   <a
-                    href="#"
+                    aria-hidden="true"
                     onClick={() =>
                       router.push({
                         pathname: '/backoffice/admin/membres',
