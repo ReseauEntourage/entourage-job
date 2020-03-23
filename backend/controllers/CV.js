@@ -5,7 +5,7 @@ const { QueryTypes } = require('sequelize');
 const {
   models,
   sequelize,
-  Sequelize: { Op, fn, col, where },
+  // Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 const { cleanCV, controlText } = require('./tools');
 
@@ -62,6 +62,12 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
     attributes: ['id', 'name'],
   },
   {
+    model: models.BusinessLine,
+    as: 'businessLines',
+    through: { attributes: [] },
+    attributes: ['id', 'name'],
+  },
+  {
     model: models.Experience,
     as: 'experiences',
     attributes: ['id', 'dateStart', 'dateEnd', 'title', 'description'],
@@ -82,6 +88,7 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER = [
 ];
 
 // todo: revoir !!!
+// permet de recuperer les id de cv recherchés pour ensuite fetch ses données
 const queryConditionCV = (attribute, value, allowHidden) =>
   `
 SELECT cv.id
@@ -181,9 +188,22 @@ const createCV = async (data) => {
     modelCV.addAmbitions(ambitions);
   }
 
+  // BusinessLines
+  if (data.businessLines) {
+    console.log(`createCV - Etape 11 - BusinessLines`);
+    const businessLines = await Promise.all(
+      data.businessLines.map((name) => {
+        return models.BusinessLine.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0]);
+      })
+    );
+    modelCV.addBusinessLines(businessLines);
+  }
+
   // Experiences
   if (data.experiences) {
-    console.log(`createCV - Etape 11 - Expériences`);
+    console.log(`createCV - Etape 12 - Expériences`);
     data.experiences.forEach((experience) =>
       models.Experience.create({
         CVId: modelCV.id,
@@ -197,7 +217,7 @@ const createCV = async (data) => {
 
   // Reviews
   if (data.reviews) {
-    console.log(`createCV - Etape 11 - Expériences`);
+    console.log(`createCV - Etape 13 - Reviews`);
     data.reviews.forEach((review) =>
       models.Review.create({
         CVId: modelCV.id,
@@ -271,27 +291,44 @@ const getRandomShortCVs = async (nb, query) => {
 
   const cvs = await sequelize.query(
     `
-    SELECT cv.id
-    FROM "CVs" cv
-    inner join (
-      select "UserId", MAX(version) as version
+/* CV par recherche prenom*/
+select cv.id, "Users"."firstName"
+from
+  "Users",
+  "User_Candidats",
+  /* pour chaque user, dernier CV publiés */
+  "CVs" cv inner join
+    (select "UserId", MAX(version) as version
       from "CVs"
       where "CVs".status = 'Published'
       group by "UserId") groupCVs
     on cv."UserId" = groupCVs."UserId"
     and cv.version =  groupCVs.version
-    and cv.status = 'Published'
-    inner join (
-      select "candidatId"
-      from "User_Candidats", "Users"
-      where  hidden = false
-      and "User_Candidats"."candidatId" = "Users"."id"
-      ${
-        query
-          ? ` and lower("Users"."firstName") like '%${query.toLowerCase()}%'`
-          : ''
-      }) groupUsers
-    on cv."UserId" = groupUsers."candidatId"`,
+/* jointure */
+where "Users"."id" = "User_Candidats"."candidatId"
+and "User_Candidats"."candidatId" = cv."UserId"
+
+/* CV visibles */
+and "User_Candidats".hidden = false
+
+${
+  query
+    ? `
+/* recherche CV par mots clés et prénom */
+and (cv."id" in (
+      select distinct "CV_BusinessLines"."CVId"
+      FROM "CV_BusinessLines", "BusinessLines"
+      where "CV_BusinessLines"."BusinessLineId" = "BusinessLines".id
+      and lower("BusinessLines"."name") like '%${query.toLowerCase()}%'
+  )
+  or cv."id" in (
+      select "CVs".id
+      FROM "Users", "CVs"
+      where "CVs"."UserId" = "Users"."id"
+      and lower("Users"."firstName") like '%${query.toLowerCase()}%'
+))`
+    : ''
+}`,
     {
       type: QueryTypes.SELECT,
     }
@@ -309,6 +346,12 @@ const getRandomShortCVs = async (nb, query) => {
       {
         model: models.Skill,
         as: 'skills',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      {
+        model: models.BusinessLine,
+        as: 'businessLines',
         through: { attributes: [] },
         attributes: ['name'],
       },
