@@ -1,3 +1,4 @@
+/* global UIkit */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
@@ -8,15 +9,21 @@ import {
   SimpleLink,
   GridNoSSR,
   IconNoSSR,
+  Card,
 } from '../../../../components/utils';
+import schemaPersonalData from '../../../../components/forms/schema/formPersonalData.json';
 import CVPageContent from '../../../../components/backoffice/cv/CVPageContent';
 import CandidatHeader from '../../../../components/backoffice/cv/CandidatHeader';
 import UserInformationCard from '../../../../components/cards/UserInformationCard';
+import ButtonIcon from '../../../../components/utils/ButtonIcon';
+import ToggleWithConfirmationModal from '../../../../components/backoffice/ToggleWithConfirmationModal';
+import ModalEdit from '../../../../components/modals/ModalEdit';
 
 const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingPersonal, setLoadingPersonal] = useState(false);
   const {
     query: { id },
   } = useRouter();
@@ -147,6 +154,122 @@ const CVPage = () => {
           )}
           {onglet === 'settings' && (
             <GridNoSSR childWidths={['1-2@m']}>
+              {/* todo: to component -> Informations personnelles */}
+              {(user.role === 'Candidat' || user.role === 'Coach') && (
+                <>
+                  <div className="uk-card uk-card-default uk-card-body">
+                    <GridNoSSR
+                      gap="small"
+                      between
+                      eachWidths={['expand', 'auto']}
+                    >
+                      <h3 className="uk-card-title">
+                        Informations personnelles
+                      </h3>
+                      {loadingPersonal ? (
+                        <div data-uk-spinner="ratio: .8" />
+                      ) : (
+                        <ButtonIcon
+                          name="pencil"
+                          onClick={() =>
+                            UIkit.modal(`#modal-personal-data`).show()
+                          }
+                        />
+                      )}
+                    </GridNoSSR>
+                    {user ? (
+                      <GridNoSSR column gap="small">
+                        <GridNoSSR row gap="small">
+                          <IconNoSSR name="user" />
+                          <span>{`${user.firstName} ${user.lastName}`}</span>
+                        </GridNoSSR>
+                        <GridNoSSR row gap="small">
+                          <IconNoSSR name="mail" />
+                          <span>{user.email}</span>
+                        </GridNoSSR>
+                        <GridNoSSR row gap="small">
+                          <IconNoSSR name="phone" />
+                          {user.phone ? (
+                            <span>{user.phone}</span>
+                          ) : (
+                            <span className="uk-text-italic">
+                              Numéro de téléphone non renseigné
+                            </span>
+                          )}
+                        </GridNoSSR>
+                        <GridNoSSR row gap="small">
+                          <IconNoSSR name="cog" />
+                          <span className="uk-text-italic">
+                            {user.candidat.hidden ? 'CV caché' : 'CV visible'}
+                          </span>
+                        </GridNoSSR>
+                        <GridNoSSR row gap="small">
+                          <IconNoSSR name="cog" />
+                          <span className="uk-text-italic">
+                            {user.candidat.employed
+                              ? 'A retrouvé un emploi'
+                              : "N'a pas retrouvé d'emploi"}
+                          </span>
+                        </GridNoSSR>
+                      </GridNoSSR>
+                    ) : (
+                      undefined
+                    )}
+                  </div>
+                  <ModalEdit
+                    submitText="Envoyer"
+                    id="modal-personal-data"
+                    title="Édition - Informations personelles"
+                    defaultValues={{ phone: user.phone }}
+                    formSchema={schemaPersonalData}
+                    onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }) => {
+                      if (phone !== user.phone) {
+                        setLoadingPersonal(true);
+                        Api.put(`/api/v1/user/${user.id}`, {
+                          phone,
+                        })
+                          .then(() => {
+                            setUser({ ...user, phone });
+                            UIkit.notification(
+                              'Votre numéro de téléphone a bien été mis à jour',
+                              'success'
+                            );
+                          })
+                          .catch((err) => {
+                            console.error(err);
+                            UIkit.notification(
+                              "Une erreur c'est produite lors de la mise à jour de votre email",
+                              'danger'
+                            );
+                          })
+                          .finally(() => setLoadingPersonal(false));
+                      }
+
+                      if (user.email === oldEmail && newEmail0 === newEmail1) {
+                        setLoadingPersonal(true);
+                        Api.put(`/api/v1/user/${user.id}`, {
+                          email: newEmail0,
+                        })
+                          .then(() => {
+                            setUser({ ...user, email: newEmail0 });
+                            UIkit.notification(
+                              'Votre email a bien été mis à jour',
+                              'success'
+                            );
+                          })
+                          .catch((err) => {
+                            console.error(err);
+                            UIkit.notification(
+                              "Une erreur c'est produite lors de la mise à jour de votre email",
+                              'danger'
+                            );
+                          })
+                          .finally(() => setLoadingPersonal(false));
+                      }
+                    }}
+                  />
+                </>
+              )}
               {(user.role === 'Candidat' || user.role === 'Coach') && (
                 <UserInformationCard
                   user={user}

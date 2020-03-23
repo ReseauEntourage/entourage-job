@@ -121,7 +121,9 @@ const UserInformationCard = ({ user, onChange }) => {
     <>
       <Card
         style="secondary"
-        title={`Son ${user.role === 'Coach' ? ' candidat' : ' bénévole coach'}`}
+        title={`Information du${
+          user.role === 'Coach' ? ' candidat' : ' coach'
+        }`}
         badge={
           loading ? (
             <div data-uk-spinner="ratio: .8" />
