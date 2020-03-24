@@ -1,4 +1,6 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import '../static/dist/css/uikit.entourage.css';
+import '../static/css/styles.less';
 import '../static/css/Forms.less';
 import '../static/css/Toggle.less';
 
