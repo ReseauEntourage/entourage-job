@@ -1,8 +1,9 @@
 /* global UIkit */
 import moment from 'moment';
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { PropTypes } from 'prop-types';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
 import { Section, GridNoSSR } from '../../../../components/utils';
 import HeaderBackoffice from '../../../../components/headers/HeaderBackoffice';
@@ -29,7 +30,7 @@ const MembersAdmin = ({ query: { role } }) => {
   const [loading, setLoading] = useState(true);
   const [allLoaded, setAllLoaded] = useState(false);
   const [offset, setOffset] = useState(0);
-  const LIMIT = 10;
+  const LIMIT = 50;
   const router = useRouter();
 
   const fetchData = async (doReset, query) => {
@@ -142,14 +143,14 @@ const MembersAdmin = ({ query: { role } }) => {
         ) : (
           <>
             <GridNoSSR eachWidths={['expand', 'auto']}>
-              <ul className="uk-subnav" data-uk-switcher>
+              <ul className="uk-subnav">
                 <li
                   className={
                     role !== 'Candidat' && role !== 'Coach' ? 'uk-active' : ''
                   }
                 >
                   <a
-                    href="#"
+                    aria-hidden="true"
                     onClick={() =>
                       router.push({
                         pathname: '/backoffice/admin/membres',
@@ -162,7 +163,7 @@ const MembersAdmin = ({ query: { role } }) => {
                 </li>
                 <li className={role === 'Candidat' ? 'uk-active' : ''}>
                   <a
-                    href="#"
+                    aria-hidden="true"
                     onClick={() =>
                       router.push({
                         pathname: '/backoffice/admin/membres',
@@ -175,7 +176,7 @@ const MembersAdmin = ({ query: { role } }) => {
                 </li>
                 <li className={role === 'Coach' ? 'uk-active' : ''}>
                   <a
-                    href="#"
+                    aria-hidden="true"
                     onClick={() =>
                       router.push({
                         pathname: '/backoffice/admin/membres',
@@ -353,5 +354,8 @@ const MembersAdmin = ({ query: { role } }) => {
 };
 MembersAdmin.getInitialProps = ({ query }) => {
   return { query };
+};
+MembersAdmin.propTypes = {
+  query: PropTypes.shape({ role: PropTypes.string }).isRequired,
 };
 export default MembersAdmin;

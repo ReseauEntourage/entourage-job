@@ -41,16 +41,13 @@ module.exports = (sequelize, DataTypes) => {
 
   UserCandidat.associate = (models) => {
     // lie un coach un utilisateur à son nouveau coach et délie un coach à son ancien user
-    const linkUsers = (userCandidat) => {
-      if (userCandidat.coachId) {
-        UserCandidat.update(
-          { coachId: null },
-          {
-            where: { coachId: userCandidat.coachId },
-          }
-        );
-      }
-    };
+    const clearCoachBindings = (coachId) =>
+      UserCandidat.update(
+        { coachId: null },
+        {
+          where: { coachId },
+        }
+      );
 
     UserCandidat.belongsTo(models.User, {
       as: 'candidat',
@@ -79,14 +76,21 @@ module.exports = (sequelize, DataTypes) => {
         0,
         8
       )}`;
-      linkUsers(userCandidat);
+      if (userCandidat.coachId) {
+        await clearCoachBindings(userCandidat.coachId);
+      }
       return userCandidat;
     });
-    UserCandidat.beforeUpdate((instance, option) => {
+    UserCandidat.beforeUpdate(async (instance, option) => {
       const nextData = instance.dataValues;
       const previousData = instance._previousDataValues;
-      if (nextData && previousData && nextData.coachId !== previousData.v) {
-        linkUsers(nextData);
+      if (
+        nextData &&
+        previousData &&
+        nextData.coachId &&
+        nextData.coachId !== previousData.coachId
+      ) {
+        await clearCoachBindings(nextData.coachId);
       }
     });
   };

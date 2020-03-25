@@ -23,7 +23,7 @@ const Filter = ({ id, loading, filters, children, search }) => {
           ))}
         </ul>
         <div className="uk-margin">
-          <form className="uk-search uk-search-default">
+          <div className="uk-search uk-search-default">
             <span data-uk-search-icon />
             <input
               className="uk-search-input"
@@ -31,7 +31,7 @@ const Filter = ({ id, loading, filters, children, search }) => {
               placeholder="Rechercher..."
               onChange={search}
             />
-          </form>
+          </div>
         </div>
       </GridNoSSR>
       {loading ? (

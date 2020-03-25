@@ -83,6 +83,7 @@ const CVPresentationCard = ({ firstName, intro, userId }) => {
           postOpportunity({
             ...fields,
             usersId: [userId],
+            date: Date.now(),
           })
         }
       />

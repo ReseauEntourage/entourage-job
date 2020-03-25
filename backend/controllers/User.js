@@ -268,6 +268,7 @@ const setUser = async (id, user) =>
 const setUserCandidat = async (candidatId, candidat) => {
   return User_Candidat.update(candidat, {
     where: { candidatId },
+    individualHooks: true,
   });
 };
 

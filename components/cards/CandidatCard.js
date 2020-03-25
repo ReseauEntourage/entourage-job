@@ -1,6 +1,7 @@
 /* global UIkit */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import '../../static/css/Toggle.less';
 import {
   LinkedinShareButton,
   TwitterShareButton,
@@ -9,16 +10,11 @@ import {
 import { SimpleLink, GridNoSSR, IconNoSSR, ImgNoSSR } from '../utils';
 import ModalShareCV from '../modals/ModalShareCV';
 
-const doEllipsis = (text, max) =>
-  text
-    .split(' ')
-    .map((mot) => (mot.length > max ? mot.slice(0, max - 1).concat('…') : mot))
-    .join(' ');
-
 const CandidatCard = ({
   url,
   imgSrc,
   imgAlt,
+  gender,
   firstName,
   ambitions,
   skills,
@@ -34,9 +30,12 @@ const CandidatCard = ({
   };
   return (
     <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small uk-text-left">
+      {/* Contenue de la carte */}
       <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
         <div className="uk-cover-container uk-height-medium uk-margin-bottom">
+          {/* Image de fond */}
           <img src={imgSrc} alt={imgAlt} data-uk-cover />
+          {/* Bandeau à retrouvé un emploie */}
           {employed && (
             <div
               style={{
@@ -58,60 +57,78 @@ const CandidatCard = ({
               </div>
             </div>
           )}
+          {/* Informations du candidat */}
           <div
             style={{
               borderRadius: '0px 2px 2px 0px',
               background: 'white', // 'linear-gradient(90deg, white 50%, transparent 200%)',
+              padding: '10px 10px 10px 0px',
             }}
             // ent-gradiant-default
             className="uk-width-1-2 uk-position-center-left"
           >
+            {/*  uk-margin-small-bottom uk-margin-small-top uk-margin-small-right */}
             <GridNoSSR
+              gap="collapse"
+              between
               column
-              gap="small"
-              className="uk-margin-small-bottom uk-margin-small-top uk-margin-small-right"
+              childWidths={['1-1']}
+              style={{
+                minHeight: '225px',
+              }}
+              className="uk-height-1-1"
             >
-              <div>
-                <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold">
+              <>
+                <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold ent-line-clamp-1">
                   {firstName}
                 </h5>
-                {catchphrase ? (
-                  <p className="uk-margin-remove">{catchphrase}</p>
-                ) : (
-                  "cherche un job pour s'en sortir"
-                )}
-              </div>
-              <GridNoSSR
-                column
-                gap="collapse"
-                className="uk-text-lowercase uk-text-bold uk-text-primary"
-                items={skills.slice(0, 2).map((a, index) => (
-                  <span key={index}>{doEllipsis(a, 15)}</span>
-                ))}
-              />
-              {ambitions && ambitions.length > 0 && (
-                <>
-                  <p>
-                    Il souhaite <br />
-                    travailler dans :
-                  </p>
+                <p
+                  style={{ fontSize: '0.775rem' }}
+                  className="uk-margin-remove ent-line-clamp-3"
+                >
+                  {catchphrase || "cherche un job pour s'en sortir"}
+                </p>
+                {skills && (
                   <GridNoSSR
-                    className="uk-grid-row-collapse uk-grid-column-small"
-                    items={ambitions.slice(0, 3).map((a, index) => (
-                      <span
-                        key={index}
-                        className="uk-label uk-label-primary uk-text-lowercase"
-                      >
-                        {doEllipsis(a, 15)}
+                    column
+                    gap="collapse"
+                    childWidths={['1-1']}
+                    className="uk-text-lowercase uk-text-bold uk-text-primary uk-margin-small-top"
+                    items={skills.slice(0, 2).map((a, index) => (
+                      <span key={index} className="ent-line-clamp-1">
+                        {a}
                       </span>
                     ))}
                   />
+                )}
+              </>
+              {ambitions && ambitions.length > 0 && (
+                <>
+                  <p
+                    style={{ fontSize: '0.775rem' }}
+                    className="uk-margin-remove uk-margin-small-top"
+                  >
+                    {gender === 1 ? 'Elle' : 'Il'} souhaite
+                    <br /> travailler dans :
+                  </p>
+                  <GridNoSSR gap="collapse">
+                    {ambitions.slice(0, 3).map((a, index) => (
+                      <span
+                        key={index}
+                        style={{ fontSize: '0.775rem' }}
+                        className="uk-label uk-text-lowercase ent-line-clamp-1 ent-margin-top-xsmall ent-margin-right-xsmall"
+                      >
+                        {a}
+                      </span>
+                    ))}
+                  </GridNoSSR>
                 </>
               )}
             </GridNoSSR>
           </div>
         </div>
       </SimpleLink>
+      {/* Bas de carte */}
       <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
         <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
           <u className="uk-text-link uk-text-primary">Voir le CV</u>
@@ -181,6 +198,7 @@ CandidatCard.propTypes = {
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
   catchphrase: PropTypes.string,
   employed: PropTypes.bool,
+  gender: PropTypes.number.isRequired,
 };
 
 CandidatCard.defaultProps = {

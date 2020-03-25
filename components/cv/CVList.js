@@ -50,6 +50,7 @@ const CVList = ({ nb, search }) => {
               }
               imgAlt={cv.user.candidat.firstName}
               firstName={cv.user.candidat.firstName}
+              gender={cv.user.candidat.gender}
               ambitions={cv.ambitions}
               skills={cv.skills}
               catchphrase={cv.catchphrase}

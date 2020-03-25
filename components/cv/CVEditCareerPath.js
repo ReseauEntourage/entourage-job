@@ -1,16 +1,12 @@
 /* global UIkit */
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ModalEdit from '../modals/ModalEdit';
-import schemaCareerPath from '../forms/schema/formEditCareerPath';
+import schemaCareerPath from '../forms/schema/formEditCareerPath.json';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
-import { UserContext } from '../store/UserProvider';
 
-const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange }) => {
-  const { user } = useContext(UserContext);
-  if (!user) return null;
-
+const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
   const ContentByGender = () => {
     if (ambitions.length === 0) {
       if (!careerPathOpen) {
@@ -23,7 +19,7 @@ const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange }) => {
       if (careerPathOpen) {
         return (
           <p>
-            Je reste {user.gender === 1 ? 'ouverte' : 'ouvert'} à toute autre
+            Je reste {gender === 1 ? 'ouverte' : 'ouvert'} à toute autre
             proposition.
           </p>
         );
@@ -42,9 +38,7 @@ const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange }) => {
           ''
         )}
         {careerPathOpen
-          ? ` mais reste ${
-              user.gender === 1 ? 'ouverte' : 'ouvert'
-            } à toute autre
+          ? ` mais reste ${gender === 1 ? 'ouverte' : 'ouvert'} à toute autre
             proposition.`
           : '.'}
       </p>
@@ -91,6 +85,7 @@ CVEditCareerPath.propTypes = {
   ambitions: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func,
   careerPathOpen: PropTypes.bool,
+  gender: PropTypes.number.isRequired,
 };
 CVEditCareerPath.defaultProps = {
   onChange: null,

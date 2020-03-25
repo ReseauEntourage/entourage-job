@@ -103,6 +103,7 @@ export default class FieldFactory {
           valid={this.getValid(data.name)}
           onChange={this.handleChange}
           disabled={data.disabled}
+          hidden={data.hidden}
         />
       );
     }
@@ -175,7 +176,7 @@ export default class FieldFactory {
             loadOptions={(inputValue, callback) =>
               data.loadOptions(inputValue, callback, this.getValue)
             }
-            isDisabled={data.disable(this.getValue)}
+            isDisabled={data.disable ? data.disable(this.getValue) : false}
             onChange={(e) =>
               this.handleChange({
                 target: {

@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-export const GridNoSSR = dynamic(() => import('./Grid'), { ssr: false });
-
 const Grid = ({
   items,
   childWidths,
@@ -23,6 +21,7 @@ const Grid = ({
   column,
   row,
   masonry,
+  style,
 }) => {
   let classBuffer = '';
   let gridBuffer = '';
@@ -55,7 +54,7 @@ const Grid = ({
   })();
   // on filtre les elemnt vide
   return (
-    <div className={classBuffer} data-uk-grid={gridBuffer}>
+    <div className={classBuffer} data-uk-grid={gridBuffer} style={style}>
       {content
         .filter((_) => _)
         .map((item, index) => (
@@ -97,6 +96,7 @@ Grid.propTypes = {
   column: PropTypes.bool,
   row: PropTypes.bool,
   masonry: PropTypes.bool,
+  style: PropTypes.shape,
 };
 Grid.defaultProps = {
   match: false,
@@ -117,5 +117,10 @@ Grid.defaultProps = {
   column: false,
   row: false,
   masonry: false,
+  style: undefined,
 };
+
+// no ssr finally not necessary
+export const GridNoSSR = Grid; // dynamic(() => import('./Grid'), { ssr: false });
+
 export default Grid;

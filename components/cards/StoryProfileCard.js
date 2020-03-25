@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ModalEdit from '../modals/ModalEdit';
-import schemaStory from '../forms/schema/formEditStory';
+import schemaStory from '../forms/schema/formEditStory.json';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
 

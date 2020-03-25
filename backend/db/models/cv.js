@@ -92,7 +92,7 @@ module.exports = (sequelize, DataTypes) => {
     cvToCreate.id = uuid();
     return cvToCreate;
   });
-  CV.associate = function(models) {
+  CV.associate = (models) => {
     // link and rename for association
     CV.belongsToMany(models.Ambition, {
       through: 'CV_Ambitions',
@@ -114,6 +114,10 @@ module.exports = (sequelize, DataTypes) => {
       through: 'CV_Passions',
       as: 'passions',
     });
+    CV.belongsToMany(models.BusinessLine, {
+      through: 'CV_BusinessLines',
+      as: 'businessLines',
+    });
 
     CV.hasMany(models.Experience, {
       as: 'experiences',
@@ -121,6 +125,7 @@ module.exports = (sequelize, DataTypes) => {
     CV.hasMany(models.Review, {
       as: 'reviews',
     });
+
     CV.belongsTo(models.User_Candidat, {
       as: 'user',
       foreignKey: 'UserId',

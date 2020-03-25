@@ -16,6 +16,9 @@ const cleanCV = (model) => {
   if (tmpCV.ambitions) {
     tmpCV.ambitions = tmpCV.ambitions.map((o) => o.name);
   }
+  if (tmpCV.businessLines) {
+    tmpCV.businessLines = tmpCV.businessLines.map((o) => o.name);
+  }
   return tmpCV;
 };
 

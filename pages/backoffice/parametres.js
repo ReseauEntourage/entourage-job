@@ -214,7 +214,7 @@ const Parametres = () => {
             {/* Informations personnelles */}
             <div className="uk-card uk-card-default uk-card-body">
               <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
-                <h3 className="uk-card-title">Informations personelles</h3>
+                <h3 className="uk-card-title">Informations personnelles</h3>
                 {loadingPersonal ? (
                   <div data-uk-spinner="ratio: .8" />
                 ) : (
@@ -252,11 +252,6 @@ const Parametres = () => {
 
             {(userData.role === 'Candidat' || userData.role === 'Coach') && (
               <UserInformationCard
-                title={`Coordonnées de ${
-                  userData.role === 'Coach'
-                    ? ' mon candidat'
-                    : ' mon bénévole coach'
-                }`}
                 user={userData}
               />
             )}
