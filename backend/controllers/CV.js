@@ -103,7 +103,7 @@ inner join (
 on cv."UserId" = groupUsers."candidatId"`;
 
 const createCV = async (data) => {
-  console.log(`createCV - Création du CV`);
+  console.log(`createCV - Etape 1 - Création du CV`);
   if (data.userId) {
     data.UserId = data.userId;
     delete data.userId;
@@ -231,6 +231,8 @@ const getCVbyUrl = async (url) => {
     type: QueryTypes.SELECT,
   });
 
+  console.log('CCLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
+  console.log(cvs);
   const modelCV = await models.CV.findByPk(cvs[0].id, {
     include: [...INCLUDES_COMPLETE_CV_WITHOUT_USER, INCLUDE_ALL_USERS],
   });

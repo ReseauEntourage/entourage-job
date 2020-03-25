@@ -7,7 +7,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 3001;
 const TIMEOUT = 20000;
 
-describe('Mail', () => {
+describe.skip('Mail', () => {
   before(() => {
     server.prepare();
     return server.start(PORT);

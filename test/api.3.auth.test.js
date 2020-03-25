@@ -8,7 +8,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 3001;
 const TIMEOUT = 20000;
 
-describe('Auth', () => {
+describe('Tests des routes API - Partie Authentification', () => {
   describe('#Controller', () => {
     const password = 'azertyuiop';
     it('should create a salt and a hash password', () => {
@@ -97,21 +97,15 @@ describe('Auth', () => {
 
     describe('#forgot', () => {
       let user;
-      before(() => {
-        return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
+
+      before((done) => {
+        Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
           .then((res) => {
             user = res.data;
+            done();
           })
           .catch(() => {
             throw new Error("Erreur lors de la creation de l'utilisateur");
-          });
-      });
-
-      after(() => {
-        return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
-          .then(() => {})
-          .catch(() => {
-            throw new Error("Erreur lors de la suppression de l'utilisateur");
           });
       });
 
@@ -142,6 +136,7 @@ describe('Auth', () => {
           })
           .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
       });
+
       it('doit retourner un code retour 422 avec une adresse mail vide', () => {
         return Api.post(`${process.env.SERVER_URL}/api/v1/auth/forgot`, {
           email: '',
@@ -156,6 +151,68 @@ describe('Auth', () => {
               "L'adresse était bien vide"
             )
           );
+      });
+
+      after((done) => {
+        Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
+          .then(() => done())
+          .catch(() => {
+            throw new Error("Erreur lors de la suppression de l'utilisateur");
+          });
+      });
+    }).timeout(TIMEOUT);
+
+    describe('#logout', () => {
+      let user;
+      before((done) => {
+        Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
+          .then((res) => {
+            user = res.data;
+            return Api.post(`${process.env.SERVER_URL}/api/v1/auth/login`, {
+              email: USER_EXAMPLE.email,
+              password: USER_EXAMPLE.password,
+            });
+          })
+          .then(({ data }) => {
+            user = { ...data.user, password: USER_EXAMPLE.password };
+            done();
+          })
+          .catch(() => {
+            done();
+            throw new Error("Erreur lors de la creation de l'utilisateur");
+          });
+      });
+
+      it('doit retourner un code retour 404', () => {
+        return Api.post(
+          `${process.env.SERVER_URL}/api/v1/auth/logout`,
+          {
+            email: USER_EXAMPLE.email,
+          },
+          {
+            headers: {
+              authorization: `Token ${user.token}`,
+            },
+          }
+        )
+          .then((res) => {
+            assert.strictEqual(res.status, 404, 'Page non trouvée attendue');
+          })
+          .catch((err) =>
+            assert.strictEqual(
+              err.response.status,
+              404,
+              'Page non trouvée attendue'
+            )
+          );
+      });
+
+      after(() => {
+        return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
+          .then(() => {})
+          .catch(() => {
+            throw new Error("Erreur lors de la suppression de l'utilisateur");
+          });
       });
     }).timeout(TIMEOUT);
 
