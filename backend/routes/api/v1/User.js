@@ -215,11 +215,13 @@ router.put('/change-pwd', auth.required, (req, res) => {
 router.put('/candidat/:id', auth.required, (req, res) => {
   UserController.setUserCandidat(req.params.id, req.body)
     .then((user) => {
+      console.log('Visibilité CV candidat - mise à jour réussie');
       res.status(200).json(user);
     })
     .catch((err) => {
+      console.log('Visibilité CV candidat - Erreur mise à jour :');
       console.error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(400).send('Une erreur est survenue');
     });
 });
 

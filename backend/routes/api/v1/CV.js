@@ -71,30 +71,32 @@ router.post(
 
     UserController.getUser(reqCV.UserId).then((user) => {
       // Génération de la photo de preview
-      S3.download(reqCV.urlImg)
-        .then(({ Body }) =>
-          createPreviewImage({
-            input: Body,
-            name: user.firstName.toUpperCase(),
-            description:
-              reqCV.catchphrase ||
-              'EN GALÈRE, CHERCHE UN JOB POUR S’EN SORTIR.',
-            ambition:
-              reqCV.ambitions && reqCV.ambitions.length > 0
-                ? reqCV.ambitions
-                    .slice(0, 2)
-                    .map((ambition) => ambition.toUpperCase())
-                    .join('. ')
-                : 'OUVERT À TOUTES PROPOSITIONS',
-          })
-            .jpeg()
-            .toBuffer()
-        )
-        .then((buffer) =>
-          S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
-        )
-        .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
-        .catch(console.error);
+      if (reqCV.urlImg) {
+        S3.download(reqCV.urlImg)
+          .then(({ Body }) =>
+            createPreviewImage({
+              input: Body,
+              name: user.firstName.toUpperCase(),
+              description:
+                reqCV.catchphrase ||
+                'EN GALÈRE, CHERCHE UN JOB POUR S’EN SORTIR.',
+              ambition:
+                reqCV.ambitions && reqCV.ambitions.length > 0
+                  ? reqCV.ambitions
+                      .slice(0, 2)
+                      .map((ambition) => ambition.toUpperCase())
+                      .join('. ')
+                  : 'OUVERT À TOUTES PROPOSITIONS',
+            })
+              .jpeg()
+              .toBuffer()
+          )
+          .then((buffer) =>
+            S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
+          )
+          .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
+          .catch(console.error);
+      }
     });
 
     try {
@@ -254,7 +256,7 @@ router.put('/:id', (req, res) => {
     })
     .catch((err) => {
       console.log(`Une erreur est survenue`);
-      res.status(401).send(err);
+      res.status(400).send(err);
     });
 });
 

@@ -1,6 +1,6 @@
 import Api from '../Axios';
 
-const { assert } = require('chai');
+const { assert, expect } = require('chai');
 const server = require('../backend/server');
 require('dotenv').config();
 
@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3001;
 const TIMEOUT = 20000;
 
 const USER_EXAMPLE = {
-  email: 'test.ament@cesttropsuper.com',
+  email: 'test.api.user@mail.fr',
   firstName: 'Test',
   lastName: 'Ament',
   password: 'azerty',
@@ -72,7 +72,17 @@ describe('Tests des routes API - Partie User', () => {
     });
   });
 
-  describe('Routes CV supplémentaires', () => {
+  describe('Routes User supplémentaires', () => {
+    let user;
+    before(() => {
+      return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
+        .then((res) => {
+          user = res.data;
+          assert.isObject(res.data, 'User retourné');
+        })
+        .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+    });
+
     describe('Récupérer tous les Users', () => {
       it("doit retourner un tableau de Users à l'appel API", () => {
         return Api.get(`${process.env.SERVER_URL}/api/v1/user`)
@@ -86,29 +96,48 @@ describe('Tests des routes API - Partie User', () => {
     });
 
     describe('Récupérer 1 User à partir de son email', () => {
-      let user;
-      before(() => {
-        return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
-          .then((res) => {
-            user = res.data;
-            assert.isObject(res.data, 'User retourné');
-          })
-          .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-      });
-      it('doit retourner le User créé précédement à partir de son email', () => {
+      it('doit retourner le User à partir de son adresse mail', () => {
         return Api.get(`${process.env.SERVER_URL}/api/v1/user/${user.email}`)
           .then((res) => {
             assert.isObject(res.data, 'User reçu');
           })
           .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
       }).timeout(TIMEOUT);
-      after(() => {
-        return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
+    });
+
+    describe('Modifier paramètre visibilité de son CV', () => {
+      // A faire non connecté et connecté
+      it('doit retourner 1 modification réussie', () => {
+        return Api.put(
+          `${process.env.SERVER_URL}/api/v1/user/candidat/${user.id}`,
+          { hidden: false }
+        )
           .then((res) => {
-            assert.equal(res.data, 1, 'Delete du User effectué');
+            expect(res.data)
+              .to.be.an('array')
+              .to.include(1);
           })
-          .catch((err) => assert.fail(`Delete du User échoué : ${err} `));
-      });
+          .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+      }).timeout(TIMEOUT);
+
+      it('doit retourner 1 modification ratée (utilisateur inexistant)', () => {
+        return Api.put(
+          `${process.env.SERVER_URL}/api/v1/user/candidat/1d1e1f`,
+          { hidden: false }
+        )
+          .then((res) => assert.strictEqual(res.status, 400, 'Erreur attendue'))
+          .catch((err) =>
+            assert.strictEqual(err.response.status, 400, 'Erreur attendue')
+          );
+      }).timeout(TIMEOUT);
+    });
+
+    after(() => {
+      return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
+        .then((res) => {
+          assert.equal(res.data, 1, 'Delete du User effectué');
+        })
+        .catch((err) => assert.fail(`Delete du User échoué : ${err} `));
     });
   });
 });
