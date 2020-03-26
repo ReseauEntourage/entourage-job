@@ -215,15 +215,5 @@ describe('Tests des routes API - Partie Authentification', () => {
           });
       });
     }).timeout(TIMEOUT);
-
-    it.skip("doit changer le mot de passe de l'utilisateur", () => {
-      return Api.post(`${process.env.SERVER_URL}/api/v1/auth/changepassword`, {
-        email: USER_EXAMPLE.email,
-        password: 'azertyuiop',
-        newPassword: 'poiuytreza',
-      })
-        .then((res) => {})
-        .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-    }).timeout(TIMEOUT);
   });
 });

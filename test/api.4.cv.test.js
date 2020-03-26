@@ -81,6 +81,11 @@ describe('Tests des routes API - Partie CV', () => {
           `${process.env.SERVER_URL}/api/v1/user/candidat/${user.id}`,
           {
             hidden: false,
+          },
+          {
+            headers: {
+              authorization: `Token ${user.token}`,
+            },
           }
         );
       })
