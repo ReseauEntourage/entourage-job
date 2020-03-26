@@ -6,7 +6,7 @@ import Textarea from '../components/forms/fields/Textarea';
 import Input from '../components/forms/fields/Input';
 
 configure({ adapter: new Adapter() });
-describe('Form fileds', () => {
+describe.skip('Form fileds', () => {
   describe('#Textarea', () => {
     it('should update the value', () => {
       let mystory = '';
