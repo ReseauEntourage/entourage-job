@@ -110,5 +110,65 @@ describe('Tests des routes API - Partie User', () => {
           .catch((err) => assert.fail(`Delete du User échoué : ${err} `));
       });
     });
+
+    describe('Changer son mot de passe', () => {
+      let user;
+      before((done) => {
+        Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
+          .then(() =>
+            Api.post(`${process.env.SERVER_URL}/api/v1/auth/login`, {
+              email: USER_EXAMPLE.email,
+              password: USER_EXAMPLE.password,
+            })
+          )
+          .then(({ data }) => {
+            console.log(data);
+            user = { ...data.user, password: USER_EXAMPLE.password };
+            done();
+          });
+      });
+
+      after((done) => {
+        Api.delete(
+          `${process.env.SERVER_URL}/api/v1/user/${user.id}`
+        ).then(() => done());
+      });
+
+      describe('User non connecté', () => {
+        it("ne doit pas changer le mot de passe de l'utilisateur", () => {
+          return Api.put(`${process.env.SERVER_URL}/api/v1/user/change-pwd`, {
+            email: USER_EXAMPLE.email,
+            oldPassword: 'azerty',
+            newPassword: 'poiuytreza22',
+          })
+            .then(() => assert.fail())
+            .catch((err) =>
+              assert.strictEqual(err.response.status, 401, 'Erreur attendue')
+            );
+        }).timeout(TIMEOUT);
+      });
+
+      describe('User connecté', () => {
+        it("doit changer le mot de passe de l'utilisateur", () => {
+          return Api.put(
+            `${process.env.SERVER_URL}/api/v1/user/change-pwd`,
+            {
+              email: USER_EXAMPLE.email,
+              oldPassword: 'azerty',
+              newPassword: 'poiuytreza22',
+            },
+            {
+              headers: {
+                authorization: `Token ${user.token}`,
+              },
+            }
+          )
+            .then((res) =>
+              assert.strictEqual(res.status, 200, 'Mot de passe modifié')
+            )
+            .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+        }).timeout(TIMEOUT);
+      });
+    });
   });
 });

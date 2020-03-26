@@ -176,7 +176,7 @@ router.get('/:id', (req, res) => {
  * Description : Modifie le User associé à l'<ID> fournit
  */
 router.put('/change-pwd', auth.required, (req, res) => {
-  UserController.getUser(req.payload.id)
+  UserController.getUserByEmail(req.payload.email)
     .then(({ salt: oldSalt, password }) => {
       const validated = AuthController.validatePassword(
         req.body.oldPassword,
