@@ -43,45 +43,36 @@ describe('Tests des routes API - Partie Authentification', () => {
   });
 
   describe('#Routes', () => {
+    let user;
     const USER_EXAMPLE = {
-      email: 'test.ament@cesttropsuper.com',
+      email: 'test.api.auth@mail.fr',
       firstName: 'Test',
       lastName: 'Ament',
       role: null,
       isAdmin: true,
-      password: 'azertyuiop',
+      password: 'azerty',
     };
 
-    before(() => {
+    before((done) => {
       server.prepare();
-      return server.start(PORT);
+      server
+        .start(PORT)
+        .then(() => {
+          return Api.post(
+            `${process.env.SERVER_URL}/api/v1/user`,
+            USER_EXAMPLE
+          );
+        })
+        .then(() => done());
     });
 
     after((done) => {
-      server.close();
-      done();
+      Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
+        .then(() => server.close())
+        .then(() => done());
     });
 
     describe('#login', () => {
-      let user;
-      before(() => {
-        return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
-          .then((res) => {
-            user = res.data;
-          })
-          .catch(() => {
-            throw new Error("Erreur lors de la creation de l'utilisateur");
-          });
-      });
-
-      after(() => {
-        return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
-          .then(() => {})
-          .catch(() => {
-            throw new Error("Erreur lors de la suppression de l'utilisateur");
-          });
-      });
-
       it("doit connecter l'utilisateur en lui renvoyant un token", () => {
         return Api.post(`${process.env.SERVER_URL}/api/v1/auth/login`, {
           email: USER_EXAMPLE.email,
@@ -95,92 +86,195 @@ describe('Tests des routes API - Partie Authentification', () => {
       });
     }).timeout(TIMEOUT);
 
-    describe('#forgot', () => {
-      let user;
-
-      before((done) => {
-        Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
-          .then((res) => {
-            user = res.data;
-            done();
+    describe('Réinitialisation de son mot de passe', () => {
+      describe('Route POST /api/v1/auth/forgot', () => {
+        it('doit retourner un code retour 200 avec une adresse mail connue', () => {
+          return Api.post(`${process.env.SERVER_URL}/api/v1/auth/forgot`, {
+            email: USER_EXAMPLE.email,
           })
-          .catch(() => {
-            throw new Error("Erreur lors de la creation de l'utilisateur");
-          });
-      });
+            .then((res) => {
+              assert.strictEqual(
+                res.status,
+                200,
+                'Un mail a normalement été envoyé'
+              );
+            })
+            .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+        });
 
-      it('doit retourner un code retour 200 avec une adresse mail connue', () => {
-        return Api.post(`${process.env.SERVER_URL}/api/v1/auth/forgot`, {
-          email: USER_EXAMPLE.email,
-        })
-          .then((res) => {
-            assert.strictEqual(
-              res.status,
-              200,
-              'Un mail a normalement été envoyé'
+        it('doit retourner un code retour 200 avec une adresse mail inconnue', () => {
+          return Api.post(`${process.env.SERVER_URL}/api/v1/auth/forgot`, {
+            email: 'inconnu-test@cesttropsuper.com',
+          })
+            .then((res) => {
+              assert.strictEqual(
+                res.status,
+                200,
+                'Un mail a normalement été envoyé'
+              );
+            })
+            .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+        });
+
+        it('doit retourner un code retour 422 avec une adresse mail vide', () => {
+          return Api.post(`${process.env.SERVER_URL}/api/v1/auth/forgot`, {
+            email: '',
+          })
+            .then((res) => {
+              assert.strictEqual(res.status, 422, "L'adresse était bien vide");
+            })
+            .catch((err) =>
+              assert.strictEqual(
+                err.response.status,
+                422,
+                "L'adresse était bien vide"
+              )
             );
-          })
-          .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+        });
       });
 
-      it('doit retourner un code retour 200 avec une adresse mail inconnue', () => {
-        return Api.post(`${process.env.SERVER_URL}/api/v1/auth/forgot`, {
-          email: 'inconnu-test@cesttropsuper.com',
-        })
-          .then((res) => {
-            assert.strictEqual(
-              res.status,
-              200,
-              'Un mail a normalement été envoyé'
-            );
-          })
-          .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-      });
-
-      it('doit retourner un code retour 422 avec une adresse mail vide', () => {
-        return Api.post(`${process.env.SERVER_URL}/api/v1/auth/forgot`, {
-          email: '',
-        })
-          .then((res) => {
-            assert.strictEqual(res.status, 422, "L'adresse était bien vide");
-          })
-          .catch((err) =>
-            assert.strictEqual(
-              err.response.status,
-              422,
-              "L'adresse était bien vide"
+      describe('Route GET /api/v1/auth/reset/:id/:token', () => {
+        it('doit retourner un code retour 403 (ici token invalide)', () => {
+          return Api.get(
+            `${process.env.SERVER_URL}/api/v1/auth/reset/${user.id}/faux`
+          )
+            .then((res) =>
+              assert.strictEqual(
+                res.status,
+                403,
+                "Le lien reçu n'est pas valide"
+              )
             )
-          );
+            .catch((err) =>
+              assert.strictEqual(
+                err.response.status,
+                403,
+                "Le lien reçu n'est pas valide"
+              )
+            );
+        });
+
+        it('doit retourner un code retour 403 (ici id invalide)', () => {
+          return Api.get(
+            `${process.env.SERVER_URL}/api/v1/auth/reset/faux/${user.token}`
+          )
+            .then((res) =>
+              assert.strictEqual(
+                res.status,
+                403,
+                "Le lien reçu n'est pas valide"
+              )
+            )
+            .catch((err) =>
+              assert.strictEqual(
+                err.response.status,
+                403,
+                "Le lien reçu n'est pas valide"
+              )
+            );
+        });
+
+        it.skip('doit retourner un code retour 200 (id et token valide)', () => {
+          return Api.get(
+            `${process.env.SERVER_URL}/api/v1/auth/reset/${user.id}/${user.token}`
+          )
+            .then((res) => {
+              assert.strictEqual(res.status, 200, 'Le lien reçu est valide');
+            })
+            .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+        });
       });
 
-      after((done) => {
-        Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
-          .then(() => done())
-          .catch(() => {
-            throw new Error("Erreur lors de la suppression de l'utilisateur");
-          });
+      describe('Route POST /api/v1/auth/reset/:id/:token', () => {
+        it('doit retourner un code retour 403 (ici token invalide)', () => {
+          return Api.post(
+            `${process.env.SERVER_URL}/api/v1/auth/reset/${user.id}/faux`,
+            { newPassword: 'qwerty', confirmPassword: 'qwerty' }
+          )
+            .then((res) =>
+              assert.strictEqual(
+                res.status,
+                403,
+                "Le lien reçu n'est pas valide"
+              )
+            )
+            .catch((err) =>
+              assert.strictEqual(
+                err.response.status,
+                403,
+                "Le lien reçu n'est pas valide"
+              )
+            );
+        });
+
+        it('doit retourner un code retour 403 (ici id invalide)', () => {
+          return Api.post(
+            `${process.env.SERVER_URL}/api/v1/auth/reset/faux/${user.token}`,
+            { newPassword: 'qwerty', confirmPassword: 'qwerty' }
+          )
+            .then((res) =>
+              assert.strictEqual(
+                res.status,
+                403,
+                "Le lien reçu n'est pas valide"
+              )
+            )
+            .catch((err) =>
+              assert.strictEqual(
+                err.response.status,
+                403,
+                "Le lien reçu n'est pas valide"
+              )
+            );
+        });
+
+        it.skip('doit retourner un code retour 400 (id et token valide mais mauvais contenu envoyé)', () => {
+          return Api.post(
+            `${process.env.SERVER_URL}/api/v1/auth/reset/${user.id}/${user.token}`,
+            { newPassword: 'qwerty', confirmPassword: 'azerty' }
+          )
+            .then((res) =>
+              assert.strictEqual(
+                res.status,
+                400,
+                "Le contenu envoyé n'est pas correct"
+              )
+            )
+            .catch((err) =>
+              assert.strictEqual(
+                err.response.status,
+                400,
+                "Le contenu envoyé n'est pas correct"
+              )
+            );
+        });
+
+        it.skip('doit retourner un code retour 200 (id et token valide)', () => {
+          return Api.post(
+            `${process.env.SERVER_URL}/api/v1/auth/reset/${user.id}/${user.token}`,
+            { newPassword: 'qwerty', confirmPassword: 'qwerty' }
+          )
+            .then((res) => {
+              assert.strictEqual(
+                res.status,
+                200,
+                'Nouveau mot de passe enregistré'
+              );
+            })
+            .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+        });
       });
-    }).timeout(TIMEOUT);
+    });
 
     describe('#logout', () => {
-      let user;
       before((done) => {
-        Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
-          .then((res) => {
-            user = res.data;
-            return Api.post(`${process.env.SERVER_URL}/api/v1/auth/login`, {
-              email: USER_EXAMPLE.email,
-              password: USER_EXAMPLE.password,
-            });
-          })
-          .then(({ data }) => {
-            user = { ...data.user, password: USER_EXAMPLE.password };
-            done();
-          })
-          .catch(() => {
-            done();
-            throw new Error("Erreur lors de la creation de l'utilisateur");
-          });
+        Api.post(`${process.env.SERVER_URL}/api/v1/auth/login`, {
+          email: USER_EXAMPLE.email,
+          password: USER_EXAMPLE.password,
+        }).then(({ data }) => {
+          user = { ...data.user, password: USER_EXAMPLE.password };
+          done();
+        });
       });
 
       it('doit retourner un code retour 404', () => {
@@ -205,14 +299,6 @@ describe('Tests des routes API - Partie Authentification', () => {
               'Page non trouvée attendue'
             )
           );
-      });
-
-      after(() => {
-        return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
-          .then(() => {})
-          .catch(() => {
-            throw new Error("Erreur lors de la suppression de l'utilisateur");
-          });
       });
     }).timeout(TIMEOUT);
   });
