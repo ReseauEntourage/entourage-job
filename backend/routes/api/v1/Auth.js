@@ -121,6 +121,40 @@ router.post('/forgot', (req, res, next) => {
     });
 });
 
+router.get('/reset/:userId/:token', (req, res, next) => {
+  const infoLog = 'GET /reset/:userId/:token -';
+
+  const { userId, token } = req.params;
+  console.log(
+    `${infoLog} Vérification du lien de réinitialisation de mot de passe`
+  );
+  console.log(`${infoLog} userId : ${userId} , token : ${token}`);
+
+  UserController.getCompleteUser(userId)
+    .then((userFound) => {
+      const user = userFound;
+      if (!user) {
+        console.log(
+          `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
+        );
+        return res.status(400).send('Lien non valide');
+      }
+      console.log(`${infoLog} DEBUG :`);
+      console.log(user);
+      if (
+        !AuthController.validatePassword(token, user.hashReset, user.saltReset)
+      ) {
+        console.log(` ${infoLog} Token invalide`);
+        return res.status(400).send('Lien non valide');
+      }
+      return res.status(200).send('Lien valide');
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(401).send(`Une erreur est survenue`);
+    });
+});
+
 // GET current route (required, only authenticated users have access)
 router.get('/current', auth.required, async (req, res, next) => {
   const {
