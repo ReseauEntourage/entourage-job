@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Api from '../../Axios';
 import Input from './fields/Input';
 import Textarea from './fields/Textarea';
-import CheckboxCGU from './fields/CheckboxCGU';
+import Checkbox from './fields/Checkbox';
 
 const DEFAULT_MESSAGE = {
   name: '',
@@ -134,7 +134,7 @@ export default class FormInterestLinkedOut extends Component {
                 title="Écrivez vos motivations*"
                 valid={fields.valid_message}
               />
-              <CheckboxCGU
+              <Checkbox
                 id="input-cgu"
                 name="cgu"
                 title={

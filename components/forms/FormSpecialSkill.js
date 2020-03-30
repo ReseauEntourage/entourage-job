@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Api from '../../Axios';
 import Input from './fields/Input';
 import Textarea from './fields/Textarea';
-import CheckboxCGU from './fields/CheckboxCGU';
+import Checkbox from './fields/Checkbox';
 import FooterForm from '../utils/FooterForm';
 
 const DEFAULT_MESSAGE = {
@@ -116,7 +116,7 @@ export default class FormSpecialSkill extends Component {
               rows={7}
               onChange={handleChange}
             />
-            <CheckboxCGU
+            <Checkbox
               id="specialskill-input-cgu"
               name="cgu"
               title={
