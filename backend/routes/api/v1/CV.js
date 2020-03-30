@@ -71,23 +71,25 @@ router.post(
 
     UserController.getUser(reqCV.UserId).then((user) => {
       // Génération de la photo de preview
-      S3.download(reqCV.urlImg)
-        .then(({ Body }) =>
-          createPreviewImage(
-            Body,
-            user.firstName,
-            reqCV.catchphrase,
-            reqCV.ambitions,
-            reqCV.skills,
-            user.gender
+      if (reqCV.urlImg) {
+        S3.download(reqCV.urlImg)
+          .then(({ Body }) =>
+            createPreviewImage(
+              Body,
+              user.firstName,
+              reqCV.catchphrase,
+              reqCV.ambitions,
+              reqCV.skills,
+              user.gender
+            )
           )
-        )
-        .then((sharpData) => sharpData.jpeg().toBuffer())
-        .then((buffer) =>
-          S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
-        )
-        .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
-        .catch(console.error);
+          .then((sharpData) => sharpData.jpeg().toBuffer())
+          .then((buffer) =>
+            S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
+          )
+          .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
+          .catch(console.error);
+      }
     });
 
     try {
@@ -247,7 +249,7 @@ router.put('/:id', (req, res) => {
     })
     .catch((err) => {
       console.log(`Une erreur est survenue`);
-      res.status(401).send(err);
+      res.status(400).send(err);
     });
 });
 
