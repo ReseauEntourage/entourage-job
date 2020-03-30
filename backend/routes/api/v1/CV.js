@@ -81,9 +81,8 @@ router.post(
             reqCV.skills,
             user.gender
           )
-            .jpeg()
-            .toBuffer()
         )
+        .then((sharpData) => sharpData.jpeg().toBuffer())
         .then((buffer) =>
           S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
         )
