@@ -4,6 +4,7 @@ const TextToSVG = require('text-to-svg');
 const textToSVG = TextToSVG.loadSync('./static/fonts/Roboto-Regular.ttf');
 const textToSVGBold = TextToSVG.loadSync('./static/fonts/Roboto-Black.ttf');
 
+// TOOLS
 // créé les options svg par defaut. possibilité de changer la taille de la police
 const createSVGOption = (fontSize, color) => ({
   fontSize,
@@ -11,12 +12,56 @@ const createSVGOption = (fontSize, color) => ({
   attributes: {
     fill: color,
   },
-  // maxWidth: 100,
-  // textOverflow: 'ellipsis',
 });
 
+const ellipsisByWord = (text, getWidth, maxWidth, maxLine) => {
+  const lines = [];
+  let line = [];
+  let hasEllipsis = false;
+  text.split(' ').forEach((word, index, words) => {
+    if (lines.length >= maxLine) {
+      hasEllipsis = true;
+      return;
+    }
+    if (index >= words.length - 1) {
+      lines.push(line.join(' '));
+      line = [];
+      return;
+    }
+    const tmp = [...line, word].join(' ');
+
+    if (getWidth(tmp) >= maxWidth) {
+      lines.push(line.join(' '));
+      line = [word];
+    } else line.push(word);
+  });
+  if (hasEllipsis) {
+    lines[lines.length - 1] += '...';
+  }
+  return lines;
+};
+
+const ellipsisByChar = (text, getWidth, maxWidth) => {
+  let line = '';
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+    if (getWidth(line + char) >= maxWidth) {
+      // on enleve un charatere tant que ça ne passe pas en largeur
+      do {
+        line = `${line.slice(0, line.length - 2)}...`;
+      } while (getWidth(line) >= maxWidth);
+      return line;
+    }
+    line += char;
+  }
+  console.log(line);
+  return line;
+};
+
+// GENERATION
+
 // permet de générer une carte entourage pour le partage. output: sortie de l'image selon le format voulue
-function generateCVPreview({ name, description, ambitions, input }) {
+function generateCVPreview(image, name, description, ambitions) {
   const ratio = 1.3;
   // todo: variables a mettre en options
   const imageWidth = Math.trunc(520 * ratio);
@@ -64,7 +109,7 @@ function generateCVPreview({ name, description, ambitions, input }) {
   );
 
   // creation de l'image
-  return sharp(input)
+  return sharp(image)
     .resize(imageWidth, imageHeight)
     .composite([
       // masque de couleur entourage
@@ -113,282 +158,313 @@ function generateCVPreview({ name, description, ambitions, input }) {
 
 // permet de générer une carte entourage pour le partage. output: sortie de l'image selon le format voulue
 const createCandidatPreviewV2 = async (
+  image,
   name,
-  gender,
   description,
-  skills,
   ambitions,
-  image
+  skills,
+  gender
 ) => {
-  const cardPadding = 20; // 10;
-  const cardCote = 450; // 325
-  const footerHeight = cardPadding * 4;
-  const cardHeight = cardCote + footerHeight;
-  const cardWidth = cardCote + cardPadding * 2;
-  const cadranHeight = Math.trunc(cardCote * 0.75);
-  const cadranWidth = Math.trunc(cardWidth / 2);
-  const cadranMargin = 10;
-  const logoHeight = footerHeight * 0.8;
+  const getCadran = async (cadranWidth, cadranHeight, cadranMargin) => {
+    const fontRatio = cadranWidth * 2;
+    // text
+    const option1 = createSVGOption(fontRatio * 0.06, '#000');
+    const option2 = createSVGOption(fontRatio * 0.04, '#666');
+    const option3 = createSVGOption(fontRatio * 0.04, '#f55f24');
+    const option4 = createSVGOption(fontRatio * 0.035, '#fff');
 
-  const ratio = 1;
-  // todo: variables a mettre en options
-  const imageWidth = cardWidth * ratio; // Math.trunc(520 * ratio);
-  const imageHeight = cardHeight * ratio; // Math.trunc(272 * ratio);
+    // Name
+    const nameSharp = sharp(
+      Buffer.from(
+        textToSVGBold.getSVG(
+          ellipsisByChar(
+            name,
+            (line) => textToSVG.getMetrics(line, option1).width,
+            cadranWidth
+          ),
+          option1
+        )
+      )
+    ).png();
+    const nameBuffer = await nameSharp.toBuffer();
+    const nameHeight = await nameSharp
+      .metadata()
+      .then((logoMeta) => logoMeta.height);
 
-  // recuperation du logo
-  const logo = sharp('./static/img/01-linkedout-orange-complet.png')
-    .resize({ height: logoHeight })
-    .png();
-  const logoBuffer = await logo.toBuffer();
-  const logoWidth = await logo
-    .metadata()
-    .then((logoMeta) =>
-      Math.trunc((logoHeight * logoMeta.width) / logoMeta.height)
+    // description
+    const descriptionSharp = ellipsisByWord(
+      description,
+      (tmp) => textToSVG.getMetrics(tmp, option2).width,
+      cadranWidth,
+      3
+    ).map((text) => sharp(Buffer.from(textToSVG.getSVG(text, option2))));
+    const descriptionBuffer = await Promise.all(
+      descriptionSharp.map((line) => line.toBuffer())
     );
-
-  // text
-  const option1 = createSVGOption(cardWidth * 0.06, '#000');
-  const option2 = createSVGOption(cardWidth * 0.04, '#666');
-  const option3 = createSVGOption(cardWidth * 0.04, '#f55f24');
-  const option4 = createSVGOption(cardWidth * 0.035, '#fff');
-  // {
-  //   fontSize: cardWidth * 0.04,
-  //   anchor: 'top',
-  //   attributes: {
-  //     fill: '#666',
-  //     maxWidth: 10,
-  //     textOverflow: 'ellipsis',
-  //   },
-  // };
-
-  const nameSharp = sharp(
-    Buffer.from(textToSVGBold.getSVG(name, option1))
-  ).png();
-  const nameBuffer = await nameSharp.toBuffer();
-  const nameHeight = await nameSharp
-    .metadata()
-    .then((logoMeta) => logoMeta.height);
-
-  const descriptionSharp = sharp(
-    Buffer.from(textToSVG.getSVG(description, option2))
-  ).png();
-  const descriptionBuffer = await descriptionSharp.toBuffer();
-  const descriptionHeight = await descriptionSharp
-    .metadata()
-    .then((logoMeta) => logoMeta.height);
-
-  // Caption
-  const caption = `${gender === 0 ? 'Il' : 'Elle'} souhaite travailler dans :`;
-  const captionSharp = sharp(
-    Buffer.from(textToSVG.getSVG(caption, option2))
-  ).png();
-  const captionBuffer = await captionSharp.toBuffer();
-  const captionHeight = await captionSharp
-    .metadata()
-    .then((logoMeta) => logoMeta.height);
-  const captionMargin = 5;
-  // Skills
-  const skillsSharp = skills
-    .slice(0, 2)
-    .map((text) =>
-      sharp(Buffer.from(textToSVGBold.getSVG(text.toLowerCase(), option3)))
+    const descriptionHeight = await Promise.all(
+      descriptionSharp.map((skill) =>
+        skill.metadata().then(({ height }) => height)
+      )
     );
-  const skillBuffers = await Promise.all(
-    skillsSharp.map((skill) => skill.toBuffer())
-  );
-  const skillHeights = await Promise.all(
-    skillsSharp.map((skill) => skill.metadata().then(({ height }) => height))
-  );
-  const skillMargins = 5;
+    const descriptionMargin = 10;
 
-  // Ambition
-  const ambitionSharps = ambitions
-    .slice(0, 2)
-    .map((text) =>
-      sharp(Buffer.from(textToSVGBold.getSVG(text.toLowerCase(), option4)))
+    // Caption
+    const caption = `${
+      gender === 0 ? 'Il' : 'Elle'
+    } souhaite travailler dans :`;
+    const captionSharp = sharp(
+      Buffer.from(textToSVG.getSVG(caption, option2))
+    ).png();
+    const captionBuffer = await captionSharp.toBuffer();
+    const captionHeight = await captionSharp
+      .metadata()
+      .then((logoMeta) => logoMeta.height);
+    const captionMargin = 5;
+
+    // Skills
+    const skillsSharp = skills
+      .slice(0, 2)
+      .map((text) =>
+        sharp(Buffer.from(textToSVGBold.getSVG(text.toLowerCase(), option3)))
+      );
+    const skillBuffers = await Promise.all(
+      skillsSharp.map((skill) => skill.toBuffer())
     );
-  const ambitionBuffers = await Promise.all(
-    ambitionSharps.map((amb) => amb.toBuffer())
-  );
-  const ambitionHeights = await Promise.all(
-    ambitionSharps.map((amb) =>
-      amb.metadata().then((logoMeta) => logoMeta.height)
-    )
-  );
-  const ambitionWidths = await Promise.all(
-    ambitionSharps.map((amb) =>
-      amb.metadata().then((logoMeta) => logoMeta.width)
-    )
-  );
-  const ambitionMargins = 5;
-  const ambitionPadding = 2;
-  // cadran
-  const cadranBuffer = await sharp({
-    create: {
-      width: cadranWidth,
-      height: cadranHeight,
-      channels: 3,
-      background: '#FFF',
-    },
-  })
-    .composite([
-      // les 3 textes et leurs positions dans l'image
-      {
-        input: nameBuffer,
-        top: cadranMargin,
-        left: 0,
+    const skillHeights = await Promise.all(
+      skillsSharp.map((skill) => skill.metadata().then(({ height }) => height))
+    );
+    const skillMargins = 5;
+
+    // Ambition
+    const ambitionSharps = ambitions
+      .slice(0, 2)
+      .map((text) =>
+        sharp(Buffer.from(textToSVGBold.getSVG(text.toLowerCase(), option4)))
+      );
+    const ambitionBuffers = await Promise.all(
+      ambitionSharps.map((amb) => amb.toBuffer())
+    );
+    const ambitionHeights = await Promise.all(
+      ambitionSharps.map((amb) =>
+        amb.metadata().then((logoMeta) => logoMeta.height)
+      )
+    );
+    const ambitionWidths = await Promise.all(
+      ambitionSharps.map((amb) =>
+        amb.metadata().then((logoMeta) => logoMeta.width)
+      )
+    );
+    const ambitionMargins = 5;
+    const ambitionPadding = 2;
+
+    // cadran
+    return sharp({
+      create: {
+        width: cadranWidth,
+        height: cadranHeight,
+        channels: 3,
+        background: '#FFF',
       },
-      // description
-      // {
-      //   input: descriptionBuffer,
-      //   top: 10 + nameHeight + 5,
-      //   left: 0,
-      // },
-      // Skills text
-      ...skillBuffers.map((input, index) => ({
-        input,
-        top:
-          cadranMargin +
-          nameHeight +
-          index * skillHeights[0] +
-          descriptionHeight,
-        left: 0,
-      })),
-      // Ambition caption
-      {
-        input: captionBuffer,
-        top:
-          cadranHeight -
-          captionHeight -
-          ambitionHeights.reduce((acc, cur) => acc + cur + ambitionMargins) -
-          cadranMargin -
-          captionMargin,
-        left: 0,
-      },
-      // ambition background
-      ...ambitionHeights.map((ambitionHeight, index) => ({
-        input: {
-          create: {
-            width: ambitionWidths[index] + 10 * 2,
-            height: ambitionHeight + ambitionPadding,
-            channels: 3,
-            background: '#f55f24',
-          },
+    })
+      .composite([
+        // les 3 textes et leurs positions dans l'image
+        {
+          input: nameBuffer,
+          top: cadranMargin,
+          left: 0,
         },
-        top:
-          cadranHeight -
-          ambitionHeights.reduce((acc, cur, ih) => {
-            if (index < ih) {
-              return acc;
-            }
-            return acc + cur + ambitionMargins;
-          }) -
-          cadranMargin -
-          ambitionPadding / 2,
-        left: 0,
-      })),
-      // ambition text
-      ...ambitionBuffers.map((input, index) => ({
-        input,
-        top:
-          cadranHeight -
-          ambitionHeights.reduce((acc, cur, ih) => {
-            if (index < ih) {
-              return acc;
-            }
-            return acc + cur + ambitionMargins;
-          }) -
-          cadranMargin,
-        left: 10,
-      })),
-    ])
-    .png()
-    .toBuffer();
+        ...descriptionBuffer.map((input, index) => ({
+          input,
+          top: cadranMargin + nameHeight + index * descriptionHeight[0],
+          left: 0,
+        })),
+        ...skillBuffers.map((input, index) => ({
+          input,
+          top:
+            cadranMargin +
+            nameHeight +
+            descriptionMargin +
+            index * skillHeights[0] +
+            index * skillMargins +
+            descriptionHeight.reduce((acc, val) => acc + val),
+          left: 0,
+        })),
+        // Ambition caption
+        {
+          input: captionBuffer,
+          top:
+            cadranHeight -
+            captionHeight -
+            ambitionHeights.reduce((acc, cur) => acc + cur + ambitionMargins) -
+            cadranMargin -
+            captionMargin,
+          left: 0,
+        },
+        // ambition background
+        ...ambitionHeights.map((ambitionHeight, index) => ({
+          input: {
+            create: {
+              width: ambitionWidths[index] + 10 * 2,
+              height: ambitionHeight + ambitionPadding,
+              channels: 3,
+              background: '#f55f24',
+            },
+          },
+          top:
+            cadranHeight -
+            ambitionHeights.reduce((acc, cur, ih) => {
+              if (index < ih) {
+                return acc;
+              }
+              return acc + cur + ambitionMargins;
+            }) -
+            cadranMargin -
+            ambitionPadding / 2,
+          left: 0,
+        })),
+        // ambition text
+        ...ambitionBuffers.map((input, index) => ({
+          input,
+          top:
+            cadranHeight -
+            ambitionHeights.reduce((acc, cur, ih) => {
+              if (index < ih) {
+                return acc;
+              }
+              return acc + cur + ambitionMargins;
+            }) -
+            cadranMargin,
+          left: 10,
+        })),
+      ])
+      .png()
+      .toBuffer();
+  };
+  const getCard = async () => {
+    const cardPadding = 20; // 10;
+    const cardCote = 450; // 325
+    const footerHeight = cardPadding * 4;
+    const cardHeight = cardCote + footerHeight;
+    const cardWidth = cardCote + cardPadding * 2;
+    const cadranHeight = Math.trunc(cardCote * 0.75);
+    const cadranWidth = Math.trunc(cardWidth / 2);
+    const cadranMargin = 10;
+    const logoHeight = footerHeight * 0.8;
 
-  // creation de l'image
-  const cardSharp = sharp({
-    create: {
-      width: cardWidth,
+    // recuperation du logo
+    const logo = sharp('./static/img/01-linkedout-orange-complet.png')
+      .resize({ height: logoHeight })
+      .png();
+    const logoBuffer = await logo.toBuffer();
+    const logoWidth = await logo
+      .metadata()
+      .then((logoMeta) =>
+        Math.trunc((logoHeight * logoMeta.width) / logoMeta.height)
+      );
+    const cadranBuffer = await getCadran(
+      cadranWidth,
+      cadranHeight,
+      cadranMargin
+    );
+
+    // creation de l'image
+    const cardSharp = sharp({
+      create: {
+        width: cardWidth,
+        height: cardHeight,
+        channels: 4,
+        background: { r: 0, g: 0, b: 0, alpha: 0 },
+      },
+    })
+      .composite([
+        // CADRAN
+        // haut
+        {
+          input: {
+            create: {
+              width: cardWidth,
+              height: cardPadding,
+              channels: 3,
+              background: '#FFF',
+            },
+          },
+          blend: 'over',
+          top: 0,
+          left: 0,
+        },
+        // gauche
+        {
+          input: {
+            create: {
+              width: cardPadding,
+              height: cardCote - cardPadding,
+              channels: 3,
+              background: '#FFF',
+            },
+          },
+          blend: 'over',
+          top: cardPadding,
+          left: 0,
+        },
+        // droite
+        {
+          input: {
+            create: {
+              width: cardPadding,
+              height: cardCote - cardPadding,
+              channels: 3,
+              background: '#FFF',
+            },
+          },
+          blend: 'over',
+          top: cardPadding,
+          left: cardCote + cardPadding,
+        },
+        // bas
+        {
+          input: {
+            create: {
+              width: cardWidth,
+              height: footerHeight,
+              channels: 3,
+              background: '#FFF',
+            },
+          },
+          blend: 'over',
+          top: cardCote,
+          left: 0,
+        },
+        // ZONE INFORMATION
+        {
+          input: cadranBuffer,
+          blend: 'over',
+          top: Math.trunc(cardCote / 2 + cardPadding / 2 - cadranHeight / 2),
+          left: cardPadding,
+        },
+        // logo linkedout
+        {
+          input: logoBuffer,
+          blend: 'over',
+          top: cardHeight - footerHeight / 2 - logoHeight / 2,
+          left: cardWidth / 2 - logoWidth / 2,
+        },
+      ])
+      .png();
+    return {
+      buffer: await cardSharp.toBuffer(),
       height: cardHeight,
-      channels: 4,
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    },
-  })
-    .composite([
-      // CADRAN
-      // haut
-      {
-        input: {
-          create: {
-            width: cardWidth,
-            height: cardPadding,
-            channels: 3,
-            background: '#FFF',
-          },
-        },
-        blend: 'over',
-        top: 0,
-        left: 0,
-      },
-      // gauche
-      {
-        input: {
-          create: {
-            width: cardPadding,
-            height: cardCote - cardPadding,
-            channels: 3,
-            background: '#FFF',
-          },
-        },
-        blend: 'over',
-        top: cardPadding,
-        left: 0,
-      },
-      // droite
-      {
-        input: {
-          create: {
-            width: cardPadding,
-            height: cardCote - cardPadding,
-            channels: 3,
-            background: '#FFF',
-          },
-        },
-        blend: 'over',
-        top: cardPadding,
-        left: cardCote + cardPadding,
-      },
-      // bas
-      {
-        input: {
-          create: {
-            width: cardWidth,
-            height: footerHeight,
-            channels: 3,
-            background: '#FFF',
-          },
-        },
-        blend: 'over',
-        top: cardCote,
-        left: 0,
-      },
-      // ZONE INFORMATION
-      {
-        input: cadranBuffer,
-        blend: 'over',
-        top: Math.trunc(cardCote / 2 + cardPadding / 2 - cadranHeight / 2),
-        left: cardPadding,
-      },
-      // logo linkedout
-      {
-        input: logoBuffer,
-        blend: 'over',
-        top: cardHeight - footerHeight / 2 - logoHeight / 2,
-        left: cardWidth / 2 - logoWidth / 2,
-      },
-    ])
-    .png();
-  const cardBuffer = await cardSharp.toBuffer();
+      width: cardWidth,
+    };
+  };
+  const ratio = 2.1;
+  // todo: variables a mettre en options
+  const imageWidth = Math.trunc(520 * ratio); // cardWidth * ratio;
+  const imageHeight = Math.trunc(272 * ratio); // cardHeight * ratio;
+  const {
+    buffer: cardBuffer,
+    height: cardHeight,
+    width: cardWidth,
+  } = await getCard();
 
   return sharp(image)
     .resize(imageWidth, imageHeight)
@@ -403,30 +479,30 @@ const createCandidatPreviewV2 = async (
     .sharpen();
 };
 
-const fs = require('fs');
+// const fs = require('fs');
 
-const exec = () => {
-  fs.readFile('./static/img/arthur.png', (err, data) => {
-    if (data) {
-      createCandidatPreviewV2(
-        'Johann'.toUpperCase(),
-        0,
-        'Un monstre moi? \nMais pas du tout !\n Je suis... Un vrai démon !',
-        ['Enjoué', 'Déterminé'],
-        ['Le jardinage', 'Les espaves verts', 'La lotterie'],
-        data
-      ).then((sharp) =>
-        sharp
-          .png()
-          .toBuffer()
-          .then((buffer) => {
-            fs.writeFile('./profil-preview.jpeg', buffer, console.log);
-          })
-      );
-    }
-  });
-};
+// const exec = () => {
+//   fs.readFile('./static/img/arthur.png', (err, data) => {
+//     if (data) {
+//       createCandidatPreviewV2(
+//         'Johannfdfskfhs'.toUpperCase(),
+//         0,
+//         "Un monstre moi? Mais pas du tout ! Je suis... Un vrai démon ! Mjonir n'a rien contre moi. Je suis le meilleur",
+//         ['Enjoué', 'Déterminé'],
+//         ['Le jardinage', 'Les espaves verts', 'La lotterie'],
+//         data
+//       ).then((sharp) =>
+//         sharp
+//           .png()
+//           .toBuffer()
+//           .then((buffer) => {
+//             fs.writeFile('./profil-preview.jpeg', buffer, console.log);
+//           })
+//       );
+//     }
+//   });
+// };
 
-exec();
+// exec();
 
-module.exports = generateCVPreview;
+module.exports = createCandidatPreviewV2;
