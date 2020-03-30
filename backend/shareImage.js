@@ -545,28 +545,4 @@ const createCandidatPreviewV2 = async (
     .sharpen();
 };
 
-const fs = require('fs');
-
-const exec = () => {
-  fs.readFile('./static/img/arthur.png', (err, data) => {
-    if (data) {
-      createCandidatPreviewV2(
-        data,
-        'Johan',
-        'Je suis le meilleur des meilleurs. Je suis le meilleur des meilleurs. Je suis le meilleur des meilleurs.',
-        ['Le jardinage', 'Les espaves verts espaves verts', 'La lotterie'],
-        ['Enjoué', 'Déterminé Déterminé Déterminé'],
-        1
-      )
-        .then((sharp) => sharp.png().toBuffer())
-        .then((buffer) => {
-          fs.writeFile('./profil-preview.jpeg', buffer, console.log);
-        })
-        .catch(console.error);
-    }
-  });
-};
-
-exec();
-
 module.exports = createCandidatPreviewV2;
