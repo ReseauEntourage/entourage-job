@@ -89,9 +89,21 @@ const deleteUser = (id) => {
 const getUser = (id) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getUser -';
-    console.log(`${infoLog} Récupérer un User à partir de son id`);
+    console.log(`${infoLog} Récupérer un User à partir de son id : ${id}`);
     User.findByPk(id, {
       attributes: ATTRIBUTES_USER,
+      include: INCLUDE_USER_CANDIDAT,
+    })
+      .then((result) => resolve(result))
+      .catch((err) => reject(err));
+  });
+};
+
+const getCompleteUser = (id) => {
+  return new Promise((resolve, reject) => {
+    const infoLog = 'getCompleteUser -';
+    console.log(`${infoLog} Récupérer un User à partir de son id : ${id}`);
+    User.findByPk(id, {
       include: INCLUDE_USER_CANDIDAT,
     })
       .then((result) => resolve(result))
@@ -340,6 +352,7 @@ module.exports = {
   createUser,
   deleteUser,
   getUser,
+  getCompleteUser,
   getUserByEmail,
   getUsers,
   setUser,
