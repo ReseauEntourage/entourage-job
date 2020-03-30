@@ -51,14 +51,14 @@ router.post('/login', auth.optional, (req, res, next) => {
   )(req, res, next);
 });
 
-router.post('/logout', auth.required, (req, res, next) => {
+router.post('/logout', auth.required, (req, res /* , next */) => {
   req.logout();
 
   // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
   res.redirect(process.env.SERVER_URL);
 });
 
-router.post('/forgot', (req, res, next) => {
+router.post('/forgot', (req, res /* , next */) => {
   let token = null;
   let user = null;
   const { email } = req.body;
@@ -121,7 +121,10 @@ router.post('/forgot', (req, res, next) => {
     });
 });
 
-router.get('/reset/:userId/:token', (req, res, next) => {
+/**
+ * GET Vérification lien de réinitialisation mot de passe
+ */
+router.get('/reset/:userId/:token', (req, res /* , next */) => {
   const infoLog = 'GET /reset/:userId/:token -';
 
   const { userId, token } = req.params;
@@ -139,8 +142,8 @@ router.get('/reset/:userId/:token', (req, res, next) => {
         );
         return res.status(400).send('Lien non valide');
       }
-      console.log(`${infoLog} DEBUG :`);
-      console.log(user);
+      /* console.log(`${infoLog} DEBUG :`);
+      console.log(user); */
       if (
         !AuthController.validatePassword(token, user.hashReset, user.saltReset)
       ) {
@@ -155,8 +158,72 @@ router.get('/reset/:userId/:token', (req, res, next) => {
     });
 });
 
-// GET current route (required, only authenticated users have access)
-router.get('/current', auth.required, async (req, res, next) => {
+/**
+ * POST Réinitialisation mot de passe
+ */
+router.post('/reset/:userId/:token', (req, res /* , next */) => {
+  const infoLog = 'POST /reset/:userId/:token -';
+  const { userId, token } = req.params;
+  const { newPassword, confirmPassword } = req.body;
+  console.log(
+    `${infoLog} Vérification du lien de réinitialisation de mot de passe`
+  );
+  console.log(`${infoLog} userId : ${userId} , token : ${token}`);
+
+  UserController.getCompleteUser(userId)
+    .then((userFound) => {
+      const user = userFound;
+      if (!user) {
+        console.log(
+          `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
+        );
+        return res.status(400).send({ error: 'Lien non valide' });
+      }
+      /* console.log(`${infoLog} DEBUG :`);
+      console.log(user); */
+      if (
+        !AuthController.validatePassword(token, user.hashReset, user.saltReset)
+      ) {
+        console.log(`${infoLog} Token invalide`);
+        return res.status(400).send({ error: 'Lien non valide' });
+      }
+      console.log(`${infoLog} Lien valide`);
+      if (newPassword !== confirmPassword) {
+        console.log(
+          `${infoLog} La confirmation de mot de passe est incorrecte`
+        );
+        return res
+          .status(400)
+          .send({ error: `La confirmation du mot de passe est incorrecte` });
+      }
+      console.log(`${infoLog} Les 2 mots de passe sont valides`);
+      console.log(`${infoLog} Chiffrement du nouveau mot de passe`);
+      const { hash, salt } = AuthController.encryptPassword(newPassword);
+      console.log(`${infoLog} Mise à jour du mot de passe de l'utilisateur`);
+      return UserController.setUser(user.id, {
+        password: hash,
+        salt,
+        hashReset: null,
+        saltReset: null,
+      });
+    })
+    .then((userUpdated) => {
+      if (userUpdated) {
+        console.log(`${infoLog} Mise à jour réussie`);
+        return res.status(200).json(userUpdated);
+      }
+      return res.status(401).send(`Une erreur inconnue est survenue`);
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(401).send(`Une erreur est survenue`);
+    });
+});
+
+/**
+ * GET current route (required, only authenticated users have access)
+ */
+router.get('/current', auth.required, async (req, res /* , next */) => {
   const {
     payload: { id },
   } = req;

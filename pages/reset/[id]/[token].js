@@ -31,10 +31,8 @@ const ResetPasswordPage = () => {
       <Section size="large" style="muted">
         <div className="uk-flex uk-flex-center">
           {loading && (
-            <div className="uk-flex uk-flex-center">
-              <div className="uk-text-center">
-                <div data-uk-spinner />
-              </div>
+            <div className="uk-text-center">
+              <div data-uk-spinner />
             </div>
           )}
           {valide ? (
@@ -48,12 +46,10 @@ const ResetPasswordPage = () => {
                     { newPassword, confirmPassword }
                   )
                     .then(() => {
-                      router.push('/login');
+                      router.push('/reset/success');
                     })
-                    .catch(() => {
-                      setError(
-                        'Erreur de connexion. Identifiant ou mot de passe invalide.'
-                      );
+                    .catch((err) => {
+                      setError(err.response.data.error);
                     });
                 }}
               />
