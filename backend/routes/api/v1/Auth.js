@@ -62,7 +62,9 @@ router.post('/forgot', (req, res, next) => {
   let token = null;
   let user = null;
   const { email } = req.body;
-  console.log(email);
+  console.log(
+    `Demande de réinitialisation du mot de passe du compte : ${email}`
+  );
 
   if (!email) {
     return res.status(422).json({
@@ -71,27 +73,31 @@ router.post('/forgot', (req, res, next) => {
       },
     });
   }
-  UserController.getUserByEmail(email)
+  return UserController.getUserByEmail(email)
     .then((userFound) => {
       user = userFound;
       if (!user) {
-        return res.status(200).send('Demande envoyée');
+        console.log(`Aucun user rattaché à l'adresse mail suivante : ${email}`);
+        return false;
       }
       console.log(
-        `Demande de réinitialisation du mot de passe demandée par user.id = ${user.id}`
+        `Demande de réinitialisation du mot de passe : user.id = ${user.id}`
       );
       const endDate = Date.now() + 1000 * 60 * 60 * 24;
       token = AuthController.generateJWT(user, endDate);
-      console.log(token);
+      // console.log(token);
       const { hash, salt } = AuthController.encryptPassword(token);
-      console.log(hash);
-      console.log(salt);
+      // console.log(hash);
+      // console.log(salt);
       return UserController.setUser(user.id, {
         hashReset: hash,
         saltReset: salt,
       });
     })
     .then((nbUpdate) => {
+      if (!nbUpdate) {
+        return res.status(200).send('Demande envoyée');
+      }
       console.log(`Nombre de User mis à jour : ${nbUpdate}`);
       if (!nbUpdate[0]) {
         return res.status(401).send(`Une erreur est survenue`);
