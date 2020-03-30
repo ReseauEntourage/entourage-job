@@ -233,7 +233,7 @@ const createCandidatPreviewV2 = async (
       heights: descriptionHeight,
     } = await buildLines(
       ellipsisByWord(
-        description.length > 0
+        description && description.length > 0
           ? description
           : "Il cherche un job pour s'en sortir.",
         (tmp) => textToSVG.getMetrics(tmp, options[1]).width,
@@ -267,7 +267,7 @@ const createCandidatPreviewV2 = async (
       heights: captionHeights,
     } = await buildLines(
       ellipsisByWord(
-        ambitions.length > 0
+        ambitions && ambitions.length > 0
           ? `${gender === 0 ? 'Il' : 'Elle'} souhaite \n travailler dans :`
           : `${gender === 0 ? 'Il' : 'Elle'} reste ${
               gender === 0 ? 'ouvert' : 'ouverte'
