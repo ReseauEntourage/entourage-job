@@ -140,7 +140,7 @@ router.get('/reset/:userId/:token', (req, res /* , next */) => {
         console.log(
           `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
         );
-        return res.status(400).send('Lien non valide');
+        return res.status(403).send({ error: 'Lien non valide' });
       }
       /* console.log(`${infoLog} DEBUG :`);
       console.log(user); */
@@ -148,7 +148,7 @@ router.get('/reset/:userId/:token', (req, res /* , next */) => {
         !AuthController.validatePassword(token, user.hashReset, user.saltReset)
       ) {
         console.log(` ${infoLog} Token invalide`);
-        return res.status(400).send('Lien non valide');
+        return res.status(403).send({ error: 'Lien non valide' });
       }
       return res.status(200).send('Lien valide');
     })
@@ -177,7 +177,7 @@ router.post('/reset/:userId/:token', (req, res /* , next */) => {
         console.log(
           `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
         );
-        return res.status(400).send({ error: 'Lien non valide' });
+        return res.status(403).send({ error: 'Lien non valide' });
       }
       /* console.log(`${infoLog} DEBUG :`);
       console.log(user); */
@@ -185,7 +185,7 @@ router.post('/reset/:userId/:token', (req, res /* , next */) => {
         !AuthController.validatePassword(token, user.hashReset, user.saltReset)
       ) {
         console.log(`${infoLog} Token invalide`);
-        return res.status(400).send({ error: 'Lien non valide' });
+        return res.status(403).send({ error: 'Lien non valide' });
       }
       console.log(`${infoLog} Lien valide`);
       if (newPassword !== confirmPassword) {

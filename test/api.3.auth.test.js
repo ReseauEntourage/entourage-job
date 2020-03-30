@@ -63,7 +63,10 @@ describe('Tests des routes API - Partie Authentification', () => {
             USER_EXAMPLE
           );
         })
-        .then(() => done());
+        .then((res) => {
+          user = res.data;
+          done();
+        });
     });
 
     after((done) => {
@@ -161,15 +164,15 @@ describe('Tests des routes API - Partie Authentification', () => {
             .then((res) =>
               assert.strictEqual(
                 res.status,
-                403,
-                "Le lien reçu n'est pas valide"
+                401,
+                "Le lien reçu n'est pas valide (id non conforme)"
               )
             )
             .catch((err) =>
               assert.strictEqual(
                 err.response.status,
-                403,
-                "Le lien reçu n'est pas valide"
+                401,
+                "Le lien reçu n'est pas valide (id non conforme)"
               )
             );
         });
@@ -215,15 +218,15 @@ describe('Tests des routes API - Partie Authentification', () => {
             .then((res) =>
               assert.strictEqual(
                 res.status,
-                403,
-                "Le lien reçu n'est pas valide"
+                401,
+                "Le lien reçu n'est pas valide (id non conforme)"
               )
             )
             .catch((err) =>
               assert.strictEqual(
                 err.response.status,
-                403,
-                "Le lien reçu n'est pas valide"
+                401,
+                "Le lien reçu n'est pas valide (id non conforme)"
               )
             );
         });
