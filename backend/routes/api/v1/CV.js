@@ -68,62 +68,61 @@ router.post(
         console.error(error);
       }
     }
-
-    UserController.getUser(reqCV.UserId).then((user) => {
-      // Génération de la photo de preview
-      if (reqCV.urlImg) {
-        S3.download(reqCV.urlImg)
-          .then(({ Body }) =>
-            createPreviewImage({
-              input: Body,
-              name: user.firstName.toUpperCase(),
-              description:
-                reqCV.catchphrase ||
-                'EN GALÈRE, CHERCHE UN JOB POUR S’EN SORTIR.',
-              ambition:
-                reqCV.ambitions && reqCV.ambitions.length > 0
-                  ? reqCV.ambitions
-                      .slice(0, 2)
-                      .map((ambition) => ambition.toUpperCase())
-                      .join('. ')
-                  : 'OUVERT À TOUTES PROPOSITIONS',
-            })
-              .jpeg()
-              .toBuffer()
-          )
-          .then((buffer) =>
-            S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
-          )
-          .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
-          .catch(console.error);
-      }
-    });
-
-    try {
+    // completion asynchrone de la generation de limage de preview et de la creation du cv par le controlleur
+    return Promise.all([
+      reqCV.urlImg
+        ? UserController.getUser(reqCV.UserId)
+            .then(({ firstName, gender }) =>
+              // Génération de la photo de preview
+              S3.download(reqCV.urlImg).then(({ Body }) =>
+                createPreviewImage(
+                  Body,
+                  firstName,
+                  reqCV.catchphrase,
+                  reqCV.ambitions,
+                  reqCV.skills,
+                  gender
+                )
+              )
+            )
+            .then((sharpData) => sharpData.jpeg().toBuffer())
+            .then((buffer) =>
+              S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
+            )
+            .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
+            .catch(console.error)
+        : null,
       // création du corps du CV
-      const cv = await CVController.createCV(reqCV);
-      // notification mail to coach and admin
-      if (req.payload.role === 'Candidat') {
-        const mailSubject = 'Soumission CV';
-        const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
-        // notification de l'admin
-        sendMail({
-          toEmail: process.env.MAILJET_TO_EMAIL,
-          subject: mailSubject,
-          text: mailText,
-        });
-        // Récupération de l'email du coach pour l'envoie du mail
-        UserController.getUser(req.payload.userToCoach)
-          .then(({ email }) =>
-            sendMail({ toEmail: email, subject: mailSubject, text: mailText })
-          )
-          .catch((err) => console.log('Pas de coach rattaché au candidat'));
-      }
-      return res.status(200).json(cv);
-    } catch (err) {
-      console.log(err);
-      return res.status(401).send(`Une erreur est survenue`);
-    }
+      CVController.createCV(reqCV)
+        .then((cv) => {
+          // notification mail to coach and admin
+          if (req.payload.role === 'Candidat') {
+            const mailSubject = 'Soumission CV';
+            const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
+            // notification de l'admin
+            sendMail({
+              toEmail: process.env.MAILJET_TO_EMAIL,
+              subject: mailSubject,
+              text: mailText,
+            });
+            // Récupération de l'email du coach pour l'envoie du mail
+            UserController.getUser(req.payload.userToCoach)
+              .then(({ email }) =>
+                sendMail({
+                  toEmail: email,
+                  subject: mailSubject,
+                  text: mailText,
+                })
+              )
+              .catch((err) => console.log('Pas de coach rattaché au candidat'));
+          }
+          return res.status(200).json(cv);
+        })
+        .catch((err) => {
+          console.log(err);
+          return res.status(401).send(`Une erreur est survenue`);
+        }),
+    ]);
   }
 );
 
