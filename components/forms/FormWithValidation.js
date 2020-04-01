@@ -85,12 +85,14 @@ export class Form extends Component {
   onSubmit(event) {
     event.preventDefault();
     const { handleSubmit } = this.state;
-    handleSubmit()
+    handleSubmit() // Vérifie les champs avant soumission
       .then((fields) => {
+        // Si les validators sont OK.
         const { afterSubmit, fieldsInfo, defaultValues } = this.props;
-        this.setState(
+        // S273 : suppression de la réinitialisation provoquant le bug
+        /* this.setState(
           this.constructor.initializeForm(fieldsInfo, defaultValues)
-        );
+        ); */
         afterSubmit(fields, (error) => this.setState({ error })); // c'est le props onsubmit de FormWithValidation
       })
       .catch(console.error);
