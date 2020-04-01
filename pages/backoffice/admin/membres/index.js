@@ -10,6 +10,7 @@ import HeaderBackoffice from '../../../../components/headers/HeaderBackoffice';
 import axios from '../../../../Axios';
 import ModalEdit from '../../../../components/modals/ModalEdit';
 import schemaCreateUser from '../../../../components/forms/schema/formCreateUser';
+import ImgProfile from '../../../../components/headers/ImgProfile';
 
 function translateStatusCV(status) {
   if (status === 'Pending') {
@@ -236,13 +237,7 @@ const MembersAdmin = ({ query: { role } }) => {
                       >
                         <td>
                           <GridNoSSR row gap="small" middle>
-                            <img
-                              className="uk-preserve-width uk-border-circle"
-                              src="/static/img/arthur.png"
-                              width="48"
-                              style={{ height: '48px' }}
-                              alt={`${member.firsName} profil`}
-                            />
+                            <ImgProfile user={member} size={48} />
                             <GridNoSSR column gap="collapse">
                               <span className="uk-text-bold">
                                 {member.firstName} {member.lastName}

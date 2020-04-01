@@ -14,6 +14,7 @@ import {
 import './Header.less';
 import HeaderUserDropdown from './HeaderUserDropdown';
 import { UserContext } from '../store/UserProvider';
+import ImgProfile from './ImgProfile';
 
 const HeaderConnected = ({ isHome }) => {
   const { user, logout } = useContext(UserContext);
@@ -167,13 +168,7 @@ const HeaderConnected = ({ isHome }) => {
               </li>
             ))}
           <li className="uk-nav-header uk-flex uk-flex-middle">
-            <img
-              className="uk-border-circle"
-              src="/static/img/arthur-background.jpg"
-              alt="Arthur Avatar"
-              width="40"
-              style={{ height: '40px' }}
-            />
+            <ImgProfile />
             <span className="uk-margin-small-left">Salut {user.firstName}</span>
           </li>
           {LINKS_CONNECTED.dropdown.map(
