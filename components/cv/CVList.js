@@ -64,7 +64,7 @@ const CVList = ({ nb, search }) => {
 
   return (
     <div className="uk-text-center">
-      <div data-uk-spinner />
+      <div data-uk-spinner="" />
     </div>
   );
 };

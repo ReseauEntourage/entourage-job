@@ -69,7 +69,7 @@ const JeVeuxTravailler = () => {
               <p>J&apos;ai les papiers requis pour intégrer LinkedOut</p>
               <Button
                 style="primary"
-                href="https://airtable.com/shrxZHflIJQqGlQAd"
+                href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
                 isExternal
                 newTab
               >

@@ -111,7 +111,13 @@ export class Form extends Component {
 
   render() {
     const { error, onSubmit } = this.state;
-    const { submitText, afterCancel, fieldsInfo, id } = this.props;
+    const {
+      submitText,
+      afterCancel,
+      fieldsInfo,
+      id,
+      defaultValues,
+    } = this.props;
     return (
       <div className="uk-width-1-1">
         <form
@@ -130,7 +136,12 @@ export class Form extends Component {
               error={error}
               submitText={submitText}
               onSubmit={onSubmit}
-              onCancel={afterCancel}
+              onCancel={() => {
+                this.setState(
+                  this.constructor.initializeForm(fieldsInfo, defaultValues)
+                );
+                afterCancel();
+              }}
             />
           </div>
         </form>

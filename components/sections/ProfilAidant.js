@@ -47,7 +47,7 @@ const coupsDePouce = [
             </p>
             <Button
               style="default"
-              href="https://airtable.com/shr6mZlTLgGFBh9om"
+              href={process.env.AIRTABLE_LINK_BECOME_COACH}
               isExternal
               newTab
             >
@@ -129,7 +129,7 @@ const coupsDePouce = [
         description: (
           <Button
             style="primary"
-            href="https://airtable.com/shrKPT4yAv6LQmQto"
+            href={process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION}
             isExternal
             newTab
           >

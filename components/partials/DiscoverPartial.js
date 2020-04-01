@@ -18,7 +18,7 @@ const DiscoverPartial = () => {
 
   const Content = () => {
     if (error) return <p className="uk-text-italic">{error}</p>;
-    if (cvs === undefined) return <div data-uk-spinner />;
+    if (cvs === undefined) return <div data-uk-spinner="" />;
     return (
       <GridNoSSR
         childWidths={['1-2@s']}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
-const CheckboxCGU = ({
+const Checkbox = ({
   id,
   name,
   defaultValue,
@@ -40,7 +40,7 @@ const CheckboxCGU = ({
   );
 };
 
-CheckboxCGU.propTypes = {
+Checkbox.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   disabled: PropTypes.string.isRequired,
@@ -52,9 +52,9 @@ CheckboxCGU.propTypes = {
     message: PropTypes.bool,
   }),
 };
-CheckboxCGU.defaultProps = {
+Checkbox.defaultProps = {
   valid: undefined,
   defaultValue: false,
 };
 
-export default CheckboxCGU;
+export default Checkbox;

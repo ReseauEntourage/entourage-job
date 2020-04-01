@@ -19,8 +19,10 @@ const CVFicheEdition = ({ cv, gender, onChange, disablePicture }) => {
   const [previewUrl, setPreviewUrl] = useState(undefined);
   useEffect(() => {
     if (cv.status !== 'Draft') {
+      // Use hash to reload image if an update is done
+      const previewHash = Date.now();
       setPreviewUrl(
-        `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${cv.UserId}.${cv.status}.preview.jpg`
+        `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${cv.UserId}.${cv.status}.preview.jpg?${previewHash}`
       );
     }
   }, [cv]);

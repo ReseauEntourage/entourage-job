@@ -11,7 +11,7 @@ import Select from './Select';
 import FieldGroup from './FieldGroup';
 import Input from './Input';
 import Textarea from './Textarea';
-import CheckboxCGU from './CheckboxCGU';
+import Checkbox from './Checkbox';
 import StepperModal from '../../modals/StepperModal';
 import SuccessModalContent from '../../modals/SuccessModalContent';
 import FormWithValidation from '../FormWithValidation';
@@ -125,7 +125,7 @@ export default class FieldFactory {
     }
     if (data.component === 'checkbox') {
       return (
-        <CheckboxCGU
+        <Checkbox
           id={`${this.id}-${data.id}`}
           name={data.name}
           title={data.title}
@@ -138,15 +138,12 @@ export default class FieldFactory {
     }
     if (data.component === 'cgu') {
       return (
-        <CheckboxCGU
+        <Checkbox
           id={`${this.id}-${data.id}`}
           name={data.name}
           title={
             <span>
-              J&apos;accepte les{' '}
-              <Link href="#">
-                <a>CGU</a>
-              </Link>
+              J&apos;accepte les <a>CGU</a>
             </span>
           }
           valid={this.getValid(data.name)}

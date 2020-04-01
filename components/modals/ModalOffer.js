@@ -100,7 +100,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                 <span>{translateCategory(currentOffer.isPublic)}</span>
               </div>
               <List className="uk-iconnav uk-grid-medium uk-flex-middle">
-                {loadingIcon && <div data-uk-spinner />}
+                {loadingIcon && <div data-uk-spinner="" />}
                 <ButtonIcon
                   name="pull"
                   className={archived ? 'ent-color-amber' : undefined}
@@ -154,7 +154,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                         setLoadingStatus(false);
                       }}
                     />
-                    {loadingStatus && <div data-uk-spinner />}
+                    {loadingStatus && <div data-uk-spinner="" />}
                   </GridNoSSR>
                   <OfferInfoContainer icon="hashtag" title="Entreprise">
                     {currentOffer.company}

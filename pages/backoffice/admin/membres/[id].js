@@ -29,11 +29,13 @@ const CVPage = () => {
   } = useRouter();
 
   useEffect(() => {
-    setLoading(true);
-    Api.get(`/api/v1/user/${id}`).then(({ data }) => {
-      setUser(data);
-      setLoading(false);
-    });
+    if (id) {
+      setLoading(true);
+      Api.get(`/api/v1/user/${id}`).then(({ data }) => {
+        setUser(data);
+        setLoading(false);
+      });
+    }
   }, [id]);
 
   if (loading) {
@@ -49,7 +51,7 @@ const CVPage = () => {
               retour à la liste
             </SimpleLink>
             <div>
-              <div uk-spinner />
+              <div uk-spinner="" />
               <hr className="ent-divier-backoffice uk-margin-large-top " />
             </div>
           </GridNoSSR>
@@ -285,30 +287,5 @@ const CVPage = () => {
     </LayoutBackOffice>
   );
 };
-CVPage.propTypes = {
-  user: PropTypes.shape({
-    id: PropTypes.string,
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    urlImg: PropTypes.string,
-    role: PropTypes.string,
-    candidat: PropTypes.shape({
-      url: PropTypes.string,
-      coach: PropTypes.shape({
-        firstName: PropTypes.string,
-        lastName: PropTypes.string,
-      }),
-    }),
-    coach: PropTypes.shape({
-      url: PropTypes.string,
-      candidat: PropTypes.shape({
-        id: PropTypes.string,
-        firstName: PropTypes.string,
-        lastName: PropTypes.string,
-      }),
-    }),
-  }).isRequired,
-};
-CVPage.defaultProps = {};
 
 export default CVPage;
