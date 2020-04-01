@@ -4,6 +4,7 @@ import { UserContext } from '../store/UserProvider';
 import { IconNoSSR, SimpleLink } from '../utils';
 import Dropdown from '../utils/Dropdown';
 import './Header.less';
+import ImgProfile from './ImgProfile';
 
 const HeaderUserDropdown = () => {
   const { user, logout } = useContext(UserContext);
@@ -21,13 +22,7 @@ const HeaderUserDropdown = () => {
           textTransform: 'none',
         }}
       >
-        <img
-          className="uk-border-circle"
-          src="/static/img/arthur-background.jpg"
-          width="40"
-          alt="Menu"
-          style={{ height: '40px' }}
-        />
+        <ImgProfile />
         <span className="uk-margin-small-left">Salut {user.firstName}</span>
         <IconNoSSR name="triangle-down" />
       </a>

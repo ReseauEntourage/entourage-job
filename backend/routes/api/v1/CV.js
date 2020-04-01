@@ -156,16 +156,28 @@ router.post('/share', (req, res) => {
 
 /**
  * Route : GET /api/<VERSION>/cv
- * Description : Récupère tous les CVs complets
+ * Description :  Récupère le CV lié au userId passé en query
+ *                ou
+ *                Récupère tous les CVs complets
  */
 router.get('/', (req, res) => {
-  console.log(req.query);
+  const infoLog = 'GET / -';
+  const { userId } = req.query;
+  if (userId) {
+    console.log(
+      `${infoLog} Récupération du CV publié appartenant au userId : ${userId}`
+    );
+  } else {
+    console.log(`${infoLog} Récupération de tous les CVs publiés`);
+  }
 
-  (req.query.userId
+  (userId
     ? CVController.getCVbyUserId(req.query.userId)
     : CVController.getCVs()
   ) // todo bizare getCVs
     .then((listeCVs) => {
+      /* console.log(`${infoLog} Liste des CV trouvés`);
+      console.log(listeCVs); */
       res.status(200).json(listeCVs);
     })
     .catch((err) => {
