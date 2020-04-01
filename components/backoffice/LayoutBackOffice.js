@@ -19,9 +19,6 @@ LayoutBackOffice.propTypes = {
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
   title: PropTypes.string,
-  router: PropTypes.shape({
-    asPath: PropTypes.string,
-  }).isRequired,
 };
 
 LayoutBackOffice.defaultProps = {

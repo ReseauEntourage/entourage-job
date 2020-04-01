@@ -92,7 +92,10 @@ const Suivi = () => {
   if (loading) {
     return (
       <Wrapper>
-        <div className="uk-width-1-1 uk-flex uk-flex-center" data-uk-spinner />
+        <div
+          className="uk-width-1-1 uk-flex uk-flex-center"
+          data-uk-spinner=""
+        />
       </Wrapper>
     );
   }
