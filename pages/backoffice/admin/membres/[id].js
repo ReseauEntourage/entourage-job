@@ -1,6 +1,5 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../../Axios';
@@ -9,14 +8,12 @@ import {
   SimpleLink,
   GridNoSSR,
   IconNoSSR,
-  Card,
 } from '../../../../components/utils';
 import schemaPersonalData from '../../../../components/forms/schema/formPersonalData.json';
 import CVPageContent from '../../../../components/backoffice/cv/CVPageContent';
 import CandidatHeader from '../../../../components/backoffice/cv/CandidatHeader';
 import UserInformationCard from '../../../../components/cards/UserInformationCard';
 import ButtonIcon from '../../../../components/utils/ButtonIcon';
-import ToggleWithConfirmationModal from '../../../../components/backoffice/ToggleWithConfirmationModal';
 import ModalEdit from '../../../../components/modals/ModalEdit';
 
 const CVPage = () => {
@@ -199,20 +196,24 @@ const CVPage = () => {
                             </span>
                           )}
                         </GridNoSSR>
-                        <GridNoSSR row gap="small">
-                          <IconNoSSR name="cog" />
-                          <span className="uk-text-italic">
-                            {user.candidat.hidden ? 'CV caché' : 'CV visible'}
-                          </span>
-                        </GridNoSSR>
-                        <GridNoSSR row gap="small">
-                          <IconNoSSR name="cog" />
-                          <span className="uk-text-italic">
-                            {user.candidat.employed
-                              ? 'A retrouvé un emploi'
-                              : "N'a pas retrouvé d'emploi"}
-                          </span>
-                        </GridNoSSR>
+                        {user.role === 'Candidat'? (
+                          <GridNoSSR row gap="small">
+                            <IconNoSSR name="cog" />
+                            <span className="uk-text-italic">
+                              {user.candidat.hidden ? 'CV caché' : 'CV visible'}
+                            </span>
+                          </GridNoSSR>
+                        ): null}
+                        {user.role === 'Candidat'? (
+                          <GridNoSSR row gap="small">
+                            <IconNoSSR name="cog" />
+                            <span className="uk-text-italic">
+                              {user.candidat.employed
+                                ? 'A retrouvé un emploi'
+                                : "N'a pas retrouvé d'emploi"}
+                            </span>
+                          </GridNoSSR>
+                        ): null}
                       </GridNoSSR>
                     ) : (
                       undefined
