@@ -106,19 +106,17 @@ const CandidatCard = ({
                 <>
                   <p
                     style={{ fontSize: '0.775rem' }}
-                    className="uk-margin-remove uk-margin-small-top"
-                  >
+                    className="uk-margin-remove uk-margin-small-top">
                     {gender === 1 ? 'Elle' : 'Il'} souhaite
                     <br /> travailler dans :
                   </p>
-                  <GridNoSSR gap="collapse">
-                    {ambitions.slice(0, 3).map((a, index) => (
+                  <GridNoSSR column gap="collapse" childWidths={['1-1']}>
+                    {ambitions.slice(0, 2).map((text, index) => (
                       <span
                         key={index}
-                        style={{ fontSize: '0.775rem' }}
-                        className="uk-label uk-text-lowercase ent-line-clamp-1 ent-margin-top-xsmall ent-margin-right-xsmall"
+                        className="uk-label uk-text-lowercase ent-card-ambition"
                       >
-                        {a}
+                        {text}
                       </span>
                     ))}
                   </GridNoSSR>
