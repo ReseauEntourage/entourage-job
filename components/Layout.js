@@ -1,9 +1,12 @@
 import React from 'react';
 import Head from 'next/head';
-import { Container } from 'next/app';
 import PropTypes from 'prop-types';
+import { withRouter } from 'next/router';
 import Footer from './Footer';
-import Header from './Header';
+import Header from './headers/Header';
+import HeaderConnected from './headers/HeaderConnected';
+import { UserContext } from './store/UserProvider';
+import ModalShareCV from './modals/ModalShareCV';
 
 const Layout = ({
   children,
@@ -13,14 +16,19 @@ const Layout = ({
   metaDescription,
   metaUrl,
   metaType,
+  router,
 }) => (
-  <Container>
+  <>
     <Head>
       <title>{title}</title>
       <link rel="icon" type="image/png" href="/static/img/fav.png" />
-      <meta property="og:title" content={metaTitle} />
-      <meta property="og:description" content={metaDescription} />
-      <meta property="og:image" content={metaImage} />
+      <meta name="title" property="og:title" content={metaTitle} />
+      <meta
+        name="description"
+        property="og:description"
+        content={metaDescription}
+      />
+      <meta name="image" property="og:image" content={metaImage} />
       <meta property="og:type" content={metaType} />
       <meta property="og:url" content={metaUrl} />
       <meta name="twitter:card" content="summary_large_image" />
@@ -30,10 +38,18 @@ const Layout = ({
       <meta name="twitter:image" content={metaImage} />
       {/* <meta name="fb:app_id" content="" /> */}
     </Head>
-    <Header />
+    <UserContext.Consumer>
+      {({ isAuthentificated }) =>
+        isAuthentificated ? (
+          <HeaderConnected />
+        ) : (
+          router.asPath !== '/' && <Header isHome={false} />
+        )
+      }
+    </UserContext.Consumer>
     {children}
     <Footer />
-  </Container>
+  </>
 );
 Layout.propTypes = {
   children: PropTypes.oneOfType([
@@ -46,9 +62,12 @@ Layout.propTypes = {
   metaDescription: PropTypes.string,
   metaUrl: PropTypes.string,
   metaType: PropTypes.string,
+  router: PropTypes.shape({
+    asPath: PropTypes.string,
+  }).isRequired,
 };
 Layout.defaultProps = {
-  title: 'Entourage Jobs',
+  title: 'LinkedOut',
   metaTitle:
     'Faites don de votre visibilité avec LinkedOut. Un partage peut tout changer.',
   metaImage: `${process.env.SERVER_URL}/static/img/entouragejobs-preview.jpg`,
@@ -57,4 +76,4 @@ Layout.defaultProps = {
   metaUrl: process.env.SERVER_URL,
   metaType: 'website',
 };
-export default Layout;
+export default withRouter(Layout);

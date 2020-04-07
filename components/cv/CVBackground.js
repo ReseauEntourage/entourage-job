@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 const CVBackground = ({ url }) => (
   <div
     style={{
+      position: 'relative',
       maxHeight: 'calc(50vw)',
       minHeight: '200px',
       height: '400px',
@@ -19,7 +20,7 @@ const CVBackground = ({ url }) => (
       }}
     >
       <div
-        className="uk-background-cover uk-background-top-center"
+        className="uk-background-cover uk-background-center"
         style={{
           backgroundImage: `url("${url}")`,
           position: 'absolute',
@@ -34,7 +35,10 @@ const CVBackground = ({ url }) => (
   </div>
 );
 CVBackground.propTypes = {
-  url: PropTypes.string.isRequired,
+  url: PropTypes.string,
+};
+CVBackground.defaultProps = {
+  url: '/static/img/arthur-background.jpg',
 };
 
 export default CVBackground;

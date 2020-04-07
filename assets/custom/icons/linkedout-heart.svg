@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="18px" viewBox="0 0 20 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <title>Path</title>
+    <desc>Created with Sketch.</desc>
+    <g id="UX/UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Profil-candidat-#1" transform="translate(-1067.000000, -1720.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <path d="M1077,1738 L1075.55,1736.70518 C1070.4,1732.12425 1067,1729.103 1067,1725.3951 C1067,1722.37384 1069.42,1720 1072.5,1720 C1074.24,1720 1075.91,1720.79455 1077,1722.05014 C1078.09,1720.79455 1079.76,1720 1081.5,1720 C1084.58,1720 1087,1722.37384 1087,1725.3951 C1087,1729.103 1083.6,1732.12425 1078.45,1736.71499 L1077,1738 Z" id="Path"></path>
+        </g>
+    </g>
+</svg>

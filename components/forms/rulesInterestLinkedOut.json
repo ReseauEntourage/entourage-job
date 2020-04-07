@@ -1,0 +1,103 @@
+[
+  {
+    "field": "name",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "name",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 80
+      }
+    ],
+    "validWhen": true,
+    "message": "80 caractères maximum"
+  },
+  {
+    "field": "structure",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "structure",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 60
+      }
+    ],
+    "validWhen": true,
+    "message": "60 caractères maximum"
+  },
+  {
+    "field": "email",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "email",
+    "method": "isEmail",
+    "validWhen": true,
+    "message": "Adresse e-mail invalide"
+  },
+  {
+    "field": "phone",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 30
+      }
+    ],
+    "validWhen": true,
+    "message": "30 caractères maximum"
+  },
+  {
+    "field": "message",
+    "method": "isEmpty",
+    "args": [
+      {
+        "ignore_whitespace": true
+      }
+    ],
+    "validWhen": false,
+    "message": "Obligatoire"
+  },
+  {
+    "field": "message",
+    "method": "isLength",
+    "args": [
+      {
+        "max": 4000
+      }
+    ],
+    "validWhen": true,
+    "message": "4000 caractères maximum"
+  },
+  {
+    "field": "cgu",
+    "method": "equals",
+    "args": ["true"],
+    "validWhen": true,
+    "message": "Obligatoire"
+  }
+]

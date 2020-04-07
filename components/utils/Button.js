@@ -17,6 +17,9 @@ const Button = ({
   children,
   className,
   isExternal,
+  newTab,
+  onClick,
+  toggle,
 }) => {
   let classBuffer = 'uk-button';
   if (visible) classBuffer += ` uk-visible@${visible}`;
@@ -28,16 +31,30 @@ const Button = ({
   });
 
   const buttonComponent = (
-    <button className={classBuffer} disabled={disabled} type="button">
+    <button
+      className={classBuffer}
+      disabled={disabled}
+      type="button"
+      onClick={onClick}
+      data-uk-toggle={toggle}
+    >
       {children}
     </button>
   );
-
-  return isExternal ? (
-    <a href={href}>{buttonComponent}</a>
-  ) : (
-    <Link href={href}>{buttonComponent}</Link>
-  );
+  if (href) {
+    return isExternal ? (
+      <a
+        href={href}
+        target={newTab ? '_blank' : ''}
+        rel={newTab ? 'noopener noreferrer' : ''}
+      >
+        {buttonComponent}
+      </a>
+    ) : (
+      <Link href={href}>{buttonComponent}</Link>
+    );
+  }
+  return buttonComponent;
 };
 Button.propTypes = {
   children: PropTypes.oneOfType([
@@ -51,17 +68,23 @@ Button.propTypes = {
   size: PropTypes.oneOf(UIKIT_BUTTON_SIZES),
   widths: PropTypes.arrayOf(PropTypes.string), // UIKIT_WIDTH_SCREENS
   isExternal: PropTypes.bool,
+  newTab: PropTypes.bool,
   className: PropTypes.string,
+  onClick: PropTypes.func,
+  toggle: PropTypes.string,
 };
 Button.defaultProps = {
   disabled: false,
   visible: undefined,
   style: undefined,
   size: undefined,
-  href: '#',
+  href: undefined,
   widths: [],
   isExternal: false,
+  newTab: false,
   className: undefined,
+  onClick: undefined,
+  toggle: undefined,
 };
 
 export default Button;

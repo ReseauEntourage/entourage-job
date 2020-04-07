@@ -1,10 +1,10 @@
-/*! UIkit 3.1.7 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.3.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
     typeof define === 'function' && define.amd ? define('uikitfilter', ['uikit-util'], factory) :
     (global = global || self, global.UIkitFilter = factory(global.UIkit.util));
-}(this, function (uikitUtil) { 'use strict';
+}(this, (function (uikitUtil) { 'use strict';
 
     var targetClass = 'uk-animation-target';
 
@@ -34,7 +34,7 @@
 
                 addStyle();
 
-                var children = uikitUtil.toNodes(this.target.children);
+                var children = uikitUtil.children(this.target);
                 var propsFrom = children.map(function (el) { return getProps(el, true); });
 
                 var oldHeight = uikitUtil.height(this.target);
@@ -46,12 +46,12 @@
                 children.forEach(uikitUtil.Transition.cancel);
 
                 reset(this.target);
-                this.$update(this.target);
+                this.$update(this.target, 'resize');
                 uikitUtil.fastdom.flush();
 
                 var newHeight = uikitUtil.height(this.target);
 
-                children = children.concat(uikitUtil.toNodes(this.target.children).filter(function (el) { return !uikitUtil.includes(children, el); }));
+                children = children.concat(uikitUtil.children(this.target).filter(function (el) { return !uikitUtil.includes(children, el); }));
 
                 var propsTo = children.map(function (el, i) { return el.parentNode && i in propsFrom
                         ? propsFrom[i]
@@ -89,13 +89,14 @@
                 uikitUtil.css(this.target, 'height', oldHeight);
                 uikitUtil.scrollTop(window, oldScrollY);
 
-                return uikitUtil.Promise.all(children.map(function (el, i) { return propsFrom[i] && propsTo[i]
-                        ? uikitUtil.Transition.start(el, propsTo[i], this$1.animation, 'ease')
-                        : uikitUtil.Promise.resolve(); }
-                ).concat(uikitUtil.Transition.start(this.target, {height: newHeight}, this.animation, 'ease'))).then(function () {
+                return uikitUtil.Promise.all(
+                    children.map(function (el, i) { return ['top', 'left', 'height', 'width'].some(function (prop) { return propsFrom[i][prop] !== propsTo[i][prop]; }
+                        ) && uikitUtil.Transition.start(el, propsTo[i], this$1.animation, 'ease'); }
+                    ).concat(oldHeight !== newHeight && uikitUtil.Transition.start(this.target, {height: newHeight}, this.animation, 'ease'))
+                ).then(function () {
                     children.forEach(function (el, i) { return uikitUtil.css(el, {display: propsTo[i].opacity === 0 ? 'none' : '', zIndex: ''}); });
                     reset(this$1.target);
-                    this$1.$update(this$1.target);
+                    this$1.$update(this$1.target, 'resize');
                     uikitUtil.fastdom.flush(); // needed for IE11
                 }, uikitUtil.noop);
 
@@ -133,13 +134,12 @@
     }
 
     function getPositionWithMargin(el) {
-        var ref = el.getBoundingClientRect();
+        var ref = uikitUtil.offset(el);
         var height = ref.height;
         var width = ref.width;
         var ref$1 = uikitUtil.position(el);
         var top = ref$1.top;
         var left = ref$1.left;
-        top += uikitUtil.toFloat(uikitUtil.css(el, 'marginTop'));
 
         return {top: top, left: left, height: height, width: width};
     }
@@ -186,8 +186,19 @@
                 },
 
                 watch: function() {
+                    var this$1 = this;
+
+
                     this.updateState();
-                }
+
+                    if (this.selActive !== false) {
+                        var actives = uikitUtil.$$(this.selActive, this.$el);
+                        this.toggles.forEach(function (el) { return uikitUtil.toggleClass(el, this$1.cls, uikitUtil.includes(actives, el)); });
+                    }
+
+                },
+
+                immediate: true
 
             },
 
@@ -200,7 +211,7 @@
             children: {
 
                 get: function() {
-                    return uikitUtil.toNodes(this.target && this.target.children);
+                    return uikitUtil.children(this.target);
                 },
 
                 watch: function(list, old) {
@@ -232,19 +243,6 @@
             }
 
         ],
-
-        connected: function() {
-            var this$1 = this;
-
-
-            this.updateState();
-
-            if (this.selActive !== false) {
-                var actives = uikitUtil.$$(this.selActive, this.$el);
-                this.toggles.forEach(function (el) { return uikitUtil.toggleClass(el, this$1.cls, uikitUtil.includes(actives, el)); });
-            }
-
-        },
 
         methods: {
 
@@ -389,12 +387,10 @@
         return uikitUtil.assign([], nodes).sort(function (a, b) { return uikitUtil.data(a, sort).localeCompare(uikitUtil.data(b, sort), undefined, {numeric: true}) * (order === 'asc' || -1); });
     }
 
-    /* global UIkit, 'filter' */
-
     if (typeof window !== 'undefined' && window.UIkit) {
         window.UIkit.component('filter', Component);
     }
 
     return Component;
 
-}));
+})));

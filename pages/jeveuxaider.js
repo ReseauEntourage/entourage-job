@@ -1,275 +1,73 @@
 import React from 'react';
-import { HelpingCard, ScaleCard } from '../components/cards';
-import { Button, Section, GridNoSSR, SliderNoSSR } from '../components/utils';
+import { Section } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
 import Layout from '../components/Layout';
+import ProfilAidant from '../components/sections/ProfilAidant';
+import HowTo from '../components/sections/HowTo';
+import StepCard from '../components/cards/StepCard';
 
-const cardsCoupsDePouce = [
-  [
-    {
-      title:
-        'Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut',
-      description:
-        'Votre partage permet de donner une visibilité inédite aux candidats auprès de recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer !',
-      picture: '/static/img/illustrations/entourage_help.png',
-    },
-    {
-      title: 'Devenez bénévole-coach !',
-      description:
-        'Vous souhaitez donner de votre temps pour tisser une relation de confiance avec un candidat et le coacher vers le retour à l’emploi ? Entourage vous forme à la mission de bénévole-coach et vous donne les outils !',
-      picture: '/static/img/illustrations/entourage_papers.png',
-      writeButton: true,
-    },
-    {
-      title:
-        'Vous souhaitez apporter au projet LinkedOut une compétence particulière ?',
-      description:
-        '(Montage photo, animation d’ateliers ou de temps conviviaux...) Nous serons ravis d’intégrer votre talent au sein du projet.',
-      picture: '/static/img/illustrations/entourage_phone.png',
-      writeButton: true,
-    },
-  ],
-  [
-    {
-      title: 'Autre texte ? Entourage vous accompagne dans les démarches',
-      description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-      picture: '/static/img/illustrations/entourage_meet.png',
-    },
-    {
-      title: 'Un Autre texte ? Entourage vous accompagne dans les démarches',
-      description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-      picture: '/static/img/illustrations/entourage_help.png',
-    },
-    {
-      title:
-        'Encore un autre texte ? Entourage vous accompagne dans les démarches',
-      description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-      picture: '/static/img/illustrations/entourage_coaching.png',
-    },
-  ],
-  [
-    {
-      title: '7 ? Entourage vous accompagne dans les démarches',
-      description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-      picture: '/static/img/illustrations/entourage_help.png',
-    },
-    {
-      title: '8 ? Entourage vous accompagne dans les démarches',
-      description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-      picture: '/static/img/illustrations/entourage_phone.png',
-    },
-    {
-      title: '9 ? Entourage vous accompagne dans les démarches',
-      description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-      picture: '/static/img/illustrations/entourage_papers.png',
-    },
-  ],
-  [
-    {
-      title: '10 ? Entourage vous accompagne dans les démarches',
-      description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-      picture: '/static/img/illustrations/entourage_coaching.png',
-    },
-    {
-      title: '11 ? Entourage vous accompagne dans les démarches',
-      description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-      picture: '/static/img/illustrations/entourage_papers.png',
-    },
-    {
-      title: '12 ? Entourage vous accompagne dans les démarches',
-      description:
-        "Vous n'êtes pas seul ! Entourage vous donne les outils pour soutenir efficacement une personne dans sa recherche professionnelle et dans sa prise de poste.",
-      picture: '/static/img/illustrations/entourage_help.png',
-    },
-  ],
-];
-
-const coupsDePouce = [
+const content = [
   {
-    title: 'Je suis un particulier',
+    img: '/static/img/illustrations/entourage_phone.png',
     description:
-      "LinkedOut cherche à recruter des bénévoles dont le rôle sera d'accompagner les personnes dans leur recherche d'emploi.",
-    cards: cardsCoupsDePouce[0],
+      "La plateforme LinkedOut permet de viraliser les CV des candidats sur les réseaux sociaux pour les rendre visibles auprès de recruteurs et générer des opportunités d'emploi.",
   },
   {
-    title: 'Je suis un acteur du milieu associatif',
+    img: '/static/img/illustrations/helping_process.png',
     description:
-      "Entourage cherche à construire son dispositif en collaboration avec d'autres acteurs de l'insertion ayant des expertises complémentaires. Contactez-nous pour rejoindre le projet ou apporter votre savoir-faire",
-    cards: cardsCoupsDePouce[1],
+      'Chaque candidat est soutenu par un bénévole-coach, de la recherche d’emploi à l’intégration en entreprise.',
   },
   {
-    title: 'Je suis un travailleur social',
+    img: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
     description:
-      "Contactez-nous si une personne que vous accompagnez vous semble pouvoir bénéficier du programme LinkedOut, que vous voulez apprendre à rédiger des CVs selon le modèle LinkedOut pour recevoir de l'aide dans les démarches de recherche d'emploi",
-    cards: cardsCoupsDePouce[2],
+      'Un parcours de courtes formations et d’ateliers à la carte permet aux candidats qui le souhaitent d’acquérir les compétences manquantes et de travailler la confiance en soi.',
   },
   {
-    title: 'Je veux recruter',
+    img: '/static/img/illustrations/cafe_solidaire_personnages.png',
     description:
-      "Contactez-nous si une personne que vous accompagnez vous semble pouvoir bénéficier du programme LinkedOut, que vous voulez apprendre à rédiger des CVs selon le modèle LinkedOut pour recevoir de l'aide dans les démarches de recherche d'emploi",
-    cards: cardsCoupsDePouce[3],
+      'Tout au long de leur parcours vers l’emploi, la communauté Entourage soutient moralement les candidats, leur permet de se resocialiser et de faire de nouvelles rencontres.',
   },
 ];
 
 const JeVeuxAider = () => (
-  <Layout title="Je veux aider - Entourage Jobs">
-    <Section id="help" style="default">
-      <h1 className="uk-text-center">
-        Vous souhaitez <span className="uk-text-primary">aider</span> ?
+  <Layout title="Je veux aider - LinkedOut">
+    <Section id="titre">
+      <h1 className="uk-heading-medium@s uk-text-bold uk-text-center uk-align-center uk-width-3-4">
+        Vous souhaitez <span className="uk-text-primary">aider ?</span>
       </h1>
-      <GridNoSSR
-        childWidths={['1-1', '1-3@m']}
-        grid="small"
-        items={[
-          <HelpingCard
-            titleHead="Vous connaissez une personne en difficulté ? "
-            titleMiddle="Entourage vous accompagne"
-            titleTail=" dans les démarches"
-            description="Vous n'êtes pas seul! Entourage vous donne les outils pour soutenir efficacement une personne danssa recherche professionnelle et dans sa prise de poste"
-            img="/static/img/help_1.png"
-            alt="help_1"
-          />,
-          <HelpingCard
-            titleHead="Vous connaissez une personne en difficulté ? "
-            titleMiddle="Entourage vous accompagne"
-            titleTail=" dans les démarches"
-            description="Vous n'êtes pas seul! Entourage vous donne les outils pour soutenir efficacement une personne danssa recherche professionnelle et dans sa prise de poste"
-            img="/static/img/help_2.png"
-            alt="help_2"
-          />,
-          <HelpingCard
-            titleHead="Vous connaissez une personne en difficulté ? "
-            titleMiddle="Entourage vous accompagne"
-            titleTail=" dans les démarches"
-            description="Vous n'êtes pas seul! Entourage vous donne les outils pour soutenir efficacement une personne danssa recherche professionnelle et dans sa prise de poste"
-            img="/static/img/help_3.png"
-            alt="help_3"
-          />,
-        ]}
-      />
+      <p
+        className="uk-text-lead@s uk-text-center uk-align-center uk-width-2-3 "
+        style={{ fontWeight: '600' }}
+      >
+        Il n&apos;y a pas de petit coup de pouce, aidez à votre échelle !
+      </p>
     </Section>
-    <Section id="aider2">
-      <h2 className="uk-text-bold uk-margin-large-bottom uk-width-3-5@m uk-width-4-5@s">
-        Il n'y a pas de petit coup de pouce.
-        <br />
-        Aidez <span className="uk-text-primary">à votre échelle</span>
-      </h2>
-      <div data-uk-grid className="uk-child-width-1-2@m uk-child-width-2-3@s">
-        <div>
-          <div className="uk-width-5-6">
-            <ul
-              data-uk-accordion="collapsible: false"
-              data-uk-switcher="connect: .switcher-container"
-            >
-              {coupsDePouce.map((coupDePouce, index) => (
-                <li key={index}>
-                  <a className="uk-accordion-title" href="#">
-                    {coupDePouce.title}
-                  </a>
-                  <div className="uk-accordion-content">
-                    <p>{coupDePouce.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <div>
-          <ul className="uk-switcher switcher-container uk-margin">
-            {coupsDePouce.map((coupDePouce, index) => (
-              <li key={index}>
-                <div>
-                  {coupDePouce.cards.map((card, index2) => (
-                    <div
-                      key={index2}
-                      className="uk-card uk-card-small uk-card-default uk-card-body"
-                    >
-                      <div
-                        className="uk-panel uk-flex uk-flex-middle"
-                        data-uk-grid
-                      >
-                        <div className="uk-width-auto@s uk-width-1-1 uk-text-center">
-                          <img
-                            src={card.picture}
-                            style={{ width: '150px', height: '150px' }}
-                            alt=""
-                            className="uk-margin-remove-bottom uk-margin-small-left"
-                          />
-                        </div>
-                        <div className="uk-width-expand uk-text-left@m uk-text-center uk-flex-first@s">
-                          <h6 className="uk-text-bold">{card.title}</h6>
-                          <p className="uk-text-meta">{card.description}</p>
-                          <Button
-                            style="default"
-                            className={
-                              card.writeButton ? 'uk-visible' : 'uk-hidden'
-                            }
-                          >
-                            écrivez-nous
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </Section>
-    <Section style="muted">
-      <div className="uk-text-center" id="scale">
-        <h2>
-          Aider <span className="uk-text-primary">à votre échelle</span>
-        </h2>
-        <SliderNoSSR
-          auto
-          finite={false}
-          childWidths={['1-1', '1-2@s', '1-4@m']}
-          grid="small"
-          items={[
-            <ScaleCard
-              title="Je suis un particulier"
-              titleEmphaseStart={2}
-              description="Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Laboriosam repellat suscipit, quo iure similique beatae
-                recusandae eius itaque."
-            />,
-            <ScaleCard
-              title="Je suis un acteur du millieu associatif"
-              titleEmphaseStart={2}
-              description="Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Laboriosam repellat suscipit, quo iure similique beatae
-                recusandae eius itaque."
-            />,
-            <ScaleCard
-              title="Je veux recruter"
-              titleEmphaseStart={2}
-              description="Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Laboriosam repellat suscipit, quo iure similique beatae
-                recusandae eius itaque."
-            />,
-            <ScaleCard
-              title="Je suis un travailleur social"
-              titleEmphaseStart={2}
-              description="Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Laboriosam repellat suscipit, quo iure similique beatae
-                recusandae eius itaque."
-            />,
-          ]}
-        />
-        <Button style="primary">écrivez-nous</Button>
-      </div>
-    </Section>
+    <ProfilAidant />
+    <HowTo
+      title={
+        <h1 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
+          Comment fonctionne{' '}
+          <span className="uk-text-primary">LinkedOut ?</span>
+        </h1>
+      }
+      colLarge={4}
+    >
+      {content.map(({ img, description }, index) => (
+        <li key={index}>
+          {<StepCard numStep={index + 1} img={img} description={description} />}
+        </li>
+      ))}
+    </HowTo>
+    {/* <Section id="travailler3" style="secondary" size="small">
+      <p className="uk-text-lead uk-text-center uk-align-center uk-width-2-3@s">
+        Tout au long de leur parcours vers l&apos;emploi, la communauté
+        Entourage soutient moralement les candidats, leur permet de se
+        resocialiser et de faire de nouvelles rencontres
+      </p>
+      <p className="uk-text-center">
+        Découvrez Entourage <IconNoSSR name="linkedout-arrow-contact" />
+      </p>
+    </Section> */}
     <DiscoverPartial />
   </Layout>
 );

@@ -1,0 +1,175 @@
+{
+  "id": "form-experience",
+  "fields": [
+    {
+      "id": "type",
+      "title": "Type d'expérience*",
+      "name": "type",
+      "component": "select",
+      "options": [
+        { "value": null, "text": "Choisissez un type" },
+        { "value": 0, "text": "Expérience" },
+        { "value": 1, "text": "Diplôme" },
+        { "value": 2, "text": "Formation" }
+      ]
+    },
+    {
+      "id": "title",
+      "name": "title",
+      "component": "input",
+      "type": "text",
+      "title": "Intitulé*"
+    },
+    {
+      "id": "description",
+      "name": "description",
+      "component": "textarea",
+      "type": "text",
+      "title": "Description"
+    },
+    {
+      "id": "dateStart",
+      "title": "Date de début*",
+      "component": "fieldgroup",
+      "fields": [
+        {
+          "id": "start-month",
+          "name": "start-month",
+          "component": "select",
+          "options": [
+            { "value": null, "text": "Mois" },
+            { "value": 1, "text": "Janvier" },
+            { "value": 2, "text": "Fevrier" },
+            { "value": 3, "text": "Mars" },
+            { "value": 4, "text": "Avril" },
+            { "value": 5, "text": "Mai" },
+            { "value": 6, "text": "Juin" },
+            { "value": 7, "text": "Juillet" },
+            { "value": 8, "text": "Aout" },
+            { "value": 9, "text": "Septembre" },
+            { "value": 10, "text": "Octobre" },
+            { "value": 11, "text": "Novembre" },
+            { "value": 12, "text": "Decembre" }
+          ]
+        },
+        {
+          "id": "start-year",
+          "name": "start-year",
+          "component": "select",
+          "generate": {
+            "placeholder": "Année",
+            "type": "dec",
+            "min": 1970,
+            "max": 2021
+          }
+        }
+      ]
+    },
+    {
+      "id": "dateEnd",
+      "title": "Date de fin",
+      "component": "fieldgroup",
+      "fields": [
+        {
+          "id": "end-month",
+          "name": "end-month",
+          "component": "select",
+          "options": [
+            { "value": null, "text": "Mois" },
+            { "value": 1, "text": "Janvier" },
+            { "value": 2, "text": "Fevrier" },
+            { "value": 3, "text": "Mars" },
+            { "value": 4, "text": "Avril" },
+            { "value": 5, "text": "Mai" },
+            { "value": 6, "text": "Juin" },
+            { "value": 7, "text": "Juillet" },
+            { "value": 8, "text": "Aout" },
+            { "value": 9, "text": "Septembre" },
+            { "value": 10, "text": "Octobre" },
+            { "value": 11, "text": "Novembre" },
+            { "value": 12, "text": "Decembre" }
+          ]
+        },
+        {
+          "id": "end-year",
+          "name": "end-year",
+          "component": "select",
+          "generate": {
+            "placeholder": "Année",
+            "type": "dec",
+            "min": 1970,
+            "max": 2021
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "field": "type",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "title",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "title",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 100
+        }
+      ],
+      "validWhen": true,
+      "message": "100 caractères maximum"
+    },
+    {
+      "field": "description",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 2000
+        }
+      ],
+      "validWhen": true,
+      "message": "2000 caractères maximum"
+    },
+    {
+      "field": "start-month",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "start-year",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    }
+  ]
+}
