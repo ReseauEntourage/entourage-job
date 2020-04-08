@@ -12,29 +12,20 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
-      dateStart: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      dateEnd: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       description: DataTypes.TEXT,
     },
     {}
   );
-  Experience.beforeCreate((experience, _) => {
-    const e = experience;
-    e.id = uuid();
-    return experience;
-  });
-  Experience.associate = function(models) {
+  Experience.beforeCreate((experience, _) => ({
+    id: uuid(),
+    ...experience,
+  }));
+  Experience.associate = (models) => {
     Experience.belongsTo(models.CV);
+    Experience.belongsToMany(models.Skill, {
+      through: 'Experience_Skills',
+      as: 'skills',
+    });
   };
   return Experience;
 };

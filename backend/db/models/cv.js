@@ -106,10 +106,6 @@ module.exports = (sequelize, DataTypes) => {
       through: 'CV_Language',
       as: 'languages',
     });
-    CV.belongsToMany(models.Skill, {
-      through: 'CV_Skills',
-      as: 'skills',
-    });
     CV.belongsToMany(models.Passion, {
       through: 'CV_Passions',
       as: 'passions',
