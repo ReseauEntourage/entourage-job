@@ -2,7 +2,6 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) =>
       Promise.all([
-        queryInterface.dropTable('CV_Skills'),
         queryInterface.createTable('Experience_Skills', {
           id: {
             type: Sequelize.INTEGER,
@@ -83,38 +82,6 @@ module.exports = {
           }
         ),
         queryInterface.dropTable('Experience_Skills'),
-        queryInterface.createTable('CV_Skills', {
-          id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER,
-          },
-          CVId: {
-            type: Sequelize.UUID,
-            allowNull: false,
-            references: {
-              model: 'CVs',
-              key: 'id',
-            },
-          },
-          SkillId: {
-            type: Sequelize.UUID,
-            allowNull: false,
-            references: {
-              model: 'Skills',
-              key: 'id',
-            },
-          },
-          createdAt: {
-            allowNull: false,
-            type: Sequelize.DATE,
-          },
-          updatedAt: {
-            allowNull: false,
-            type: Sequelize.DATE,
-          },
-        }),
       ]);
     });
   },

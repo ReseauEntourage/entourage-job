@@ -19,29 +19,20 @@ const CV_EXAMPLE = {
   contracts: ['CDI', 'CDD', 'Intérim'],
   experiences: [
     {
-      dateStart: 'Octobre 2008',
-      dateEnd: 'Juillet 2011',
-      title: 'Magasinier & gestion des stocks',
+      skills: ['Rapide'],
       description: 'Chez Joyau, Espagne',
     },
     {
-      dateStart: 'Janvier 2012',
-      dateEnd: 'Février 2014',
-      title: 'Opérateur sur presse (intérim)',
       description:
         'Société PFI à Lognes (77). (Fabrication de pièces automobiles, contrôle de qualité, mise des pièces en bac et étiquetage, fiches clients)',
     },
     {
-      dateStart: '2019',
-      dateEnd: '2019',
-      title: 'Formations',
+      skills: ['Rapide', 'Fiable', 'Minutieux'],
       description:
         'Monteur Raccordeur en FTTH \nHOBO (Electricité Haute et Basse tension)',
     },
     {
-      dateStart: 'Août 2017',
-      dateEnd: 'Mars 2019',
-      title: 'Logisticien polyvalent',
+      skills: ['Rapide', 'Fiable'],
       description:
         'Dans le domaine informatique. Démantèlement des ordinateurs, effacement des données, installation de systèmes, changement de disques durs et mémoire, réparation',
     },

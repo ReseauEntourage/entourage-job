@@ -16,10 +16,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Experience.beforeCreate((experience, _) => ({
-    id: uuid(),
-    ...experience,
-  }));
+  Experience.beforeCreate((fields, _) => {
+    const data = fields;
+    data.id = uuid();
+    return data;
+  });
   Experience.associate = (models) => {
     Experience.belongsTo(models.CV);
     Experience.belongsToMany(models.Skill, {

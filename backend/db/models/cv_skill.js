@@ -2,14 +2,14 @@
 const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
-  const Experience_Skill = sequelize.define(
-    'Experience_Skill',
+  const CV_Skill = sequelize.define(
+    'CV_Skill',
     {
-      ExperienceId: {
+      CVId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'Experiences',
+          model: 'CVs',
           key: 'id',
         },
       },
@@ -24,13 +24,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Experience_Skill.beforeCreate((fields, _) => {
+  CV_Skill.beforeCreate((fields, _) => {
     const data = fields;
     data.id = uuid();
     return data;
   });
-  Experience_Skill.associate = (models) => {
+  CV_Skill.associate = function(models) {
     // associations can be defined here
   };
-  return Experience_Skill;
+  return CV_Skill;
 };
