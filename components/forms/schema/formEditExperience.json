@@ -11,7 +11,7 @@
     {
       "id": "skills",
       "name": "skills",
-      "title": "Compétences associés",
+      "title": "Compétences",
       "type": "text",
       "component": "select-request-creatable",
       "isMulti": true
