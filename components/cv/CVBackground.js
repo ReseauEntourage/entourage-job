@@ -5,33 +5,28 @@ const CVBackground = ({ url }) => (
   <div
     style={{
       position: 'relative',
-      maxHeight: 'calc(50vw)',
-      minHeight: '200px',
-      height: '400px',
+      minHeight: '220px',
+      maxHeight: '410px',
+      height: '50vw',
       width: '100%',
     }}
   >
     <div
+      className="uk-background-cover uk-background-center"
       style={{
+        backgroundImage: `url("${url}")`,
+        backgroundPosition: 'center',
         position: 'absolute',
         right: 0,
         top: 0,
         left: 0,
+        display: 'block',
+        width: '100%',
+        minHeight: '140%',
+        maxHeight: '170%',
+        height: '70vw',
       }}
-    >
-      <div
-        className="uk-background-cover uk-background-center"
-        style={{
-          backgroundImage: `url("${url}")`,
-          position: 'absolute',
-          display: 'block',
-          width: '100%',
-          height: '70vw',
-          minHeight: '300px',
-          maxHeight: 'calc(100vh - 80px)',
-        }}
-      />
-    </div>
+    />
   </div>
 );
 CVBackground.propTypes = {

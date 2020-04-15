@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
-import { DiscoverPartial, ContactPartial } from '../../components/partials';
+import {
+  DiscoverPartial,
+  ContactPartial,
+  ActionPartial,
+  SharePartial,
+} from '../../components/partials';
 import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
@@ -42,8 +47,10 @@ const CVPage = ({ cv, router }) => {
     >
       <CVBackground url={process.env.AWSS3_URL + cv.urlImg || undefined} />
       <CVFiche cv={cv} />
+      {/* <DiscoverPartial />  */}
+      <ActionPartial />
       <ContactPartial />
-      <DiscoverPartial />
+      <SharePartial />
     </Layout>
   );
 };
