@@ -45,7 +45,9 @@ const CVPage = ({ cv, router }) => {
       }
       metaType="profile"
     >
-      <CVBackground url={process.env.AWSS3_URL + cv.urlImg || undefined} />
+      {cv.urlImg && (
+        <CVBackground url={process.env.AWSS3_URL + cv.urlImg || undefined} />
+      )}
       <CVFiche cv={cv} />
       {/* <DiscoverPartial />  */}
       <ActionPartial />

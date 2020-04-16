@@ -210,7 +210,7 @@ const CVFiche = ({ cv }) => {
             />
           </div>
           <GridNoSSR gap="large" eachWidths={['expand', 'auto@m']}>
-            <GridNoSSR>
+            <GridNoSSR column>
               {cv.experiences.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">Mes compétences</h3>
