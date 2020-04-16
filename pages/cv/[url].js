@@ -45,14 +45,16 @@ const CVPage = ({ cv, router }) => {
       }
       metaType="profile"
     >
-      {cv.urlImg && (
-        <CVBackground url={process.env.AWSS3_URL + cv.urlImg || undefined} />
-      )}
-      <CVFiche cv={cv} />
-      {/* <DiscoverPartial />  */}
-      <ActionPartial />
-      <ContactPartial />
-      <SharePartial />
+      <div className="uk-background-muted">
+        {cv.urlImg && (
+          <CVBackground url={process.env.AWSS3_URL + cv.urlImg || undefined} />
+        )}
+        <CVFiche cv={cv} />
+        {/* <DiscoverPartial />  */}
+        <ActionPartial />
+        <ContactPartial />
+        <SharePartial />
+      </div>
     </Layout>
   );
 };

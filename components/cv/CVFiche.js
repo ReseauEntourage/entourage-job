@@ -50,28 +50,59 @@ const CVFiche = ({ cv }) => {
     UIkit.modal(`#info-share-${cv.user.candidat.firstName}`).show();
 
   return (
-    <Section style="muted">
-      <div className="uk-card uk-card-default uk-card-body uk-margin-medium ">
+    <Section id="cv-fiche" className="uk-position-relative">
+      {/* <div
+        // data-uk-scrollspy="cls: uk-animation-slide-bottom; repeat: true; offset-top: 100vh"
+        data-uk-sticky="bottom: true; offset: 90; media: @xl; cls-inactive: ent-profile-inactive; cls-active: ent-profile-active"
+        // uk-scrollspy="cls:uk-animation-fade; repeat:true"
+      >
+        <div className="uk-card">
+          <img
+            style={{ width: 'calc((100vw - 1280px) / 2)' }}
+            src={process.env.AWSS3_URL + cv.urlImg}
+            alt=""
+          />
+        </div>
+      </div> */}
+      <div
+        // uk-parallax="y: 0,1000"
+        // uk-parallax="y: 100,0"
+        className="uk-card uk-card-default uk-card-body uk-card-large uk-margin-medium "
+      >
         <GridNoSSR childWidths={['1-1']}>
           <div className="uk-text-center">
             <h1 className="uk-text-bold uk-heading-medium uk-text-primary">
               {cv.user.candidat.firstName} {cv.user.candidat.lastName}
             </h1>
             {cv.catchphrase && (
-              <p className="uk-width-xlarge uk-margin-auto">
-                <IconNoSSR
-                  className="uk-text-primary"
-                  name="quote-right"
-                  ratio={1.4}
-                  flip
-                />
-                {cv.catchphrase}
-                <IconNoSSR
-                  className="uk-text-primary"
-                  name="quote-right"
-                  ratio={0.8}
-                />
-              </p>
+              <div
+                className="uk-width-xlarge uk-margin-auto"
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  display: 'flex',
+                }}
+              >
+                <p
+                  className="uk-position-relative"
+                  style={{
+                    width: 'fit-content',
+                  }}
+                >
+                  <IconNoSSR
+                    className="uk-text-primary ent-quote-after"
+                    name="quote-right"
+                    ratio={1.4}
+                    flip
+                  />
+                  {cv.catchphrase}
+                  <IconNoSSR
+                    className="uk-text-primary ent-quote-before"
+                    name="quote-right"
+                    ratio={0.8}
+                  />
+                </p>
+              </div>
             )}
             {/* uk-text-emphasis uk-text-bold */}
             <p className="uk-width-xxlarge uk-margin-auto uk-text-lead">
@@ -242,7 +273,14 @@ const CVFiche = ({ cv }) => {
                 <div className="">
                   <h3 className="uk-margin-small-bottom">Mon histoire</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
-                  <p className="">{cv.story}</p>
+                  <p className="">
+                    {cv.story.split('\n').reduce((acc, item, key, arr) => {
+                      if (key < arr.length - 1 && key > 0) {
+                        return [...acc, <br />, item];
+                      }
+                      return [...acc, item];
+                    }, [])}
+                  </p>
                 </div>
               )}
               {/* cv.reviews */}
@@ -254,17 +292,17 @@ const CVFiche = ({ cv }) => {
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   {cv.reviews.map((review, i) => (
                     <li id={i} key={i}>
-                      <p className="uk-text-small uk-margin-small">
+                      <p className="uk-margin-small uk-position-relative">
                         <IconNoSSR
                           name="quote-right"
-                          className="uk-text-primary"
+                          className="uk-text-primary ent-quote-after"
                           flip
                           ratio={1.4}
                         />
                         {review.text}
                         <IconNoSSR
                           name="quote-right"
-                          className="uk-text-primary"
+                          className="uk-text-primary ent-quote-before"
                           ratio={0.8}
                         />
                       </p>
@@ -291,13 +329,23 @@ const CVFiche = ({ cv }) => {
                   {cv.user.candidat.email && (
                     <li>
                       <IconNoSSR className="uk-text-primary" name="user" />{' '}
-                      <span>{cv.user.candidat.email}</span>
+                      <a
+                        className="uk-link-text"
+                        href={`mailto:${cv.user.candidat.email}`}
+                      >
+                        {cv.user.candidat.email}
+                      </a>
                     </li>
                   )}
                   {cv.user.candidat.phone && (
                     <li>
                       <IconNoSSR className="uk-text-primary" name="phone" />{' '}
-                      <span>{cv.user.candidat.phone}</span>
+                      <a
+                        className="uk-link-text"
+                        href={`tel:${cv.user.candidat.phone}`}
+                      >
+                        {cv.user.candidat.phone}
+                      </a>
                     </li>
                   )}
                   {cv.contracts.length > 0 && (

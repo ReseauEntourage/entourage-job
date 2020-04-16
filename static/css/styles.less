@@ -61,3 +61,42 @@ hr.uk-divider-small::after {
 .ent-text-white {
   color: #fff
 }
+
+.ent-quote-after {
+  position: absolute;
+  left: -28px;
+  top: calc(-28px / 2);
+}
+
+.ent-quote-before {
+  position: absolute;
+  right: -16px;
+  bottom: calc(-16px / 2);
+}
+
+// deprecie
+.ent-profile-inactive {
+  position: absolute;
+  left: 0;
+  top: 110px
+}
+
+.ent-profile-inactive .uk-sticky-placeholder {
+  height: 0;
+}
+
+.ent-profile-inactive img {
+  opacity: 0;
+  transition: opacity .1s ease-in;
+}
+
+.ent-profile-active img {
+  opacity: 1;
+  transition: opacity .1s ease-in;
+}
+
+.ent-profile-active {
+  z-index: 980;
+  left: 10px !important;
+  width: calc((100vw - 1280px) / 2) !important
+}
