@@ -57,19 +57,22 @@ const CVFiche = ({ cv }) => {
             <h1 className="uk-text-bold uk-heading-medium uk-text-primary">
               {cv.user.candidat.firstName} {cv.user.candidat.lastName}
             </h1>
-            <p className="uk-width-xlarge uk-margin-auto">
-              <IconNoSSR
-                className="uk-text-primary"
-                name="quote-right"
-                ratio={1}
-              />
-              {cv.catchphrase}
-              <IconNoSSR
-                className="uk-text-primary"
-                name="quote-right"
-                ratio={1}
-              />
-            </p>
+            {cv.catchphrase && (
+              <p className="uk-width-xlarge uk-margin-auto">
+                <IconNoSSR
+                  className="uk-text-primary"
+                  name="quote-right"
+                  ratio={1.4}
+                  flip
+                />
+                {cv.catchphrase}
+                <IconNoSSR
+                  className="uk-text-primary"
+                  name="quote-right"
+                  ratio={0.8}
+                />
+              </p>
+            )}
             {/* uk-text-emphasis uk-text-bold */}
             <p className="uk-width-xxlarge uk-margin-auto uk-text-lead">
               J&apos;aimerais beaucoup travailler dans{' '}
@@ -126,20 +129,28 @@ const CVFiche = ({ cv }) => {
                 url={link}
                 title={title}
                 description={sharedDescription}
-                style={{ cursor: 'pointer', color: '#fff !important' }}
+                style={{ cursor: 'pointer' }}
                 className="uk-icon-link uk-icon-button uk-background-primary"
               >
-                <IconNoSSR name="linkedin" ratio={1.2} />
+                <IconNoSSR
+                  className="ent-text-white"
+                  name="linkedin"
+                  ratio={1.2}
+                />
               </LinkedinShareButton>
               <FacebookShareButton
                 onShareWindowClose={openNewsletterModal}
                 url={link}
                 quote={sharedDescription}
                 hashtags={hashtags}
-                style={{ cursor: 'pointer', color: '#fff !important' }}
+                style={{ cursor: 'pointer' }}
                 className="uk-icon-link uk-icon-button uk-background-primary"
               >
-                <IconNoSSR name="facebook" ratio={1.2} />
+                <IconNoSSR
+                  className="ent-text-white"
+                  name="facebook"
+                  ratio={1.2}
+                />
               </FacebookShareButton>
               <TwitterShareButton
                 onShareWindowClose={openNewsletterModal}
@@ -147,19 +158,27 @@ const CVFiche = ({ cv }) => {
                 title={sharedDescription}
                 hashtags={hashtags}
                 via="R_Entourage"
-                style={{ cursor: 'pointer', color: '#fff !important' }}
+                style={{ cursor: 'pointer' }}
                 className="uk-icon-link uk-icon-button uk-background-primary"
               >
-                <IconNoSSR name="twitter" ratio={1.2} />
+                <IconNoSSR
+                  className="ent-text-white"
+                  name="twitter"
+                  ratio={1.2}
+                />
               </TwitterShareButton>
               <WhatsappShareButton
                 onShareWindowClose={openNewsletterModal}
                 url={link}
                 title={sharedDescription}
-                style={{ cursor: 'pointer', color: '#fff !important' }}
+                style={{ cursor: 'pointer' }}
                 className="uk-icon-link uk-icon-button uk-background-primary"
               >
-                <IconNoSSR name="whatsapp" ratio={1.2} />
+                <IconNoSSR
+                  className="ent-text-white"
+                  name="whatsapp"
+                  ratio={1.2}
+                />
               </WhatsappShareButton>
             </GridNoSSR>
             <ModalShareCV
@@ -190,7 +209,7 @@ const CVFiche = ({ cv }) => {
               }
             />
           </div>
-          <GridNoSSR eachWidths={['expand', 'auto@m']}>
+          <GridNoSSR gap="large" eachWidths={['expand', 'auto@m']}>
             <GridNoSSR>
               {cv.experiences.length > 0 && (
                 <div className="">
@@ -239,11 +258,14 @@ const CVFiche = ({ cv }) => {
                         <IconNoSSR
                           name="quote-right"
                           className="uk-text-primary"
+                          flip
+                          ratio={1.4}
                         />
                         {review.text}
                         <IconNoSSR
                           name="quote-right"
                           className="uk-text-primary"
+                          ratio={0.8}
                         />
                       </p>
                       <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">

@@ -6,7 +6,7 @@ const CVBackground = ({ url }) => (
     style={{
       position: 'relative',
       minHeight: '220px',
-      maxHeight: '410px',
+      maxHeight: '50vh',
       height: '50vw',
       width: '100%',
     }}
@@ -23,7 +23,7 @@ const CVBackground = ({ url }) => (
         display: 'block',
         width: '100%',
         minHeight: '140%',
-        maxHeight: '170%',
+        maxHeight: '140%',
         height: '70vw',
       }}
     />
