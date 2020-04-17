@@ -87,6 +87,7 @@ const CVFiche = ({ cv }) => {
                   className="uk-position-relative"
                   style={{
                     width: 'fit-content',
+                    marginBottom: '8px',
                   }}
                 >
                   <IconNoSSR
@@ -146,76 +147,89 @@ const CVFiche = ({ cv }) => {
                 '.'
               )}
             </p>
-            <IconNoSSR
-              name="triangle-down"
-              className="uk-text-primary"
-              ratio="2"
-            />
-            <p className="uk-margin-remove-top uk-margin-small uk-text-lead">
-              Partager mon CV
-            </p>
-            <GridNoSSR row gap="small" center>
-              <LinkedinShareButton
-                onShareWindowClose={openNewsletterModal}
-                url={link}
-                title={title}
-                description={sharedDescription}
-                style={{ cursor: 'pointer' }}
-                className="uk-icon-link uk-icon-button uk-background-primary"
+            <div className="uk-position-relative uk-margin-medium-top">
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '-20px',
+                  left: 0,
+                  right: 0,
+                }}
               >
-                <IconNoSSR
-                  className="ent-text-white"
-                  name="linkedin"
-                  ratio={1.2}
-                />
-              </LinkedinShareButton>
-              <FacebookShareButton
-                onShareWindowClose={openNewsletterModal}
-                url={link}
-                quote={sharedDescription}
-                hashtags={hashtags}
-                style={{ cursor: 'pointer' }}
-                className="uk-icon-link uk-icon-button uk-background-primary"
-              >
-                <IconNoSSR
-                  className="ent-text-white"
-                  name="facebook"
-                  ratio={1.2}
-                />
-              </FacebookShareButton>
-              <TwitterShareButton
-                onShareWindowClose={openNewsletterModal}
-                url={link}
-                title={sharedDescription}
-                hashtags={hashtags}
-                via="R_Entourage"
-                style={{ cursor: 'pointer' }}
-                className="uk-icon-link uk-icon-button uk-background-primary"
-              >
-                <IconNoSSR
-                  className="ent-text-white"
-                  name="twitter"
-                  ratio={1.2}
-                />
-              </TwitterShareButton>
-              <WhatsappShareButton
-                onShareWindowClose={openNewsletterModal}
-                url={link}
-                title={sharedDescription}
-                style={{ cursor: 'pointer' }}
-                className="uk-icon-link uk-icon-button uk-background-primary"
-              >
-                <IconNoSSR
-                  className="ent-text-white"
-                  name="whatsapp"
-                  ratio={1.2}
-                />
-              </WhatsappShareButton>
-            </GridNoSSR>
-            <ModalShareCV
-              id={`info-share-${cv.user.candidat.firstName}`}
-              firstName={cv.user.candidat.firstName}
-            />
+                <a href="#cv-fiche" data-uk-scroll="offset: 80">
+                  <IconNoSSR
+                    name="triangle-down"
+                    className="uk-text-primary"
+                    ratio="2"
+                  />
+                </a>
+              </div>
+              <p className="uk-margin-bottom-small uk-text-lead">
+                Partager mon CV
+              </p>
+              <GridNoSSR row gap="small" center>
+                <LinkedinShareButton
+                  onShareWindowClose={openNewsletterModal}
+                  url={link}
+                  title={title}
+                  description={sharedDescription}
+                  style={{ cursor: 'pointer' }}
+                  className="uk-icon-link uk-icon-button uk-background-primary"
+                >
+                  <IconNoSSR
+                    className="ent-text-white"
+                    name="linkedin"
+                    ratio={1.2}
+                  />
+                </LinkedinShareButton>
+                <FacebookShareButton
+                  onShareWindowClose={openNewsletterModal}
+                  url={link}
+                  quote={sharedDescription}
+                  hashtags={hashtags}
+                  style={{ cursor: 'pointer' }}
+                  className="uk-icon-link uk-icon-button uk-background-primary"
+                >
+                  <IconNoSSR
+                    className="ent-text-white"
+                    name="facebook"
+                    ratio={1.2}
+                  />
+                </FacebookShareButton>
+                <TwitterShareButton
+                  onShareWindowClose={openNewsletterModal}
+                  url={link}
+                  title={sharedDescription}
+                  hashtags={hashtags}
+                  via="R_Entourage"
+                  style={{ cursor: 'pointer' }}
+                  className="uk-icon-link uk-icon-button uk-background-primary"
+                >
+                  <IconNoSSR
+                    className="ent-text-white"
+                    name="twitter"
+                    ratio={1.2}
+                  />
+                </TwitterShareButton>
+                <WhatsappShareButton
+                  onShareWindowClose={openNewsletterModal}
+                  url={link}
+                  title={sharedDescription}
+                  style={{ cursor: 'pointer' }}
+                  className="uk-icon-link uk-icon-button uk-background-primary"
+                >
+                  <IconNoSSR
+                    className="ent-text-white"
+                    name="whatsapp"
+                    ratio={1.2}
+                  />
+                </WhatsappShareButton>
+              </GridNoSSR>
+              <ModalShareCV
+                id={`info-share-${cv.user.candidat.firstName}`}
+                firstName={cv.user.candidat.firstName}
+              />
+            </div>
             <ModalEdit
               id="modal-send-opportunity"
               title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
@@ -240,7 +254,7 @@ const CVFiche = ({ cv }) => {
               }
             />
           </div>
-          <GridNoSSR gap="large" eachWidths={['expand', 'auto@m']}>
+          <GridNoSSR gap="large" eachWidths={['expand', 'auto@s']}>
             <GridNoSSR column>
               {cv.experiences.length > 0 && (
                 <div className="">
@@ -250,7 +264,7 @@ const CVFiche = ({ cv }) => {
                     {cv.experiences.map((exp, i) => (
                       <>
                         {exp.skills && (
-                          <dt key={i}>
+                          <dt key={i} style={{ display: 'block' }}>
                             {exp.skills.map((name, key) => (
                               <span
                                 key={key}
@@ -290,28 +304,41 @@ const CVFiche = ({ cv }) => {
                     Mes recommandations
                   </h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
-                  {cv.reviews.map((review, i) => (
-                    <li id={i} key={i}>
-                      <p className="uk-margin-small uk-position-relative">
-                        <IconNoSSR
-                          name="quote-right"
-                          className="uk-text-primary ent-quote-after"
-                          flip
-                          ratio={1.4}
-                        />
-                        {review.text}
-                        <IconNoSSR
-                          name="quote-right"
-                          className="uk-text-primary ent-quote-before"
-                          ratio={0.8}
-                        />
-                      </p>
-                      <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
-                        {review.name}
-                      </p>
-                      <p className="uk-margin-remove">{review.status}</p>
-                    </li>
-                  ))}
+                  <GridNoSSR gap="small" column>
+                    {cv.reviews.map((review, i) => (
+                      <div key={i}>
+                        <GridNoSSR gap="small" column>
+                          <div>
+                            <IconNoSSR
+                              flip
+                              className="uk-text-primary"
+                              name="quote-right"
+                              ratio={1.4}
+                            />
+                            <p className="uk-margin-remove">{review.text}</p>
+                            <GridNoSSR
+                              className="uk-margin-small-top"
+                              eachWidths={['expand', 'auto']}
+                              between
+                              row
+                            >
+                              <p className="uk-text-meta uk-margin-remove-top">
+                                <span className="uk-text-bold">
+                                  {review.name}
+                                </span>
+                                , {review.status}
+                              </p>
+                              <IconNoSSR
+                                className="uk-text-muted uk-width-1-1 uk-text-right"
+                                name="quote-right"
+                                ratio={0.8}
+                              />
+                            </GridNoSSR>
+                          </div>
+                        </GridNoSSR>
+                      </div>
+                    ))}
+                  </GridNoSSR>
                 </div>
               )}
             </GridNoSSR>
@@ -320,13 +347,13 @@ const CVFiche = ({ cv }) => {
                 <h3 className="uk-margin-small-bottom">Mes infos pratiques</h3>
                 <hr className="uk-divider-small uk-margin-remove-top" />
                 <ul className="uk-list">
-                  <li>
-                    <IconNoSSR className="uk-text-primary" name="location" />{' '}
-                    {cv.location && cv.location !== ''
-                      ? cv.location
-                      : 'Localisation non renseignée'}
-                  </li>
-                  {cv.user.candidat.email && (
+                  {cv.location && cv.location.length > 0 && (
+                    <li>
+                      <IconNoSSR className="uk-text-primary" name="location" />{' '}
+                      {cv.location}
+                    </li>
+                  )}
+                  {/* {cv.user.candidat.email && (
                     <li>
                       <IconNoSSR className="uk-text-primary" name="user" />{' '}
                       <a
@@ -347,7 +374,7 @@ const CVFiche = ({ cv }) => {
                         {cv.user.candidat.phone}
                       </a>
                     </li>
-                  )}
+                  )} */}
                   {cv.contracts.length > 0 && (
                     <li>
                       <IconNoSSR className="uk-text-primary" name="file-text" />{' '}
@@ -358,6 +385,12 @@ const CVFiche = ({ cv }) => {
                     <li>
                       <IconNoSSR className="uk-text-primary" name="users" />{' '}
                       {cv.languages.join(' / ')}
+                    </li>
+                  )}
+                  {cv.transport && (
+                    <li>
+                      <IconNoSSR className="uk-text-primary" name="cart" />{' '}
+                      {cv.transport}
                     </li>
                   )}
                 </ul>
@@ -377,6 +410,7 @@ const CVFiche = ({ cv }) => {
               )}
             </GridNoSSR>
           </GridNoSSR>
+          <hr />
           <GridNoSSR column middle>
             <p className="uk-text-center uk-width-xlarge@m">
               Je suis accompagné(e) dans ma recherche d&apos;emploi et mon

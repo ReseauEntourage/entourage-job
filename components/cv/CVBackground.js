@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const CVBackground = ({ url }) => (
   <div
     className="uk-container"
-    data-uk-parallax="y: 0, -128"
+    data-uk-parallax="y: 0, -130"
     style={{
       position: 'relative',
       minHeight: '220px',
