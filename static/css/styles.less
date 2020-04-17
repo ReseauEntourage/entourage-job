@@ -1,4 +1,7 @@
 // permet de créer un ellipsis sur un text à plusieurs lignes
+body {
+  overflow-wrap: anywhere
+}
 
 .ent-card-ambition {
   max-width: calc(100% - 20px);
@@ -52,4 +55,75 @@
 
 .ent-margin-bottom-xsmall {
   margin-bottom: 5px !important
+}
+
+hr.uk-divider-small::after {
+  border-top: 1px solid #f55f24;
+}
+
+.ent-text-white {
+  color: #fff
+}
+
+.ent-quote-after {
+  position: absolute;
+  left: -28px;
+  top: calc(-28px / 2);
+}
+
+.ent-quote-before {
+  position: absolute;
+  right: -16px;
+  bottom: calc(-16px / 2);
+}
+
+// deprecie
+.ent-profile-inactive {
+  position: absolute;
+  left: 0;
+  top: 110px
+}
+
+.ent-profile-inactive .uk-sticky-placeholder {
+  height: 0;
+}
+
+.ent-profile-inactive img {
+  opacity: 0;
+  transition: opacity .1s ease-in;
+}
+
+.ent-profile-active img {
+  opacity: 1;
+  transition: opacity .1s ease-in;
+}
+
+.ent-profile-active {
+  z-index: 980;
+  left: 10px !important;
+  width: calc((100vw - 1280px) / 2) !important
+}
+
+// .ent-nav
+.ent-nav-item:not(:first-child):not(:last-child)::before {
+  content: "|";
+  align-items: center;
+  margin: 0 20px;
+  font-size: 14px;
+  color: #999;
+  display: flex;
+}
+
+// .ent-nav
+.ent-nav-item {
+  display: flex;
+}
+
+.ent-nav-item>a {
+  color: white !important;
+  text-transform: none !important;
+}
+
+.ent-nav-item:hover>a {
+  color: rgba(255, 255, 255, .5) !important;
 }

@@ -169,7 +169,10 @@ export default class FieldFactory {
             defaultValue={this.defaultValues[data.id]}
             isMulti={data.isMulti}
             openMenuOnClic={false}
-            placeholder={data.placeholder}
+            placeholder={data.placeholder || 'Sélectionner...'}
+            noOptionsMessage={
+              data.noOptionsMessage || ((value) => `Aucun résultat`)
+            }
             loadOptions={(inputValue, callback) =>
               data.loadOptions(inputValue, callback, this.getValue)
             }
@@ -209,7 +212,10 @@ export default class FieldFactory {
             options={data.options}
             className="basic-multi-select"
             classNamePrefix="select"
-            placeholder={data.placeholder}
+            placeholder={data.placeholder || 'Sélectionner...'}
+            noOptionsMessage={
+              data.noOptionsMessage || ((value) => `Aucun résultat`)
+            }
             onChange={(obj) => {
               if (obj) {
                 let valueToReturn = obj;
@@ -253,7 +259,10 @@ export default class FieldFactory {
             options={data.options}
             className="basic-multi-select"
             classNamePrefix="select"
-            placeholder={data.placeholder}
+            placeholder={data.placeholder || 'Sélectionner...'}
+            noOptionsMessage={
+              data.noOptionsMessage || ((value) => `Aucun résultat`)
+            }
             onChange={(obj) => {
               if (obj) {
                 let valueToReturn = obj;

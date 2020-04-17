@@ -3,35 +3,31 @@ import PropTypes from 'prop-types';
 
 const CVBackground = ({ url }) => (
   <div
+    className="uk-container"
+    data-uk-parallax="y: 0, -130"
     style={{
       position: 'relative',
-      maxHeight: 'calc(50vw)',
-      minHeight: '200px',
-      height: '400px',
-      width: '100%',
+      minHeight: '220px',
+      maxHeight: '50vh',
+      height: '50vw',
     }}
   >
     <div
+      className="uk-background-cover uk-background-center uk-box-shadow-small"
       style={{
+        backgroundImage: `url("${url}")`,
+        backgroundPosition: 'center',
         position: 'absolute',
         right: 0,
         top: 0,
         left: 0,
+        display: 'block',
+        width: '100%',
+        minHeight: '140%',
+        maxHeight: '140%',
+        height: '70vw',
       }}
-    >
-      <div
-        className="uk-background-cover uk-background-center"
-        style={{
-          backgroundImage: `url("${url}")`,
-          position: 'absolute',
-          display: 'block',
-          width: '100%',
-          height: '70vw',
-          minHeight: '300px',
-          maxHeight: 'calc(100vh - 80px)',
-        }}
-      />
-    </div>
+    />
   </div>
 );
 CVBackground.propTypes = {

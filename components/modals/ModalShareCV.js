@@ -13,7 +13,7 @@ const ModalShareCV = ({ firstName, id }) => (
     id={id}
     title="Merci pour votre partage."
     composers={[
-      (_, next) => (
+      (close, next) => (
         <>
           <p>
             Pour {firstName}, votre action peut tout changer !<br />
@@ -25,6 +25,7 @@ const ModalShareCV = ({ firstName, id }) => (
           <FormWithValidation
             formSchema={schemaGetEmail}
             submitText="Envoyer"
+            onCancel={close}
             onSubmit={({ email }) => {
               Axios.post('/api/v1/cv/share', { email })
                 .then(next)

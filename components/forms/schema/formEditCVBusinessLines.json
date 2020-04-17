@@ -6,7 +6,7 @@
       "name": "businessLines",
       "type": "text",
       "title": "Mots clés",
-      "component": "select-request",
+      "component": "select-request-creatable",
       "options": [
         { "value": "Construction / BTP", "label": "Construction / BTP" },
         {

@@ -13,13 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     s.id = uuid();
     return s;
   });
-  Skill.associate = function(models) {
-    Skill.belongsToMany(models.CV, {
-      through: 'CV_Skill',
-      as: 'CVs',
-      foreignKey: 'SkillId',
-      otherKey: 'CVId',
-    });
-  };
+  Skill.associate = function(models) {};
   return Skill;
 };

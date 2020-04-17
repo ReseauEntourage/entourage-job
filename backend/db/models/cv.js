@@ -87,10 +87,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  CV.beforeCreate((cv) => {
-    const cvToCreate = cv;
-    cvToCreate.id = uuid();
-    return cvToCreate;
+  CV.beforeCreate((fields, _) => {
+    const data = fields;
+    data.id = uuid();
+    return data;
   });
   CV.associate = (models) => {
     // link and rename for association
@@ -106,10 +106,6 @@ module.exports = (sequelize, DataTypes) => {
       through: 'CV_Language',
       as: 'languages',
     });
-    CV.belongsToMany(models.Skill, {
-      through: 'CV_Skills',
-      as: 'skills',
-    });
     CV.belongsToMany(models.Passion, {
       through: 'CV_Passions',
       as: 'passions',
@@ -117,6 +113,10 @@ module.exports = (sequelize, DataTypes) => {
     CV.belongsToMany(models.BusinessLine, {
       through: 'CV_BusinessLines',
       as: 'businessLines',
+    });
+    CV.belongsToMany(models.Skill, {
+      through: 'CV_Skills',
+      as: 'skills',
     });
 
     CV.hasMany(models.Experience, {
