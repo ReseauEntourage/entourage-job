@@ -2,38 +2,44 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) =>
       Promise.all([
-        queryInterface.createTable('Experience_Skills', {
-          id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-          },
-          ExperienceId: {
-            type: Sequelize.UUID,
-            allowNull: false,
-            references: {
-              model: 'Experiences',
-              key: 'id',
+        queryInterface.createTable(
+          'Experience_Skills',
+          {
+            id: {
+              type: Sequelize.INTEGER,
+              primaryKey: true,
+              autoIncrement: true,
+              allowNull: false,
+            },
+            ExperienceId: {
+              type: Sequelize.UUID,
+              allowNull: false,
+              references: {
+                model: 'Experiences',
+                key: 'id',
+              },
+            },
+            SkillId: {
+              type: Sequelize.UUID,
+              allowNull: false,
+              references: {
+                model: 'Skills',
+                key: 'id',
+              },
+            },
+            createdAt: {
+              allowNull: false,
+              type: Sequelize.DATE,
+            },
+            updatedAt: {
+              allowNull: false,
+              type: Sequelize.DATE,
             },
           },
-          SkillId: {
-            type: Sequelize.UUID,
-            allowNull: false,
-            references: {
-              model: 'Skills',
-              key: 'id',
-            },
-          },
-          createdAt: {
-            allowNull: false,
-            type: Sequelize.DATE,
-          },
-          updatedAt: {
-            allowNull: false,
-            type: Sequelize.DATE,
-          },
-        }),
+          {
+            transaction: t,
+          }
+        ),
         queryInterface.removeColumn('Experiences', 'dateStart', {
           transaction: t,
         }),
@@ -81,7 +87,9 @@ module.exports = {
             transaction: t,
           }
         ),
-        queryInterface.dropTable('Experience_Skills'),
+        queryInterface.dropTable('Experience_Skills', {
+          transaction: t,
+        }),
       ]);
     });
   },
