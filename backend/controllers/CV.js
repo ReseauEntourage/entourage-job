@@ -70,7 +70,15 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
   {
     model: models.Experience,
     as: 'experiences',
-    attributes: ['id', 'dateStart', 'dateEnd', 'title', 'description'],
+    attributes: ['id', 'description'],
+    include: [
+      {
+        model: models.Skill,
+        as: 'skills',
+        through: { attributes: [] },
+        attributes: ['id', 'name'],
+      },
+    ],
   },
   {
     model: models.Review,
@@ -110,7 +118,7 @@ inner join (
 on cv."UserId" = groupUsers."candidatId"`;
 
 const createCV = async (data) => {
-  console.log(`createCV - Etape 1 - Création du CV`);
+  console.log(`createCV - Création du CV`);
   if (data.userId) {
     data.UserId = data.userId;
     delete data.userId;
@@ -120,7 +128,7 @@ const createCV = async (data) => {
 
   // Skills
   if (data.skills) {
-    console.log(`createCV - Etape 2 - Skills`);
+    console.log(`createCV - Skills`);
     const skills = await Promise.all(
       // pour chaque competence
       data.skills.map((name) =>
@@ -138,20 +146,24 @@ const createCV = async (data) => {
 
   // languages
   if (data.languages) {
-    console.log(`createCV - Etape 4 - Langues`);
+    console.log(`createCV - Langues`);
     const languages = await Promise.all(
+      // pour chaque competence
       data.languages.map((name) =>
+        // on trouve ou créé la donné
         models.Language.findOrCreate({
           where: { name: controlText(name) },
+          // on recupere de model retourné
         }).then((model) => model[0])
       )
     );
+    // on ajoute toutes les competences
     modelCV.addLanguages(languages);
   }
 
   // Contracts
   if (data.contracts) {
-    console.log(`createCV - Etape 6 - Contrats`);
+    console.log(`createCV - Contrats`);
     const contracts = await Promise.all(
       data.contracts.map((name) => {
         return models.Contract.findOrCreate({
@@ -164,7 +176,7 @@ const createCV = async (data) => {
 
   // Passions
   if (data.passions) {
-    console.log(`createCV - Etape 8 - Passions`);
+    console.log(`createCV - Passions`);
     const passions = await Promise.all(
       data.passions.map((name) => {
         return models.Passion.findOrCreate({
@@ -177,7 +189,7 @@ const createCV = async (data) => {
 
   // Ambitions
   if (data.ambitions) {
-    console.log(`createCV - Etape 10 - Ambitions`);
+    console.log(`createCV - Ambitions`);
     const ambitions = await Promise.all(
       data.ambitions.map((name) => {
         return models.Ambition.findOrCreate({
@@ -190,7 +202,7 @@ const createCV = async (data) => {
 
   // BusinessLines
   if (data.businessLines) {
-    console.log(`createCV - Etape 11 - BusinessLines`);
+    console.log(`createCV - BusinessLines`);
     const businessLines = await Promise.all(
       data.businessLines.map((name) => {
         return models.BusinessLine.findOrCreate({
@@ -203,21 +215,32 @@ const createCV = async (data) => {
 
   // Experiences
   if (data.experiences) {
-    console.log(`createCV - Etape 12 - Expériences`);
-    data.experiences.forEach((experience) =>
-      models.Experience.create({
-        CVId: modelCV.id,
-        dateStart: experience.dateStart,
-        dateEnd: experience.dateEnd,
-        title: experience.title,
-        description: experience.description,
+    console.log(`createCV - Expériences`);
+    const modelExperiences = await Promise.all(
+      data.experiences.map(async (experience) => {
+        const modelExperience = await models.Experience.create({
+          CVId: modelCV.id,
+          description: experience.description,
+        });
+        // Skills
+        if (experience.skills) {
+          console.log(`createCV - BusinessLines`);
+          Promise.all(
+            experience.skills.map((name) => {
+              return models.Skill.findOrCreate({
+                where: { name: controlText(name) },
+              }).then((model) => model[0]);
+            })
+          ).then((skills) => modelExperience.addSkills(skills));
+        }
+        return modelExperience;
       })
     );
   }
 
   // Reviews
   if (data.reviews) {
-    console.log(`createCV - Etape 13 - Reviews`);
+    console.log(`createCV - Reviews`);
     data.reviews.forEach((review) =>
       models.Review.create({
         CVId: modelCV.id,

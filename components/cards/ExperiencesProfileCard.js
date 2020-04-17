@@ -8,43 +8,12 @@ import { GridNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalConfirm from '../modals/ModalConfirm';
 
-function getExpWithSeparatedDates(exp) {
-  const dateStartSplited = exp.dateStart.split('/');
-
-  const newExp = {
-    type: exp.type,
-    title: exp.title,
-    description: exp.description,
-    'start-month': Number(dateStartSplited[0]),
-    'start-year': Number(dateStartSplited[1]),
-  };
-  if (exp.dateEnd) {
-    const [month, year] = exp.dateEnd.split('/').map((val) => Number(val));
-    // on admet la date au bon format
-    newExp['end-month'] = month;
-    newExp['end-year'] = year;
-  }
-  return newExp;
-}
-
-function getExpWithoutSeparatedDate(exp) {
-  return {
-    type: exp.type,
-    title: exp.title,
-    description: exp.description,
-    dateStart: `${exp['start-month']}/${exp['start-year']}`,
-    dateEnd:
-      exp['end-month'] && exp['end-year']
-        ? `${exp['end-month']}/${exp['end-year']}`
-        : undefined,
-  };
-}
-
 // PROBLEM: les modals existe. mais ne sont pas present dans le dom react, resultat les evenements ne sont plus géré
 // todo: ONE MODAL, MULTIPLE EDITION
 const ExperiencesProfileCard = ({ experiences, onChange }) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentDefaultValue, setCurrentDefaultValue] = useState({});
+  console.log(experiences);
 
   return (
     <>
@@ -69,19 +38,29 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           ) : (
             experiences.map((exp, i) => (
               <li id={i} key={i}>
-                <GridNoSSR eachWidths={['expand', 'auto']}>
+                <GridNoSSR
+                  eachWidths={['expand', 'auto']}
+                  className="uk-margin-medium-bottom"
+                  style={{
+                    overflowWrap: 'anywhere',
+                  }}
+                >
                   <>
-                    <p className="uk-text-muted uk-margin-small">
-                      {exp.dateEnd
-                        ? `${exp.dateStart} - ${exp.dateEnd}`
-                        : exp.dateStart}
-                    </p>
-                    <p className="uk-text-bold uk-text-primary uk-margin-small">
-                      {exp.title}
-                    </p>
-                    <p className="uk-margin-small-top uk-margin-medium-bottom">
+                    <p className="uk-margin-small-top uk-margin-small">
                       {exp.description}
                     </p>
+                    {exp.skills && (
+                      <p className="uk-text-primary">
+                        {exp.skills.map((name, key) => (
+                          <span
+                            key={key}
+                            className="uk-label uk-margin-small-right"
+                          >
+                            {name}
+                          </span>
+                        ))}
+                      </p>
+                    )}
                   </>
                   {onChange && (
                     <div className="uk-flex uk-flex-column">
@@ -89,9 +68,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
                         name="pencil"
                         onClick={() => {
                           setCurrentIndex(i);
-                          setCurrentDefaultValue(
-                            getExpWithSeparatedDates(experiences[i])
-                          );
+                          setCurrentDefaultValue(experiences[i]);
                           UIkit.modal(`#modal-experience-edit`).show();
                         }}
                       />
@@ -118,10 +95,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
             formSchema={schemaformEditExperience}
             onSubmit={(fields) =>
               onChange({
-                experiences: [
-                  ...experiences,
-                  getExpWithoutSeparatedDate(fields),
-                ],
+                experiences: [...experiences, fields],
               })
             }
           />
@@ -132,7 +106,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
             defaultValues={currentDefaultValue}
             onSubmit={(fields) => {
               const newExperiences = experiences;
-              newExperiences[currentIndex] = getExpWithoutSeparatedDate(fields);
+              newExperiences[currentIndex] = fields;
               onChange({ experiences: newExperiences });
             }}
           />
@@ -153,10 +127,10 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
 ExperiencesProfileCard.propTypes = {
   experiences: PropTypes.arrayOf(
     PropTypes.shape({
-      type: PropTypes.string,
-      dateStart: PropTypes.string,
-      dateEnd: PropTypes.string,
-      title: PropTypes.string,
+      // type: PropTypes.string,
+      // dateStart: PropTypes.string,
+      // dateEnd: PropTypes.string,
+      // title: PropTypes.string,
       description: PropTypes.string,
     })
   ),
