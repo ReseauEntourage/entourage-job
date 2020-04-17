@@ -1,4 +1,7 @@
 // permet de créer un ellipsis sur un text à plusieurs lignes
+body {
+  overflow-wrap: anywhere
+}
 
 .ent-card-ambition {
   max-width: calc(100% - 20px);
@@ -99,4 +102,28 @@ hr.uk-divider-small::after {
   z-index: 980;
   left: 10px !important;
   width: calc((100vw - 1280px) / 2) !important
+}
+
+// .ent-nav
+.ent-nav-item:not(:first-child):not(:last-child)::before {
+  content: "|";
+  align-items: center;
+  margin: 0 20px;
+  font-size: 14px;
+  color: #999;
+  display: flex;
+}
+
+// .ent-nav
+.ent-nav-item {
+  display: flex;
+}
+
+.ent-nav-item>a {
+  color: white !important;
+  text-transform: none !important;
+}
+
+.ent-nav-item:hover>a {
+  color: rgba(255, 255, 255, .5) !important;
 }
