@@ -12,9 +12,9 @@ import {
   SimpleLink,
 } from '../utils';
 import './Header.less';
-import HeaderUserDropdown from './HeaderUserDropdown';
 import { UserContext } from '../store/UserProvider';
 import ImgProfile from './ImgProfile';
+import Dropdown from '../utils/Dropdown';
 
 const HeaderConnected = ({ isHome }) => {
   const { user, logout } = useContext(UserContext);
@@ -34,7 +34,7 @@ const HeaderConnected = ({ isHome }) => {
       },
     ],
     dropdown: [
-      { icon: 'user', name: 'Mon profil' },
+      // { icon: 'user', name: 'Mon profil' },
       {
         href: '/backoffice/parametres',
         icon: 'settings',
@@ -66,6 +66,7 @@ const HeaderConnected = ({ isHome }) => {
   return (
     <header id="header">
       <NavbarNoSSR
+        sticky=""
         mode="click"
         className={`uk-background-default uk-navbar-transparent ${
           isHome ? 'ent-home' : 'ent-header-shadow'
@@ -74,8 +75,12 @@ const HeaderConnected = ({ isHome }) => {
           <>
             <NavbarLogo
               href="/"
-              src="/static/img/linkedout_by_entourage.png"
+              src="/static/img/01-linkedout-orange-complet.png"
               alt="Linkedout"
+              // style={{
+              //   width: '210px',
+              //   /* marginTop: '8px', */
+              // }}
             />
             <ul
               className="uk-navbar-nav"
@@ -113,9 +118,47 @@ const HeaderConnected = ({ isHome }) => {
               className="uk-visible@m"
               style={{ borderLeft: '1px solid lightgray' }}
             >
-              <HeaderUserDropdown />
+              <a
+                id="nav-profile"
+                style={{
+                  fontWeight: 500,
+                  fontSize: '1rem',
+                  color: 'black',
+                  textTransform: 'none',
+                }}
+              >
+                <ImgProfile />
+                <span className="uk-margin-small-left">
+                  Salut {user.firstName}
+                </span>
+                <IconNoSSR name="triangle-down" />
+              </a>
+              <Dropdown
+                dividers={[2]}
+                id="dropdown-nav-profile"
+                boundaryId="nav-profile"
+              >
+                {LINKS_CONNECTED.dropdown.map(
+                  ({ href, name, onClick }, index) => (
+                    <a
+                      key={index}
+                      aria-hidden="true"
+                      onClick={() => {
+                        if (href) {
+                          router.push(href);
+                        }
+                        if (onClick) {
+                          onClick();
+                        }
+                      }}
+                    >
+                      {name}
+                    </a>
+                  )
+                )}
+              </Dropdown>
             </li>
-            <li style={{ borderLeft: '1px solid lightgray' }}>
+            {/* <li style={{ borderLeft: '1px solid lightgray' }}>
               <a
                 className="uk-visible@m"
                 style={{
@@ -129,7 +172,7 @@ const HeaderConnected = ({ isHome }) => {
                   <IconNoSSR name="bell" />
                 </span>
               </a>
-            </li>
+            </li> */}
             <HamburgerNoSSR targetId="offcanvas-logged" hidden="m" />
           </ul>
         }

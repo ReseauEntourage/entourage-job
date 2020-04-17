@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Nav = ({ navbar, items }) => (
-  <ul className={navbar ? 'uk-navbar-nav' : 'uk-nav uk-nav-default'}>
+  <ul className={navbar ? 'uk-navbar-nav' : 'uk-nav uk-nav-default ent-nav'}>
     {items.map((value, index) => (
-      <li key={index}>{value}</li>
+      <li key={index} className="ent-nav-item">
+        {value}
+      </li>
     ))}
   </ul>
 );

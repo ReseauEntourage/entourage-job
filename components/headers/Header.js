@@ -15,9 +15,7 @@ import './Header.less';
 const Header = ({ isHome }) => {
   const LINKS = [
     { href: '/jeveuxaider', name: 'Aider' },
-    { href: '#', name: '|' },
     { href: '/jeveuxrecruter', name: 'Recruter' },
-    { href: '#', name: '|' },
     { href: '/jeveuxtravailler', name: 'Travailler' },
   ];
   const router = useRouter();
@@ -27,18 +25,16 @@ const Header = ({ isHome }) => {
         sticky=""
         className="uk-background-secondary uk-navbar-transparent uk-light ent-home"
         left={
-          <>
-            <NavbarLogo
-              href="/"
-              src="/static/img/03-linkedout-blanc-complet.png"
-              alt="Linkedout"
-              alwaysVisible={!isHome}
-              style={{
-                width: '210px',
-                /* marginTop: '8px', */
-              }}
-            />
-          </>
+          <NavbarLogo
+            href="/"
+            src="/static/img/03-linkedout-blanc-complet.png"
+            alt="Linkedout"
+            alwaysVisible={!isHome}
+            style={{
+              width: '210px',
+              /* marginTop: '8px', */
+            }}
+          />
         }
         right={
           <Nav
@@ -46,17 +42,7 @@ const Header = ({ isHome }) => {
             items={[
               ...LINKS.map((value) => (
                 <Link href={value.href}>
-                  <a
-                    className="uk-visible@s"
-                    style={{
-                      // fontWeight: 500,
-                      // fontSize: '1rem',
-                      color: 'white',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {value.name}
-                  </a>
+                  <a className="uk-visible@s">{value.name}</a>
                 </Link>
               )),
               <div className="uk-navbar-item uk-visible@s">
@@ -74,7 +60,7 @@ const Header = ({ isHome }) => {
                       borderRadius: '2px',
                     }}
                   >
-                  Je partage un CV &gt;
+                    Je partage un CV &gt;
                   </button>
                 </Link>
               </div>,
