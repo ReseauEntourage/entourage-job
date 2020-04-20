@@ -8,7 +8,9 @@ import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOfferAdmin from '../../../components/modals/ModalOfferAdmin';
 import Filter from '../../../components/utils/Filter';
 import Axios from '../../../Axios';
+import schema from '../../../components/forms/schema/formEditOpportunity';
 import { UserContext } from '../../../components/store/UserProvider';
+import ModalEdit from '../../../components/modals/ModalEdit';
 
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
@@ -65,6 +67,16 @@ const LesOpportunites = () => {
     return null;
   };
 
+  const postOpportunity = async (opportunity) => {
+    try {
+      await Axios.post(`/api/v1/opportunity/`, opportunity);
+      UIkit.notification(`L'oppotunité a été ajoutée.`, 'success');
+      fetchData();
+    } catch (err) {
+      UIkit.notification(`Une erreur est survenue.`, 'danger');
+    }
+  };
+
   useEffect(() => {
     fetchData().then((data) => {
       if (data) {
@@ -90,6 +102,7 @@ const LesOpportunites = () => {
           <button
             type="button"
             className="uk-button uk-button-primary"
+            data-uk-toggle="target: #add-opportunity"
             style={{
               color: 'white',
               backgroundColor: '#F55F24',
@@ -99,10 +112,6 @@ const LesOpportunites = () => {
               padding: '0px 20px',
               borderRadius: '2px',
             }}
-            onClick={() => {
-              console.log('#add-opportunity');
-              // UIkit.modal('#add-opportunity').show();
-            }}
           >
             <span
               uk-icon="icon: plus; ratio:0.8"
@@ -110,6 +119,18 @@ const LesOpportunites = () => {
             />
             Nouvelle opportunité
           </button>
+          <ModalEdit
+            id="add-opportunity"
+            title="Ajouter une opportunité"
+            submitText="Envoyer"
+            formSchema={schema}
+            onSubmit={(fields) =>
+              postOpportunity({
+                ...fields,
+                date: Date.now(),
+              })
+            }
+          />
         </HeaderBackoffice>
         {hasError ? (
           <Section className="uk-width-1-1">

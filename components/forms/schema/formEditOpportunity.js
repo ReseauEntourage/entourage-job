@@ -162,6 +162,17 @@ export default {
   ],
   rules: [
     {
+      field: 'title',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
       field: 'recruiterName',
       method: 'isEmpty',
       args: [
@@ -207,6 +218,17 @@ export default {
     },
     {
       field: 'location',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'description',
       method: 'isEmpty',
       args: [
         {

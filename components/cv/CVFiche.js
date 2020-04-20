@@ -230,29 +230,6 @@ const CVFiche = ({ cv }) => {
                 firstName={cv.user.candidat.firstName}
               />
             </div>
-            <ModalEdit
-              id="modal-send-opportunity"
-              title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
-              description={
-                "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez avec le coach plus bas dans la page CV !"
-              }
-              submitText="Envoyer"
-              defaultValues={{
-                isPublic: false,
-                candidatId: {
-                  value: cv.UserId,
-                  label: `${cv.user.candidat.firstName}`,
-                },
-              }}
-              formSchema={schema}
-              onSubmit={(fields) =>
-                postOpportunity({
-                  ...fields,
-                  usersId: [cv.UserId],
-                  date: Date.now(),
-                })
-              }
-            />
           </div>
           <GridNoSSR gap="large" eachWidths={['expand', 'auto@s']}>
             <GridNoSSR column>
@@ -375,22 +352,28 @@ const CVFiche = ({ cv }) => {
                       </a>
                     </li>
                   )} */}
-                  {cv.contracts.length > 0 && (
+                  {cv.contracts && cv.contracts.length > 0 && (
                     <li>
                       <IconNoSSR className="uk-text-primary" name="file-text" />{' '}
                       {cv.contracts.join(' / ')}
                     </li>
                   )}
-                  {cv.languages.length > 0 && (
+                  {cv.languages && cv.languages.length > 0 && (
                     <li>
                       <IconNoSSR className="uk-text-primary" name="users" />{' '}
                       {cv.languages.join(' / ')}
                     </li>
                   )}
-                  {cv.transport && (
+                  {cv.transport && cv.transport.length > 0 && (
                     <li>
                       <IconNoSSR className="uk-text-primary" name="cart" />{' '}
                       {cv.transport}
+                    </li>
+                  )}
+                  {cv.availability && cv.availability.length > 0 && (
+                    <li>
+                      <IconNoSSR className="uk-text-primary" name="calendar" />{' '}
+                      {cv.availability}
                     </li>
                   )}
                 </ul>
@@ -454,6 +437,29 @@ const CVFiche = ({ cv }) => {
         >
           Contactez-moi &gt;
         </button>
+        <ModalEdit
+          id="modal-send-opportunity"
+          title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
+          description={
+            "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez avec le coach plus bas dans la page CV !"
+          }
+          submitText="Envoyer"
+          defaultValues={{
+            isPublic: false,
+            candidatId: {
+              value: cv.UserId,
+              label: `${cv.user.candidat.firstName}`,
+            },
+          }}
+          formSchema={schema}
+          onSubmit={(fields) =>
+            postOpportunity({
+              ...fields,
+              usersId: [cv.UserId],
+              date: Date.now(),
+            })
+          }
+        />
       </div>
     </Section>
   );
