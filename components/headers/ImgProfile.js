@@ -39,7 +39,7 @@ const ImgProfile = ({ user, size }) => {
           <ImgNoSSR
             className="uk-height-1-1"
             src={process.env.AWSS3_URL + urlImg}
-            alt="photo de ..."
+            alt={`photo de ${firstName}`}
           />
         </div>
       ) : (

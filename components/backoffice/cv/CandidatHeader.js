@@ -1,19 +1,20 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR, SimpleLink, IconNoSSR } from '../../utils';
-import { UserContext } from '../../store/UserProvider';
+import ImgProfile from '../../headers/ImgProfile';
 
 const CandidatHeader = ({ user }) => {
   if (!user) return null;
   return (
     <GridNoSSR row gap="small" middle>
-      <img
+      <ImgProfile user={user} size={48} />
+      {/* <img
         className="uk-preserve-width uk-border-circle"
         src={user.urlImg || '/static/img/arthur.png'}
         width="48"
         style={{ height: '48px' }}
         alt={`${user.firstName} profil`}
-      />
+      /> */}
       <GridNoSSR column gap="collapse">
         <h3 className="uk-text-bold">
           {user.firstName} {user.lastName}
