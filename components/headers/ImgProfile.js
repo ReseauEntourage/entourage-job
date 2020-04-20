@@ -2,53 +2,54 @@ import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { UserContext } from '../store/UserProvider';
 import Api from '../../Axios';
+import { ImgNoSSR } from '../utils';
 
 const ImgProfile = ({ user, size }) => {
-  console.log(user);
-  const userToCheck = user || useContext(UserContext).user;
+  const { id, firstName, role } = user || useContext(UserContext).user;
   const [urlImg, setUrlImg] = useState(null);
 
   useEffect(() => {
-    Api.get(`/api/v1/cv/?userId=${userToCheck.id}`)
-      .then(({ data }) => {
-        if (data && data.urlImg) {
-          setUrlImg(data.urlImg);
-        }
-      })
-      .catch();
+    if (role === 'Candidat') {
+      // TODO creer un champs dans le user pour recupérer son image de profil
+      // dans notre cas, seul un cv a une image (pas le coach/candidat/admin = USER)
+      Api.get(`/api/v1/cv/?userId=${id}`)
+        .then(({ data }) => {
+          if (data && data.urlImg) {
+            setUrlImg(data.urlImg);
+          }
+        })
+        .catch(console.error);
+    }
   }, [user]);
-  return urlImg ? (
+
+  return (
     <div
-      className="uk-border-circle"
+      className="uk-background-primary uk-border-circle uk-position-relative"
       style={{
         width: `${size}px`,
         height: `${size}px`,
-        backgroundImage: `url(${process.env.AWSS3_URL + urlImg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    />
-  ) : (
-    <div
-      className="uk-background-primary uk-border-circle uk-text-large uk-text-normal uk-text-uppercase uk-text-center"
-      style={{
-        width: `${size}px`,
-        height: `${size}px`,
-        color: 'white',
-        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -52%)',
-          fontSize: size / 2,
-        }}
-      >
-        {userToCheck.firstName.substr(0, 1)}
-      </div>
+      {urlImg ? (
+        <div
+          className="uk-height-1-1 uk-position-center uk-width-expand"
+          style={{ maxWidth: 'inherit' }}
+        >
+          <ImgNoSSR
+            className="uk-height-1-1"
+            src={process.env.AWSS3_URL + urlImg}
+            alt="photo de ..."
+          />
+        </div>
+      ) : (
+        <span
+          className="uk-text-normal uk-text-uppercase uk-position-center"
+          style={{ fontSize: size / 2, paddingBottom: size / 8, color: '#fff' }}
+        >
+          {firstName.substr(0, 1)}
+        </span>
+      )}
     </div>
   );
 };

@@ -37,6 +37,9 @@ const MembersAdmin = ({ query: { role } }) => {
   const fetchData = async (doReset, query) => {
     setLoading(true);
     setHasError(false);
+    if (doReset) {
+      setMembers([]);
+    }
     try {
       const { data } = await axios.get('/api/v1/user/members', {
         params: {
@@ -226,93 +229,99 @@ const MembersAdmin = ({ query: { role } }) => {
                 </thead>
                 <tbody>
                   {members.map((member, key) => (
-                    <Link
-                      key={key}
-                      href={`/backoffice/admin/membres/${member.id}`}
-                    >
-                      <tr
-                        className="uk-text-reset"
-                        aria-hidden="true"
-                        style={{ cursor: 'pointer' }}
-                      >
-                        <td>
-                          <GridNoSSR row gap="small" middle>
-                            <ImgProfile user={member} size={48} />
-                            <GridNoSSR column gap="collapse">
-                              <span className="uk-text-bold">
-                                {member.firstName} {member.lastName}
-                              </span>
-                              <span>{member.email}</span>
-                            </GridNoSSR>
-                          </GridNoSSR>
-                        </td>
-                        {role === 'All' && <td>{member.role}</td>}
-                        {role === 'Candidat' && member.candidat && (
-                          <>
-                            <td>
-                              <span className="uk-hidden@m">
-                                {member.candidat.employed
-                                  ? 'A trouvé un emploi'
-                                  : "En recherche d'emploi"}
-                              </span>
-                              <input
-                                className="uk-checkbox uk-visible@m"
-                                type="checkbox"
-                                defaultChecked={member.candidat.employed}
-                              />
-                            </td>
-                            <td>
-                              {member.candidat &&
-                              member.candidat.cvs &&
-                              member.candidat.cvs.length > 0 ? (
-                                translateStatusCV(member.candidat.cvs[0].status)
-                              ) : (
-                                <span className="uk-text-italic uk-text-danger">
-                                  Aucun CV
+                    <tr key={key}>
+                      <Link href={`/backoffice/admin/membres/${member.id}`}>
+                        <a
+                          className="uk-link-reset"
+                          style={{
+                            display: 'contents',
+                            height: '100%',
+                            width: '100%',
+                          }}
+                        >
+                          <td>
+                            <GridNoSSR row gap="small" middle>
+                              <ImgProfile user={member} size={48} />
+                              <GridNoSSR column gap="collapse">
+                                <span className="uk-text-bold">
+                                  {member.firstName} {member.lastName}
                                 </span>
+                                <span>{member.email}</span>
+                              </GridNoSSR>
+                            </GridNoSSR>
+                          </td>
+                          {role === 'All' && <td>{member.role}</td>}
+                          {role === 'Candidat' && member.candidat && (
+                            <>
+                              <td>
+                                <span className="uk-hidden@m">
+                                  {member.candidat.employed
+                                    ? 'A trouvé un emploi'
+                                    : "En recherche d'emploi"}
+                                </span>
+                                <input
+                                  className="uk-checkbox uk-visible@m"
+                                  type="checkbox"
+                                  defaultChecked={member.candidat.employed}
+                                />
+                              </td>
+                              <td>
+                                {member.candidat &&
+                                member.candidat.cvs &&
+                                member.candidat.cvs.length > 0 ? (
+                                  translateStatusCV(
+                                    member.candidat.cvs[0].status
+                                  )
+                                ) : (
+                                  <span className="uk-text-italic uk-text-danger">
+                                    Aucun CV
+                                  </span>
+                                )}
+                              </td>
+                              <td>
+                                <span className="uk-hidden@m">
+                                  {member.candidat.hidden
+                                    ? 'Masqué'
+                                    : 'Visible'}
+                                </span>
+                                <input
+                                  className="uk-checkbox uk-visible@m"
+                                  type="checkbox"
+                                  defaultChecked={member.candidat.hidden}
+                                />
+                              </td>
+                            </>
+                          )}
+                          {member.role === 'Candidat' && (
+                            <td>
+                              {member.candidat && member.candidat.coach ? (
+                                `${member.candidat.coach.firstName} ${member.candidat.coach.lastName}`
+                              ) : (
+                                <span className="uk-text-italic">Non lié</span>
                               )}
                             </td>
-                            <td>
-                              <span className="uk-hidden@m">
-                                {member.candidat.hidden ? 'Masqué' : 'Visible'}
-                              </span>
-                              <input
-                                className="uk-checkbox uk-visible@m"
-                                type="checkbox"
-                                defaultChecked={member.candidat.hidden}
-                              />
-                            </td>
-                          </>
-                        )}
-                        {member.role === 'Candidat' && (
-                          <td>
-                            {member.candidat && member.candidat.coach ? (
-                              `${member.candidat.coach.firstName} ${member.candidat.coach.lastName}`
-                            ) : (
-                              <span className="uk-text-italic">Non lié</span>
-                            )}
-                          </td>
-                        )}
-                        {member.role === 'Coach' && (
-                          <td>
-                            {member.coach && member.coach.candidat ? (
-                              `${member.coach.candidat.firstName} ${member.coach.candidat.lastName}`
-                            ) : (
-                              <span className="uk-text-italic">Non lié</span>
-                            )}
-                          </td>
-                        )}
-                        <td>
-                          {member.lastConnection ? (
-                            moment(member.lastConnection).format('DD/MM/YYYY')
-                          ) : (
-                            <span className="uk-text-italic">
-                              Aucune connexion
-                            </span>
                           )}
-                        </td>
-                      </tr>
-                    </Link>
+                          {member.role === 'Coach' && (
+                            <td>
+                              {member.coach && member.coach.candidat ? (
+                                `${member.coach.candidat.firstName} ${member.coach.candidat.lastName}`
+                              ) : (
+                                <span className="uk-text-italic">Non lié</span>
+                              )}
+                            </td>
+                          )}
+                          <td>
+                            {member.lastConnection ? (
+                              moment(member.lastConnection).format('DD/MM/YYYY')
+                            ) : (
+                              <span className="uk-text-italic">
+                                Aucune connexion
+                              </span>
+                            )}
+                          </td>
+                        </a>
+                      </Link>
+                    </tr>
                   ))}
                 </tbody>
               </table>
