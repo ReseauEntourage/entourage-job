@@ -114,6 +114,12 @@ hr.uk-divider-small::after {
   display: flex;
 }
 
+@media (max-width: 639px) {
+  .ent-nav-item:not(:first-child):not(:last-child)::before {
+    display: none !important;
+  }
+}
+
 // .ent-nav
 .ent-nav-item {
   display: flex;
