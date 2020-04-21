@@ -40,8 +40,8 @@ const Header = ({ isHome }) => {
           <Nav
             navbar
             items={[
-              ...LINKS.map((value) => (
-                <Link href={value.href}>
+              ...LINKS.map((value, i) => (
+                <Link href={value.href} key={i}>
                   <a className="uk-visible@s">{value.name}</a>
                 </Link>
               )),
