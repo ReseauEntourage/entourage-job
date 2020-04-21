@@ -37,15 +37,13 @@
     ],
     "jsx-a11y/anchor-is-valid": "off",
     "jsx-a11y/anchor-has-content": "off",
-    // "import/imports-first": ["error", "absolute-first"],
-    // "import/newline-after-import": "error",
-    // "import/prefer-default-export": "warn",
     "react/no-array-index-key": "off",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "react/prop-types": "error",
     "react/style-prop-object": "off",
     "react/forbid-prop-types": "warn",
+    "react/static-property-placement": ["warn", "static getter"],
     "react/jsx-filename-extension": [
       "warn",
       {

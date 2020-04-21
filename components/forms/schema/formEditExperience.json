@@ -1,0 +1,33 @@
+{
+  "id": "form-experience",
+  "fields": [
+    {
+      "id": "description",
+      "name": "description",
+      "component": "textarea",
+      "type": "text",
+      "title": "Description"
+    },
+    {
+      "id": "skills",
+      "name": "skills",
+      "title": "Compétences",
+      "type": "text",
+      "component": "select-request-creatable",
+      "isMulti": true
+    }
+  ],
+  "rules": [
+    {
+      "field": "description",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 2000
+        }
+      ],
+      "validWhen": true,
+      "message": "2000 caractères maximum"
+    }
+  ]
+}

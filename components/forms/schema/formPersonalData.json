@@ -1,0 +1,48 @@
+{
+  "id": "form-catchphrase",
+  "fields": [
+    { "title": "Modifier l'adresse mail", "component": "text" },
+    {
+      "id": "oldEmail",
+      "name": "oldEmail",
+      "component": "input",
+      "type": "email",
+      "title": "Tapez votre ancien email "
+    },
+    {
+      "id": "newEmail0",
+      "name": "newEmail0",
+      "component": "input",
+      "type": "email",
+      "title": "Tapez votre nouvel email "
+    },
+    {
+      "id": "newEmail1",
+      "name": "newEmail1",
+      "component": "input",
+      "type": "email",
+      "title": "Verifiez votre nouvel email "
+    },
+    { "title": "Modifier le numéro de téléphone", "component": "text" },
+    {
+      "id": "phone",
+      "name": "phone",
+      "component": "input",
+      "type": "phone",
+      "title": "Tapez votre numero de telephone "
+    }
+  ],
+  "rules": [
+    {
+      "field": "phone",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 30
+        }
+      ],
+      "validWhen": true,
+      "message": "30 caractères maximum"
+    }
+  ]
+}

@@ -3,9 +3,13 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { ImgNoSSR } from './Img';
 
-const NavbarLogo = ({ href, src, alt }) => (
+const NavbarLogo = ({ href, src, alt, style, alwaysVisible }) => (
   <Link href={href}>
-    <a className="uk-navbar-item uk-logo">
+    <a // info: regle css sur uk-logo
+      className={`uk-navbar-item uk-width-small ${!alwaysVisible &&
+        'uk-logo uk-animation-fade'}`}
+      style={style}
+    >
       <ImgNoSSR src={src} alt={alt} />
     </a>
   </Link>
@@ -14,6 +18,7 @@ NavbarLogo.propTypes = {
   src: PropTypes.string.isRequired,
   href: PropTypes.string.isRequired,
   alt: PropTypes.string,
+  style: PropTypes.shape(),
 };
-NavbarLogo.defaultProps = { alt: 'navbar logo' };
+NavbarLogo.defaultProps = { alt: 'navbar logo', style: {} };
 export default NavbarLogo;

@@ -1,0 +1,25 @@
+{
+  "id": "form-devise",
+  "fields": [
+    {
+      "id": "devise",
+      "name": "devise",
+      "component": "input",
+      "type": "text",
+      "title": "Ce que vous pouvez apporter*"
+    }
+  ],
+  "rules": [
+    {
+      "field": "devise",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 150
+        }
+      ],
+      "validWhen": true,
+      "message": "150 caractères maximum"
+    }
+  ]
+}

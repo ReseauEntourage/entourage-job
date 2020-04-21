@@ -1,0 +1,154 @@
+{
+  "id": "form-offer",
+  "fields": [
+    {
+      "id": "firstName",
+      "name": "firstName",
+      "component": "input",
+      "type": "text",
+      "title": "Prenom*"
+    },
+    {
+      "id": "lastName",
+      "name": "lastName",
+      "component": "input",
+      "type": "text",
+      "title": "Nom*"
+    },
+    {
+      "id": "email",
+      "name": "email",
+      "component": "input",
+      "type": "text",
+      "title": "Email*"
+    },
+    {
+      "id": "phone",
+      "name": "phone",
+      "component": "input",
+      "type": "text",
+      "title": "Téléphone"
+    },
+    {
+      "id": "job",
+      "name": "job",
+      "component": "input",
+      "type": "text",
+      "title": "Nom du poste proposé*"
+    },
+    {
+      "id": "businessLine",
+      "name": "businessLine",
+      "title": "Secteur d'activité*",
+      "component": "select",
+      "options": [
+        { "value": null, "text": "Sélectionnez un secteur d'activité" },
+        { "value": "Accueil", "text": "Accueil" },
+        { "value": "Administratif", "text": "Administratif" },
+        { "value": "Animalier", "text": "Animalier" },
+        { "value": "Artisanat", "text": "Artisanat" },
+        { "value": "Associatif", "text": "Associatif" },
+        { "value": "Assurance/Banque", "text": "Assurance/Banque" },
+        { "value": "BTP", "text": "BTP" },
+        { "value": "Communication", "text": "Communication" },
+        { "value": "Culture", "text": "Culture" },
+        { "value": "Informatique", "text": "Informatique" },
+        { "value": "Interpréterait", "text": "Interpréterait" },
+        { "value": "Médico-social", "text": "Médico-social" },
+        { "value": "Restauration", "text": "Restauration" },
+        { "value": "Social", "text": "Social" },
+        { "value": "Transports", "text": "Transports" },
+        { "value": "Vente / Commerce", "text": "Vente / Commerce" }
+      ]
+    },
+    {
+      "id": "company",
+      "name": "company",
+      "component": "input",
+      "type": "text",
+      "title": "Entreprise"
+    },
+    {
+      "id": "localization",
+      "name": "localization",
+      "component": "input",
+      "type": "text",
+      "title": "Localisation*"
+    },
+    {
+      "id": "message",
+      "name": "message",
+      "component": "textarea",
+      "type": "text",
+      "title": "Votre message"
+    }
+  ],
+  "rules": [
+    {
+      "field": "firstname",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "lastname",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "email",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "phone",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "title",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "location",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    }
+  ]
+}

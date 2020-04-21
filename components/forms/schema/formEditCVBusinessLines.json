@@ -1,0 +1,49 @@
+{
+  "id": "form-cv-businesslines",
+  "fields": [
+    {
+      "id": "businessLines",
+      "name": "businessLines",
+      "type": "text",
+      "title": "Mots clés",
+      "component": "select-request-creatable",
+      "options": [
+        { "value": "Construction / BTP", "label": "Construction / BTP" },
+        {
+          "value": "Transport / Logistique",
+          "label": "Transport / Logistique"
+        },
+        {
+          "value": "Hôtellerie / Restauration",
+          "label": "Hôtellerie / Restauration"
+        },
+        {
+          "value": "Services à la personne",
+          "label": "Services à la personne"
+        },
+        { "value": "Entretien", "label": "Entretien" },
+        { "value": "Vente / Commerce", "label": "Vente / Commerce" },
+        { "value": "Industrie", "label": "Industrie" },
+        { "value": "Artisanat", "label": "Artisanat" },
+        {
+          "value": "Secrétariat / Assistanat",
+          "label": "Secrétariat / Assistanat"
+        }
+      ],
+      "isMulti": true
+    }
+  ],
+  "rules": [
+    {
+      "field": "languages",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 100
+        }
+      ],
+      "validWhen": true,
+      "message": "100 caractères maximum"
+    }
+  ]
+}

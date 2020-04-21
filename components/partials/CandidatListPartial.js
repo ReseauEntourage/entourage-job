@@ -1,73 +1,52 @@
 import React from 'react';
-import { GridNoSSR, Button, IconNoSSR, Section, SimpleLink } from '../utils';
-import { CandidatCard } from '../cards';
-
-const items = Array(11).fill(
-  <CandidatCard
-    id="arthur"
-    imgSrc="static/img/arthur.png"
-    imgAlt="arthur"
-    title="Arthur"
-    description="série télévisée d'animation américano-canadienne."
-    goods={['volontaire', "esprit d'équipe"]}
-    ambitions={['la vente', 'la restauration']}
-  />
-);
-/* items.push(<div className="uk-text-center uk-padding uk-padding-remove-bottom">
-  <Button style="default">Voir plus</Button>
-</div>); */
-items.push(
-  <div className="uk-flex uk-flex-column uk-flex-middle">
-    <button
-      onClick={() => {}}
-      onKeyPress={() =>
-        Array(3).forEach(() =>
-          items.push(
-            <CandidatCard
-              id="arthur"
-              imgSrc="static/img/arthur.png"
-              imgAlt="arthur"
-              title="Arthur"
-              description="série télévisée d'animation américano-canadienne."
-              goods={['volontaire', "esprit d'équipe"]}
-              ambitions={['la vente', 'la restauration']}
-            />
-          )
-        )
-      }
-      type="button"
-      className="uk-icon-button"
-      style={{ color: 'white', backgroundColor: '#F55F24' }}
-    >
-      <IconNoSSR name="plus" />
-    </button>
-    <SimpleLink href="/contact" className="uk-link-muted uk-padding-small">
-      <span className="uk-text-bold">Voir plus</span>
-    </SimpleLink>
-  </div>
-);
+import Link from 'next/link';
+import { GridNoSSR, Section } from '../utils';
+import CVList from '../cv/CVList';
 
 const CandidatListPartial = () => (
-  <Section style="default" container="small" id="profiles">
-    <div className="uk-text-center uk-margin-large">
-      <h2 className="uk-text-bold">
-        <span className="uk-text-primary">Eux</span> cherchent un travail,
-        <br />
-        <span className="uk-text-primary">Vous</span> avez un réseau.
-      </h2>
-      <p className="uk-align-center uk-width-2-3@s">
-        Nos candidats sont des gens en situation de précarité financière et
-        professionnellle. Toutes accompagnées par des travailleurs sociaux,
-        motivées pour se réinsérer, elles dévoilent leurs talents et leurs
-        aspirations. Réseau, amis, recruteurs, à vos partages !
-      </p>
-    </div>
-    <GridNoSSR
-      childWidths={['1-1', '1-2@s']}
-      parallax={400}
-      items={items}
-      className="uk-padding-remove-bottom"
-    />
+  <Section style="muted" id="candidat" className="uk-padding">
+    <GridNoSSR column middle eachWidths={['2-3@m', '1-1']}>
+      <div className="uk-text-center">
+        <h2 className="uk-text-bold uk-margin-remove-bottom">
+          Ils sont <span className="uk-text-primary">motivés</span> pour
+          travailler
+        </h2>
+        <h3 className="uk-text-bold uk-margin-remove-top">
+          Votre partage peut tout{' '}
+          <span className="uk-text-primary">changer</span>
+        </h3>
+        <p className="uk-margin-remove-bottom">
+          Eux ont du talent. Vous, vous avez du réseau. Si vous pensez comme
+          nous que l&apos;exclusion ne doit pas être un frein, partagez votre
+          réseau professionnel à ceux qui en ont le plus besoin.
+        </p>
+      </div>
+      <CVList nb={9} />
+      <GridNoSSR middle column gap="collapse">
+        <Link href="/lescandidats">
+          <button
+            type="button"
+            className="uk-button uk-button-primary"
+            style={{
+              color: 'white',
+              backgroundColor: '#F55F24',
+              backgroundImage: 'none',
+              textTransform: 'none',
+              boder: null,
+              padding: '0px 20px',
+              borderRadius: '2px',
+            }}
+          >
+            Voir tous les candidats &gt;
+          </button>
+        </Link>
+        <p style={{ marginTop: '20px' }}>
+          Tous ces candidats cherchent un travail en Île de France, si vous
+          êtes sur un autre territoire, contactez-nous à
+          contact-linkedout@entourage.social
+        </p>
+      </GridNoSSR>
+    </GridNoSSR>
   </Section>
 );
 
