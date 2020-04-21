@@ -39,11 +39,7 @@ export default class MyDocument extends Document {
   render() {
     return (
       <html lang="fr">
-        <Head />
-        <body>
-          {/* <UserProvider> */}
-          <Main />
-          <NextScript />
+        <Head>
           <script
             async
             src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GA_TRACKING_ID}`}
@@ -54,13 +50,18 @@ export default class MyDocument extends Document {
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${process.env.GA_TRACKING_ID}');
+                gtag('config', '${process.env.GA_TRACKING_ID}', {
+                  page_path: window.location.pathname,
+                });
               `,
             }}
           />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
           <script src="/static/dist/js/uikit.js" />
           <script src="/static/dist/js/uikit-icons.js" />
-          {/* </UserProvider> */}
         </body>
       </html>
     );
