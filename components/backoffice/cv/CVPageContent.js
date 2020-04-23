@@ -3,13 +3,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Api from '../../../Axios';
 import { GridNoSSR, Button } from '../../utils';
-import { CVFicheEdition } from '../../cv';
+import { CVFicheEdition, CVBackground, CVFiche } from '../../cv';
 import { UserContext } from '../../store/UserProvider';
 import ButtonPost from './ButtonPost';
 import ErrorMessage from './ErrorMessage';
 import LoadingScreen from './LoadingScreen';
-import NoCV from './NoCV';
-import CandidatHeader from './CandidatHeader';
 
 function translate(status) {
   switch (status) {
@@ -186,7 +184,7 @@ const CVPageContent = ({ candidatId }) => {
         </GridNoSSR>
 
         <GridNoSSR row gap="small">
-          <Button disabled style="default">
+          <Button toggle="target: #preview-modal" style="default">
             Prévisualiser la page
           </Button>
           {user.role === 'Candidat' && (
@@ -218,6 +216,41 @@ const CVPageContent = ({ candidatId }) => {
         disablePicture={user.role === 'Candidat' || user.role === 'Coach'}
         onChange={(fields) => setCV({ ...cv, ...fields, status: 'Draft' })}
       />
+
+      {/* preview modal */}
+      <div id="preview-modal" className="uk-modal-container" data-uk-modal>
+        <div className="uk-modal-dialog">
+          <button
+            className="uk-modal-close-default"
+            type="button"
+            data-uk-close
+            aria-label="close"
+          />
+          <div className="uk-modal-header">
+            <h2 className="uk-modal-title">Previsualisation du cv</h2>
+          </div>
+          <div
+            className="uk-modal-body uk-background-muted"
+            data-uk-overflow-auto
+          >
+            {cv.urlImg && (
+              <CVBackground
+                url={
+                  cv.profileImageObjectUrl
+                    ? cv.profileImageObjectUrl
+                    : process.env.AWSS3_URL + cv.urlImg
+                }
+              />
+            )}
+            <CVFiche cv={cv} actionDisabled />
+          </div>
+          <div className="uk-modal-footer uk-text-right">
+            <Button className="uk-modal-close" style="default">
+              Fermer
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
