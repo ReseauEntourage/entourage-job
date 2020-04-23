@@ -48,16 +48,10 @@ const Suivi = () => {
       })
       .then(() => {
         setUserCandidat({ ...userCandidat, note });
-        UIkit.notification('Suivi sauvegardé', {
-          pos: 'bottom-center',
-          status: 'success',
-        });
+        UIkit.notification('Suivi sauvegardé', 'success');
       })
       .catch(() => {
-        UIkit.notification('Erreur lors de la mise à jour du suivi', {
-          pos: 'bottom-center',
-          status: 'danger',
-        });
+        UIkit.notification('Erreur lors de la mise à jour du suivi', 'danger');
       });
   };
 

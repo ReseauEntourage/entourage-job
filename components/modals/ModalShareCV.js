@@ -30,7 +30,7 @@ const ModalShareCV = ({ firstName, id }) => (
               Axios.post('/api/v1/cv/share', { email })
                 .then(next)
                 .catch(() =>
-                  UIkit.notification('Une erreur est survenue', 'error')
+                  UIkit.notification('Une erreur est survenue', 'danger')
                 );
             }}
           />

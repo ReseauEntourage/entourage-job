@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Api from '../../../Axios';
-import { GridNoSSR, Button } from '../../utils';
+import { GridNoSSR, Button, IconNoSSR } from '../../utils';
 import { CVFicheEdition, CVBackground, CVFiche } from '../../cv';
 import { UserContext } from '../../store/UserProvider';
 import ButtonPost from './ButtonPost';
@@ -101,18 +101,12 @@ const CVPageContent = ({ candidatId }) => {
           user.role === 'Candidat'
             ? 'Votre demande de modification a bien été envoyée'
             : 'Le profil a été mis à jour',
-          {
-            pos: 'bottom-center',
-            status: 'info',
-          }
+          'success'
         );
       })
       .catch((err) => {
         console.error(err);
-        UIkit.notification("Une erreur s'est produite", {
-          pos: 'bottom-center',
-          status: 'danger',
-        });
+        UIkit.notification("Une erreur s'est produite", 'danger');
       });
   };
 
@@ -185,7 +179,7 @@ const CVPageContent = ({ candidatId }) => {
 
         <GridNoSSR row gap="small">
           <Button toggle="target: #preview-modal" style="default">
-            Prévisualiser la page
+            Prévisualiser
           </Button>
           {user.role === 'Candidat' && (
             <ButtonPost
