@@ -142,10 +142,16 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   right: 0,
                 }}
               >
-                <a href="#cv-fiche" data-uk-scroll="offset: 80">
+                <a
+                  href="#cv-fiche"
+                  data-uk-scroll="offset: 80"
+                  className={actionDisabled && 'uk-disabled'}
+                >
                   <IconNoSSR
                     name="triangle-down"
-                    className="uk-text-primary"
+                    className={
+                      actionDisabled ? 'uk-text-muted' : 'uk-text-primary'
+                    }
                     ratio="2"
                   />
                 </a>

@@ -1,6 +1,8 @@
 /* global UIkit */
+
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import Api from '../../../Axios';
 import { GridNoSSR, Button, IconNoSSR } from '../../utils';
 import { CVFicheEdition, CVBackground, CVFiche } from '../../cv';
@@ -69,6 +71,36 @@ const CVPageContent = ({ candidatId }) => {
       setLoading(false);
     }
   }, [candidatId]);
+
+  useEffect(() => {
+    const unsavedChanges = cv && cv.status === 'Draft';
+    const message =
+      "Voulez-vous quitter l'édition du CV? \nLes modifications que vous avez apportées ne seront peut-être pas enregistrées.";
+    // 'Voulez-vous sauvegarder les modifications que vous avez apportées ?\nvos modifications seront perdues si vous ne les sauvegardez pas.';
+    const routeChangeStart = (url) => {
+      if (Router.asPath !== url && unsavedChanges && !window.confirm(message)) {
+        Router.events.emit('routeChangeError');
+        Router.replace(Router, Router.asPath);
+        throw new Error('Abort route change. Please ignore this error.');
+      }
+    };
+
+    const beforeunload = (e) => {
+      if (unsavedChanges) {
+        e.preventDefault();
+        e.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener('beforeunload', beforeunload);
+    Router.events.on('routeChangeStart', routeChangeStart);
+
+    return () => {
+      window.removeEventListener('beforeunload', beforeunload);
+      Router.events.off('routeChangeStart', routeChangeStart);
+    };
+  }, [cv]);
 
   const postCV = (status) => {
     // prepare data
@@ -221,7 +253,7 @@ const CVPageContent = ({ candidatId }) => {
             aria-label="close"
           />
           <div className="uk-modal-header">
-            <h2 className="uk-modal-title">Previsualisation du cv</h2>
+            <h2 className="uk-modal-title">Prévisualisation du CV</h2>
           </div>
           <div
             className="uk-modal-body uk-background-muted"
