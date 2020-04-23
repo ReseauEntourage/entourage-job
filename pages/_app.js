@@ -6,9 +6,16 @@ import '../static/css/Toggle.less';
 
 import React from 'react';
 import App from 'next/app';
+import Router from 'next/router';
 import UserProvider from '../components/store/UserProvider';
 
+import * as gtag from '../lib/gtag';
+
 class EntourageApp extends App {
+  componentDidMount() {
+    Router.events.on('routeChangeComplete', (url) => gtag.pageview(url));
+  }
+
   render() {
     const { Component, pageProps } = this.props;
     return (

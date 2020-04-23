@@ -53,7 +53,7 @@ const data = [
 ];
 
 const NumberPartial = () => (
-  <Section style="muted" container="" id="profiles">
+  <Section style="muted" id="profiles">
     <GridNoSSR
       gap="large"
       column
@@ -102,8 +102,8 @@ const NumberPartial = () => (
       <div className="uk-position-relative" data-uk-slider="">
         <div className="uk-slider-container">
           <ul className="uk-slider-items uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small">
-            {data.map(({ title, description, role, imgSrc, imgAlt }) => (
-              <li>
+            {data.map(({ title, description, role, imgSrc, imgAlt }, i) => (
+              <li key={i}>
                 <div className="uk-card uk-card-small uk-card-default">
                   {imgSrc && (
                     <div className="uk-card-media-top">

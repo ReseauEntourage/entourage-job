@@ -56,7 +56,6 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     const accessToken = localStorage.getItem('access-token');
     if (accessToken) {
-      console.log('token found: ', accessToken);
       Api.get('/api/v1/auth/current')
         .then(({ data }) => {
           localStorage.setItem('access-token', data.user.token);

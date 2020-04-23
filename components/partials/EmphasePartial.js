@@ -28,7 +28,7 @@ const datas = [
   },
 ];
 const EmphasePartial = () => (
-  <Section style="default" container="" id="profiles">
+  <Section style="default" id="profiles">
     <GridNoSSR gap="large" column middle eachWidths={['2-3@s', '1-1']}>
       <div className="uk-text-center">
         <h2 className="uk-text-bold">
@@ -45,21 +45,19 @@ const EmphasePartial = () => (
       </div>
       <GridNoSSR
         childWidths={['1-3@s']}
-        items={datas.map((value) => (
-          <div>
+        items={datas.map(({ imgSrc, imgAlt, title, number }, i) => (
+          <div key={i}>
             <div style={{ marginLeft: '54px', marginBottom: '14px' }}>
               <ImgNoSSR
-                src={value.imgSrc}
-                alt={value.imgAlt}
+                src={imgSrc}
+                alt={imgAlt}
                 className="uk-width-small uk-height-small"
               />
             </div>
             <GridNoSSR eachWidths={['auto', 'expand']}>
-              <span className="uk-text-primary uk-heading-small">
-                {value.number}
-              </span>
+              <span className="uk-text-primary uk-heading-small">{number}</span>
               <GridNoSSR gap="small" column>
-                <h4>{value.title}</h4>
+                <h4>{title}</h4>
                 <hr
                   // className="uk-divider-small"
                   style={{ borderTopColor: '#F55F24', width: '100px' }}
