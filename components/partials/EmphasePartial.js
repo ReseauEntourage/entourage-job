@@ -51,8 +51,8 @@ const EmphasePartial = () => (
           <GridNoSSR
             style={{ paddingTop: '150px', width: 'auto' }}
             eachWidths={[
-              'auto@s uk-width-1-4 uk-text-right',
-              'expand@s uk-width-3-4',
+              'auto uk-text-right', // uk-width-1-4
+              'expand', // uk-width-3-4
             ]}
             row
           >

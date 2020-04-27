@@ -42,10 +42,11 @@ const Header = ({ isHome }) => {
             items={[
               ...LINKS.map((value, i) => (
                 <Link href={value.href} key={i}>
-                  <a className="uk-visible@s">{value.name}</a>
+                  <a className="uk-visible@m">{value.name}</a>
                 </Link>
               )),
-              <div className="uk-navbar-item uk-visible@s">
+              // separateurs en css .ent-nav
+              <div className="uk-navbar-item uk-visible@m">
                 <Link href="/lescandidats">
                   <button
                     type="button"
@@ -64,7 +65,7 @@ const Header = ({ isHome }) => {
                   </button>
                 </Link>
               </div>,
-              <HamburgerNoSSR targetId="offcanvas-guest" hidden="s" />,
+              <HamburgerNoSSR targetId="offcanvas-guest" hidden="m" />,
             ]}
           />
         }

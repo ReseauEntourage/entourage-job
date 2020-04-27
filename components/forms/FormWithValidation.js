@@ -136,12 +136,15 @@ export class Form extends Component {
               error={error}
               submitText={submitText}
               onSubmit={onSubmit}
-              onCancel={() => {
-                this.setState(
-                  this.constructor.initializeForm(fieldsInfo, defaultValues)
-                );
-                afterCancel();
-              }}
+              onCancel={
+                afterCancel &&
+                (() => {
+                  this.setState(
+                    this.constructor.initializeForm(fieldsInfo, defaultValues)
+                  );
+                  afterCancel();
+                })
+              }
             />
           </div>
         </form>
