@@ -3,10 +3,6 @@ import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import { UIKIT_SCREENS } from '../variables';
 
-export const HamburgerNoSSR = dynamic(() => import('./Hamburger'), {
-  ssr: false,
-});
-
 const Hamburger = ({ hidden, targetId, visible }) => {
   let classBuffer = '';
   if (hidden) classBuffer += `uk-hidden@${hidden}`;
@@ -27,4 +23,9 @@ Hamburger.propTypes = {
   targetId: PropTypes.string.isRequired,
 };
 Hamburger.defaultProps = { hidden: undefined, visible: undefined };
+
+export const HamburgerNoSSR = dynamic(() => import('./Hamburger'), {
+  ssr: false,
+});
+
 export default Hamburger;

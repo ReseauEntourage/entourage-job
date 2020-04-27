@@ -20,7 +20,7 @@ const datas = [
   },
 ];
 const ActionPartial = () => (
-  <Section style="default" container="" id="profiles">
+  <Section style="default" id="profiles">
     <GridNoSSR gap="large" column>
       <div className="uk-text-center">
         <h2 className="uk-text-bold">

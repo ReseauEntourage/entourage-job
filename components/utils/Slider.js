@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-export const SliderNoSSR = dynamic(() => import('./Slider'), { ssr: false });
-
 const Slider = ({ grid, items, childWidths, finite, autoplay }) => {
   let classBuffer2 = 'uk-slider-items';
   if (grid) classBuffer2 += ` uk-grid-small`;
@@ -22,12 +20,14 @@ const Slider = ({ grid, items, childWidths, finite, autoplay }) => {
       <a
         className="uk-position-center-left uk-position-small uk-hidden-hover"
         href="#"
+        aria-label="précedent"
         data-uk-slidenav-previous
         data-uk-slider-item="previous"
       />
       <a
         className="uk-position-center-right uk-position-small uk-hidden-hover"
         href="#"
+        aria-label="suivant"
         data-uk-slidenav-next
         data-uk-slider-item="next"
       />
@@ -47,4 +47,5 @@ Slider.defaultProps = {
   finite: undefined,
   autoplay: undefined,
 };
+export const SliderNoSSR = Slider;
 export default Slider;

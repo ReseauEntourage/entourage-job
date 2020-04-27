@@ -2,10 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-export const IconNoSSR = dynamic(() => import('./Icon'), {
-  ssr: false,
-});
-
 const Icon = ({ name, ratio, flip, className }) => (
   <span
     data-uk-icon={`icon: ${name}; ratio: ${ratio}`}
@@ -24,5 +20,7 @@ Icon.defaultProps = {
   ratio: 1,
   flip: false,
 };
+
+export const IconNoSSR = dynamic(() => import('./Icon'), { ssr: false });
 
 export { Icon as default };

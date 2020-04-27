@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-export const DropdownNoSSR = dynamic(() => import('./Dropdown'), {
-  ssr: false,
-});
+// dynamic(() => import('./Dropdown'), {
+//   ssr: false,
+// });
 
 const Dropdown = ({ children, headers, dividers, active, id, boundaryId }) => (
   <div
@@ -47,4 +47,5 @@ Dropdown.defaultProps = {
   id: 'dropdown',
   boundaryId: undefined,
 };
+export const DropdownNoSSR = Dropdown;
 export default Dropdown;

@@ -304,6 +304,7 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
             </a>
           </p>
           <ImgNoSSR
+            alt="logo linkedout"
             className="uk-width-small"
             src="/static/img/01-linkedout-orange-complet.png"
           />

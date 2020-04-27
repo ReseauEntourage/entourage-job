@@ -39,7 +39,8 @@ const ModalShareCV = ({ firstName, id }) => (
       (close) => (
         <div className="uk-flex uk-flex-column">
           <p>
-            Saviez-vous que LinkedOut est porté par l'association Entourage ?
+            Saviez-vous que LinkedOut est porté par l&apos;association Entourage
+            ?
           </p>
           <Button isExternal href="https://www.entourage.social/" style="link">
             https://www.entourage.social/

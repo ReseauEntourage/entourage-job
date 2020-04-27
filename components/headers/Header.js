@@ -71,19 +71,19 @@ const Header = ({ isHome }) => {
       />
       <OffcanvasNoSSR id="offcanvas-guest">
         <ul className="uk-nav uk-nav-default">
+          <li>
+            <a
+              aria-hidden="true"
+              onClick={() => {
+                router.push('/');
+                UIkit.offcanvas('#offcanvas-guest').hide();
+              }}
+            >
+              Accueil
+            </a>
+          </li>
           {[
-            <li>
-              <a
-                aria-hidden="true"
-                onClick={() => {
-                  router.push('/');
-                  UIkit.offcanvas('#offcanvas-guest').hide();
-                }}
-              >
-                Accueil
-              </a>
-            </li>,
-            ...LINKS.filter(({ href }) => href !== '#').map(
+            LINKS.filter(({ href }) => href !== '#').map(
               ({ href, name }, index) => (
                 <li key={index}>
                   <a

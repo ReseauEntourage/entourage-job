@@ -27,24 +27,24 @@ const AssociationEntourage = () => (
               l’application mobile &apos;Entourage&apos; qui permet de
               coordonner des actions de solidarité à l’échelle locale.
             </p>
-            <Link href="https://www.entourage.social">
-              <a
-                className="uk-button uk-button-primary"
-                target="_blank"
-                style={{
-                  color: 'white',
-                  backgroundColor: 'transparent',
-                  backgroundImage: 'none',
-                  textTransform: 'none',
-                  boder: null,
-                  padding: '0px 20px',
-                  borderRadius: '2px',
-                  border: 'solid 2px #fff ',
-                }}
-              >
-                Voir le site &gt;
-              </a>
-            </Link>
+            <a
+              className="uk-button uk-button-primary"
+              href="https://www.entourage.social"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: 'white',
+                backgroundColor: 'transparent',
+                backgroundImage: 'none',
+                textTransform: 'none',
+                boder: null,
+                padding: '0px 20px',
+                borderRadius: '2px',
+                border: 'solid 2px #fff ',
+              }}
+            >
+              Voir le site &gt;
+            </a>
           </div>
           <div className="uk-flex uk-flex-middle">
             <hr className="uk-divider-vertical uk-visible@s" />
