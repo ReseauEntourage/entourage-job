@@ -19,9 +19,7 @@ const Index = () => {
       <CandidatListPartial />
       <EmphasePartial />
       <NumberPartial />
-      <ActionPartial />
-      <ContactPartial />
-      <SharePartial />
+      <ActionPartial style="default" />
     </Layout>
   );
 };

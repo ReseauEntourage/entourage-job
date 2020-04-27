@@ -44,28 +44,35 @@ const EmphasePartial = () => (
         </p> */}
       </div>
       <GridNoSSR
+        middle
+        center
         childWidths={['1-3@s']}
         items={datas.map(({ imgSrc, imgAlt, title, number }, i) => (
-          <div key={i}>
-            <div style={{ marginLeft: '54px', marginBottom: '14px' }}>
-              <ImgNoSSR
-                src={imgSrc}
-                alt={imgAlt}
-                className="uk-width-small uk-height-small"
-              />
-            </div>
-            <GridNoSSR eachWidths={['auto', 'expand']}>
-              <span className="uk-text-primary uk-heading-small">{number}</span>
-              <GridNoSSR gap="small" column>
-                <h4>{title}</h4>
-                <hr
-                  // className="uk-divider-small"
-                  style={{ borderTopColor: '#F55F24', width: '100px' }}
+          <GridNoSSR
+            style={{ paddingTop: '150px', width: 'auto' }}
+            eachWidths={[
+              'auto@s uk-width-1-4 uk-text-right',
+              'expand@s uk-width-3-4',
+            ]}
+            row
+          >
+            <span className="uk-text-primary uk-heading-small">{number}</span>
+            <GridNoSSR gap="small" column className="uk-position-relative">
+              <div style={{ position: 'absolute', top: '-150px' }}>
+                <ImgNoSSR
+                  src={imgSrc}
+                  alt={imgAlt}
+                  className="uk-height-small"
                 />
-                {/* <p>{value.description}</p> */}
-              </GridNoSSR>
+              </div>
+              <h4 className="uk-margin-small-top">{title}</h4>
+              <hr
+                // className="uk-divider-small"
+                style={{ borderTopColor: '#F55F24', width: '100px' }}
+              />
+              {/* <p>{value.description}</p> */}
             </GridNoSSR>
-          </div>
+          </GridNoSSR>
         ))}
       />
     </GridNoSSR>
