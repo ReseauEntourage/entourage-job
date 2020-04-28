@@ -1,0 +1,49 @@
+service: linkedout-contact-sendmail
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  domains:
+    prod: api.linkedout.entourage.social
+    dev: api-preprod.linkedout.entourage.social
+  certificateNames: 
+    prod: 'api.linkedout.entourage.social'
+    dev: 'api-preprod.linkedout.entourage.social'
+  certificateArns:
+    prod: 'arn:aws:acm:us-east-1:494943233757:certificate/fa183498-e748-4a61-9664-6be8e6cacd66'
+    dev: 'arn:aws:acm:us-east-1:494943233757:certificate/3938ed9e-7589-4e40-b336-902c044607af'
+
+  customDomain:
+    domainName: ${self:custom.domains.${self:provider.stage}}
+    certificateName: ${self:custom.certificateNames.${self:provider.stage}}
+    stage: ${self:provider.stage}
+    createRoute53Record: true  
+    basePath: ''
+
+  email:
+    dev: 'emile@entourage.social'
+    prod: 'jo@entourage.social'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-1
+  environment :
+    MAILJET_PUB: ${env:MAILJET_PUB,'e5b289fb5ae7ba436f49056886b3a8d6'}
+    MAILJET_SEC: ${env:MAILJET_SEC,'da2a0f276a5fcae19f198b2c25607258'}
+    MAILJET_FROM_EMAIL: "linkedout@entourage.social"
+    MAILJET_FROM_NAME: "LinkedOut ⛵️ by Entourage"
+    MAILJET_TO_EMAIL: "${self:custom.email.${self:provider.stage}}"
+
+functions:
+  sendContactInfoByMail:
+    handler: handler.sendContactInfoByMail
+    events:
+      - http:
+          path: contact
+          method: post
+          cors: true
