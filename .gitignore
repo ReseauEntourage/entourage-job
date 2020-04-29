@@ -4,3 +4,4 @@ node_modules
 assets/uikit
 assets/*.vpp.bak*
 _next
+backend/lib/aws_lambda/.serverless/
