@@ -106,7 +106,8 @@ const CandidatCard = ({
                 <>
                   <p
                     style={{ fontSize: '0.775rem' }}
-                    className="uk-margin-remove uk-margin-small-top">
+                    className="uk-margin-remove uk-margin-small-top"
+                  >
                     {gender === 1 ? 'Elle' : 'Il'} souhaite
                     <br /> travailler dans :
                   </p>
@@ -145,7 +146,11 @@ const CandidatCard = ({
                 style={{ cursor: 'pointer' }}
                 className="uk-icon-link uk-text-primary"
               >
-                <IconNoSSR name="facebook" ratio={0.9} />
+                <IconNoSSR
+                  name="facebook"
+                  ratio={0.9}
+                  className={`share-facebook-${firstName}`}
+                />
               </FacebookShareButton>
             </li>
             <li>
@@ -160,7 +165,11 @@ const CandidatCard = ({
                 style={{ cursor: 'pointer' }}
                 className="uk-icon-link uk-text-primary"
               >
-                <IconNoSSR name="twitter" ratio={0.9} />
+                <IconNoSSR
+                  name="twitter"
+                  ratio={0.9}
+                  className={`share-twitter-${firstName}`}
+                />
               </TwitterShareButton>
             </li>
             <li>
@@ -175,7 +184,11 @@ const CandidatCard = ({
                 style={{ cursor: 'pointer' }}
                 className="uk-icon-link uk-text-primary"
               >
-                <IconNoSSR name="linkedin" ratio={0.9} />
+                <IconNoSSR
+                  name="linkedin"
+                  ratio={0.9}
+                  className={`share-linkedin-${firstName}`}
+                />
               </LinkedinShareButton>
             </li>
           </ul>
