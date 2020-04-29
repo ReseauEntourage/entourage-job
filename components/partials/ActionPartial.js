@@ -8,22 +8,22 @@ const datas = [
     href: '/jeveuxtravailler',
     button: 'Je veux travailler',
     title: 'Je suis en galère',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nam itaque soluta ad officiis minima! Ea inventore saepe quam accusamus?',
+    // description:
+    //   'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nam itaque soluta ad officiis minima! Ea inventore saepe quam accusamus?',
   },
   {
     href: '/jeveuxaider',
     button: 'Je veux aider',
     title: 'Je suis un particulier ou un acteur du social',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nam itaque soluta ad officiis minima! Ea inventore saepe quam accusamus?',
+    // description:
+    //   'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nam itaque soluta ad officiis minima! Ea inventore saepe quam accusamus?',
   },
   {
     href: '/jeveuxrecruter',
     button: 'Je veux recruter',
     title: 'Découvrez les profils des candidats',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nam itaque soluta ad officiis minima! Ea inventore saepe quam accusamus?',
+    // description:
+    //   'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nam itaque soluta ad officiis minima! Ea inventore saepe quam accusamus?',
   },
 ];
 const ActionPartial = ({ style }) => (
@@ -54,7 +54,7 @@ const ActionPartial = ({ style }) => (
             >
               <h4>{value.title}</h4>
               <hr style={{ borderTopColor: '#F55F24', width: '100px' }} />
-              <p>{value.description}</p>
+              {value.description && <p>{value.description}</p>}
               <Link href={value.href}>
                 <a
                   className="uk-button uk-button-primary"
