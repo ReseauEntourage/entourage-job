@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const uid = require('uid-safe');
+const sslRedirect = require('heroku-ssl-redirect');
 const passport = require('./config/passport');
 
 const routeCV = require('./routes/api/v1/CV');
@@ -15,6 +16,9 @@ const app = express();
 let server;
 
 module.exports.prepare = () => {
+  // enable ssl redirect
+  app.use(sslRedirect());
+
   app.use(express.json());
 
   // add session management to Express
