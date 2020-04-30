@@ -6,11 +6,11 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import FooterForm from '../utils/FooterForm';
 import FormValidator from './FormValidator';
-import FieldFactory from './fields/FieldFactory';
+import FieldFactory from './fields/FieldFactory'; // eslint-disable-line import/no-cycle
 
 const FormWithValidationV2 = ({
   formSchema: { id, rules, fields },
-  defaultValues, // backup
+  defaultValues,
   submitText,
   onSubmit,
   onCancel,
@@ -135,9 +135,8 @@ const FormWithValidationV2 = ({
             onCancel={
               onCancel &&
               (() => {
-                setUsedDefaultValues(defaultValues);
-                //
-                fieldFactory.reset();
+                // does not work
+                // setUsedDefaultValues(defaultValues); // reset all values
                 onCancel();
               })
             }
