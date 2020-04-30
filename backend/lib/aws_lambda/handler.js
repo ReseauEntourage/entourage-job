@@ -68,6 +68,7 @@ module.exports.sendContactInfoByMail = (event, context, callback) => {
             'Access-Control-Allow-Credentials': true,
           };
           res.body = JSON.stringify({message: "Mail sent and table updated !"});
+          callback(null, res);
         }
 
       });
