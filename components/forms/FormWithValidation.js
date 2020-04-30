@@ -1,178 +1,153 @@
 /* eslint-disable camelcase */
 /* eslint-disable default-case */
-import React, { Component } from 'react';
+/* eslint-disable max-classes-per-file */
+
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import FooterForm from '../utils/FooterForm';
-import withValidation from './withValidation';
+import FormValidator from './FormValidator';
 import FieldFactory from './fields/FieldFactory';
 
-// TODO REFACTOR parceque cest illisible !
-export class Form extends Component {
-  static get propTypes() {
-    return {
-      // Gere la mise à jour des entrés utilisateur
-      // prend en parametre un event (input, textarea...) renvoie void
-      handleChange: PropTypes.func.isRequired,
-      // Gere l'envoie du formulaire
-      // renvoie une promesse informant si les champs sont corrects
-      handleSubmit: PropTypes.func.isRequired,
-      // action effectué lors de l'annulation d'un formulaire
-      afterCancel: PropTypes.func,
-      // action effectué apres l'envoie du formulaire
-      afterSubmit: PropTypes.func,
+const FormWithValidationV2 = ({
+  formSchema: { id, rules, fields },
+  defaultValues, // backup
+  submitText,
+  onSubmit,
+  onCancel,
+}) => {
+  const [validator, setValidator] = useState();
 
-      id: PropTypes.string.isRequired,
-      submitText: PropTypes.string,
-      fieldsInfo: PropTypes.arrayOf(
-        PropTypes.shape({
-          name: PropTypes.string,
-        })
-      ).isRequired,
+  const [usedDefaultValues, setUsedDefaultValues] = useState(defaultValues);
+  const [error, setError] = useState();
+  const [fieldFactory, setFieldFactory] = useState();
 
-      defaultValues: PropTypes.objectOf(PropTypes.string),
-    };
-  }
+  const [fieldValidations, setFieldValidations] = useState({});
+  const [fieldValues, setFieldValues] = useState({});
 
-  static get defaultProps() {
-    return {
-      afterCancel: undefined,
-      afterSubmit: undefined,
-      submitText: undefined,
-      defaultValues: undefined,
-    };
-  }
+  const setValid = (key, value) =>
+    setFieldValidations({ ...fieldValidations, [`valid_${key}`]: value });
+  const setValue = (key, value) =>
+    setFieldValues({ ...fieldValues, [key]: value });
 
-  static initializeForm(fieldsInfo, defaultValues) {
+  const getValid = (key) => fieldValidations[`valid_${key}`];
+  const getValue = (key) => fieldValues[key];
+
+  // fonction permettant de verifier une champs d'entré utilisateur
+  const updateForm = ({
+    target: { checked, name, type, value, selectedIndex },
+  }) => {
+    if (validator) {
+      let fieldValue;
+      if (type === 'checkbox') {
+        fieldValue = checked;
+      } else if (type === 'select-one' && selectedIndex === 0) {
+        fieldValue = null; // si on est sur le placeholder ( option sans valeur )
+      } else fieldValue = value;
+
+      /* Validators start */
+      setValue(name, fieldValue); // enregistre la valeur du champs
+      const validation = validator.validate(fieldValues); // envoie une copie des champs pour que le state ne soit pas altéré
+
+      // enregistre la raison de la validation {isInvalid: boolean, message: string}
+      if (validation[name] !== undefined) {
+        setValid(name, validation[name]);
+      }
+
+      /* Validators end */
+      setError('');
+    }
+  };
+
+  const submitForm = (event) => {
+    if (validator) {
+      event.preventDefault();
+      // Vérifie les champs avant soumission
+      /* Validators control before submit */
+      const validation = validator.validate(fieldValues);
+      if (validation.isValid) {
+        // Si les validators sont OK.
+        onSubmit(fieldValues, (msg) => setError(msg)); // c'est le props onsubmit de FormWithValidation
+      } else {
+        // erreur de validation
+        Object.keys(validation).forEach((key) => {
+          if (key !== 'isValid') {
+            setValid(key, validation[key]);
+          }
+        });
+        setError('Un ou plusieurs champs sont invalides');
+        console.error({ validation });
+      }
+    }
+  };
+
+  useEffect(() => {
+    setValidator(new FormValidator(rules));
+
     // todo revoir la structure du state
     // on extrait les nom des champs
-    const fieldsId = fieldsInfo.map((field) => field.id);
+    const fieldsId = fields.map((field) => field.id);
 
-    const values = fieldsId.reduce((acc, id) => {
-      acc[id] = defaultValues[id];
-      return acc;
-    }, {});
-
-    const validation = fieldsId.reduce((acc, id) => {
-      acc[`valid_${id}`] = undefined;
-      return acc;
-    }, {});
-
-    return {
-      setValid: (key, value) => (validation[`valid_${key}`] = value),
-      getValid: (key) => validation[`valid_${key}`],
-      setValue: (key, value) => (values[key] = value),
-      getValue: (key) => values[key],
-      getValues: () => values,
-    };
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = this.createState(props);
-
-    const { id, defaultValues } = this.props;
-    const { handleChange, fields, getValid, getValue } = this.state;
-    this.fieldFactory = new FieldFactory(
-      id,
-      fields,
-      defaultValues,
-      handleChange,
-      getValid,
-      getValue
+    setFieldValues(
+      fieldsId.reduce((acc, value) => {
+        acc[value] = usedDefaultValues[value];
+        return acc;
+      }, {})
     );
-  }
 
-  onSubmit(event) {
-    event.preventDefault();
-    const { handleSubmit } = this.state;
-    handleSubmit() // Vérifie les champs avant soumission
-      .then((fields) => {
-        // Si les validators sont OK.
-        const { afterSubmit, fieldsInfo, defaultValues } = this.props;
-        // S273 : suppression de la réinitialisation provoquant le bug
-        /* this.setState(
-          this.constructor.initializeForm(fieldsInfo, defaultValues)
-        ); */
-        afterSubmit(fields, (error) => this.setState({ error })); // c'est le props onsubmit de FormWithValidation
-      })
-      .catch(console.error);
-  }
-
-  createState({ handleChange, handleSubmit, fieldsInfo, defaultValues }) {
-    // todo revoir la structure du state
-    return {
-      error: null,
-      handleChange: handleChange.bind(this),
-      handleSubmit: handleSubmit.bind(this),
-      onSubmit: this.onSubmit.bind(this),
-      ...this.constructor.initializeForm(fieldsInfo, defaultValues),
-    };
-  }
-
-  render() {
-    const { error, onSubmit } = this.state;
-    const {
-      submitText,
-      afterCancel,
-      fieldsInfo,
-      id,
-      defaultValues,
-    } = this.props;
-    return (
-      <div className="uk-width-1-1">
-        <form
-          id={id}
-          className="uk-form-stacked uk-grid-small uk-child-width-1-1"
-          data-uk-grid
-          onSubmit={onSubmit}
-        >
-          <fieldset className="uk-fieldset uk-width-1-1">
-            {fieldsInfo.map((value, i) => (
-              <li key={i}>{this.fieldFactory.generate(value)}</li>
-            ))}
-          </fieldset>
-          <div>
-            <FooterForm
-              error={error}
-              submitText={submitText}
-              onSubmit={onSubmit}
-              onCancel={
-                afterCancel &&
-                (() => {
-                  this.setState(
-                    this.constructor.initializeForm(fieldsInfo, defaultValues)
-                  );
-                  afterCancel();
-                })
-              }
-            />
-          </div>
-        </form>
-      </div>
+    setFieldValidations(
+      fieldsId.reduce((acc, value) => {
+        acc[`valid_${value}`] = undefined;
+        return acc;
+      }, {})
     );
-  }
-}
 
-const FormWithValidation = ({
-  formSchema,
-  defaultValues,
-  onCancel,
-  onSubmit,
-  submitText,
-}) => {
-  const GeneratedForm = withValidation(Form, formSchema.rules);
+    setFieldFactory(
+      new FieldFactory(
+        id,
+        fields,
+        usedDefaultValues,
+        updateForm,
+        getValid,
+        getValue
+      )
+    );
+  }, [fields, usedDefaultValues]);
+
   return (
-    <GeneratedForm
-      id={formSchema.id}
-      fieldsInfo={formSchema.fields}
-      defaultValues={defaultValues}
-      afterCancel={onCancel}
-      afterSubmit={onSubmit}
-      submitText={submitText}
-    />
+    <div className="uk-width-1-1">
+      <form
+        id={id}
+        className="uk-form-stacked uk-grid-small uk-child-width-1-1"
+        data-uk-grid
+        onSubmit={submitForm}
+      >
+        <fieldset className="uk-fieldset uk-width-1-1">
+          {fieldFactory &&
+            fields.map((value, i) => (
+              <li key={i}>{fieldFactory.generate(value)}</li>
+            ))}
+        </fieldset>
+        <div>
+          <FooterForm
+            error={error}
+            submitText={submitText}
+            onSubmit={submitForm}
+            onCancel={
+              onCancel &&
+              (() => {
+                setUsedDefaultValues(defaultValues);
+                //
+                fieldFactory.reset();
+                onCancel();
+              })
+            }
+          />
+        </div>
+      </form>
+    </div>
   );
 };
-FormWithValidation.propTypes = {
+FormWithValidationV2.propTypes = {
   defaultValues: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -183,8 +158,8 @@ FormWithValidation.propTypes = {
   }).isRequired,
   submitText: PropTypes.string,
 };
-FormWithValidation.defaultProps = {
+FormWithValidationV2.defaultProps = {
   submitText: undefined,
   defaultValues: [],
 };
-export default FormWithValidation;
+export default FormWithValidationV2;

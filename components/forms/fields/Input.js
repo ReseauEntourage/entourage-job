@@ -1,106 +1,77 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
-export default class Input extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      labelClass: '',
-    };
-  }
+const Input = ({
+  id,
+  name,
+  placeholder,
+  title,
+  type,
+  valid,
+  defaultValue,
+  onChange,
+  disabled,
+}) => {
+  const [labelClass, setLabelClass] = useState('');
+  const [value, setValue] = useState(defaultValue);
 
-  static get propTypes() {
-    return {
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      placeholder: PropTypes.string,
-      onChange: PropTypes.func.isRequired,
-      title: PropTypes.string.isRequired,
-      valid: PropTypes.shape({
-        isInvalid: PropTypes.boolean,
-        message: PropTypes.boolean,
-      }),
-      defaultValue: PropTypes.string,
-      disabled: PropTypes.bool,
-    };
-  }
-
-  static get defaultProps() {
-    return {
-      placeholder: 'Tapez votre texte',
-      valid: undefined,
-      defaultValue: '',
-      disabled: false,
-    };
-  }
-
-  componentDidMount() {
-    const { defaultValue, name } = this.props;
-    if (defaultValue) {
-      this.setLabelClass(defaultValue);
-      // trick to verify field before the user update of the field
-      this.handleChange({
-        target: { name, value: defaultValue, type: 'input' },
-      });
-    }
-  }
-
-  getValidClass() {
-    const { valid } = this.props;
-    if (valid !== undefined) {
-      if (!valid.isInvalid) return '';
-      return 'uk-form-danger';
-    }
-    return '';
-  }
-
-  setLabelClass(value) {
-    this.setState({
-      labelClass: value.length > 0 ? ' stay-small' : '',
-    });
-  }
-
-  handleChange(event) {
-    const { value } = event.target;
-    const { onChange } = this.props;
+  const update = (event) => {
+    setLabelClass(event.target.value.length > 0 && ' stay-small');
+    setValue(event.target.value);
     onChange(event);
-    this.setLabelClass(value);
-  }
+  };
 
-  render() {
-    const {
-      id,
-      name,
-      placeholder,
-      title,
-      type,
-      valid,
-      defaultValue,
-      disabled,
-    } = this.props;
-    const { labelClass } = this.state;
-
-    const addClasses = this.getValidClass();
-
-    return (
-      <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
-        <label className={`uk-form-label ${labelClass}`} htmlFor={id}>
-          {title}
-        </label>
-        <input
-          name={name}
-          type={type}
-          id={id}
-          defaultValue={defaultValue}
-          placeholder={placeholder || 'Tapez votre texte'}
-          onChange={(event) => this.handleChange(event)}
-          className={`uk-input uk-form-large ${addClasses}`}
-          disabled={disabled}
-        />
-        <FormValidatorErrorMessage validObj={valid} />
-      </div>
+  useEffect(() => {
+    setValue(defaultValue || '');
+    setLabelClass(
+      (defaultValue && defaultValue.length > 0 && ' stay-small') || ''
     );
-  }
-}
+    onChange({ target: { name, value: defaultValue || '', type: 'input' } });
+  }, [defaultValue]);
+
+  return (
+    <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+      <label className={`uk-form-label ${labelClass}`} htmlFor={id}>
+        {title}
+      </label>
+      <input
+        name={name}
+        type={type}
+        id={id}
+        value={value}
+        defaultValue={defaultValue}
+        placeholder={placeholder || 'Tapez votre texte'}
+        onChange={(event) => update(event)}
+        className={`uk-input uk-form-large ${
+          valid !== undefined && valid.isInvalid ? 'uk-form-danger' : ''
+        }`}
+        disabled={disabled}
+      />
+      <FormValidatorErrorMessage validObj={valid} />
+    </div>
+  );
+};
+
+Input.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  valid: PropTypes.shape({
+    isInvalid: PropTypes.boolean,
+    message: PropTypes.boolean,
+  }),
+  defaultValue: PropTypes.string,
+  disabled: PropTypes.bool,
+};
+
+Input.defaultProps = {
+  placeholder: 'Tapez votre texte',
+  valid: undefined,
+  defaultValue: '',
+  disabled: false,
+};
+export default Input;
