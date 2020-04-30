@@ -1,9 +1,11 @@
 {
 	"body": {
 		"security": "",
-		"name": "francois",
-		"phone": "0677300840",
-		"email": "francois@entourage.social",
-		"details": "blahblah"
+		"name": "Emile Emile",
+		"telephone": "061234567890",
+		"mail": "emile@entourage.social",
+		"status": "Journaliste",
+		"organisation": "Lyon TV",
+		"message": "Bonjour"
 	}
 }

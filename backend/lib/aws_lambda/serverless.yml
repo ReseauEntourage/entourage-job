@@ -9,7 +9,7 @@ custom:
   domains:
     prod: api.linkedout.entourage.social
     dev: api-preprod.linkedout.entourage.social
-  certificateNames: 
+  certificateNames:
     prod: 'api.linkedout.entourage.social'
     dev: 'api-preprod.linkedout.entourage.social'
   certificateArns:
@@ -20,12 +20,20 @@ custom:
     domainName: ${self:custom.domains.${self:provider.stage}}
     certificateName: ${self:custom.certificateNames.${self:provider.stage}}
     stage: ${self:provider.stage}
-    createRoute53Record: true  
+    createRoute53Record: true
     basePath: ''
 
   email:
     dev: 'emile@entourage.social'
-    prod: 'jo@entourage.social'
+    prod: 'linkedout-vendeeglobe@entourage.social'
+
+  airtable:
+    base:
+      dev: 'appyuFDCEJ9MI4cwJ'
+      prod: 'apprVNQ5m6UHAtS7B'
+    key:
+      dev: 'keyBUdW5UiesrXRNr'
+      prod: 'keyBUdW5UiesrXRNr'
 
 provider:
   name: aws
@@ -38,6 +46,8 @@ provider:
     MAILJET_FROM_EMAIL: "linkedout@entourage.social"
     MAILJET_FROM_NAME: "LinkedOut ⛵️ by Entourage"
     MAILJET_TO_EMAIL: "${self:custom.email.${self:provider.stage}}"
+    AIRTABLE_BASE: "${self:custom.airtable.base.${self:provider.stage}}"
+    AIRTABLE_KEY: "${self:custom.airtable.key.${self:provider.stage}}"
 
 functions:
   sendContactInfoByMail:
