@@ -8,6 +8,7 @@ import Select from '../forms/fields/Select';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import axios from '../../Axios';
+import {OFFER_STATUS} from "../../constants";
 
 export const List = ({ className, children }) => (
   <ul className={`uk-nav ${className}`}>
@@ -137,14 +138,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       title="Statut"
                       name="status"
                       placeholder="statut"
-                      options={[
-                        { value: 0, text: 'Contacté' },
-                        { value: 1, text: "Phase d'entretien" },
-                        { value: 2, text: 'Embauche' },
-                        { value: 3, text: 'Refus' },
-                        { value: 4, text: 'Standby' },
-                        { value: 5, text: 'Relance' },
-                      ]}
+                      options={OFFER_STATUS}
                       defaultValue={status}
                       onChange={(event) => {
                         setLoadingStatus(true);
