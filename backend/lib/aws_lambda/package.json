@@ -6,7 +6,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "node-mailjet": "^3.3.1"
+    "node-mailjet": "^3.3.1",
+    "airtable": "^0.8.1"
   },
   "devDependencies": {
     "serverless-domain-manager": "^3.3.2"
