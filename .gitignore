@@ -1,6 +1,7 @@
-.env
+.env*
 .next
 node_modules
+.idea
 assets/uikit
 assets/*.vpp.bak*
 _next
