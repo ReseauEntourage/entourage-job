@@ -8,7 +8,12 @@ import FooterForm from '../utils/FooterForm';
 import FormValidator from './FormValidator';
 import generate from './fieldGenerator';
 
-const FormWithValidationV2 = ({
+/**
+ * Permet de creer un formulaire avec la generation de ses champs et validations de champs
+ * Regroupe les deux composants du fichier formWithValidationOld en stateless
+ * - Plus lisible
+ */
+const FormWithValidation = ({
   formSchema: { id, rules, fields },
   defaultValues,
   submitText,
@@ -76,7 +81,6 @@ const FormWithValidationV2 = ({
   useEffect(() => {
     // on extrait les nom des champs
     const fieldsId = fields.map((field) => field.id);
-
     const validations = fieldsId.reduce((acc, value) => {
       acc[`valid_${value}`] = undefined;
       return acc;
@@ -91,47 +95,48 @@ const FormWithValidationV2 = ({
   }, [fields, usedDefaultValues]);
 
   return (
-    <div className="uk-width-1-1">
-      <form
-        id={id}
-        className="uk-form-stacked uk-grid-small uk-child-width-1-1"
-        data-uk-grid
+    <form
+      id={id}
+      className="uk-form-stacked uk-grid-small uk-width-1-1 uk-child-width-1-1"
+      data-uk-grid
+      onSubmit={submitForm}
+    >
+      <fieldset className="uk-fieldset">
+        {fields.map((value, i) => (
+          <li key={i}>
+            {generate(
+              value,
+              id,
+              usedDefaultValues,
+              updateForm,
+              (name) => fieldValidations[`valid_${name}`],
+              (name) => fieldValues[name]
+            )}
+          </li>
+        ))}
+      </fieldset>
+      <FooterForm
+        error={error}
+        submitText={submitText}
         onSubmit={submitForm}
-      >
-        <fieldset className="uk-fieldset uk-width-1-1">
-          {fields.map((value, i) => (
-            <li key={i}>
-              {generate(
-                value,
-                id,
-                usedDefaultValues,
-                updateForm,
-                (name) => fieldValidations[`valid_${name}`],
-                (name) => fieldValues[name]
-              )}
-            </li>
-          ))}
-        </fieldset>
-        <div>
-          <FooterForm
-            error={error}
-            submitText={submitText}
-            onSubmit={submitForm}
-            onCancel={
-              onCancel &&
-              (() => {
-                // does not work
-                // setUsedDefaultValues(defaultValues); // reset all values
-                onCancel();
-              })
-            }
-          />
-        </div>
-      </form>
-    </div>
+        onCancel={
+          onCancel &&
+          (() => {
+            // todo: le reset des champs ne fonctionne pas avec un simple changement de state
+            // Peut etre tenter en travaillant sur le generate field et ses champs
+            const tmpDefaultValues = defaultValues;
+            fields.forEach((field) => {
+              tmpDefaultValues[field.id] = '';
+            });
+            setUsedDefaultValues(tmpDefaultValues);
+            onCancel();
+          })
+        }
+      />
+    </form>
   );
 };
-FormWithValidationV2.propTypes = {
+FormWithValidation.propTypes = {
   defaultValues: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -142,8 +147,8 @@ FormWithValidationV2.propTypes = {
   }).isRequired,
   submitText: PropTypes.string,
 };
-FormWithValidationV2.defaultProps = {
+FormWithValidation.defaultProps = {
   submitText: undefined,
   defaultValues: [],
 };
-export default FormWithValidationV2;
+export default FormWithValidation;
