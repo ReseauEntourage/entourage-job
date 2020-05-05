@@ -49,7 +49,12 @@ router.post('/', (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(401).send('Une erreur est survenue');
+      if(err.name === "SequelizeUniqueConstraintError") {
+        res.status(409).send('Adresse email déjà existante');
+      }
+      else {
+        res.status(401).send('Une erreur est survenue');
+      }
     });
 });
 
