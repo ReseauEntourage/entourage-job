@@ -119,10 +119,18 @@ const MembersAdmin = ({ query: { role } }) => {
                 }
               } catch (error) {
                 console.error(error);
-                UIkit.notification(
-                  "Une erreur c'est produite lors de la création du membre",
-                  'danger'
-                );
+                if(error.response.status === 409) {
+                  UIkit.notification(
+                    "Cette adresse email est déjà utilisée",
+                    'danger'
+                  );
+                }
+                else {
+                  UIkit.notification(
+                    "Une erreur c'est produite lors de la création du membre",
+                    'danger'
+                  );
+                }
               }
             }}
           />
