@@ -76,7 +76,7 @@ const InfoProfileCard = ({
           contracts,
           languages,
         }}
-        onSubmit={(fields) => {
+        onSubmit={(fields, closeModal) => {
           closeModal();
           onChange({
             ...fields,
