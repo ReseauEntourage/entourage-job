@@ -49,6 +49,8 @@ function toAuthJSON(user) {
     phone: user.phone,
     role: user.role,
     token: generateJWT(user),
+    candidatId: user.coach ? user.coach.candidat.id : null,
+    coachId: user.candidat ? user.candidat.coach.id : null
   };
 }
 

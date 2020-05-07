@@ -11,18 +11,16 @@ import axios from '../../../../Axios';
 import ModalEdit from '../../../../components/modals/ModalEdit';
 import schemaCreateUser from '../../../../components/forms/schema/formCreateUser';
 import ImgProfile from '../../../../components/headers/ImgProfile';
+import {CV_STATUS} from "../../../../constants";
 
 function translateStatusCV(status) {
-  if (status === 'Pending') {
-    return <span className="uk-text-warning">En attente</span>;
-  }
-  if (status === 'Published') {
-    return <span className="uk-text-success">Publié</span>;
-  }
-  if (status === 'New') {
-    return <span className="uk-text-info">Nouveau</span>;
-  }
-  return <span className="uk-text-">Inconnu</span>;
+  const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unkown;
+  return (
+    <span className={`uk-text-${cvStatus.style}`}>
+      {cvStatus.label}
+    </span>
+  );
+
 }
 
 const MembersAdmin = ({ query: { role } }) => {

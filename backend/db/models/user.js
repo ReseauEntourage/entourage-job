@@ -92,6 +92,8 @@ module.exports = (sequelize, DataTypes) => {
     // si candidat regarder candidat
     User.hasOne(models.User_Candidat, {
       as: 'candidat',
+      foreignKey: 'candidatId',
+      sourceKey: 'id',
       hooks: true,
       onDelete: 'cascade',
     });
@@ -99,6 +101,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasOne(models.User_Candidat, {
       as: 'coach',
       foreignKey: 'coachId',
+      sourceKey: 'id',
     });
 
     User.beforeCreate((u) => {

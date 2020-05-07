@@ -115,20 +115,7 @@ const getUserByEmail = async (email) => {
   const user = await User.findOne({
     where: { email },
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
-    include: [
-      {
-        model: User_Candidat,
-        as: 'candidat',
-        attributes: ATTRIBUTES_USER_CANDIDAT,
-        include: [
-          {
-            model: User,
-            as: 'coach',
-            attributes: ATTRIBUTES_USER,
-          },
-        ],
-      },
-    ],
+    include: INCLUDE_USER_CANDIDAT,
   });
   return user;
 };
@@ -151,32 +138,7 @@ const getMembers = (limit, offset, order, role, query) => {
       role: { [Op.not]: 'Admin' },
     },
     attributes: ATTRIBUTES_USER,
-    include: [
-      {
-        model: User_Candidat,
-        as: 'candidat',
-        attributes: ATTRIBUTES_USER_CANDIDAT,
-        include: [
-          {
-            model: User,
-            as: 'coach',
-            attributes: ATTRIBUTES_USER,
-          },
-        ],
-      },
-      {
-        model: User_Candidat,
-        as: 'coach',
-        attributes: ATTRIBUTES_USER_CANDIDAT,
-        include: [
-          {
-            model: User,
-            as: 'candidat',
-            attributes: ATTRIBUTES_USER,
-          },
-        ],
-      },
-    ],
+    include: INCLUDE_USER_CANDIDAT,
   };
   // recherche de l'utilisateur
   if (query) {
@@ -232,7 +194,7 @@ const getMembers = (limit, offset, order, role, query) => {
     options.include = [
       {
         model: User_Candidat,
-        as: 'coach',
+        as: 'candidat',
         attributes: ATTRIBUTES_USER_CANDIDAT,
         include: [
           {

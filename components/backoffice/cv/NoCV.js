@@ -15,7 +15,7 @@ const NoCV = ({ createCV, user }) => (
         </Button>
       </div>
     )}
-    {user.role === 'Coach' && !user.userToCoach && (
+    {user.role === 'Coach' && !user.candidatId && (
       <div>
         <h2 className="uk-text-bold">
           <span className="uk-text-primary">Aucun candidat</span> n&apos;est
@@ -27,7 +27,7 @@ const NoCV = ({ createCV, user }) => (
         </p>
       </div>
     )}
-    {user.role === 'Coach' && user.userToCoach && (
+    {user.role === 'Coach' && user.candidatId && (
       <div>
         <h2 className="uk-text-bold">
           <span className="uk-text-primary">Aucun CV</span> n&apos;est rattaché
@@ -44,7 +44,7 @@ NoCV.propTypes = {
   createCV: PropTypes.func.isRequired,
   user: PropTypes.shape({
     role: PropTypes.string,
-    userToCoach: PropTypes.string.isRequired,
+    candidatId: PropTypes.string.isRequired,
   }).isRequired,
 };
 
