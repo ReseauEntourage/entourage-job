@@ -151,7 +151,7 @@ const UserInformationCard = ({ user, onChange }) => {
             : undefined,
         }}
         formSchema={schema}
-        onSubmit={({ linkedUser: linkedUserId }) => {
+        onSubmit={({ linkedUser: linkedUserId }, closeModal) => {
           setLoading(true);
           let promise = null;
           if (user.role === 'Candidat') {
@@ -177,6 +177,7 @@ const UserInformationCard = ({ user, onChange }) => {
             promise
               .then(() => axios.get(`/api/v1/user/${user.id}`))
               .then(({ data }) => {
+                closeModal();
                 assignUser(data);
                 onChange(data);
                 UIkit.notification('Le membre a bien été lié', 'success');

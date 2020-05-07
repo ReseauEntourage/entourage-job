@@ -124,12 +124,13 @@ const LesOpportunites = () => {
             title="Ajouter une opportunité"
             submitText="Envoyer"
             formSchema={schema}
-            onSubmit={(fields) =>
+            onSubmit={(fields, closeModal) => {
+              closeModal();
               postOpportunity({
                 ...fields,
                 date: Date.now(),
               })
-            }
+            }}
           />
         </HeaderBackoffice>
         {hasError ? (

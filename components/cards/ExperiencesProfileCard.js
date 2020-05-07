@@ -93,18 +93,20 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
             id="modal-experience-add"
             title="Ajout - Mon expérience"
             formSchema={schemaformEditExperience}
-            onSubmit={(fields) =>
+            onSubmit={(fields, closeModal) => {
+              closeModal();
               onChange({
                 experiences: [...experiences, fields],
               })
-            }
+            }}
           />
           <ModalEdit
             id="modal-experience-edit"
             title="Édition - Mon expérience"
             formSchema={schemaformEditExperience}
             defaultValues={currentDefaultValue}
-            onSubmit={(fields) => {
+            onSubmit={(fields, closeModal) => {
+              closeModal();
               const newExperiences = experiences;
               newExperiences[currentIndex] = fields;
               onChange({ experiences: newExperiences });

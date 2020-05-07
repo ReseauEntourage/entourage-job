@@ -77,18 +77,20 @@ const CVEditReviews = ({ reviews, onChange }) => {
         id="modal-testimonial-add"
         title="Ajout - Mes recommandations"
         formSchema={schemaTestimonial}
-        onSubmit={(fields) =>
+        onSubmit={(fields, closeModal) => {
+          closeModal();
           onChange({
             reviews: [...reviews, fields],
           })
-        }
+        }}
       />
       <ModalEdit
         id="modal-testimonial-edit"
         title="Édition - Mes recommandations"
         formSchema={schemaTestimonial}
         defaultValues={currentDefaultValue}
-        onSubmit={(fields) => {
+        onSubmit={(fields, closeModal) => {
+          closeModal();
           const newReviews = reviews;
           newReviews[currentIndex] = fields;
           onChange({ reviews: newReviews });

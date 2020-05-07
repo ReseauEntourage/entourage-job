@@ -225,13 +225,14 @@ const CVPage = () => {
                     title="Édition - Informations personelles"
                     defaultValues={{ phone: user.phone }}
                     formSchema={schemaPersonalData}
-                    onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }) => {
+                    onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
                       if (phone !== user.phone) {
                         setLoadingPersonal(true);
                         Api.put(`/api/v1/user/${user.id}`, {
                           phone,
                         })
                           .then(() => {
+                            closeModal();
                             setUser({ ...user, phone });
                             UIkit.notification(
                               'Votre numéro de téléphone a bien été mis à jour',

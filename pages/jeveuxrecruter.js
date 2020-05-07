@@ -7,7 +7,6 @@ import { ReviewCard } from '../components/cards';
 import HowTo from '../components/sections/HowTo';
 import StepCard from '../components/cards/StepCard';
 import schemaformEditOffer from '../components/forms/schema/formEditOffer';
-import ModalEdit from '../components/modals/ModalEdit';
 import Api from '../Axios';
 import StepperModal from '../components/modals/StepperModal';
 import FormWithValidation from '../components/forms/FormWithValidation';

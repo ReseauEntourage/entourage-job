@@ -306,13 +306,14 @@ const Parametres = () => {
           title="Édition - Informations personelles"
           defaultValues={{ phone: userData.phone }}
           formSchema={schemaPersonalData}
-          onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }) => {
+          onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
             if (phone !== userData.phone) {
               setLoadingPersonal(true);
               Api.put(`/api/v1/user/${userData.id}`, {
                 phone,
               })
                 .then(() => {
+                  closeModal();
                   setUserData({ ...userData, phone });
                   UIkit.notification(
                     'Votre numéro de téléphone a bien été mis à jour',

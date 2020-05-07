@@ -76,11 +76,12 @@ const InfoProfileCard = ({
           contracts,
           languages,
         }}
-        onSubmit={(fields) =>
+        onSubmit={(fields) => {
+          closeModal();
           onChange({
             ...fields,
           })
-        }
+        }}
       />
     )}
   </div>

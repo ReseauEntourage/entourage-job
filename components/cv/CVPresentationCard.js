@@ -168,13 +168,14 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
               },
             }}
             formSchema={schema}
-            onSubmit={(fields) =>
+            onSubmit={(fields, closeModal) => {
+              closeModal();
               postOpportunity({
                 ...fields,
                 usersId: [userId],
                 date: Date.now(),
-              })
-            }
+              });
+            }}
           />
         </div>
         <GridNoSSR eachWidths={['expand', 'auto']}>

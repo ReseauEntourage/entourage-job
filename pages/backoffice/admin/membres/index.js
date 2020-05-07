@@ -108,10 +108,11 @@ const MembersAdmin = ({ query: { role } }) => {
             title="Création de membre"
             description="Merci de renseigner quelques informations afin de créer le membre"
             submitText="Créer le membre"
-            onSubmit={async (fields) => {
+            onSubmit={async (fields, closeModal) => {
               try {
                 const { data } = await axios.post('api/v1/user', fields);
                 if (data) {
+                  closeModal();
                   UIkit.notification('Le membre a bien été créé', 'success');
                   fetchData(true);
                 } else {
