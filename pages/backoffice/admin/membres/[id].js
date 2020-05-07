@@ -15,6 +15,7 @@ import CandidatHeader from '../../../../components/backoffice/cv/CandidatHeader'
 import UserInformationCard from '../../../../components/cards/UserInformationCard';
 import ButtonIcon from '../../../../components/utils/ButtonIcon';
 import ModalEdit from '../../../../components/modals/ModalEdit';
+import {USER_ROLES} from "../../../../constants";
 
 const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
@@ -131,7 +132,7 @@ const CVPage = () => {
           </ul>
           {onglet === 'cv' && (
             <>
-              {user.role === 'Coach' &&
+              {user.role === USER_ROLES.COACH &&
                 (user.coach ? (
                   <CVPageContent candidatId={user.coach.candidat.id} />
                 ) : (
@@ -146,7 +147,7 @@ const CVPage = () => {
                     </p>
                   </>
                 ))}
-              {user.role === 'Candidat' && (
+              {user.role === USER_ROLES.CANDIDAT && (
                 <CVPageContent candidatId={user.id} />
               )}
             </>
@@ -154,7 +155,7 @@ const CVPage = () => {
           {onglet === 'settings' && (
             <GridNoSSR childWidths={['1-2@m']}>
               {/* todo: to component -> Informations personnelles */}
-              {(user.role === 'Candidat' || user.role === 'Coach') && (
+              {(user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
                 <>
                   <div className="uk-card uk-card-default uk-card-body">
                     <GridNoSSR
@@ -196,7 +197,7 @@ const CVPage = () => {
                             </span>
                           )}
                         </GridNoSSR>
-                        {user.role === 'Candidat'? (
+                        {user.role === USER_ROLES.CANDIDAT? (
                           <GridNoSSR row gap="small">
                             <IconNoSSR name="cog" />
                             <span className="uk-text-italic">
@@ -204,7 +205,7 @@ const CVPage = () => {
                             </span>
                           </GridNoSSR>
                         ): null}
-                        {user.role === 'Candidat'? (
+                        {user.role === USER_ROLES.CANDIDAT? (
                           <GridNoSSR row gap="small">
                             <IconNoSSR name="cog" />
                             <span className="uk-text-italic">
@@ -273,7 +274,7 @@ const CVPage = () => {
                   />
                 </>
               )}
-              {(user.role === 'Candidat' || user.role === 'Coach') && (
+              {(user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
                 <UserInformationCard
                   user={user}
                   onChange={(data) => {

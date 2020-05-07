@@ -13,6 +13,7 @@ import {
 } from '../../../components/utils';
 import { UserContext } from '../../../components/store/UserProvider';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
+import {USER_ROLES} from "../../../constants";
 
 const Suivi = () => {
   const { user } = useContext(UserContext);
@@ -59,10 +60,10 @@ const Suivi = () => {
     if (user) {
       setLoading(true);
       const params = {};
-      if (user.role === 'Coach') {
+      if (user.role === USER_ROLES.COACH) {
         params.coachId = user.id;
       }
-      if (user.role === 'Candidat') {
+      if (user.role === USER_ROLES.CANDIDAT) {
         params.candidatId = user.id;
       }
       axios
@@ -98,7 +99,7 @@ const Suivi = () => {
       <Wrapper>
         <h2 className="uk-text-bold">
           <span className="uk-text-primary">
-            {user.role === 'Coach' ? 'Aucun candidat' : 'Aucun bénévole coach'}
+            {user.role === USER_ROLES.COACH ? 'Aucun candidat' : 'Aucun bénévole coach'}
           </span>{' '}
           n&apos;est rattaché à ce compte.
         </h2>

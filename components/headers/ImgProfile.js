@@ -9,7 +9,7 @@ const ImgProfile = ({ user, size }) => {
   const [urlImg, setUrlImg] = useState(null);
 
   useEffect(() => {
-    if (role === 'Candidat') {
+    if (role === USER_ROLES.CANDIDAT) {
       // TODO creer un champs dans le user pour recupérer son image de profil
       // dans notre cas, seul un cv a une image (pas le coach/candidat/admin = USER)
       Api.get(`/api/v1/cv/?userId=${id}`)

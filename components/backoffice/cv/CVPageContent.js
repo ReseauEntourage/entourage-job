@@ -11,7 +11,7 @@ import ButtonPost from './ButtonPost';
 import ErrorMessage from './ErrorMessage';
 import LoadingScreen from './LoadingScreen';
 
-import {CV_STATUS} from "../../../constants";
+import {CV_STATUS, USER_ROLES} from "../../../constants";
 
 const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
@@ -105,7 +105,7 @@ const CVPageContent = ({ candidatId }) => {
       .then(({ data }) => {
         setCV(data);
         UIkit.notification(
-          user.role === 'Candidat'
+          user.role === USER_ROLES.CANDIDAT
             ? 'Votre demande de modification a bien été envoyée'
             : 'Le profil a été mis à jour',
           'success'
@@ -132,7 +132,7 @@ const CVPageContent = ({ candidatId }) => {
     return (
       <GridNoSSR column middle>
         <div>
-          {user.role === 'Coach' && !user.candidatId && (
+          {user.role === USER_ROLES.COACH && !user.candidatId && (
             <>
               <h2 className="uk-text-bold">
                 <span className="uk-text-primary">Aucun candidat</span>{' '}
@@ -144,9 +144,9 @@ const CVPageContent = ({ candidatId }) => {
               </p>
             </>
           )}
-          {(user.role === 'Admin' ||
-            user.role === 'Candidat' ||
-            (user.role === 'Coach' && user.candidatId)) && (
+          {(user.role === USER_ROLES.ADMIN ||
+            user.role === USER_ROLES.CANDIDAT ||
+            (user.role === USER_ROLES.COACH && user.candidatId)) && (
             <>
               <h2 className="uk-text-bold">
                 <span className="uk-text-primary">Aucun CV</span> n&apos;est
@@ -182,7 +182,7 @@ const CVPageContent = ({ candidatId }) => {
               {cvStatus.label}
             </span>
           </div>
-          {(user.role === 'Admin' || user.role === 'Coach') && (
+          {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
             <div>Version : {cv.version}</div>
           )}
         </GridNoSSR>
@@ -191,21 +191,21 @@ const CVPageContent = ({ candidatId }) => {
           <Button toggle="target: #preview-modal" style="default">
             Prévisualiser
           </Button>
-          {user.role === 'Candidat' && (
+          {user.role === USER_ROLES.CANDIDAT && (
             <ButtonPost
               style="primary"
               action={() => postCV('Pending')}
               text="Soumettre"
             />
           )}
-          {(user.role === 'Admin' || user.role === 'Coach') && (
+          {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
             <ButtonPost
               style="default"
               action={() => postCV('Pending')}
               text="Sauvegarder"
             />
           )}
-          {(user.role === 'Admin' || user.role === 'Coach') && (
+          {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
             <ButtonPost
               style="primary"
               action={() => postCV('Published')}
@@ -217,7 +217,7 @@ const CVPageContent = ({ candidatId }) => {
       <CVFicheEdition
         gender={cv.user.candidat.gender}
         cv={cv}
-        disablePicture={user.role === 'Candidat' || user.role === 'Coach'}
+        disablePicture={user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH}
         onChange={(fields) => setCV({ ...cv, ...fields, status: 'Draft' })}
       />
 

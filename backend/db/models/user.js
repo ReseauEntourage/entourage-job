@@ -1,3 +1,5 @@
+import {USER_ROLES} from "../../../constants";
+
 const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
@@ -45,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'Candidat',
+        defaultValue: USER_ROLES.CANDIDAT,
       },
       password: {
         // hash
@@ -112,7 +114,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.afterCreate(async (user) => {
-      if (user.role === 'Candidat') {
+      if (user.role === USER_ROLES.CANDIDAT) {
         await models.User_Candidat.create({
           candidatId: user.id,
           url: `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`,

@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, GridNoSSR } from '../../utils';
+import {USER_ROLES} from '../../../constants';
 
 const NoCV = ({ createCV, user }) => (
   <GridNoSSR column middle>
-    {user.role === 'Candidat' && (
+    {user.role === USER_ROLES.CANDIDAT && (
       <div>
         <h2 className="uk-text-bold">
           <span className="uk-text-primary">Aucun CV</span> n&apos;est rattaché
@@ -15,7 +16,7 @@ const NoCV = ({ createCV, user }) => (
         </Button>
       </div>
     )}
-    {user.role === 'Coach' && !user.candidatId && (
+    {user.role === USER_ROLES.COACH && !user.candidatId && (
       <div>
         <h2 className="uk-text-bold">
           <span className="uk-text-primary">Aucun candidat</span> n&apos;est
@@ -27,7 +28,7 @@ const NoCV = ({ createCV, user }) => (
         </p>
       </div>
     )}
-    {user.role === 'Coach' && user.candidatId && (
+    {user.role === USER_ROLES.COACH && user.candidatId && (
       <div>
         <h2 className="uk-text-bold">
           <span className="uk-text-primary">Aucun CV</span> n&apos;est rattaché

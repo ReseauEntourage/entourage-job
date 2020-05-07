@@ -1,9 +1,11 @@
+import {USER_ROLES} from "../../../constants";
+
 module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkUpdate(
       'Users',
       {
-        role: 'Candidat',
+        role: USER_ROLES.CANDIDAT,
       },
       {}
     );

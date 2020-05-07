@@ -6,6 +6,7 @@ import { Section } from '../components/utils';
 import schema from '../components/forms/schema/formLogin';
 import FormWithValidation from '../components/forms/FormWithValidation';
 import { UserContext } from '../components/store/UserProvider';
+import {USER_ROLES} from "../constants";
 
 const Login = () => {
   const { login, user } = useContext(UserContext);
@@ -13,10 +14,10 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      if (user.role === 'Admin') {
+      if (user.role === USER_ROLES.ADMIN) {
         router.push('/backoffice/admin/offres');
       }
-      if (user.role === 'Candidat' || user.role === 'Coach') {
+      if (user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) {
         router.push('/backoffice/candidat/offres');
       }
     }

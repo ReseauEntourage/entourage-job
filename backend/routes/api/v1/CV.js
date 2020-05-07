@@ -1,4 +1,6 @@
 // eslint-disable-next-line import/newline-after-import
+import {USER_ROLES} from "../../../../constants";
+
 const router = require('express').Router();
 const multer = require('multer');
 const sharp = require('sharp');
@@ -27,11 +29,11 @@ router.post(
       typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
 
     switch (req.payload.role) {
-      case 'Candidat':
+      case USER_ROLES.CANDIDAT:
         reqCV.status = 'Pending';
         break;
-      case 'Coach':
-      case 'Admin':
+      case USER_ROLES.COACH:
+      case USER_ROLES.ADMIN:
         // on laisse la permission au coach et à l'admin de choisir le statut à enregistrer
         if (!reqCV.status) {
           reqCV.status = 'Published';
@@ -96,7 +98,7 @@ router.post(
     const cv = await CVController.createCV(reqCV);
     try {
       // notification mail to coach and admin
-      if (req.payload.role === 'Candidat') {
+      if (req.payload.role === USER_ROLES.CANDIDAT) {
         const mailSubject = 'Soumission CV';
         const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
         // notification de l'admin
@@ -193,7 +195,7 @@ router.get('/', (req, res) => {
 router.get('/edit', auth.required, (req, res) => {
   console.log(req.payload);
   let userId;
-  if (req.payload.role === 'Candidat') {
+  if (req.payload.role === USER_ROLES.CANDIDAT) {
     userId = req.payload.id;
   } else if (req.payload.userToCoach) {
     userId = req.payload.userToCoach;

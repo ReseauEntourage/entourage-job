@@ -1,6 +1,8 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable camelcase */
 
+import {USER_ROLES} from "../../constants";
+
 const {
   models: { User, User_Candidat, CV },
   Sequelize: { Op, fn, col, where },
@@ -49,10 +51,10 @@ const createUser = (newUser) => {
   console.log(`${infoLog} Création du User`);
 
   const userToCreate = { ...newUser };
-  userToCreate.role = newUser.role || 'Candidat';
+  userToCreate.role = newUser.role || USER_ROLES.CANDIDAT;
 
   return User.create(userToCreate).then(async (res) => {
-    if (userToCreate.userToCoach && res.role === 'Coach') {
+    if (userToCreate.userToCoach && res.role === USER_ROLES.COACH) {
       await User_Candidat.update(
         { candidatId: userToCreate.userToCoach, coachId: res.id },
         {
@@ -60,7 +62,7 @@ const createUser = (newUser) => {
         }
       );
     }
-    if (userToCreate.userToCoach && res.role === 'Candidat') {
+    if (userToCreate.userToCoach && res.role === USER_ROLES.CANDIDAT) {
       await User_Candidat.update(
         { candidatId: res.id, coachId: userToCreate.userToCoach },
         {
@@ -135,7 +137,7 @@ const getMembers = (limit, offset, order, role, query) => {
     limit,
     order,
     where: {
-      role: { [Op.not]: 'Admin' },
+      role: { [Op.not]: USER_ROLES.ADMIN },
     },
     attributes: ATTRIBUTES_USER,
     include: INCLUDE_USER_CANDIDAT,
@@ -161,7 +163,7 @@ const getMembers = (limit, offset, order, role, query) => {
   }
 
   // filtre par role
-  if (role === 'Candidat' || role === 'Coach') {
+  if (role === USER_ROLES.CANDIDAT || role === USER_ROLES.COACH) {
     options.where = {
       ...options.where,
       role,
@@ -169,7 +171,7 @@ const getMembers = (limit, offset, order, role, query) => {
   }
   // recuperer la derniere version de cv
   // todo trouver un moyen d'ameliorer la recuperation
-  if (role === 'Candidat') {
+  if (role === USER_ROLES.CANDIDAT) {
     options.include = [
       {
         model: User_Candidat,
@@ -190,7 +192,7 @@ const getMembers = (limit, offset, order, role, query) => {
       },
     ];
   }
-  if (role === 'Coach') {
+  if (role === USER_ROLES.COACH) {
     options.include = [
       {
         model: User_Candidat,

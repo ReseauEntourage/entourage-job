@@ -39,3 +39,9 @@ export const CV_STATUS = {
       style: ""
     }
 };
+
+export const USER_ROLES = {
+  COACH: 'Coach',
+  CANDIDAT: 'Candidat',
+  ADMIN: 'Admin',
+};

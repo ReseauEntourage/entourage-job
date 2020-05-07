@@ -1,4 +1,5 @@
 import axios from '../../../Axios';
+import {USER_ROLES} from "../../../constants";
 
 export default {
   id: 'form-add-user',
@@ -45,9 +46,9 @@ export default {
       component: 'select',
       options: [
         { value: null, text: 'Choisissez un role' },
-        { value: 'Candidat', text: 'Candidat' },
-        { value: 'Coach', text: 'Coach' },
-        { value: 'Admin', text: 'Admin' },
+        { value: USER_ROLES.CANDIDAT, text: USER_ROLES.CANDIDAT },
+        { value: USER_ROLES.COACH, text: USER_ROLES.COACH },
+        { value: USER_ROLES.ADMIN, text: USER_ROLES.ADMIN },
       ],
     },
     {
@@ -57,10 +58,10 @@ export default {
       component: 'select-request-async',
       cacheOptions: false,
       disable: (getValue) =>
-        getValue('role') !== 'Candidat' && getValue('role') !== 'Coach',
+        getValue('role') !== USER_ROLES.CANDIDAT && getValue('role') !== USER_ROLES.COACH,
       loadOptions: (inputValue, callback, getValue) => {
         if (inputValue.length > 0) {
-          const role = getValue('role') === 'Coach' ? 'Candidat' : 'Coach';
+          const role = getValue('role') === USER_ROLES.COACH ? USER_ROLES.CANDIDAT : USER_ROLES.COACH;
           axios
             .get('api/v1/user/search', {
               params: {

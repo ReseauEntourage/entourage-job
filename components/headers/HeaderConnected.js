@@ -15,6 +15,7 @@ import './Header.less';
 import { UserContext } from '../store/UserProvider';
 import ImgProfile from './ImgProfile';
 import Dropdown from '../utils/Dropdown';
+import {USER_ROLES} from "../../constants";
 
 const HeaderConnected = ({ isHome }) => {
   const { user, logout } = useContext(UserContext);
@@ -86,7 +87,7 @@ const HeaderConnected = ({ isHome }) => {
               className="uk-navbar-nav"
               style={{ borderLeft: '1px solid lightgray' }}
             >
-              {(user.role === 'Admin'
+              {(user.role === USER_ROLES.ADMIN
                 ? LINKS_CONNECTED.admin
                 : LINKS_CONNECTED.member
               ).map((link, index) => (
@@ -188,7 +189,7 @@ const HeaderConnected = ({ isHome }) => {
               Accueil
             </SimpleLink>
           </li>
-          {(user.role === 'Admin'
+          {(user.role === USER_ROLES.ADMIN
             ? LINKS_CONNECTED.admin
             : LINKS_CONNECTED.member
           )

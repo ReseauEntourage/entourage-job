@@ -6,6 +6,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Api from '../../Axios';
+import {USER_ROLES} from "../../constants";
 
 /**
  * On ajoute la propriété `setName` à notre contexte
@@ -20,10 +21,10 @@ const UserProvider = ({ children }) => {
   // la restriction devrait etre faite des le serveur !
   const restrictAccessByRole = (role) => {
     if (
-      (Router.pathname.includes('/backoffice/admin') && role !== 'Admin') ||
+      (Router.pathname.includes('/backoffice/admin') && role !== USER_ROLES.ADMIN) ||
       (Router.pathname.includes('/backoffice/candidat') &&
-        role !== 'Candidat' &&
-        role !== 'Coach')
+        role !== USER_ROLES.CANDIDAT &&
+        role !== USER_ROLES.COACH)
     ) {
       Router.push('/login');
     }
