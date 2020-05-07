@@ -38,7 +38,10 @@ const StoryProfileCard = ({ description, onChange }) => (
           title="Édition - Mon histoire"
           formSchema={schemaStory}
           defaultValues={{ story: description }}
-          onSubmit={onChange}
+          onSubmit={(fields, closeModal) => {
+            closeModal();
+            onChange(fields);
+          }}
         />
       </h3>
     )}

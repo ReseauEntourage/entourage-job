@@ -37,7 +37,10 @@ const CVEditDevise = ({ devise, onChange }) => {
           title="Édition - Ma devise"
           formSchema={schemaDevise}
           defaultValues={{ devise }}
-          onSubmit={onChange}
+          onSubmit={(fields, closeModal) => {
+            closeModal();
+            onChange(fields);
+          }}
         />
       )}
     </>

@@ -37,7 +37,10 @@ const CVEditCatchphrase = ({ catchphrase, onChange }) => {
           title="Édition - Ma phrase d'accroche"
           formSchema={schemaCatchphrase}
           defaultValues={{ catchphrase }}
-          onSubmit={onChange}
+          onSubmit={(fields, closeModal) => {
+            closeModal();
+            onChange(fields);
+          }}
         />
       )}
     </>

@@ -472,13 +472,14 @@ const CVFiche = ({ cv, actionDisabled }) => {
             },
           }}
           formSchema={schema}
-          onSubmit={(fields) =>
+          onSubmit={(fields, closeModal) => {
+            closeModal();
             postOpportunity({
               ...fields,
               usersId: [cv.UserId],
               date: Date.now(),
-            })
-          }
+            });
+          }}
         />
       </div>
     </div>
