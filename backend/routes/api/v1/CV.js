@@ -1,6 +1,3 @@
-// eslint-disable-next-line import/newline-after-import
-import {USER_ROLES} from "../../../../constants";
-
 const router = require('express').Router();
 const multer = require('multer');
 const sharp = require('sharp');
@@ -12,6 +9,7 @@ const S3 = require('../../../controllers/aws');
 const { sendMail } = require('../../../controllers/mail');
 const { airtable } = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
+const {USER_ROLES} = require("../../../../constants");
 
 const upload = multer({ dest: 'uploads/' });
 

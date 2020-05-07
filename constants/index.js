@@ -1,4 +1,4 @@
-export const OFFER_STATUS = [
+const OFFER_STATUS = [
   {value: -1, text: "Offre à traiter"},
   {value: 0, text: "Contacté"},
   {value: 1, text: "Phase d'entretien"},
@@ -8,7 +8,7 @@ export const OFFER_STATUS = [
   {value: 5, text: "Relance"},
 ];
 
-export const CV_STATUS = {
+const CV_STATUS = {
   Pending: {
     label: "En attente",
     value: "Pending",
@@ -40,8 +40,14 @@ export const CV_STATUS = {
     }
 };
 
-export const USER_ROLES = {
+const USER_ROLES = {
   COACH: 'Coach',
   CANDIDAT: 'Candidat',
   ADMIN: 'Admin',
 };
+
+module.exports = {
+  OFFER_STATUS,
+  CV_STATUS,
+  USER_ROLES
+}

@@ -1,7 +1,6 @@
-import {USER_ROLES} from "../../../../constants";
-
 const validator = require('validator');
 const express = require('express');
+const {USER_ROLES} = require("../../../../constants");
 const { auth } = require('../../../controllers/Auth');
 const { sendMail } = require('../../../controllers/mail');
 

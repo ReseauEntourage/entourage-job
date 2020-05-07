@@ -1,6 +1,6 @@
-import {USER_ROLES} from "../../../constants";
-
 const uuid = require('uuid/v4');
+const {USER_ROLES} = require("../../../constants");
+
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { UserContext } from '../store/UserProvider';
 import Api from '../../Axios';
 import { ImgNoSSR } from '../utils';
+import {USER_ROLES} from '../../constants';
 
 const ImgProfile = ({ user, size }) => {
   const { id, firstName, role } = user || useContext(UserContext).user;

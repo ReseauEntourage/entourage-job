@@ -2,6 +2,7 @@
 .next
 node_modules
 .idea
+.vscode
 assets/uikit
 assets/*.vpp.bak*
 _next

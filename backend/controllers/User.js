@@ -1,7 +1,4 @@
-/* eslint-disable no-restricted-globals */
-/* eslint-disable camelcase */
-
-import {USER_ROLES} from "../../constants";
+const {USER_ROLES} = require("../../constants");
 
 const {
   models: { User, User_Candidat, CV },
