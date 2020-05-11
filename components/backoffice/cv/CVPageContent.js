@@ -11,32 +11,7 @@ import ButtonPost from './ButtonPost';
 import ErrorMessage from './ErrorMessage';
 import LoadingScreen from './LoadingScreen';
 
-function translate(status) {
-  switch (status) {
-    case 'Pending':
-      return 'En attente';
-    case 'Published':
-      return 'Publié';
-    case 'New':
-      return 'Nouveau';
-    case 'Draft':
-      return 'Brouillon';
-    default:
-      return status;
-  }
-}
-function translateStatus(status) {
-  switch (status) {
-    case 'Draft':
-      return 'warning';
-    case 'Published':
-      return 'success';
-    case 'New':
-      return 'info';
-    default:
-      return 'muted';
-  }
-}
+import {CV_STATUS, USER_ROLES} from "../../../constants";
 
 const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
@@ -130,7 +105,7 @@ const CVPageContent = ({ candidatId }) => {
       .then(({ data }) => {
         setCV(data);
         UIkit.notification(
-          user.role === 'Candidat'
+          user.role === USER_ROLES.CANDIDAT
             ? 'Votre demande de modification a bien été envoyée'
             : 'Le profil a été mis à jour',
           'success'
@@ -157,7 +132,7 @@ const CVPageContent = ({ candidatId }) => {
     return (
       <GridNoSSR column middle>
         <div>
-          {user.role === 'Coach' && !user.userToCoach && (
+          {user.role === USER_ROLES.COACH && !user.candidatId && (
             <>
               <h2 className="uk-text-bold">
                 <span className="uk-text-primary">Aucun candidat</span>{' '}
@@ -169,9 +144,9 @@ const CVPageContent = ({ candidatId }) => {
               </p>
             </>
           )}
-          {(user.role === 'Admin' ||
-            user.role === 'Candidat' ||
-            (user.role === 'Coach' && user.userToCoach)) && (
+          {(user.role === USER_ROLES.ADMIN ||
+            user.role === USER_ROLES.CANDIDAT ||
+            (user.role === USER_ROLES.COACH && user.candidatId)) && (
             <>
               <h2 className="uk-text-bold">
                 <span className="uk-text-primary">Aucun CV</span> n&apos;est
@@ -181,7 +156,7 @@ const CVPageContent = ({ candidatId }) => {
                 style="primary"
                 onClick={() =>
                   Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                    cv: { userId: candidatId, status: 'Pending' },
+                    cv: { userId: candidatId, status: CV_STATUS.New.value },
                   }).then(({ data }) => setCV(data))
                 }
               >
@@ -193,6 +168,9 @@ const CVPageContent = ({ candidatId }) => {
       </GridNoSSR>
     );
   }
+
+  const cvStatus = CV_STATUS[cv.status] ? CV_STATUS[cv.status] : CV_STATUS.Unkown;
+
   // affichage du CV
   return (
     <div>
@@ -200,11 +178,11 @@ const CVPageContent = ({ candidatId }) => {
         <GridNoSSR column gap="collapse">
           <div>
             Statut :{' '}
-            <span className={`uk-text-${translateStatus(cv.status)}`}>
-              {translate(cv.status)}
+            <span className={`uk-text-${cvStatus.style}`}>
+              {cvStatus.label}
             </span>
           </div>
-          {(user.role === 'Admin' || user.role === 'Coach') && (
+          {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
             <div>Version : {cv.version}</div>
           )}
         </GridNoSSR>
@@ -213,21 +191,21 @@ const CVPageContent = ({ candidatId }) => {
           <Button toggle="target: #preview-modal" style="default">
             Prévisualiser
           </Button>
-          {user.role === 'Candidat' && (
+          {user.role === USER_ROLES.CANDIDAT && (
             <ButtonPost
               style="primary"
               action={() => postCV('Pending')}
               text="Soumettre"
             />
           )}
-          {(user.role === 'Admin' || user.role === 'Coach') && (
+          {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
             <ButtonPost
               style="default"
               action={() => postCV('Pending')}
               text="Sauvegarder"
             />
           )}
-          {(user.role === 'Admin' || user.role === 'Coach') && (
+          {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
             <ButtonPost
               style="primary"
               action={() => postCV('Published')}
@@ -239,7 +217,7 @@ const CVPageContent = ({ candidatId }) => {
       <CVFicheEdition
         gender={cv.user.candidat.gender}
         cv={cv}
-        disablePicture={user.role === 'Candidat' || user.role === 'Coach'}
+        disablePicture={user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH}
         onChange={(fields) => setCV({ ...cv, ...fields, status: 'Draft' })}
       />
 

@@ -6,6 +6,7 @@ import { Section } from '../../../components/utils';
 import CVEditWelcome from '../../../components/cv/CVEditWelcome';
 import { UserContext } from '../../../components/store/UserProvider';
 import CVPageContent from '../../../components/backoffice/cv/CVPageContent';
+import {USER_ROLES} from "../../../constants";
 
 const Edit = () => {
   const { user } = useContext(UserContext);
@@ -26,11 +27,11 @@ const Edit = () => {
         {userCompleteData && (
           <>
             <CVEditWelcome user={userCompleteData} />
-            {userCompleteData.role === 'Coach' &&
+            {userCompleteData.role === USER_ROLES.COACH &&
               (userCompleteData.coach ? (
                 <CVPageContent
                   candidatId={
-                    userCompleteData.role === 'Coach'
+                    userCompleteData.role === USER_ROLES.COACH
                       ? userCompleteData.coach.candidat.id
                       : userCompleteData.id
                   }
@@ -39,7 +40,7 @@ const Edit = () => {
                 <>
                   <h2 className="uk-text-bold">
                     <span className="uk-text-primary">
-                      {user.role === 'Coach'
+                      {user.role === USER_ROLES.COACH
                         ? 'Aucun candidat'
                         : 'Aucun bénévole coach'}
                     </span>{' '}
@@ -51,7 +52,7 @@ const Edit = () => {
                   </p>
                 </>
               ))}
-            {userCompleteData.role === 'Candidat' && (
+            {userCompleteData.role === USER_ROLES.CANDIDAT && (
               <CVPageContent candidatId={userCompleteData.id} />
             )}
           </>

@@ -11,18 +11,16 @@ import axios from '../../../../Axios';
 import ModalEdit from '../../../../components/modals/ModalEdit';
 import schemaCreateUser from '../../../../components/forms/schema/formCreateUser';
 import ImgProfile from '../../../../components/headers/ImgProfile';
+import {CV_STATUS, USER_ROLES} from "../../../../constants";
 
 function translateStatusCV(status) {
-  if (status === 'Pending') {
-    return <span className="uk-text-warning">En attente</span>;
-  }
-  if (status === 'Published') {
-    return <span className="uk-text-success">Publié</span>;
-  }
-  if (status === 'New') {
-    return <span className="uk-text-info">Nouveau</span>;
-  }
-  return <span className="uk-text-">Inconnu</span>;
+  const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unkown;
+  return (
+    <span className={`uk-text-${cvStatus.style}`}>
+      {cvStatus.label}
+    </span>
+  );
+
 }
 
 const MembersAdmin = ({ query: { role } }) => {
@@ -159,7 +157,7 @@ const MembersAdmin = ({ query: { role } }) => {
               <ul className="uk-subnav">
                 <li
                   className={
-                    role !== 'Candidat' && role !== 'Coach' ? 'uk-active' : ''
+                    role !== USER_ROLES.CANDIDAT && role !== USER_ROLES.COACH ? 'uk-active' : ''
                   }
                 >
                   <a
@@ -174,26 +172,26 @@ const MembersAdmin = ({ query: { role } }) => {
                     Tous les membres
                   </a>
                 </li>
-                <li className={role === 'Candidat' ? 'uk-active' : ''}>
+                <li className={role === USER_ROLES.CANDIDAT ? 'uk-active' : ''}>
                   <a
                     aria-hidden="true"
                     onClick={() =>
                       router.push({
                         pathname: '/backoffice/admin/membres',
-                        query: { role: 'Candidat' },
+                        query: { role: USER_ROLES.CANDIDAT },
                       })
                     }
                   >
                     Candidats
                   </a>
                 </li>
-                <li className={role === 'Coach' ? 'uk-active' : ''}>
+                <li className={role === USER_ROLES.COACH ? 'uk-active' : ''}>
                   <a
                     aria-hidden="true"
                     onClick={() =>
                       router.push({
                         pathname: '/backoffice/admin/membres',
-                        query: { role: 'Coach' },
+                        query: { role: USER_ROLES.COACH },
                       })
                     }
                   >
@@ -221,7 +219,7 @@ const MembersAdmin = ({ query: { role } }) => {
                   <tr>
                     <th className="">Membre</th>
                     {role === 'All' && <th className="uk-width-small">Role</th>}
-                    {role === 'Candidat' && (
+                    {role === USER_ROLES.CANDIDAT && (
                       <>
                         <th className="uk-width-small">À retrouvé un emploi</th>
                         <th className="uk-width-small">Statut du dernier CV</th>
@@ -260,7 +258,7 @@ const MembersAdmin = ({ query: { role } }) => {
                             </GridNoSSR>
                           </td>
                           {role === 'All' && <td>{member.role}</td>}
-                          {role === 'Candidat' && member.candidat && (
+                          {role === USER_ROLES.CANDIDAT && member.candidat && (
                             <>
                               <td>
                                 <span className="uk-hidden@m">
@@ -301,7 +299,7 @@ const MembersAdmin = ({ query: { role } }) => {
                               </td>
                             </>
                           )}
-                          {member.role === 'Candidat' && (
+                          {member.role === USER_ROLES.CANDIDAT && (
                             <td>
                               {member.candidat && member.candidat.coach ? (
                                 `${member.candidat.coach.firstName} ${member.candidat.coach.lastName}`
@@ -310,7 +308,7 @@ const MembersAdmin = ({ query: { role } }) => {
                               )}
                             </td>
                           )}
-                          {member.role === 'Coach' && (
+                          {member.role === USER_ROLES.COACH && (
                             <td>
                               {member.coach && member.coach.candidat ? (
                                 `${member.coach.candidat.firstName} ${member.coach.candidat.lastName}`

@@ -1,9 +1,11 @@
+const {USER_ROLES} = require("../../../constants");
+
 module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkUpdate(
       'Users',
       {
-        role: 'Candidat',
+        role: USER_ROLES.CANDIDAT,
       },
       {}
     );

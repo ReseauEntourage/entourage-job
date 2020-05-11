@@ -1,4 +1,5 @@
 import axios from '../../../Axios';
+import {USER_ROLES} from "../../../constants";
 
 export default {
   id: 'form-offer',
@@ -147,7 +148,7 @@ export default {
           .get('api/v1/user/search', {
             params: {
               query: inputValue,
-              role: 'Candidat',
+              role: USER_ROLES.CANDIDAT,
             },
           })
           .then(({ data }) =>

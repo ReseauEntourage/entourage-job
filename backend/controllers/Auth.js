@@ -40,6 +40,16 @@ function generateJWT(user, expiration) {
 }
 
 function toAuthJSON(user) {
+  let candidatId = null;
+  if(user.coach && user.coach.candidat) {
+    candidatId = user.coach.candidat;
+  }
+
+  let coachId = null;
+  if(user.candidat && user.candidat.coach) {
+    coachId = user.candidat.coach;
+  }
+
   return {
     id: user.id,
     email: user.email,
@@ -49,6 +59,8 @@ function toAuthJSON(user) {
     phone: user.phone,
     role: user.role,
     token: generateJWT(user),
+    candidatId,
+    coachId
   };
 }
 
