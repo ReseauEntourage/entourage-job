@@ -12,6 +12,7 @@ import ErrorMessage from './ErrorMessage';
 import LoadingScreen from './LoadingScreen';
 
 import {CV_STATUS, USER_ROLES} from "../../../constants";
+import NoCV from "./NoCV";
 
 const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
@@ -130,42 +131,7 @@ const CVPageContent = ({ candidatId }) => {
   // aucun CV
   if (cv === null) {
     return (
-      <GridNoSSR column middle>
-        <div>
-          {user.role === USER_ROLES.COACH && !user.candidatId && (
-            <>
-              <h2 className="uk-text-bold">
-                <span className="uk-text-primary">Aucun candidat</span>{' '}
-                n&apos;est rattaché à ce compte coach.
-              </h2>
-              <p>
-                Il peut y avoir plusieurs raisons à ce sujet. Contacte
-                l&apos;équipe LinkedOut pour en savoir plus.
-              </p>
-            </>
-          )}
-          {(user.role === USER_ROLES.ADMIN ||
-            user.role === USER_ROLES.CANDIDAT ||
-            (user.role === USER_ROLES.COACH && user.candidatId)) && (
-            <>
-              <h2 className="uk-text-bold">
-                <span className="uk-text-primary">Aucun CV</span> n&apos;est
-                rattaché à ce compte.
-              </h2>
-              <Button
-                style="primary"
-                onClick={() =>
-                  Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                    cv: { userId: candidatId, status: CV_STATUS.New.value },
-                  }).then(({ data }) => setCV(data))
-                }
-              >
-                Creer le CV
-              </Button>
-            </>
-          )}
-        </div>
-      </GridNoSSR>
+      <NoCV candidatId={candidatId} user={user} setCV={setCV} />
     );
   }
 

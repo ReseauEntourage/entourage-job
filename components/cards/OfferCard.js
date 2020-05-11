@@ -7,7 +7,7 @@ import { GridNoSSR, Button, IconNoSSR } from '../utils';
 
 function translateStatus(status) {
   const currentStatus = OFFER_STATUS.find((oStatus) => oStatus.value === status);
-  if(currentStatus) return currentStatus.text;
+  if(currentStatus) return currentStatus.label;
   return "Non défini";
 }
 
