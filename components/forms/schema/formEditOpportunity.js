@@ -1,5 +1,5 @@
 import axios from '../../../Axios';
-import {USER_ROLES} from "../../../constants";
+import {USER_ROLES, BUSINESS_LINES} from "../../../constants";
 
 export default {
   id: 'form-offer',
@@ -38,74 +38,9 @@ export default {
       title: "Secteur d'activité*",
       placeholder: "Sélectionnez les secteurs d'activité",
       type: 'text',
-      component: 'select-request',
+      component: "select-request-creatable",
       isMulti: true,
-      options: [
-        {
-          value: 'Accueil',
-          label: 'Accueil',
-        },
-        {
-          value: 'Administratif',
-          label: 'Administratif',
-        },
-        {
-          value: 'Animalier',
-          label: 'Animalier',
-        },
-        {
-          value: 'Artisanat',
-          label: 'Artisanat',
-        },
-        {
-          value: 'Associatif',
-          label: 'Associatif',
-        },
-        {
-          value: 'Assurance/Banque',
-          label: 'Assurance/Banque',
-        },
-        {
-          value: 'BTP',
-          label: 'BTP',
-        },
-        {
-          value: 'Communication',
-          label: 'Communication',
-        },
-        {
-          value: 'Culture',
-          label: 'Culture',
-        },
-        {
-          value: 'Informatique',
-          label: 'Informatique',
-        },
-        {
-          value: 'Interpréterait',
-          label: 'Interpréterait',
-        },
-        {
-          value: 'Médico-social',
-          label: 'Médico-social',
-        },
-        {
-          value: 'Restauration',
-          label: 'Restauration',
-        },
-        {
-          value: 'Social',
-          label: 'Social',
-        },
-        {
-          value: 'Transports',
-          label: 'Transports',
-        },
-        {
-          value: 'Vente / Commerce',
-          label: 'Vente / Commerce',
-        },
-      ],
+      options: BUSINESS_LINES
     },
     {
       id: 'company',

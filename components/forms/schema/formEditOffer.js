@@ -1,4 +1,6 @@
-{
+import {BUSINESS_LINES} from '../../../constants';
+
+export default {
   "id": "form-offer",
   "fields": [
     {
@@ -40,26 +42,10 @@
       "id": "businessLine",
       "name": "businessLine",
       "title": "Secteur d'activité*",
-      "component": "select",
-      "options": [
-        { "value": null, "text": "Sélectionnez un secteur d'activité" },
-        { "value": "Accueil", "text": "Accueil" },
-        { "value": "Administratif", "text": "Administratif" },
-        { "value": "Animalier", "text": "Animalier" },
-        { "value": "Artisanat", "text": "Artisanat" },
-        { "value": "Associatif", "text": "Associatif" },
-        { "value": "Assurance/Banque", "text": "Assurance/Banque" },
-        { "value": "BTP", "text": "BTP" },
-        { "value": "Communication", "text": "Communication" },
-        { "value": "Culture", "text": "Culture" },
-        { "value": "Informatique", "text": "Informatique" },
-        { "value": "Interpréterait", "text": "Interpréterait" },
-        { "value": "Médico-social", "text": "Médico-social" },
-        { "value": "Restauration", "text": "Restauration" },
-        { "value": "Social", "text": "Social" },
-        { "value": "Transports", "text": "Transports" },
-        { "value": "Vente / Commerce", "text": "Vente / Commerce" }
-      ]
+      "placeholder": "Sélectionnez le secteur d'activité",
+      "type": "text",
+      "component": "select-request-creatable",
+      "options": BUSINESS_LINES
     },
     {
       "id": "company",

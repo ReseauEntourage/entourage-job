@@ -1,11 +1,78 @@
 const OFFER_STATUS = [
-  {value: -1, text: "Offre à traiter"},
-  {value: 0, text: "Contacté"},
-  {value: 1, text: "Phase d'entretien"},
-  {value: 2, text: "Embauche"},
-  {value: 3, text: "Refus"},
-  {value: 4, text: "Standby"},
-  {value: 5, text: "Relance"},
+  {value: -1, label: "Offre à traiter"},
+  {value: 0, label: "Contacté"},
+  {value: 1, label: "Phase d'entretien"},
+  {value: 2, label: "Embauche"},
+  {value: 3, label: "Refus"},
+  {value: 4, label: "Standby"},
+  {value: 5, label: "Relance"}
+];
+
+const BUSINESS_LINES = [
+  {
+    value: 'Accueil',
+    label: 'Accueil',
+  },
+  {
+    value: 'Administratif',
+    label: 'Administratif',
+  },
+  {
+    value: 'Animalier',
+    label: 'Animalier',
+  },
+  {
+    value: 'Artisanat',
+    label: 'Artisanat',
+  },
+  {
+    value: 'Associatif',
+    label: 'Associatif',
+  },
+  {
+    value: 'Assurance/Banque',
+    label: 'Assurance/Banque',
+  },
+  {
+    value: 'BTP',
+    label: 'BTP',
+  },
+  {
+    value: 'Communication',
+    label: 'Communication',
+  },
+  {
+    value: 'Culture',
+    label: 'Culture',
+  },
+  {
+    value: 'Informatique',
+    label: 'Informatique',
+  },
+  {
+    value: 'Interprétariat',
+    label: 'Interprétariat',
+  },
+  {
+    value: 'Médico-social',
+    label: 'Médico-social',
+  },
+  {
+    value: 'Restauration',
+    label: 'Restauration',
+  },
+  {
+    value: 'Social',
+    label: 'Social',
+  },
+  {
+    value: 'Transports',
+    label: 'Transports',
+  },
+  {
+    value: 'Vente / Commerce',
+    label: 'Vente / Commerce',
+  },
 ];
 
 const CV_STATUS = {
@@ -49,5 +116,6 @@ const USER_ROLES = {
 module.exports = {
   OFFER_STATUS,
   CV_STATUS,
-  USER_ROLES
-}
+  USER_ROLES,
+  BUSINESS_LINES
+};
