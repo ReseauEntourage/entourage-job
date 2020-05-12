@@ -29,7 +29,7 @@ export default {
       "name": "phone",
       "component": "input",
       "type": "text",
-      "title": "Téléphone"
+      "title": "Téléphone*"
     },
     {
       "id": "job",
@@ -52,7 +52,7 @@ export default {
       "name": "company",
       "component": "input",
       "type": "text",
-      "title": "Entreprise"
+      "title": "Entreprise*"
     },
     {
       "id": "localization",
@@ -105,6 +105,28 @@ export default {
     },
     {
       "field": "phone",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "businessLine",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "company",
       "method": "isEmpty",
       "args": [
         {

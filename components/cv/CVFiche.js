@@ -145,7 +145,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 <a
                   href="#cv-fiche"
                   data-uk-scroll="offset: 80"
-                  className={actionDisabled && 'uk-disabled'}
+                  className={actionDisabled ? 'uk-disabled' : undefined}
                 >
                   <IconNoSSR
                     name="triangle-down"
@@ -175,7 +175,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   className="uk-icon-link uk-icon-button uk-background-primary"
                 >
                   <IconNoSSR
-                    className={!actionDisabled && 'ent-text-white'}
+                    className={!actionDisabled ? 'ent-text-white' : undefined}
                     name="linkedin"
                     ratio={1.2}
                   />
@@ -195,7 +195,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   className="uk-icon-link uk-icon-button uk-background-primary"
                 >
                   <IconNoSSR
-                    className={!actionDisabled && 'ent-text-white'}
+                    className={!actionDisabled ? 'ent-text-white' : undefined}
                     name="facebook"
                     ratio={1.2}
                   />
@@ -216,7 +216,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   className="uk-icon-link uk-icon-button uk-background-primary"
                 >
                   <IconNoSSR
-                    className={!actionDisabled && 'ent-text-white'}
+                    className={!actionDisabled ? 'ent-text-white' : undefined}
                     name="twitter"
                     ratio={1.2}
                   />

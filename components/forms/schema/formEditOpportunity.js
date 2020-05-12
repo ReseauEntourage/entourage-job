@@ -30,7 +30,7 @@ export default {
       name: 'recruiterPhone',
       component: 'input',
       type: 'text',
-      title: 'Téléphone du recruteur',
+      title: 'Téléphone du recruteur*',
     },
     {
       id: 'businessLines',
@@ -47,7 +47,7 @@ export default {
       name: 'company',
       component: 'input',
       type: 'text',
-      title: 'Entreprise',
+      title: 'Entreprise*',
     },
     {
       id: 'location',
@@ -61,7 +61,7 @@ export default {
       name: 'description',
       component: 'textarea',
       type: 'text',
-      title: 'Votre description',
+      title: 'Votre description*',
     },
     {
       id: 'isPublic',
@@ -132,6 +132,17 @@ export default {
     },
     {
       field: 'recruiterPhone',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'businessLines',
       method: 'isEmpty',
       args: [
         {

@@ -52,8 +52,8 @@ ModalEdit.propTypes = {
   title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   formSchema: PropTypes.shape({
     id: PropTypes.string,
-    fields: PropTypes.object,
-    rules: PropTypes.object,
+    fields: PropTypes.arrayOf(PropTypes.object),
+    rules: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   onSubmit: PropTypes.func.isRequired,
   defaultValues: PropTypes.arrayOf(PropTypes.string),

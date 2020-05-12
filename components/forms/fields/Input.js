@@ -61,8 +61,8 @@ Input.propTypes = {
   onChange: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   valid: PropTypes.shape({
-    isInvalid: PropTypes.boolean,
-    message: PropTypes.boolean,
+    isInvalid: PropTypes.bool,
+    message: PropTypes.bool,
   }),
   defaultValue: PropTypes.string,
   disabled: PropTypes.bool,

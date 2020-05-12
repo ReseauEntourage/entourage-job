@@ -43,7 +43,7 @@ const Checkbox = ({
 Checkbox.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  disabled: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   defaultValue: PropTypes.bool,
   title: PropTypes.node.isRequired,
@@ -55,6 +55,7 @@ Checkbox.propTypes = {
 Checkbox.defaultProps = {
   valid: undefined,
   defaultValue: false,
+  disabled: false
 };
 
 export default Checkbox;

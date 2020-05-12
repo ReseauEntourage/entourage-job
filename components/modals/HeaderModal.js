@@ -15,6 +15,9 @@ const HeaderModal = ({ children }) => (
   </div>
 );
 HeaderModal.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]).isRequired
 };
 export default HeaderModal;
