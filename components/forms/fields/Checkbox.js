@@ -49,7 +49,7 @@ Checkbox.propTypes = {
   title: PropTypes.node.isRequired,
   valid: PropTypes.shape({
     isInvalid: PropTypes.bool,
-    message: PropTypes.bool,
+    message: PropTypes.string,
   }),
 };
 Checkbox.defaultProps = {

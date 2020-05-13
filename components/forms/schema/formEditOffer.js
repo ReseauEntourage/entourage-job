@@ -66,12 +66,12 @@ export default {
       "name": "message",
       "component": "textarea",
       "type": "text",
-      "title": "Votre message"
+      "title": "Votre message*"
     }
   ],
   "rules": [
     {
-      "field": "firstname",
+      "field": "firstName",
       "method": "isEmpty",
       "args": [
         {
@@ -82,7 +82,7 @@ export default {
       "message": "Obligatoire"
     },
     {
-      "field": "lastname",
+      "field": "lastName",
       "method": "isEmpty",
       "args": [
         {
@@ -137,7 +137,7 @@ export default {
       "message": "Obligatoire"
     },
     {
-      "field": "title",
+      "field": "job",
       "method": "isEmpty",
       "args": [
         {
@@ -148,7 +148,18 @@ export default {
       "message": "Obligatoire"
     },
     {
-      "field": "location",
+      "field": "localization",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "message",
       "method": "isEmpty",
       "args": [
         {

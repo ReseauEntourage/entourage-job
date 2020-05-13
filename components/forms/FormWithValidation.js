@@ -103,7 +103,7 @@ const FormWithValidation = ({
     >
       <fieldset className="uk-fieldset">
         {fields.map((value, i) => (
-          <li key={i}>
+          <li key={i} hidden={!!value.hidden}>
             {generate(
               value,
               id,
