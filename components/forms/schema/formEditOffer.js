@@ -124,7 +124,7 @@ export default {
       field: 'phone',
       method: 'isMobilePhone',
       args: [
-        'any'
+        'fr-FR'
       ],
       validWhen: true,
       message: 'Invalide',

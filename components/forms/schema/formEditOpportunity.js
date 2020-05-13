@@ -151,7 +151,7 @@ export default {
       field: 'recruiterPhone',
       method: 'isMobilePhone',
       args: [
-        'any'
+        'fr-FR'
       ],
       validWhen: true,
       message: 'Invalide',
