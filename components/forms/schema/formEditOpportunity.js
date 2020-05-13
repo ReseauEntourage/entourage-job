@@ -22,14 +22,14 @@ export default {
       id: 'recruiterMail',
       name: 'recruiterMail',
       component: 'input',
-      type: 'text',
+      type: 'email',
       title: 'Adresse mail du recruteur*',
     },
     {
       id: 'recruiterPhone',
       name: 'recruiterPhone',
       component: 'input',
-      type: 'text',
+      type: 'tel',
       title: 'Téléphone du recruteur*',
     },
     {
@@ -131,6 +131,12 @@ export default {
       message: 'Obligatoire',
     },
     {
+      field: 'recruiterMail',
+      method: 'isEmail',
+      validWhen: true,
+      message: 'Invalide',
+    },
+    {
       field: 'recruiterPhone',
       method: 'isEmpty',
       args: [
@@ -140,6 +146,15 @@ export default {
       ],
       validWhen: false,
       message: 'Obligatoire',
+    },
+    {
+      field: 'recruiterPhone',
+      method: 'isMobilePhone',
+      args: [
+        'any'
+      ],
+      validWhen: true,
+      message: 'Invalide',
     },
     {
       field: 'businessLines',
