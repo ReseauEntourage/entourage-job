@@ -21,7 +21,7 @@ export default class Input extends Component {
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
         isInvalid: PropTypes.boolean,
-        message: PropTypes.boolean,
+        message: PropTypes.string,
       }),
       defaultValue: PropTypes.string,
     };

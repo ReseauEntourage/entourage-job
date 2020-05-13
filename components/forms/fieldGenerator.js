@@ -13,6 +13,7 @@ import lostPwdSchema from './schema/formLostPwd.json';
 import Api from '../../Axios';
 import FormWithValidationV2 from './FormWithValidation';
 import Input from './fields/Input';
+import FormValidatorErrorMessage from "./FormValidatorErrorMessage";
 
 const generator = (
   data,
@@ -227,6 +228,7 @@ const generator = (
             } else console.log('pb here reactselect');
           }}
         />
+        <FormValidatorErrorMessage validObj={getValid(data.name)} />
       </div>
     );
   }
@@ -274,6 +276,7 @@ const generator = (
             } else console.log('pb here reactselect');
           }}
         />
+        <FormValidatorErrorMessage validObj={getValid(data.name)} />
       </div>
     );
   }

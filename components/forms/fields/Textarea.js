@@ -75,7 +75,7 @@ Textarea.propTypes = {
   title: PropTypes.string.isRequired,
   valid: PropTypes.shape({
     isInvalid: PropTypes.bool,
-    message: PropTypes.bool,
+    message: PropTypes.string,
   }),
   rows: PropTypes.number,
   maxLength: PropTypes.number,

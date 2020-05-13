@@ -20,7 +20,7 @@ export default class DatePicker extends Component {
       title: PropTypes.string.isRequired,
       valid: PropTypes.shape({
         isInvalid: PropTypes.boolean,
-        message: PropTypes.boolean,
+        message: PropTypes.string,
       }),
       value: PropTypes.string,
       min: PropTypes.string,

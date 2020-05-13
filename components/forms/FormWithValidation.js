@@ -103,7 +103,7 @@ const FormWithValidation = ({
     >
       <fieldset className="uk-fieldset">
         {fields.map((value, i) => (
-          <li key={i}>
+          <li key={i} hidden={!!value.hidden}>
             {generate(
               value,
               id,
@@ -142,8 +142,8 @@ FormWithValidation.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   formSchema: PropTypes.shape({
     id: PropTypes.string,
-    fields: PropTypes.object,
-    rules: PropTypes.object,
+    fields: PropTypes.arrayOf(PropTypes.object),
+    rules: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   submitText: PropTypes.string,
 };

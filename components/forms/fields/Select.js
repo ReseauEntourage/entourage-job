@@ -87,7 +87,7 @@ Select.propTypes = {
   title: PropTypes.string.isRequired,
   valid: PropTypes.shape({
     isInvalid: PropTypes.bool,
-    message: PropTypes.bool,
+    message: PropTypes.string,
   }),
   defaultValue: PropTypes.string,
   options: PropTypes.arrayOf(

@@ -22,15 +22,15 @@ export default {
       id: 'recruiterMail',
       name: 'recruiterMail',
       component: 'input',
-      type: 'text',
+      type: 'email',
       title: 'Adresse mail du recruteur*',
     },
     {
       id: 'recruiterPhone',
       name: 'recruiterPhone',
       component: 'input',
-      type: 'text',
-      title: 'Téléphone du recruteur',
+      type: 'tel',
+      title: 'Téléphone du recruteur*',
     },
     {
       id: 'businessLines',
@@ -47,7 +47,7 @@ export default {
       name: 'company',
       component: 'input',
       type: 'text',
-      title: 'Entreprise',
+      title: 'Entreprise*',
     },
     {
       id: 'location',
@@ -61,7 +61,7 @@ export default {
       name: 'description',
       component: 'textarea',
       type: 'text',
-      title: 'Votre description',
+      title: 'Votre description*',
     },
     {
       id: 'isPublic',
@@ -131,7 +131,33 @@ export default {
       message: 'Obligatoire',
     },
     {
+      field: 'recruiterMail',
+      method: 'isEmail',
+      validWhen: true,
+      message: 'Invalide',
+    },
+    {
       field: 'recruiterPhone',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'recruiterPhone',
+      method: 'isMobilePhone',
+      args: [
+        'fr-FR'
+      ],
+      validWhen: true,
+      message: 'Invalide',
+    },
+    {
+      field: 'businessLines',
       method: 'isEmpty',
       args: [
         {

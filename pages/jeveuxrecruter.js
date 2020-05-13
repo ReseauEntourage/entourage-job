@@ -6,7 +6,7 @@ import { DiscoverPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
 import HowTo from '../components/sections/HowTo';
 import StepCard from '../components/cards/StepCard';
-import schemaformEditOffer from '../components/forms/schema/formEditOffer';
+import schema from '../components/forms/schema/formEditOpportunity';
 import Api from '../Axios';
 import StepperModal from '../components/modals/StepperModal';
 import FormWithValidation from '../components/forms/FormWithValidation';
@@ -67,6 +67,17 @@ const JeVeuxRecruter = () => {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     },
   ];
+
+  const candidatId = schema.fields[
+    schema.fields.findIndex((field) => field.id === 'candidatId')
+  ];
+
+  candidatId.disabled = () => true;
+  candidatId.hidden = () => true;
+
+  schema.fields[
+    schema.fields.findIndex((field) => field.id === 'isPublic')
+  ].disabled = true;
 
   return (
     <Layout title="Je veux recruter - LinkedOut">
@@ -202,17 +213,15 @@ const JeVeuxRecruter = () => {
               <p>
                 Cet espace est dédié aux potentiels recruteurs qui souhaitent
                 proposer des opportunités aux candidats. Écrivez vos mots
-                d&apos;encouragement ou contactez avec le coach plus bas dans la
+                d&apos;encouragement ou contactez le coach plus bas dans la
                 page CV !
               </p>
               <FormWithValidation
                 submitText="Envoyer"
-                formSchema={schemaformEditOffer}
+                formSchema={schema}
                 onCancel={closeModal}
-                onSubmit={(message) => {
-                  console.log(message);
-
-                  Api.post('/api/v1/message', { message })
+                onSubmit={(opportunity) => {
+                  Api.post('/api/v1/opportunity/', opportunity)
                     .then(nextStep)
                     .catch((error) => {
                       console.error(error);
@@ -221,6 +230,9 @@ const JeVeuxRecruter = () => {
                         { pos: 'bottom-center', status: 'danger' }
                       );
                     });
+                }}
+                defaultValues={{
+                  isPublic: true
                 }}
               />
             </div>

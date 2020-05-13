@@ -38,9 +38,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
     schema.fields.findIndex((field) => field.id === 'isPublic')
   ].disabled = true;
 
-  const postOpportunity = async (opportunity) => {
+  const postOpportunity = async (opportunity, closeModal) => {
     try {
       await Axios.post(`/api/v1/opportunity/`, opportunity);
+      closeModal();
       UIkit.notification(
         `Merci pour votre message, ${cv.user.candidat.firstName} et son coach reviennent vers vous bientôt.`,
         'success'
@@ -145,7 +146,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 <a
                   href="#cv-fiche"
                   data-uk-scroll="offset: 80"
-                  className={actionDisabled && 'uk-disabled'}
+                  className={actionDisabled ? 'uk-disabled' : undefined}
                 >
                   <IconNoSSR
                     name="triangle-down"
@@ -175,7 +176,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   className="uk-icon-link uk-icon-button uk-background-primary"
                 >
                   <IconNoSSR
-                    className={!actionDisabled && 'ent-text-white'}
+                    className={!actionDisabled ? 'ent-text-white' : undefined}
                     name="linkedin"
                     ratio={1.2}
                   />
@@ -195,7 +196,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   className="uk-icon-link uk-icon-button uk-background-primary"
                 >
                   <IconNoSSR
-                    className={!actionDisabled && 'ent-text-white'}
+                    className={!actionDisabled ? 'ent-text-white' : undefined}
                     name="facebook"
                     ratio={1.2}
                   />
@@ -216,7 +217,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   className="uk-icon-link uk-icon-button uk-background-primary"
                 >
                   <IconNoSSR
-                    className={!actionDisabled && 'ent-text-white'}
+                    className={!actionDisabled ? 'ent-text-white' : undefined}
                     name="twitter"
                     ratio={1.2}
                   />
@@ -461,7 +462,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           id="modal-send-opportunity"
           title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
           description={
-            "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez avec le coach plus bas dans la page CV !"
+            "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez le coach plus bas dans la page CV !"
           }
           submitText="Envoyer"
           defaultValues={{
@@ -473,12 +474,11 @@ const CVFiche = ({ cv, actionDisabled }) => {
           }}
           formSchema={schema}
           onSubmit={(fields, closeModal) => {
-            closeModal();
             postOpportunity({
               ...fields,
               usersId: [cv.UserId],
               date: Date.now(),
-            });
+            }, closeModal);
           }}
         />
       </div>

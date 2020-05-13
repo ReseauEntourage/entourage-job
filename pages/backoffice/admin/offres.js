@@ -67,9 +67,10 @@ const LesOpportunites = () => {
     return null;
   };
 
-  const postOpportunity = async (opportunity) => {
+  const postOpportunity = async (opportunity, closeModal) => {
     try {
       await Axios.post(`/api/v1/opportunity/`, opportunity);
+      closeModal();
       UIkit.notification(`L'oppotunité a été ajoutée.`, 'success');
       fetchData();
     } catch (err) {
@@ -125,11 +126,10 @@ const LesOpportunites = () => {
             submitText="Envoyer"
             formSchema={schema}
             onSubmit={(fields, closeModal) => {
-              closeModal();
               postOpportunity({
                 ...fields,
                 date: Date.now(),
-              })
+              }, closeModal)
             }}
           />
         </HeaderBackoffice>
