@@ -24,10 +24,10 @@ const HowTo = () => {
 
   return (
     <Section id="how" style="muted">
-      <h1 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
         Comment fonctionne{' '}
         <span className="uk-text-primary">LinkedOut&nbsp;?</span>
-      </h1>
+      </h2>
       <div className="uk-flex uk-flex-wrap uk-flex-left uk-flex-around">
         {content.map(({img, description}) => {
           return (

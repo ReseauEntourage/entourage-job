@@ -38,7 +38,7 @@ const ActionPartial = ({ style }) => (
         </p>
       </div>
 
-      <div uk-height-match="target : h4">
+      <div uk-height-match="target : h3">
         <GridNoSSR
           childWidths={['1-3@s']}
           middle
@@ -51,7 +51,7 @@ const ActionPartial = ({ style }) => (
               middle
               column
             >
-              <h4>{value.title}</h4>
+              <h3>{value.title}</h3>
               <hr style={{ borderTopColor: '#F55F24', width: '100px' }} />
               {value.description && <p>{value.description}</p>}
               <Link href={value.href}>

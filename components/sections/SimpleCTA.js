@@ -1,21 +1,22 @@
 import React from 'react';
-import { Section } from '../utils';
 import PropTypes from 'prop-types';
 import Link from "next/link";
+import { Section } from '../utils';
 
 const SimpleCTA = ({id, style, title, text, button}) => {
   return (
     <Section id={id} style={style}>
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-        <h1 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m uk-margin-remove-vertical">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m uk-margin-remove-vertical">
           {title}
-        </h1>
-        <h4 className="uk-width-1-2@m uk-align-center uk-text-center">
+        </h2>
+        <h3 className="uk-width-1-2@m uk-align-center uk-text-center">
           {text}
-        </h4>
+        </h3>
         <Link href={button.href}>
           <a
             className="uk-button uk-button-primary"
+            target="_blank"
             style={{
               color: 'white',
               backgroundColor: '#F55F24',
@@ -40,7 +41,8 @@ SimpleCTA.propTypes = {
   title: PropTypes.element.isRequired,
   button: PropTypes.shape({
     label: PropTypes.string.isRequired,
-    href: PropTypes.string.isRequired
+    href: PropTypes.string.isRequired,
+    external: PropTypes.bool
   }).isRequired,
   text: PropTypes.string.isRequired
 };
