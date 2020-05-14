@@ -1,44 +1,56 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Section } from '../utils';
 
-const HowTo = ({ title, children, colLarge }) => {
-  let classChildWidth =
-    'uk-child-width-1-4@l uk-child-width-1-3@m uk-child-width-1-2@s';
-  switch (colLarge) {
-    case 4:
-      classChildWidth = 'uk-child-width-1-2@s uk-child-width-1-1';
-      break;
-    case 3:
-      classChildWidth =
-        'uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-1@s';
-      break;
-    case 2:
-      classChildWidth = 'uk-child-width-1-2@l uk-child-width-1-1@m';
-      break;
-    default:
-      classChildWidth =
-        'uk-child-width-1-4@l uk-child-width-1-3@m uk-child-width-1-2@s';
-  }
+const HowTo = () => {
+  const content = [
+    {
+      img: '/static/img/illustrations/how1.png',
+      description: <div>La viralisation des CV repensés de candidats sur les réseaux sociaux via <span className="uk-text-bold">cette plateforme <span className="uk-text-primary">www.linkedout.fr</span></span>, afin de générer des opportunités d’emploi</div>,
+    },
+    {
+      img: '/static/img/illustrations/how2.png',
+      description: <div><span className="uk-text-bold">Un accompagnement de proximité</span> avec des bénévoles-coachs avant, pendant mais aussi après le retour à l’emploi</div>,
+    },
+    {
+      img: '/static/img/illustrations/how3.png',
+      description: <div><span className="uk-text-bold">Des formations courtes</span> et des ateliers de remobilisation « à la carte » pour acquérir les compétences manquantes et reprendre confiance</div>,
+    },
+    {
+      img: '/static/img/illustrations/how4.png',
+      description: <div><span className="uk-text-bold">Une communauté d’entraide</span> et d’amitié, Entourage, offre des temps conviviaux pour se ressourcer et faire de nouvelles rencontres</div>,
+    },
+  ];
+
 
   return (
-    <Section style="default">
-      {title}
-      <div className={`${classChildWidth} uk-flex-center`} data-uk-grid>
-        {children}
+    <Section id="how" style="muted">
+      <h1 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
+        Comment fonctionne{' '}
+        <span className="uk-text-primary">LinkedOut&nbsp;?</span>
+      </h1>
+      <div className="uk-flex uk-flex-wrap uk-flex-left uk-flex-around">
+        {content.map(({img, description}) => {
+          return (
+            <div className="uk-flex uk-flex-column uk-flex-middle uk-width-medium">
+              <div className="uk-height-small uk-flex uk-flex-bottom uk-flex-center">
+                <img src={img} width="100" height="150" alt=""/>
+              </div>
+              <div className="uk-padding-small uk-flex uk-flex-top">
+                {description}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </Section>
   );
 };
 
 HowTo.propTypes = {
-  title: PropTypes.node.isRequired,
-  children: PropTypes.node.isRequired,
-  colLarge: PropTypes.number,
+
 };
 
 HowTo.defaultProps = {
-  colLarge: 4,
 };
 
 export default HowTo;

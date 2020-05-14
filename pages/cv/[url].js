@@ -5,12 +5,11 @@ import {
   DiscoverPartial,
   ContactPartial,
   ActionPartial,
-  SharePartial,
 } from '../../components/partials';
 import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
-import { Section } from '../../components/utils';
+import {GridNoSSR, Section} from '../../components/utils';
 
 const CVPage = ({ cv, router }) => {
   if (!cv) {
@@ -23,7 +22,12 @@ const CVPage = ({ cv, router }) => {
             supprimée.
           </p>
         </Section>
-        <ContactPartial />
+        <ContactPartial submitLabel="Écrivez-moi" title={
+          <h3 className="uk-text-bold">
+            Gardons contact,{' '}
+            <span className="uk-text-primary">le programme évolue</span> !
+          </h3>
+        }/>
         <DiscoverPartial />
       </Layout>
     );
