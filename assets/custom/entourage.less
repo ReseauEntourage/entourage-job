@@ -1,8 +1,22 @@
 // Import UIkit default theme (or uikit.less with only core styles)
-@import '../src/less/uikit.theme.less';
+@import '../uikit/src/less/uikit.theme.less';
 
+@font-face {
+  font-family: Roboto;
+  src: url("../../static/fonts/Roboto-Regular.ttf");
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url("../../static/fonts/Roboto-Bold.ttf");
+  font-weight: bold;
+}
 // Your custom code goes here, e.g. mixins, variables.
 // See "how to create a theme" below for more info.
+
+$global-font-family: Roboto, sans-serif;
+@base-body-font-family: Roboto, sans-serif;
+@base-heading-font-family: Roboto, sans-serif;
 
 // overlay
 
