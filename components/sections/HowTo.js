@@ -28,10 +28,10 @@ const HowTo = () => {
         Comment fonctionne{' '}
         <span className="uk-text-primary">LinkedOut&nbsp;?</span>
       </h2>
-      <div className="uk-flex uk-flex-wrap uk-flex-left uk-flex-around">
+      <div className="uk-width-expand uk-flex uk-flex-wrap uk-flex-left uk-flex-center uk-flex-around">
         {content.map(({img, description}) => {
           return (
-            <div className="uk-flex uk-flex-column uk-flex-middle uk-width-medium">
+            <div className="uk-flex uk-flex-column uk-flex-middle uk-width-medium uk-padding-small">
               <div className="uk-height-small uk-flex uk-flex-bottom uk-flex-center">
                 <img src={img} width="100" height="150" alt=""/>
               </div>

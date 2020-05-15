@@ -5,7 +5,9 @@ import { Section } from '../utils';
 
 const SimpleCTA = ({id, style, title, text, button}) => {
   return (
-    <Section id={id} style={style}>
+    <Section style={style}>
+      {/* Fix so that the anchor scroll to the right height */}
+      <div id={id} style={{marginTop: -140, paddingTop: 140}} />
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m uk-margin-remove-vertical">
           {title}

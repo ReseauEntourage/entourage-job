@@ -8,17 +8,25 @@ import StepCard from '../components/cards/StepCard';
 import SimpleCTA from "../components/sections/SimpleCTA";
 import MultipleCTA from "../components/sections/MultipleCTA";
 import ImageTitle from "../components/sections/ImageTitle";
+import SubHeader from "../components/sections/SubHeader";
 
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - LinkedOut">
     <ImageTitle id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider ?</span></>} text="Il n'y a pas de petit coup de pouce, aidez à votre échelle !" />
-    <Section id="profile" style="muted">
-      <div className="uk-flex uk-flex-wrap uk-flex-around">
-        <a href="#private"><h3 className="uk-text-primary">Je suis un particulier</h3></a>
-        <a href="#actor"><h3 className="uk-text-primary">Je suis un acteur social</h3></a>
-        <a href="#give"><h3 className="uk-text-primary">Je deviens mécène</h3></a>
-      </div>
-    </Section>
+    <SubHeader id="profile" data={[
+      {
+        href: "#private",
+        label: "Je suis un particulier"
+      },
+      {
+        href: "#actor",
+        label: "Je suis un acteur social"
+      },
+      {
+        href: "#give",
+        label: "Je deviens mécène"
+      },
+    ]} style="muted"/>
     <MultipleCTA
       id="private"
       title={

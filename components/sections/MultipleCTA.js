@@ -5,17 +5,19 @@ import { Section } from '../utils';
 
 const MultipleCTA = ({id, style, title, data}) => {
   return (
-    <Section id={id} style={style}>
+    <Section style={style}>
+      {/* Fix so that the anchor scroll to the right height */}
+      <div id={id} style={{marginTop: -140, paddingTop: 140}} />
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
           {title}
         </h2>
-        <div className="uk-flex uk-flex-wrap uk-flex-around">
+        <div className="uk-width-expand uk-flex uk-flex-wrap uk-flex-around">
           {
             data.map((item) => {
               return (
-                <div className="uk-flex uk-flex-column uk-flex-top uk-width-large uk-padding-small">
-                  <h3 className="uk-width-xsmall uk-text-bold">
+                <div className="uk-flex uk-flex-1 uk-flex-column uk-flex-top uk-width-large uk-padding-small">
+                  <h3 className="uk-width-xsmall uk-text-bold uk-width-medium">
                     {item.title}
                   </h3>
                   <hr className="uk-divider-small uk-margin-remove-vertical" />
