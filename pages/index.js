@@ -3,11 +3,9 @@ import Layout from '../components/Layout';
 import {
   ActionPartial,
   CandidatListPartial,
-  ContactPartial,
   EmphasePartial,
   LandingPagePartial,
   NumberPartial,
-  SharePartial,
 } from '../components/partials';
 import Header from '../components/headers/Header';
 

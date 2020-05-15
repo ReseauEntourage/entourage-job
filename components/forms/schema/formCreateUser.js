@@ -26,9 +26,9 @@ export default {
       name: 'gender',
       component: 'select',
       options: [
-        { value: null, text: 'Choisissez un genre' },
-        { value: 0, text: 'Homme' },
-        { value: 1, text: 'Femme' },
+        { value: null, label: 'Choisissez un genre' },
+        { value: 0, label: 'Homme' },
+        { value: 1, label: 'Femme' },
       ],
     },
     {
@@ -45,10 +45,10 @@ export default {
       name: 'role',
       component: 'select',
       options: [
-        { value: null, text: 'Choisissez un role' },
-        { value: USER_ROLES.CANDIDAT, text: USER_ROLES.CANDIDAT },
-        { value: USER_ROLES.COACH, text: USER_ROLES.COACH },
-        { value: USER_ROLES.ADMIN, text: USER_ROLES.ADMIN },
+        { value: null, label: 'Choisissez un role' },
+        { value: USER_ROLES.CANDIDAT, label: USER_ROLES.CANDIDAT },
+        { value: USER_ROLES.COACH, label: USER_ROLES.COACH },
+        { value: USER_ROLES.ADMIN, label: USER_ROLES.ADMIN },
       ],
     },
     {

@@ -61,8 +61,8 @@ const AssociationEntourage = () => (
               alt="app-screenshot entourage"
             />
             <GridNoSSR column gap="small">
-              <ImgNoSSR src="/static/img/BTAndroid.png" alt="android" />
-              <ImgNoSSR src="/static/img/BTApple.png" alt="ios" />
+              <ImgNoSSR height="47" width="168" src="/static/img/BTAndroid.png" alt="android" />
+              <ImgNoSSR height="47" width="168" src="/static/img/BTApple.png" alt="ios" />
             </GridNoSSR>
           </GridNoSSR>
         </GridNoSSR>

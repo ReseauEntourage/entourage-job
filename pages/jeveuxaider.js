@@ -1,74 +1,87 @@
 import React from 'react';
-import { Section } from '../components/utils';
-import { DiscoverPartial } from '../components/partials';
+import {GridNoSSR, Section} from '../components/utils';
+import {ContactPartial, DiscoverPartial, SharePartial} from '../components/partials';
 import Layout from '../components/Layout';
 import ProfilAidant from '../components/sections/ProfilAidant';
 import HowTo from '../components/sections/HowTo';
 import StepCard from '../components/cards/StepCard';
-
-const content = [
-  {
-    img: '/static/img/illustrations/entourage_phone.png',
-    description:
-      "La plateforme LinkedOut permet de viraliser les CV des candidats sur les réseaux sociaux pour les rendre visibles auprès de recruteurs et générer des opportunités d'emploi.",
-  },
-  {
-    img: '/static/img/illustrations/helping_process.png',
-    description:
-      'Chaque candidat est soutenu par un bénévole-coach, de la recherche d’emploi à l’intégration en entreprise.',
-  },
-  {
-    img: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
-    description:
-      'Un parcours de courtes formations et d’ateliers à la carte permet aux candidats qui le souhaitent d’acquérir les compétences manquantes et de travailler la confiance en soi.',
-  },
-  {
-    img: '/static/img/illustrations/cafe_solidaire_personnages.png',
-    description:
-      'Tout au long de leur parcours vers l’emploi, la communauté Entourage soutient moralement les candidats, leur permet de se resocialiser et de faire de nouvelles rencontres.',
-  },
-];
+import SimpleCTA from "../components/sections/SimpleCTA";
+import MultipleCTA from "../components/sections/MultipleCTA";
+import ImageTitle from "../components/sections/ImageTitle";
 
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - LinkedOut">
-    <Section id="titre">
-      <h1 className="uk-heading-medium@s uk-text-bold uk-text-center uk-align-center uk-width-3-4">
-        Vous souhaitez <span className="uk-text-primary">aider ?</span>
-      </h1>
-      <p
-        className="uk-text-lead@s uk-text-center uk-align-center uk-width-2-3 "
-        style={{ fontWeight: '600' }}
-      >
-        Il n&apos;y a pas de petit coup de pouce, aidez à votre échelle !
-      </p>
+    <ImageTitle id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider ?</span></>} text="Il n'y a pas de petit coup de pouce, aidez à votre échelle !" />
+    <Section id="profile" style="muted">
+      <div className="uk-flex uk-flex-wrap uk-flex-around">
+        <a href="#private"><h3 className="uk-text-primary">Je suis un particulier</h3></a>
+        <a href="#actor"><h3 className="uk-text-primary">Je suis un acteur social</h3></a>
+        <a href="#give"><h3 className="uk-text-primary">Je deviens mécène</h3></a>
+      </div>
     </Section>
-    <ProfilAidant />
-    <HowTo
+    <MultipleCTA
+      id="private"
       title={
-        <h1 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
-          Comment fonctionne{' '}
-          <span className="uk-text-primary">LinkedOut ?</span>
-        </h1>
+        <>
+          Je suis un <span className="uk-text-primary">particulier</span>
+        </>
       }
-      colLarge={4}
-    >
-      {content.map(({ img, description }, index) => (
-        <li key={index}>
-          {<StepCard numStep={index + 1} img={img} description={description} />}
-        </li>
-      ))}
-    </HowTo>
-    {/* <Section id="travailler3" style="secondary" size="small">
-      <p className="uk-text-lead uk-text-center uk-align-center uk-width-2-3@s">
-        Tout au long de leur parcours vers l&apos;emploi, la communauté
-        Entourage soutient moralement les candidats, leur permet de se
-        resocialiser et de faire de nouvelles rencontres
-      </p>
-      <p className="uk-text-center">
-        Découvrez Entourage <IconNoSSR name="linkedout-arrow-contact" />
-      </p>
-    </Section> */}
-    <DiscoverPartial />
+      data={[
+        {
+          title: "Donnez de la visibilité au candidat",
+          text: "Donnez de la visibilité au candidat en lui faisant bénéficier de votre réseau via le partage de son CV (facebook, LinkedIn, twitter). Vous augmentez ainsi ses chances de recevoir des opportunités d’emploi.\nVotre partage peut tout changer !",
+          button: {
+            label: "Je partage un CV",
+            href: "/lescandidats"
+          }
+        },
+        {
+          title: "Engagez-vous avec un candidat LinkedOut",
+          text: "Donnez de votre temps et tissez une relation de confiance avec le candidat pour le soutenir jusqu’à son intégration durable dans l’entreprise.\nEntourage vous forme à la mission de bénévole-coach !",
+          button: {
+            label: "Je deviens bénévole coach",
+            href: "https://airtable.com/shrZg9tgkviDwPVoW", // TODO MAKE CONSTANT
+            external: true
+          }
+        }
+      ]}
+     />
+    <SimpleCTA
+      title={
+        <>
+          Je suis un <span className="uk-text-primary">acteur de l&apos;insertion</span> sociale et professionnelle
+        </>
+      }
+      text="Vous accompagnez une personne en démarche de réinsertion professionnelle, motivée pour travailler ?"
+      id="actor"
+      button={{
+        label: "Je vous l'oriente",
+        href: "https://airtable.com/shr63tyc9rBdJO2ko", // TODO MAKE CONSTANT
+        external: true
+      }}
+      style="muted"/>
+    <SimpleCTA
+      title={
+        <>
+          Je deviens{' '}<span className="uk-text-primary">mécène</span>
+        </>
+      }
+      text="Je souhaite soutenir financièrement le projet LinkedOut et participer à la construction d’une société plus inclusive"
+      id="give"
+      button={{
+        label: "Je fais un don",
+        href: "https://don.entourage.social/?_ga=2.51486825.130511908.1589373822-697393147.1588101221",
+        external: true
+      }} />
+    <HowTo />
+    <Section style='muted'>
+      <GridNoSSR gap="large" column>
+        <ContactPartial padding="none" submitLabel="Ok" title={
+          <h3 className='uk-align-center uk-width-1-2@m'>Je m&apos;inscris à la newsletter pour avoir des nouvelles des candidats et être informé de l&apos;évolution du projet.</h3>
+        }/>
+        <SharePartial/>
+      </GridNoSSR>
+    </Section>
   </Layout>
 );
 

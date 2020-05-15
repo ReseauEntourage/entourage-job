@@ -1,13 +1,11 @@
 import React from 'react';
-import { Section, IconNoSSR, GridNoSSR } from '../utils';
+import PropTypes from "prop-types";
+import { IconNoSSR, GridNoSSR } from '../utils';
 
-const ContactPartial = () => (
-  <Section style="default" id="profiles">
+const ContactPartial = ({ title, submitLabel, padding }) => (
+  <div id="profiles" className={!padding ? 'uk-padding-remove-vertical' : ''}>
     <div className="uk-text-center">
-      <h3 className="uk-text-bold">
-        Gardons contact,{' '}
-        <span className="uk-text-primary">le programme évolue</span> !
-      </h3>
+      {title}
     </div>
     {/* input */}
     <div className="uk-flex uk-flex-center">
@@ -40,10 +38,21 @@ const ContactPartial = () => (
             borderRadius: '2px',
           }}
         >
-          Écrivez-moi
+          {submitLabel}
         </button>
       </GridNoSSR>
     </div>
-  </Section>
+  </div>
 );
+
+ContactPartial.propTypes = {
+  title: PropTypes.element.isRequired,
+  submitLabel: PropTypes.string.isRequired,
+  padding: PropTypes.bool
+};
+
+ContactPartial.defaultProps = {
+  padding: true
+};
+
 export default ContactPartial;
