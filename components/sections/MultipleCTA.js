@@ -27,7 +27,8 @@ const MultipleCTA = ({id, style, title, data}) => {
                   <Link href={item.button.href}>
                     <a
                       className="uk-button uk-button-primary uk-padding-small"
-                      target={item.external ? "_blank" : ""}
+                      target={item.button.external ? "_blank" : ""}
+                      data-uk-toggle={`target:${item.button.modal}`}
                       style={{
                         color: 'white',
                         backgroundColor: '#F55F24',
@@ -61,7 +62,8 @@ MultipleCTA.propTypes = {
     button: PropTypes.shape({
       label: PropTypes.string.isRequired,
       href: PropTypes.string.isRequired,
-      external: PropTypes.bool
+      external: PropTypes.bool,
+      modal: PropTypes.string
     }).isRequired,
   })).isRequired
 };
