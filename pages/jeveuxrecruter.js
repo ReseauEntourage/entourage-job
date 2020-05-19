@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 import { Button, Section, GridNoSSR, IconNoSSR } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
-import HowTo from '../components/sections/HowTo';
+import HowItWorks from '../components/sections/HowItWorks';
 import StepCard from '../components/cards/StepCard';
 import schema from '../components/forms/schema/formEditOpportunity';
 import Api from '../Axios';
@@ -138,7 +138,7 @@ const JeVeuxRecruter = () => {
           </div>
         </div>
       </Section>
-      <HowTo
+      <HowItWorks
         title={
           <h3 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
             Du premier contact à l&apos;intégration en entreprise,{' '}
@@ -166,7 +166,7 @@ const JeVeuxRecruter = () => {
           img="/static/img/illustrations/entourage_phone.png"
           description="Lorem ipsum lorem ipsum"
         />
-      </HowTo>
+      </HowItWorks>
       <Section id="recruter4" style="default">
         <h2 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
           Vous avez des opportunités d'emplois ?

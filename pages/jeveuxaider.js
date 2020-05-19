@@ -1,8 +1,9 @@
 import React from 'react';
 import {GridNoSSR, Section} from '../components/utils';
 import {ContactPartial, SharePartial} from '../components/partials';
+import {EXTERNAL_LINKS} from '../constants';
 import Layout from '../components/Layout';
-import HowTo from '../components/sections/HowTo';
+import HowItWorks from '../components/sections/HowItWorks';
 import SimpleCTA from "../components/sections/SimpleCTA";
 import MultipleCTA from "../components/sections/MultipleCTA";
 import ImageTitle from "../components/sections/ImageTitle";
@@ -62,7 +63,7 @@ const JeVeuxAider = () => (
       id="actor"
       button={{
         label: "Je vous l'oriente",
-        href: "https://airtable.com/shr63tyc9rBdJO2ko", // TODO MAKE CONSTANT
+        href: EXTERNAL_LINKS.AIRTABLE_CANDIDATE,
         external: true
       }}
       style="muted"/>
@@ -72,14 +73,14 @@ const JeVeuxAider = () => (
           Je deviens{' '}<span className="uk-text-primary">mécène</span>
         </>
       }
-      text="Je souhaite soutenir financièrement le projet LinkedOut et participer à la construction d’une société plus inclusive"
+      text="Je souhaite soutenir financièrement le projet LinkedOut et participer à la construction d’une société plus inclusive"
       id="give"
       button={{
         label: "Je fais un don",
-        href: "https://don.entourage.social/?_ga=2.51486825.130511908.1589373822-697393147.1588101221",
+        href: EXTERNAL_LINKS.DONATION,
         external: true
       }} />
-    <HowTo />
+    <HowItWorks />
     <Section style='muted'>
       <GridNoSSR gap="large" column>
         <ContactPartial padding="none" submitLabel="Ok" title={

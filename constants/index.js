@@ -113,9 +113,16 @@ const USER_ROLES = {
   ADMIN: 'Admin',
 };
 
+const EXTERNAL_LINKS = {
+  AIRTABLE_COACH : "https://airtable.com/shrZg9tgkviDwPVoW",
+  AIRTABLE_CANDIDATE: "https://airtable.com/shr63tyc9rBdJO2ko",
+  DONATION: "https://don.entourage.social/?_ga=2.51486825.130511908.1589373822-697393147.1588101221"
+};
+
 module.exports = {
   OFFER_STATUS,
   CV_STATUS,
   USER_ROLES,
-  BUSINESS_LINES
+  BUSINESS_LINES,
+  EXTERNAL_LINKS
 };
