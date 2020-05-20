@@ -14,9 +14,9 @@ import './Header.less';
 
 const Header = ({ isHome }) => {
   const LINKS = [
-    { href: '/jeveuxaider', name: 'Aider' },
-    { href: '/jeveuxrecruter', name: 'Recruter' },
     { href: '/jeveuxtravailler', name: 'Travailler' },
+    { href: '/jeveuxrecruter', name: 'Recruter' },
+    { href: '/jeveuxaider', name: 'Aider' },
   ];
   const router = useRouter();
   return (

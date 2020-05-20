@@ -23,19 +23,19 @@ const HowToJoin = () => {
 
 
   return (
-    <Section id="how" style="default">
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m uk-margin-remove-vertical">
+    <Section id="how" container="small" style="default">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-vertical">
         Comment rejoindre{' '}
         <span className="uk-text-primary">LinkedOut&nbsp;?</span>
       </h2>
-      <h3 className="uk-width-1-2@m uk-align-center uk-text-center">
+      <h3 className="uk-align-center uk-text-center">
         Vous êtes en démarche d’insertion professionnelle et motivés pour être acteur de votre recherche
       </h3>
-      <p className="uk-margin-large-top uk-width-1-2@m">Vous rassemblez les éléments suivants, nécessaires à l’obtention d’un contrat de travail&nbsp;:</p>
+      <p className="uk-margin-large-top uk-width-large">Vous rassemblez les éléments suivants, nécessaires à l’obtention d’un contrat de travail&nbsp;:</p>
       <div className="uk-width-expand uk-flex uk-flex-wrap uk-flex-left uk-flex-center uk-flex-around">
-        {content.map(({img, description}) => {
+        {content.map(({img, description}, index) => {
           return (
-            <div className="uk-flex uk-flex-column uk-flex-middle uk-width-medium uk-padding-small">
+            <div key={index.toString()} className="uk-flex uk-flex-column uk-flex-middle uk-width-1-4@m uk-padding-small uk-padding-remove-horizontal">
               <div className="uk-height-small uk-flex uk-flex-bottom uk-flex-center">
                 <img src={img} width="100" height="150" alt=""/>
               </div>

@@ -31,16 +31,16 @@ const StepsToJoin = () => {
       <div className="uk-width-expand uk-flex uk-flex-wrap uk-flex-left uk-flex-center uk-flex-around">
         {content.map(({description}, index) => {
           return (
-            <div className="uk-flex uk-flex-top uk-flex-left uk-width-medium uk-padding-small">
+            <div key={index.toString()} className="uk-flex uk-flex-top uk-flex-left uk-width-medium uk-padding-small">
               <div className="uk-text-primary uk-text-large uk-text-bold">{index + 1}</div>
-              <div className="uk-padding-small uk-margin-small-top uk-flex uk-flex-top">
+              <div className="uk-flex uk-padding-small uk-margin-small-top uk-flex uk-flex-top">
                 {description}
               </div>
             </div>
           );
         })}
         <div className="uk-flex uk-flex-top uk-flex-left uk-width-medium uk-padding-small">
-          <Link href={EXTERNAL_LINKS.AIRTABLE_CANDIDATE}>
+          <Link href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}>
             <a
               className="uk-button uk-button-primary uk-width-small uk-margin-medium-top"
               target="_blank"
@@ -56,7 +56,10 @@ const StepsToJoin = () => {
             >Je candidate&nbsp;&gt;</a>
           </Link>
         </div>
-        <h3 className="uk-width">Si vous avez des questions, écrivez-nous à <a href="mailto:contact-linkedout@entourage.social">contact-linkedout@entourage.social</a></h3>
+        <h3 className="uk-text-center">
+          Si vous avez des questions, écrivez-nous à{' '}
+          <br />
+          <a target='_blank' href="mailto:contact-linkedout@entourage.social">contact-linkedout@entourage.social</a></h3>
       </div>
     </Section>
   );

@@ -11,7 +11,7 @@ import SubHeader from "../components/sections/SubHeader";
 
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - LinkedOut">
-    <ImageTitle id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider&nbsp;?</span></>} text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"} />
+    <ImageTitle img='static/img/header_pic.jpg' id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider&nbsp;?</span></>} text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"} />
     <SubHeader id="profile" data={[
       {
         href: "#private",
@@ -63,7 +63,7 @@ const JeVeuxAider = () => (
       id="actor"
       button={{
         label: "Je vous l'oriente",
-        href: EXTERNAL_LINKS.AIRTABLE_CANDIDATE,
+        href: process.env.AIRTABLE_LINK_JOIN_LINKEDOUT,
         external: true
       }}
       style="muted"/>
@@ -83,8 +83,8 @@ const JeVeuxAider = () => (
     <HowItWorks />
     <Section style='muted'>
       <GridNoSSR gap="large" column>
-        <ContactPartial padding="none" submitLabel="Ok" title={
-          <h3 className='uk-align-center uk-width-1-2@m'>Je m&apos;inscris à la newsletter pour avoir des nouvelles des candidats et être informé de l&apos;évolution du projet.</h3>
+        <ContactPartial padding="none" submitLabel="OK" title={
+          <h3 className='uk-align-center uk-text-bold uk-width-1-2@m'>Je m&apos;inscris à la newsletter pour avoir des nouvelles des candidats et être informé de l&apos;évolution du projet.</h3>
         }/>
         <SharePartial/>
       </GridNoSSR>
