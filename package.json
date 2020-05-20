@@ -19,7 +19,7 @@
     "start": "NODE_ENV=production node -r dotenv/config ./backend/serveur-next.js",
     "uikit-install": "cd ./assets/ && git clone git://github.com/uikit/uikit.git && cd uikit && git checkout master && npm i",
     "uikit-update": "cd ./assets/uikit/ && git pull && npm i",
-    "uikit-compile": "cp -r ./assets/custom/ ./assets/uikit/custom/ && cd ./assets/uikit/ && npm run compile && cd ../../ && cp -r ./assets/uikit/dist/ ./static/dist",
+    "uikit-compile": "cp -r ./assets/custom/ ./assets/uikit/custom/ && cd ./assets/uikit/ && npm run-script compile && cd ../../ && cp -r ./assets/uikit/dist/ ./static/ && rm -rf ./assets/uikit/dist/ && rm -rf ./assets/uikit/custom/",
     "uikit-install-windows": "cd .\\assets\\ && git clone git://github.com/uikit/uikit.git && cd uikit && git checkout master && npm i",
     "uikit-update-windows": "cd .\\assets\\uikit\\ && git pull && npm i",
     "uikit-compile-windows": "xcopy /Y /S /I .\\assets\\custom .\\assets\\uikit\\custom && cd .\\assets\\uikit && npm run-script compile && cd ..\\.. && xcopy /Y /S .\\assets\\uikit\\dist .\\static\\dist"
