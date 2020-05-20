@@ -1,4 +1,4 @@
-/*! UIkit 3.3.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
+/*! UIkit 3.4.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -86,7 +86,7 @@
 
                 uikitUtil.addClass(this.target, targetClass);
                 children.forEach(function (el, i) { return propsFrom[i] && uikitUtil.css(el, propsFrom[i]); });
-                uikitUtil.css(this.target, 'height', oldHeight);
+                uikitUtil.css(this.target, {height: oldHeight, display: 'block'});
                 uikitUtil.scrollTop(window, oldScrollY);
 
                 return uikitUtil.Promise.all(
@@ -130,7 +130,7 @@
             width: ''
         });
         uikitUtil.removeClass(el, targetClass);
-        uikitUtil.css(el, 'height', '');
+        uikitUtil.css(el, {height: '', display: ''});
     }
 
     function getPositionWithMargin(el) {

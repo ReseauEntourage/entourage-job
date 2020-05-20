@@ -1,4 +1,4 @@
-/*! UIkit 3.3.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
+/*! UIkit 3.4.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -86,7 +86,7 @@
 
                 uikitUtil.addClass(this.target, targetClass);
                 children.forEach(function (el, i) { return propsFrom[i] && uikitUtil.css(el, propsFrom[i]); });
-                uikitUtil.css(this.target, 'height', oldHeight);
+                uikitUtil.css(this.target, {height: oldHeight, display: 'block'});
                 uikitUtil.scrollTop(window, oldScrollY);
 
                 return uikitUtil.Promise.all(
@@ -130,7 +130,7 @@
             width: ''
         });
         uikitUtil.removeClass(el, targetClass);
-        uikitUtil.css(el, 'height', '');
+        uikitUtil.css(el, {height: '', display: ''});
     }
 
     function getPositionWithMargin(el) {
@@ -219,14 +219,22 @@
 
         computed: {
 
+            target: function() {
+                return (this.$el.tBodies || [this.$el])[0];
+            },
+
+            items: function() {
+                return uikitUtil.children(this.target);
+            },
+
             isEmpty: {
 
                 get: function() {
-                    return uikitUtil.isEmpty(this.$el.children);
+                    return uikitUtil.isEmpty(this.items);
                 },
 
                 watch: function(empty) {
-                    uikitUtil.toggleClass(this.$el, this.clsEmpty, empty);
+                    uikitUtil.toggleClass(this.target, this.clsEmpty, empty);
                 },
 
                 immediate: true
@@ -238,7 +246,7 @@
                 get: function(ref, el) {
                     var handle = ref.handle;
 
-                    return handle ? uikitUtil.$$(handle, el) : uikitUtil.children(el);
+                    return handle ? uikitUtil.$$(handle, el) : this.items;
                 },
 
                 watch: function(handles, prev) {
@@ -288,7 +296,7 @@
                     return;
                 }
 
-                target = sortable.$el === target.parentNode && target || uikitUtil.children(sortable.$el).filter(function (element) { return uikitUtil.within(target, element); })[0];
+                target = sortable.target === target.parentNode && target || sortable.items.filter(function (element) { return uikitUtil.within(target, element); })[0];
 
                 if (move) {
                     previous.remove(this.placeholder);
@@ -315,7 +323,7 @@
                 var target = e.target;
                 var button = e.button;
                 var defaultPrevented = e.defaultPrevented;
-                var ref = uikitUtil.children(this.$el).filter(function (el) { return uikitUtil.within(target, el); });
+                var ref = this.items.filter(function (el) { return uikitUtil.within(target, el); });
                 var placeholder = ref[0];
 
                 if (!placeholder
@@ -353,7 +361,7 @@
 
                 uikitUtil.addClass(this.drag, this.clsDrag, this.clsCustom);
                 uikitUtil.addClass(this.placeholder, this.clsPlaceholder);
-                uikitUtil.addClass(this.$el.children, this.clsItem);
+                uikitUtil.addClass(this.items, this.clsItem);
                 uikitUtil.addClass(document.documentElement, this.clsDragState);
 
                 uikitUtil.trigger(this.$el, 'start', [this, this.placeholder]);
@@ -406,7 +414,7 @@
                 this.drag = null;
 
                 var classes = this.touched.map(function (sortable) { return ((sortable.clsPlaceholder) + " " + (sortable.clsItem)); }).join(' ');
-                this.touched.forEach(function (sortable) { return uikitUtil.removeClass(sortable.$el.children, classes); });
+                this.touched.forEach(function (sortable) { return uikitUtil.removeClass(sortable.items, classes); });
 
                 uikitUtil.removeClass(document.documentElement, this.clsDragState);
 
@@ -416,20 +424,20 @@
                 var this$1 = this;
 
 
-                uikitUtil.addClass(this.$el.children, this.clsItem);
+                uikitUtil.addClass(this.items, this.clsItem);
 
                 var insert = function () {
 
                     if (target) {
 
-                        if (!uikitUtil.within(element, this$1.$el) || isPredecessor(element, target)) {
+                        if (!uikitUtil.within(element, this$1.target) || isPredecessor(element, target)) {
                             uikitUtil.before(target, element);
                         } else {
                             uikitUtil.after(target, element);
                         }
 
                     } else {
-                        uikitUtil.append(this$1.$el, element);
+                        uikitUtil.append(this$1.target, element);
                     }
 
                 };
@@ -444,7 +452,7 @@
 
             remove: function(element) {
 
-                if (!uikitUtil.within(element, this.$el)) {
+                if (!uikitUtil.within(element, this.target)) {
                     return;
                 }
 
@@ -515,7 +523,7 @@
     }
 
     function appendDrag(container, element) {
-        var clone = uikitUtil.append(container, element.outerHTML.replace(/(^<)li|li(\/>$)/g, '$1div$2'));
+        var clone = uikitUtil.append(container, element.outerHTML.replace(/(^<)(?:li|tr)|(?:li|tr)(\/>$)/g, '$1div$2'));
 
         uikitUtil.attr(clone, 'style', ((uikitUtil.attr(clone, 'style')) + ";margin:0!important"));
 

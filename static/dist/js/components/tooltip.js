@@ -1,4 +1,4 @@
-/*! UIkit 3.3.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
+/*! UIkit 3.4.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -35,8 +35,7 @@
             animation: 'list',
             duration: Number,
             origin: String,
-            transition: String,
-            queued: Boolean
+            transition: String
         },
 
         data: {
@@ -45,7 +44,6 @@
             duration: 200,
             origin: false,
             transition: 'linear',
-            queued: false,
 
             initProps: {
                 overflow: '',
@@ -88,43 +86,9 @@
             toggleElement: function(targets, show, animate) {
                 var this$1 = this;
 
-                return new uikitUtil.Promise(function (resolve) {
-
-                    targets = uikitUtil.toNodes(targets);
-
-                    var all = function (targets) { return uikitUtil.Promise.all(targets.map(function (el) { return this$1._toggleElement(el, show, animate); })); };
-
-                    var p;
-
-                    if (!this$1.queued || !uikitUtil.isUndefined(show) || !this$1.hasAnimation || targets.length < 2) {
-
-                        p = all(targets);
-
-                    } else {
-
-                        var toggled = targets.filter(function (el) { return this$1.isToggled(el); });
-                        var untoggled = targets.filter(function (el) { return !uikitUtil.includes(toggled, el); });
-                        var body = document.body;
-                        var scroll = body.scrollTop;
-                        var el = toggled[0];
-                        var inProgress = uikitUtil.Animation.inProgress(el) && uikitUtil.hasClass(el, 'uk-animation-leave')
-                                || uikitUtil.Transition.inProgress(el) && el.style.height === '0px';
-
-                        p = all(toggled);
-
-                        if (!inProgress) {
-                            p = p.then(function () {
-                                var p = all(untoggled);
-                                body.scrollTop = scroll;
-                                return p;
-                            });
-                        }
-
-                    }
-
-                    p.then(resolve, uikitUtil.noop);
-
-                });
+                return uikitUtil.Promise.all(uikitUtil.toNodes(targets).map(function (el) { return new uikitUtil.Promise(function (resolve) { return this$1._toggleElement(el, show, animate).then(resolve, uikitUtil.noop); }
+                    ); }
+                ));
             },
 
             isToggled: function(el) {
@@ -409,7 +373,6 @@
                     actives.splice(actives.indexOf(this$1), 1);
 
                     clearTimeout(this$1.showTimer);
-                    clearInterval(this$1.hideTimer);
 
                     this$1.tooltip = uikitUtil.remove(this$1.tooltip);
                     this$1._unbind();
@@ -442,8 +405,6 @@
                 });
 
                 this.toggleElement(this.tooltip, true);
-
-                this.hideTimer = setInterval(function () { return !uikitUtil.isVisible(this$1.$el) && this$1.hide(); }, 150);
 
             },
 

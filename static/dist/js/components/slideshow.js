@@ -1,4 +1,4 @@
-/*! UIkit 3.3.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
+/*! UIkit 3.4.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -177,7 +177,7 @@
 
                 name: 'visibilitychange',
 
-                el: document,
+                el: uikitUtil.inBrowser && document,
 
                 filter: function() {
                     return this.autoplay;
@@ -286,6 +286,9 @@
                 name: 'touchmove',
                 passive: false,
                 handler: 'move',
+                filter: function() {
+                    return uikitUtil.pointerMove === 'touchmove';
+                },
                 delegate: function() {
                     return this.selSlides;
                 }
@@ -335,7 +338,8 @@
                     this$1.unbindMove = null;
                 };
                 uikitUtil.on(window, 'scroll', this.unbindMove);
-                uikitUtil.on(document, uikitUtil.pointerUp, this.end, true);
+                uikitUtil.on(window.visualViewport, 'resize', this.unbindMove);
+                uikitUtil.on(document, (uikitUtil.pointerUp + " " + uikitUtil.pointerCancel), this.end, true);
 
                 uikitUtil.css(this.list, 'userSelect', 'none');
 
@@ -425,6 +429,7 @@
             end: function() {
 
                 uikitUtil.off(window, 'scroll', this.unbindMove);
+                uikitUtil.off(window.visualViewport, 'resize', this.unbindMove);
                 this.unbindMove && this.unbindMove();
                 uikitUtil.off(document, uikitUtil.pointerUp, this.end, true);
 
@@ -695,8 +700,9 @@
                 this.prevIndex = prevIndex;
                 this.index = nextIndex;
 
-                prev && uikitUtil.trigger(prev, 'beforeitemhide', [this]);
-                if (!uikitUtil.trigger(next, 'beforeitemshow', [this, prev])) {
+                if (prev && !uikitUtil.trigger(prev, 'beforeitemhide', [this])
+                    || !uikitUtil.trigger(next, 'beforeitemshow', [this, prev])
+                ) {
                     this.index = this.prevIndex;
                     reset();
                     return;
@@ -834,7 +840,7 @@
                 var animation = ref.animation;
                 var Animations = ref.Animations;
 
-                return uikitUtil.assign(animation in Animations ? Animations[animation] : Animations.slide, {name: animation});
+                return uikitUtil.assign(Animations[animation] || Animations.slide, {name: animation});
             },
 
             transitionOptions: function() {
