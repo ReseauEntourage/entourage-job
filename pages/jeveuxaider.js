@@ -1,24 +1,30 @@
 import React from 'react';
 import {GridNoSSR, Section} from '../components/utils';
-import {ContactPartial, DiscoverPartial, SharePartial} from '../components/partials';
+import {ContactPartial, SharePartial} from '../components/partials';
 import Layout from '../components/Layout';
-import ProfilAidant from '../components/sections/ProfilAidant';
 import HowTo from '../components/sections/HowTo';
-import StepCard from '../components/cards/StepCard';
 import SimpleCTA from "../components/sections/SimpleCTA";
 import MultipleCTA from "../components/sections/MultipleCTA";
 import ImageTitle from "../components/sections/ImageTitle";
+import SubHeader from "../components/sections/SubHeader";
 
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - LinkedOut">
-    <ImageTitle id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider ?</span></>} text="Il n'y a pas de petit coup de pouce, aidez à votre échelle !" />
-    <Section id="profile" style="muted">
-      <div className="uk-flex uk-flex-wrap uk-flex-around">
-        <a href="#private"><h3 className="uk-text-primary">Je suis un particulier</h3></a>
-        <a href="#actor"><h3 className="uk-text-primary">Je suis un acteur social</h3></a>
-        <a href="#give"><h3 className="uk-text-primary">Je deviens mécène</h3></a>
-      </div>
-    </Section>
+    <ImageTitle id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider&nbsp;?</span></>} text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"} />
+    <SubHeader id="profile" data={[
+      {
+        href: "#private",
+        label: "Je suis un particulier"
+      },
+      {
+        href: "#actor",
+        label: "Je suis un acteur social"
+      },
+      {
+        href: "#give",
+        label: "Je deviens mécène"
+      },
+    ]} style="muted"/>
     <MultipleCTA
       id="private"
       title={
@@ -29,7 +35,7 @@ const JeVeuxAider = () => (
       data={[
         {
           title: "Donnez de la visibilité au candidat",
-          text: "Donnez de la visibilité au candidat en lui faisant bénéficier de votre réseau via le partage de son CV (facebook, LinkedIn, twitter). Vous augmentez ainsi ses chances de recevoir des opportunités d’emploi.\nVotre partage peut tout changer !",
+          text: "Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut. Votre partage permet de donner une visibilité inédite aux candidats auprès de recruteurs et de générer des opportunités d’emploi.\nUn partage peut tout changer\xa0!",
           button: {
             label: "Je partage un CV",
             href: "/lescandidats"
@@ -37,10 +43,10 @@ const JeVeuxAider = () => (
         },
         {
           title: "Engagez-vous avec un candidat LinkedOut",
-          text: "Donnez de votre temps et tissez une relation de confiance avec le candidat pour le soutenir jusqu’à son intégration durable dans l’entreprise.\nEntourage vous forme à la mission de bénévole-coach !",
+          text: "Vous souhaitez donner de votre temps pour tisser une relation de confiance avec un candidat et le coacher vers le retour à l’emploi\xa0?\nEntourage vous forme à la mission de bénévole-coach et vous donne les outils\xa0!",
           button: {
-            label: "Je deviens bénévole coach",
-            href: "https://airtable.com/shrZg9tgkviDwPVoW", // TODO MAKE CONSTANT
+            label: "Je deviens bénévole-coach",
+            href: process.env.AIRTABLE_LINK_BECOME_COACH,
             external: true
           }
         }
