@@ -24,7 +24,7 @@ const MultipleCTA = ({showNumbers, showDividers, data}) => {
               {showDividers && <hr className="uk-divider-small uk-margin-remove-vertical" />}
               {
                 item.text &&
-                <div className={`${showDividers ? '' : 'uk-text-center'} uk-flex-1 uk-margin-medium-top uk-margin-medium-bottom`}>
+                <div className={`${item.button ? '' : 'uk-margin-remove-bottom'} uk-flex-1 uk-margin-medium-top uk-margin-medium-bottom`}>
                   {item.text}
                 </div>
               }

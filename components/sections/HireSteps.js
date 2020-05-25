@@ -30,6 +30,25 @@ const HireSteps = () => {
         {' '}un candidat LinkedOut&nbsp;?
       </h2>
       <MultipleCTA data={content} showNumbers showDividers />
+      <MultipleCTA
+        data={[
+          {
+            title: "Je cherche un candidat",
+            button: {
+              label: "Je découvre le candidat dont j’ai besoin",
+              href: "/lescandidats"
+            }
+          },
+          {
+            title: "Vous avez régulièrement des besoins de recrutement\xa0? Vous avez plusieurs offres d’emploi à pourvoir\xa0?",
+            button: {
+              label: "J’envoie mon offre à LinkedOut",
+              href: process.env.AIRTABLE_LINK_BECOME_COACH,
+              modal: "#modal-offer-add"
+            }
+          }
+        ]}
+      />
     </Section>
   );
 };

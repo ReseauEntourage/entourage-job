@@ -123,12 +123,14 @@ const JeVeuxRecruter = () => {
         id="actor"
         style="muted">
         <div className="uk-background-default uk-width-expand uk-padding-large">
-          <h3 className="uk-text-bold uk-text-primary uk-width-large">Les candidats peuvent rejoindre LinkedOut de différentes manières&nbsp;:</h3>
-          <div className="uk-flex uk-flex-wrap uk-flex-wrap-around">
-            {waysToJoin.map(({description}, index) => <div key={index.toString()} className="uk-flex-1">{description}</div>)}
+          <div className="uk-overflow-hidden">
+            <h3 className="uk-text-bold uk-text-primary uk-width-large">Les candidats peuvent rejoindre LinkedOut de différentes manières&nbsp;:</h3>
+            <div className="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small uk-grid-divider">
+              {waysToJoin.map(({description}, index) => <div key={index.toString()} className="">{description}</div>)}
+            </div>
           </div>
         </div>
-        <h3 className="uk-text-center">
+        <h3 className="uk-text-center uk-margin-medium-bottom">
           LinkedOut accompagne les candidats dans l’apprentissage des codes de l’entreprise par le soutien individualisé des bénévoles-coach, des immersions possibles en entreprises et grâce au réseau d’anciens candidats LinkedOut qui transmettent leur expérience.
         </h3>
         <MultipleCTA
@@ -143,11 +145,10 @@ const JeVeuxRecruter = () => {
             {
               title: "Mon offre d’emploi concerne plusieurs profils",
               button: {
-                label: "J’envois mon offre à LinkedOut",
+                label: "J’envoie mon offre à LinkedOut",
                 href: process.env.AIRTABLE_LINK_BECOME_COACH,
-                external: true
+                modal: "#modal-offer-add"
               }
-              /* onClick={() => UIkit.modal('#modal-offer-add').show() */
             }
           ]}
         />
@@ -157,10 +158,16 @@ const JeVeuxRecruter = () => {
           <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom">
             Ce que LinkedOut <span className="uk-text-primary">vous apporte</span>
           </h2>
-          <div className="uk-grid uk-flex-wrap uk-flex-wrap-around">
-            <div className="uk-width-1-3@m uk-padding-large uk-background-primary">{whatItBrings[0].description}</div>
-            <div className="uk-width-1-3@m uk-padding-large uk-background-secondary uk-text-white">{whatItBrings[0].description}</div>
-            <div className="uk-width-1-3@m uk-padding-large uk-background-muted">{whatItBrings[0].description}</div>
+          <div className="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-grid uk-grid-match uk-grid-small">
+            <div>
+              <div className="uk-card uk-card-body uk-background-primary" style={{color: 'white'}}>{whatItBrings[0].description}</div>
+            </div>
+            <div>
+              <div className="uk-card uk-card-body uk-background-secondary" style={{color: 'white'}}>{whatItBrings[1].description}</div>
+            </div>
+            <div>
+              <div className="uk-card uk-card-body uk-background-muted">{whatItBrings[2].description}</div>
+            </div>
           </div>
         </div>
       </Section>
@@ -191,7 +198,7 @@ const JeVeuxRecruter = () => {
             containerClasses="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small" />
         </div>
       </Section>
-      <DiscoverPartial />
+      <DiscoverPartial style='muted'/>
       <StepperModal
         id="modal-offer-add"
         title="Proposer une opportunité"
