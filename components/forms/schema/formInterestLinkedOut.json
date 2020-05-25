@@ -1,21 +1,21 @@
 {
-  "id": "form-specialskills",
+  "id": "form-interest",
   "fields": [
-    {
-      "id": "firstName",
-      "name": "firstName",
-      "type": "text",
-      "component": "input",
-      "placeholder": "Tapez votre texte",
-      "title": "Nom et prénom*"
-    },
     {
       "id": "lastName",
       "name": "lastName",
       "type": "text",
       "component": "input",
       "placeholder": "Tapez votre texte",
-      "title": "Nom et prénom*"
+      "title": "Nom*"
+    },
+    {
+      "id": "firstName",
+      "name": "firstName",
+      "type": "text",
+      "component": "input",
+      "placeholder": "Tapez votre texte",
+      "title": "Prénom*"
     },
     {
       "id": "email",
@@ -30,16 +30,16 @@
       "name": "phone",
       "type": "text",
       "component": "input",
-      "placeholder": "Tapez votre texte",
+      "placeholder": "Tapez votre numéro de téléphone",
       "title": "Téléphone"
     },
     {
-      "id": "company",
-      "name": "company",
+      "id": "structure",
+      "name": "structure",
       "type": "text",
       "component": "input",
       "placeholder": "Tapez votre texte",
-      "title": "Structure*"
+      "title": "Structure"
     },
     {
       "id": "message",
@@ -47,7 +47,7 @@
       "component": "textarea",
       "type": "text",
       "placeholder": "Tapez votre texte",
-      "title": "Écrivez vos motivations*",
+      "title": "Votre message*",
       "rows": 7
     },
     {
@@ -58,7 +58,7 @@
   ],
   "rules": [
     {
-      "field": "name",
+      "field": "lastName",
       "method": "isEmpty",
       "args": [
         {
@@ -69,7 +69,7 @@
       "message": "Obligatoire"
     },
     {
-      "field": "name",
+      "field": "lastName",
       "method": "isLength",
       "args": [
         {
@@ -80,7 +80,7 @@
       "message": "80 caractères maximum"
     },
     {
-      "field": "structure",
+      "field": "firstName",
       "method": "isEmpty",
       "args": [
         {
@@ -89,6 +89,17 @@
       ],
       "validWhen": false,
       "message": "Obligatoire"
+    },
+    {
+      "field": "firstName",
+      "method": "isLength",
+      "args": [
+        {
+          "max": 80
+        }
+      ],
+      "validWhen": true,
+      "message": "80 caractères maximum"
     },
     {
       "field": "structure",
@@ -117,17 +128,6 @@
       "method": "isEmail",
       "validWhen": true,
       "message": "Adresse e-mail invalide"
-    },
-    {
-      "field": "phone",
-      "method": "isLength",
-      "args": [
-        {
-          "max": 30
-        }
-      ],
-      "validWhen": true,
-      "message": "30 caractères maximum"
     },
     {
       "field": "message",

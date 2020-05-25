@@ -17,14 +17,14 @@ const MultipleCTA = ({showNumbers, showDividers, data}) => {
               }
               {
                 item.title &&
-                <h3 className={`${showDividers ? '' : 'uk-text-center'} uk-flex-bottom uk-text-bold uk-flex`} style={{minHeight: 52}}>
+                <h3 className={`${showDividers ? '' : 'uk-text-center'} ${item.text ? '' : 'uk-flex-1'} uk-flex-middle uk-text-bold uk-flex`} style={{minHeight: 52}}>
                   {showNumbers && <div className="uk-text-bold uk-text-primary uk-text-large uk-margin-small-right uk-position-absolute" style={{fontSize: 46, marginLeft: -40, lineHeight: 1}}>{index+1}</div>}{item.title}
                 </h3>
               }
               {showDividers && <hr className="uk-divider-small uk-margin-remove-vertical" />}
               {
                 item.text &&
-                <div className="uk-flex-1 uk-margin-medium-top uk-margin-medium-bottom">
+                <div className={`${showDividers ? '' : 'uk-text-center'} uk-flex-1 uk-margin-medium-top uk-margin-medium-bottom`}>
                   {item.text}
                 </div>
               }

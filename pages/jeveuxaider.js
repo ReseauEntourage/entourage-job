@@ -8,6 +8,8 @@ import SimpleCTA from "../components/partials/SimpleCTA";
 import MultipleCTA from "../components/partials/MultipleCTA";
 import ImageTitle from "../components/sections/ImageTitle";
 import SubHeader from "../components/sections/SubHeader";
+import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
+
 
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - LinkedOut">
@@ -29,7 +31,7 @@ const JeVeuxAider = () => (
     <Section container="small" style="default">
       {/* Fix so that the anchor scroll to the right height */}
       <div id="private" style={{marginTop: -140, paddingTop: 140}} />
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-vertical">
         Je suis un{' '}
         <span className="uk-text-primary">particulier</span>
       </h2>
@@ -56,20 +58,34 @@ const JeVeuxAider = () => (
         showDividers
       />
     </Section>
-    <SimpleCTA
-      title={
-        <>
-          Je suis un <span className="uk-text-primary">acteur de l&apos;insertion</span> sociale et professionnelle
-        </>
-      }
-      text="Vous accompagnez une personne en démarche de réinsertion professionnelle, motivée pour travailler ?"
-      id="actor"
-      button={{
-        label: "Je vous l'oriente",
-        href: process.env.AIRTABLE_LINK_JOIN_LINKEDOUT,
-        external: true
-      }}
-      style="muted"/>
+    <Section container="small" style="muted">
+      {/* Fix so that the anchor scroll to the right height */}
+      <div id="actor" style={{marginTop: -140, paddingTop: 140}} />
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom">
+        Je suis un{' '}<span className="uk-text-primary">acteur de l&apos;insertion</span>
+        {' '}sociale et professionnelle
+      </h2>
+      <MultipleCTA
+        data={[
+          {
+            title: "Vous accompagnez un personne en démarche de réinsertion professionnelle",
+            button: {
+              label: "Je vous l'oriente",
+              href: process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION,
+              external: true
+            }
+          },
+          {
+            title: "Vous êtes intéressés par le projet LinkedOut et vous souhaiteriez coopérer avec nous",
+            button: {
+              label: "Écrivez-nous",
+              href: "#",
+              external: true,
+              modal: "#modal-interest-linkedOut"
+            }
+          }
+        ]}/>
+    </Section>
     <SimpleCTA
       title={
         <>
@@ -84,14 +100,13 @@ const JeVeuxAider = () => (
         external: true
       }} />
     <HowItWorks />
-    <Section style='muted'>
+    <Section style='muted' className="uk-padding-remove-top">
       <GridNoSSR gap="large" column>
-        <ContactPartial padding="none" submitLabel="OK" title={
-          <h3 className='uk-align-center uk-text-bold uk-width-1-2@m'>Je m&apos;inscris à la newsletter pour avoir des nouvelles des candidats et être informé de l&apos;évolution du projet.</h3>
-        }/>
+        <ContactPartial padding="none" />
         <SharePartial/>
       </GridNoSSR>
     </Section>
+    <ModalInterestLinkedOut />
   </Layout>
 );
 
