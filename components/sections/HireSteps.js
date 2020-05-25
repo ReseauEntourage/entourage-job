@@ -23,7 +23,7 @@ const HireSteps = () => {
 
 
   return (
-    <Section id="how" style="muted" container="small">
+    <Section id="hireSteps" style="muted" container="small">
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom">
         Concrètement,{' '}
         <span className="uk-text-primary">comment recruter</span>

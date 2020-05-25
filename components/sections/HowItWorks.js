@@ -24,7 +24,7 @@ const HowItWorks = () => {
 
 
   return (
-    <Section id="how" style="muted">
+    <Section id="howItWorks" style="muted">
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
         Comment fonctionne{' '}
         <span className="uk-text-primary">LinkedOut&nbsp;?</span>

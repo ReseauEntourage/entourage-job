@@ -152,7 +152,6 @@ const JeVeuxRecruter = () => {
           ]}
         />
       </SimpleCTA>
-{/*
       <Section container="small" style="default">
         <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
           <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom">
@@ -165,8 +164,8 @@ const JeVeuxRecruter = () => {
           </div>
         </div>
       </Section>
-*/}
-      <Section id="recruter2">
+      <HireSteps />
+      <Section id="testimony">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom">
           <span className="uk-text-primary">LinkedOut plebiscité</span>{' '}
           par les recruteurs...
@@ -192,7 +191,7 @@ const JeVeuxRecruter = () => {
             containerClasses="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small" />
         </div>
       </Section>
-      <HireSteps />
+      <DiscoverPartial />
       <StepperModal
         id="modal-offer-add"
         title="Proposer une opportunité"
@@ -245,7 +244,6 @@ const JeVeuxRecruter = () => {
           ),
         ]}
       />
-      <DiscoverPartial />
     </Layout>
   );
 };

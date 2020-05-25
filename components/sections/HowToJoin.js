@@ -23,7 +23,7 @@ const HowToJoin = () => {
 
 
   return (
-    <Section id="how" container="small" style="default">
+    <Section id="howToJoin" container="small" style="default">
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-vertical">
         Comment rejoindre{' '}
         <span className="uk-text-primary">LinkedOut&nbsp;?</span>

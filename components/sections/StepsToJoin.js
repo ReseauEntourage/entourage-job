@@ -24,7 +24,7 @@ const StepsToJoin = () => {
 
 
   return (
-    <Section container="small" id="how" style="muted">
+    <Section container="small" id="stepToJoin" style="muted">
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
         Quelles sont <span className="uk-text-primary">les étapes</span> du parcours LinkedOut ?
       </h2>
@@ -39,7 +39,7 @@ const StepsToJoin = () => {
             </div>
           );
         })}
-        <div className="uk-flex uk-flex-top uk-flex-left uk-width-medium uk-padding-small">
+        <div className="uk-flex uk-flex-top uk-padding-small">
           <Link href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}>
             <a
               className="uk-button uk-button-primary uk-width-small uk-margin-medium-top"

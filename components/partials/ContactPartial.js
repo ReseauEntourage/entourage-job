@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from "prop-types";
 import { IconNoSSR, GridNoSSR } from '../utils';
 
-const ContactPartial = ({ title, submitLabel, padding }) => (
+const ContactPartial = ({ padding }) => (
   <div id="profiles" className={!padding ? 'uk-padding-remove-vertical' : ''}>
     <div className="uk-text-center">
-      {title}
+      <h3 className='uk-align-center uk-text-bold uk-width-1-2@m'>Je m&apos;inscris à la newsletter pour avoir des nouvelles des candidats et être informé de l&apos;évolution du projet</h3>
     </div>
     {/* input */}
     <div className="uk-flex uk-flex-center">
@@ -22,7 +22,7 @@ const ContactPartial = ({ title, submitLabel, padding }) => (
             className="uk-input"
             type="text"
             placeholder="Votre adresse mail..."
-            style={{ borderBottom: 0, borderRadius: '2px 0 0 2px' }}
+            style={{ borderBottom: 0, borderRadius: '2px 0 0 2px', paddingTop: 0}}
           />
         </div>
         <button
@@ -38,7 +38,7 @@ const ContactPartial = ({ title, submitLabel, padding }) => (
             borderRadius: '2px',
           }}
         >
-          {submitLabel}
+          Écrivez-moi&nbsp;!
         </button>
       </GridNoSSR>
     </div>
@@ -46,8 +46,6 @@ const ContactPartial = ({ title, submitLabel, padding }) => (
 );
 
 ContactPartial.propTypes = {
-  title: PropTypes.element.isRequired,
-  submitLabel: PropTypes.string.isRequired,
   padding: PropTypes.bool
 };
 
