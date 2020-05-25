@@ -21,7 +21,7 @@ describe.skip('Mail', () => {
   it('doit effectuer l\'envoi de mail "contactez nous"', () => {
     return Api.post(`${process.env.SERVER_URL}/api/v1/mail/contact-us`, {
       email: 'myemail@myemail.email',
-      text: 'mon text de blablabla test',
+      message: 'mon text de blablabla test',
     })
       .then((res) => {
         assert.isObject(res, 'pas de res');

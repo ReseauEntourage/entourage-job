@@ -1,14 +1,23 @@
-import React from 'react';
+/* global UIkit */
+import React, {useState} from 'react';
 import PropTypes from "prop-types";
+import validator from 'validator';
 import { IconNoSSR, GridNoSSR } from '../utils';
+import Axios from "../../Axios";
 
-const ContactPartial = ({ title, submitLabel, padding }) => (
-  <div id="profiles" className={!padding ? 'uk-padding-remove-vertical' : ''}>
+const ContactPartial = ({ padding }) => {
+  const [email, setEmail] = useState('');
+  const [isValid, setIsValid] = useState(true);
+
+  return (<div id="profiles" className={!padding ? 'uk-padding-remove-vertical' : ''}>
     <div className="uk-text-center">
-      {title}
+      <h3 className='uk-align-center uk-text-bold uk-width-1-2@m'>Je m&apos;inscris à la newsletter
+                                                                  pour avoir des nouvelles des
+                                                                  candidats et être informé de
+                                                                  l&apos;évolution du projet</h3>
     </div>
     {/* input */}
-    <div className="uk-flex uk-flex-center">
+    <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
       <GridNoSSR
         eachWidths={['expand', 'auto']}
         className="uk-width-1-2@s"
@@ -20,9 +29,10 @@ const ContactPartial = ({ title, submitLabel, padding }) => (
           </a>
           <input
             className="uk-input"
-            type="text"
+            type="email"
             placeholder="Votre adresse mail..."
-            style={{ borderBottom: 0, borderRadius: '2px 0 0 2px' }}
+            style={{borderBottom: 0, borderRadius: '2px 0 0 2px', paddingTop: 0}}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <button
@@ -37,17 +47,31 @@ const ContactPartial = ({ title, submitLabel, padding }) => (
             padding: '0px 20px',
             borderRadius: '2px',
           }}
+          onClick={() => {
+            if(validator.isEmail(email)) {
+              Axios.post('/api/v1/cv/share', { email })
+                .then(() => {
+                  UIkit.notification('Votre inscription à la newsletter a bien été prise en compte !', 'success')
+                })
+                .catch(() =>
+                  UIkit.notification('Une erreur est survenue', 'danger')
+                );
+              setIsValid(true);
+            }
+            else {
+              setIsValid(false);
+            }
+          }}
         >
-          {submitLabel}
+          Écrivez-moi&nbsp;!
         </button>
       </GridNoSSR>
+      {!isValid && <span className="uk-text-danger uk-padding-small">Adresse mail invalide</span>}
     </div>
   </div>
-);
+)};
 
 ContactPartial.propTypes = {
-  title: PropTypes.element.isRequired,
-  submitLabel: PropTypes.string.isRequired,
   padding: PropTypes.bool
 };
 

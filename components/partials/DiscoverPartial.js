@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { GridNoSSR, Section, IconNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import Api from '../../Axios';
 
-const DiscoverPartial = () => {
+const DiscoverPartial = ({style}) => {
   const [cvs, setCVs] = useState(undefined);
   const [error, setError] = useState(null);
 
@@ -41,7 +42,7 @@ const DiscoverPartial = () => {
     );
   };
   return (
-    <Section id="discover">
+    <Section id="discover" style={style}>
       <div className="uk-text-center">
         <h2 className="uk-text-bold">
           Découvrez les <span className="uk-text-primary">candidats</span>
@@ -56,4 +57,13 @@ const DiscoverPartial = () => {
     </Section>
   );
 };
+
+DiscoverPartial.propTypes = {
+  style: PropTypes.string
+};
+
+DiscoverPartial.defaultProps = {
+  style: 'default'
+};
+
 export default DiscoverPartial;

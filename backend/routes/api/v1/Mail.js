@@ -36,13 +36,13 @@ const mailController = require('../../../controllers/mail');
 
 router.post('/contact-us', (req, res) => {
   // todo verification de champs
-  const { email, text } = req.body;
-  if (email && email.length > 0 && (text && text.length > 0)) {
+  const { firstName, lastName, phone, email, structure, message } = req.body;
+  if (email && email.length > 0 && (message && message.length > 0)) {
     mailController
       .sendMail({
         toEmail: process.env.MAILJET_TO_EMAIL,
-        subject: `LinkedOut - Je souhaite être aidé ou réorienté `,
-        text: `Adresse mail : ${email}\nMessage : ${text}`,
+        subject: `LinkedOut - Demande de contact`,
+        text: `Prénom : ${firstName}\nNom : ${lastName}\nTéléphone : ${phone || ''}\nAdresse mail : ${email}\nStructure : ${structure || ''}\nMessage : ${message}`,
       })
       .then((value) => {
         console.log('mail: contact us sent');

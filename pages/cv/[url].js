@@ -22,12 +22,7 @@ const CVPage = ({ cv, router }) => {
             supprimée.
           </p>
         </Section>
-        <ContactPartial submitLabel="Écrivez-moi" title={
-          <h3 className="uk-text-bold">
-            Gardons contact,{' '}
-            <span className="uk-text-primary">le programme évolue</span> !
-          </h3>
-        }/>
+        <ContactPartial submitLabel="Écrivez-moi" />
         <DiscoverPartial />
       </Layout>
     );
