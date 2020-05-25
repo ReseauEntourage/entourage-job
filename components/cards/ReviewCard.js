@@ -4,7 +4,7 @@ import {IconNoSSR, GridNoSSR, ImgNoSSR} from '../utils';
 
 const ReviewCard = ({ author, role, review }) => (
   <div className="uk-card uk-card-default uk-card-body uk-background-muted uk-flex">
-    <GridNoSSR column between eachWidths={['expand', 'expand']}>
+    <GridNoSSR column between eachWidths={['expand', 'auto']}>
       <>
         <ImgNoSSR alt="" width="27" height="21" src="static/img/guillemets.png"  />
         <p className="uk-text-small uk-margin-small">{review}</p>
