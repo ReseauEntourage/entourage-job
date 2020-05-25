@@ -4,8 +4,8 @@ import {ContactPartial, SharePartial} from '../components/partials';
 import {EXTERNAL_LINKS} from '../constants';
 import Layout from '../components/Layout';
 import HowItWorks from '../components/sections/HowItWorks';
-import SimpleCTA from "../components/sections/SimpleCTA";
-import MultipleCTA from "../components/sections/MultipleCTA";
+import SimpleCTA from "../components/partials/SimpleCTA";
+import MultipleCTA from "../components/partials/MultipleCTA";
 import ImageTitle from "../components/sections/ImageTitle";
 import SubHeader from "../components/sections/SubHeader";
 
@@ -26,33 +26,36 @@ const JeVeuxAider = () => (
         label: "Je deviens mécène"
       },
     ]} style="muted"/>
-    <MultipleCTA
-      id="private"
-      title={
-        <>
-          Je suis un <span className="uk-text-primary">particulier</span>
-        </>
-      }
-      data={[
-        {
-          title: "Donnez de la visibilité au candidat",
-          text: "Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut. Votre partage permet de donner une visibilité inédite aux candidats auprès de recruteurs et de générer des opportunités d’emploi.\nUn partage peut tout changer\xa0!",
-          button: {
-            label: "Je partage un CV",
-            href: "/lescandidats"
+    <Section container="small" style="default">
+      {/* Fix so that the anchor scroll to the right height */}
+      <div id="private" style={{marginTop: -140, paddingTop: 140}} />
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
+        Je suis un{' '}
+        <span className="uk-text-primary">particulier</span>
+      </h2>
+      <MultipleCTA
+        data={[
+          {
+            title: "Donnez de la visibilité au candidat",
+            text: "Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut. Votre partage permet de donner une visibilité inédite aux candidats auprès de recruteurs et de générer des opportunités d’emploi.\nUn partage peut tout changer\xa0!",
+            button: {
+              label: "Je partage un CV",
+              href: "/lescandidats"
+            }
+          },
+          {
+            title: "Engagez-vous avec un candidat LinkedOut",
+            text: "Vous souhaitez donner de votre temps pour tisser une relation de confiance avec un candidat et le coacher vers le retour à l’emploi\xa0?\nEntourage vous forme à la mission de bénévole-coach et vous donne les outils\xa0!",
+            button: {
+              label: "Je deviens bénévole-coach",
+              href: process.env.AIRTABLE_LINK_BECOME_COACH,
+              external: true
+            }
           }
-        },
-        {
-          title: "Engagez-vous avec un candidat LinkedOut",
-          text: "Vous souhaitez donner de votre temps pour tisser une relation de confiance avec un candidat et le coacher vers le retour à l’emploi\xa0?\nEntourage vous forme à la mission de bénévole-coach et vous donne les outils\xa0!",
-          button: {
-            label: "Je deviens bénévole-coach",
-            href: process.env.AIRTABLE_LINK_BECOME_COACH,
-            external: true
-          }
-        }
-      ]}
-     />
+        ]}
+        showDividers
+      />
+    </Section>
     <SimpleCTA
       title={
         <>
