@@ -1,7 +1,7 @@
 import React from 'react';
 import { Section } from '../utils';
 
-const HowTo = () => {
+const HowItWorks = () => {
   const content = [
     {
       img: '/static/img/illustrations/how1.png',
@@ -35,7 +35,7 @@ const HowTo = () => {
               <div className="uk-height-small uk-flex uk-flex-bottom uk-flex-center">
                 <img src={img} width="100" height="150" alt=""/>
               </div>
-              <div className="uk-padding-small uk-flex uk-flex-top">
+              <div className="uk-padding-small uk-margin-medium-top uk-flex uk-flex-top">
                 {description}
               </div>
             </div>
@@ -46,11 +46,11 @@ const HowTo = () => {
   );
 };
 
-HowTo.propTypes = {
+HowItWorks.propTypes = {
 
 };
 
-HowTo.defaultProps = {
+HowItWorks.defaultProps = {
 };
 
-export default HowTo;
+export default HowItWorks;

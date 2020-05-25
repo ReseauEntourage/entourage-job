@@ -5,7 +5,7 @@ import { Section } from '../utils';
 
 const MultipleCTA = ({id, style, title, data}) => {
   return (
-    <Section style={style}>
+    <Section container="small" style={style}>
       {/* Fix so that the anchor scroll to the right height */}
       <div id={id} style={{marginTop: -140, paddingTop: 140}} />
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
