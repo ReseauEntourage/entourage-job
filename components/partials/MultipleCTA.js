@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from "next/link";
+import {Button} from "../utils";
 
 const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers, data}) => {
   return (
@@ -23,7 +24,7 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                 <div className="uk-flex uk-flex-column uk-flex-1">
                   {
                     item.title &&
-                    <h3 className={`${showHorizontalDividers ? '' : 'uk-text-center'} ${showVerticalDividers ? 'uk-padding-small' : ''} ${item.text ? '' : 'uk-flex-1'} uk-text-bold uk-flex-middle uk-flex`} style={{minHeight: 70}}>
+                    <h3 className={`${showHorizontalDividers ? '' : 'uk-text-center  uk-flex-center'} ${showVerticalDividers ? 'uk-padding-small' : ''} ${item.text ? '' : 'uk-flex-1'} uk-text-bold uk-flex-middle uk-flex`} style={{minHeight: 70}}>
                       {item.title}
                     </h3>
                   }
@@ -36,7 +37,15 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                   }
                   {
                     item.button &&
-                    <Link href={item.button.href}>
+                     <Button
+                       href={item.button.href}
+                       style='primary'
+                       isExternal={item.button.external}
+                       newTab={item.button.external}
+                       toggle={item.button.modal}>
+                        {item.button.label} &gt;
+                      </Button>
+                    /*<Link href={item.button.href}>
                       <a
                         className="uk-button uk-button-primary uk-padding-small uk-align-center"
                         target={item.button.external ? "_blank" : ""}
@@ -53,7 +62,7 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                       >
                         {item.button.label} &gt;
                       </a>
-                    </Link>
+                    </Link>*/
                   }
                 </div>
               </div>

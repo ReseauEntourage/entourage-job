@@ -299,9 +299,9 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
             <br />
             <a
               className="uk-link-text uk-text-primary"
-              href="mailto:contact-linkedout@entouratge.social"
+              href="mailto:contact-linkedout@entourage.social"
             >
-              contact-linkedout@entouratge.social
+              contact-linkedout@entourage.social
             </a>
           </p>
           <ImgNoSSR

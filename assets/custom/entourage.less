@@ -16,9 +16,7 @@
 @dotnav-item-onclick-background: fade(#FF5101, 20%);
 @dotnav-item-active-background: fade(#FF5101, 100%);
 @dotnav-item-border: fade(#FF5101, 100%);
-/*
-  @global-border: #FF5101;
-*/
+@grid-divider-border: #FF5101;
 
 @base-body-font-family: Roboto, sans-serif;
 @base-body-font-weight: normal;
@@ -33,24 +31,58 @@
 @global-muted-background: #F2F2F0;
 
 @overlay-primary-background: fade(@global-primary-background, 70%);
+
 //Link
 @global-link-color: #f55f24;
 @global-link-color-hover: #d53f00;
 
+
 //Button
 .hook-button() {
-  border-radius: 5px;
+  color: black;
+  background-color: white;
+  background-image: none;
+  text-transform: none;
+  border: solid 1px #e5e5e5;
+  padding: 0px 20px;
+  border-radius: 2px;
+}
+
+.hook-button-default() {
+  color: black;
+  background-color: white;
+  background-image: none;
+  text-transform: none;
+  border: solid 1px #e5e5e5;
+  padding: 0px 20px;
+  border-radius: 2px;
 }
 
 .hook-button-primary() {
-  background-color: #f55f24;
-  background-image: linear-gradient(#f58f00, #f55f24);
+  color: white;
+  background-color: #F55F24;
+  background-image: none;
+  text-transform: none;
+  border: none;
+  padding: 0px 20px;
+  border-radius: 2px;
+}
+
+.hook-button-disabled() {
+  color: #999;
+  background-color: #e5e5e5;
 }
 
 .hook-button-primary-hover() {
   background-image: none;
-  background-color: #f55f24;
+  background-color: darken(white, 5%);
 }
+
+.hook-button-primary-hover() {
+  background-image: none;
+  background-color: darken(#F55F24, 5%);
+}
+
 
 .ent-link-muted {
   color: white;

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import validator from 'validator';
 import { IconNoSSR, GridNoSSR } from '../utils';
 import Axios from "../../Axios";
+import Button from "../utils/Button";
 
 const ContactPartial = ({ padding }) => {
   const [email, setEmail] = useState('');
@@ -35,18 +36,8 @@ const ContactPartial = ({ padding }) => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <button
-          type="button"
-          className="uk-button uk-button-primary"
-          style={{
-            color: 'white',
-            backgroundColor: '#F55F24',
-            backgroundImage: 'none',
-            textTransform: 'none',
-            boder: null,
-            padding: '0px 20px',
-            borderRadius: '2px',
-          }}
+        <Button
+          style='primary'
           onClick={() => {
             if(validator.isEmail(email)) {
               Axios.post('/api/v1/cv/share', { email })
@@ -62,9 +53,9 @@ const ContactPartial = ({ padding }) => {
               setIsValid(false);
             }
           }}
-        >
+         >
           Écrivez-moi&nbsp;!
-        </button>
+        </Button>
       </GridNoSSR>
       {!isValid && <span className="uk-text-danger uk-padding-small">Adresse mail invalide</span>}
     </div>

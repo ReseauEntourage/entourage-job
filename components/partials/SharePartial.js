@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import { IconNoSSR, GridNoSSR } from '../utils';
+import {IconNoSSR, GridNoSSR, Button} from '../utils';
 
 const SharePartial = ({padding}) => (
   <div id="share" className={!padding ? 'uk-padding-remove-vertical' : ''}>
@@ -23,24 +23,13 @@ const SharePartial = ({padding}) => (
           href: 'https://www.linkedin.com/company/association-entourage/',
         },
       ].map(({ name, title, href }, key) => (
-        <a
+        <Button
           href={href}
-          key={key}
-          className="uk-button uk-button-primary"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: 'white',
-            backgroundColor: '#F55F24',
-            backgroundImage: 'none',
-            textTransform: 'none',
-            boder: null,
-            padding: '0px 20px',
-            borderRadius: '2px',
-          }}
-        >
+          style='primary'
+          isExternal
+          newTab>
           {title} <IconNoSSR name={name} />
-        </a>
+        </Button>
       ))}
     </GridNoSSR>
   </div>

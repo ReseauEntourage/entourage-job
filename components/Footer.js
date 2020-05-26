@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
 import AssociationEntourage from './partials/AssociationEntourage';
+import Button from "./utils/Button";
 
 const sharedTitle = 'Entourage Jobs';
 const sharedDescription =
@@ -138,23 +139,12 @@ const Footer = () => {
                   <IconNoSSR name="twitter" />
                 </TwitterShareButton>
               </GridNoSSR>
-              <Link href="/login">
-                <a
-                  type="button"
-                  className="uk-button uk-button-primary"
-                  style={{
-                    color: 'white',
-                    backgroundColor: '#F55F24',
-                    backgroundImage: 'none',
-                    textTransform: 'none',
-                    boder: null,
-                    padding: '0px 20px',
-                    borderRadius: '2px',
-                  }}
-                >
-                  Espace candidat &gt;
-                </a>
-              </Link>
+              <Button
+
+                href="/login"
+                style='primary'>
+                Espace candidat &gt;
+              </Button>
             </GridNoSSR>
           </GridNoSSR>
         </GridNoSSR>

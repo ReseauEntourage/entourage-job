@@ -1916,7 +1916,6 @@ select.uk-form-width-xsmall {
   font: inherit;
   color: inherit;
   /* 5 */
-  text-transform: none;
   /* 6 */
   -webkit-appearance: none;
   border-radius: 0;
@@ -1935,7 +1934,13 @@ select.uk-form-width-xsmall {
   text-transform: uppercase;
   transition: 0.1s ease-in-out;
   transition-property: color, background-color, border-color;
-  border-radius: 5px;
+  color: black;
+  background-color: white;
+  background-image: none;
+  text-transform: none;
+  border: solid 1px #e5e5e5;
+  padding: 0px 20px;
+  border-radius: 2px;
 }
 .uk-button:not(:disabled) {
   cursor: pointer;
@@ -1966,6 +1971,13 @@ select.uk-form-width-xsmall {
   background-color: transparent;
   color: #333;
   border: 1px solid #e5e5e5;
+  color: black;
+  background-color: white;
+  background-image: none;
+  text-transform: none;
+  border: solid 1px #e5e5e5;
+  padding: 0px 20px;
+  border-radius: 2px;
 }
 /* Hover + Focus */
 .uk-button-default:hover,
@@ -1985,18 +1997,24 @@ select.uk-form-width-xsmall {
  * Primary
  */
 .uk-button-primary {
+  background-color: #f55f24;
   color: #fff;
   border: 1px solid transparent;
-  background-color: #f55f24;
-  background-image: linear-gradient(#f58f00, #f55f24);
+  color: white;
+  background-color: #F55F24;
+  background-image: none;
+  text-transform: none;
+  border: none;
+  padding: 0px 20px;
+  border-radius: 2px;
 }
 /* Hover + Focus */
 .uk-button-primary:hover,
 .uk-button-primary:focus {
-  background-color: #f44d0c;
   color: #fff;
+  background-color: #f2f2f2;
   background-image: none;
-  background-color: #f55f24;
+  background-color: #f44d0c;
 }
 /* OnClick + Active */
 .uk-button-primary:active,
@@ -2055,6 +2073,8 @@ select.uk-form-width-xsmall {
   background-color: transparent;
   color: #999;
   border-color: #e5e5e5;
+  color: white;
+  background-color: #e5e5e5;
 }
 /* Size modifiers
  ========================================================================== */
@@ -2613,7 +2633,7 @@ select.uk-form-width-xsmall {
   position: absolute;
   top: 0;
   bottom: 0;
-  border-left: 1px solid #e5e5e5;
+  border-left: 1px solid #FF5101;
 }
 /* Vertical */
 .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before {
@@ -2621,7 +2641,7 @@ select.uk-form-width-xsmall {
   position: absolute;
   left: 0;
   right: 0;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #FF5101;
 }
 /*
  * Default
@@ -12449,28 +12469,6 @@ iframe.uk-cover {
     page-break-after: avoid;
   }
 }
-/*
-@global-border: #FF5101;
-*/
-/*@base-body-font-size: 17px;
-@base-body-line-height: 22px;*/
-/*@base-heading-font-size: 22px;
-@base-heading-line-height: 26px;*/
-/*@base-h1-font-weight: bold;
-@base-h1-font-size: 63px;
-@base-h1-line-height: 64px;
-
-@base-h2-font-weight: bold;
-@base-h2-font-size: 46px;
-@base-h2-line-height: 51px;
-
-@base-h3-font-weight: normal;
-@base-h3-font-size: 22px;
-@base-h3-line-height: 26px;
-
-@base-h4-font-weight: normal;
-@base-h4-font-size: 22px;
-@base-h4-line-height: 26px;*/
 .ent-link-muted {
   color: white;
 }

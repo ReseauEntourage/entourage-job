@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from "next/link";
-import { Section } from '../utils';
+import {Button, Section} from '../utils';
 
 const SimpleCTA = ({id, style, title, text, button, children}) => {
   return (
@@ -16,7 +16,16 @@ const SimpleCTA = ({id, style, title, text, button, children}) => {
           {text}
         </h3>
         {
-          button && <Link href={button.href}>
+          button &&
+          <Button
+            href={button.href}
+            style='primary'
+            isExternal={button.external}
+            newTab={button.external}
+            toggle={button.modal}>
+            {button.label} &gt;
+          </Button>
+          /*<Link href={button.href}>
             <a
               className="uk-button uk-button-primary"
               target="_blank"
@@ -32,7 +41,7 @@ const SimpleCTA = ({id, style, title, text, button, children}) => {
             >
               {button.label} &gt;
             </a>
-          </Link>
+          </Link>*/
         }
         {children}
       </div>
@@ -47,7 +56,8 @@ SimpleCTA.propTypes = {
   button: PropTypes.shape({
     label: PropTypes.string.isRequired,
     href: PropTypes.string.isRequired,
-    external: PropTypes.bool
+    external: PropTypes.bool,
+    modal: PropTypes.bool
   }),
   text: PropTypes.string.isRequired,
   children: PropTypes.element

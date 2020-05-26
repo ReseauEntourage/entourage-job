@@ -79,8 +79,7 @@ const JeVeuxAider = () => (
             title: "Vous êtes intéressés par le projet LinkedOut et vous souhaiteriez coopérer avec nous",
             button: {
               label: "Écrivez-nous",
-              href: "#",
-              modal: "#modal-interest-linkedOut"
+              modal: "target: #modal-interest-linkedOut"
             }
           }
         ]}
