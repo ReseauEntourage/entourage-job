@@ -44,7 +44,7 @@ const DiscoverPartial = ({style}) => {
   return (
     <Section id="discover" style={style}>
       <div className="uk-text-center">
-        <h2 className="uk-text-bold">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
           Découvrez les <span className="uk-text-primary">candidats</span>
         </h2>
         <a href="#">

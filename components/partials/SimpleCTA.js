@@ -9,7 +9,7 @@ const SimpleCTA = ({id, style, title, text, button, children}) => {
       {/* Fix so that the anchor scroll to the right height */}
       <div id={id} style={{marginTop: -140, paddingTop: 140}} />
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-vertical">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
           {title}
         </h2>
         <h3 className="uk-align-center uk-text-center">

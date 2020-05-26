@@ -113,26 +113,27 @@ const JeVeuxRecruter = () => {
         id="hire-title"
         title={<>Vous souhaitez <span className="uk-text-primary">recruter un candidat LinkedOut ?</span></>}
         text={"La précarité et l'exclusion n'empêchent pas le talent\xa0! Recruteurs, plus qui quiconque, faites la différence\xa0! Soyez des acteurs essentiels du projet LinkedOut en donnant la chance à un ou plusieurs candidats correspondant aux compétences que vous recherchez"} />
-      <SimpleCTA
-        title={
-          <>
-            D&apos;où viennent les candidats <span className="uk-text-primary">LinkedOut&nbsp;?</span>
-          </>
-        }
-        text={"LinkedOut s'adresse à des profils diversifiés ayant comme points communs la capacité et la motivation pour travailler\xa0: personnes ayant connus des parcours de rue, personnes accueillies dans des structures d'hébergement temporaires (hotels sociaux, centre d'hébergement d'urgence,...), personnes sortants de parcours d'insertion, jeunes en précarité, etc..."}
-        id="actor"
-        style="muted">
-        <div className="uk-background-default uk-width-expand uk-padding-large">
+      <Section
+        id="whereTheyCome"
+        style="muted"
+        container="small">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+          D&apos;où viennent les candidats <span className="uk-text-primary">LinkedOut&nbsp;?</span>
+        </h2>
+        <h4 className="uk-align-center uk-text-center">
+          LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la capacité et la motivation pour travailler&nbsp;: personnes ayant connus des parcours de rue, personnes accueillies dans des structures d&apos;hébergement temporaires (hotels sociaux, centre d&apos;hébergement d&apos;urgence,...), personnes sortants de parcours d&apos;insertion, jeunes en précarité, etc...
+        </h4>
+        <div className="uk-background-default uk-width-expand uk-padding-large uk-margin-large-bottom uk-margin-large-top">
           <div className="uk-overflow-hidden">
-            <h3 className="uk-text-bold uk-text-primary uk-width-large">Les candidats peuvent rejoindre LinkedOut de différentes manières&nbsp;:</h3>
+            <h4 className="uk-text-bold uk-text-primary uk-width-large uk-margin-medium-bottom">Les candidats peuvent rejoindre LinkedOut de différentes manières&nbsp;:</h4>
             <div className="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small uk-grid-divider">
               {waysToJoin.map(({description}, index) => <div key={index.toString()} className="">{description}</div>)}
             </div>
           </div>
         </div>
-        <h3 className="uk-text-center uk-margin-medium-bottom">
+        <h4 className="uk-text-center uk-margin-medium-bottom">
           LinkedOut accompagne les candidats dans l’apprentissage des codes de l’entreprise par le soutien individualisé des bénévoles-coach, des immersions possibles en entreprises et grâce au réseau d’anciens candidats LinkedOut qui transmettent leur expérience.
-        </h3>
+        </h4>
         <MultipleCTA
           data={[
             {
@@ -151,11 +152,12 @@ const JeVeuxRecruter = () => {
               }
             }
           ]}
+          showVerticalDividers
         />
-      </SimpleCTA>
+      </Section>
       <Section container="small" style="default">
         <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-          <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom">
+          <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
             Ce que LinkedOut <span className="uk-text-primary">vous apporte</span>
           </h2>
           <div className="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-grid uk-grid-match uk-grid-small">
@@ -173,13 +175,13 @@ const JeVeuxRecruter = () => {
       </Section>
       <HireSteps />
       <Section id="testimony">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
           <span className="uk-text-primary">LinkedOut plebiscité</span>{' '}
           par les recruteurs...
         </h2>
-        <h3 className="uk-align-center uk-text-center">
+        <h4 className="uk-align-center uk-text-center">
           Le retour des recruteurs en entreprise est unanime&nbsp;: l&apos;arrivée des candidats fédère les salariés et transforme le projet d&apos;entreprise en une véritable aventure humaine, porteuse de sens pour tous !
-        </h3>
+        </h4>
         <div className="uk-width-expand">
           <Carousel
             itemRenderer={(review, index) => (

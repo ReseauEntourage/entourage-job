@@ -274,23 +274,23 @@ h6,
  */
 h1,
 .uk-h1 {
-  font-size: 63px;
-  line-height: 64px;
+  font-size: 2.23125rem;
+  line-height: 1.2;
 }
 h2,
 .uk-h2 {
-  font-size: 46px;
-  line-height: 51px;
+  font-size: 1.7rem;
+  line-height: 1.3;
 }
 h3,
 .uk-h3 {
-  font-size: 22px;
-  line-height: 26px;
+  font-size: 1.5rem;
+  line-height: 1.4;
 }
 h4,
 .uk-h4 {
-  font-size: 22px;
-  line-height: 26px;
+  font-size: 1.25rem;
+  line-height: 1.4;
 }
 h5,
 .uk-h5 {
@@ -12452,6 +12452,25 @@ iframe.uk-cover {
 /*
 @global-border: #FF5101;
 */
+/*@base-body-font-size: 17px;
+@base-body-line-height: 22px;*/
+/*@base-heading-font-size: 22px;
+@base-heading-line-height: 26px;*/
+/*@base-h1-font-weight: bold;
+@base-h1-font-size: 63px;
+@base-h1-line-height: 64px;
+
+@base-h2-font-weight: bold;
+@base-h2-font-size: 46px;
+@base-h2-line-height: 51px;
+
+@base-h3-font-weight: normal;
+@base-h3-font-size: 22px;
+@base-h3-line-height: 26px;
+
+@base-h4-font-weight: normal;
+@base-h4-font-size: 22px;
+@base-h4-line-height: 26px;*/
 .ent-link-muted {
   color: white;
 }

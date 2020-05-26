@@ -11,10 +11,10 @@ const ContactPartial = ({ padding }) => {
 
   return (<div id="profiles" className={!padding ? 'uk-padding-remove-vertical' : ''}>
     <div className="uk-text-center">
-      <h3 className='uk-align-center uk-text-bold uk-width-1-2@m'>Je m&apos;inscris à la newsletter
+      <h4 className='uk-align-center uk-text-bold uk-width-1-2@m'>Je m&apos;inscris à la newsletter
                                                                   pour avoir des nouvelles des
                                                                   candidats et être informé de
-                                                                  l&apos;évolution du projet</h3>
+                                                                  l&apos;évolution du projet</h4>
     </div>
     {/* input */}
     <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">

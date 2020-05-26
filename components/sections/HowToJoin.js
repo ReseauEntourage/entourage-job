@@ -24,7 +24,7 @@ const HowToJoin = () => {
 
   return (
     <Section id="howToJoin" container="small" style="default">
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-vertical">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
         Comment rejoindre{' '}
         <span className="uk-text-primary">LinkedOut&nbsp;?</span>
       </h2>

@@ -25,7 +25,7 @@ const StepsToJoin = () => {
 
   return (
     <Section container="small" id="stepToJoin" style="muted">
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
         Quelles sont <span className="uk-text-primary">les étapes</span> du parcours LinkedOut ?
       </h2>
       <div className="uk-width-expand uk-flex uk-flex-wrap uk-flex-left uk-flex-center uk-flex-around">
@@ -56,10 +56,10 @@ const StepsToJoin = () => {
             >Je candidate&nbsp;&gt;</a>
           </Link>
         </div>
-        <h3 className="uk-text-center">
+        <h4 className="uk-text-center">
           Si vous avez des questions, écrivez-nous à{' '}
           <br />
-          <a target='_blank' href="mailto:contact-linkedout@entourage.social">contact-linkedout@entourage.social</a></h3>
+          <a target='_blank' href="mailto:contact-linkedout@entourage.social">contact-linkedout@entourage.social</a></h4>
       </div>
     </Section>
   );
