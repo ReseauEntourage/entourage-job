@@ -1971,6 +1971,9 @@ select.uk-form-width-xsmall {
   background-color: transparent;
   color: #333;
   border: 1px solid #e5e5e5;
+  text-transform: uppercase;
+  transition: 0.1s ease-in-out;
+  transition-property: color, background-color, border-color;
   color: black;
   background-color: white;
   background-image: none;
@@ -2000,13 +2003,19 @@ select.uk-form-width-xsmall {
   background-color: #f55f24;
   color: #fff;
   border: 1px solid transparent;
-  color: white;
-  background-color: #F55F24;
+  text-transform: uppercase;
+  transition: 0.1s ease-in-out;
+  transition-property: color, background-color, border-color;
+  color: black;
+  background-color: white;
   background-image: none;
   text-transform: none;
-  border: none;
+  border: solid 1px #e5e5e5;
   padding: 0px 20px;
   border-radius: 2px;
+  color: white;
+  background-color: #F55F24;
+  border: none;
 }
 /* Hover + Focus */
 .uk-button-primary:hover,
@@ -2071,9 +2080,8 @@ select.uk-form-width-xsmall {
 .uk-button-secondary:disabled,
 .uk-button-danger:disabled {
   background-color: transparent;
-  color: #999;
   border-color: #e5e5e5;
-  color: white;
+  color: #999;
   background-color: #e5e5e5;
 }
 /* Size modifiers

@@ -45,24 +45,6 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                        toggle={item.button.modal}>
                         {item.button.label} &gt;
                       </Button>
-                    /*<Link href={item.button.href}>
-                      <a
-                        className="uk-button uk-button-primary uk-padding-small uk-align-center"
-                        target={item.button.external ? "_blank" : ""}
-                        data-uk-toggle={`target:${item.button.modal}`}
-                        style={{
-                          color: 'white',
-                          backgroundColor: '#F55F24',
-                          backgroundImage: 'none',
-                          textTransform: 'none',
-                          border: null,
-                          padding: '0px 20px',
-                          borderRadius: '2px',
-                        }}
-                      >
-                        {item.button.label} &gt;
-                      </a>
-                    </Link>*/
                   }
                 </div>
               </div>

@@ -24,7 +24,7 @@ const Header = ({ isHome }) => {
     <header id="header">
       <NavbarNoSSR
         sticky=""
-        className="uk-background-secondary uk-navbar-transparent uk-light ent-home"
+        className="uk-background-secondary uk-navbar-transparent ent-home"
         left={
           <NavbarLogo
             href="/"

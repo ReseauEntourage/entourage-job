@@ -40,7 +40,10 @@ const Layout = ({
     </Head>
     <UserContext.Consumer>
       {({ isAuthentificated }) =>
-        isAuthentificated ? (
+        isAuthentificated &&
+        router.asPath !== '/jeveuxaider' &&
+        router.asPath !== '/jeveuxtravailler' &&
+        router.asPath !== '/jeveuxrecruter' ? (
           <HeaderConnected />
         ) : (
           router.asPath !== '/' && <Header isHome={false} />

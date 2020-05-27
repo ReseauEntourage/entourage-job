@@ -22,7 +22,7 @@ const Footer = () => {
   return (
     <footer id="footer">
       <AssociationEntourage />
-      <Section style="secondary" size="small">
+      <Section style="secondary" size="small" preserveColor>
         <GridNoSSR
           middle
           center
@@ -31,7 +31,7 @@ const Footer = () => {
           gap="medium"
         >
           {asPath === '/' && (
-            <p className="uk-text-center">
+            <p className="uk-text-center uk-light">
               <a
                 className="ent-logo-hover"
                 href="https://www.linkedin.com/"
@@ -94,7 +94,7 @@ const Footer = () => {
             eachWidths={['expand', 'auto@m']}
             gap="small"
           >
-            <ul className="uk-subnav uk-subnav-divider uk-flex-left@m uk-flex-center">
+            <ul className="uk-subnav uk-subnav-divider uk-flex-left@m uk-flex-center uk-light">
               <li className="uk-text-capitalize">
                 <SimpleLink href="/">Mentions légales</SimpleLink>
               </li>
@@ -108,7 +108,7 @@ const Footer = () => {
               </li>
             </ul>
             <GridNoSSR row middle className="uk-flex-right@m uk-flex-center">
-              <GridNoSSR row middle childWidths={['auto']} gap="small">
+              <GridNoSSR row middle childWidths={['auto']} gap="small" className="uk-light">
                 <div>Partager</div>
                 <FacebookShareButton
                   className="uk-icon-button uk-icon-link"
@@ -140,7 +140,6 @@ const Footer = () => {
                 </TwitterShareButton>
               </GridNoSSR>
               <Button
-
                 href="/login"
                 style='primary'>
                 Espace candidat &gt;

@@ -25,23 +25,6 @@ const SimpleCTA = ({id, style, title, text, button, children}) => {
             toggle={button.modal}>
             {button.label} &gt;
           </Button>
-          /*<Link href={button.href}>
-            <a
-              className="uk-button uk-button-primary"
-              target="_blank"
-              style={{
-                color: 'white',
-                backgroundColor: '#F55F24',
-                backgroundImage: 'none',
-                textTransform: 'none',
-                border: null,
-                padding: '0px 20px',
-                borderRadius: '2px',
-              }}
-            >
-              {button.label} &gt;
-            </a>
-          </Link>*/
         }
         {children}
       </div>

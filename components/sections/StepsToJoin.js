@@ -2,6 +2,7 @@ import React from 'react';
 import Link from "next/link";
 import { Section } from '../utils';
 import {EXTERNAL_LINKS} from '../../constants';
+import Button from "../utils/Button";
 
 const StepsToJoin = () => {
   const content = [
@@ -40,21 +41,12 @@ const StepsToJoin = () => {
           );
         })}
         <div className="uk-flex uk-flex-top uk-padding-small">
-          <Link href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}>
-            <a
-              className="uk-button uk-button-primary uk-width-small uk-margin-medium-top"
-              target="_blank"
-              style={{
-                color: 'white',
-                backgroundColor: '#F55F24',
-                backgroundImage: 'none',
-                textTransform: 'none',
-                border: null,
-                padding: '0px 20px',
-                borderRadius: '2px',
-              }}
-            >Je candidate&nbsp;&gt;</a>
-          </Link>
+          <Button
+            style="primary"
+            className="uk-margin-medium-top"
+            isExternal
+            href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
+          >Je candidate&nbsp;&gt;</Button>
         </div>
         <h4 className="uk-text-center">
           Si vous avez des questions, écrivez-nous à{' '}

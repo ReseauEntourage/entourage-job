@@ -97,13 +97,6 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
               '.'
             )}
           </h3>
-          {/* <button
-        type="button"
-        className="uk-button uk-button-primary"
-        data-uk-toggle="target: #modal-send-opportunity"
-      >
-        J&apos;écris à {firstName}
-      </button> */}
           <IconNoSSR
             name="triangle-down"
             className="uk-text-primary"

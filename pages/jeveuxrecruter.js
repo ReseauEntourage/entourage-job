@@ -241,13 +241,12 @@ const JeVeuxRecruter = () => {
                 <p className="uk-text-lead">
                   Merci pour votre offre, nous reviendrons bientôt vers vous.
                 </p>
-                <button
-                  type="button"
-                  className="uk-button uk-button-primary"
+                <Button
+                  style="primary"
                   onClick={closeModal}
                 >
                   Fermer
-                </button>
+                </Button>
               </div>
             </div>
           ),

@@ -12,6 +12,7 @@ import ModalEdit from '../../../../components/modals/ModalEdit';
 import schemaCreateUser from '../../../../components/forms/schema/formCreateUser';
 import ImgProfile from '../../../../components/headers/ImgProfile';
 import {CV_STATUS, USER_ROLES} from "../../../../constants";
+import Button from "../../../../components/utils/Button";
 
 function translateStatusCV(status) {
   const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unkown;
@@ -78,18 +79,8 @@ const MembersAdmin = ({ query: { role } }) => {
           title="Gestion des membres"
           description="Ici tu peux accéder à tous les profils des coachs et candidats afin d'effectuer un suivi individuel de leur avancée."
         >
-          <button
-            type="button"
-            className="uk-button uk-button-primary"
-            style={{
-              color: 'white',
-              backgroundColor: '#F55F24',
-              backgroundImage: 'none',
-              textTransform: 'none',
-              boder: null,
-              padding: '0px 20px',
-              borderRadius: '2px',
-            }}
+          <Button
+            style="primary"
             onClick={() => {
               UIkit.modal('#add-user').show();
             }}
@@ -99,7 +90,7 @@ const MembersAdmin = ({ query: { role } }) => {
               className="uk-margin-small-right"
             />
             Nouveau membre
-          </button>
+          </Button>
           <ModalEdit
             id="add-user"
             formSchema={schemaCreateUser}
@@ -343,13 +334,12 @@ const MembersAdmin = ({ query: { role } }) => {
                 style={{ borderTop: '1px solid #e5e5e5' }}
                 className="uk-text-center uk-width-1-1 uk-padding"
               >
-                <button
-                  className="uk-button uk-button-text"
-                  type="button"
+                <Button
+                  style="text"
                   onClick={() => fetchData()}
                 >
                   Voir plus...
-                </button>
+                </Button>
               </div>
             )}
             {!loading && allLoaded && members.length <= 0 && (
