@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from "next/link";
-import { Section } from '../utils';
+import {IconNoSSR, Section} from '../utils';
 import {EXTERNAL_LINKS} from '../../constants';
 import Button from "../utils/Button";
 
@@ -29,7 +29,7 @@ const StepsToJoin = () => {
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
         Quelles sont <span className="uk-text-primary">les étapes</span> du parcours LinkedOut ?
       </h2>
-      {{/* TODO use grid */}}
+      {/* TODO use grid */}
       <div className="uk-width-expand uk-flex uk-flex-wrap uk-flex-left uk-flex-center uk-flex-around">
         {content.map(({description}, index) => {
           return (
@@ -47,7 +47,7 @@ const StepsToJoin = () => {
             className="uk-margin-medium-top"
             isExternal
             href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
-          >Je candidate&nbsp;&gt;</Button>
+          >Je candidate{' '}<IconNoSSR name="chevron-right" /></Button>
         </div>
         <h4 className="uk-text-center">
           Si vous avez des questions, écrivez-nous à{' '}
