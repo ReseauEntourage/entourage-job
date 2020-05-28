@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { GridNoSSR, Section } from '../utils';
+import {GridNoSSR, IconNoSSR, Section} from '../utils';
 import CVList from '../cv/CVList';
 import Button from "../utils/Button";
 
@@ -27,7 +27,7 @@ const CandidatListPartial = () => (
         <Button
           href="/lescandidats"
           style='primary'>
-          Voir tous les candidats &gt;
+          Voir tous les candidats{' '}<IconNoSSR name="chevron-right" />
         </Button>
         <p style={{ marginTop: '20px' }}>
           Tous ces candidats cherchent un travail en Île de France, si vous

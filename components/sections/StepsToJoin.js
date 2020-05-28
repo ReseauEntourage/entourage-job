@@ -29,6 +29,7 @@ const StepsToJoin = () => {
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
         Quelles sont <span className="uk-text-primary">les étapes</span> du parcours LinkedOut ?
       </h2>
+      {{/* TODO use grid */}}
       <div className="uk-width-expand uk-flex uk-flex-wrap uk-flex-left uk-flex-center uk-flex-around">
         {content.map(({description}, index) => {
           return (

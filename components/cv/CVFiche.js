@@ -447,7 +447,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           href="/lescandidats"
           style='primary'
           toggle="target: #modal-send-opportunity">
-          Contactez-moi &gt;
+          Contactez-moi{' '}<IconNoSSR name="chevron-right" />
         </Button>
         <ModalEdit
           id="modal-send-opportunity"

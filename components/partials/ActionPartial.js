@@ -59,7 +59,7 @@ const ActionPartial = ({ style }) => (
               <Button
                 href={value.href}
                 style='primary'>
-                {value.button} &gt;
+                {value.button}{' '}<IconNoSSR name="chevron-right" />
               </Button>
             </GridNoSSR>
           ))}

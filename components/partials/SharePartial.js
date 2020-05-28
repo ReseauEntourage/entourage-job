@@ -27,7 +27,8 @@ const SharePartial = ({padding}) => (
           href={href}
           style='primary'
           isExternal
-          newTab>
+          newTab
+          key={key}>
           {title} <IconNoSSR name={name} />
         </Button>
       ))}

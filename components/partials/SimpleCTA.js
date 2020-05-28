@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from "next/link";
-import {Button, Section} from '../utils';
+import {Button, IconNoSSR, Section} from '../utils';
 
 const SimpleCTA = ({id, style, title, text, button, children}) => {
   return (
@@ -23,7 +23,7 @@ const SimpleCTA = ({id, style, title, text, button, children}) => {
             isExternal={button.external}
             newTab={button.external}
             toggle={button.modal}>
-            {button.label} &gt;
+            {button.label}{' '}<IconNoSSR name="chevron-right" />
           </Button>
         }
         {children}

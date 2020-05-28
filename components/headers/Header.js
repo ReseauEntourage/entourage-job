@@ -8,7 +8,7 @@ import {
   NavbarNoSSR,
   OffcanvasNoSSR,
   HamburgerNoSSR,
-  NavbarLogo,
+  NavbarLogo, IconNoSSR,
 } from '../utils';
 import './Header.less';
 import Button from "../utils/Button";
@@ -51,7 +51,7 @@ const Header = ({ isHome }) => {
                 <Button
                   href="/lescandidats"
                   style='primary'>
-                  Je partage un CV &gt;
+                  Je partage un CV{' '}<IconNoSSR name="chevron-right" />
                 </Button>
               </div>,
               <HamburgerNoSSR targetId="offcanvas-guest" hidden="m" />,

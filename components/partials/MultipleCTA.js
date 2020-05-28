@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Link from "next/link";
-import {Button} from "../utils";
+import {Button, IconNoSSR} from "../utils";
 
 const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers, data}) => {
   return (
@@ -37,14 +36,16 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                   }
                   {
                     item.button &&
-                     <Button
-                       href={item.button.href}
-                       style='primary'
-                       isExternal={item.button.external}
-                       newTab={item.button.external}
-                       toggle={item.button.modal}>
-                        {item.button.label} &gt;
-                      </Button>
+                      <div className="uk-flex uk-flex-middle uk-flex-center">
+                        <Button
+                          href={item.button.href}
+                          style='primary'
+                          isExternal={item.button.external}
+                          newTab={item.button.external}
+                          toggle={item.button.modal}>
+                          {item.button.label}{' '}<IconNoSSR name="chevron-right" />
+                        </Button>
+                      </div>
                   }
                 </div>
               </div>

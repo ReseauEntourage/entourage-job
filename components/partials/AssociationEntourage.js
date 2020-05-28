@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { GridNoSSR, SimpleLink, ImgNoSSR, Background, Section } from '../utils';
+import {GridNoSSR, SimpleLink, ImgNoSSR, Background, Section, IconNoSSR} from '../utils';
 import Button from "../utils/Button";
 
 const AssociationEntourage = () => (
@@ -31,7 +31,7 @@ const AssociationEntourage = () => (
             <Button
               href="https://www.entourage.social"
               style="default">
-              Voir le site &gt;
+              Voir le site{' '}<IconNoSSR name="chevron-right" />
             </Button>
           </div>
           <div className="uk-flex uk-flex-middle">

@@ -142,7 +142,7 @@ const Footer = () => {
               <Button
                 href="/login"
                 style='primary'>
-                Espace candidat &gt;
+                Espace candidat{' '}<IconNoSSR name="chevron-right" />
               </Button>
             </GridNoSSR>
           </GridNoSSR>
