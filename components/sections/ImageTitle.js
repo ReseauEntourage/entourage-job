@@ -11,12 +11,12 @@ const ImageTitle = ({id, title, text, img}) => {
           <h1 className="uk-text-center uk-align-center uk-text-bold">
             {title}
           </h1>
-          <h3 className="uk-text-center uk-align-center uk-margin-remove-vertical">
+          <h4 className="uk-text-center uk-align-center uk-margin-remove-vertical">
             {text}
-          </h3>
+          </h4>
         </div>
       </div>
-      <div style={{height: 70}}/>
+      <div style={{height: 90}}/>
     </div>
   );
 };

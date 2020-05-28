@@ -16,37 +16,14 @@
 @dotnav-item-onclick-background: fade(#FF5101, 20%);
 @dotnav-item-active-background: fade(#FF5101, 100%);
 @dotnav-item-border: fade(#FF5101, 100%);
-/*
-@global-border: #FF5101;
-*/
+@grid-divider-border: #FF5101;
 
 @base-body-font-family: Roboto, sans-serif;
 @base-body-font-weight: normal;
-@base-body-font-size: 17px;
-@base-body-line-height: 22px;
 @base-body-color: black;
 
 @base-heading-font-family: Roboto, sans-serif;
-@base-heading-font-weight: normal;
-@base-heading-font-size: 22px;
-@base-heading-line-height: 26px;
 @base-heading-color: black;
-
-@base-h1-font-weight: bold;
-@base-h1-font-size: 63px;
-@base-h1-line-height: 64px;
-
-@base-h2-font-weight: bold;
-@base-h2-font-size: 46px;
-@base-h2-line-height: 51px;
-
-@base-h3-font-weight: normal;
-@base-h3-font-size: 22px;
-@base-h3-line-height: 26px;
-
-@base-h4-font-weight: normal;
-@base-h4-font-size: 22px;
-@base-h4-line-height: 26px;
 
 // overlay
 @global-primary-background: #f55f24;
@@ -54,24 +31,49 @@
 @global-muted-background: #F2F2F0;
 
 @overlay-primary-background: fade(@global-primary-background, 70%);
+
 //Link
 @global-link-color: #f55f24;
 @global-link-color-hover: #d53f00;
 
+
 //Button
 .hook-button() {
-  border-radius: 5px;
+  color: black;
+  background-color: white;
+  background-image: none;
+  text-transform: none;
+  border: solid 1px #e5e5e5;
+  padding: 0px 20px;
+  border-radius: 2px;
+}
+
+.hook-button-default() {
+  .hook-button();
 }
 
 .hook-button-primary() {
-  background-color: #f55f24;
-  background-image: linear-gradient(#f58f00, #f55f24);
+  .hook-button();
+  color: white;
+  background-color: #F55F24;
+  border: none;
+}
+
+.hook-button-disabled() {
+  color: #999;
+  background-color: #e5e5e5;
 }
 
 .hook-button-primary-hover() {
   background-image: none;
-  background-color: #f55f24;
+  background-color: darken(white, 5%);
 }
+
+.hook-button-primary-hover() {
+  background-image: none;
+  background-color: darken(#F55F24, 5%);
+}
+
 
 .ent-link-muted {
   color: white;

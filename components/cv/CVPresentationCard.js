@@ -97,13 +97,6 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
               '.'
             )}
           </h3>
-          {/* <button
-        type="button"
-        className="uk-button uk-button-primary"
-        data-uk-toggle="target: #modal-send-opportunity"
-      >
-        J&apos;écris à {firstName}
-      </button> */}
           <IconNoSSR
             name="triangle-down"
             className="uk-text-primary"
@@ -299,9 +292,9 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
             <br />
             <a
               className="uk-link-text uk-text-primary"
-              href="mailto:contact-linkedout@entouratge.social"
+              href="mailto:contact-linkedout@entourage.social"
             >
-              contact-linkedout@entouratge.social
+              contact-linkedout@entourage.social
             </a>
           </p>
           <ImgNoSSR

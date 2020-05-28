@@ -31,7 +31,7 @@ const JeVeuxAider = () => (
     <Section container="small" style="default">
       {/* Fix so that the anchor scroll to the right height */}
       <div id="private" style={{marginTop: -140, paddingTop: 140}} />
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
         Je suis un{' '}
         <span className="uk-text-primary">particulier</span>
       </h2>
@@ -55,13 +55,13 @@ const JeVeuxAider = () => (
             }
           }
         ]}
-        showDividers
+        showHorizontalDividers
       />
     </Section>
     <Section container="small" style="muted">
       {/* Fix so that the anchor scroll to the right height */}
       <div id="actor" style={{marginTop: -140, paddingTop: 140}} />
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
         Je suis un{' '}<span className="uk-text-primary">acteur de l&apos;insertion</span>
         {' '}sociale et professionnelle
       </h2>
@@ -79,11 +79,11 @@ const JeVeuxAider = () => (
             title: "Vous êtes intéressés par le projet LinkedOut et vous souhaiteriez coopérer avec nous",
             button: {
               label: "Écrivez-nous",
-              href: "#",
-              modal: "#modal-interest-linkedOut"
+              modal: "target: #modal-interest-linkedOut"
             }
           }
-        ]}/>
+        ]}
+        showVerticalDividers/>
     </Section>
     <SimpleCTA
       title={

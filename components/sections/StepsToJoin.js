@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from "next/link";
-import { Section } from '../utils';
+import {IconNoSSR, Section} from '../utils';
 import {EXTERNAL_LINKS} from '../../constants';
+import Button from "../utils/Button";
 
 const StepsToJoin = () => {
   const content = [
@@ -25,9 +26,10 @@ const StepsToJoin = () => {
 
   return (
     <Section container="small" id="stepToJoin" style="muted">
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
         Quelles sont <span className="uk-text-primary">les étapes</span> du parcours LinkedOut ?
       </h2>
+      {/* TODO use grid */}
       <div className="uk-width-expand uk-flex uk-flex-wrap uk-flex-left uk-flex-center uk-flex-around">
         {content.map(({description}, index) => {
           return (
@@ -40,26 +42,17 @@ const StepsToJoin = () => {
           );
         })}
         <div className="uk-flex uk-flex-top uk-padding-small">
-          <Link href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}>
-            <a
-              className="uk-button uk-button-primary uk-width-small uk-margin-medium-top"
-              target="_blank"
-              style={{
-                color: 'white',
-                backgroundColor: '#F55F24',
-                backgroundImage: 'none',
-                textTransform: 'none',
-                border: null,
-                padding: '0px 20px',
-                borderRadius: '2px',
-              }}
-            >Je candidate&nbsp;&gt;</a>
-          </Link>
+          <Button
+            style="primary"
+            className="uk-margin-medium-top"
+            isExternal
+            href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
+          >Je candidate{' '}<IconNoSSR name="chevron-right" /></Button>
         </div>
-        <h3 className="uk-text-center">
+        <h4 className="uk-text-center">
           Si vous avez des questions, écrivez-nous à{' '}
           <br />
-          <a target='_blank' href="mailto:contact-linkedout@entourage.social">contact-linkedout@entourage.social</a></h3>
+          <a target='_blank' href="mailto:contact-linkedout@entourage.social">contact-linkedout@entourage.social</a></h4>
       </div>
     </Section>
   );

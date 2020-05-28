@@ -16,6 +16,7 @@ import ModalEdit from '../modals/ModalEdit';
 import schema from '../forms/schema/formEditOpportunity';
 import Axios from '../../Axios';
 import ModalShareCV from '../modals/ModalShareCV';
+import Button from "../utils/Button";
 
 /**
  * Le cv en public et en preview
@@ -421,9 +422,9 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 className={`uk-link-text uk-text-primary${
                   actionDisabled ? ' uk-disabled' : ''
                 }`}
-                href="mailto:contact-linkedout@entouratge.social"
+                href="mailto:contact-linkedout@entourage.social"
               >
-                contact-linkedout@entouratge.social
+                contact-linkedout@entourage.social
               </a>
             </p>
             <ImgNoSSR
@@ -441,23 +442,13 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </div>{' '}
           à me proposer ?
         </h2>
-        <button
+        <Button
           disabled={actionDisabled}
-          type="button"
-          data-uk-toggle="target: #modal-send-opportunity"
-          className="uk-button uk-button-primary"
-          style={{
-            color: actionDisabled ? '#999' : 'white',
-            backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
-            backgroundImage: 'none',
-            textTransform: 'none',
-            border: null,
-            padding: '0px 20px',
-            borderRadius: '2px',
-          }}
-        >
-          Contactez-moi &gt;
-        </button>
+          href="/lescandidats"
+          style='primary'
+          toggle="target: #modal-send-opportunity">
+          Contactez-moi{' '}<IconNoSSR name="chevron-right" />
+        </Button>
         <ModalEdit
           id="modal-send-opportunity"
           title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}

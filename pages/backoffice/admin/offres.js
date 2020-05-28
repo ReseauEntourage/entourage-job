@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
-import { Section } from '../../../components/utils';
+import {Button, Section} from '../../../components/utils';
 import OfferCard from '../../../components/cards/OfferCard';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOfferAdmin from '../../../components/modals/ModalOfferAdmin';
@@ -100,26 +100,15 @@ const LesOpportunites = () => {
           title="Modération des offres d'emploi"
           description="Ici tu peux accéder à toutes les opportunités et valider les offres qui se retrouveront ensuite dans les tableaux des candidats."
         >
-          <button
-            type="button"
-            className="uk-button uk-button-primary"
-            data-uk-toggle="target: #add-opportunity"
-            style={{
-              color: 'white',
-              backgroundColor: '#F55F24',
-              backgroundImage: 'none',
-              textTransform: 'none',
-              boder: null,
-              padding: '0px 20px',
-              borderRadius: '2px',
-            }}
-          >
+          <Button
+            style="primary"
+            toggle="target: #add-opportunity">
             <span
               uk-icon="icon: plus; ratio:0.8"
               className="uk-margin-small-right"
             />
             Nouvelle opportunité
-          </button>
+          </Button>
           <ModalEdit
             id="add-opportunity"
             title="Ajouter une opportunité"

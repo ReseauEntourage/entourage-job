@@ -8,9 +8,10 @@ import {
   NavbarNoSSR,
   OffcanvasNoSSR,
   HamburgerNoSSR,
-  NavbarLogo,
+  NavbarLogo, IconNoSSR,
 } from '../utils';
 import './Header.less';
+import Button from "../utils/Button";
 
 const Header = ({ isHome }) => {
   const LINKS = [
@@ -23,7 +24,7 @@ const Header = ({ isHome }) => {
     <header id="header">
       <NavbarNoSSR
         sticky=""
-        className="uk-background-secondary uk-navbar-transparent uk-light ent-home"
+        className="uk-background-secondary uk-navbar-transparent ent-home"
         left={
           <NavbarLogo
             href="/"
@@ -47,23 +48,11 @@ const Header = ({ isHome }) => {
               )),
               // separateurs en css .ent-nav
               <div className="uk-navbar-item uk-visible@m">
-                <Link href="/lescandidats">
-                  <button
-                    type="button"
-                    className="uk-button uk-button-primary"
-                    style={{
-                      color: 'white',
-                      backgroundColor: '#F55F24',
-                      backgroundImage: 'none',
-                      textTransform: 'none',
-                      boder: null,
-                      padding: '0px 20px',
-                      borderRadius: '2px',
-                    }}
-                  >
-                    Je partage un CV &gt;
-                  </button>
-                </Link>
+                <Button
+                  href="/lescandidats"
+                  style='primary'>
+                  Je partage un CV{' '}<IconNoSSR name="chevron-right" />
+                </Button>
               </div>,
               <HamburgerNoSSR targetId="offcanvas-guest" hidden="m" />,
             ]}

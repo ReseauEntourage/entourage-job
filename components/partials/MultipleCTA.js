@@ -1,54 +1,54 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Link from "next/link";
+import {Button, IconNoSSR} from "../utils";
 
-const MultipleCTA = ({showNumbers, showDividers, data}) => {
+const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers, data}) => {
   return (
-    <div className="uk-width-expand uk-flex uk-flex-wrap uk-flex-around">
+    <div className={`${showVerticalDividers ? 'uk-margin-large-top' : ''} uk-width-expand uk-flex uk-flex-wrap uk-flex-around uk-overflow-hidden`}>
       {
         data.map((item, index) => {
           return (
-            <div key={index.toString()} className={`${showDividers ? '' : 'uk-flex-middle'} uk-flex uk-width-1-${data.length}@m uk-flex-column uk-flex-top uk-width-medium uk-padding-small`}>
+            <div
+              key={index.toString()}
+              className={`uk-flex-middle uk-flex uk-width-1-${data.length}@m uk-flex-column uk-flex-top uk-width-medium uk-padding-small`}
+              style={showVerticalDividers ? {borderLeft: 'solid 1px #f55f24', marginLeft: '-2px'} : {}}>
               {
                 item.img &&
-                <div className="uk-height-small uk-flex uk-flex-bottom uk-flex-center uk-width-expand uk-margin-small-bottom">
+                <div className="uk-height-small uk-flex uk-flex-middle uk-flex-center uk-margin-medium-bottom uk-width-small">
                   <img src={item.img} width="" height="" alt=""/>
                 </div>
               }
-              {
-                item.title &&
-                <h3 className={`${showDividers ? '' : 'uk-text-center'} ${item.text ? '' : 'uk-flex-1'} uk-flex-middle uk-text-bold uk-flex`} style={{minHeight: 52}}>
-                  {showNumbers && <div className="uk-text-bold uk-text-primary uk-text-large uk-margin-small-right uk-position-absolute" style={{fontSize: 46, marginLeft: -40, lineHeight: 1}}>{index+1}</div>}{item.title}
-                </h3>
-              }
-              {showDividers && <hr className="uk-divider-small uk-margin-remove-vertical" />}
-              {
-                item.text &&
-                <div className={`${item.button ? '' : 'uk-margin-remove-bottom'} uk-flex-1 uk-margin-medium-top uk-margin-medium-bottom`}>
-                  {item.text}
+              <div className="uk-flex uk-flex-1">
+                {showNumbers && <div className="uk-text-bold uk-text-primary uk-text-large uk-margin-small-right uk-margin-small-top" style={{fontSize: 46, lineHeight: 1}}>{index+1}</div>}
+                <div className="uk-flex uk-flex-column uk-flex-1">
+                  {
+                    item.title &&
+                    <h3 className={`${showHorizontalDividers ? '' : 'uk-text-center  uk-flex-center'} ${showVerticalDividers ? 'uk-padding-small' : ''} ${item.text ? '' : 'uk-flex-1'} uk-text-bold uk-flex-middle uk-flex`} style={{minHeight: 70}}>
+                      {item.title}
+                    </h3>
+                  }
+                  {showHorizontalDividers && <hr className="uk-divider-small uk-margin-remove-vertical" />}
+                  {
+                    item.text &&
+                    <div className={`${item.button ? '' : 'uk-margin-remove-bottom'} uk-flex-1 uk-margin-medium-top uk-margin-medium-bottom`}>
+                      {item.text}
+                    </div>
+                  }
+                  {
+                    item.button &&
+                      <div className="uk-flex uk-flex-middle uk-flex-center">
+                        <Button
+                          href={item.button.href}
+                          style='primary'
+                          isExternal={item.button.external}
+                          newTab={item.button.external}
+                          toggle={item.button.modal}>
+                          {item.button.label}{' '}<IconNoSSR name="chevron-right" />
+                        </Button>
+                      </div>
+                  }
                 </div>
-              }
-              {
-                item.button &&
-                <Link href={item.button.href}>
-                  <a
-                    className="uk-button uk-button-primary uk-padding-small"
-                    target={item.button.external ? "_blank" : ""}
-                    data-uk-toggle={`target:${item.button.modal}`}
-                    style={{
-                      color: 'white',
-                      backgroundColor: '#F55F24',
-                      backgroundImage: 'none',
-                      textTransform: 'none',
-                      border: null,
-                      padding: '0px 20px',
-                      borderRadius: '2px',
-                    }}
-                  >
-                    {item.button.label} &gt;
-                  </a>
-                </Link>
-              }
+              </div>
           </div>
           );
         })
@@ -59,7 +59,8 @@ const MultipleCTA = ({showNumbers, showDividers, data}) => {
 
 MultipleCTA.propTypes = {
   showNumbers: PropTypes.bool,
-  showDividers: PropTypes.bool,
+  showHorizontalDividers: PropTypes.bool,
+  showVerticalDividers: PropTypes.bool,
   data: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string,
     text: PropTypes.element,
@@ -75,7 +76,8 @@ MultipleCTA.propTypes = {
 
 MultipleCTA.defaultProps = {
   showNumbers: false,
-  showDividers: false
+  showHorizontalDividers: false,
+  showVerticalDividers: false
 };
 
 export default MultipleCTA;

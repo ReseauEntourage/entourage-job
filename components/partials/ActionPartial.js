@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Section, GridNoSSR, IconNoSSR } from '../utils';
 import {SharePartial} from "./index";
 import ContactPartial from "./ContactPartial";
+import Button from "../utils/Button";
 
 const datas = [
   {
@@ -43,33 +44,23 @@ const ActionPartial = ({ style }) => (
           childWidths={['1-3@s']}
           middle
           gap="large"
-          items={datas.map((value) => (
+          items={datas.map((value, index) => (
             <GridNoSSR
               // uk-width-medium@s
               className="uk-text-center"
               gap="small"
               middle
               column
+              key={index.toString()}
             >
               <h3>{value.title}</h3>
               <hr style={{ borderTopColor: '#F55F24', width: '100px' }} />
               {value.description && <p>{value.description}</p>}
-              <Link href={value.href}>
-                <a
-                  className="uk-button uk-button-primary"
-                  style={{
-                    color: 'white',
-                    backgroundColor: '#F55F24',
-                    backgroundImage: 'none',
-                    textTransform: 'none',
-                    border: null,
-                    padding: '0px 20px',
-                    borderRadius: '2px',
-                  }}
-                >
-                  {value.button} &gt;
-                </a>
-              </Link>
+              <Button
+                href={value.href}
+                style='primary'>
+                {value.button}{' '}<IconNoSSR name="chevron-right" />
+              </Button>
             </GridNoSSR>
           ))}
         />

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { GridNoSSR, SimpleLink, ImgNoSSR, Background, Section } from '../utils';
+import {GridNoSSR, SimpleLink, ImgNoSSR, Background, Section, IconNoSSR} from '../utils';
+import Button from "../utils/Button";
 
 const AssociationEntourage = () => (
   <Background blend={{ colorHex: '#484848' }}>
@@ -19,7 +20,7 @@ const AssociationEntourage = () => (
             <span className="uk-text-primary">Entourage</span>
           </h1>
         </div>
-        <GridNoSSR middle eachWidths={['expand@s', 'auto', 'expand@s']}>
+        <GridNoSSR middle eachWidths={['expand@s', 'auto', 'expand@s']} className="uk-light">
           <div style={{ color: '#fff' }}>
             <p className="uk-text-left">
               Entourage est une association fondée en 2014 qui vise à créer du
@@ -27,24 +28,11 @@ const AssociationEntourage = () => (
               l’application mobile &apos;Entourage&apos; qui permet de
               coordonner des actions de solidarité à l’échelle locale.
             </p>
-            <a
-              className="uk-button uk-button-primary"
+            <Button
               href="https://www.entourage.social"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                color: 'white',
-                backgroundColor: 'transparent',
-                backgroundImage: 'none',
-                textTransform: 'none',
-                boder: null,
-                padding: '0px 20px',
-                borderRadius: '2px',
-                border: 'solid 2px #fff ',
-              }}
-            >
-              Voir le site &gt;
-            </a>
+              style="default">
+              Voir le site{' '}<IconNoSSR name="chevron-right" />
+            </Button>
           </div>
           <div className="uk-flex uk-flex-middle">
             <hr className="uk-divider-vertical uk-visible@s" />

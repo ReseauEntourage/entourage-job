@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
-import { Section, IconNoSSR } from '../../components/utils';
+import {Section, IconNoSSR, Button} from '../../components/utils';
 
 const ResetSuccessPage = () => {
   const router = useRouter();
@@ -15,13 +15,12 @@ const ResetSuccessPage = () => {
             <p className="uk-text-lead">
               Votre mot de passe a bien été réinitialisé.
             </p>
-            <button
-              type="button"
-              className="uk-button uk-button-primary"
+            <Button
+              style='primary'
               onClick={() => router.push('/login')}
             >
               Se connecter
-            </button>
+            </Button>
           </div>
         </div>
       </Section>

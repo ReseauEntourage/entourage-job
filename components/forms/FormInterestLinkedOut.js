@@ -7,6 +7,7 @@ import Api from '../../Axios';
 import Input from './fields/Input';
 import Textarea from './fields/Textarea';
 import Checkbox from './fields/Checkbox';
+import {Button} from "../utils";
 
 const DEFAULT_MESSAGE = {
   name: '',
@@ -165,21 +166,20 @@ export default class FormInterestLinkedOut extends Component {
             >
               {error}
             </span>
-            <button
-              type="button"
-              className="uk-button uk-button-primary uk-margin-right"
+            <Button
+              style="primary"
+              className="uk-margin-right"
               onClick={onSubmit}
             >
               Envoyer
-            </button>
-            <button
-              type="button"
-              className="uk-button uk-button-default"
+            </Button>
+            <Button
+              style="default"
               name="cancel"
               onClick={afterCancel}
             >
               Annuler
-            </button>
+            </Button>
           </div>
         </div>
       </>
