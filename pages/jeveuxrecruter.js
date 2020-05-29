@@ -11,7 +11,7 @@ import Api from '../Axios';
 import StepperModal from '../components/modals/StepperModal';
 import FormWithValidation from '../components/forms/FormWithValidation';
 import ImageTitle from "../components/sections/ImageTitle";
-import SimpleCTA from "../components/partials/SimpleCTA";
+import SimpleSection from "../components/sections/SimpleSection";
 import MultipleCTA from "../components/partials/MultipleCTA";
 import HireSteps from "../components/sections/HireSteps";
 import Carousel from "../components/utils/Carousel";
@@ -179,7 +179,7 @@ const JeVeuxRecruter = () => {
           <span className="uk-text-primary">LinkedOut plebiscité</span>{' '}
           par les recruteurs...
         </h2>
-        <h4 className="uk-align-center uk-text-center">
+        <h4 className="uk-align-center uk-text-center uk-margin-medium-bottom">
           Le retour des recruteurs en entreprise est unanime&nbsp;: l&apos;arrivée des candidats fédère les salariés et transforme le projet d&apos;entreprise en une véritable aventure humaine, porteuse de sens pour tous !
         </h4>
         <div className="uk-width-expand">

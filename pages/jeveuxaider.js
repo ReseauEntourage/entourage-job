@@ -4,7 +4,7 @@ import {ContactPartial, SharePartial} from '../components/partials';
 import {EXTERNAL_LINKS} from '../constants';
 import Layout from '../components/Layout';
 import HowItWorks from '../components/sections/HowItWorks';
-import SimpleCTA from "../components/partials/SimpleCTA";
+import SimpleSection from "../components/sections/SimpleSection";
 import MultipleCTA from "../components/partials/MultipleCTA";
 import ImageTitle from "../components/sections/ImageTitle";
 import SubHeader from "../components/sections/SubHeader";
@@ -31,23 +31,23 @@ const JeVeuxAider = () => (
     <Section container="small" style="default">
       {/* Fix so that the anchor scroll to the right height */}
       <div id="private" style={{marginTop: -140, paddingTop: 140}} />
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
         Je suis un{' '}
         <span className="uk-text-primary">particulier</span>
       </h2>
       <MultipleCTA
         data={[
           {
-            title: "Donnez de la visibilité au candidat",
-            text: <div>Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut. Votre partage permet de donner une visibilité inédite aux candidats auprès de recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer&nbsp;!</div>,
+            title: "Partagez votre réseau pour donner une visibilité inédite à une personne exclue en recherche d’emploi",
+            text: <div>Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut. Votre partage permet de donner une visibilité inédite aux candidats auprès de potentiels recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer&nbsp;!</div>,
             button: {
               label: "Je partage un CV",
               href: "/lescandidats"
             }
           },
           {
-            title: "Engagez-vous avec un candidat LinkedOut",
-            text: <div>Vous souhaitez donner de votre temps pour tisser une relation de confiance avec un candidat et le coacher vers le retour à l’emploi&nbsp;? Entourage vous forme à la mission de bénévole-coach et vous donne les outils&nbsp;!</div>,
+            title: "Coachez une personne exclue vers l’emploi\xa0!",
+            text: <div>Vous souhaitez donner de votre temps pour tisser une relation de proximité avec un candidat et le coacher dans son retour à l’emploi&nbsp;? Entourage vous forme à la mission de bénévole-coach et vous donne les outils.</div>,
             button: {
               label: "Je deviens bénévole-coach",
               href: process.env.AIRTABLE_LINK_BECOME_COACH,
@@ -61,14 +61,14 @@ const JeVeuxAider = () => (
     <Section container="small" style="muted">
       {/* Fix so that the anchor scroll to the right height */}
       <div id="actor" style={{marginTop: -140, paddingTop: 140}} />
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
         Je suis un{' '}<span className="uk-text-primary">acteur de l&apos;insertion</span>
         {' '}sociale et professionnelle
       </h2>
       <MultipleCTA
         data={[
           {
-            title: "Vous accompagnez un personne en démarche de réinsertion professionnelle",
+            title: "Vous accompagnez un personne en démarche de réinsertion professionnelle\xa0?",
             button: {
               label: "Je vous l'oriente",
               href: process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION,
@@ -76,7 +76,7 @@ const JeVeuxAider = () => (
             }
           },
           {
-            title: "Vous êtes intéressés par le projet LinkedOut et vous souhaiteriez coopérer avec nous",
+            title: "Vous êtes intéressé(e) par l’approche de LinkedOut et souhaitez coopérer avec nous\xa0?",
             button: {
               label: "Écrivez-nous",
               modal: "target: #modal-interest-linkedOut"
@@ -85,7 +85,7 @@ const JeVeuxAider = () => (
         ]}
         showVerticalDividers/>
     </Section>
-    <SimpleCTA
+    <SimpleSection
       title={
         <>
           Je deviens{' '}<span className="uk-text-primary">mécène</span>

@@ -6,7 +6,7 @@ const HowItWorks = () => {
   const content = [
     {
       img: '/static/img/illustrations/how1.png',
-      text: <div><span className="uk-text-bold">La plateforme LinkedOut</span> permet de viraliser les CV des candidats sur les réseaux sociaux pour les rendre visibles auprès de recruteurs et générer des opportunités d’emploi</div>,
+      text: <div>La plateforme <span className="uk-text-primary">LinkedOut</span> permet de <span className="uk-text-bold">viraliser les CV des candidats</span> sur les réseaux sociaux pour les rendre visibles auprès de recruteurs et générer des opportunités d’emploi</div>,
     },
     {
       img: '/static/img/illustrations/how2.png',
@@ -25,7 +25,7 @@ const HowItWorks = () => {
 
   return (
     <Section id="howItWorks" style="muted">
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
         Comment fonctionne{' '}
         <span className="uk-text-primary">LinkedOut&nbsp;?</span>
       </h2>

@@ -1,21 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, IconNoSSR} from "../utils";
+import Grid from '../utils/Grid';
 
 const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers, data}) => {
   return (
-    <div className={`${showVerticalDividers ? 'uk-margin-large-top' : ''} uk-width-expand uk-flex uk-flex-wrap uk-flex-around uk-overflow-hidden`}>
-      {
-        data.map((item, index) => {
+    <div uk-height-match="target : h3">
+      <Grid
+        childWidths={[`1-${data.length}@s`]}
+        match
+        gap="large"
+        divider={showVerticalDividers}
+        items={ data.map((item, index) => {
           return (
             <div
               key={index.toString()}
-              className={`uk-flex-middle uk-flex uk-width-1-${data.length}@m uk-flex-column uk-flex-top uk-width-medium uk-padding-small`}
-              style={showVerticalDividers ? {borderLeft: 'solid 1px #f55f24', marginLeft: '-2px'} : {}}>
+              className="uk-flex uk-flex-column uk-flex-middle">
               {
                 item.img &&
-                <div className="uk-height-small uk-flex uk-flex-middle uk-flex-center uk-margin-medium-bottom uk-width-small">
-                  <img src={item.img} width="" height="" alt=""/>
+                <div className={`uk-height-small uk-flex uk-flex-bottom uk-flex-center ${item.text ? 'uk-margin-medium-bottom' : ''}`}>
+                  <img src={item.img} width="" height="" alt="" className="uk-height-max-small"/>
                 </div>
               }
               <div className="uk-flex uk-flex-1">
@@ -23,7 +27,7 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                 <div className="uk-flex uk-flex-column uk-flex-1">
                   {
                     item.title &&
-                    <h3 className={`${showHorizontalDividers ? '' : 'uk-text-center  uk-flex-center'} ${showVerticalDividers ? 'uk-padding-small' : ''} ${item.text ? '' : 'uk-flex-1'} uk-text-bold uk-flex-middle uk-flex`} style={{minHeight: 70}}>
+                    <h3 className={`${item.text ? ' uk-flex-bottom' : 'uk-padding-small uk-text-center uk-flex-center uk-flex-middle uk-flex-1'} uk-text-bold uk-flex`}>
                       {item.title}
                     </h3>
                   }
@@ -36,23 +40,22 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                   }
                   {
                     item.button &&
-                      <div className="uk-flex uk-flex-middle uk-flex-center">
-                        <Button
-                          href={item.button.href}
-                          style='primary'
-                          isExternal={item.button.external}
-                          newTab={item.button.external}
-                          toggle={item.button.modal}>
-                          {item.button.label}{' '}<IconNoSSR name="chevron-right" />
-                        </Button>
-                      </div>
+                    <div className={`${item.text ? 'uk-flex-start' : 'uk-flex-center'} uk-flex uk-flex-middle`}>
+                      <Button
+                        href={item.button.href}
+                        style='primary'
+                        isExternal={item.button.external}
+                        newTab={item.button.external}
+                        toggle={item.button.modal}>
+                        {item.button.label}{' '}<IconNoSSR name="chevron-right" />
+                      </Button>
+                    </div>
                   }
                 </div>
               </div>
-          </div>
+            </div>
           );
-        })
-      }
+        })}/>
     </div>
   );
 };
