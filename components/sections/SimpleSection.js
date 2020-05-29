@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Link from "next/link";
 import {Button, IconNoSSR, Section} from '../utils';
 
-const SimpleCTA = ({id, style, title, text, button, children}) => {
+const SimpleSection = ({id, style, title, text, button, children}) => {
   return (
     <Section container="small" style={style}>
       {/* Fix so that the anchor scroll to the right height */}
@@ -12,7 +12,7 @@ const SimpleCTA = ({id, style, title, text, button, children}) => {
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
           {title}
         </h2>
-        <h3 className="uk-align-center uk-text-center">
+        <h3 className="uk-align-center uk-text-center uk-margin-large-bottom">
           {text}
         </h3>
         {
@@ -32,7 +32,7 @@ const SimpleCTA = ({id, style, title, text, button, children}) => {
   );
 };
 
-SimpleCTA.propTypes = {
+SimpleSection.propTypes = {
   id: PropTypes.string.isRequired,
   style: PropTypes.string,
   title: PropTypes.element.isRequired,
@@ -46,10 +46,10 @@ SimpleCTA.propTypes = {
   children: PropTypes.element
 };
 
-SimpleCTA.defaultProps = {
+SimpleSection.defaultProps = {
   style: 'default',
   button: undefined,
   children: undefined
 };
 
-export default SimpleCTA;
+export default SimpleSection;

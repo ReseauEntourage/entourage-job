@@ -4,7 +4,7 @@ import {ContactPartial, SharePartial} from '../components/partials';
 import {EXTERNAL_LINKS} from '../constants';
 import Layout from '../components/Layout';
 import HowItWorks from '../components/sections/HowItWorks';
-import SimpleCTA from "../components/partials/SimpleCTA";
+import SimpleSection from "../components/sections/SimpleSection";
 import MultipleCTA from "../components/partials/MultipleCTA";
 import ImageTitle from "../components/sections/ImageTitle";
 import SubHeader from "../components/sections/SubHeader";
@@ -31,7 +31,7 @@ const JeVeuxAider = () => (
     <Section container="small" style="default">
       {/* Fix so that the anchor scroll to the right height */}
       <div id="private" style={{marginTop: -140, paddingTop: 140}} />
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
         Je suis un{' '}
         <span className="uk-text-primary">particulier</span>
       </h2>
@@ -61,7 +61,7 @@ const JeVeuxAider = () => (
     <Section container="small" style="muted">
       {/* Fix so that the anchor scroll to the right height */}
       <div id="actor" style={{marginTop: -140, paddingTop: 140}} />
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
         Je suis un{' '}<span className="uk-text-primary">acteur de l&apos;insertion</span>
         {' '}sociale et professionnelle
       </h2>
@@ -85,7 +85,7 @@ const JeVeuxAider = () => (
         ]}
         showVerticalDividers/>
     </Section>
-    <SimpleCTA
+    <SimpleSection
       title={
         <>
           Je deviens{' '}<span className="uk-text-primary">mécène</span>
