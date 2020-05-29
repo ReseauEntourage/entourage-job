@@ -23,6 +23,7 @@ const ContactPartial = ({ padding }) => {
         eachWidths={['expand', 'auto']}
         className="uk-width-1-2@s"
         gap="collapse"
+        middle
       >
         <div data-uk-form-custom="target: true" className="uk-width-1-1">
           <a className="uk-form-icon" disabled>

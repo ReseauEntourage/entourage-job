@@ -21,7 +21,7 @@ const JeVeuxAider = () => (
       },
       {
         href: "#actor",
-        label: "Je suis un acteur social"
+        label: "Je suis un acteur social ou associatif"
       },
       {
         href: "#give",
@@ -68,7 +68,7 @@ const JeVeuxAider = () => (
       <MultipleCTA
         data={[
           {
-            title: "Vous accompagnez un personne en démarche de réinsertion professionnelle\xa0?",
+            title: "Vous accompagnez un personne en démarche de d'insertion professionnelle\xa0?",
             button: {
               label: "Je vous l'oriente",
               href: process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION,
