@@ -38,16 +38,16 @@ const JeVeuxAider = () => (
       <MultipleCTA
         data={[
           {
-            title: "Donnez de la visibilité au candidat",
-            text: <div>Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut. Votre partage permet de donner une visibilité inédite aux candidats auprès de recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer&nbsp;!</div>,
+            title: "Partagez votre réseau pour donner une visibilité inédite à une personne exclue en recherche d’emploi",
+            text: <div>Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut. Votre partage permet de donner une visibilité inédite aux candidats auprès de potentiels recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer&nbsp;!</div>,
             button: {
               label: "Je partage un CV",
               href: "/lescandidats"
             }
           },
           {
-            title: "Engagez-vous avec un candidat LinkedOut",
-            text: <div>Vous souhaitez donner de votre temps pour tisser une relation de confiance avec un candidat et le coacher vers le retour à l’emploi&nbsp;? Entourage vous forme à la mission de bénévole-coach et vous donne les outils&nbsp;!</div>,
+            title: "Coachez une personne exclue vers l’emploi\xa0!",
+            text: <div>Vous souhaitez donner de votre temps pour tisser une relation de proximité avec un candidat et le coacher dans son retour à l’emploi&nbsp;? Entourage vous forme à la mission de bénévole-coach et vous donne les outils.</div>,
             button: {
               label: "Je deviens bénévole-coach",
               href: process.env.AIRTABLE_LINK_BECOME_COACH,
@@ -68,7 +68,7 @@ const JeVeuxAider = () => (
       <MultipleCTA
         data={[
           {
-            title: "Vous accompagnez un personne en démarche de réinsertion professionnelle",
+            title: "Vous accompagnez un personne en démarche de réinsertion professionnelle\xa0?",
             button: {
               label: "Je vous l'oriente",
               href: process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION,
@@ -76,7 +76,7 @@ const JeVeuxAider = () => (
             }
           },
           {
-            title: "Vous êtes intéressés par le projet LinkedOut et vous souhaiteriez coopérer avec nous",
+            title: "Vous êtes intéressé(e) par l’approche de LinkedOut et souhaitez coopérer avec nous\xa0?",
             button: {
               label: "Écrivez-nous",
               modal: "target: #modal-interest-linkedOut"
