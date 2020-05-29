@@ -37,7 +37,7 @@ const StepsToJoin = () => {
 
 
   return (
-    <Section container="small" id="stepToJoin" style="muted">
+    <Section container="small" id="stepsToJoin" style="muted">
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
         Quelles sont <span className="uk-text-primary">les étapes</span> du parcours LinkedOut ?
       </h2>

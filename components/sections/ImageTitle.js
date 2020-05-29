@@ -11,9 +11,9 @@ const ImageTitle = ({id, title, text, img}) => {
           <h1 className="uk-text-center uk-align-center uk-text-bold">
             {title}
           </h1>
-          <h4 className="uk-text-center uk-align-center uk-margin-remove-vertical">
+          <h3 className="uk-text-center uk-align-center uk-margin-remove-vertical">
             {text}
-          </h4>
+          </h3>
         </div>
       </div>
       <div style={{height: 90}}/>
