@@ -7,7 +7,7 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
   return (
     <div uk-height-match="target : h3">
       <Grid
-        childWidths={[`1-${data.length}@s`]}
+        childWidths={[`1-${data.length}@m`]}
         match
         gap="large"
         divider={showVerticalDividers}
@@ -18,7 +18,7 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
               className="uk-flex uk-flex-column uk-flex-middle">
               {
                 item.img &&
-                <div className={`uk-height-small uk-flex uk-flex-bottom uk-flex-center ${item.text ? 'uk-margin-medium-bottom' : ''}`}>
+                <div className={`uk-height-small uk-flex uk-flex-bottom uk-flex-center ${item.title ? 'uk-margin-medium-bottom' : ''}`}>
                   <img src={item.img} width="" height="" alt="" className="uk-height-max-small"/>
                 </div>
               }

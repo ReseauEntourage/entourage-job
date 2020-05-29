@@ -22,7 +22,7 @@ const DiscoverPartial = ({style}) => {
     if (cvs === undefined) return <div data-uk-spinner="" />;
     return (
       <GridNoSSR
-        childWidths={['1-2@s']}
+        childWidths={['1-2@m']}
         items={cvs.map((cv) => (
           <CandidatCard
             url={cv.user && cv.user.url}

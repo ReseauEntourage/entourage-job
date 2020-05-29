@@ -3,6 +3,7 @@ import Link from "next/link";
 import {IconNoSSR, Section} from '../utils';
 import {EXTERNAL_LINKS} from '../../constants';
 import Button from "../utils/Button";
+import Grid from "../utils/Grid";
 
 const StepsToJoin = () => {
   const content = [
@@ -21,6 +22,17 @@ const StepsToJoin = () => {
     {
       description: <div>L’accompagnement de LinkedOut continue après la reprise d’un emploi ! Le bénévole-coach reste à vos côtés et un interlocuteur est disponible au sein de l’équipe Linkedout pour répondre à vos questions et faire le lien avec votre employeur si nécessaire</div>,
     },
+    {
+      button:
+        <div className="uk-flex uk-flex-top uk-flex-center uk-padding-small">
+          <Button
+            style="primary"
+            className="uk-margin-medium-top"
+            isExternal
+            href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
+          >Je candidate{' '}<IconNoSSR name="chevron-right" /></Button>
+        </div>,
+    },
   ];
 
 
@@ -29,31 +41,27 @@ const StepsToJoin = () => {
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
         Quelles sont <span className="uk-text-primary">les étapes</span> du parcours LinkedOut ?
       </h2>
-      {/* TODO use grid */}
-      <div className="uk-width-expand uk-flex uk-flex-wrap uk-flex-left uk-flex-center uk-flex-around">
-        {content.map(({description}, index) => {
+      <Grid
+        childWidths={[`1-${content.length/2}@m`]}
+        match
+        gap="small"
+        items={content.map((item, index) => {
+          if(item.button) {
+            return item.button;
+          }
           return (
-            <div key={index.toString()} className="uk-flex uk-flex-top uk-flex-left uk-width-medium uk-padding-small">
+            <div key={index.toString()} className="uk-flex uk-flex-top uk-flex-left">
               <div className="uk-text-primary uk-text-large uk-text-bold">{index + 1}</div>
               <div className="uk-flex uk-padding-small uk-margin-small-top uk-flex uk-flex-top">
-                {description}
+                {item.description}
               </div>
             </div>
           );
-        })}
-        <div className="uk-flex uk-flex-top uk-padding-small">
-          <Button
-            style="primary"
-            className="uk-margin-medium-top"
-            isExternal
-            href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
-          >Je candidate{' '}<IconNoSSR name="chevron-right" /></Button>
-        </div>
+        })}/>
         <h4 className="uk-text-center">
           Si vous avez des questions, écrivez-nous à{' '}
           <br />
-          <a target='_blank' href="mailto:contact-linkedout@entourage.social">contact-linkedout@entourage.social</a></h4>
-      </div>
+          <a target='_blank' rel="noopener noreferrer" href="mailto:contact-linkedout@entourage.social">contact-linkedout@entourage.social</a></h4>
     </Section>
   );
 };
