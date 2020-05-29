@@ -39,7 +39,7 @@ const Highlights = () => {
         <div className="uk-height-large uk-width-expand">
           <Carousel containerClasses="uk-child-width-1-1" itemRenderer={(({description, img}, index) => {
             return (
-              <li>
+              <li key={index.toString()}>
                 <div className="uk-inline uk-flex uk-padding-large uk-padding-remove-vertical uk-flex-center uk-flex-wrap uk-flex-wrap-around uk-margin-medium-top">
                   <div className="uk-inline">
                     <img src={img} className="uk-flex-1 uk-width-large uk-padding-small"  alt="" />

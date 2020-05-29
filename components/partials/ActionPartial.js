@@ -41,7 +41,7 @@ const ActionPartial = ({ style }) => (
 
       <div uk-height-match="target : h3">
         <GridNoSSR
-          childWidths={['1-3@s']}
+          childWidths={['1-3@m']}
           middle
           gap="large"
           items={datas.map((value, index) => (
