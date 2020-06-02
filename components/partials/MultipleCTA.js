@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import {Button, IconNoSSR} from "../utils";
 import Grid from '../utils/Grid';
 
-const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers, data}) => {
+const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers, data, spacing, className}) => {
   return (
-    <div uk-height-match="target : h3">
+    <div uk-height-match="target : h3" className={className}>
       <Grid
         childWidths={[`1-${data.length}@m`]}
         match
-        gap="large"
+        gap={spacing}
         divider={showVerticalDividers}
         items={ data.map((item, index) => {
           return (
@@ -34,7 +34,7 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                   {showHorizontalDividers && <hr className="uk-divider-small uk-margin-remove-vertical" />}
                   {
                     item.text &&
-                    <div className={`${item.button ? '' : 'uk-margin-remove-bottom'} uk-flex-1 uk-margin-medium-top uk-margin-medium-bottom`}>
+                    <div className={`${item.button ? '' : 'uk-margin-remove-bottom'} ${item.title ? 'uk-margin-medium-top' : ''} uk-flex-1 uk-margin-medium-bottom`}>
                       {item.text}
                     </div>
                   }
@@ -64,6 +64,8 @@ MultipleCTA.propTypes = {
   showNumbers: PropTypes.bool,
   showHorizontalDividers: PropTypes.bool,
   showVerticalDividers: PropTypes.bool,
+  spacing: PropTypes.oneOf('small', 'medium', 'large'),
+  className: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string,
     text: PropTypes.element,
@@ -80,7 +82,9 @@ MultipleCTA.propTypes = {
 MultipleCTA.defaultProps = {
   showNumbers: false,
   showHorizontalDividers: false,
-  showVerticalDividers: false
+  showVerticalDividers: false,
+  spacing: 'large',
+  className: ''
 };
 
 export default MultipleCTA;

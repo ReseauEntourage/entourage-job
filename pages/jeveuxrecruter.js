@@ -15,32 +15,22 @@ import SimpleSection from "../components/sections/SimpleSection";
 import MultipleCTA from "../components/partials/MultipleCTA";
 import HireSteps from "../components/sections/HireSteps";
 import Carousel from "../components/utils/Carousel";
+import Grid from "../components/utils/Grid";
+import WhatItBrings from "../components/sections/WhatItBrings";
 
 const JeVeuxRecruter = () => {
   const waysToJoin = [
     {
-      description: <div>En fin de parcours d’insertion, ils nous sont <span className="uk-text-bold">orientés par les chargées d’accompagnement</span> des structures d’insertion professionnelles</div>,
+      text: <div>En fin de parcours d’insertion, les candidats nous sont <span className="uk-text-bold">orientés par les chargées d’accompagnement</span> des structures d’insertion professionnelles</div>,
     },
     {
-      description: <div>Ils sont <span className="uk-text-bold">orientés par les travailleurs sociaux d’associations partenaires</span> (Armée du Salut, Aurore, Emmaüs Solidarité,...)</div>,
+      text: <div>Les candidats sont <span className="uk-text-bold">orientés par les travailleurs sociaux d’associations partenaires</span> ou de dispositif publics</div>,
     },
     {
-      description: <div>Ils sont orientés par <span className="uk-text-bold">des membres du réseau Entourage</span></div>,
+      text: <div>Les candidats sont orientés par <span className="uk-text-bold">des membres du réseau Entourage</span></div>,
     },
     {
-      description: <div>Ils <span className="uk-text-bold">candidatent spontanément</span> depuis le site internet</div>,
-    },
-  ];
-
-  const whatItBrings = [
-    {
-      description: <div><span className="uk-text-bold">Des candidats prêts et motivés pour travailler</span>, accompagnés individuellement pendant la recherche et après la reprise d’emploi par un bénévole coach</div>,
-    },
-    {
-      description: <div>L’équipe LinkedOut vous <span className="uk-text-bold">accompagne dans votre recrutement inclusif</span> (kit d’accueil et d’intégration du candidat, interlocuteur privilégié, prise de feedback régulière...)</div>,
-    },
-    {
-      description: <div><span className="uk-text-bold">Des événements conviviaux avec un réseau d’entreprises engagées</span>, fédérées autour d’une même vision de société plus inclusive</div>,
+      text: <div>Les candidats <span className="uk-text-bold">candidatent spontanément</span> depuis le site internet</div>,
     },
   ];
 
@@ -112,75 +102,78 @@ const JeVeuxRecruter = () => {
         img='static/img/header_pic.jpg'
         id="hire-title"
         title={<>Vous souhaitez <span className="uk-text-primary">recruter un candidat LinkedOut ?</span></>}
-        text={"La précarité et l'exclusion n'empêchent pas le talent\xa0! Recruteurs, plus qui quiconque, faites la différence\xa0! Soyez des acteurs essentiels du projet LinkedOut en donnant la chance à un ou plusieurs candidats correspondant aux compétences que vous recherchez"} />
+        text={"La précarité et l'exclusion n'empêchent pas le talent\xa0!"} />
       <Section
-        id="whereTheyCome"
+        id="makeADifference"
         style="muted"
         container="small">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+        <h4 className="uk-align-center uk-text-center">
+          Recruteurs, plus qui quiconque, faites la différence&nbsp;! Soyez des acteurs essentiels du projet LinkedOut en donnant la chance à un ou plusieurs candidats correspondant aux compétences que vous recherchez.
+        </h4>
+      </Section>
+      <Section
+        id="whereTheyComeFrom"
+        style="default"
+        container="small">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
           D&apos;où viennent les candidats <span className="uk-text-primary">LinkedOut&nbsp;?</span>
         </h2>
         <h4 className="uk-align-center uk-text-center">
-          LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la capacité et la motivation pour travailler&nbsp;: personnes ayant connus des parcours de rue, personnes accueillies dans des structures d&apos;hébergement temporaires (hotels sociaux, centre d&apos;hébergement d&apos;urgence,...), personnes sortants de parcours d&apos;insertion, jeunes en précarité, etc...
+          LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la capacité et la motivation pour travailler&nbsp;:
+          <br/>
+          <span>
+            personnes ayant connus des parcours de rue, personnes accueillies dans des structures d&apos;hébergement temporaires (hotels sociaux, centre d&apos;hébergement d&apos;urgence, etc.) personnes sortants de parcours d&apos;insertion, jeunes en précarité&nbsp;...
+          </span>
         </h4>
-        <div className="uk-background-default uk-width-expand uk-padding-large uk-margin-large-bottom uk-margin-large-top">
-          <div className="uk-overflow-hidden">
-            <h4 className="uk-text-bold uk-text-primary uk-width-large uk-margin-medium-bottom">Les candidats peuvent rejoindre LinkedOut de différentes manières&nbsp;:</h4>
-            <div className="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small uk-grid-divider">
-              {waysToJoin.map(({description}, index) => <div key={index.toString()} className="">{description}</div>)}
-            </div>
-          </div>
-        </div>
-        <h4 className="uk-text-center uk-margin-medium-bottom">
-          LinkedOut accompagne les candidats dans l’apprentissage des codes de l’entreprise par le soutien individualisé des bénévoles-coach, des immersions possibles en entreprises et grâce au réseau d’anciens candidats LinkedOut qui transmettent leur expérience.
-        </h4>
-        <MultipleCTA
-          data={[
-            {
-              title: "Je cherche un candidat",
-              button: {
-                label: "Je découvre le candidat dont j’ai besoin",
-                href: "/lescandidats"
-              }
-            },
-            {
-              title: "Mon offre d’emploi concerne plusieurs profils",
-              button: {
-                label: "J’envoie mon offre à LinkedOut",
-                href: process.env.AIRTABLE_LINK_BECOME_COACH,
-                modal: "#modal-offer-add"
-              }
-            }
-          ]}
-          showVerticalDividers
-        />
       </Section>
-      <Section container="small" style="default">
+      <Section
+        id="waysToJoin"
+        style="muted"
+        container="small">
         <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-          <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
-            Ce que LinkedOut <span className="uk-text-primary">vous apporte</span>
+          <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+            Plusieurs <span className="uk-text-primary">manières de rejoindre</span> LinkedOut
           </h2>
-          <div className="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-grid uk-grid-match uk-grid-small">
-            <div>
-              <div className="uk-card uk-card-body uk-background-primary" style={{color: 'white'}}>{whatItBrings[0].description}</div>
-            </div>
-            <div>
-              <div className="uk-card uk-card-body uk-background-secondary" style={{color: 'white'}}>{whatItBrings[1].description}</div>
-            </div>
-            <div>
-              <div className="uk-card uk-card-body uk-background-muted">{whatItBrings[2].description}</div>
-            </div>
-          </div>
+          <MultipleCTA
+            data={waysToJoin}
+            showVerticalDividers
+            spacing='small'
+            className="uk-margin-large-bottom"
+          />
+          <hr className="uk-divider-small uk-margin-remove-top uk-margin-large-bottom" />
+          <MultipleCTA
+            data={[
+              {
+                title: "Je cherche un candidat",
+                text: <div>Je cherche un profil en particulier</div>,
+                button: {
+                  label: "Je découvre les candidats",
+                  href: "/lescandidats"
+                }
+              },
+              {
+                title: "Mon offre d’emploi concerne plusieurs profils",
+                text: <div>Vous avez régulièrement des besoins de recrutement&nbsp;? Vous avez plusieurs offres d’emploi à pourvoir&nbsp;?</div>,
+                button: {
+                  label: "J’envoie mon offre à LinkedOut",
+                  href: process.env.AIRTABLE_LINK_BECOME_COACH,
+                  modal: "#modal-offer-add"
+                }
+              }
+            ]}
+            showHorizontalDividers
+          />
         </div>
       </Section>
       <HireSteps />
+      <WhatItBrings />
       <Section id="testimony">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
           <span className="uk-text-primary">LinkedOut plebiscité</span>{' '}
           par les recruteurs...
         </h2>
         <h4 className="uk-align-center uk-text-center uk-margin-medium-bottom">
-          Le retour des recruteurs en entreprise est unanime&nbsp;: l&apos;arrivée des candidats fédère les salariés et transforme le projet d&apos;entreprise en une véritable aventure humaine, porteuse de sens pour tous !
+          Le retour des recruteurs en entreprise est unanime&nbsp;: l&apos;arrivée des candidats fédère les salariés et transforme le projet d&apos;entreprise en une véritable aventure humaine, porteuse de sens pour tous&nbsp;!
         </h4>
         <div className="uk-width-expand">
           <Carousel
