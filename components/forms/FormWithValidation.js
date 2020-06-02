@@ -138,7 +138,7 @@ const FormWithValidation = ({
 };
 FormWithValidation.propTypes = {
   defaultValues: PropTypes.arrayOf(PropTypes.string),
-  onCancel: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
   onSubmit: PropTypes.func.isRequired,
   formSchema: PropTypes.shape({
     id: PropTypes.string,
@@ -150,5 +150,6 @@ FormWithValidation.propTypes = {
 FormWithValidation.defaultProps = {
   submitText: undefined,
   defaultValues: [],
+  onCancel: undefined
 };
 export default FormWithValidation;

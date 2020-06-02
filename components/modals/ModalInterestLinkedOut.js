@@ -2,7 +2,7 @@ import React from 'react';
 import SuccessModalContent from './SuccessModalContent';
 import StepperModal from "./StepperModal";
 import FormWithValidation from "../forms/FormWithValidation";
-import interestLinkedOutSchema from "../forms/schema/formInterestLinkedOut";
+import interestLinkedOutSchema from "../forms/schema/formInterestLinkedOut.json";
 import Api from "../../Axios";
 
 const ModalInterestLinkedOut = () => (

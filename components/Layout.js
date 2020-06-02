@@ -43,7 +43,9 @@ const Layout = ({
         isAuthentificated &&
         router.asPath !== '/jeveuxaider' &&
         router.asPath !== '/jeveuxtravailler' &&
-        router.asPath !== '/jeveuxrecruter' ? (
+        router.asPath !== '/jeveuxrecruter' &&
+        router.asPath !== '/lescandidats' &&
+        router.asPath !== '/contact' ? (
           <HeaderConnected />
         ) : (
           router.asPath !== '/' && <Header isHome={false} />

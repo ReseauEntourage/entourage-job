@@ -96,7 +96,12 @@ const Footer = () => {
           >
             <ul className="uk-subnav uk-subnav-divider uk-flex-left@m uk-flex-center uk-light">
               <li className="uk-text-capitalize">
-                <SimpleLink href="/">Mentions légales</SimpleLink>
+                <SimpleLink
+                  isExternal
+                  href="https://www.entourage.social/politique-de-confidentialite/"
+                >
+                  Mentions légales
+                </SimpleLink>
               </li>
               <li className="uk-text-capitalize">
                 <SimpleLink href="/contact">Contact</SimpleLink>
