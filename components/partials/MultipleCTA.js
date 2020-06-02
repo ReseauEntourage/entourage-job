@@ -18,7 +18,7 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
               className="uk-flex uk-flex-column uk-flex-middle">
               {
                 item.img &&
-                <div className={`uk-height-small uk-flex uk-flex-bottom uk-flex-center ${item.title ? 'uk-margin-medium-bottom' : ''}`}>
+                <div className="uk-height-small uk-flex uk-flex-bottom uk-flex-center uk-margin-medium-bottom">
                   <img src={item.img} width="" height="" alt="" className="uk-height-max-small"/>
                 </div>
               }
