@@ -32,7 +32,14 @@ const CandidatListPartial = () => (
         <p style={{ marginTop: '20px' }}>
           Tous ces candidats cherchent un travail en Île de France, si vous
           êtes sur un autre territoire, contactez-nous à
-          contact-linkedout@entourage.social
+          <a
+            className="uk-link-text uk-text-primary"
+            target='_blank'
+            rel="noopener noreferrer"
+            href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
+          >
+            {process.env.MAILJET_CONTACT_EMAIL}
+          </a>
         </p>
       </GridNoSSR>
     </GridNoSSR>

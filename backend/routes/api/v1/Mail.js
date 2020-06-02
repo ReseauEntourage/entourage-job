@@ -40,8 +40,8 @@ router.post('/contact-us', (req, res) => {
   if (email && email.length > 0 && (message && message.length > 0)) {
     mailController
       .sendMail({
-        toEmail: process.env.MAILJET_TO_EMAIL,
-        subject: `LinkedOut - Demande de contact`,
+        toEmail: process.env.MAILJET_CONTACT_EMAIL,
+        subject: `LinkedOut - Contact`,
         text: `Prénom : ${firstName}\nNom : ${lastName}\nTéléphone : ${phone || ''}\nAdresse mail : ${email}\nStructure : ${structure || ''}\nMessage : ${message}`,
       })
       .then((value) => {
