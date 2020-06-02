@@ -43,12 +43,28 @@ const INCLUDE_USER_CANDIDAT = [
   },
 ];
 
+const capitalizeName = (name) => {
+  let capitalizedName = name.toLowerCase()
+    .split(' ')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ');
+
+  capitalizedName = capitalizedName
+    .split('-')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join('-');
+
+  return capitalizedName;
+};
+
 const createUser = (newUser) => {
   const infoLog = 'createUser -';
   console.log(`${infoLog} Création du User`);
 
   const userToCreate = { ...newUser };
   userToCreate.role = newUser.role || USER_ROLES.CANDIDAT;
+  userToCreate.firstName = capitalizeName(userToCreate.firstName);
+  userToCreate.lastName = capitalizeName(userToCreate.lastName);
 
   return User.create(userToCreate).then(async (res) => {
     if (userToCreate.userToCoach && res.role === USER_ROLES.COACH) {
