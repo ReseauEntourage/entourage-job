@@ -28,6 +28,7 @@ const WhatItBrings = () => {
           spacing="medium"
           className="uk-margin-large-bottom"
         />
+        <hr className="uk-divider-small uk-margin-remove-top uk-margin-large-bottom" />
         <MultipleCTA
           data={[
             {
