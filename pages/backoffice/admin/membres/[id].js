@@ -243,7 +243,7 @@ const CVPage = () => {
                           .catch((err) => {
                             console.error(err);
                             UIkit.notification(
-                              "Une erreur c'est produite lors de la mise à jour de votre email",
+                              "Une erreur s'est produite lors de la mise à jour de votre email",
                               'danger'
                             );
                           })
@@ -265,7 +265,7 @@ const CVPage = () => {
                           .catch((err) => {
                             console.error(err);
                             UIkit.notification(
-                              "Une erreur c'est produite lors de la mise à jour de votre email",
+                              "Une erreur s'est produite lors de la mise à jour de votre email",
                               'danger'
                             );
                           })

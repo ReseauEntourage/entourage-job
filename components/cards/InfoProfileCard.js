@@ -49,7 +49,7 @@ const InfoProfileCard = ({
         <IconNoSSR name="calendar" />{' '}
         {availability && availability !== ''
           ? availability
-          : 'Disponibilité non renseignée'}
+          : 'Disponibilités non renseignée'}
       </li>
       <li>
         <IconNoSSR name="users" />{' '}

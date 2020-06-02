@@ -117,7 +117,7 @@ const MembersAdmin = ({ query: { role } }) => {
                 }
                 else {
                   UIkit.notification(
-                    "Une erreur c'est produite lors de la création du membre",
+                    "Une erreur s'est produite lors de la création du membre",
                     'danger'
                   );
                 }

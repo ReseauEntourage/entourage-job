@@ -4,7 +4,7 @@
     {
       "id": "contracts",
       "name": "contracts",
-      "title": "Type de poste recherché",
+      "title": "Type de contrat recherché",
       "type": "text",
       "component": "select-request-creatable",
       "isMulti": true
@@ -21,7 +21,7 @@
       "name": "availability",
       "component": "input",
       "type": "text",
-      "title": "Disponibilité de travail possibles"
+      "title": "Disponibilités de travail possibles"
     },
     {
       "id": "languages",
