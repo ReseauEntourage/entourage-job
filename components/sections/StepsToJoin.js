@@ -61,7 +61,15 @@ const StepsToJoin = () => {
         <h4 className="uk-text-center">
           Si vous avez des questions, écrivez-nous à{' '}
           <br />
-          <a target='_blank' rel="noopener noreferrer" href="mailto:contact-linkedout@entourage.social">contact-linkedout@entourage.social</a></h4>
+          <a
+            className="uk-link-text uk-text-primary"
+            target='_blank'
+            rel="noopener noreferrer"
+            href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
+          >
+            {process.env.MAILJET_CONTACT_EMAIL}
+          </a>
+        </h4>
     </Section>
   );
 };

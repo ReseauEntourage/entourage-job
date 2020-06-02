@@ -292,9 +292,11 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
             <br />
             <a
               className="uk-link-text uk-text-primary"
-              href="mailto:contact-linkedout@entourage.social"
+              target='_blank'
+              rel="noopener noreferrer"
+              href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
             >
-              contact-linkedout@entourage.social
+              {process.env.MAILJET_CONTACT_EMAIL}
             </a>
           </p>
           <ImgNoSSR
