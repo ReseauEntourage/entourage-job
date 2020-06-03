@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const uid = require('uid-safe');
-const sslRedirect = require('heroku-ssl-redirect');
+const enforce = require('express-sslify');
 const passport = require('./config/passport');
 
 const routeCV = require('./routes/api/v1/CV');
@@ -16,8 +16,11 @@ const app = express();
 let server;
 
 module.exports.prepare = () => {
+
+  const env = process.env.NODE_ENV || 'development';
+
   // enable ssl redirect
-  app.use(sslRedirect());
+  if(env !== 'development') app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
   app.use(express.json());
 
