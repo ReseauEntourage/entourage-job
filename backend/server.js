@@ -17,10 +17,10 @@ let server;
 
 module.exports.prepare = () => {
 
-  const env = process.env.NODE_ENV || 'development';
+  const dev = process.env.NODE_ENV !== 'production';
 
   // enable ssl redirect
-  if(env !== 'development') app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  if(!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
   app.use(express.json());
 
