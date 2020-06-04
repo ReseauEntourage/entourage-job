@@ -1,21 +1,17 @@
 /* global UIkit */
 import React from 'react';
 import Layout from '../components/Layout';
-import { Button, Section, GridNoSSR, IconNoSSR } from '../components/utils';
+import { Button, Section, IconNoSSR } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
-import HowItWorks from '../components/sections/HowItWorks';
-import StepCard from '../components/cards/StepCard';
 import schema from '../components/forms/schema/formEditOpportunity';
 import Api from '../Axios';
 import StepperModal from '../components/modals/StepperModal';
 import FormWithValidation from '../components/forms/FormWithValidation';
 import ImageTitle from "../components/sections/ImageTitle";
-import SimpleSection from "../components/sections/SimpleSection";
 import MultipleCTA from "../components/partials/MultipleCTA";
 import HireSteps from "../components/sections/HireSteps";
 import Carousel from "../components/utils/Carousel";
-import Grid from "../components/utils/Grid";
 import WhatItBrings from "../components/sections/WhatItBrings";
 
 const JeVeuxRecruter = () => {
