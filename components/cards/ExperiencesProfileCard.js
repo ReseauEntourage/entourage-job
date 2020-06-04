@@ -115,7 +115,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           <ModalConfirm
             id="modal-experience-remove"
             text="Êtes-vous sûr(e) de vouloir supprimer cette expérience ?"
-            buttonText="supprimer"
+            buttonText="Supprimer"
             onConfirm={() => {
               experiences.splice(currentIndex, 1);
               onChange({ experiences });

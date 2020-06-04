@@ -99,7 +99,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
       <ModalConfirm
         id="modal-testimonial-remove"
         text="Êtes-vous sûr(e) de vouloir supprimer cette recommandation ?"
-        buttonText="supprimer"
+        buttonText="Supprimer"
         onConfirm={() => {
           reviews.splice(currentIndex, 1);
           onChange({ reviews });

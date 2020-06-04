@@ -6,7 +6,8 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import FooterForm from '../utils/FooterForm';
 import FormValidator from './FormValidator';
-import generate from './fieldGenerator';
+import GenericField from './GenericField';
+
 
 /**
  * Permet de creer un formulaire avec la generation de ses champs et validations de champs
@@ -32,15 +33,14 @@ const FormWithValidation = ({
   const updateForm = ({
     target: { checked, name, type, value, selectedIndex },
   }) => {
+    console.log( checked, name, type, value, selectedIndex );
     let fieldValue;
-    if (type === 'checkbox') {
-      fieldValue = checked;
-    } else if (type === 'select-one' && selectedIndex === 0) {
+    if (type === 'select-one' && selectedIndex === 0) {
       fieldValue = null; // si on est sur le placeholder ( option sans valeur )
     } else fieldValue = value;
 
     /* Validators start */
-    const tmpFieldValues = fieldValues;
+    const tmpFieldValues = {...fieldValues};
     tmpFieldValues[name] = fieldValue;
     setFieldValues(tmpFieldValues); // enregistre la valeur du champs
     const validation = validator.validate(tmpFieldValues); // envoie une copie des champs pour que le state ne soit pas altéré
@@ -64,6 +64,7 @@ const FormWithValidation = ({
     if (validation.isValid) {
       // Si les validators sont OK.
       onSubmit(fieldValues, (msg) => setError(msg)); // c'est le props onsubmit de FormWithValidation
+
     } else {
       // erreur de validation
       const tmpFieldValidations = fieldValidations;
@@ -78,7 +79,7 @@ const FormWithValidation = ({
     }
   };
 
-  useEffect(() => {
+  const initializeForm = () => {
     // on extrait les nom des champs
     const fieldsId = fields.map((field) => field.id);
     const validations = fieldsId.reduce((acc, value) => {
@@ -92,6 +93,10 @@ const FormWithValidation = ({
 
     setFieldValues(values);
     setFieldValidations(validations);
+  };
+
+  useEffect(() => {
+    initializeForm();
   }, [fields, usedDefaultValues]);
 
   return (
@@ -104,14 +109,13 @@ const FormWithValidation = ({
       <fieldset className="uk-fieldset">
         {fields.map((value, i) => (
           <li key={i} hidden={!!value.hidden}>
-            {generate(
-              value,
-              id,
-              usedDefaultValues,
-              updateForm,
-              (name) => fieldValidations[`valid_${name}`],
-              (name) => fieldValues[name]
-            )}
+            <GenericField
+              data={value}
+              formId={id}
+              value={fieldValues[value.id]}
+              onChange={updateForm}
+              getValid={(name) => fieldValidations[`valid_${name}`]}
+              getValue={(name) => fieldValues[name]} />
           </li>
         ))}
       </fieldset>
@@ -122,13 +126,7 @@ const FormWithValidation = ({
         onCancel={
           onCancel &&
           (() => {
-            // todo: le reset des champs ne fonctionne pas avec un simple changement de state
-            // Peut etre tenter en travaillant sur le generate field et ses champs
-            const tmpDefaultValues = defaultValues;
-            fields.forEach((field) => {
-              tmpDefaultValues[field.id] = '';
-            });
-            setUsedDefaultValues(tmpDefaultValues);
+            initializeForm();
             onCancel();
           })
         }
@@ -137,7 +135,7 @@ const FormWithValidation = ({
   );
 };
 FormWithValidation.propTypes = {
-  defaultValues: PropTypes.arrayOf(PropTypes.string),
+  defaultValues: PropTypes.objectOf(PropTypes.any),
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func.isRequired,
   formSchema: PropTypes.shape({
@@ -149,7 +147,7 @@ FormWithValidation.propTypes = {
 };
 FormWithValidation.defaultProps = {
   submitText: undefined,
-  defaultValues: [],
+  defaultValues: {},
   onCancel: undefined
 };
 export default FormWithValidation;

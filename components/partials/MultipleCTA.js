@@ -64,7 +64,7 @@ MultipleCTA.propTypes = {
   showNumbers: PropTypes.bool,
   showHorizontalDividers: PropTypes.bool,
   showVerticalDividers: PropTypes.bool,
-  spacing: PropTypes.oneOf('small', 'medium', 'large'),
+  spacing: PropTypes.oneOf(['small', 'medium', 'large']),
   className: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string,

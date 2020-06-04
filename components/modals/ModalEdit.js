@@ -56,12 +56,12 @@ ModalEdit.propTypes = {
     rules: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   onSubmit: PropTypes.func.isRequired,
-  defaultValues: PropTypes.arrayOf(PropTypes.string),
+  defaultValues: PropTypes.objectOf(PropTypes.any),
   description: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   submitText: PropTypes.string,
 };
 ModalEdit.defaultProps = {
-  defaultValues: [],
+  defaultValues: {},
   description: undefined,
   submitText: 'Sauvegarder',
 };

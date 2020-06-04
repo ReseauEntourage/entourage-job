@@ -139,10 +139,11 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       name="status"
                       placeholder="statut"
                       options={OFFER_STATUS}
-                      defaultValue={status}
+                      value={status}
                       onChange={(event) => {
                         setLoadingStatus(true);
                         const { userOpportunity } = currentOffer;
+                        console.log(event.target.value);
                         userOpportunity.status = Number(event.target.value);
                         updateOpportunityUser(userOpportunity);
                         setLoadingStatus(false);
@@ -203,7 +204,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                 name="modal-offer-comment"
                 title="Ecrivez un commentaire à propos de cette opportunité..."
                 type="text"
-                defaultValue={note}
+                value={noteBuffer}
                 onChange={(e) => setNoteBuffer(e.target.value)}
               />
               {noteBuffer === note || (note === null && noteBuffer === '') ? (
