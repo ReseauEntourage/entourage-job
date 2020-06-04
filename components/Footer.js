@@ -4,10 +4,10 @@ import {
   TwitterShareButton,
   LinkedinShareButton,
 } from 'react-share';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
 import AssociationEntourage from './partials/AssociationEntourage';
+import Partenaires from './partials/Partenaires';
 import Button from "./utils/Button";
 
 const sharedTitle = 'Entourage Jobs';
@@ -21,6 +21,7 @@ const Footer = () => {
   const { asPath } = useRouter();
   return (
     <footer id="footer">
+      <Partenaires />
       <AssociationEntourage />
       <Section style="secondary" size="small" preserveColor>
         <GridNoSSR

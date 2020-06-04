@@ -1,6 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
-import {GridNoSSR, SimpleLink, ImgNoSSR, Background, Section, IconNoSSR} from '../utils';
+import {GridNoSSR, ImgNoSSR, Background, Section, IconNoSSR} from '../utils';
 import Button from "../utils/Button";
 
 const AssociationEntourage = () => (
@@ -13,8 +12,8 @@ const AssociationEntourage = () => (
         childWidths={['auto']}
         className="uk-text-center"
       >
-        <div className="uk-margin-medium-top">
-          <ImgNoSSR src="/static/img/logo-entourage.svg" alt="logo-entourage" />
+        <div style={{borderTop: 'solid 1px rgba(255, 255, 255, 0.2)'}}>
+          <ImgNoSSR className="uk-margin-large-top" src="/static/img/logo-entourage.svg" alt="logo-entourage" />
           <h1 className="uk-text-bold uk-margin-small">
             <span style={{ color: '#fff' }}>L&apos;association </span>
             <span className="uk-text-primary">Entourage</span>
