@@ -2,7 +2,7 @@
 /* eslint-disable default-case */
 /* eslint-disable max-classes-per-file */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import PropTypes from 'prop-types';
 import FooterForm from '../utils/FooterForm';
 import FormValidator from './FormValidator';
@@ -14,13 +14,14 @@ import GenericField from './GenericField';
  * Regroupe les deux composants du fichier formWithValidationOld en stateless
  * - Plus lisible
  */
-const FormWithValidation = ({
+const FormWithValidation = forwardRef(({
   formSchema: { id, rules, fields },
   defaultValues,
   submitText,
   onSubmit,
   onCancel,
-}) => {
+}, ref) => {
+
   const validator = new FormValidator(rules);
 
   const [usedDefaultValues, setUsedDefaultValues] = useState(defaultValues);
@@ -33,7 +34,6 @@ const FormWithValidation = ({
   const updateForm = ({
     target: { name, type, value, checked, selectedIndex },
   }) => {
-    console.log( name, type, value, checked, selectedIndex );
     let fieldValue;
     if(type === 'checkbox') {
       fieldValue = checked;
@@ -94,9 +94,16 @@ const FormWithValidation = ({
       return acc;
     }, {});
 
+    console.log("INITIAL VALUES ", values);
+
     setFieldValues(values);
     setFieldValidations(validations);
   };
+
+  useImperativeHandle(ref, () => ({
+    resetForm: initializeForm
+  }));
+
 
   useEffect(() => {
     initializeForm();
@@ -136,7 +143,7 @@ const FormWithValidation = ({
       />
     </form>
   );
-};
+});
 FormWithValidation.propTypes = {
   defaultValues: PropTypes.objectOf(PropTypes.any),
   onCancel: PropTypes.func,

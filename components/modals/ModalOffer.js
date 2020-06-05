@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import PropsType, { func } from 'prop-types';
 import moment from 'moment';
 import { GridNoSSR, Button, IconNoSSR, SimpleLink } from '../utils';
@@ -59,6 +59,7 @@ export function translateCategory(isPublic) {
   return 'Offre inconnue';
 }
 const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
+
   if (!currentOffer) {
     currentOffer = { userOpportunity: {}, businessLines: [] };
   }
@@ -77,7 +78,9 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
     setCurrentOffer({ ...currentOffer, opportunityUser });
   };
 
-  useEffect(() => setNoteBuffer(note), [currentOffer]);
+  const resetNoteBuffer = () => setNoteBuffer(note);
+
+  useEffect(resetNoteBuffer, [currentOffer]);
 
   // futur: use moment
   const date = new Date(currentOffer.date);
@@ -90,7 +93,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
         className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${archived &&
           'uk-light uk-background-secondary'}`}
       >
-        <CloseButtonNoSSR className="uk-modal-close-default" />
+        <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetNoteBuffer} />
         {!currentOffer ? null : (
           <div className="uk-modal-body">
             <GridNoSSR gap="small" between middle>

@@ -1,5 +1,5 @@
 /* global UIkit */
-import React from 'react';
+import React, {useRef} from 'react';
 import Layout from '../components/Layout';
 import { Button, Section, IconNoSSR } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
@@ -14,6 +14,12 @@ import WaysToJoin from "../components/sections/WaysToJoin";
 import Reviews from "../components/sections/Reviews";
 
 const JeVeuxRecruter = () => {
+  const form = useRef(null);
+
+  const resetForm = () => {
+    form.current.resetForm();
+  };
+
   const candidatId = schema.fields[
     schema.fields.findIndex((field) => field.id === 'candidatId')
   ];
@@ -63,6 +69,7 @@ const JeVeuxRecruter = () => {
       <StepperModal
         id="modal-offer-add"
         title="Proposer une opportunité"
+        resetForm={resetForm}
         composers={[
           (closeModal, nextStep) => (
             <div>
@@ -73,6 +80,7 @@ const JeVeuxRecruter = () => {
                 page CV !
               </p>
               <FormWithValidation
+                ref={form}
                 submitText="Envoyer"
                 formSchema={schema}
                 onCancel={closeModal}

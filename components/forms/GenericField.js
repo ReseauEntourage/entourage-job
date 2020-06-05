@@ -129,6 +129,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
             J&apos;accepte les <a>CGU</a>
           </span>
         }
+        value={value}
         valid={getValid(data.name)}
         onChange={onChange}
         disabled={data.disabled}

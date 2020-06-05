@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useContext, useEffect } from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { Section } from '../components/utils';
@@ -15,6 +15,12 @@ import SuccessModalContent from "../components/modals/SuccessModalContent";
 const Login = () => {
   const { login, user } = useContext(UserContext);
   const router = useRouter();
+
+  const form = useRef(null);
+
+  const resetForm = () => {
+    form.current.resetForm();
+  };
 
   useEffect(() => {
     if (user) {
@@ -56,9 +62,11 @@ const Login = () => {
       <StepperModal
         id="modal-lost-pwd"
         title="Mot de passe oublié ?"
+        resetForm={resetForm}
         composers={[
           (closeModal, nextStep) => (
             <FormWithValidation
+              ref={form}
               submitText="Envoyer"
               formSchema={schemaLostPwd}
               onCancel={closeModal}
