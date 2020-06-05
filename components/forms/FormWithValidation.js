@@ -31,11 +31,14 @@ const FormWithValidation = ({
 
   // fonction permettant de verifier une champs d'entré utilisateur
   const updateForm = ({
-    target: { checked, name, type, value, selectedIndex },
+    target: { name, type, value, checked, selectedIndex },
   }) => {
-    console.log( checked, name, type, value, selectedIndex );
+    console.log( name, type, value, checked, selectedIndex );
     let fieldValue;
-    if (type === 'select-one' && selectedIndex === 0) {
+    if(type === 'checkbox') {
+      fieldValue = checked;
+    }
+    else if (type === 'select-one' && selectedIndex === 0) {
       fieldValue = null; // si on est sur le placeholder ( option sans valeur )
     } else fieldValue = value;
 

@@ -23,12 +23,8 @@ const Checkbox = ({
           className={`uk-checkbox${
             valid !== undefined && valid.isInvalid ? ' uk-form-danger' : ''
           }`}
-          value={value}
-          onChange={() => {
-            onChange({
-              target: { name, value: !value, type: 'checkbox' },
-            });
-          }}
+          checked={value}
+          onChange={(event) => onChange(event)}
         />
         <span style={{ paddingLeft: '10px' }}>{title}</span>
       </label>
