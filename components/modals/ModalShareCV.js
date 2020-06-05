@@ -12,7 +12,7 @@ const ModalShareCV = ({ firstName, id }) => {
   const form = useRef(null);
 
   const resetForm = () => {
-    form.current.resetForm();
+    if(form.current) form.current.resetForm();
   };
 
   return (

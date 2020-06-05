@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useContext, useState, useEffect } from 'react';
+import React, {useContext, useState, useEffect, useRef} from 'react';
 import { PropTypes } from 'prop-types';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
@@ -141,6 +141,12 @@ const Parametres = () => {
     }
   }, [user]);
 
+  const form = useRef(null);
+
+  const resetForm = () => {
+    if(form.current) form.current.resetForm();
+  };
+
   if (!user) return null;
 
   return (
@@ -265,6 +271,7 @@ const Parametres = () => {
               {loadingPassword ? <div data-uk-spinner="ratio: .8" /> : <></>}
             </GridNoSSR>
             <FormWithValidation
+              ref={form}
               submitText="Modifier"
               formSchema={schemaChangePassword}
               onSubmit={(
@@ -285,6 +292,7 @@ const Parametres = () => {
                         'Nouveau mot de passe enregistré',
                         'success'
                       );
+                      resetForm();
                       setLoadingPassword(false); // lorsque utilisation de finaly => erreur de node/child
                     })
                     .catch((err) => {

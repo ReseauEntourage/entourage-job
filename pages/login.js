@@ -19,7 +19,7 @@ const Login = () => {
   const form = useRef(null);
 
   const resetForm = () => {
-    form.current.resetForm();
+    if(form.current) form.current.resetForm();
   };
 
   useEffect(() => {

@@ -14,7 +14,7 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
   const [index, setIndex] = useState(0);
   const [wrappedComponents, setWrappedComponents] = useState();
   const close = () => {
-    // resetForm();
+    resetForm();
     UIkit.modal(`#${id}`).hide();
     // TODO: Probleme car il est possible que la modale se ferme par un moyen autre qu'ici (uk-close-icon~)
     setIndex(0);
