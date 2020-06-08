@@ -11,7 +11,7 @@ const JeVeuxTravailler = () => {
       <ImageTitle
         img='static/img/header_pic_work.jpg'
         id="work-title"
-        title={<>Vous cherchez <span className="uk-text-primary">un travail ?</span></>}
+        title={<>Vous cherchez <span className="uk-text-primary">du travail ?</span></>}
         text="LinkedOut s’adresse à toute personne en situation d’exclusion ou de précarité, dans une démarche d’insertion professionnelle, motivée et en capacité de travailler." />
       <Highlights />
       <HowToJoin />

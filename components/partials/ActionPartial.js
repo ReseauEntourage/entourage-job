@@ -5,25 +5,32 @@ import { Section, GridNoSSR, IconNoSSR } from '../utils';
 import {SharePartial} from "./index";
 import ContactPartial from "./ContactPartial";
 import Button from "../utils/Button";
+import MultipleCTA from "./MultipleCTA";
 
 const datas = [
   {
-    href: '/jeveuxtravailler',
-    button: 'Je veux travailler',
+    button: {
+      href: '/jeveuxtravailler',
+      label: 'Je veux travailler',
+    },
     title: 'Je suis en galère',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nam itaque soluta ad officiis minima! Ea inventore saepe quam accusamus?',
+    text: 'LinkedOut s’adresse à toute personne en situation d’exclusion ou de précarité, dans une démarche d’insertion professionnelle, motivée et en capacité de travailler.',
   },
   {
-    href: '/jeveuxaider',
-    button: 'Je veux aider',
+    button: {
+      href: '/jeveuxaider',
+      label: 'Je veux aider',
+    },
     title: 'Je suis un particulier ou un acteur du social',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nam itaque soluta ad officiis minima! Ea inventore saepe quam accusamus?',
+    text: 'Il n\'y a pas de petit coup de pouce, aidez à votre échelle\xa0!',
   },
   {
-    href: '/jeveuxrecruter',
-    button: 'Je veux recruter',
+    button: {
+      href: '/jeveuxrecruter',
+      label: 'Je veux recruter'
+    },
     title: 'Découvrez les profils des candidats',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nam itaque soluta ad officiis minima! Ea inventore saepe quam accusamus?'
+    text: 'La précarité et l\'exclusion n\'empêchent pas le talent\xa0!'
   },
 ];
 const ActionPartial = ({ style }) => (
@@ -39,32 +46,7 @@ const ActionPartial = ({ style }) => (
         </p>
       </div>
 
-      <div uk-height-match="target : h3">
-        <GridNoSSR
-          childWidths={['1-3@m']}
-          middle
-          gap="large"
-          items={datas.map((value, index) => (
-            <GridNoSSR
-              // uk-width-medium@s
-              className="uk-text-center"
-              gap="small"
-              middle
-              column
-              key={index.toString()}
-            >
-              <h3>{value.title}</h3>
-              <hr style={{ borderTopColor: '#F55F24', width: '100px' }} />
-              {value.description && <p>{value.description}</p>}
-              <Button
-                href={value.href}
-                style='primary'>
-                {value.button}{' '}<IconNoSSR name="chevron-right" />
-              </Button>
-            </GridNoSSR>
-          ))}
-        />
-      </div>
+      <MultipleCTA data={datas} showHorizontalDividers/>
       <ContactPartial />
       <SharePartial />
     </GridNoSSR>

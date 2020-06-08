@@ -6,19 +6,19 @@ const HowToJoin = () => {
   const content = [
     {
       img: '/static/img/id_card.png',
-      description: <div><span className="uk-text-bold">Carte Nationale d&apos;Identité</span> (ou carte de résident avec autorisation de travail / titre de séjour)</div>,
+      description: <div><span className="uk-text-bold">Carte Nationale d&apos;Identité</span> (ou carte résident avec autorisation de travail / titre de séjour)</div>,
     },
     {
       img: '/static/img/domiciliation.png',
       description: <div><span className="uk-text-bold">Domiciliation</span></div>,
     },
     {
-      img: '/static/img/social_security.png',
-      description: <div><span className="uk-text-bold">Attestation de sécurité sociale</span></div>,
-    },
-    {
       img: '/static/img/bank.png',
       description: <div><span className="uk-text-bold">Compte bancaire</span></div>,
+    },
+    {
+      img: '/static/img/social_security.png',
+      description: <div><span className="uk-text-bold">Attestation de sécurité sociale</span></div>,
     },
   ];
 
@@ -29,7 +29,7 @@ const HowToJoin = () => {
         <span className="uk-text-primary">LinkedOut&nbsp;?</span>
       </h2>
       <h3 className="uk-align-center uk-text-center">
-        Vous êtes en démarche d’insertion professionnelle et motivés pour être acteur de votre recherche
+        Vous êtes en démarche d’insertion professionnelle et motivé(e) pour être acteur de votre recherche&nbsp;!
       </h3>
       <p className="uk-width-large uk-margin-large-bottom uk-margin-large-top">Vous rassemblez les éléments suivants, nécessaires à l’obtention d’un contrat de travail&nbsp;:</p>
       <Grid

@@ -10,19 +10,19 @@ const Highlights = () => {
       img: '/static/img/highlight_1.jpg',
     },
     {
-      description: <div><span className="uk-text-bold">Vous êtes soutenu par un bénévole-coach</span> sur la durée, pendant la recherche et après la reprise d&apos;un emploi</div>,
+      description: <div><span className="uk-text-bold">Vous êtes soutenu(e) par un bénévole-coach</span> sur la durée, pendant la recherche et après la reprise d&apos;un emploi</div>,
       img: '/static/img/highlight_1.jpg',
     },
     {
-      description: <div>Vous choisissez <span className="uk-text-bold">des formations courtes selon vos besoins</span> (numérique, préparation à l’entretien d&apos;embauche, connaissance de l’entreprise...)</div>,
+      description: <div>Vous choisissez <span className="uk-text-bold">des formations courtes selon vos besoins</span> <span className="uk-text-italic">(numérique, préparation à l’entretien d&apos;embauche, connaissance de l’entreprise...)</span></div>,
       img: '/static/img/highlight_1.jpg',
     },
     {
-      description: <div>Au sein de la communauté Entourage <span className="uk-text-bold">vous pouvez participer à des événements</span> de convivialité pour vous ressourcer et faire de nouvelles rencontres (soirées jeux, apéro, théâtre,…)</div>,
+      description: <div>Au sein de la communauté Entourage <span className="uk-text-bold">vous pouvez participer à des événements</span> de convivialité pour vous ressourcer et faire de nouvelles rencontres (soirées jeux, apéro, pétanque,…)</div>,
       img: '/static/img/highlight_1.jpg',
     },
     {
-      description: <div><span className="uk-text-bold">Un réseau d&apos;ancien</span> pour des contacts ou des conseils si vous le souhaitez</div>,
+      description: <div>Vous bénéficiez <span className="uk-text-bold">d&apos;un réseau d&apos;anciens</span> pour des contacts ou des conseils si vous le souhaitez</div>,
       img: '/static/img/highlight_1.jpg',
     }
   ];
