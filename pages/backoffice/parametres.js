@@ -19,6 +19,7 @@ import schemaPersonalData from '../../components/forms/schema/formPersonalData.j
 import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
 import {USER_ROLES} from "../../constants";
+import {useResetForm} from "../../hooks";
 
 // userId du candidat ou coach lié
 const UserInformationCard = ({ title, user }) => {
@@ -129,6 +130,7 @@ const Parametres = () => {
   const [userData, setUserData] = useState(false);
   const [loadingPersonal, setLoadingPersonal] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
+  const [form, resetForm] = useResetForm();
 
   useEffect(() => {
     if (user) {
@@ -140,12 +142,6 @@ const Parametres = () => {
         .finally(() => setLoadingPersonal(false));
     }
   }, [user]);
-
-  const form = useRef(null);
-
-  const resetForm = () => {
-    if(form.current) form.current.resetForm();
-  };
 
   if (!user) return null;
 

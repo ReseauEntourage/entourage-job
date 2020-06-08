@@ -10,7 +10,7 @@ import AssociationEntourage from './partials/AssociationEntourage';
 import Partenaires from './partials/Partenaires';
 import Button from "./utils/Button";
 
-const sharedTitle = 'Entourage Jobs';
+const sharedTitle = 'LinkedOut';
 const sharedDescription =
   "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail, vous avez du réseau.";
 const hashtags = ['LinkedOut'];

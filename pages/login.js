@@ -11,16 +11,12 @@ import Api from '../Axios';
 import {USER_ROLES} from "../constants";
 import StepperModal from "../components/modals/StepperModal";
 import SuccessModalContent from "../components/modals/SuccessModalContent";
+import {useResetForm} from "../hooks";
 
 const Login = () => {
   const { login, user } = useContext(UserContext);
   const router = useRouter();
-
-  const form = useRef(null);
-
-  const resetForm = () => {
-    if(form.current) form.current.resetForm();
-  };
+  const [form, resetForm] = useResetForm();
 
   useEffect(() => {
     if (user) {

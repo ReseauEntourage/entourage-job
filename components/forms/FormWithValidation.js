@@ -144,6 +144,7 @@ const FormWithValidation = forwardRef(({
     </form>
   );
 });
+
 FormWithValidation.propTypes = {
   defaultValues: PropTypes.objectOf(PropTypes.any),
   onCancel: PropTypes.func,
@@ -155,9 +156,11 @@ FormWithValidation.propTypes = {
   }).isRequired,
   submitText: PropTypes.string,
 };
+
 FormWithValidation.defaultProps = {
   submitText: undefined,
   defaultValues: {},
   onCancel: undefined
 };
+
 export default FormWithValidation;

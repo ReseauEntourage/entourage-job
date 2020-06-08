@@ -6,6 +6,7 @@ import HeaderModal from './HeaderModal';
 import FormWithValidation from '../forms/FormWithValidation';
 
 import { CloseButtonNoSSR } from '../utils';
+import {useResetForm} from "../../hooks";
 
 const ModalEdit = ({
   id,
@@ -16,14 +17,10 @@ const ModalEdit = ({
   onSubmit,
   submitText,
 }) => {
-  const form = useRef(null);
-
-  const resetForm = () => {
-    if(form.current) form.current.resetForm();
-  };
+  const [form, resetForm] = useResetForm();
 
   return (
-    <ModalGeneric id={id}>
+    <ModalGeneric id={id} resetForm={resetForm}>
       {(closeModal) => (
         <>
           <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm}/>

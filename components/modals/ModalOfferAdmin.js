@@ -9,20 +9,17 @@ import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
+import {useResetForm} from "../../hooks";
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
-  const form = useRef(null);
-
-  const resetForm = () => {
-    if(form.current) form.current.resetForm();
-  };
-
   if (!currentOffer) {
     currentOffer = { userOpportunity: [], businessLines: [] };
   }
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const [form, resetForm] = useResetForm();
 
   const updateOpportunity = async (opportunity) => {
     setError(false);

@@ -12,13 +12,10 @@ import HireSteps from "../components/sections/HireSteps";
 import WhatItBrings from "../components/sections/WhatItBrings";
 import WaysToJoin from "../components/sections/WaysToJoin";
 import Reviews from "../components/sections/Reviews";
+import {useResetForm} from "../hooks";
 
 const JeVeuxRecruter = () => {
-  const form = useRef(null);
-
-  const resetForm = () => {
-    if(form.current) form.current.resetForm();
-  };
+  const [form, resetForm] = useResetForm();
 
   const candidatId = schema.fields[
     schema.fields.findIndex((field) => field.id === 'candidatId')

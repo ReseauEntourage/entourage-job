@@ -8,7 +8,7 @@ import { GridNoSSR, IconNoSSR, Section, Background, ImgNoSSR } from '../utils';
 
 // Home page partials
 const LandingPagePartial = () => {
-  const sharedTitle = 'Entourage Jobs';
+  const sharedTitle = 'LinkedOut';
   const sharedDescription =
     "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail, vous avez du réseau.";
   const hashtags = ['LinkedOut'];

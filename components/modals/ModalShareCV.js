@@ -7,13 +7,10 @@ import FormWithValidation from '../forms/FormWithValidation';
 import schemaGetEmail from '../forms/schema/fromGetEmail.json';
 import Axios from '../../Axios';
 import { Button } from '../utils';
+import {useResetForm} from "../../hooks";
 
 const ModalShareCV = ({ firstName, id }) => {
-  const form = useRef(null);
-
-  const resetForm = () => {
-    if(form.current) form.current.resetForm();
-  };
+  const [form, resetForm] = useResetForm();
 
   return (
     <StepperModal

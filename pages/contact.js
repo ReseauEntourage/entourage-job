@@ -5,13 +5,10 @@ import interestLinkedOutSchema from "../components/forms/schema/formInterestLink
 import {Section} from "../components/utils";
 import FormWithValidation from "../components/forms/FormWithValidation";
 import Api from "../Axios";
+import {useResetForm} from "../hooks";
 
 const Contact = () => {
-  const form = useRef(null);
-
-  const resetForm = () => {
-    if(form.current) form.current.resetForm();
-  };
+  const [form, resetForm] = useResetForm();
 
   return (
     <Layout title="Contact - LinkedOut">

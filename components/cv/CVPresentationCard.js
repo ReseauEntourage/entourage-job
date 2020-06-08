@@ -19,7 +19,7 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
   const hashtags = ['LinkedOut'];
   const sharedDescription =
     "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer.";
-  const title = `${firstName} - Entourage Jobs`;
+  const title = `${firstName} - LinkedOut`;
   const router = useRouter();
   const hostname = process.env.SERVER_URL;
   const link = `${hostname}${router.asPath}`;
