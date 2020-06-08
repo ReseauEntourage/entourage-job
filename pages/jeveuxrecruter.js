@@ -1,19 +1,60 @@
 /* global UIkit */
 import React from 'react';
 import Layout from '../components/Layout';
-import { Button, Section, GridNoSSR, IconNoSSR } from '../components/utils';
+import { Button, Section, IconNoSSR } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
 import { ReviewCard } from '../components/cards';
-import HowTo from '../components/sections/HowTo';
-import StepCard from '../components/cards/StepCard';
-import schemaformEditOffer from '../components/forms/schema/formEditOffer';
-import ModalEdit from '../components/modals/ModalEdit';
+import schema from '../components/forms/schema/formEditOpportunity';
 import Api from '../Axios';
 import StepperModal from '../components/modals/StepperModal';
 import FormWithValidation from '../components/forms/FormWithValidation';
+import ImageTitle from "../components/sections/ImageTitle";
+import MultipleCTA from "../components/partials/MultipleCTA";
+import HireSteps from "../components/sections/HireSteps";
+import Carousel from "../components/utils/Carousel";
+import WhatItBrings from "../components/sections/WhatItBrings";
 
 const JeVeuxRecruter = () => {
+  const waysToJoin = [
+    {
+      text: <div>En fin de parcours d’insertion, les candidats nous sont <span className="uk-text-bold">orientés par les chargées d’accompagnement</span> des structures d’insertion professionnelles</div>,
+    },
+    {
+      text: <div>Les candidats sont <span className="uk-text-bold">orientés par les travailleurs sociaux d’associations partenaires</span> ou de dispositif publics</div>,
+    },
+    {
+      text: <div>Les candidats sont orientés par <span className="uk-text-bold">des membres du réseau Entourage</span></div>,
+    },
+    {
+      text: <div>Les candidats <span className="uk-text-bold">candidatent spontanément</span> depuis le site internet</div>,
+    },
+  ];
+
   const reviews = [
+    {
+      author: 'Paul Jean',
+      colorClass: 'uk-text-primary',
+      picture: '/static/img/arthur.png',
+      review:
+        "Nous avons intégré Zineb à l'équipe il y a maintenant 6 mois. Tout a été rendu facile par Entourage et les équipes de travail sont très satisfaites.",
+      role: 'Directeur RH chez Sanofi',
+    },
+    {
+      author: 'Stéphane Joli',
+      colorClass: '',
+      picture: '/static/img/arthur.png',
+      review:
+        "Mohamed s'est fondu dans le groupe en un clin d'oeil, tout le monde a l'impression qu'il est là depuis 10 ans.",
+      role: 'Recruteur pour LVMH',
+    },
+    {
+      author: 'Jeanne Pierrot ',
+      colorClass: 'uk-text-primary',
+      picture: '/static/img/arthur.png',
+      review:
+        "La réinsertion est rendue plus facile grâce à Entourage Jobs, et c'est une belle victoire pour les candidats et pour les entreprises. Continuez !",
+      role: 'Directrice RH chez Le grand Breguet',
+    },
     {
       author: 'Paul Jean',
       colorClass: 'uk-text-primary',
@@ -40,160 +81,115 @@ const JeVeuxRecruter = () => {
     },
   ];
 
-  const faq = [
-    {
-      question:
-        'Quels sont les types de contrat recherchés par les candidats ?',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    },
-    {
-      question: 'Question 2',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    },
-    {
-      question: 'Question 3',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    },
-    {
-      question: 'Question 4',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    },
-    {
-      question: 'Question 5',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    },
+  const candidatId = schema.fields[
+    schema.fields.findIndex((field) => field.id === 'candidatId')
   ];
+
+  candidatId.disabled = () => true;
+  candidatId.hidden = () => true;
+
+  schema.fields[
+    schema.fields.findIndex((field) => field.id === 'isPublic')
+  ].disabled = true;
 
   return (
     <Layout title="Je veux recruter - LinkedOut">
-      <Section id="recruter1">
-        <h1 className="uk-text-bold uk-text-center">
-          Vous souhaitez <span className="uk-text-primary">recruter</span> un
-          candidat ?
-        </h1>
-        <div className="uk-align-center uk-text-center uk-width-1-2@m uk-width-2-3@s">
-          <p>
-            Recruteurs, plus que quiconque, faîtes la différence ! Soyez acteur
-            essentiel de l'opération LinkedOut par Entourage en publiant vos
-            offres d'emplois et en cherchant les candidats qui feront le bonheur
-            de votre entreprise.
-          </p>
-          <GridNoSSR center gap="small">
-            <Button
-              style="default"
-              onClick={() => UIkit.modal('#modal-offer-add').show()}
-            >
-              Poster une offre
-            </Button>
-            <Button style="primary">Découvrir les candidats</Button>
-          </GridNoSSR>
-        </div>
+      <ImageTitle
+        img='static/img/header_pic.jpg'
+        id="hire-title"
+        title={<>Vous souhaitez <span className="uk-text-primary">recruter un candidat LinkedOut ?</span></>}
+        text={"La précarité et l'exclusion n'empêchent pas le talent\xa0!"} />
+      <Section
+        id="makeADifference"
+        style="muted"
+        container="small">
+        <h4 className="uk-align-center uk-text-center">
+          Recruteurs, plus qui quiconque, faites la différence&nbsp;! Soyez des acteurs essentiels du projet LinkedOut en donnant la chance à un ou plusieurs candidats correspondant aux compétences que vous recherchez.
+        </h4>
       </Section>
-      <Section id="recruter2">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m uk-width-2-3@s">
-          Une opportunité <span className="uk-text-primary">et</span> une bonne
-          action,
-          <span className="uk-text-primary"> ne passez pas à côté !</span>
+      <Section
+        id="whereTheyComeFrom"
+        style="default"
+        container="small">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+          D&apos;où viennent les candidats <span className="uk-text-primary">LinkedOut&nbsp;?</span>
         </h2>
-        <div data-uk-grid className="uk-child-width-1-2@m uk-child-width-2-3@s">
-          <div>
-            <div className="uk-width-5-6">
-              <h3 className="uk-text-bold">
-                <span className="uk-text-primary">LinkedOut plebiscité</span>{' '}
-                par les recruteurs...
-              </h3>
-              <p>
-                Le retour des recruteurs en entreprise est unanime : les
-                candidats apportent une joie de vivre et une énergie qui
-                facilitent leur intégration. Un bonheur au quotidien.
-              </p>
-            </div>
-          </div>
-          <div>
-            {reviews.map((review, index) => (
-              <ReviewCard
-                author={review.author}
-                colorclassName={review.colorClass}
-                key={index}
-                picture={review.picture}
-                review={review.review}
-                role={review.role}
-              />
-            ))}
-          </div>
+        <h4 className="uk-align-center uk-text-center">
+          LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la capacité et la motivation pour travailler&nbsp;:
+          <br/>
+          <span>
+            personnes ayant connus des parcours de rue, personnes accueillies dans des structures d&apos;hébergement temporaires (hotels sociaux, centre d&apos;hébergement d&apos;urgence, etc.) personnes sortants de parcours d&apos;insertion, jeunes en précarité&nbsp;...
+          </span>
+        </h4>
+      </Section>
+      <Section
+        id="waysToJoin"
+        style="muted"
+        container="small">
+        <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
+          <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+            Plusieurs <span className="uk-text-primary">manières de rejoindre</span> LinkedOut
+          </h2>
+          <MultipleCTA
+            data={waysToJoin}
+            showVerticalDividers
+            spacing='small'
+            className="uk-margin-large-bottom"
+          />
+          <hr className="uk-divider-small uk-margin-remove-top uk-margin-large-bottom" />
+          <MultipleCTA
+            data={[
+              {
+                title: "Je cherche un candidat",
+                text: <div>Je cherche un profil en particulier</div>,
+                button: {
+                  label: "Je découvre les candidats",
+                  href: "/lescandidats"
+                }
+              },
+              {
+                title: "Mon offre d’emploi concerne plusieurs profils",
+                text: <div>Vous avez régulièrement des besoins de recrutement&nbsp;? Vous avez plusieurs offres d’emploi à pourvoir&nbsp;?</div>,
+                button: {
+                  label: "J’envoie mon offre à LinkedOut",
+                  href: process.env.AIRTABLE_LINK_BECOME_COACH,
+                  modal: "#modal-offer-add"
+                }
+              }
+            ]}
+            showHorizontalDividers
+          />
         </div>
       </Section>
-      <HowTo
-        title={
-          <h3 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
-            Du premier contact à l&apos;intégration en entreprise,{' '}
-            <span className="uk-text-primary">comment ça marche</span>
-          </h3>
-        }
-      >
-        <StepCard
-          numStep={1}
-          img="/static/img/illustrations/entourage_phone.png"
-          description="Lorem ipsum lorem ipsum"
-        />
-        <StepCard
-          numStep={2}
-          img="/static/img/illustrations/entourage_papers.png"
-          description="Lorem ipsum lorem ipsum"
-        />
-        <StepCard
-          numStep={3}
-          img="/static/img/illustrations/entourage_meet.png"
-          description="Lorem ipsum lorem ipsum"
-        />
-        <StepCard
-          numStep={4}
-          img="/static/img/illustrations/entourage_phone.png"
-          description="Lorem ipsum lorem ipsum"
-        />
-      </HowTo>
-      <Section id="recruter4" style="default">
-        <h2 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5@s">
-          Vous avez des opportunités d'emplois ?
-          <span className="uk-text-primary">Discutons</span>
+      <HireSteps />
+      <WhatItBrings />
+      <Section id="testimony">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+          <span className="uk-text-primary">LinkedOut plebiscité</span>{' '}
+          par les recruteurs...
         </h2>
-        <div
-          className="uk-align-center uk-text-center uk-margin-large-top"
-          data-uk-grid
-        >
-          <div className="uk-inline uk-padding-small">
-            <Button style="primary">écrivez-nous</Button>
-          </div>
-          <div className="uk-inline uk-padding-small uk-margin-remove">
-            <Button style="default">Rappelez-moi</Button>
-          </div>
+        <h4 className="uk-align-center uk-text-center uk-margin-medium-bottom">
+          Le retour des recruteurs en entreprise est unanime&nbsp;: l&apos;arrivée des candidats fédère les salariés et transforme le projet d&apos;entreprise en une véritable aventure humaine, porteuse de sens pour tous&nbsp;!
+        </h4>
+        <div className="uk-width-expand">
+          <Carousel
+            itemRenderer={(review, index) => (
+              <div key={index.toString()}>
+                <ReviewCard
+                  author={review.author}
+                  colorclassName={review.colorClass}
+                  key={index}
+                  review={review.review}
+                  role={review.role}
+                />
+              </div>
+            )}
+            style="default"
+            items={reviews}
+            containerClasses="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small" />
         </div>
       </Section>
-      <Section id="recruter5" style="default">
-        <h3 className="uk-text-bold uk-text-center uk-align-center uk-width-3-5">
-          Foire Aux <span className="uk-text-primary">Questions</span>
-        </h3>
-        <div className="uk-width-4-5 uk-align-center">
-          <hr className="uk-margin-large-bottom" />
-          <ul data-uk-accordion>
-            {faq.map((question, index) => (
-              <li className={index === 0 ? 'uk-open' : undefined} key={index}>
-                <a className="uk-accordion-title" href="#">
-                  {question.question}
-                </a>
-                <div className="uk-accordion-content">
-                  <p>{question.answer}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Section>
+      <DiscoverPartial style='muted'/>
       <StepperModal
         id="modal-offer-add"
         title="Proposer une opportunité"
@@ -203,17 +199,15 @@ const JeVeuxRecruter = () => {
               <p>
                 Cet espace est dédié aux potentiels recruteurs qui souhaitent
                 proposer des opportunités aux candidats. Écrivez vos mots
-                d&apos;encouragement ou contactez avec le coach plus bas dans la
+                d&apos;encouragement ou contactez le coach plus bas dans la
                 page CV !
               </p>
               <FormWithValidation
                 submitText="Envoyer"
-                formSchema={schemaformEditOffer}
+                formSchema={schema}
                 onCancel={closeModal}
-                onSubmit={(message) => {
-                  console.log(message);
-
-                  Api.post('/api/v1/message', { message })
+                onSubmit={(opportunity) => {
+                  Api.post('/api/v1/opportunity/', opportunity)
                     .then(nextStep)
                     .catch((error) => {
                       console.error(error);
@@ -222,6 +216,9 @@ const JeVeuxRecruter = () => {
                         { pos: 'bottom-center', status: 'danger' }
                       );
                     });
+                }}
+                defaultValues={{
+                  isPublic: true
                 }}
               />
             </div>
@@ -233,19 +230,17 @@ const JeVeuxRecruter = () => {
                 <p className="uk-text-lead">
                   Merci pour votre offre, nous reviendrons bientôt vers vous.
                 </p>
-                <button
-                  type="button"
-                  className="uk-button uk-button-primary"
+                <Button
+                  style="primary"
                   onClick={closeModal}
                 >
                   Fermer
-                </button>
+                </Button>
               </div>
             </div>
           ),
         ]}
       />
-      <DiscoverPartial />
     </Layout>
   );
 };

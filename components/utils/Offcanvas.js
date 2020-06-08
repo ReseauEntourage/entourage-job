@@ -4,10 +4,6 @@ import dynamic from 'next/dynamic';
 
 import { CloseButtonNoSSR } from './CloseButton';
 
-export const OffcanvasNoSSR = dynamic(() => import('./Offcanvas'), {
-  ssr: false,
-});
-
 const Offcanvas = ({ id, children, container }) => (
   <div
     data-uk-offcanvas={`overlay: true; flip: true; ${
@@ -32,4 +28,9 @@ Offcanvas.propTypes = {
 Offcanvas.defaultProps = {
   container: undefined,
 };
+
+export const OffcanvasNoSSR = dynamic(() => import('./Offcanvas'), {
+  ssr: false,
+});
+
 export default Offcanvas;

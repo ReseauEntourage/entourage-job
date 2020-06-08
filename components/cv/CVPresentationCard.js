@@ -33,9 +33,10 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
     schema.fields.findIndex((field) => field.id === 'isPublic')
   ].disabled = true;
 
-  const postOpportunity = async (opportunity) => {
+  const postOpportunity = async (opportunity, closeModal) => {
     try {
       await Axios.post(`/api/v1/opportunity/`, opportunity);
+      closeModal();
       UIkit.notification(
         `Merci pour votre message, ${firstName} et son coach reviennent vers vous bientôt.`,
         'success'
@@ -96,13 +97,6 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
               '.'
             )}
           </h3>
-          {/* <button
-        type="button"
-        className="uk-button uk-button-primary"
-        data-uk-toggle="target: #modal-send-opportunity"
-      >
-        J&apos;écris à {firstName}
-      </button> */}
           <IconNoSSR
             name="triangle-down"
             className="uk-text-primary"
@@ -157,7 +151,7 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
             id="modal-send-opportunity"
             title={`Proposer une opportunité à ${firstName}`}
             description={
-              "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez avec le coach plus bas dans la page CV !"
+              "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez le coach plus bas dans la page CV !"
             }
             submitText="Envoyer"
             defaultValues={{
@@ -168,13 +162,13 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
               },
             }}
             formSchema={schema}
-            onSubmit={(fields) =>
+            onSubmit={(fields, closeModal) => {
               postOpportunity({
                 ...fields,
                 usersId: [userId],
                 date: Date.now(),
-              })
-            }
+              }, closeModal);
+            }}
           />
         </div>
         <GridNoSSR eachWidths={['expand', 'auto']}>
@@ -298,12 +292,15 @@ const CVPresentationCard = ({ firstName, intro, userId, cv }) => {
             <br />
             <a
               className="uk-link-text uk-text-primary"
-              href="mailto:contact-linkedout@entouratge.social"
+              target='_blank'
+              rel="noopener noreferrer"
+              href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
             >
-              contact-linkedout@entouratge.social
+              {process.env.MAILJET_CONTACT_EMAIL}
             </a>
           </p>
           <ImgNoSSR
+            alt="logo linkedout"
             className="uk-width-small"
             src="/static/img/01-linkedout-orange-complet.png"
           />

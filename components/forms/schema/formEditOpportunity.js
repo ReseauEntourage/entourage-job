@@ -1,4 +1,5 @@
 import axios from '../../../Axios';
+import {USER_ROLES, BUSINESS_LINES} from "../../../constants";
 
 export default {
   id: 'form-offer',
@@ -21,15 +22,15 @@ export default {
       id: 'recruiterMail',
       name: 'recruiterMail',
       component: 'input',
-      type: 'text',
+      type: 'email',
       title: 'Adresse mail du recruteur*',
     },
     {
       id: 'recruiterPhone',
       name: 'recruiterPhone',
       component: 'input',
-      type: 'text',
-      title: 'Téléphone du recruteur',
+      type: 'tel',
+      title: 'Téléphone du recruteur*',
     },
     {
       id: 'businessLines',
@@ -37,81 +38,16 @@ export default {
       title: "Secteur d'activité*",
       placeholder: "Sélectionnez les secteurs d'activité",
       type: 'text',
-      component: 'select-request',
+      component: "select-request-creatable",
       isMulti: true,
-      options: [
-        {
-          value: 'Accueil',
-          label: 'Accueil',
-        },
-        {
-          value: 'Administratif',
-          label: 'Administratif',
-        },
-        {
-          value: 'Animalier',
-          label: 'Animalier',
-        },
-        {
-          value: 'Artisanat',
-          label: 'Artisanat',
-        },
-        {
-          value: 'Associatif',
-          label: 'Associatif',
-        },
-        {
-          value: 'Assurance/Banque',
-          label: 'Assurance/Banque',
-        },
-        {
-          value: 'BTP',
-          label: 'BTP',
-        },
-        {
-          value: 'Communication',
-          label: 'Communication',
-        },
-        {
-          value: 'Culture',
-          label: 'Culture',
-        },
-        {
-          value: 'Informatique',
-          label: 'Informatique',
-        },
-        {
-          value: 'Interpréterait',
-          label: 'Interpréterait',
-        },
-        {
-          value: 'Médico-social',
-          label: 'Médico-social',
-        },
-        {
-          value: 'Restauration',
-          label: 'Restauration',
-        },
-        {
-          value: 'Social',
-          label: 'Social',
-        },
-        {
-          value: 'Transports',
-          label: 'Transports',
-        },
-        {
-          value: 'Vente / Commerce',
-          label: 'Vente / Commerce',
-        },
-      ],
+      options: BUSINESS_LINES
     },
     {
       id: 'company',
       name: 'company',
       component: 'input',
       type: 'text',
-      title: 'Entreprise',
+      title: 'Entreprise*',
     },
     {
       id: 'location',
@@ -125,7 +61,7 @@ export default {
       name: 'description',
       component: 'textarea',
       type: 'text',
-      title: 'Votre description',
+      title: 'Votre description*',
     },
     {
       id: 'isPublic',
@@ -147,7 +83,7 @@ export default {
           .get('api/v1/user/search', {
             params: {
               query: inputValue,
-              role: 'Candidat',
+              role: USER_ROLES.CANDIDAT,
             },
           })
           .then(({ data }) =>
@@ -161,6 +97,17 @@ export default {
     },
   ],
   rules: [
+    {
+      field: 'title',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
     {
       field: 'recruiterName',
       method: 'isEmpty',
@@ -184,7 +131,33 @@ export default {
       message: 'Obligatoire',
     },
     {
+      field: 'recruiterMail',
+      method: 'isEmail',
+      validWhen: true,
+      message: 'Invalide',
+    },
+    {
       field: 'recruiterPhone',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'recruiterPhone',
+      method: 'isMobilePhone',
+      args: [
+        'fr-FR'
+      ],
+      validWhen: true,
+      message: 'Invalide',
+    },
+    {
+      field: 'businessLines',
       method: 'isEmpty',
       args: [
         {
@@ -207,6 +180,17 @@ export default {
     },
     {
       field: 'location',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'description',
       method: 'isEmpty',
       args: [
         {

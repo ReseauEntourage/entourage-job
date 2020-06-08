@@ -120,7 +120,6 @@ Grid.defaultProps = {
   style: undefined,
 };
 
-// no ssr finally not necessary
-export const GridNoSSR = Grid; // dynamic(() => import('./Grid'), { ssr: false });
+export const GridNoSSR = dynamic(() => import('./Grid'), { ssr: false });
 
 export default Grid;

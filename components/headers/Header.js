@@ -8,22 +8,23 @@ import {
   NavbarNoSSR,
   OffcanvasNoSSR,
   HamburgerNoSSR,
-  NavbarLogo,
+  NavbarLogo, IconNoSSR,
 } from '../utils';
 import './Header.less';
+import Button from "../utils/Button";
 
 const Header = ({ isHome }) => {
   const LINKS = [
-    { href: '/jeveuxaider', name: 'Aider' },
-    { href: '/jeveuxrecruter', name: 'Recruter' },
     { href: '/jeveuxtravailler', name: 'Travailler' },
+    { href: '/jeveuxrecruter', name: 'Recruter' },
+    { href: '/jeveuxaider', name: 'Aider' },
   ];
   const router = useRouter();
   return (
     <header id="header">
       <NavbarNoSSR
         sticky=""
-        className="uk-background-secondary uk-navbar-transparent uk-light ent-home"
+        className="uk-background-secondary uk-navbar-transparent ent-home"
         left={
           <NavbarLogo
             href="/"
@@ -40,50 +41,39 @@ const Header = ({ isHome }) => {
           <Nav
             navbar
             items={[
-              ...LINKS.map((value) => (
-                <Link href={value.href}>
-                  <a className="uk-visible@s">{value.name}</a>
+              ...LINKS.map((value, i) => (
+                <Link href={value.href} key={i}>
+                  <a className="uk-visible@m">{value.name}</a>
                 </Link>
               )),
-              <div className="uk-navbar-item uk-visible@s">
-                <Link href="/lescandidats">
-                  <button
-                    type="button"
-                    className="uk-button uk-button-primary"
-                    style={{
-                      color: 'white',
-                      backgroundColor: '#F55F24',
-                      backgroundImage: 'none',
-                      textTransform: 'none',
-                      boder: null,
-                      padding: '0px 20px',
-                      borderRadius: '2px',
-                    }}
-                  >
-                    Je partage un CV &gt;
-                  </button>
-                </Link>
+              // separateurs en css .ent-nav
+              <div className="uk-navbar-item uk-visible@m">
+                <Button
+                  href="/lescandidats"
+                  style='primary'>
+                  Je partage un CV{' '}<IconNoSSR name="chevron-right" />
+                </Button>
               </div>,
-              <HamburgerNoSSR targetId="offcanvas-guest" hidden="s" />,
+              <HamburgerNoSSR targetId="offcanvas-guest" hidden="m" />,
             ]}
           />
         }
       />
       <OffcanvasNoSSR id="offcanvas-guest">
         <ul className="uk-nav uk-nav-default">
+          <li>
+            <a
+              aria-hidden="true"
+              onClick={() => {
+                router.push('/');
+                UIkit.offcanvas('#offcanvas-guest').hide();
+              }}
+            >
+              Accueil
+            </a>
+          </li>
           {[
-            <li>
-              <a
-                aria-hidden="true"
-                onClick={() => {
-                  router.push('/');
-                  UIkit.offcanvas('#offcanvas-guest').hide();
-                }}
-              >
-                Accueil
-              </a>
-            </li>,
-            ...LINKS.filter(({ href }) => href !== '#').map(
+            LINKS.filter(({ href }) => href !== '#').map(
               ({ href, name }, index) => (
                 <li key={index}>
                   <a

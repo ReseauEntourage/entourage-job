@@ -9,6 +9,7 @@ import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOffer from '../../../components/modals/ModalOffer';
 import axios from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
+import {USER_ROLES} from "../../../constants";
 
 const getTag = (offer) => {
   if (offer.userOpportunity && offer.userOpportunity.archived) {
@@ -114,11 +115,11 @@ const Opportunites = () => {
       });
 
     if (user) {
-      if (user.role === 'Candidat') {
+      if (user.role === USER_ROLES.CANDIDAT) {
         setCandidatId(user.id);
         fetchAndAct(user.id);
       }
-      if (user.role === 'Coach') {
+      if (user.role === USER_ROLES.COACH) {
         axios
           .get(`/api/v1/user/candidat/`, {
             params: {

@@ -1,32 +1,79 @@
 // Import UIkit default theme (or uikit.less with only core styles)
-@import '../src/less/uikit.theme.less';
+@import "../src/less/uikit.theme.less";
 
 // Your custom code goes here, e.g. mixins, variables.
 // See "how to create a theme" below for more info.
 
-// overlay
+//Font families
+@global-font-family: Roboto, sans-serif;
+@global-font-weight: normal;
+@global-font-size: 17px;
+@global-line-height: 22px;
+@global-color: black;
 
+@dotnav-item-background: fade(@global-color, 0%);
+@dotnav-item-hover-background: fade(#FF5101, 100%);
+@dotnav-item-onclick-background: fade(#FF5101, 20%);
+@dotnav-item-active-background: fade(#FF5101, 100%);
+@dotnav-item-border: fade(#FF5101, 100%);
+@grid-divider-border: #FF5101;
+
+@base-body-font-family: Roboto, sans-serif;
+@base-body-font-weight: normal;
+@base-body-color: black;
+
+@base-heading-font-family: Roboto, sans-serif;
+@base-heading-color: black;
+
+// overlay
 @global-primary-background: #f55f24;
 
+@global-muted-background: #F2F2F0;
+
 @overlay-primary-background: fade(@global-primary-background, 70%);
+
 //Link
 @global-link-color: #f55f24;
 @global-link-color-hover: #d53f00;
 
+
 //Button
 .hook-button() {
-  border-radius: 5px;
+  color: black;
+  background-color: white;
+  background-image: none;
+  text-transform: none;
+  border: solid 1px #e5e5e5;
+  padding: 0px 20px;
+  border-radius: 2px;
+}
+
+.hook-button-default() {
+  .hook-button();
 }
 
 .hook-button-primary() {
-  background-color: #f55f24;
-  background-image: linear-gradient(#f58f00, #f55f24);
+  .hook-button();
+  color: white;
+  background-color: #F55F24;
+  border: none;
+}
+
+.hook-button-disabled() {
+  color: #999;
+  background-color: #e5e5e5;
 }
 
 .hook-button-primary-hover() {
   background-image: none;
-  background-color: #f55f24;
+  background-color: darken(white, 5%);
 }
+
+.hook-button-primary-hover() {
+  background-image: none;
+  background-color: darken(#F55F24, 5%);
+}
+
 
 .ent-link-muted {
   color: white;

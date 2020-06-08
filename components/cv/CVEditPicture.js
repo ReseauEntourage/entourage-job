@@ -23,8 +23,14 @@ const CVEditPicture = ({ urlImg, onChange, disablePicture }) => {
                 id="image-upload"
                 type="file"
                 onChange={({ target }) => {
-                  onChange({ profileImage: target.files[0] });
-                  setUrl(URL.createObjectURL(target.files[0]));
+                  const profileImageObjectUrl = URL.createObjectURL(
+                    target.files[0]
+                  );
+                  onChange({
+                    profileImage: target.files[0],
+                    profileImageObjectUrl,
+                  });
+                  setUrl(profileImageObjectUrl);
                 }}
               />
               Mettre à jour

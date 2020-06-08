@@ -1,5 +1,4 @@
-/* eslint-disable no-restricted-globals */
-/* eslint-disable camelcase */
+const {USER_ROLES} = require("../../constants");
 
 const {
   models: { User, User_Candidat, CV },
@@ -44,15 +43,31 @@ const INCLUDE_USER_CANDIDAT = [
   },
 ];
 
+const capitalizeName = (name) => {
+  let capitalizedName = name.toLowerCase()
+    .split(' ')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ');
+
+  capitalizedName = capitalizedName
+    .split('-')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join('-');
+
+  return capitalizedName;
+};
+
 const createUser = (newUser) => {
   const infoLog = 'createUser -';
   console.log(`${infoLog} Création du User`);
 
   const userToCreate = { ...newUser };
-  userToCreate.role = newUser.role || 'Candidat';
+  userToCreate.role = newUser.role || USER_ROLES.CANDIDAT;
+  userToCreate.firstName = capitalizeName(userToCreate.firstName);
+  userToCreate.lastName = capitalizeName(userToCreate.lastName);
 
   return User.create(userToCreate).then(async (res) => {
-    if (userToCreate.userToCoach && res.role === 'Coach') {
+    if (userToCreate.userToCoach && res.role === USER_ROLES.COACH) {
       await User_Candidat.update(
         { candidatId: userToCreate.userToCoach, coachId: res.id },
         {
@@ -60,7 +75,7 @@ const createUser = (newUser) => {
         }
       );
     }
-    if (userToCreate.userToCoach && res.role === 'Candidat') {
+    if (userToCreate.userToCoach && res.role === USER_ROLES.CANDIDAT) {
       await User_Candidat.update(
         { candidatId: res.id, coachId: userToCreate.userToCoach },
         {
@@ -115,20 +130,7 @@ const getUserByEmail = async (email) => {
   const user = await User.findOne({
     where: { email },
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
-    include: [
-      {
-        model: User_Candidat,
-        as: 'candidat',
-        attributes: ATTRIBUTES_USER_CANDIDAT,
-        include: [
-          {
-            model: User,
-            as: 'coach',
-            attributes: ATTRIBUTES_USER,
-          },
-        ],
-      },
-    ],
+    include: INCLUDE_USER_CANDIDAT,
   });
   return user;
 };
@@ -148,35 +150,10 @@ const getMembers = (limit, offset, order, role, query) => {
     limit,
     order,
     where: {
-      role: { [Op.not]: 'Admin' },
+      role: { [Op.not]: USER_ROLES.ADMIN },
     },
     attributes: ATTRIBUTES_USER,
-    include: [
-      {
-        model: User_Candidat,
-        as: 'candidat',
-        attributes: ATTRIBUTES_USER_CANDIDAT,
-        include: [
-          {
-            model: User,
-            as: 'coach',
-            attributes: ATTRIBUTES_USER,
-          },
-        ],
-      },
-      {
-        model: User_Candidat,
-        as: 'coach',
-        attributes: ATTRIBUTES_USER_CANDIDAT,
-        include: [
-          {
-            model: User,
-            as: 'candidat',
-            attributes: ATTRIBUTES_USER,
-          },
-        ],
-      },
-    ],
+    include: INCLUDE_USER_CANDIDAT,
   };
   // recherche de l'utilisateur
   if (query) {
@@ -199,7 +176,7 @@ const getMembers = (limit, offset, order, role, query) => {
   }
 
   // filtre par role
-  if (role === 'Candidat' || role === 'Coach') {
+  if (role === USER_ROLES.CANDIDAT || role === USER_ROLES.COACH) {
     options.where = {
       ...options.where,
       role,
@@ -207,7 +184,7 @@ const getMembers = (limit, offset, order, role, query) => {
   }
   // recuperer la derniere version de cv
   // todo trouver un moyen d'ameliorer la recuperation
-  if (role === 'Candidat') {
+  if (role === USER_ROLES.CANDIDAT) {
     options.include = [
       {
         model: User_Candidat,
@@ -228,11 +205,11 @@ const getMembers = (limit, offset, order, role, query) => {
       },
     ];
   }
-  if (role === 'Coach') {
+  if (role === USER_ROLES.COACH) {
     options.include = [
       {
         model: User_Candidat,
-        as: 'coach',
+        as: 'candidat',
         attributes: ATTRIBUTES_USER_CANDIDAT,
         include: [
           {

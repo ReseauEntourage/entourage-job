@@ -18,6 +18,7 @@ import FormWithValidation from '../../components/forms/FormWithValidation';
 import schemaPersonalData from '../../components/forms/schema/formPersonalData.json';
 import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
+import {USER_ROLES} from "../../constants";
 
 // userId du candidat ou coach lié
 const UserInformationCard = ({ title, user }) => {
@@ -27,11 +28,11 @@ const UserInformationCard = ({ title, user }) => {
 
   useEffect(() => {
     if (user) {
-      if (user.role === 'Coach' && user.coach) {
+      if (user.role === USER_ROLES.COACH && user.coach) {
         setLinkedUser(user.coach.candidat);
         setUserCandidat(user.coach);
       }
-      if (user.role === 'Candidat' && user.candidat) {
+      if (user.role === USER_ROLES.CANDIDAT && user.candidat) {
         setLinkedUser(user.candidat.coach);
         setUserCandidat(user.candidat);
       }
@@ -77,7 +78,7 @@ const UserInformationCard = ({ title, user }) => {
               </span>
             </GridNoSSR>
           )}
-          {user.role === 'Coach' && (
+          {user.role === USER_ROLES.COACH && (
             <SimpleLink
               className="uk-link-muted"
               target="_blank"
@@ -89,7 +90,7 @@ const UserInformationCard = ({ title, user }) => {
               </GridNoSSR>
             </SimpleLink>
           )}
-          {user.role === 'Coach' && (
+          {user.role === USER_ROLES.COACH && (
             <GridNoSSR row gap="small">
               <IconNoSSR name="cog" />
               <span className="uk-text-italic">
@@ -97,7 +98,7 @@ const UserInformationCard = ({ title, user }) => {
               </span>
             </GridNoSSR>
           )}
-          {user.role === 'Coach' && (
+          {user.role === USER_ROLES.COACH && (
             <GridNoSSR row gap="small">
               <IconNoSSR name="cog" />
               <span className="uk-text-italic">
@@ -152,7 +153,7 @@ const Parametres = () => {
         <GridNoSSR childWidths={['1-2@m']} match>
           <GridNoSSR childWidths={['1-1']}>
             {/* Preferences du CV */}
-            {userData.role === 'Candidat' && (
+            {userData.role === USER_ROLES.CANDIDAT && (
               <Card title="Préférences du CV">
                 <ToggleWithConfirmationModal
                   id="employed"
@@ -250,7 +251,7 @@ const Parametres = () => {
               )}
             </div>
 
-            {(userData.role === 'Candidat' || userData.role === 'Coach') && (
+            {(userData.role === USER_ROLES.CANDIDAT || userData.role === USER_ROLES.COACH) && (
               <UserInformationCard
                 user={userData}
               />
@@ -306,13 +307,14 @@ const Parametres = () => {
           title="Édition - Informations personelles"
           defaultValues={{ phone: userData.phone }}
           formSchema={schemaPersonalData}
-          onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }) => {
+          onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
             if (phone !== userData.phone) {
               setLoadingPersonal(true);
               Api.put(`/api/v1/user/${userData.id}`, {
                 phone,
               })
                 .then(() => {
+                  closeModal();
                   setUserData({ ...userData, phone });
                   UIkit.notification(
                     'Votre numéro de téléphone a bien été mis à jour',

@@ -61,9 +61,9 @@ const Select = ({
           }}
           disabled={disabled}
         >
-          {options.map(({ value, text }, i) => (
+          {options.map(({ value, label }, i) => (
             <option value={value} key={i}>
-              {text}
+              {label}
             </option>
           ))}
         </select>
@@ -87,7 +87,7 @@ Select.propTypes = {
   title: PropTypes.string.isRequired,
   valid: PropTypes.shape({
     isInvalid: PropTypes.bool,
-    message: PropTypes.bool,
+    message: PropTypes.string,
   }),
   defaultValue: PropTypes.string,
   options: PropTypes.arrayOf(
@@ -97,7 +97,7 @@ Select.propTypes = {
         PropTypes.number,
         PropTypes.bool,
       ]),
-      text: PropTypes.string,
+      label: PropTypes.string,
     })
   ).isRequired,
   hidden: PropTypes.bool,

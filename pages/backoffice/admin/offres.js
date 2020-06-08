@@ -2,13 +2,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
-import { Section } from '../../../components/utils';
+import {Button, Section} from '../../../components/utils';
 import OfferCard from '../../../components/cards/OfferCard';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOfferAdmin from '../../../components/modals/ModalOfferAdmin';
 import Filter from '../../../components/utils/Filter';
 import Axios from '../../../Axios';
+import schema from '../../../components/forms/schema/formEditOpportunity';
 import { UserContext } from '../../../components/store/UserProvider';
+import ModalEdit from '../../../components/modals/ModalEdit';
 
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
@@ -65,6 +67,17 @@ const LesOpportunites = () => {
     return null;
   };
 
+  const postOpportunity = async (opportunity, closeModal) => {
+    try {
+      await Axios.post(`/api/v1/opportunity/`, opportunity);
+      closeModal();
+      UIkit.notification(`L'oppotunité a été ajoutée.`, 'success');
+      fetchData();
+    } catch (err) {
+      UIkit.notification(`Une erreur est survenue.`, 'danger');
+    }
+  };
+
   useEffect(() => {
     fetchData().then((data) => {
       if (data) {
@@ -87,29 +100,27 @@ const LesOpportunites = () => {
           title="Modération des offres d'emploi"
           description="Ici tu peux accéder à toutes les opportunités et valider les offres qui se retrouveront ensuite dans les tableaux des candidats."
         >
-          <button
-            type="button"
-            className="uk-button uk-button-primary"
-            style={{
-              color: 'white',
-              backgroundColor: '#F55F24',
-              backgroundImage: 'none',
-              textTransform: 'none',
-              boder: null,
-              padding: '0px 20px',
-              borderRadius: '2px',
-            }}
-            onClick={() => {
-              console.log('#add-opportunity');
-              // UIkit.modal('#add-opportunity').show();
-            }}
-          >
+          <Button
+            style="primary"
+            toggle="target: #add-opportunity">
             <span
               uk-icon="icon: plus; ratio:0.8"
               className="uk-margin-small-right"
             />
             Nouvelle opportunité
-          </button>
+          </Button>
+          <ModalEdit
+            id="add-opportunity"
+            title="Ajouter une opportunité"
+            submitText="Envoyer"
+            formSchema={schema}
+            onSubmit={(fields, closeModal) => {
+              postOpportunity({
+                ...fields,
+                date: Date.now(),
+              }, closeModal)
+            }}
+          />
         </HeaderBackoffice>
         {hasError ? (
           <Section className="uk-width-1-1">

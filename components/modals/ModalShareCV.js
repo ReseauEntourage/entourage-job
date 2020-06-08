@@ -30,7 +30,7 @@ const ModalShareCV = ({ firstName, id }) => (
               Axios.post('/api/v1/cv/share', { email })
                 .then(next)
                 .catch(() =>
-                  UIkit.notification('Une erreur est survenue', 'error')
+                  UIkit.notification('Une erreur est survenue', 'danger')
                 );
             }}
           />
@@ -39,7 +39,8 @@ const ModalShareCV = ({ firstName, id }) => (
       (close) => (
         <div className="uk-flex uk-flex-column">
           <p>
-            Saviez-vous que LinkedOut est porté par l'association Entourage ?
+            Saviez-vous que LinkedOut est porté par l&apos;association Entourage
+            ?
           </p>
           <Button isExternal href="https://www.entourage.social/" style="link">
             https://www.entourage.social/

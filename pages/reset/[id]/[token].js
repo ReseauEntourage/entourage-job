@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/Layout';
-import { Section, IconNoSSR } from '../../../components/utils';
+import {Section, IconNoSSR, Button} from '../../../components/utils';
 import schema from '../../../components/forms/schema/formResetPassword.json';
 import FormWithValidation from '../../../components/forms/FormWithValidation';
 import Api from '../../../Axios';
@@ -61,13 +61,12 @@ const ResetPasswordPage = () => {
                 Ce lien ne semble pas valide. Veuillez contacter l&apos;équipe
                 Linkedout.
               </p>
-              <button
-                type="button"
-                className="uk-button uk-button-primary"
+              <Button
+                style="primary"
                 onClick={() => router.push('/')}
               >
                 Retourner à l&apos;accueil
-              </button>
+              </Button>
             </div>
           )}
         </div>

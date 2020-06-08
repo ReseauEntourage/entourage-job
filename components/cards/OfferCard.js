@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+
+import {OFFER_STATUS} from "../../constants";
 import { GridNoSSR, Button, IconNoSSR } from '../utils';
 
 function translateStatus(status) {
-  if (status === 0) return 'Contacté';
-  if (status === 1) return "Phase d'entretien";
-  if (status === 2) return 'Embauche';
-  if (status === 3) return 'Refus';
-  if (status === 4) return 'En attente';
-  if (status === 5) return 'Relance';
-  return 'Non défini';
+  const currentStatus = OFFER_STATUS.find((oStatus) => oStatus.value === status);
+  if(currentStatus) return currentStatus.label;
+  return "Non défini";
 }
 
 const OfferCard = ({

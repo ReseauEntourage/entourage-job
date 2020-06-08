@@ -1,4 +1,5 @@
 import axios from '../../../Axios';
+import {USER_ROLES} from "../../../constants";
 
 export default {
   id: 'form-edit-linked-user',
@@ -11,10 +12,10 @@ export default {
       disabled: true,
       hidden: true,
       options: [
-        { value: null, text: 'Choisissez un role' },
-        { value: 'Candidat', text: 'Candidat' },
-        { value: 'Coach', text: 'Coach' },
-        { value: 'Admin', text: 'Admin' },
+        { value: null, label: 'Choisissez un role' },
+        { value: USER_ROLES.CANDIDAT, label: USER_ROLES.CANDIDAT },
+        { value: USER_ROLES.COACH, label: USER_ROLES.COACH },
+        { value: USER_ROLES.ADMIN, label: USER_ROLES.ADMIN },
       ],
     },
     {

@@ -6,6 +6,7 @@ import ButtonIcon from '../utils/ButtonIcon';
 import ModalEdit from '../modals/ModalEdit';
 import schema from '../forms/schema/formEditLinkedUser';
 import axios from '../../Axios';
+import {USER_ROLES} from "../../constants";
 
 // userId du candidat ou coach lié
 const UserInformationCard = ({ user, onChange }) => {
@@ -16,7 +17,7 @@ const UserInformationCard = ({ user, onChange }) => {
   const [loading, setLoading] = useState(false);
 
   const assignUser = (userToAssign) => {
-    if (userToAssign.role === 'Coach') {
+    if (userToAssign.role === USER_ROLES.COACH) {
       if (userToAssign.coach) {
         setLinkedUser(userToAssign.coach.candidat);
         setUserCandidat(userToAssign.coach);
@@ -27,7 +28,7 @@ const UserInformationCard = ({ user, onChange }) => {
       // customisation du schema en fonction de l'utilisateur
       schema.fields[1].title = 'Candidat lié';
     }
-    if (userToAssign.role === 'Candidat') {
+    if (userToAssign.role === USER_ROLES.CANDIDAT) {
       if (userToAssign.candidat) {
         setLinkedUser(userToAssign.candidat.coach);
         setUserCandidat(userToAssign.candidat);
@@ -82,7 +83,7 @@ const UserInformationCard = ({ user, onChange }) => {
           </span>
         </GridNoSSR>
       )}
-      {user.role === 'Coach' && userCandidat && (
+      {user.role === USER_ROLES.COACH && userCandidat && (
         <SimpleLink
           className="uk-link-muted"
           target="_blank"
@@ -94,7 +95,7 @@ const UserInformationCard = ({ user, onChange }) => {
           </GridNoSSR>
         </SimpleLink>
       )}
-      {user.role === 'Coach' && userCandidat && (
+      {user.role === USER_ROLES.COACH && userCandidat && (
         <GridNoSSR row gap="small">
           <IconNoSSR name="cog" />
           <span className="uk-text-italic">
@@ -102,7 +103,7 @@ const UserInformationCard = ({ user, onChange }) => {
           </span>
         </GridNoSSR>
       )}
-      {user.role === 'Coach' && userCandidat && (
+      {user.role === USER_ROLES.COACH && userCandidat && (
         <GridNoSSR row gap="small">
           <IconNoSSR name="cog" />
           <span className="uk-text-italic">
@@ -122,7 +123,7 @@ const UserInformationCard = ({ user, onChange }) => {
       <Card
         style="secondary"
         title={`Information du${
-          user.role === 'Coach' ? ' candidat' : ' coach'
+          user.role === USER_ROLES.COACH ? ' candidat' : ' coach'
         }`}
         badge={
           loading ? (
@@ -140,9 +141,9 @@ const UserInformationCard = ({ user, onChange }) => {
       <ModalEdit
         submitText="Envoyer"
         id="modal-edit-linked-user"
-        title={user.role === 'Candidat' ? 'Bénévole coach lié' : 'Candidat lié'}
+        title={user.role === USER_ROLES.CANDIDAT ? 'Bénévole coach lié' : 'Candidat lié'}
         defaultValues={{
-          role: user.role === 'Coach' ? 'Candidat' : 'Coach',
+          role: user.role === USER_ROLES.COACH ? USER_ROLES.CANDIDAT : USER_ROLES.COACH,
           linkedUser: linkedUser
             ? {
                 value: linkedUser.id,
@@ -151,16 +152,16 @@ const UserInformationCard = ({ user, onChange }) => {
             : undefined,
         }}
         formSchema={schema}
-        onSubmit={({ linkedUser: linkedUserId }) => {
+        onSubmit={({ linkedUser: linkedUserId }, closeModal) => {
           setLoading(true);
           let promise = null;
-          if (user.role === 'Candidat') {
+          if (user.role === USER_ROLES.CANDIDAT) {
             // on lui assigne ou eleve un coach
             promise = axios.put(`api/v1/user/candidat/${user.id}`, {
               coachId: linkedUserId || null,
             });
           }
-          if (user.role === 'Coach') {
+          if (user.role === USER_ROLES.COACH) {
             // on l'assigne à un candidat
             if (linkedUserId) {
               promise = axios.put(`api/v1/user/candidat/${linkedUserId}`, {
@@ -177,6 +178,7 @@ const UserInformationCard = ({ user, onChange }) => {
             promise
               .then(() => axios.get(`/api/v1/user/${user.id}`))
               .then(({ data }) => {
+                closeModal();
                 assignUser(data);
                 onChange(data);
                 UIkit.notification('Le membre a bien été lié', 'success');

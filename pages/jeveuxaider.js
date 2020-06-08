@@ -1,74 +1,111 @@
 import React from 'react';
-import { Section } from '../components/utils';
-import { DiscoverPartial } from '../components/partials';
+import {GridNoSSR, Section} from '../components/utils';
+import {ContactPartial, SharePartial} from '../components/partials';
+import {EXTERNAL_LINKS} from '../constants';
 import Layout from '../components/Layout';
-import ProfilAidant from '../components/sections/ProfilAidant';
-import HowTo from '../components/sections/HowTo';
-import StepCard from '../components/cards/StepCard';
+import HowItWorks from '../components/sections/HowItWorks';
+import SimpleSection from "../components/sections/SimpleSection";
+import MultipleCTA from "../components/partials/MultipleCTA";
+import ImageTitle from "../components/sections/ImageTitle";
+import SubHeader from "../components/sections/SubHeader";
+import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
 
-const content = [
-  {
-    img: '/static/img/illustrations/entourage_phone.png',
-    description:
-      "La plateforme LinkedOut permet de viraliser les CV des candidats sur les réseaux sociaux pour les rendre visibles auprès de recruteurs et générer des opportunités d'emploi.",
-  },
-  {
-    img: '/static/img/illustrations/helping_process.png',
-    description:
-      'Chaque candidat est soutenu par un bénévole-coach, de la recherche d’emploi à l’intégration en entreprise.',
-  },
-  {
-    img: '/static/img/illustrations/Idee-reseau-entourage-dessin.png',
-    description:
-      'Un parcours de courtes formations et d’ateliers à la carte permet aux candidats qui le souhaitent d’acquérir les compétences manquantes et de travailler la confiance en soi.',
-  },
-  {
-    img: '/static/img/illustrations/cafe_solidaire_personnages.png',
-    description:
-      'Tout au long de leur parcours vers l’emploi, la communauté Entourage soutient moralement les candidats, leur permet de se resocialiser et de faire de nouvelles rencontres.',
-  },
-];
 
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - LinkedOut">
-    <Section id="titre">
-      <h1 className="uk-heading-medium@s uk-text-bold uk-text-center uk-align-center uk-width-3-4">
-        Vous souhaitez <span className="uk-text-primary">aider ?</span>
-      </h1>
-      <p
-        className="uk-text-lead@s uk-text-center uk-align-center uk-width-2-3 "
-        style={{ fontWeight: '600' }}
-      >
-        Il n&apos;y a pas de petit coup de pouce, aidez à votre échelle !
-      </p>
+    <ImageTitle img='static/img/header_pic.jpg' id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider&nbsp;?</span></>} text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"} />
+    <SubHeader id="profile" data={[
+      {
+        href: "#private",
+        label: "Je suis un particulier"
+      },
+      {
+        href: "#actor",
+        label: "Je suis un acteur social ou associatif"
+      },
+      {
+        href: "#give",
+        label: "Je deviens mécène"
+      },
+    ]} style="muted"/>
+    <Section container="small" style="default">
+      {/* Fix so that the anchor scroll to the right height */}
+      <div id="private" style={{marginTop: -140, paddingTop: 140}} />
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+        Je suis un{' '}
+        <span className="uk-text-primary">particulier</span>
+      </h2>
+      <MultipleCTA
+        data={[
+          {
+            title: "Partagez votre réseau pour donner une visibilité inédite à une personne exclue en recherche d’emploi",
+            text: <div>Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut. Votre partage permet de donner une visibilité inédite aux candidats auprès de potentiels recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer&nbsp;!</div>,
+            button: {
+              label: "Je partage un CV",
+              href: "/lescandidats"
+            }
+          },
+          {
+            title: "Coachez une personne exclue vers l’emploi\xa0!",
+            text: <div>Vous souhaitez donner de votre temps pour tisser une relation de proximité avec un candidat et le coacher dans son retour à l’emploi&nbsp;? Entourage vous forme à la mission de bénévole-coach et vous donne les outils.</div>,
+            button: {
+              label: "Je deviens bénévole-coach",
+              href: process.env.AIRTABLE_LINK_BECOME_COACH,
+              external: true
+            }
+          }
+        ]}
+        showHorizontalDividers
+      />
     </Section>
-    <ProfilAidant />
-    <HowTo
+    <Section container="small" style="muted">
+      {/* Fix so that the anchor scroll to the right height */}
+      <div id="actor" style={{marginTop: -140, paddingTop: 140}} />
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+        Je suis un{' '}<span className="uk-text-primary">acteur de l&apos;insertion</span>
+        {' '}sociale et professionnelle
+      </h2>
+      <MultipleCTA
+        data={[
+          {
+            title: "Vous accompagnez un personne en démarche de d'insertion professionnelle\xa0?",
+            button: {
+              label: "Je vous l'oriente",
+              href: process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION,
+              external: true
+            }
+          },
+          {
+            title: "Vous êtes intéressé(e) par l’approche de LinkedOut et souhaitez coopérer avec nous\xa0?",
+            button: {
+              label: "Écrivez-nous",
+              modal: "target: #modal-interest-linkedOut"
+            }
+          }
+        ]}
+        showVerticalDividers/>
+    </Section>
+    <SimpleSection
       title={
-        <h1 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-width-1-2@m">
-          Comment fonctionne{' '}
-          <span className="uk-text-primary">LinkedOut ?</span>
-        </h1>
+        <>
+          Je deviens{' '}<span className="uk-text-primary">mécène</span>
+        </>
       }
-      colLarge={4}
-    >
-      {content.map(({ img, description }, index) => (
-        <li key={index}>
-          {<StepCard numStep={index + 1} img={img} description={description} />}
-        </li>
-      ))}
-    </HowTo>
-    {/* <Section id="travailler3" style="secondary" size="small">
-      <p className="uk-text-lead uk-text-center uk-align-center uk-width-2-3@s">
-        Tout au long de leur parcours vers l&apos;emploi, la communauté
-        Entourage soutient moralement les candidats, leur permet de se
-        resocialiser et de faire de nouvelles rencontres
-      </p>
-      <p className="uk-text-center">
-        Découvrez Entourage <IconNoSSR name="linkedout-arrow-contact" />
-      </p>
-    </Section> */}
-    <DiscoverPartial />
+      text="Je souhaite soutenir financièrement le projet LinkedOut et participer à la construction d’une société plus inclusive"
+      id="give"
+      button={{
+        label: "Je fais un don",
+        href: EXTERNAL_LINKS.DONATION,
+        external: true
+      }} />
+    <HowItWorks />
+    <Section style='muted' className="uk-padding-remove-top">
+      <GridNoSSR gap="large" column>
+        <ContactPartial padding={false} />
+        <SharePartial/>
+      </GridNoSSR>
+    </Section>
+    <ModalInterestLinkedOut />
   </Layout>
 );
 

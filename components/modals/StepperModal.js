@@ -45,7 +45,10 @@ const StepperModal = ({ composers, title, id }) => {
 };
 StepperModal.propTypes = {
   id: PropTypes.string.isRequired,
-  title: PropTypes.element.isRequired,
+  title: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]).isRequired,
   composers: PropTypes.arrayOf(PropTypes.func).isRequired,
 };
 export default StepperModal;

@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { UIKIT_STYLES, UIKIT_SECTION_SIZES } from '../variables';
 
-const Section = ({ style, size, id, container, children, className }) => {
+const Section = ({ style, size, id, container, children, className, preserveColor }) => {
   let classBuffer = 'uk-section';
   if (style) classBuffer += ` uk-section-${style}`;
   if (size) classBuffer += ` uk-section-${size}`;
   if (className) classBuffer += ` ${className}`;
+  if (preserveColor) classBuffer += ` uk-preserve-color`;
 
   let classBuffer2 = 'uk-container';
   if (container) classBuffer2 += ` uk-container-${container}`;
@@ -29,6 +30,7 @@ Section.propTypes = {
   ]).isRequired,
   container: PropTypes.oneOf(['small', 'large']),
   className: PropTypes.string,
+  preserveColor: PropTypes.bool
 };
 Section.defaultProps = {
   style: undefined,
@@ -36,6 +38,7 @@ Section.defaultProps = {
   id: undefined,
   container: undefined,
   className: undefined,
+  preserveColor: false
 };
 
 export default Section;

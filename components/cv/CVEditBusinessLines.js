@@ -47,11 +47,12 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => (
         defaultValues={{
           businessLines,
         }}
-        onSubmit={(fields) =>
+        onSubmit={(fields, closeModal) => {
+          closeModal();
           onChange({
             ...fields,
-          })
-        }
+          });
+        }}
       />
     )}
   </div>

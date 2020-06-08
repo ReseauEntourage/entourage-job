@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const uid = require('uid-safe');
+const enforce = require('express-sslify');
 const passport = require('./config/passport');
 
 const routeCV = require('./routes/api/v1/CV');
@@ -15,6 +16,12 @@ const app = express();
 let server;
 
 module.exports.prepare = () => {
+
+  const dev = process.env.NODE_ENV !== 'production';
+
+  // enable ssl redirect
+  if(!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
+
   app.use(express.json());
 
   // add session management to Express

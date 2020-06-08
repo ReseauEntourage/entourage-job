@@ -49,7 +49,8 @@ const PassionsCard = ({ list, onChange }) => {
               acc[`passion${i + 1}`] = value;
               return acc;
             }, {})}
-            onSubmit={(fields) => {
+            onSubmit={(fields, closeModal) => {
+              closeModal();
               const fieldsTransform = {
                 passions: Object.values(fields).filter((val) => {
                   return typeof val === 'string' && val !== '';

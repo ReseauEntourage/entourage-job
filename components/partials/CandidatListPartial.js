@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import { GridNoSSR, Section } from '../utils';
+import {GridNoSSR, IconNoSSR, Section} from '../utils';
 import CVList from '../cv/CVList';
+import Button from "../utils/Button";
 
 const CandidatListPartial = () => (
   <Section style="muted" id="candidat" className="uk-padding">
@@ -23,27 +24,22 @@ const CandidatListPartial = () => (
       </div>
       <CVList nb={9} />
       <GridNoSSR middle column gap="collapse">
-        <Link href="/lescandidats">
-          <button
-            type="button"
-            className="uk-button uk-button-primary"
-            style={{
-              color: 'white',
-              backgroundColor: '#F55F24',
-              backgroundImage: 'none',
-              textTransform: 'none',
-              boder: null,
-              padding: '0px 20px',
-              borderRadius: '2px',
-            }}
-          >
-            Voir tous les candidats &gt;
-          </button>
-        </Link>
+        <Button
+          href="/lescandidats"
+          style='primary'>
+          Voir tous les candidats{' '}<IconNoSSR name="chevron-right" />
+        </Button>
         <p style={{ marginTop: '20px' }}>
           Tous ces candidats cherchent un travail en Île de France, si vous
           êtes sur un autre territoire, contactez-nous à
-          contact-linkedout@entourage.social
+          <a
+            className="uk-link-text uk-text-primary"
+            target='_blank'
+            rel="noopener noreferrer"
+            href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
+          >
+            {process.env.MAILJET_CONTACT_EMAIL}
+          </a>
         </p>
       </GridNoSSR>
     </GridNoSSR>

@@ -37,7 +37,19 @@ describe('Tests des routes API - Partie User', () => {
           })
           .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
       }).timeout(TIMEOUT);
+
+      describe('Créer un User avec un email déjà existant', () => {
+        it("Ne doit pas créer de nouveau user si email déjà dans la base", () => {
+          return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
+            .then(() => assert.fail())
+            .catch((err) =>
+              assert.strictEqual(err.response.status, 409, 'Adresse email déjà existante')
+            );
+        }).timeout(TIMEOUT);
+      });
     });
+
+
     describe('R - Read 1 User', () => {
       it("doit retourner le User créé précédement à l'appel API", () => {
         return Api.get(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)

@@ -8,7 +8,7 @@ const CVBackground = ({ url }) => (
     style={{
       position: 'relative',
       minHeight: '220px',
-      maxHeight: '50vh',
+      maxHeight: '500px', // '50vh',
       height: '50vw',
     }}
   >

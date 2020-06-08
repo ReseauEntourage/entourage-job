@@ -284,9 +284,11 @@ export default class FieldFactory {
         </div>
       );
     }
+    // ne devrait pas se placer ici mais dans la page de mot de passe oublié
     if (data.component === 'lost-pwd') {
       return (
         <div>
+          {/* creer un component lien  */}
           <a
             className="uk-text-small uk-margin-remove"
             href="#"

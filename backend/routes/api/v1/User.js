@@ -1,5 +1,6 @@
 const validator = require('validator');
 const express = require('express');
+const {USER_ROLES} = require("../../../../constants");
 const { auth } = require('../../../controllers/Auth');
 const { sendMail } = require('../../../controllers/mail');
 
@@ -49,7 +50,12 @@ router.post('/', (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(401).send('Une erreur est survenue');
+      if(err.name === "SequelizeUniqueConstraintError") {
+        res.status(409).send('Adresse email déjà existante');
+      }
+      else {
+        res.status(401).send('Une erreur est survenue');
+      }
     });
 });
 
@@ -89,7 +95,7 @@ router.get('/members', (req, res) => {
         users.map((u) => {
           const user = u.toJSON();
           // sort by version desc
-          if (user.role === 'Candidat' && user.candidat.cvs) {
+          if (user.role === USER_ROLES.CANDIDAT && user.candidat.cvs) {
             user.candidat.cvs = user.candidat.cvs.sort(
               (a, b) => b.version - a.version
             );

@@ -49,7 +49,7 @@ const InfoProfileCard = ({
         <IconNoSSR name="calendar" />{' '}
         {availability && availability !== ''
           ? availability
-          : 'Disponibilité non renseignée'}
+          : 'Disponibilités non renseignée'}
       </li>
       <li>
         <IconNoSSR name="users" />{' '}
@@ -76,11 +76,12 @@ const InfoProfileCard = ({
           contracts,
           languages,
         }}
-        onSubmit={(fields) =>
+        onSubmit={(fields, closeModal) => {
+          closeModal();
           onChange({
             ...fields,
           })
-        }
+        }}
       />
     )}
   </div>

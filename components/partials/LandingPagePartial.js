@@ -10,7 +10,7 @@ import { GridNoSSR, IconNoSSR, Section, Background, ImgNoSSR } from '../utils';
 const LandingPagePartial = () => {
   const sharedTitle = 'Entourage Jobs';
   const sharedDescription =
-    "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail , vous avez du réseau.";
+    "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail, vous avez du réseau.";
   const hashtags = ['LinkedOut'];
   const sharedURL = process.env.SERVER_URL;
   const viaTwitter = 'R_Entourage';

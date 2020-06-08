@@ -2,10 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-export const ImgNoSSR = dynamic(() => import('./Img'), {
-  ssr: false,
-});
-
 const Img = ({ src, alt, width, height, className }) => {
   return (
     <img
@@ -31,5 +27,7 @@ Img.defaultProps = {
   height: undefined,
   className: undefined,
 };
+
+export const ImgNoSSR = dynamic(() => import('./Img'), { ssr: false });
 
 export default Img;

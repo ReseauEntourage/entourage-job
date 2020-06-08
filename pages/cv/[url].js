@@ -5,12 +5,11 @@ import {
   DiscoverPartial,
   ContactPartial,
   ActionPartial,
-  SharePartial,
 } from '../../components/partials';
 import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
-import { Section } from '../../components/utils';
+import {GridNoSSR, Section} from '../../components/utils';
 
 const CVPage = ({ cv, router }) => {
   if (!cv) {
@@ -23,7 +22,7 @@ const CVPage = ({ cv, router }) => {
             supprimée.
           </p>
         </Section>
-        <ContactPartial />
+        <ContactPartial submitLabel="Écrivez-moi" />
         <DiscoverPartial />
       </Layout>
     );
@@ -50,10 +49,7 @@ const CVPage = ({ cv, router }) => {
           <CVBackground url={process.env.AWSS3_URL + cv.urlImg || undefined} />
         )}
         <CVFiche cv={cv} />
-        {/* <DiscoverPartial />  */}
-        <ActionPartial />
-        <ContactPartial />
-        <SharePartial />
+        <ActionPartial style="muted" />
       </div>
     </Layout>
   );

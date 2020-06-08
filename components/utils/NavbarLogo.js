@@ -19,6 +19,7 @@ NavbarLogo.propTypes = {
   href: PropTypes.string.isRequired,
   alt: PropTypes.string,
   style: PropTypes.shape(),
+  alwaysVisible: PropTypes.bool
 };
-NavbarLogo.defaultProps = { alt: 'navbar logo', style: {} };
+NavbarLogo.defaultProps = { alt: 'navbar logo', style: {}, alwaysVisible: false};
 export default NavbarLogo;

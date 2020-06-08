@@ -1,4 +1,6 @@
 const uuid = require('uuid/v4');
+const {USER_ROLES} = require("../../../constants");
+
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -45,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'Candidat',
+        defaultValue: USER_ROLES.CANDIDAT,
       },
       password: {
         // hash
@@ -92,6 +94,8 @@ module.exports = (sequelize, DataTypes) => {
     // si candidat regarder candidat
     User.hasOne(models.User_Candidat, {
       as: 'candidat',
+      foreignKey: 'candidatId',
+      sourceKey: 'id',
       hooks: true,
       onDelete: 'cascade',
     });
@@ -99,6 +103,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasOne(models.User_Candidat, {
       as: 'coach',
       foreignKey: 'coachId',
+      sourceKey: 'id',
     });
 
     User.beforeCreate((u) => {
@@ -109,7 +114,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.afterCreate(async (user) => {
-      if (user.role === 'Candidat') {
+      if (user.role === USER_ROLES.CANDIDAT) {
         await models.User_Candidat.create({
           candidatId: user.id,
           url: `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`,

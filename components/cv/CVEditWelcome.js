@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import HeaderBackoffice from '../headers/HeaderBackoffice';
 import CandidatHeader from '../backoffice/cv/CandidatHeader';
 import { UserContext } from '../store/UserProvider';
+import {USER_ROLES} from "../../constants";
 
 const CVEditWelcome = ({ user }) => {
   if (user === null) {
@@ -11,16 +12,16 @@ const CVEditWelcome = ({ user }) => {
   return (
     <HeaderBackoffice
       childrenBottom
-      title={`Ravi de te revoir,${user.role === 'Coach' ? ' coach' : ''} ${
+      title={`Ravi de te revoir,${user.role === USER_ROLES.COACH ? ' coach' : ''} ${
         user.firstName
       } !`}
       description={
-        user.role === 'Candidat'
+        user.role === USER_ROLES.CANDIDAT
           ? "Bienvenue dans ton espace personnel, depuis lequel tu peux modifier les informations qui s'affichent dans ta page profil candidat sur LinkedOut."
           : `Bienvenue dans l'espace personnel de ton candidat rattaché, depuis lequel tu peux modifier avec lui ses informations qui s'affichent dans la page profil candidat sur LinkedOut.`
       }
     >
-      {user.role === 'Coach' && <CandidatHeader user={user} />}
+      {user.role === USER_ROLES.COACH && <CandidatHeader user={user} />}
     </HeaderBackoffice>
   );
 };

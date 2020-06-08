@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { GridNoSSR, Section, IconNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import Api from '../../Axios';
 
-const DiscoverPartial = () => {
+const DiscoverPartial = ({style}) => {
   const [cvs, setCVs] = useState(undefined);
   const [error, setError] = useState(null);
 
@@ -21,7 +22,7 @@ const DiscoverPartial = () => {
     if (cvs === undefined) return <div data-uk-spinner="" />;
     return (
       <GridNoSSR
-        childWidths={['1-2@s']}
+        childWidths={['1-2@m']}
         items={cvs.map((cv) => (
           <CandidatCard
             url={cv.user && cv.user.url}
@@ -41,9 +42,9 @@ const DiscoverPartial = () => {
     );
   };
   return (
-    <Section id="discover">
+    <Section id="discover" style={style}>
       <div className="uk-text-center">
-        <h2 className="uk-text-bold">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
           Découvrez les <span className="uk-text-primary">candidats</span>
         </h2>
         <a href="#">
@@ -56,4 +57,13 @@ const DiscoverPartial = () => {
     </Section>
   );
 };
+
+DiscoverPartial.propTypes = {
+  style: PropTypes.string
+};
+
+DiscoverPartial.defaultProps = {
+  style: 'default'
+};
+
 export default DiscoverPartial;

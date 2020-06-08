@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-export const NavbarNoSSR = dynamic(() => import('./Navbar.js'), { ssr: false });
-
 const Navbar = ({ id, left, center, right, sticky, className, mode }) => (
   <nav
     className={`uk-navbar-container ${className}`}
@@ -34,4 +32,7 @@ Navbar.defaultProps = {
   className: undefined,
   mode: undefined,
 };
+
+export const NavbarNoSSR = dynamic(() => import('./Navbar.js'), { ssr: false });
+
 export default Navbar;

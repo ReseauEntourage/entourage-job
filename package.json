@@ -19,11 +19,10 @@
     "start": "NODE_ENV=production node -r dotenv/config ./backend/serveur-next.js",
     "uikit-install": "cd ./assets/ && git clone git://github.com/uikit/uikit.git && cd uikit && git checkout master && npm i",
     "uikit-update": "cd ./assets/uikit/ && git pull && npm i",
-    "uikit-compile": "cp -r ./assets/custom/ ./assets/uikit/custom/ && cd ./assets/uikit/ && npm run-script compile && cd ../../ && cp -r ./assets/uikit/dist/ ./static/ && rm -rf ./assets/uikit/dist/ && rm -rf ./assets/uikit/custom/",
+    "uikit-compile": "cp -r ./assets/custom/ ./assets/uikit/custom/ && cd ./assets/uikit/ && npm run compile && cd ../../ && cp -r ./assets/uikit/dist/ ./static/dist",
     "uikit-install-windows": "cd .\\assets\\ && git clone git://github.com/uikit/uikit.git && cd uikit && git checkout master && npm i",
     "uikit-update-windows": "cd .\\assets\\uikit\\ && git pull && npm i",
-    "uikit-compile-windows": "xcopy /Y /S /I .\\assets\\custom .\\assets\\uikit\\custom && cd .\\assets\\uikit && npm run-script compile && cd ..\\.. && xcopy /Y /S .\\assets\\uikit\\dist .\\static\\dist && del .\\assets\\uikit\\dist && del .\\assets\\uikit\\custom",
-    "uikit-compile-windowsa": "copy /Y .\\assets\\custom .\\assets\\uikit\\custom && cd .\\assets\\uikit\\ && npm run-script compile && cd ..\\..\\ && copy /Y .\\assets\\uikit\\dist .\\static && del .\\assets\\uikit\\dist && del .\\assets\\uikit\\custom"
+    "uikit-compile-windows": "xcopy /Y /S /I .\\assets\\custom .\\assets\\uikit\\custom && cd .\\assets\\uikit && npm run-script compile && cd ..\\.. && xcopy /Y /S .\\assets\\uikit\\dist .\\static\\dist"
   },
   "repository": {
     "type": "git",
@@ -60,6 +59,7 @@
     "express": "^4.17.1",
     "express-jwt": "^5.3.1",
     "express-session": "^1.17.0",
+    "express-sslify": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "less": "^3.11.1",
     "moment": "^2.24.0",
@@ -101,7 +101,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
-    "mocha": "^7.1.0",
+    "mocha": "^7.1.2",
     "nodemon": "^1.19.4",
     "prettier": "^1.19.1"
   }
