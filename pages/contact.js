@@ -8,7 +8,7 @@ import Api from "../Axios";
 
 const Contact = () => {
   return (
-    <Layout title="Je veux travailler - LinkedOut">
+    <Layout title="Contact - LinkedOut">
       <Section container="small" style="default">
         <h1 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
           Formulaire de{' '}
