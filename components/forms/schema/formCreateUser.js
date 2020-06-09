@@ -90,7 +90,40 @@ export default {
   ],
   rules: [
     {
-      field: 'email',
+      field: 'firstName',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'lastName',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'gender',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'role',
       method: 'isEmpty',
       args: [
         {
