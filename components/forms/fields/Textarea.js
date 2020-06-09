@@ -24,24 +24,21 @@ const Textarea = ({
   rows,
   onChange,
   maxLength,
-  defaultValue,
+  value,
 }) => {
   const [labelClass, setLabelClass] = useState('');
-  const [value, setValue] = useState(defaultValue);
 
   function update(event) {
     setLabelClass(event.target.value.length > 0 && ' stay-small');
-    setValue(event.target.value);
     onChange(event);
   }
 
   useEffect(() => {
-    setValue(defaultValue || '');
     setLabelClass(
-      (defaultValue && defaultValue.length > 0 && ' stay-small') || ''
+      (value && value.length > 0 && ' stay-small') || ''
     );
-    onChange({ target: { name, value: defaultValue || '', type: 'textarea' } });
-  }, [defaultValue]);
+    onChange({ target: { name, value: value || '', type: 'textarea' } });
+  }, [value]);
 
   return (
     <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
@@ -54,7 +51,7 @@ const Textarea = ({
         rows={rows}
         placeholder={placeholder || 'Tapez votre texte'}
         maxLength={maxLength}
-        value={value}
+        value={value || ''}
         onChange={(e) => {
           update(e);
         }}
@@ -79,7 +76,7 @@ Textarea.propTypes = {
   }),
   rows: PropTypes.number,
   maxLength: PropTypes.number,
-  defaultValue: PropTypes.string,
+  value: PropTypes.string,
 };
 
 Textarea.defaultProps = {
@@ -88,7 +85,7 @@ Textarea.defaultProps = {
   rows: 5,
   valid: undefined,
   maxLength: 1000,
-  defaultValue: '',
+  value: '',
   onChange: () => {},
 };
 export default Textarea;

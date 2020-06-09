@@ -50,7 +50,8 @@ const WaysToJoin = () => {
               button: {
                 label: "J’envoie mon offre à LinkedOut",
                 href: process.env.AIRTABLE_LINK_BECOME_COACH,
-                modal: "#modal-offer-add"
+                modal: "#modal-offer-add",
+                external: true
               }
             }
           ]}

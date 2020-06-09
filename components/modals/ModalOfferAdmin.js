@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import PropsType from 'prop-types';
 import moment from 'moment';
 import axios from '../../Axios';
@@ -9,6 +9,7 @@ import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
+import {useResetForm} from "../../hooks";
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
@@ -17,6 +18,8 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const [form, resetForm] = useResetForm();
 
   const updateOpportunity = async (opportunity) => {
     setError(false);
@@ -60,6 +63,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
         <div>
           <h3>Modification de l&apos;offres d&apos;emploi</h3>
           <FormWithValidation
+            ref={form}
             formSchema={schema}
             defaultValues={{
               ...currentOffer,
@@ -247,7 +251,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
         className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${currentOffer.isArchived &&
           'uk-light uk-background-secondary'}`}
       >
-        <CloseButtonNoSSR className="uk-modal-close-default" />
+        <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm} />
         <div className="uk-modal-body">{contentBuilder()}</div>
       </div>
     </div>

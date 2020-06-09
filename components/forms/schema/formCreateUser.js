@@ -26,7 +26,7 @@ export default {
       name: 'gender',
       component: 'select',
       options: [
-        { value: null, label: 'Choisissez un genre' },
+        { value: -1, label: 'Choisissez un genre' },
         { value: 0, label: 'Homme' },
         { value: 1, label: 'Femme' },
       ],
@@ -45,7 +45,7 @@ export default {
       name: 'role',
       component: 'select',
       options: [
-        { value: null, label: 'Choisissez un role' },
+        { value: -1, label: 'Choisissez un role' },
         { value: USER_ROLES.CANDIDAT, label: USER_ROLES.CANDIDAT },
         { value: USER_ROLES.COACH, label: USER_ROLES.COACH },
         { value: USER_ROLES.ADMIN, label: USER_ROLES.ADMIN },
@@ -90,7 +90,40 @@ export default {
   ],
   rules: [
     {
-      field: 'email',
+      field: 'firstName',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'lastName',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'gender',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'role',
       method: 'isEmpty',
       args: [
         {

@@ -14,11 +14,12 @@ import CVEditBusinessLines from './CVEditBusinessLines';
 import CVEditDevise from './CVEditDevise';
 import CVEditCareerPath from './CVEditCareerPath';
 import { ImgNoSSR } from '../utils';
+import {CV_STATUS} from '../../constants';
 
 const CVFicheEdition = ({ cv, gender, onChange, disablePicture }) => {
   const [previewUrl, setPreviewUrl] = useState(undefined);
   useEffect(() => {
-    if (cv.status !== 'Draft') {
+    if (cv.status !== CV_STATUS.Draft.value) {
       // Use hash to reload image if an update is done
       const previewHash = Date.now();
       setPreviewUrl(
@@ -90,7 +91,7 @@ const CVFicheEdition = ({ cv, gender, onChange, disablePicture }) => {
                     src={previewUrl}
                     alt="Preview"
                   />
-                  {cv.status === 'Draft' && (
+                  {cv.status === CV_STATUS.Draft.value && (
                     <>
                       <div
                         className="uk-position-cover"

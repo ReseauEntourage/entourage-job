@@ -99,10 +99,10 @@ const CV_STATUS = {
       value: "Draft",
       style: "warning"
     },
-  Unkown:
+  Unknown:
     {
       label: "Inconnu",
-      value: "unknown",
+      value: "Unknown",
       style: ""
     }
 };

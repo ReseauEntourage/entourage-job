@@ -64,15 +64,15 @@ MultipleCTA.propTypes = {
   showNumbers: PropTypes.bool,
   showHorizontalDividers: PropTypes.bool,
   showVerticalDividers: PropTypes.bool,
-  spacing: PropTypes.oneOf('small', 'medium', 'large'),
+  spacing: PropTypes.oneOf(['small', 'medium', 'large']),
   className: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string,
     text: PropTypes.element,
     img: PropTypes.string,
     button: PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired,
+      label: PropTypes.string,
+      href: PropTypes.string,
       external: PropTypes.bool,
       modal: PropTypes.string
     }),

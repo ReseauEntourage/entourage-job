@@ -29,7 +29,8 @@ const AssociationEntourage = () => (
             </p>
             <Button
               href="https://www.entourage.social"
-              style="default">
+              style="default"
+              isExternal>
               Voir le site{' '}<IconNoSSR name="chevron-right" />
             </Button>
           </div>

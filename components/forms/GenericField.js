@@ -1,28 +1,49 @@
 import React from 'react';
 import ReactSelect from 'react-select';
 import AsyncSelect from 'react-select/async';
+import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
 import FieldGroup from './fields/FieldGroup';
 import DatePicker from './fields/DatePicker';
 import Select from './fields/Select';
 import Textarea from './fields/Textarea';
 import Checkbox from './fields/Checkbox';
-import StepperModal from '../modals/StepperModal';
-import SuccessModalContent from '../modals/SuccessModalContent';
-import lostPwdSchema from './schema/formLostPwd.json';
-import Api from '../../Axios';
-import FormWithValidationV2 from './FormWithValidation';
 import Input from './fields/Input';
 import FormValidatorErrorMessage from "./FormValidatorErrorMessage";
 
-const generator = (
-  data,
-  formId,
-  defaultValues,
-  onChange,
-  getValid,
-  getValue
-) => {
+const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => {
+
+  const parseValueToUseSelect = () => {
+    let valueToUse = null;
+    if (data.isMulti && Array.isArray(value) && value.length > 0) {
+      valueToUse = value.map((item) => ({
+        value: item,
+        label: item,
+      }));
+    }
+    else if(value) {
+      valueToUse = value;
+    }
+    return valueToUse;
+  };
+
+  const parseValueToReturnSelect = (event) => {
+    let valueToReturn = null;
+    if (data.isMulti && Array.isArray(event) && event.length > 0) {
+      valueToReturn = event.map((item) => item.value);
+    }
+    else if(event.value) {
+      valueToReturn = event.value;
+    }
+    onChange({
+      target: {
+        name: data.name,
+        value: valueToReturn,
+        type: data.type,
+      },
+    });
+  };
+
   if (data.component === 'fieldgroup') {
     const { fields, title, id } = data;
     return (
@@ -40,7 +61,7 @@ const generator = (
         placeholder={data.placeholder}
         name={data.name}
         title={data.title}
-        defaultValue={defaultValues[data.id]}
+        value={value}
         type={data.type}
         valid={getValid(data.name)}
         onChange={onChange}
@@ -55,7 +76,7 @@ const generator = (
         placeholder={data.placeholder}
         name={data.name}
         title={data.title}
-        defaultValue={defaultValues[data.id]}
+        value={value}
         valid={getValid(data.name)}
         onChange={onChange}
         pattern={data.pattern}
@@ -86,13 +107,17 @@ const generator = (
           });
       }
     }
+
+    let valueToUse = value;
+    if(!valueToUse) valueToUse = options[0].value;
+
     return (
       <Select
         id={`${formId}-${data.id}`}
         placeholder={data.placeholder}
         name={data.name}
         title={data.title}
-        defaultValue={defaultValues[data.id]}
+        value={valueToUse}
         options={options}
         valid={getValid(data.name)}
         onChange={onChange}
@@ -109,7 +134,7 @@ const generator = (
         row={data.row}
         title={data.title}
         type={data.type}
-        defaultValue={defaultValues[data.id]}
+        value={value}
         placeholder={data.placeholder}
         valid={getValid(data.name)}
         onChange={onChange}
@@ -123,7 +148,7 @@ const generator = (
         id={`${formId}-${data.id}`}
         name={data.name}
         title={data.title}
-        defaultValue={defaultValues[data.id]}
+        value={value}
         valid={getValid(data.name)}
         onChange={onChange}
         disabled={data.disabled}
@@ -140,6 +165,7 @@ const generator = (
             J&apos;accepte les <a>CGU</a>
           </span>
         }
+        value={value}
         valid={getValid(data.name)}
         onChange={onChange}
         disabled={data.disabled}
@@ -147,6 +173,9 @@ const generator = (
     );
   }
   if (data.component === 'select-request-async') {
+    let valueToUse = null;
+    if(value) valueToUse = getValue(value);
+
     return (
       <div>
         {data.title && (
@@ -160,26 +189,18 @@ const generator = (
           }
           isClearable
           defaultOptions
-          defaultValue={defaultValues[data.id]}
+          value={valueToUse}
           isMulti={data.isMulti}
-          openMenuOnClic={false}
+          openMenuOnClick={false}
           placeholder={data.placeholder || 'Sélectionner...'}
           noOptionsMessage={
-            data.noOptionsMessage || ((value) => `Aucun résultat`)
+            data.noOptionsMessage || ((val) => `Aucun résultat`)
           }
           loadOptions={(inputValue, callback) =>
             data.loadOptions(inputValue, callback, getValue)
           }
           isDisabled={data.disable ? data.disable(getValue) : false}
-          onChange={(e) =>
-            onChange({
-              target: {
-                name: data.name,
-                value: e ? e.value : '',
-                type: data.type,
-              },
-            })
-          }
+          onChange={parseValueToReturnSelect}
         />
       </div>
     );
@@ -195,38 +216,15 @@ const generator = (
         <ReactSelect
           isMulti={data.isMulti}
           name={data.name}
-          defaultValue={
-            defaultValues &&
-            defaultValues[data.id] &&
-            defaultValues[data.id].map((value) => ({
-              value,
-              label: value,
-            }))
-          }
+          value={parseValueToUseSelect()}
           options={data.options}
           className="basic-multi-select"
           classNamePrefix="select"
           placeholder={data.placeholder || 'Sélectionner...'}
           noOptionsMessage={
-            data.noOptionsMessage || ((value) => `Aucun résultat`)
+            data.noOptionsMessage || ((item) => `Aucun résultat`)
           }
-          onChange={(obj) => {
-            if (obj) {
-              let valueToReturn = obj;
-              if (Array.isArray(obj)) {
-                valueToReturn = obj.map(({ value }) => value);
-              } else {
-                valueToReturn = obj.value;
-              }
-              onChange({
-                target: {
-                  name: data.name,
-                  value: valueToReturn,
-                  type: data.type,
-                },
-              });
-            } else console.log('pb here reactselect');
-          }}
+          onChange={parseValueToReturnSelect}
         />
         <FormValidatorErrorMessage validObj={getValid(data.name)} />
       </div>
@@ -243,79 +241,17 @@ const generator = (
         <CreatableSelect
           isMulti={data.isMulti}
           name={data.name}
-          defaultValue={
-            defaultValues &&
-            defaultValues[data.id] &&
-            defaultValues[data.id].map((value) => ({
-              value,
-              label: value,
-            }))
-          }
+          value={parseValueToUseSelect()}
           options={data.options}
           className="basic-multi-select"
           classNamePrefix="select"
           placeholder={data.placeholder || 'Sélectionner...'}
           noOptionsMessage={
-            data.noOptionsMessage || ((value) => `Aucun résultat`)
+            data.noOptionsMessage || ((item) => `Aucun résultat`)
           }
-          onChange={(obj) => {
-            if (obj) {
-              let valueToReturn = obj;
-              if (Array.isArray(obj)) {
-                valueToReturn = obj.map(({ value }) => value);
-              } else {
-                valueToReturn = obj.value;
-              }
-              onChange({
-                target: {
-                  name: data.name,
-                  value: valueToReturn,
-                  type: data.type,
-                },
-              });
-            } else console.log('pb here reactselect');
-          }}
+          onChange={parseValueToReturnSelect}
         />
         <FormValidatorErrorMessage validObj={getValid(data.name)} />
-      </div>
-    );
-  }
-  // ne devrait pas se placer ici mais dans la page de mot de passe oublié
-  if (data.component === 'lost-pwd') {
-    return (
-      <div>
-        {/* creer un component lien  */}
-        <a
-          className="uk-text-small uk-margin-remove"
-          href="#"
-          data-uk-toggle="target: #modal-lost-pwd"
-        >
-          {data.title}
-        </a>
-        <StepperModal
-          id="modal-lost-pwd"
-          title="Mot de passe oublié ?"
-          composers={[
-            (closeModal, nextStep) => (
-              <FormWithValidationV2
-                submitText="Envoyer"
-                formSchema={lostPwdSchema}
-                onCancel={closeModal}
-                onSubmit={(fields, setError) => {
-                  Api.post('/api/v1/auth/forgot', fields)
-                    .then(() => nextStep())
-                    .catch(() => setError("Une erreur s'est produite"));
-                }}
-              />
-            ),
-            (closeModal) => (
-              <SuccessModalContent
-                closeModal={closeModal}
-                text="Un e-mail vient d'être envoyé à l'adresse indiquée."
-              />
-            ),
-          ]}
-        />
       </div>
     );
   }
@@ -328,4 +264,18 @@ const generator = (
   }
   throw `component ${data.component} does not exist`; // eslint-disable-line no-throw-literal
 };
-export default generator;
+
+GenericField.propTypes = {
+  data: PropTypes.objectOf(PropTypes.any).isRequired,
+  formId: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+  onChange: PropTypes.func.isRequired,
+  getValid: PropTypes.func.isRequired,
+  getValue: PropTypes.func.isRequired
+};
+
+GenericField.defaultProps = {
+
+};
+
+export default GenericField;

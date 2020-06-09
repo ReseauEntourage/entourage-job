@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from "prop-types";
 import validator from 'validator';
 import { IconNoSSR, GridNoSSR } from '../utils';
@@ -35,19 +35,21 @@ const ContactPartial = ({ padding }) => {
             placeholder="Votre adresse mail..."
             style={{borderBottom: 0, borderRadius: '2px 0 0 2px', paddingTop: 0}}
             onChange={(e) => setEmail(e.target.value)}
+            value={email}
           />
         </div>
         <Button
           style='primary'
-          onClick={() => {
+          onClick={async () => {
             if(validator.isEmail(email)) {
-              Axios.post('/api/v1/cv/share', { email })
-                .then(() => {
-                  UIkit.notification('Votre inscription à la newsletter a bien été prise en compte !', 'success')
-                })
-                .catch(() =>
-                  UIkit.notification('Une erreur est survenue', 'danger')
-                );
+              try {
+                await Axios.post('/api/v1/cv/share', { email });
+                UIkit.notification('Votre inscription à la newsletter a bien été prise en compte !', 'success');
+                setEmail('');
+              }
+              catch {
+                UIkit.notification('Une erreur est survenue', 'danger');
+              }
               setIsValid(true);
             }
             else {
@@ -58,7 +60,9 @@ const ContactPartial = ({ padding }) => {
           Écrivez-moi&nbsp;!
         </Button>
       </GridNoSSR>
-      {!isValid && <span className="uk-text-danger uk-padding-small">Adresse mail invalide</span>}
+      <span className="uk-text-danger uk-padding-small">
+      {!isValid && "Adresse mail invalide"}
+      </span>
     </div>
   </div>
 )};

@@ -177,7 +177,7 @@ const CandidatCard = ({
                 onShareWindowClose={openNewsletterModal}
                 url={`${process.env.SERVER_URL}/cv/${url}`}
                 title={`${firstName.charAt(0).toUpperCase() +
-                  firstName.slice(1).toLowerCase()} - Entourage Jobs`}
+                  firstName.slice(1).toLowerCase()} - LinkedOut`}
                 description={
                   "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
                 }

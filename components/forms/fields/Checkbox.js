@@ -5,13 +5,12 @@ import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 const Checkbox = ({
   id,
   name,
-  defaultValue,
+  value,
   onChange,
   title,
   valid,
   disabled,
 }) => {
-  const [checked, setChecked] = useState(defaultValue);
 
   return (
     <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
@@ -24,14 +23,8 @@ const Checkbox = ({
           className={`uk-checkbox${
             valid !== undefined && valid.isInvalid ? ' uk-form-danger' : ''
           }`}
-          checked={checked}
-          // defaultChecked={defaultValue}
-          onChange={() => {
-            onChange({
-              target: { name, checked: !checked, type: 'checkbox' },
-            });
-            setChecked(!checked);
-          }}
+          checked={value}
+          onChange={(event) => onChange(event)}
         />
         <span style={{ paddingLeft: '10px' }}>{title}</span>
       </label>
@@ -45,7 +38,7 @@ Checkbox.propTypes = {
   name: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
-  defaultValue: PropTypes.bool,
+  value: PropTypes.bool,
   title: PropTypes.node.isRequired,
   valid: PropTypes.shape({
     isInvalid: PropTypes.bool,
@@ -54,7 +47,7 @@ Checkbox.propTypes = {
 };
 Checkbox.defaultProps = {
   valid: undefined,
-  defaultValue: false,
+  value: false,
   disabled: false
 };
 

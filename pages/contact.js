@@ -1,12 +1,15 @@
 /* global UIkit */
-import React from 'react';
+import React, {useRef} from 'react';
 import Layout from '../components/Layout';
 import interestLinkedOutSchema from "../components/forms/schema/formInterestLinkedOut.json";
 import {Section} from "../components/utils";
 import FormWithValidation from "../components/forms/FormWithValidation";
 import Api from "../Axios";
+import {useResetForm} from "../hooks";
 
 const Contact = () => {
+  const [form, resetForm] = useResetForm();
+
   return (
     <Layout title="Contact - LinkedOut">
       <Section container="small" style="default">
@@ -18,11 +21,15 @@ const Contact = () => {
           Vous êtes un acteur de l&apos;insertion sociale et professionnelle intéressé(e) par l’approche de LinkedOut et souhaitez coopérer avec nous&nbsp;? Vous êtes un recruteur et souhaitez en savoir plus sur le dispositif LinkedOut&nbsp;? Ou vous êtes simplement un particulier et avez des questions sur le projet&nbsp;?
         </h4>
         <FormWithValidation
+          ref={form}
           submitText="Envoyer"
           formSchema={interestLinkedOutSchema}
           onSubmit={(fields) => {
             Api.post('/api/v1/mail/contact-us', fields)
-              .then(() => UIkit.notification("Merci pour votre message.", "success"))
+              .then(() => {
+                UIkit.notification("Merci pour votre message.", "success");
+                resetForm();
+              })
               .catch(() => UIkit.notification("Une erreur s'est produite", "danger"));
           }}
         />

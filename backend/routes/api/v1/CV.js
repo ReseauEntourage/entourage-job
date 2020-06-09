@@ -9,7 +9,7 @@ const S3 = require('../../../controllers/aws');
 const { sendMail } = require('../../../controllers/mail');
 const { airtable } = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
-const {USER_ROLES} = require("../../../../constants");
+const {USER_ROLES, CV_STATUS} = require("../../../../constants");
 
 const upload = multer({ dest: 'uploads/' });
 
@@ -28,17 +28,17 @@ router.post(
 
     switch (req.payload.role) {
       case USER_ROLES.CANDIDAT:
-        reqCV.status = 'Pending';
+        reqCV.status = CV_STATUS.Pending.value;
         break;
       case USER_ROLES.COACH:
       case USER_ROLES.ADMIN:
         // on laisse la permission au coach et à l'admin de choisir le statut à enregistrer
         if (!reqCV.status) {
-          reqCV.status = 'Published';
+          reqCV.status = CV_STATUS.Published.value;
         }
         break;
       default:
-        reqCV.status = 'Unknown';
+        reqCV.status = CV_STATUS.Unknown.value;
         break;
     }
     // uploading image and generating preview image
@@ -60,7 +60,7 @@ router.post(
       }
     }
     // création de l'image publiée
-    if (reqCV.status === 'Published') {
+    if (reqCV.status === CV_STATUS.Published.value) {
       try {
         const { Body } = await S3.download(reqCV.urlImg);
         reqCV.urlImg = await S3.upload(Body, `${reqCV.UserId}.Published.webp`);

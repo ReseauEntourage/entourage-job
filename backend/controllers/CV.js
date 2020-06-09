@@ -9,6 +9,8 @@ const {
 } = require('../db/models');
 const { cleanCV, controlText } = require('./tools');
 
+const {CV_STATUS} = require('../../constants');
+
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
   as: 'user',
@@ -104,11 +106,11 @@ FROM "CVs" cv
 inner join (
   select "UserId", MAX(version) as version
   from "CVs"
-  where "CVs".status = 'Published'
+  where "CVs".status = ${CV_STATUS.Published.value}
   group by "UserId") groupCVs
 on cv."UserId" = groupCVs."UserId"
 and cv.version =  groupCVs.version
-and cv.status = 'Published'
+and cv.status = ${CV_STATUS.Published.value}
 inner join (
   select distinct "candidatId"
   from "User_Candidats"
@@ -299,7 +301,7 @@ const getCVs = async () => {
   console.log(`getCVs - Récupérer les CVs`);
   const modelCVs = await models.CV.findAll({
     where: {
-      status: 'Published',
+      status: CV_STATUS.Published.value,
     },
     include: INCLUDES_COMPLETE_CV_WITH_NOT_HIDDEN_USER,
   });

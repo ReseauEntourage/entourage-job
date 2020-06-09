@@ -9,26 +9,22 @@ const Input = ({
   title,
   type,
   valid,
-  defaultValue,
+  value,
   onChange,
   disabled,
 }) => {
   const [labelClass, setLabelClass] = useState('');
-  const [value, setValue] = useState(defaultValue);
 
   const update = (event) => {
     setLabelClass(event.target.value.length > 0 && ' stay-small');
-    setValue(event.target.value);
     onChange(event);
   };
 
   useEffect(() => {
-    setValue(defaultValue || '');
     setLabelClass(
-      (defaultValue && defaultValue.length > 0 && ' stay-small') || ''
+      (value && value.length > 0 && ' stay-small') || ''
     );
-    onChange({ target: { name, value: defaultValue || '', type: 'input' } });
-  }, [defaultValue]);
+  }, [value]);
 
   return (
     <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
@@ -39,8 +35,7 @@ const Input = ({
         name={name}
         type={type}
         id={id}
-        value={value}
-        defaultValue={defaultValue}
+        value={value || ''}
         placeholder={placeholder || 'Tapez votre texte'}
         onChange={(event) => update(event)}
         className={`uk-input uk-form-large ${
@@ -64,14 +59,14 @@ Input.propTypes = {
     isInvalid: PropTypes.bool,
     message: PropTypes.string,
   }),
-  defaultValue: PropTypes.string,
+  value: PropTypes.string,
   disabled: PropTypes.bool,
 };
 
 Input.defaultProps = {
   placeholder: 'Tapez votre texte',
   valid: undefined,
-  defaultValue: '',
+  value: '',
   disabled: false,
 };
 export default Input;

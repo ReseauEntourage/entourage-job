@@ -31,7 +31,7 @@ const CandidatListPartial = () => (
         </Button>
         <p style={{ marginTop: '20px' }}>
           Tous ces candidats cherchent un travail en Île de France, si vous
-          êtes sur un autre territoire, contactez-nous à
+          êtes sur un autre territoire, contactez-nous à{' '}
           <a
             className="uk-link-text uk-text-primary"
             target='_blank'
