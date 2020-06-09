@@ -12,6 +12,38 @@ import Input from './fields/Input';
 import FormValidatorErrorMessage from "./FormValidatorErrorMessage";
 
 const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => {
+
+  const parseValueToUseSelect = () => {
+    let valueToUse = null;
+    if (data.isMulti && Array.isArray(value) && value.length > 0) {
+      valueToUse = value.map((item) => ({
+        value: item,
+        label: item,
+      }));
+    }
+    else if(value) {
+      valueToUse = value;
+    }
+    return valueToUse;
+  };
+
+  const parseValueToReturnSelect = (event) => {
+    let valueToReturn = null;
+    if (data.isMulti && Array.isArray(event) && event.length > 0) {
+      valueToReturn = event.map((item) => item.value);
+    }
+    else if(event.value) {
+      valueToReturn = event.value;
+    }
+    onChange({
+      target: {
+        name: data.name,
+        value: valueToReturn,
+        type: data.type,
+      },
+    });
+  };
+
   if (data.component === 'fieldgroup') {
     const { fields, title, id } = data;
     return (
@@ -75,13 +107,17 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
           });
       }
     }
+
+    let valueToUse = value;
+    if(!valueToUse) valueToUse = options[0].value;
+
     return (
       <Select
         id={`${formId}-${data.id}`}
         placeholder={data.placeholder}
         name={data.name}
         title={data.title}
-        value={value}
+        value={valueToUse}
         options={options}
         valid={getValid(data.name)}
         onChange={onChange}
@@ -137,6 +173,9 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
     );
   }
   if (data.component === 'select-request-async') {
+    let valueToUse = null;
+    if(value) valueToUse = getValue(value);
+
     return (
       <div>
         {data.title && (
@@ -150,9 +189,9 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
           }
           isClearable
           defaultOptions
-          defaultValue={value}
+          value={valueToUse}
           isMulti={data.isMulti}
-          openMenuOnClic={false}
+          openMenuOnClick={false}
           placeholder={data.placeholder || 'Sélectionner...'}
           noOptionsMessage={
             data.noOptionsMessage || ((val) => `Aucun résultat`)
@@ -161,15 +200,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
             data.loadOptions(inputValue, callback, getValue)
           }
           isDisabled={data.disable ? data.disable(getValue) : false}
-          onChange={(e) =>
-            onChange({
-              target: {
-                name: data.name,
-                value: e ? e.value : '',
-                type: data.type,
-              },
-            })
-          }
+          onChange={parseValueToReturnSelect}
         />
       </div>
     );
@@ -185,12 +216,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
         <ReactSelect
           isMulti={data.isMulti}
           name={data.name}
-          defaultValue={
-            value && {
-              value,
-              label: value,
-            }
-          }
+          value={parseValueToUseSelect()}
           options={data.options}
           className="basic-multi-select"
           classNamePrefix="select"
@@ -198,23 +224,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
           noOptionsMessage={
             data.noOptionsMessage || ((item) => `Aucun résultat`)
           }
-          onChange={(obj) => {
-            if (obj) {
-              let valueToReturn = obj;
-              if (Array.isArray(obj)) {
-                valueToReturn = obj.map((item) => item.value);
-              } else {
-                valueToReturn = obj.value;
-              }
-              onChange({
-                target: {
-                  name: data.name,
-                  value: valueToReturn,
-                  type: data.type,
-                },
-              });
-            } else console.log('pb here reactselect');
-          }}
+          onChange={parseValueToReturnSelect}
         />
         <FormValidatorErrorMessage validObj={getValid(data.name)} />
       </div>
@@ -231,12 +241,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
         <CreatableSelect
           isMulti={data.isMulti}
           name={data.name}
-          defaultValue={
-            value && {
-              value,
-              label: value,
-            }
-          }
+          value={parseValueToUseSelect()}
           options={data.options}
           className="basic-multi-select"
           classNamePrefix="select"
@@ -244,23 +249,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
           noOptionsMessage={
             data.noOptionsMessage || ((item) => `Aucun résultat`)
           }
-          onChange={(obj) => {
-            if (obj) {
-              let valueToReturn = obj;
-              if (Array.isArray(obj)) {
-                valueToReturn = obj.map((item) => item.value);
-              } else {
-                valueToReturn = obj.value;
-              }
-              onChange({
-                target: {
-                  name: data.name,
-                  value: valueToReturn,
-                  type: data.type,
-                },
-              });
-            } else console.log('pb here reactselect');
-          }}
+          onChange={parseValueToReturnSelect}
         />
         <FormValidatorErrorMessage validObj={getValid(data.name)} />
       </div>
@@ -276,14 +265,13 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
   throw `component ${data.component} does not exist`; // eslint-disable-line no-throw-literal
 };
 
-// TODO Change PropTypes
 GenericField.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
   formId: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   onChange: PropTypes.func.isRequired,
   getValid: PropTypes.bool.isRequired,
-  getValue: PropTypes.any.isRequired
+  getValue: PropTypes.func.isRequired
 };
 
 GenericField.defaultProps = {

@@ -94,8 +94,6 @@ const FormWithValidation = forwardRef(({
       return acc;
     }, {});
 
-    console.log("INITIAL VALUES ", values);
-
     setFieldValues(values);
     setFieldValidations(validations);
   };

@@ -49,7 +49,7 @@ const CVPageContent = ({ candidatId }) => {
   }, [candidatId]);
 
   useEffect(() => {
-    const unsavedChanges = cv && cv.status === 'Draft';
+    const unsavedChanges = cv && cv.status === CV_STATUS.Draft.value;
     const message =
       "Voulez-vous quitter l'édition du CV? \nLes modifications que vous avez apportées ne seront peut-être pas enregistrées.";
     // 'Voulez-vous sauvegarder les modifications que vous avez apportées ?\nvos modifications seront perdues si vous ne les sauvegardez pas.';
@@ -135,7 +135,7 @@ const CVPageContent = ({ candidatId }) => {
     );
   }
 
-  const cvStatus = CV_STATUS[cv.status] ? CV_STATUS[cv.status] : CV_STATUS.Unkown;
+  const cvStatus = CV_STATUS[cv.status] ? CV_STATUS[cv.status] : CV_STATUS.Unknown;
 
   // affichage du CV
   return (
@@ -160,21 +160,21 @@ const CVPageContent = ({ candidatId }) => {
           {user.role === USER_ROLES.CANDIDAT && (
             <ButtonPost
               style="primary"
-              action={() => postCV('Pending')}
+              action={() => postCV(CV_STATUS.Pending.value)}
               text="Soumettre"
             />
           )}
           {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
             <ButtonPost
               style="default"
-              action={() => postCV('Pending')}
+              action={() => postCV(CV_STATUS.Pending.value)}
               text="Sauvegarder"
             />
           )}
           {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
             <ButtonPost
               style="primary"
-              action={() => postCV('Published')}
+              action={() => postCV(CV_STATUS.Published.value)}
               text="Publier"
             />
           )}
@@ -184,7 +184,7 @@ const CVPageContent = ({ candidatId }) => {
         gender={cv.user.candidat.gender}
         cv={cv}
         disablePicture={user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH}
-        onChange={(fields) => setCV({ ...cv, ...fields, status: 'Draft' })}
+        onChange={(fields) => setCV({ ...cv, ...fields, status: CV_STATUS.Draft.value })}
       />
 
       {/* preview modal */}

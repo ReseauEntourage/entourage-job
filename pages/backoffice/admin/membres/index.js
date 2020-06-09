@@ -15,7 +15,7 @@ import {CV_STATUS, USER_ROLES} from "../../../../constants";
 import Button from "../../../../components/utils/Button";
 
 function translateStatusCV(status) {
-  const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unkown;
+  const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unknown;
   return (
     <span className={`uk-text-${cvStatus.style}`}>
       {cvStatus.label}
