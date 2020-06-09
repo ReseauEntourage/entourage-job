@@ -71,8 +71,8 @@ MultipleCTA.propTypes = {
     text: PropTypes.element,
     img: PropTypes.string,
     button: PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired,
+      label: PropTypes.string,
+      href: PropTypes.string,
       external: PropTypes.bool,
       modal: PropTypes.string
     }),

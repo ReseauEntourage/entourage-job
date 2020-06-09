@@ -270,7 +270,7 @@ GenericField.propTypes = {
   formId: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   onChange: PropTypes.func.isRequired,
-  getValid: PropTypes.bool.isRequired,
+  getValid: PropTypes.func.isRequired,
   getValue: PropTypes.func.isRequired
 };
 
