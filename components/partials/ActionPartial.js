@@ -10,14 +10,6 @@ import MultipleCTA from "./MultipleCTA";
 const datas = [
   {
     button: {
-      href: '/jeveuxtravailler',
-      label: 'Je veux travailler',
-    },
-    title: 'Je suis en galère',
-    text: 'LinkedOut s’adresse à toute personne en situation d’exclusion ou de précarité, dans une démarche d’insertion professionnelle, motivée et en capacité de travailler.',
-  },
-  {
-    button: {
       href: '/jeveuxaider',
       label: 'Je veux aider',
     },
@@ -31,6 +23,14 @@ const datas = [
     },
     title: 'Découvrez les profils des candidats',
     text: 'La précarité et l\'exclusion n\'empêchent pas le talent\xa0!'
+  },
+  {
+    button: {
+      href: '/jeveuxtravailler',
+      label: 'Je veux travailler',
+    },
+    title: 'Je suis en galère',
+    text: 'LinkedOut s’adresse à toute personne en situation d’exclusion ou de précarité, dans une démarche d’insertion professionnelle, motivée et en capacité de travailler.',
   },
 ];
 const ActionPartial = ({ style }) => (
