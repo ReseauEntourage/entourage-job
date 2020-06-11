@@ -28,8 +28,8 @@ const WhatItBrings = () => {
           spacing="medium"
           className="uk-margin-large-bottom"
         />
-        <hr className="uk-divider-small uk-margin-remove-top uk-margin-large-bottom" />
         <MultipleCTA
+          className="uk-margin-large-top"
           data={[
             {
               title: "Je cherche un candidat",
@@ -50,7 +50,7 @@ const WhatItBrings = () => {
               }
             }
           ]}
-          showHorizontalDividers
+          showVerticalDividers
         />
       </div>
     </Section>

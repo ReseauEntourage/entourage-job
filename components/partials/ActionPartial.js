@@ -14,7 +14,6 @@ const datas = [
       label: 'Je veux aider',
     },
     title: 'Je suis un particulier ou un acteur du social',
-    text: 'Il n\'y a pas de petit coup de pouce, aidez à votre échelle\xa0!',
   },
   {
     button: {
@@ -22,7 +21,6 @@ const datas = [
       label: 'Je veux recruter'
     },
     title: 'Découvrez les profils des candidats',
-    text: 'La précarité et l\'exclusion n\'empêchent pas le talent\xa0!'
   },
   {
     button: {
@@ -30,7 +28,6 @@ const datas = [
       label: 'Je veux travailler',
     },
     title: 'Je suis en galère',
-    text: 'LinkedOut s’adresse à toute personne en situation d’exclusion ou de précarité, dans une démarche d’insertion professionnelle, motivée et en capacité de travailler.',
   },
 ];
 const ActionPartial = ({ style }) => (
@@ -46,7 +43,7 @@ const ActionPartial = ({ style }) => (
         </p>
       </div>
 
-      <MultipleCTA data={datas} showHorizontalDividers/>
+      <MultipleCTA data={datas} className="uk-margin-large-bottom" />
       <ContactPartial />
       <SharePartial />
     </GridNoSSR>
