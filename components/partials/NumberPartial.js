@@ -5,7 +5,7 @@ import Carousel from "../utils/Carousel";
 
 const numbers = [
   { value: 73, description: '% des candidats ont retrouvé un job' },
-  { value: 40000, description: 'Partages sur les réseaux de leur CV' },
+  { value: '120k', description: 'Partages sur les réseaux de leur CV' },
   { value: 300, description: 'Entreprises solidaires' },
 ];
 const data = [
@@ -72,7 +72,7 @@ const NumberPartial = () => (
           LinkedOut
         </p>
       </div>
-      {/* </GridNoSSR> */}
+
       <GridNoSSR
         center
         childWidths={['1-1', '1-2@s', '1-3@l']}
@@ -85,9 +85,6 @@ const NumberPartial = () => (
           </div>
         ))}
       />
-      {/* <p className="uk-text-center">
-        Linked Out est plébiscité par les candidats et aussi par les recruteurs.
-      </p> */}
 
       <iframe
         src="https://www.youtube.com/embed/1cfmgC2IqWs"

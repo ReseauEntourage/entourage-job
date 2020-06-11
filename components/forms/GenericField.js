@@ -32,7 +32,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
     if (data.isMulti && Array.isArray(event) && event.length > 0) {
       valueToReturn = event.map((item) => item.value);
     }
-    else if(event.value) {
+    else if(event && event.value) {
       valueToReturn = event.value;
     }
     onChange({

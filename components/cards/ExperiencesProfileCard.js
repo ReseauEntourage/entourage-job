@@ -13,7 +13,6 @@ import ModalConfirm from '../modals/ModalConfirm';
 const ExperiencesProfileCard = ({ experiences, onChange }) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentDefaultValue, setCurrentDefaultValue] = useState({});
-  console.log(experiences);
 
   return (
     <>
@@ -68,7 +67,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
                         name="pencil"
                         onClick={() => {
                           setCurrentIndex(i);
-                          setCurrentDefaultValue(experiences[i]);
+                          setCurrentDefaultValue(exp);
                           UIkit.modal(`#modal-experience-edit`).show();
                         }}
                       />
@@ -143,55 +142,3 @@ ExperiencesProfileCard.defaultProps = {
   onChange: null,
 };
 export default ExperiencesProfileCard;
-
-// const EditCard = ({ title, onChange, id, addCondition, content }) => (
-//   <>
-//   <div className="uk-card uk-card-default uk-card-body">
-//     <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
-//       <h3 className="uk-card-title">{title}</h3>
-//       {onChange && addCondition && (
-//         <ButtonIcon onClick={() => UIkit.modal(`#${id}-add`).show()} name="plus" />
-//       )}
-//     </GridNoSSR>
-//     {content}
-//   </div>
-//       {onChange && (
-//         <>
-//           <ModalEdit
-//             id={`${id}-add`}
-//             title={`Ajout - ${title}`}
-//             formSchema={formSchema}
-//             onSubmit={(fields) =>
-//               onChange({
-//                 Experiences: [
-//                   ...experiences,
-//                   getExpWithoutSeparatedDate(fields),
-//                 ],
-//               })
-//             }
-//           />
-//           <ModalEdit
-//             id="modal-experience-edit"
-//             title="Édition - Mon expérience"
-//             formSchema={formSchema}
-//             defaultValues={currentDefaultValue}
-//             onSubmit={(fields) => {
-//               const newExperiences = experiences;
-//               newExperiences[currentIndex] = getExpWithoutSeparatedDate(fields);
-//               onChange({ Experiences: newExperiences });
-//             }}
-//           />
-//           <ModalConfirm
-//             id="modal-experience-remove"
-//             text="Êtes-vous sûr(e) de vouloir supprimer cette expérience ?"
-//             buttonText="supprimer"
-//             onConfirm={() => {
-//               experiences.splice(currentIndex, 1);
-//               onChange({ Experiences: experiences });
-//             }}
-//           />
-//         </>
-//       )}
-
-//   </>
-// );
