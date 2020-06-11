@@ -61,8 +61,11 @@ const JeVeuxRecruter = () => {
       <WaysToJoin />
       <HireSteps />
       <WhatItBrings />
-      <Reviews />
-      <DiscoverPartial style='muted'/>
+      {/*
+        TODO Unhide when we'll have real testimonies
+        <Reviews />
+      */}
+      <DiscoverPartial style='default'/>
       <StepperModal
         id="modal-offer-add"
         title="Proposer une opportunité"
