@@ -24,7 +24,6 @@ const FormWithValidation = forwardRef(({
 
   const validator = new FormValidator(rules);
 
-  const [usedDefaultValues, setUsedDefaultValues] = useState(defaultValues);
   const [error, setError] = useState();
 
   const [fieldValidations, setFieldValidations] = useState({});
@@ -90,7 +89,7 @@ const FormWithValidation = forwardRef(({
       return acc;
     }, {});
     const values = fieldsId.reduce((acc, value) => {
-      acc[value] = usedDefaultValues[value];
+      acc[value] = defaultValues[value];
       return acc;
     }, {});
 
@@ -105,7 +104,7 @@ const FormWithValidation = forwardRef(({
 
   useEffect(() => {
     initializeForm();
-  }, [fields, usedDefaultValues]);
+  }, [fields, defaultValues]);
 
   return (
     <form

@@ -51,7 +51,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
                       name="pencil"
                       onClick={() => {
                         setCurrentIndex(i);
-                        setCurrentDefaultValue(review); // todo
+                        setCurrentDefaultValue(review);
                         UIkit.modal(`#modal-testimonial-edit`).show();
                       }}
                     />
