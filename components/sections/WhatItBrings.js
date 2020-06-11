@@ -29,7 +29,6 @@ const WhatItBrings = () => {
           className="uk-margin-large-bottom"
         />
         <MultipleCTA
-          className="uk-margin-large-top"
           data={[
             {
               title: "Je cherche un candidat",
