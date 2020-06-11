@@ -33,7 +33,6 @@ const WaysToJoin = () => {
           spacing='small'
           className="uk-margin-large-bottom"
         />
-        <hr className="uk-divider-small uk-margin-remove-top uk-margin-large-bottom" />
         <MultipleCTA
           data={[
             {
@@ -55,7 +54,7 @@ const WaysToJoin = () => {
               }
             }
           ]}
-          showHorizontalDividers
+          showVerticalDividers
         />
       </div>
     </Section>
