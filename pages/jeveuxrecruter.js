@@ -31,7 +31,7 @@ const JeVeuxRecruter = () => {
   return (
     <Layout title="Je veux recruter - LinkedOut">
       <ImageTitle
-        img='static/img/header_pic.jpg'
+        img='static/img/header_pic_hire.jpg'
         id="hire-title"
         title={<>Vous souhaitez <span className="uk-text-primary">recruter un candidat LinkedOut ?</span></>}
         text={"La précarité et l'exclusion n'empêchent pas le talent\xa0!"} />
@@ -61,8 +61,11 @@ const JeVeuxRecruter = () => {
       <WaysToJoin />
       <HireSteps />
       <WhatItBrings />
-      <Reviews />
-      <DiscoverPartial style='muted'/>
+      {/*
+        TODO Unhide when we'll have real testimonies
+        <Reviews />
+      */}
+      <DiscoverPartial style='default'/>
       <StepperModal
         id="modal-offer-add"
         title="Proposer une opportunité"

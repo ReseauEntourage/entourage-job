@@ -97,55 +97,58 @@ const NumberPartial = () => (
         title="linkedout"
       />
 
-      <Carousel
-        itemRenderer={({ title, description, role, imgSrc, imgAlt }, i) => (
-          <li key={i.toString()}>
-            <div className="uk-card uk-card-small uk-card-default">
-              {imgSrc && (
-                <div className="uk-card-media-top">
-                  <img
-                    className="uk-height-small uk-width-1-1"
-                    src={imgSrc}
-                    alt={imgAlt}
-                  />
-                </div>
-              )}
-              <GridNoSSR
-                gap="small"
-                between
-                column
-                eachWidths={['expand', 'auto']}
-                className={`uk-card-body ${!imgSrc && 'uk-height-1-1'}`}
-              >
-                <div>
-                  <IconNoSSR
-                    flip
-                    className="uk-text-primary"
-                    name="quote-right"
-                    ratio={1.4}
-                  />
-                  <p className="uk-margin-remove">{description}</p>
-                  <IconNoSSR
-                    className="uk-text-muted uk-width-1-1 uk-text-right"
-                    name="quote-right"
-                    ratio={0.8}
-                  />
-                </div>
-                <div className="uk-card-title">
-                  <h3 className="uk-text-bold uk-text-small uk-margin-remove-bottom uk-text-uppercase">
-                    {title}
-                  </h3>
-                  <p className="uk-text-meta uk-margin-remove-top">
-                    {role}
-                  </p>
-                </div>
-              </GridNoSSR>
-            </div>
-          </li>
-        )}
-        style="muted"
-        items={data}
-        containerClasses="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small" />
+      {/*
+        TODO Unhide when we'll have real testimonies
+        <Carousel
+          itemRenderer={({ title, description, role, imgSrc, imgAlt }, i) => (
+            <li key={i.toString()}>
+              <div className="uk-card uk-card-small uk-card-default">
+                {imgSrc && (
+                  <div className="uk-card-media-top">
+                    <img
+                      className="uk-height-small uk-width-1-1"
+                      src={imgSrc}
+                      alt={imgAlt}
+                    />
+                  </div>
+                )}
+                <GridNoSSR
+                  gap="small"
+                  between
+                  column
+                  eachWidths={['expand', 'auto']}
+                  className={`uk-card-body ${!imgSrc && 'uk-height-1-1'}`}
+                >
+                  <div>
+                    <IconNoSSR
+                      flip
+                      className="uk-text-primary"
+                      name="quote-right"
+                      ratio={1.4}
+                    />
+                    <p className="uk-margin-remove">{description}</p>
+                    <IconNoSSR
+                      className="uk-text-muted uk-width-1-1 uk-text-right"
+                      name="quote-right"
+                      ratio={0.8}
+                    />
+                  </div>
+                  <div className="uk-card-title">
+                    <h3 className="uk-text-bold uk-text-small uk-margin-remove-bottom uk-text-uppercase">
+                      {title}
+                    </h3>
+                    <p className="uk-text-meta uk-margin-remove-top">
+                      {role}
+                    </p>
+                  </div>
+                </GridNoSSR>
+              </div>
+            </li>
+          )}
+          style="muted"
+          items={data}
+          containerClasses="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small" />
+      */}
     </GridNoSSR>
   </Section>
 );

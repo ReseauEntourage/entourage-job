@@ -13,7 +13,7 @@ import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut"
 
 const JeVeuxAider = () => (
   <Layout title="Je veux aider - LinkedOut">
-    <ImageTitle img='static/img/header_pic.jpg' id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider&nbsp;?</span></>} text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"} />
+    <ImageTitle img='static/img/header_pic_help.jpg' id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider&nbsp;?</span></>} text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"} />
     <SubHeader id="profile" data={[
       {
         href: "#private",
