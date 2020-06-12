@@ -23,24 +23,24 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                 </div>
               }
               <div className="uk-flex uk-flex-1">
-                {showNumbers && <div className="uk-text-bold uk-text-primary uk-text-large uk-margin-small-right uk-margin-small-top" style={{fontSize: 46, lineHeight: 1}}>{index+1}</div>}
+                {showNumbers && <div className="uk-text-bold uk-text-primary uk-text-large uk-margin-medium-right uk-margin-small-top" style={{fontSize: 46, lineHeight: 1}}>{index+1}</div>}
                 <div className="uk-flex uk-flex-column uk-flex-1">
                   {
                     item.title &&
-                    <h3 className={`${item.text ? ' uk-flex-bottom' : 'uk-padding-small uk-text-center uk-flex-center uk-flex-middle uk-flex-1'} uk-text-bold uk-flex`}>
+                    <h3 className={`${showHorizontalDividers ? ' uk-flex-middle' : 'uk-padding-small uk-text-center uk-flex-center uk-flex-middle uk-flex-1'} uk-text-bold uk-flex`}>
                       {item.title}
                     </h3>
                   }
                   {showHorizontalDividers && <hr className="uk-divider-small uk-margin-remove-vertical" />}
                   {
                     item.text &&
-                    <div className={`${item.button ? '' : 'uk-margin-remove-bottom'} ${item.title ? 'uk-margin-medium-top' : ''} uk-flex-1 uk-margin-medium-bottom`}>
+                    <div className={`${item.button ? '' : 'uk-margin-remove-bottom'} ${showHorizontalDividers ? 'uk-margin-medium-top' : ''} ${!showHorizontalDividers && item.title ? 'uk-text-center' : ''} uk-flex-1 uk-margin-medium-bottom`}>
                       {item.text}
                     </div>
                   }
                   {
                     item.button &&
-                    <div className={`${item.text ? 'uk-flex-start' : 'uk-flex-center'} uk-flex uk-flex-middle`}>
+                    <div className={`${showHorizontalDividers ? 'uk-flex-start' : 'uk-flex-center'} uk-flex uk-flex-middle`}>
                       <Button
                         href={item.button.href}
                         style='primary'
@@ -64,15 +64,15 @@ MultipleCTA.propTypes = {
   showNumbers: PropTypes.bool,
   showHorizontalDividers: PropTypes.bool,
   showVerticalDividers: PropTypes.bool,
-  spacing: PropTypes.oneOf('small', 'medium', 'large'),
+  spacing: PropTypes.oneOf(['small', 'medium', 'large']),
   className: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string,
     text: PropTypes.element,
     img: PropTypes.string,
     button: PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired,
+      label: PropTypes.string,
+      href: PropTypes.string,
       external: PropTypes.bool,
       modal: PropTypes.string
     }),

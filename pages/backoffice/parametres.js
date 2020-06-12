@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useContext, useState, useEffect } from 'react';
+import React, {useContext, useState, useEffect, useRef} from 'react';
 import { PropTypes } from 'prop-types';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
@@ -19,6 +19,7 @@ import schemaPersonalData from '../../components/forms/schema/formPersonalData.j
 import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
 import {USER_ROLES} from "../../constants";
+import {useResetForm} from "../../hooks";
 
 // userId du candidat ou coach lié
 const UserInformationCard = ({ title, user }) => {
@@ -129,6 +130,7 @@ const Parametres = () => {
   const [userData, setUserData] = useState(false);
   const [loadingPersonal, setLoadingPersonal] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
+  const [form, resetForm] = useResetForm();
 
   useEffect(() => {
     if (user) {
@@ -265,6 +267,7 @@ const Parametres = () => {
               {loadingPassword ? <div data-uk-spinner="ratio: .8" /> : <></>}
             </GridNoSSR>
             <FormWithValidation
+              ref={form}
               submitText="Modifier"
               formSchema={schemaChangePassword}
               onSubmit={(
@@ -285,6 +288,7 @@ const Parametres = () => {
                         'Nouveau mot de passe enregistré',
                         'success'
                       );
+                      resetForm();
                       setLoadingPassword(false); // lorsque utilisation de finaly => erreur de node/child
                     })
                     .catch((err) => {

@@ -10,6 +10,7 @@
       "title": "Adresse mail*"
     },
     {
+      "id": "cgu",
       "name": "cgu",
       "component": "cgu"
     }

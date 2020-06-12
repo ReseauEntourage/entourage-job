@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {IconNoSSR, GridNoSSR, ImgNoSSR} from '../utils';
+import {GridNoSSR, ImgNoSSR} from '../utils';
 
 const ReviewCard = ({ author, role, review }) => (
   <div className="uk-card uk-card-default uk-card-body uk-background-muted uk-flex">
@@ -16,7 +16,7 @@ const ReviewCard = ({ author, role, review }) => (
         <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
           {author}
         </p>
-        <p className="uk-margin-remove">{role}</p>
+        <p className="uk-margin-remove uk-text-meta">{role}</p>
       </>
     </GridNoSSR>
   </div>

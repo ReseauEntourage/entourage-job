@@ -51,7 +51,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
                       name="pencil"
                       onClick={() => {
                         setCurrentIndex(i);
-                        setCurrentDefaultValue(review); // todo
+                        setCurrentDefaultValue(review);
                         UIkit.modal(`#modal-testimonial-edit`).show();
                       }}
                     />
@@ -99,7 +99,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
       <ModalConfirm
         id="modal-testimonial-remove"
         text="Êtes-vous sûr(e) de vouloir supprimer cette recommandation ?"
-        buttonText="supprimer"
+        buttonText="Supprimer"
         onConfirm={() => {
           reviews.splice(currentIndex, 1);
           onChange({ reviews });

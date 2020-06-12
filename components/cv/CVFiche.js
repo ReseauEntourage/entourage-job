@@ -28,7 +28,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
   const hashtags = ['LinkedOut'];
   const sharedDescription =
     "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer.";
-  const title = `${cv.user.candidat.firstName} - Entourage Jobs`;
+  const title = `${cv.user.candidat.firstName} - LinkedOut`;
 
   // desactivation des champs candidat et publique
   schema.fields[
@@ -446,7 +446,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
         </h2>
         <Button
           disabled={actionDisabled}
-          href="/lescandidats"
           style='primary'
           toggle="target: #modal-send-opportunity">
           Contactez-moi{' '}<IconNoSSR name="chevron-right" />

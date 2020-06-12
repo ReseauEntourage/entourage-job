@@ -3,20 +3,46 @@ import PropTypes from 'prop-types';
 
 const ImageTitle = ({id, title, text, img}) => {
   return (
-    <div id={id} className="uk-section uk-padding-remove-vertical uk-background-muted">
-      <div className="uk-container-expand uk-height-large uk-background-image uk-background-top-center uk-background-norepeat uk-background-cover uk-height-max-large uk-flex uk-flex-bottom" style={{backgroundImage: `url(${img})`}}>
+    <div
+      id={id}
+      className="uk-modal-body uk-background-muted uk-margin-remove uk-padding-remove"
+      data-uk-overflow-auto
+    >
+      <div
+        data-uk-parallax="y: 0, -130"
+        style={{
+          position: 'relative',
+          minHeight: '220px',
+          maxHeight: '500px', // '50vh',
+          height: '50vw',
+        }}
+      >
         <div
-          className="uk-width-1-2@m uk-align-center uk-background-default uk-padding uk-margin-remove-top"
-          style={{marginBottom: -90}}>
-          <h1 className="uk-text-center uk-align-center uk-text-bold">
-            {title}
-          </h1>
-          <h3 className="uk-text-center uk-align-center uk-margin-remove-vertical">
-            {text}
-          </h3>
-        </div>
+          className="uk-background-cover uk-background-center uk-box-shadow-small"
+          style={{
+            backgroundImage: `url("${img}")`,
+            backgroundPosition: 'center',
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            left: 0,
+            display: 'block',
+            width: '100%',
+            minHeight: '140%',
+            maxHeight: '140%',
+            height: '70vw',
+          }}
+        />
       </div>
-      <div style={{height: 90}}/>
+      <div
+        className="uk-flex uk-flex-column uk-flex-center uk-position-relative uk-width-1-2@m uk-align-center uk-background-default uk-padding" style={{minHeight: 250}}>
+        <h1 className="uk-text-center uk-align-center uk-text-bold">
+          {title}
+        </h1>
+        <h3 className="uk-text-center uk-align-center uk-margin-remove-vertical">
+          {text}
+        </h3>
+      </div>
     </div>
   );
 };

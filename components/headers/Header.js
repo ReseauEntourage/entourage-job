@@ -15,9 +15,9 @@ import Button from "../utils/Button";
 
 const Header = ({ isHome }) => {
   const LINKS = [
-    { href: '/jeveuxtravailler', name: 'Travailler' },
-    { href: '/jeveuxrecruter', name: 'Recruter' },
     { href: '/jeveuxaider', name: 'Aider' },
+    { href: '/jeveuxrecruter', name: 'Recruter' },
+    { href: '/jeveuxtravailler', name: 'Travailler' },
   ];
   const router = useRouter();
   return (
@@ -41,11 +41,26 @@ const Header = ({ isHome }) => {
           <Nav
             navbar
             items={[
-              ...LINKS.map((value, i) => (
-                <Link href={value.href} key={i}>
-                  <a className="uk-visible@m">{value.name}</a>
-                </Link>
-              )),
+              ...LINKS.map((value, i) => {
+                  if (router.asPath === value.href) {
+                    return (
+                      <div className="uk-navbar-item uk-padding-remove-horizontal">
+                        <Button
+                          href={value.href}
+                          className="uk-padding-small uk-padding-remove-vertical">
+                            {value.name}
+                        </Button>
+                      </div>
+                    );
+                  }
+                  return (
+                    <Link href={value.href} key={i}>
+                      {/* Hack so that the links don't move when changing current page */}
+                      <a style={{border: '1px solid transparent'}} className={`uk-visible@m ${router.asPath === value.href && 'uk-text-bold uk-text-primary'}`}>{value.name}</a>
+                    </Link>
+                  );
+                }
+              ),
               // separateurs en css .ent-nav
               <div className="uk-navbar-item uk-visible@m">
                 <Button

@@ -8,19 +8,11 @@ const Select = ({
   title,
   valid,
   options,
-  defaultValue,
+  value,
   onChange,
   disabled,
   hidden,
 }) => {
-  useEffect(() => {
-    if (defaultValue) {
-      // trick to verify field before the user update of the field
-      onChange({
-        target: { name, value: defaultValue, type: 'input' },
-      });
-    }
-  }, [defaultValue]);
 
   return (
     <>
@@ -53,7 +45,7 @@ const Select = ({
           onChange={(event) => onChange(event)}
           name={name}
           id={id}
-          value={defaultValue}
+          value={value}
           style={{
             backgroundColor: 'transparent',
             paddingLeft: 0,
@@ -61,9 +53,9 @@ const Select = ({
           }}
           disabled={disabled}
         >
-          {options.map(({ value, label }, i) => (
-            <option value={value} key={i}>
-              {label}
+          {options.map((item, i) => (
+            <option value={item.value} key={i}>
+              {item.label}
             </option>
           ))}
         </select>
@@ -74,11 +66,12 @@ const Select = ({
 };
 Select.defaultProps = {
   valid: undefined,
-  defaultValue: undefined,
+  value: undefined,
   disabled: false,
   onChange: () => {},
   hidden: false,
 };
+
 Select.propTypes = {
   disabled: PropTypes.bool,
   id: PropTypes.string.isRequired,
@@ -89,7 +82,7 @@ Select.propTypes = {
     isInvalid: PropTypes.bool,
     message: PropTypes.string,
   }),
-  defaultValue: PropTypes.string,
+  value: PropTypes.string,
   options: PropTypes.arrayOf(
     PropTypes.objectOf({
       value: PropTypes.oneOfType([

@@ -28,7 +28,6 @@ const WhatItBrings = () => {
           spacing="medium"
           className="uk-margin-large-bottom"
         />
-        <hr className="uk-divider-small uk-margin-remove-top uk-margin-large-bottom" />
         <MultipleCTA
           data={[
             {
@@ -45,11 +44,12 @@ const WhatItBrings = () => {
               button: {
                 label: "J’envoie mon offre à LinkedOut",
                 href: process.env.AIRTABLE_LINK_BECOME_COACH,
-                modal: "#modal-offer-add"
+                modal: "#modal-offer-add",
+                external: true
               }
             }
           ]}
-          showHorizontalDividers
+          showVerticalDividers
         />
       </div>
     </Section>
