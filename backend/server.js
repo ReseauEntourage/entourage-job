@@ -50,16 +50,14 @@ module.exports.prepare = () => {
   app.use('/api/v1/opportunity', routeOpportunity);
   app.use('/api/v1/user', routeUser);
 
-  // restricting access to some routes
-  const restrictAccess = (req, res, next) => {
-    console.log(`restrictAccess : ${req.isAuthenticated()}`);
+  app.use((err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') {
+      res.status(err.status).send({message: err.message});
+      return;
+    }
+    next();
+  });
 
-    if (!req.isAuthenticated()) return res.redirect('/login');
-    return next();
-  };
-
-  // todo restriction acces login for connected users
-  // app.use('/backoffice/', restrictAccess);
 };
 
 module.exports.get = (path, handle) => {
