@@ -9,7 +9,7 @@ const UserController = require('../../../controllers/User');
 const AuthController = require('../../../controllers/Auth');
 
 /* !!! TODO !!!
- * RESTRICTION DES ROUTE AUX ROLES ET A LA CONNEXION
+ * RESTRICTION DES ROUTES AUX ROLES
  * !!! TODO !!!
  */
 
@@ -17,7 +17,7 @@ const AuthController = require('../../../controllers/Auth');
  * Route : POST /api/<VERSION>/user
  * Description : Créé le User
  */
-router.post('/', (req, res) => {
+router.post('/', auth.required, (req, res) => {
   function fakePassword() {
     return Math.random() // Generate random number, eg: 0.123456
       .toString(36) // Convert  to base-36 : "0.4fzyo82mvyr"
@@ -63,7 +63,7 @@ router.post('/', (req, res) => {
  * Route : GET /api/<VERSION>/user
  * Description : Récupère tous les Users
  */
-router.get('/', (req, res) => {
+router.get('/', auth.required, (req, res) => {
   const order = [['firstName', 'ASC']];
   UserController.getUsers(req.query.limit, req.query.offset, order)
     .then((users) => {
@@ -80,7 +80,7 @@ router.get('/', (req, res) => {
  * Route : GET /api/<VERSION>/user
  * Description : Récupère tous les Users
  */
-router.get('/members', (req, res) => {
+router.get('/members', auth.required, (req, res) => {
   const order = [['firstName', 'ASC']];
   UserController.getMembers(
     req.query.limit,
@@ -114,7 +114,7 @@ router.get('/members', (req, res) => {
  * Route : GET /api/<VERSION>/user
  * Description : Récupère tous les Users
  */
-router.get('/search', (req, res) => {
+router.get('/search', auth.required, (req, res) => {
   console.log(req.query);
 
   UserController.searchUsers(req.query.query, req.query.role)
@@ -132,7 +132,7 @@ router.get('/search', (req, res) => {
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/candidat', (req, res) => {
+router.get('/candidat', auth.required, (req, res) => {
   UserController.getUserCandidatOpt(req.query)
     .then((user) => {
       res.status(200).json(user);
@@ -147,7 +147,7 @@ router.get('/candidat', (req, res) => {
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/candidat/:id', (req, res) => {
+router.get('/candidat/:id', auth.required, (req, res) => {
   UserController.getUserCandidat(req.params.id)
     .then((user) => {
       res.status(200).json(user);
@@ -162,7 +162,7 @@ router.get('/candidat/:id', (req, res) => {
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', auth.required, (req, res) => {
   (validator.isEmail(req.params.id)
     ? UserController.getUserByEmail(req.params.id)
     : UserController.getUser(req.params.id)
@@ -235,7 +235,7 @@ router.put('/candidat/:id', auth.required, (req, res) => {
  * Route : PUT /api/<VERSION>/user/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
-router.put('/:id', (req, res) => {
+router.put('/:id', auth.required, (req, res) => {
   UserController.setUser(req.params.id, req.body)
     .then((user) => {
       console.log(`User modifié`);
@@ -254,7 +254,7 @@ router.put('/:id', (req, res) => {
  * - id : ID du User à supprimer
  * Exemple : <server_url>/api/v1/user/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth.required, (req, res) => {
   UserController.deleteUser(req.params.id)
     .then((result) => {
       res.status(200).json(result);
