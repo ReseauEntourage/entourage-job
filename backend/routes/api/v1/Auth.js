@@ -58,7 +58,7 @@ router.post('/logout', auth.required, (req, res /* , next */) => {
   res.redirect(process.env.SERVER_URL);
 });
 
-router.post('/forgot', (req, res /* , next */) => {
+router.post('/forgot', auth.optional, (req, res /* , next */) => {
   let token = null;
   let user = null;
   const { email } = req.body;
@@ -124,7 +124,7 @@ router.post('/forgot', (req, res /* , next */) => {
 /**
  * GET Vérification lien de réinitialisation mot de passe
  */
-router.get('/reset/:userId/:token', (req, res /* , next */) => {
+router.get('/reset/:userId/:token', auth.optional, (req, res /* , next */) => {
   const infoLog = 'GET /reset/:userId/:token -';
 
   const { userId, token } = req.params;
@@ -161,7 +161,7 @@ router.get('/reset/:userId/:token', (req, res /* , next */) => {
 /**
  * POST Réinitialisation mot de passe
  */
-router.post('/reset/:userId/:token', (req, res /* , next */) => {
+router.post('/reset/:userId/:token', auth.optional, (req, res /* , next */) => {
   const infoLog = 'POST /reset/:userId/:token -';
   const { userId, token } = req.params;
   const { newPassword, confirmPassword } = req.body;

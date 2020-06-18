@@ -132,7 +132,7 @@ router.post(
  * Route : POST /api/<VERSION>/cv
  * Description : Prise d'info partageur
  */
-router.post('/share', (req, res) => {
+router.post('/share', auth.optional, (req, res) => {
   return airtable('newsletter').create(
     [
       {
@@ -160,7 +160,7 @@ router.post('/share', (req, res) => {
  *                ou
  *                Récupère tous les CVs complets
  */
-router.get('/', (req, res) => {
+router.get('/', auth.optional, (req, res) => {
   const infoLog = 'GET / -';
   const { userId } = req.query;
   if (userId) {
@@ -225,7 +225,7 @@ router.get('/edit', auth.required, (req, res) => {
  * - nb : Nombre de CVs à retourner (11 par défaut)
  * Exemple : <server_url>/api/v1/cv/cards/random?nb=2
  */
-router.get('/cards/random', (req, res) => {
+router.get('/cards/random', auth.optional, (req, res) => {
   CVController.getRandomShortCVs(req.query.nb, req.query.q)
     .then((listeCVs) => {
       res.status(200).json(listeCVs);
@@ -240,7 +240,7 @@ router.get('/cards/random', (req, res) => {
  * Route : GET /api/<VERSION>/cv/<URL>
  * Description : Récupère le CV associé à l'<URL> fournit
  */
-router.get('/:url', (req, res) => {
+router.get('/:url', auth.optional, (req, res) => {
   CVController.getCVbyUrl(req.params.url)
     .then((cv) => {
       if (cv) {
@@ -261,7 +261,7 @@ router.get('/:url', (req, res) => {
  * Route : PUT /api/<VERSION>/cv/<ID>
  * Description : Modifie le CV associé à l'<ID> fournit
  */
-router.put('/:id', (req, res) => {
+router.put('/:id', auth.required, (req, res) => {
   CVController.setCV(req.params.id, req.body)
     .then((cv) => {
       console.log(`CV modifié`);
@@ -289,7 +289,7 @@ router.post('/image', auth.required, (req, res) => {
  * - id : ID du CV à supprimer
  * Exemple : <server_url>/api/v1/cv/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth.required, (req, res) => {
   CVController.deleteCV(req.params.id)
     .then((result) => {
       res.status(200).json(result);

@@ -3,10 +3,11 @@ const express = require('express');
 const router = express.Router();
 const sequelize = require('sequelize');
 const db = require('../../../db/config/databaseConnect');
+const { auth } = require('../../../controllers/Auth');
 const Message = require('../../../db/models/message')(db, sequelize.DataTypes);
 
 // Find all messages
-router.get('/', (req, res) => {
+router.get('/', auth.required, (req, res) => {
   Message.findAll()
     .then((listeMessages) => {
       console.log('All Messages : ', JSON.stringify(listeMessages, null, 4));
@@ -19,7 +20,7 @@ router.get('/', (req, res) => {
 });
 
 // Create a new message
-router.post('/', (req, res) => {
+router.post('/', auth.required, (req, res) => {
   Message.create({
     firstName: req.body.message.firstName,
     lastName: req.body.message.lastName,
@@ -47,7 +48,7 @@ router.post('/', (req, res) => {
 });
 
 // Find 1 message req.params.id
-router.get('/:id', (req, res) => {
+router.get('/:id', auth.required, (req, res) => {
   Message.findAll({
     where: { id: req.params.id },
   })
@@ -62,7 +63,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Delete a message
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth.required, (req, res) => {
   Message.destroy({
     where: { id: req.params.id },
   })
