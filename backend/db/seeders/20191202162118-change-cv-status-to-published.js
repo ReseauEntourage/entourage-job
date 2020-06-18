@@ -1,11 +1,11 @@
-
+const {CV_STATUS} = require('../../../constants');
 
 module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkUpdate(
       'CVs',
       {
-        status: 'Published',
+        status: CV_STATUS.Published.value,
       },
       {
         version: 1,
@@ -17,7 +17,7 @@ module.exports = {
     return queryInterface.bulkUpdate(
       'CVs',
       {
-        status: 'Draft',
+        status: CV_STATUS.Draft.value,
       },
       {
         version: 1,
