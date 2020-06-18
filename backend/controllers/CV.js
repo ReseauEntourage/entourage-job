@@ -19,12 +19,12 @@ const INCLUDE_ALL_USERS = {
     {
       model: models.User,
       as: 'coach',
-      attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
+      attributes: ['id', 'firstName', 'lastName', 'gender'],
     },
     {
       model: models.User,
       as: 'candidat',
-      attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
+      attributes: ['id', 'firstName', 'lastName', 'gender'],
     },
   ],
 };
@@ -106,11 +106,11 @@ FROM "CVs" cv
 inner join (
   select "UserId", MAX(version) as version
   from "CVs"
-  where "CVs".status = ${CV_STATUS.Published.value}
+  where "CVs".status = '${CV_STATUS.Published.value}'
   group by "UserId") groupCVs
 on cv."UserId" = groupCVs."UserId"
 and cv.version =  groupCVs.version
-and cv.status = ${CV_STATUS.Published.value}
+and cv.status = '${CV_STATUS.Published.value}'
 inner join (
   select distinct "candidatId"
   from "User_Candidats"
@@ -327,7 +327,7 @@ from
   "CVs" cv inner join
     (select "UserId", MAX(version) as version
       from "CVs"
-      where "CVs".status = 'Published'
+      where "CVs".status = '${CV_STATUS.Published.value}'
       group by "UserId") groupCVs
     on cv."UserId" = groupCVs."UserId"
     and cv.version =  groupCVs.version

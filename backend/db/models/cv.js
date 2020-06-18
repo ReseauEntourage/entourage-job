@@ -1,4 +1,5 @@
 const uuid = require('uuid/v4');
+const {CV_STATUS} = require('../../../constants');
 
 module.exports = (sequelize, DataTypes) => {
   const CV = sequelize.define(
@@ -77,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       status: {
         type: DataTypes.STRING,
-        defaultValue: 'New',
+        defaultValue: CV_STATUS.New.value,
       },
       version: {
         type: DataTypes.INTEGER,

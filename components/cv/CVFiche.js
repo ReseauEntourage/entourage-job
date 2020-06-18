@@ -348,28 +348,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
                       {cv.location}
                     </li>
                   )}
-                  {/* {cv.user.candidat.email && (
-                    <li>
-                      <IconNoSSR className="uk-text-primary" name="user" />{' '}
-                      <a
-                        className="uk-link-text"
-                        href={`mailto:${cv.user.candidat.email}`}
-                      >
-                        {cv.user.candidat.email}
-                      </a>
-                    </li>
-                  )}
-                  {cv.user.candidat.phone && (
-                    <li>
-                      <IconNoSSR className="uk-text-primary" name="phone" />{' '}
-                      <a
-                        className="uk-link-text"
-                        href={`tel:${cv.user.candidat.phone}`}
-                      >
-                        {cv.user.candidat.phone}
-                      </a>
-                    </li>
-                  )} */}
                   {cv.contracts && cv.contracts.length > 0 && (
                     <li>
                       <IconNoSSR className="uk-text-primary" name="file-text" />{' '}
