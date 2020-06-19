@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const jwtExpress = require('express-jwt');
+const expressJwt = require('express-jwt');
 
 function encryptPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
@@ -76,18 +76,22 @@ const getTokenFromHeaders = (req) => {
   return null;
 };
 
-const auth = {
-  required: jwtExpress({
-    secret: 'secret',
-    userProperty: 'payload',
-    getToken: getTokenFromHeaders,
-  }),
-  optional: jwtExpress({
-    secret: 'secret',
-    userProperty: 'payload',
-    getToken: getTokenFromHeaders,
-    credentialsRequired: false,
-  }),
+const auth = (roles= []) => {
+
+  return [
+    expressJwt({
+      secret: 'secret',
+      userProperty: 'payload',
+      getToken: getTokenFromHeaders,
+      credentialsRequired: roles.length > 0,
+    }),
+    (req, res, next) => {
+      if (roles.length > 0 && !roles.includes(req.payload.role)) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+      next();
+    }
+  ];
 };
 
 module.exports = {
