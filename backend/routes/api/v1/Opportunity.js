@@ -22,7 +22,7 @@ router.post('/', auth(), (req, res) => {
  * Route : GET /api/<VERSION>/opportunity
  * Description : Récupère toutes les opportunités
  */
-router.get('/admin', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.getOpportunities(req.query.query)
     .then((listeOpportunities) => {
       console.log(
@@ -41,7 +41,8 @@ router.get('/admin', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADM
  * Description : ...
  */
 router.get('/user/private/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  OpportunityController.getPrivateUserOpportunities(req.params.id)
+  if((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.params.id) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.params.id) || req.payload.role === USER_ROLES.ADMIN) {
+    OpportunityController.getPrivateUserOpportunities(req.params.id)
     .then((listeOpportunities) => {
       res.status(200).json(listeOpportunities);
     })
@@ -49,6 +50,10 @@ router.get('/user/private/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USE
       console.log(err);
       res.status(401).send('Une erreur est survenue');
     });
+  }
+  else {
+    res.status(401).send({message: "Unauthorized"});
+  }
 });
 
 /**
@@ -56,7 +61,8 @@ router.get('/user/private/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USE
  * Description : ...
  */
 router.get('/user/all/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  OpportunityController.getAllUserOpportunities(req.params.id)
+  if((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.params.id) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.params.id) || req.payload.role === USER_ROLES.ADMIN) {
+    OpportunityController.getAllUserOpportunities(req.params.id)
     .then((listeOpportunities) => {
       res.status(200).json(listeOpportunities);
     })
@@ -64,6 +70,10 @@ router.get('/user/all/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
       console.error(err);
       res.status(401).send('Une erreur est survenue');
     });
+  }
+  else {
+    res.status(401).send({message: "Unauthorized"});
+  }
 });
 
 /**
@@ -71,7 +81,8 @@ router.get('/user/all/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
  * Description : Récupère l'opportunité associé à l'<ID> fournit
  */
 router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  OpportunityController.getOpportunity(req.params.id)
+  if((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.params.id) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.params.id) || req.payload.role === USER_ROLES.ADMIN) {
+    OpportunityController.getOpportunity(req.params.id)
     .then((opportunity) => {
       if (opportunity) {
         console.log(`Opportunité trouvé`);
@@ -85,6 +96,10 @@ router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
       console.error(err);
       res.status(401).send(err);
     });
+  }
+  else {
+    res.status(401).send({message: "Unauthorized"});
+  }
 });
 
 /**
@@ -92,7 +107,8 @@ router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
  * Description : ...
  */
 router.post('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  OpportunityController.addUserToOpportunity(
+  if((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.body.userId) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.body.userId) || req.payload.role === USER_ROLES.ADMIN) {
+    OpportunityController.addUserToOpportunity(
     req.body.opportunityId,
     req.body.userId
   )
@@ -101,9 +117,13 @@ router.post('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADM
       console.error(err);
       res.status(401).send(`Une erreur est survenue`);
     });
+  }
+  else {
+    res.status(401).send({message: "Unauthorized"});
+  }
 });
 
-router.put('/', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.updateOpportunity(req.body)
     .then((opp) => {
       res.status(200).json(opp);
@@ -115,14 +135,19 @@ router.put('/', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
 });
 
 router.put('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  OpportunityController.updateOpportunityUser(req.body)
-    .then((oppUs) => {
-      res.status(200).json(oppUs);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(401).send(`Une erreur est survenue`);
-    });
+  if((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.body.UserId) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.body.UserId) || req.payload.role === USER_ROLES.ADMIN) {
+    OpportunityController.updateOpportunityUser(req.body)
+      .then((oppUs) => {
+        res.status(200).json(oppUs);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(401).send(`Une erreur est survenue`);
+      });
+  }
+  else {
+    res.status(401).send({message: "Unauthorized"});
+  }
 });
 
 /**
@@ -132,7 +157,7 @@ router.put('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMI
  * - id : ID du CV à supprimer
  * Exemple : <server_url>/api/v1/cv/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.deleteOpportunity(req.params.id)
     .then((result) => {
       res.status(200).json(result);
