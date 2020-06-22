@@ -24,6 +24,16 @@ function generateJWT(user, expiration) {
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + 60);
 
+  let candidatId = null;
+  if(user.coach && user.coach.candidat) {
+    candidatId = user.coach.candidat.id;
+  }
+
+  let coachId = null;
+  if(user.candidat && user.candidat.coach) {
+    coachId = user.candidat.coach.id;
+  }
+
   return jwt.sign(
     {
       email: user.email,
@@ -34,6 +44,8 @@ function generateJWT(user, expiration) {
       gender: user.gender,
       role: user.role,
       exp: parseInt((expiration || expirationDate.getTime()) / 1000, 10),
+      candidatId,
+      coachId
     },
     'secret'
   );
