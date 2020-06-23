@@ -9,12 +9,15 @@ import MultipleCTA from "../partials/MultipleCTA";
 const StepsToJoin = () => {
   const content = [
     {
+      img: '/static/img/illustrations/work1.png',
       text: <div><span className="uk-text-bold">Nous vous aidons à réaliser un CV</span> plus humain, afin de valoriser vos atouts et de vous présenter tel que vous êtes</div>,
     },
     {
+      img: '/static/img/illustrations/work2.png',
       text: <div><span className="uk-text-bold">Vous rencontrez toutes les semaines votre bénévole-coach</span> pour travailler ensemble votre recherche d’emploi</div>,
     },
     {
+      img: '/static/img/illustrations/work3.png',
       text: <div>Vous êtes soutenu(e) <span className="uk-text-bold">lors de votre reprise d&apos;emploi</span> et durant les premiers mois de votre arrivée en entreprise</div>,
     },
   ];
