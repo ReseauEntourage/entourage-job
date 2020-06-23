@@ -2,79 +2,79 @@ const router = require('express').Router();
 const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs');
-const { auth } = require('../../../controllers/Auth');
+const {auth} = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
 const S3 = require('../../../controllers/aws');
-const { sendMail } = require('../../../controllers/mail');
-const { airtable } = require('../../../controllers/airtable');
+const {sendMail} = require('../../../controllers/mail');
+const {airtable} = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
 const {USER_ROLES, CV_STATUS} = require("../../../../constants");
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({dest: 'uploads/'});
 
 /**
  * Route : POST /api/<VERSION>/cv
  * Description : Créé le CV
  */
-// TODO Security
 router.post(
   '/',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   upload.single('profileImage'),
   async (req, res) => {
-    // si le cv est une string json le parser, sinon prendre l'objet
-    const reqCV =
-      typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
+    if ((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.body.cv.UserId) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.body.cv.UserId) || req.payload.role === USER_ROLES.ADMIN) {
+      // si le cv est une string json le parser, sinon prendre l'objet
+      const reqCV =
+        typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
 
-    switch (req.payload.role) {
-      case USER_ROLES.CANDIDAT:
-        reqCV.status = CV_STATUS.Pending.value;
-        break;
-      case USER_ROLES.COACH:
-      case USER_ROLES.ADMIN:
-        // on laisse la permission au coach et à l'admin de choisir le statut à enregistrer
-        if (!reqCV.status) {
-          reqCV.status = CV_STATUS.Published.value;
+      switch (req.payload.role) {
+        case USER_ROLES.CANDIDAT:
+          reqCV.status = CV_STATUS.Pending.value;
+          break;
+        case USER_ROLES.COACH:
+        case USER_ROLES.ADMIN:
+          // on laisse la permission au coach et à l'admin de choisir le statut à enregistrer
+          if (!reqCV.status) {
+            reqCV.status = CV_STATUS.Published.value;
+          }
+          break;
+        default:
+          reqCV.status = CV_STATUS.Unknown.value;
+          break;
+      }
+      // uploading image and generating preview image
+      if (req.file) {
+        const {path} = req.file;
+        try {
+          const fileBuffer = await sharp(path)
+            .trim()
+            .webp()
+            .toBuffer();
+          reqCV.urlImg = await S3.upload(
+            fileBuffer,
+            `${reqCV.UserId}.${reqCV.status}.webp`
+          );
+        } catch (error) {
+          console.error(error);
+        } finally {
+          fs.unlinkSync(path); // remove image localy after upload to S3
         }
-        break;
-      default:
-        reqCV.status = CV_STATUS.Unknown.value;
-        break;
-    }
-    // uploading image and generating preview image
-    if (req.file) {
-      const { path } = req.file;
-      try {
-        const fileBuffer = await sharp(path)
-          .trim()
-          .webp()
-          .toBuffer();
-        reqCV.urlImg = await S3.upload(
-          fileBuffer,
-          `${reqCV.UserId}.${reqCV.status}.webp`
-        );
-      } catch (error) {
-        console.error(error);
-      } finally {
-        fs.unlinkSync(path); // remove image localy after upload to S3
       }
-    }
-    // création de l'image publiée
-    if (reqCV.status === CV_STATUS.Published.value) {
-      try {
-        const { Body } = await S3.download(reqCV.urlImg);
-        reqCV.urlImg = await S3.upload(Body, `${reqCV.UserId}.Published.webp`);
-      } catch (error) {
-        console.error(error);
+      // création de l'image publiée
+      if (reqCV.status === CV_STATUS.Published.value) {
+        try {
+          const {Body} = await S3.download(reqCV.urlImg);
+          reqCV.urlImg = await S3.upload(Body, `${reqCV.UserId}.Published.webp`);
+        } catch (error) {
+          console.error(error);
+        }
       }
-    }
-    // completion asynchrone de la generation de limage de preview
-    const previewPromise = reqCV.urlImg
-      ? UserController.getUser(reqCV.UserId)
-          .then(({ firstName, gender }) =>
+      // completion asynchrone de la generation de limage de preview
+      const previewPromise = reqCV.urlImg
+        ? UserController.getUser(reqCV.UserId)
+          .then(({firstName, gender}) =>
             // Génération de la photo de preview
-            S3.download(reqCV.urlImg).then(({ Body }) =>
+            S3.download(reqCV.urlImg).then(({Body}) =>
               createPreviewImage(
                 Body,
                 firstName,
@@ -91,40 +91,43 @@ router.post(
           )
           .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
           .catch(console.error)
-      : null;
+        : null;
 
-    // création du corps du CV
-    const cv = await CVController.createCV(reqCV);
-    try {
-      // notification mail to coach and admin
-      if (req.payload.role === USER_ROLES.CANDIDAT) {
-        const mailSubject = 'Soumission CV';
-        const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
-        // notification de l'admin
-        sendMail({
-          toEmail: process.env.MAILJET_TO_EMAIL,
-          subject: mailSubject,
-          text: mailText,
-        });
-        // Récupération de l'email du coach pour l'envoie du mail
-        UserController.getUser(req.payload.userToCoach)
-          .then(({ email }) =>
-            sendMail({
-              toEmail: email,
-              subject: mailSubject,
-              text: mailText,
-            })
-          )
-          .catch((err) => console.log('Pas de coach rattaché au candidat'));
+      // création du corps du CV
+      const cv = await CVController.createCV(reqCV);
+      try {
+        // notification mail to coach and admin
+        if (req.payload.role === USER_ROLES.CANDIDAT) {
+          const mailSubject = 'Soumission CV';
+          const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
+          // notification de l'admin
+          sendMail({
+            toEmail: process.env.MAILJET_TO_EMAIL,
+            subject: mailSubject,
+            text: mailText,
+          });
+          // Récupération de l'email du coach pour l'envoie du mail
+          UserController.getUser(req.payload.userToCoach)
+            .then(({email}) =>
+              sendMail({
+                toEmail: email,
+                subject: mailSubject,
+                text: mailText,
+              })
+            )
+            .catch((err) => console.log('Pas de coach rattaché au candidat'));
+        }
+        // attente de la génération de l'image de preview
+        await previewPromise;
+        return res.status(200).json(cv);
+      } catch (err) {
+        console.log(err);
+        // attente de la génération de l'image de preview
+        await previewPromise;
+        return res.status(401).send(`Une erreur est survenue`);
       }
-      // attente de la génération de l'image de preview
-      await previewPromise;
-      return res.status(200).json(cv);
-    } catch (err) {
-      console.log(err);
-      // attente de la génération de l'image de preview
-      await previewPromise;
-      return res.status(401).send(`Une erreur est survenue`);
+    } else {
+      res.status(401).send({message: "Unauthorized"});
     }
   }
 );
@@ -163,7 +166,7 @@ router.post('/share', auth(), (req, res) => {
  */
 router.get('/', auth(), (req, res) => {
   const infoLog = 'GET / -';
-  const { userId } = req.query;
+  const {userId} = req.query;
   if (userId) {
     console.log(
       `${infoLog} Récupération du CV publié appartenant au userId : ${userId}`
@@ -173,8 +176,8 @@ router.get('/', auth(), (req, res) => {
   }
 
   (userId
-    ? CVController.getCVbyUserId(req.query.userId)
-    : CVController.getCVs()
+      ? CVController.getCVbyUserId(req.query.userId)
+      : CVController.getCVs()
   ) // todo bizare getCVs
     .then((listeCVs) => {
       /* console.log(`${infoLog} Liste des CV trouvés`);
@@ -290,14 +293,16 @@ router.get('/:url', auth(), (req, res) => {
   });
 */
 
-router.post('/image', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  CVController.uploadToBucket(req.body.file, req.payload.id)
-    .then((data) => res.status(200).json(data))
-    .catch((err) => {
-      console.error(err);
-      res.status(401).send('Une erreur est survenue');
-    });
-});
+/*
+  router.post('/image', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+    CVController.uploadToBucket(req.body.file, req.payload.id)
+      .then((data) => res.status(200).json(data))
+      .catch((err) => {
+        console.error(err);
+        res.status(401).send('Une erreur est survenue');
+      });
+  });
+*/
 
 /**
  * Route : DELETE /api/<VERSION>/cv/<ID>
