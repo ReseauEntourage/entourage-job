@@ -31,7 +31,7 @@ const StepsToJoin = () => {
       <MultipleCTA data={content} showNumbers/>
       <div className="uk-flex uk-flex-top uk-flex-center uk-padding-small">
         <Button
-          style="primary"
+          style="secondary"
           className="uk-margin-medium-top"
           isExternal
           href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}

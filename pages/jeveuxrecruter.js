@@ -45,18 +45,27 @@ const JeVeuxRecruter = () => {
       </Section>
       <Section
         id="whereTheyComeFrom"
-        style="default"
-        container="small">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+        style="default">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-small-bottom uk-margin-remove-top">
           D&apos;où viennent les candidats <span className="uk-text-primary">LinkedOut&nbsp;?</span>
         </h2>
-        <h4 className="uk-align-center uk-text-center">
-          LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la capacité et la motivation pour travailler&nbsp;:
-          <br/>
-          <span>
-            personnes ayant connus des parcours de rue, personnes accueillies dans des structures d&apos;hébergement temporaires (hotels sociaux, centre d&apos;hébergement d&apos;urgence, etc.) personnes sortants de parcours d&apos;insertion, jeunes en précarité&nbsp;...
-          </span>
-        </h4>
+        <div className="uk-inline uk-margin-medium-top">
+          <img src="../static/img/candidats.png" alt="" />
+          <div className="uk-overlay uk-overlay-primary uk-position-cover uk-flex uk-flex-middle uk-flex-center">
+            <div className="uk-container-small">
+              <h3 className="uk-text-bold uk-align-center uk-text-center uk-margin-remove">
+                LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la capacité et la motivation pour travailler&nbsp;:
+                <br/>
+                <br/>
+                - Personnes ayant connus des parcours de rue
+                <br/>
+                - Personnes accueillies dans des structures d&apos;hébergement temporaires (hotels sociaux, centre d&apos;hébergement d&apos;urgence, etc.)
+                <br/>
+                - Personnes sortants de parcours d&apos;insertion, jeunes en précarité&nbsp;...
+              </h3>
+            </div>
+          </div>
+        </div>
       </Section>
       <WaysToJoin />
       <HireSteps />
@@ -109,7 +118,7 @@ const JeVeuxRecruter = () => {
                   Merci pour votre offre, nous reviendrons bientôt vers vous.
                 </p>
                 <Button
-                  style="primary"
+                  style="secondary"
                   onClick={closeModal}
                 >
                   Fermer

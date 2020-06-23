@@ -59,6 +59,44 @@
   border: none;
 }
 
+.hook-button-secondary() {
+  .hook-button();
+  background-color: #F55F24;
+  color: white;
+  border: none;
+  padding: 0 24px;
+  border-radius: 3px;
+  height: 44px;
+  font-size: @global-font-size;
+}
+
+.hook-inverse-button-secondary() {
+  .hook-button-secondary();
+  color: #F55F24;
+  background-color: white;
+}
+
+.hook-button-secondary-hover() {
+  background-color: darken(#F55F24, 5%);
+  color: darken(white, 5%);
+}
+
+.hook-button-secondary-active() {
+  background-color: darken(#F55F24, 10%);
+  color: darken(white, 10%);
+}
+
+.hook-inverse-button-secondary-hover() {
+  color: darken(#F55F24, 5%);
+  background-color: darken(white, 5%);
+}
+
+.hook-inverse-button-secondary-active() {
+  color: darken(#F55F24, 10%);
+  background-color: darken(white, 10%);
+}
+
+
 .hook-button-disabled() {
   color: #999;
   background-color: #e5e5e5;

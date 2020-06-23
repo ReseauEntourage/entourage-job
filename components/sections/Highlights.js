@@ -37,7 +37,7 @@ const Highlights = () => {
         <h3 className="uk-align-center uk-text-center">
           LinkedOut vous aide à trouver un travail et à vous intégrer dans votre nouvelle entreprise
         </h3>
-        <div className="uk-height-large uk-width-expand">
+        <div className="uk-width-expand">
           <Carousel containerClasses="uk-child-width-1-1" itemRenderer={(({description, img}, index) => {
             return (
               <li key={index.toString()} className="uk-flex uk-flex-middle">

@@ -43,7 +43,7 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                     <div className={`${showHorizontalDividers ? 'uk-flex-start' : 'uk-flex-center'} uk-flex uk-flex-middle`}>
                       <Button
                         href={item.button.href}
-                        style='primary'
+                        style='secondary'
                         isExternal={item.button.external}
                         newTab={item.button.external}
                         toggle={item.button.modal}>
