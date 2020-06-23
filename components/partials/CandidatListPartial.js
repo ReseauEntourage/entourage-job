@@ -26,7 +26,7 @@ const CandidatListPartial = () => (
       <GridNoSSR middle column gap="collapse">
         <Button
           href="/lescandidats"
-          style='primary'>
+          style='secondary'>
           Voir tous les candidats{' '}<IconNoSSR name="chevron-right" />
         </Button>
         <p style={{ marginTop: '20px' }}>

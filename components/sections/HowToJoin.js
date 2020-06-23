@@ -43,7 +43,7 @@ const HowToJoin = () => {
                 <img src={img} width="" height="" alt="" className="uk-height-max-small"/>
               </div>
               <div className="uk-flex uk-flex-top">
-                <div className="uk-text-primary"><IconNoSSR name="chevron-right" />&nbsp;</div>
+                <div className="uk-text-primary"><IconNoSSR name="triangle-right" />&nbsp;</div>
                 <div className="uk-flex-1">
                   {description}
                 </div>
