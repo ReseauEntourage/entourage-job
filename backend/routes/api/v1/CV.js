@@ -17,6 +17,7 @@ const upload = multer({ dest: 'uploads/' });
  * Route : POST /api/<VERSION>/cv
  * Description : Créé le CV
  */
+// TODO Security
 router.post(
   '/',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
@@ -190,33 +191,41 @@ router.get('/', auth(), (req, res) => {
  * Route : GET /api/<VERSION>/cv/edit
  * Description : Récupère le CV associé au <USERID> fournit en body
  */
-router.get('/edit', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  console.log(req.payload);
-  let userId;
-  if (req.payload.role === USER_ROLES.CANDIDAT) {
-    userId = req.payload.id;
-  } else if (req.payload.userToCoach) {
-    userId = req.payload.userToCoach;
-  }
-  if (!userId) {
-    console.log(`Aucun userId trouvé, aucun CV ne peut être récupéré`);
-    res.status(401).send('Aucun userId trouvé, aucun CV ne peut être récupéré');
-  } else {
-    CVController.getCVbyUserId(userId)
-      .then((cv) => {
-        if (cv !== null) {
-          console.log(`CV trouvé`);
-        } else {
-          console.log(`Aucun CV trouvé`);
-        }
-        res.status(200).json(cv);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(401).send(`Aucun CV trouvé`);
-      });
-  }
-});
+
+/*
+  router.get('/edit', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+    if(req.payload.id === req.params.id || req.payload.role === USER_ROLES.ADMIN) {
+      let userId;
+      if (req.payload.role === USER_ROLES.CANDIDAT) {
+        userId = req.payload.id;
+      } else if (req.payload.candidatId) {
+        userId = req.payload.candidatId;
+      }
+      if (!userId) {
+        console.log(`Aucun userId trouvé, aucun CV ne peut être récupéré`);
+        res.status(401).send('Aucun userId trouvé, aucun CV ne peut être récupéré');
+      } else {
+        CVController.getCVbyUserId(userId)
+          .then((cv) => {
+            if (cv !== null) {
+              console.log(`CV trouvé`);
+            } else {
+              console.log(`Aucun CV trouvé`);
+            }
+            res.status(200).json(cv);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(401).send(`Aucun CV trouvé`);
+          });
+      }
+    }
+    else {
+      res.status(401).send({message: "Unauthorized"});
+    }
+  });
+*/
+
 
 /**
  * Route : GET /api/<VERSION>/cv/cards/random
@@ -261,17 +270,25 @@ router.get('/:url', auth(), (req, res) => {
  * Route : PUT /api/<VERSION>/cv/<ID>
  * Description : Modifie le CV associé à l'<ID> fournit
  */
-router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  CVController.setCV(req.params.id, req.body)
-    .then((cv) => {
-      console.log(`CV modifié`);
-      res.status(200).json(cv);
-    })
-    .catch((err) => {
-      console.log(`Une erreur est survenue`);
-      res.status(400).send(err);
-    });
-});
+
+/*
+  router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+    if((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.body.UserId) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.body.UserId) || req.payload.role === USER_ROLES.ADMIN) {
+      CVController.setCV(req.params.id, req.body)
+      .then((cv) => {
+        console.log(`CV modifié`);
+        res.status(200).json(cv);
+      })
+      .catch((err) => {
+        console.log(`Une erreur est survenue`);
+        res.status(400).send(err);
+      });
+    }
+    else {
+      res.status(401).send({message: "Unauthorized"});
+    }
+  });
+*/
 
 router.post('/image', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   CVController.uploadToBucket(req.body.file, req.payload.id)
@@ -289,7 +306,7 @@ router.post('/image', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.AD
  * - id : ID du CV à supprimer
  * Exemple : <server_url>/api/v1/cv/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
   CVController.deleteCV(req.params.id)
     .then((result) => {
       res.status(200).json(result);

@@ -80,8 +80,9 @@ router.get('/user/all/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
  * Route : GET /api/<VERSION>/opportunity/<ID>
  * Description : Récupère l'opportunité associé à l'<ID> fournit
  */
-router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  if((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.params.id) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.params.id) || req.payload.role === USER_ROLES.ADMIN) {
+
+/*
+  router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
     OpportunityController.getOpportunity(req.params.id)
     .then((opportunity) => {
       if (opportunity) {
@@ -96,11 +97,8 @@ router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
       console.error(err);
       res.status(401).send(err);
     });
-  }
-  else {
-    res.status(401).send({message: "Unauthorized"});
-  }
-});
+  });
+*/
 
 /**
  * Route : POST /api/<VERSION>/...
