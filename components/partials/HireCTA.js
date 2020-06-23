@@ -35,7 +35,6 @@ const HireCTA = ({inverse}) => {
         const shouldInverse = (index % 2 === 0) !== inverse;
         return (
           <div
-            style={shouldInverse ? {} : {backgroundColor: 'rgb(72, 72, 72)'}}
             className={`${shouldInverse ? 'uk-background-primary' : 'uk-background-secondary'} uk-flex uk-flex-column uk-flex-center`}>
             <div className="uk-padding-large uk-flex uk-flex-column uk-flex-middle uk-flex-1">
               {
