@@ -9,6 +9,7 @@ import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
 import AssociationEntourage from './partials/AssociationEntourage';
 import Partners from './partials/Partners';
 import Button from "./utils/Button";
+import {EXTERNAL_LINKS} from '../constants';
 
 const sharedTitle = 'LinkedOut';
 const sharedDescription =
@@ -28,7 +29,7 @@ const Footer = () => {
           middle
           center
           column
-          eachWidths={['3-4', '1-1']}
+          eachWidths={['1-1', '1-1']}
           gap="medium"
         >
           {asPath === '/' && (
@@ -92,10 +93,18 @@ const Footer = () => {
             row
             center
             middle
-            eachWidths={['expand', 'auto@m']}
+            eachWidths={['auto@m', 'expand', 'auto@m']}
             gap="small"
           >
-            <ul className="uk-subnav uk-subnav-divider uk-flex-left@m uk-flex-center uk-light">
+            <div className="uk-flex uk-flex-center">
+              <Button
+                href={EXTERNAL_LINKS.DONATION}
+                isExternal
+                style='primary'>
+                Soutenir LinkedOut{' '}<IconNoSSR name="chevron-right" />
+              </Button>
+            </div>
+            <ul className="uk-padding-small uk-subnav uk-subnav-divider uk-flex-left@m uk-flex-center uk-light">
               <li className="uk-text-capitalize">
                 <SimpleLink
                   isExternal
