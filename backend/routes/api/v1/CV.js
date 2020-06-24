@@ -10,6 +10,7 @@ const {sendMail} = require('../../../controllers/mail');
 const {airtable} = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
 const {USER_ROLES, CV_STATUS} = require("../../../../constants");
+const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../../../utils');
 
 const upload = multer({dest: 'uploads/'});
 
@@ -22,10 +23,10 @@ router.post(
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   upload.single('profileImage'),
   async (req, res) => {
-    if ((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.body.cv.UserId) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.body.cv.UserId) || req.payload.role === USER_ROLES.ADMIN) {
-      // si le cv est une string json le parser, sinon prendre l'objet
-      const reqCV =
-        typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
+    // si le cv est une string json le parser, sinon prendre l'objet
+    const reqCV =
+      typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
+    checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
 
       switch (req.payload.role) {
         case USER_ROLES.CANDIDAT:
@@ -126,9 +127,7 @@ router.post(
         await previewPromise;
         return res.status(401).send(`Une erreur est survenue`);
       }
-    } else {
-      res.status(401).send({message: "Unauthorized"});
-    }
+    });
   }
 );
 
@@ -197,7 +196,7 @@ router.get('/', auth(), (req, res) => {
 
 /*
   router.get('/edit', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-    if(req.payload.id === req.params.id || req.payload.role === USER_ROLES.ADMIN) {
+    checkUserAuthorization(req, res, req.params.id, () => {
       let userId;
       if (req.payload.role === USER_ROLES.CANDIDAT) {
         userId = req.payload.id;
@@ -222,10 +221,7 @@ router.get('/', auth(), (req, res) => {
             res.status(401).send(`Aucun CV trouvé`);
           });
       }
-    }
-    else {
-      res.status(401).send({message: "Unauthorized"});
-    }
+    });
   });
 */
 
@@ -276,7 +272,7 @@ router.get('/:url', auth(), (req, res) => {
 
 /*
   router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-    if((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.body.UserId) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.body.UserId) || req.payload.role === USER_ROLES.ADMIN) {
+    checkUserAuthorization(req, res, req.body.UserId, () => {
       CVController.setCV(req.params.id, req.body)
       .then((cv) => {
         console.log(`CV modifié`);
@@ -286,10 +282,7 @@ router.get('/:url', auth(), (req, res) => {
         console.log(`Une erreur est survenue`);
         res.status(400).send(err);
       });
-    }
-    else {
-      res.status(401).send({message: "Unauthorized"});
-    }
+    });
   });
 */
 

@@ -1,5 +1,6 @@
 const validator = require('validator');
 const express = require('express');
+const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../../../utils');
 const {USER_ROLES} = require("../../../../constants");
 const { auth } = require('../../../controllers/Auth');
 const { sendMail } = require('../../../controllers/mail');
@@ -172,7 +173,7 @@ router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
 router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  if(req.payload.id === req.params.id || req.payload.email === req.params.id || req.payload.role === USER_ROLES.ADMIN) {
+  checkUserAuthorization(req, res, req.params.id, () => {
     (validator.isEmail(req.params.id)
         ? UserController.getUserByEmail(req.params.id)
         : UserController.getUser(req.params.id)
@@ -185,16 +186,14 @@ router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
         console.log(`Aucun User trouvé`);
         res.status(401).send(err);
       });
-  }
-  else {
-    res.status(401).send({message: "Unauthorized"});
-  }
+  });
 });
 
 /**
  * Route : PUT /api/<VERSION>/user/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
+// TODO check
 router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   UserController.getUserByEmail(req.payload.email)
     .then(({ salt: oldSalt, password }) => {
@@ -233,7 +232,7 @@ router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLE
  * Description : Modifie le User associé à l'<ID> fournit
  */
 router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  if((req.payload.role === USER_ROLES.CANDIDAT && req.payload.id === req.params.id) || (req.payload.role === USER_ROLES.COACH && req.payload.candidatId === req.params.id) || req.payload.role === USER_ROLES.ADMIN) {
+  checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
     UserController.setUserCandidat(req.params.id, req.body)
       .then((user) => {
         console.log('Visibilité CV candidat - mise à jour réussie');
@@ -244,10 +243,7 @@ router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
         console.error(err);
         res.status(400).send('Une erreur est survenue');
       });
-  }
-  else {
-    res.status(401).send({message: "Unauthorized"});
-  }
+  });
 });
 
 /**
@@ -255,7 +251,7 @@ router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
  * Description : Modifie le User associé à l'<ID> fournit
  */
 router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  if(req.payload.id === req.params.id || req.payload.role === USER_ROLES.ADMIN) {
+  checkUserAuthorization(req, res, req.params.id, () => {
     UserController.setUser(req.params.id, req.body)
       .then((user) => {
         console.log(`User modifié`);
@@ -265,10 +261,7 @@ router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
         console.log(`Une erreur est survenue`);
         res.status(401).send(err);
       });
-  }
-  else {
-    res.status(401).send({message: "Unauthorized"});
-  }
+  });
 });
 
 /**

@@ -46,7 +46,7 @@ module.exports.prepare = () => {
   app.use('/api/v1/auth', routeAuth);
   app.use('/api/v1/cv', routeCV);
   app.use('/api/v1/mail', routeMail);
-  app.use('/api/v1/message', routeMessage);
+  // app.use('/api/v1/message', routeMessage);
   app.use('/api/v1/opportunity', routeOpportunity);
   app.use('/api/v1/user', routeUser);
 
