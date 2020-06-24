@@ -96,7 +96,7 @@ const Footer = () => {
             eachWidths={['auto@m', 'expand', 'auto@m']}
             gap="small"
           >
-            <div className="uk-flex uk-flex-center">
+            <div className="uk-flex uk-flex-center uk-light">
               <Button
                 href={EXTERNAL_LINKS.DONATION}
                 isExternal
