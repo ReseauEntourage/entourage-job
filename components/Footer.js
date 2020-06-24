@@ -7,7 +7,7 @@ import {
 import { useRouter } from 'next/router';
 import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
 import AssociationEntourage from './partials/AssociationEntourage';
-import Partenaires from './partials/Partenaires';
+import Partners from './partials/Partners';
 import Button from "./utils/Button";
 
 const sharedTitle = 'LinkedOut';
@@ -21,7 +21,7 @@ const Footer = () => {
   const { asPath } = useRouter();
   return (
     <footer id="footer">
-      <Partenaires />
+      <Partners />
       <AssociationEntourage />
       <Section style="secondary" size="small" preserveColor>
         <GridNoSSR

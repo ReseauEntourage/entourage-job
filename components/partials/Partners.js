@@ -2,7 +2,7 @@ import React from 'react';
 import {Background, Section} from '../utils';
 import Grid from "../utils/Grid";
 
-const Partenaires = () => {
+const Partners = () => {
   const partners = {
     strategy: [
       '../../static/img/partner10.png',
@@ -10,10 +10,10 @@ const Partenaires = () => {
       '../../static/img/partner5.png',
       '../../static/img/partner6.png',
       '../../static/img/partner3.png',
-      '../../static/img/partner11.png',
+      '../../static/img/partner7.png',
     ],
     finance: [
-      '../../static/img/partner7.png',
+      '../../static/img/partner11.png',
       '../../static/img/partner4.png',
       '../../static/img/partner9.png',
       '../../static/img/partner8.png',
@@ -70,4 +70,4 @@ const Partenaires = () => {
   )
 };
 
-export default Partenaires;
+export default Partners;
