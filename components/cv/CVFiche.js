@@ -424,7 +424,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
         </h2>
         <Button
           disabled={actionDisabled}
-          style='primary'
+          style='secondary'
           toggle="target: #modal-send-opportunity">
           Contactez-moi{' '}<IconNoSSR name="chevron-right" />
         </Button>

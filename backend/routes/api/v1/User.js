@@ -1,5 +1,6 @@
 const validator = require('validator');
 const express = require('express');
+const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../../../utils');
 const {USER_ROLES} = require("../../../../constants");
 const { auth } = require('../../../controllers/Auth');
 const { sendMail } = require('../../../controllers/mail');
@@ -8,16 +9,11 @@ const router = express.Router();
 const UserController = require('../../../controllers/User');
 const AuthController = require('../../../controllers/Auth');
 
-/* !!! TODO !!!
- * RESTRICTION DES ROUTES AUX ROLES
- * !!! TODO !!!
- */
-
 /**
  * Route : POST /api/<VERSION>/user
  * Description : Créé le User
  */
-router.post('/', auth.required, (req, res) => {
+router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
   function fakePassword() {
     return Math.random() // Generate random number, eg: 0.123456
       .toString(36) // Convert  to base-36 : "0.4fzyo82mvyr"
@@ -45,7 +41,6 @@ router.post('/', auth.required, (req, res) => {
           "L'équipe Entourage",
       });
 
-      // todo: send mail to created user
       res.status(200).json(users);
     })
     .catch((err) => {
@@ -62,25 +57,29 @@ router.post('/', auth.required, (req, res) => {
 /**
  * Route : GET /api/<VERSION>/user
  * Description : Récupère tous les Users
+ * Disabled because not used
  */
-router.get('/', auth.required, (req, res) => {
-  const order = [['firstName', 'ASC']];
-  UserController.getUsers(req.query.limit, req.query.offset, order)
-    .then((users) => {
-      console.log(`Users récupérés (Total : ${users.length})`);
-      res.status(200).json(users);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(401).send('Une erreur est survenue');
-    });
-});
+
+/*
+  router.get('/', auth([USER_ROLES.ADMIN]), (req, res) => {
+    const order = [['firstName', 'ASC']];
+    UserController.getUsers(req.query.limit, req.query.offset, order)
+      .then((users) => {
+        console.log(`Users récupérés (Total : ${users.length})`);
+        res.status(200).json(users);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(401).send('Une erreur est survenue');
+      });
+  });
+*/
 
 /**
  * Route : GET /api/<VERSION>/user
  * Description : Récupère tous les Users
  */
-router.get('/members', auth.required, (req, res) => {
+router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
   const order = [['firstName', 'ASC']];
   UserController.getMembers(
     req.query.limit,
@@ -114,9 +113,7 @@ router.get('/members', auth.required, (req, res) => {
  * Route : GET /api/<VERSION>/user
  * Description : Récupère tous les Users
  */
-router.get('/search', auth.required, (req, res) => {
-  console.log(req.query);
-
+router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
   UserController.searchUsers(req.query.query, req.query.role)
     .then((users) => {
       console.log(`Users récupérés (Total : ${users.length})`);
@@ -132,56 +129,72 @@ router.get('/search', auth.required, (req, res) => {
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/candidat', auth.required, (req, res) => {
-  UserController.getUserCandidatOpt(req.query)
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(401).send('Une erreur est survenue');
-    });
+router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+  if(req.payload.id === req.query.coachId || req.payload.id === req.query.candidatId || req.payload.role === USER_ROLES.ADMIN) {
+    UserController.getUserCandidatOpt(req.query)
+      .then((user) => {
+        res.status(200).json(user);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(401).send('Une erreur est survenue');
+      });
+  }
+  else {
+    res.status(401).send({message: "Unauthorized"});
+  }
 });
 
 /**
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/candidat/:id', auth.required, (req, res) => {
-  UserController.getUserCandidat(req.params.id)
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(401).send('Une erreur est survenue');
-    });
-});
+
+/*
+  router.get('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+    if(req.payload.id === req.params.id || req.payload.role === USER_ROLES.ADMIN) {
+      UserController.getUserCandidat(req.params.id)
+        .then((user) => {
+          res.status(200).json(user);
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(401).send('Une erreur est survenue');
+        });
+    }
+    else {
+      res.status(401).send({message: "Unauthorized"});
+    }
+  });
+*/
 
 /**
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/:id', auth.required, (req, res) => {
-  (validator.isEmail(req.params.id)
-    ? UserController.getUserByEmail(req.params.id)
-    : UserController.getUser(req.params.id)
-  )
-    .then((user) => {
-      console.log(`User trouvé`);
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      console.log(`Aucun User trouvé`);
-      res.status(401).send(err);
-    });
+router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+  checkUserAuthorization(req, res, req.params.id, () => {
+    (validator.isEmail(req.params.id)
+        ? UserController.getUserByEmail(req.params.id)
+        : UserController.getUser(req.params.id)
+    )
+      .then((user) => {
+        console.log(`User trouvé`);
+        res.status(200).json(user);
+      })
+      .catch((err) => {
+        console.log(`Aucun User trouvé`);
+        res.status(401).send(err);
+      });
+  });
 });
 
 /**
  * Route : PUT /api/<VERSION>/user/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
-router.put('/change-pwd', auth.required, (req, res) => {
+// TODO check
+router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   UserController.getUserByEmail(req.payload.email)
     .then(({ salt: oldSalt, password }) => {
       const validated = AuthController.validatePassword(
@@ -218,33 +231,37 @@ router.put('/change-pwd', auth.required, (req, res) => {
  * Route : PUT /api/<VERSION>/user/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
-router.put('/candidat/:id', auth.required, (req, res) => {
-  UserController.setUserCandidat(req.params.id, req.body)
-    .then((user) => {
-      console.log('Visibilité CV candidat - mise à jour réussie');
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      console.log('Visibilité CV candidat - Erreur mise à jour :');
-      console.error(err);
-      res.status(400).send('Une erreur est survenue');
-    });
+router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+  checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
+    UserController.setUserCandidat(req.params.id, req.body)
+      .then((user) => {
+        console.log('Visibilité CV candidat - mise à jour réussie');
+        res.status(200).json(user);
+      })
+      .catch((err) => {
+        console.log('Visibilité CV candidat - Erreur mise à jour :');
+        console.error(err);
+        res.status(400).send('Une erreur est survenue');
+      });
+  });
 });
 
 /**
  * Route : PUT /api/<VERSION>/user/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
-router.put('/:id', auth.required, (req, res) => {
-  UserController.setUser(req.params.id, req.body)
-    .then((user) => {
-      console.log(`User modifié`);
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      console.log(`Une erreur est survenue`);
-      res.status(401).send(err);
-    });
+router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+  checkUserAuthorization(req, res, req.params.id, () => {
+    UserController.setUser(req.params.id, req.body)
+      .then((user) => {
+        console.log(`User modifié`);
+        res.status(200).json(user);
+      })
+      .catch((err) => {
+        console.log(`Une erreur est survenue`);
+        res.status(401).send(err);
+      });
+  });
 });
 
 /**
@@ -254,7 +271,7 @@ router.put('/:id', auth.required, (req, res) => {
  * - id : ID du User à supprimer
  * Exemple : <server_url>/api/v1/user/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', auth.required, (req, res) => {
+router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
   UserController.deleteUser(req.params.id)
     .then((result) => {
       res.status(200).json(result);

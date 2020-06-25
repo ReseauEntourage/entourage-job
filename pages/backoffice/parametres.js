@@ -341,6 +341,7 @@ const Parametres = () => {
                 email: newEmail0,
               })
                 .then(() => {
+                  closeModal();
                   setUserData({ ...userData, email: newEmail0 });
                   UIkit.notification(
                     'Votre email a bien été mis à jour',
