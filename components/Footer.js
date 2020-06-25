@@ -85,8 +85,32 @@ const Footer = () => {
                 </span>
               </span>
               {
-                ' porté par l’association Entourage, qui permet le retour à l’emploi des plus précaires. LinkedIn soutient les valeurs véhiculées par le dispositif, et se félicite de pouvoir contribuer à son succès en lui faisant bénéficier de la renommée de ses marques.'
-              }
+                ' porté par l’association Entourage, qui permet le retour à l’emploi des plus précaires. '}
+              <span
+                style={{
+                  fontWeight: 700,
+                  color: 'white',
+                  fontSize: '16px',
+                }}
+              >
+                  Linked
+                  <span
+                    style={{
+                      background: '#0077b5',
+                      borderRadius: '2px',
+                      display: 'inline-block',
+                      lineHeight: '17px',
+                      marginLeft: '2px',
+                      padding: '0 2px',
+                    }}
+                  >
+                    in
+                  </span>
+                </span>
+                {' soutient les valeurs véhiculées par le dispositif, et se félicite de pouvoir contribuer à son succès en lui faisant bénéficier de la renommée de ses marques.'}
+              <p>
+                L&apos;usage des marques LinkedOut est autorisé dans le cadre d&apos;une licence consentie par la société LinkedIn Ireland Unlimited.
+              </p>
             </p>
           )}
           <GridNoSSR
