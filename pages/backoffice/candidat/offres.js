@@ -141,11 +141,11 @@ const Opportunites = () => {
   if (!user) return null;
 
   return (
-    <LayoutBackOffice title="Mes opportunités">
+    <LayoutBackOffice title={user.role === USER_ROLES.CANDIDAT ? "Mes opportunités" : "Opportunités du candidat"}>
       <Section>
         <HeaderBackoffice
-          title="Consulte toutes tes opportunités de travail"
-          description="Parcours les offres qui t&rsquo;ont été adressées directement ainsi que celles communes aux différents candidats du parcours LinkedOut."
+          title={user.role === USER_ROLES.CANDIDAT ? "Consulte toutes tes opportunités de travail" :"Consulte les opportunités de travail du candidat"}
+          description={user.role === USER_ROLES.CANDIDAT ? "Parcours les offres qui t&rsquo;ont été adressées directement ainsi que celles communes aux différents candidats du parcours LinkedOut." : "Parcours les offres qui ont été adressées à ton candidat rattaché ainsi que celles communes aux différents candidats du parcours LinkedOut."}
         />
         {hasError ? (
           <Section className="uk-width-1-1">
@@ -170,7 +170,7 @@ const Opportunites = () => {
               id="opportunitees"
               loading={loading}
               filters={[
-                { tag: 'private', title: 'Mes offres' },
+                { tag: 'private', title: user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat'},
                 { tag: 'public', title: 'Offres générales' },
                 { tag: 'archive', title: 'Offres archivées' },
               ]}

@@ -35,7 +35,6 @@ const HeaderConnected = ({ isHome }) => {
       },
     ],
     dropdown: [
-      // { icon: 'user', name: 'Mon profil' },
       {
         href: '/backoffice/parametres',
         icon: 'settings',
@@ -47,7 +46,7 @@ const HeaderConnected = ({ isHome }) => {
         name: 'Se déconnecter',
       },
     ],
-    member: [
+    candidat: [
       {
         href: '/backoffice/candidat/offres',
         name: 'Mes offres',
@@ -58,7 +57,28 @@ const HeaderConnected = ({ isHome }) => {
         name: 'Mon Suivi',
         icon: 'file-text',
       },
-      { href: '/backoffice/candidat/cv', name: 'Mon CV', icon: 'user' },
+      {
+        href: '/backoffice/candidat/cv',
+        name: 'Mon CV',
+        icon: 'user'
+      },
+    ],
+    coach: [
+      {
+        href: '/backoffice/candidat/offres',
+        name: 'Offres',
+        icon: 'list',
+      },
+      {
+        href: '/backoffice/candidat/suivi',
+        name: 'Suivi',
+        icon: 'file-text',
+      },
+      {
+        href: '/backoffice/candidat/cv',
+        name: 'CV',
+        icon: 'user'
+      },
     ],
   };
 
@@ -78,19 +98,13 @@ const HeaderConnected = ({ isHome }) => {
               href="/"
               src="/static/img/01-linkedout-orange-complet.png"
               alt="Linkedout"
-              // style={{
-              //   width: '210px',
-              //   /* marginTop: '8px', */
-              // }}
             />
             <ul
               className="uk-navbar-nav"
               style={{ borderLeft: '1px solid lightgray' }}
             >
-              {(user.role === USER_ROLES.ADMIN
-                ? LINKS_CONNECTED.admin
-                : LINKS_CONNECTED.member
-              ).map((link, index) => (
+              {
+                LINKS_CONNECTED[user.role.toLowerCase()].map((link, index) => (
                 <li key={index} style={{ borderRight: '1px solid lightgray' }}>
                   <Link href={link.href}>
                     <a
@@ -189,10 +203,8 @@ const HeaderConnected = ({ isHome }) => {
               Accueil
             </SimpleLink>
           </li>
-          {(user.role === USER_ROLES.ADMIN
-            ? LINKS_CONNECTED.admin
-            : LINKS_CONNECTED.member
-          )
+          {
+            LINKS_CONNECTED[user.role.toLowerCase()]
             .filter(({ href }) => href !== '#')
             .map(({ href, icon, name }, index) => (
               <li key={index}>

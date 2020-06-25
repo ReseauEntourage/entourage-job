@@ -31,10 +31,6 @@ const Header = ({ isHome }) => {
             src="/static/img/03-linkedout-blanc-complet.png"
             alt="Linkedout"
             alwaysVisible={!isHome}
-            style={{
-              width: '210px',
-              /* marginTop: '8px', */
-            }}
           />
         }
         right={
