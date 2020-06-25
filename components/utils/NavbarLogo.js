@@ -5,13 +5,16 @@ import { ImgNoSSR } from './Img';
 
 const NavbarLogo = ({ href, src, alt, style, alwaysVisible }) => (
   <Link href={href}>
-    <a // info: regle css sur uk-logo
-      className={`uk-navbar-item uk-width-small ${!alwaysVisible &&
+    <div style={{width: 210}}>
+      <a // info: regle css sur uk-logo
+        className={`uk-navbar-item ${!alwaysVisible &&
         'uk-logo uk-animation-fade'}`}
-      style={style}
-    >
-      <ImgNoSSR src={src} alt={alt} />
-    </a>
+        style={style}
+      >
+        <ImgNoSSR src={src} alt={alt} />
+      </a>
+    </div>
+
   </Link>
 );
 NavbarLogo.propTypes = {

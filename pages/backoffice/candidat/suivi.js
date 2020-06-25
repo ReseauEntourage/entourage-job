@@ -22,12 +22,18 @@ const Suivi = () => {
   const [loading, setLoading] = useState(true);
   const [value, setValue] = useState();
 
+  const title = user && user.role === USER_ROLES.CANDIDAT ? "Mon suivi" : "Suivi du candidat";
+  const description = user && user.role === USER_ROLES.CANDIDAT ?
+    "Vous pouvez prendre des notes sur la progression de vos recherches, noter vos différents rendez-vous, etc. Profitez de cet espace d'écriture libre qui vous est dédié."
+    :
+    "Le candidat peut prendre des notes sur la progression de ses recherches, noter ses différents rendez-vous, etc. Profitez de cet espace d'écriture libre qui vous est dédié.";
+
   const Wrapper = ({ children }) => (
-    <LayoutBackOffice title="Mon suivi">
+    <LayoutBackOffice title={title}>
       <Section>
         <HeaderBackoffice
-          title="Mon suivi"
-          description="Vous pouvez prendre des notes sur la progression de vos recherches, noter vos différents rendez-vous, etc. Profitez de cet espace d'écriture libre qui vous est dédié."
+          title={title}
+          description={description}
         />
         {children}
       </Section>
@@ -111,18 +117,13 @@ const Suivi = () => {
     );
   }
   return (
-    <LayoutBackOffice title="Mon suivi">
-      <Section>
-        <HeaderBackoffice
-          title="Mon suivi"
-          description="Vous pouvez prendre des notes sur la progression de vos recherches, noter vos différents rendez-vous, etc. Profitez de cet espace d'écriture libre qui vous est dédié."
-        />
+    <Wrapper>
         <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
           <label
             className={`uk-form-label ${labelClass}`}
             htmlFor="textarea-suivi"
           >
-            Mon suivi
+           {title}
           </label>
           <textarea
             id="textarea-suivi"
@@ -151,8 +152,7 @@ const Suivi = () => {
             Sauvegarder
           </Button>
         </GridNoSSR>
-      </Section>
-    </LayoutBackOffice>
+    </Wrapper>
   );
 };
 export default Suivi;
