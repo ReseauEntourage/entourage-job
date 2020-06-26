@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactSelect from 'react-select';
+import ReactSelect, {components} from 'react-select';
 import AsyncSelect from 'react-select/async';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
@@ -11,7 +11,7 @@ import Checkbox from './fields/Checkbox';
 import Input from './fields/Input';
 import FormValidatorErrorMessage from "./FormValidatorErrorMessage";
 
-const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => {
+const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
 
   const parseValueToUseSelect = () => {
     let valueToUse = null;
@@ -20,8 +20,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
         value: item,
         label: item,
       }));
-    }
-    else if(value) {
+    } else if (value) {
       valueToUse = value;
     }
     return valueToUse;
@@ -31,8 +30,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
     let valueToReturn = null;
     if (data.isMulti && Array.isArray(event) && event.length > 0) {
       valueToReturn = event.map((item) => item.value);
-    }
-    else if(event && event.value) {
+    } else if (event && event.value) {
       valueToReturn = event.value;
     }
     onChange({
@@ -45,7 +43,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
   };
 
   if (data.component === 'fieldgroup') {
-    const { fields, title, id } = data;
+    const {fields, title, id} = data;
     return (
       <FieldGroup
         id={`${formId}-${id}`}
@@ -87,29 +85,29 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
     );
   }
   if (data.component === 'select') {
-    let { options } = data;
+    let {options} = data;
     if (data.generate) {
-      const { max, min, type, placeholder } = data.generate;
+      const {max, min, type, placeholder} = data.generate;
       if (type === 'inc') {
         options = Array(max - min)
           .fill(min)
           .map((_, i) => {
-            if (i === 0) return { value: null, text: placeholder };
-            return { value: min + i, text: min + i };
+            if (i === 0) return {value: null, text: placeholder};
+            return {value: min + i, text: min + i};
           });
       }
       if (type === 'dec') {
         options = Array(max - min)
           .fill(max)
           .map((_, i) => {
-            if (i === 0) return { value: null, text: placeholder };
-            return { value: max - i, text: max - i };
+            if (i === 0) return {value: null, text: placeholder};
+            return {value: max - i, text: max - i};
           });
       }
     }
 
     let valueToUse = value;
-    if(!valueToUse) valueToUse = options[0].value;
+    if (!valueToUse) valueToUse = options[0].value;
 
     return (
       <Select
@@ -174,7 +172,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
   }
   if (data.component === 'select-request-async') {
     let valueToUse = null;
-    if(value) valueToUse = getValue(value);
+    if (value) valueToUse = getValue(value);
 
     return (
       <div>
@@ -192,7 +190,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
           value={valueToUse}
           isMulti={data.isMulti}
           openMenuOnClick={false}
-          placeholder={data.placeholder || 'Sélectionner...'}
+          placeholder={data.placeholder || 'Sélectionnez...'}
           noOptionsMessage={
             data.noOptionsMessage || ((val) => `Aucun résultat`)
           }
@@ -220,7 +218,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
           options={data.options}
           className="basic-multi-select"
           classNamePrefix="select"
-          placeholder={data.placeholder || 'Sélectionner...'}
+          placeholder={data.placeholder || 'Sélectionnez...'}
           noOptionsMessage={
             data.noOptionsMessage || ((item) => `Aucun résultat`)
           }
@@ -231,6 +229,19 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
     );
   }
   if (data.component === 'select-request-creatable') {
+
+    const hasOptions = data.options && data.options.length > 0;
+
+    const DropdownIndicator = props => {
+      return (
+        <components.DropdownIndicator {...props} />
+      );
+    };
+
+    const customComponents = {
+      DropdownIndicator: hasOptions ? DropdownIndicator : null
+    };
+
     return (
       <div>
         {data.title && (
@@ -239,15 +250,17 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
           </label>
         )}
         <CreatableSelect
+          components={customComponents}
+          formatCreateLabel={userInput => `Créer "${userInput}"`}
           isMulti={data.isMulti}
           name={data.name}
           value={parseValueToUseSelect()}
           options={data.options}
           className="basic-multi-select"
           classNamePrefix="select"
-          placeholder={data.placeholder || 'Sélectionner...'}
+          placeholder={data.placeholder || (hasOptions ? 'Sélectionnez...' : 'Saisissez...')}
           noOptionsMessage={
-            data.noOptionsMessage || ((item) => `Aucun résultat`)
+            data.noOptionsMessage || ((item) => hasOptions ? `Aucun résultat` : 'Saisissez un élement')
           }
           onChange={parseValueToReturnSelect}
         />
@@ -255,6 +268,7 @@ const GenericField = ({ data, formId, value, onChange, getValid, getValue }) => 
       </div>
     );
   }
+
   if (data.component === 'text') {
     return (
       <p className="uk-heading-divider uk-margin-top uk-margin-remove-bottom">
@@ -274,8 +288,6 @@ GenericField.propTypes = {
   getValue: PropTypes.func.isRequired
 };
 
-GenericField.defaultProps = {
-
-};
+GenericField.defaultProps = {};
 
 export default GenericField;

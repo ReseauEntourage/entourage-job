@@ -4,7 +4,7 @@ const router = express.Router();
 const { auth } = require('../../../controllers/Auth');
 const mailController = require('../../../controllers/mail');
 
-router.post('/contact-us', auth.optional, (req, res) => {
+router.post('/contact-us', auth(), (req, res) => {
   // todo verification de champs
   const { firstName, lastName, phone, email, structure, message } = req.body;
   if (email && email.length > 0 && (message && message.length > 0)) {

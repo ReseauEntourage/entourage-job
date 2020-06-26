@@ -45,18 +45,33 @@ const JeVeuxRecruter = () => {
       </Section>
       <Section
         id="whereTheyComeFrom"
-        style="default"
-        container="small">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-          D&apos;où viennent les candidats <span className="uk-text-primary">LinkedOut&nbsp;?</span>
-        </h2>
-        <h4 className="uk-align-center uk-text-center">
-          LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la capacité et la motivation pour travailler&nbsp;:
-          <br/>
-          <span>
-            personnes ayant connus des parcours de rue, personnes accueillies dans des structures d&apos;hébergement temporaires (hotels sociaux, centre d&apos;hébergement d&apos;urgence, etc.) personnes sortants de parcours d&apos;insertion, jeunes en précarité&nbsp;...
-          </span>
-        </h4>
+        style="default">
+        <div className="uk-flex uk-flex-column uk-flex-middle">
+          <div className="uk-container-small uk-flex uk-flex-column uk-flex-middle">
+            <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-small-bottom uk-margin-remove-top">
+              D&apos;où viennent les candidats <span className="uk-text-primary">LinkedOut&nbsp;?</span>
+            </h2>
+            <h3 className="uk-align-center uk-text-center">
+              LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la capacité et la motivation pour travailler&nbsp;:
+            </h3>
+          </div>
+        </div>
+        <div className="uk-margin-medium-top">
+          <img src="../static/img/candidats.png" alt="" />
+            <div className="uk-background-primary uk-light uk-padding uk-flex uk-flex-center">
+              <div className="uk-container-small">
+                <h4 className="uk-align-center uk-text-center uk-margin-remove">
+                  <IconNoSSR name="triangle-right"/>Personnes ayant connus des parcours de rue
+                  <br/>
+                  <br/>
+                  <IconNoSSR name="triangle-right"/>Personnes accueillies dans des structures d&apos;hébergement temporaires (hotels sociaux, centre d&apos;hébergement d&apos;urgence, etc.)
+                  <br/>
+                  <br/>
+                  <IconNoSSR name="triangle-right"/>Personnes sortants de parcours d&apos;insertion, jeunes en précarité&nbsp;...
+                </h4>
+              </div>
+            </div>
+        </div>
       </Section>
       <WaysToJoin />
       <HireSteps />
@@ -109,7 +124,7 @@ const JeVeuxRecruter = () => {
                   Merci pour votre offre, nous reviendrons bientôt vers vous.
                 </p>
                 <Button
-                  style="primary"
+                  style="secondary"
                   onClick={closeModal}
                 >
                   Fermer

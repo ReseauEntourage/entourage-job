@@ -13,7 +13,7 @@ const ImageTitle = ({id, title, text, img}) => {
         style={{
           position: 'relative',
           minHeight: '220px',
-          maxHeight: '500px', // '50vh',
+          maxHeight: '300px',
           height: '50vw',
         }}
       >
@@ -21,7 +21,7 @@ const ImageTitle = ({id, title, text, img}) => {
           className="uk-background-cover uk-background-center uk-box-shadow-small"
           style={{
             backgroundImage: `url("${img}")`,
-            backgroundPosition: 'center',
+            backgroundPosition: 'center 30%',
             position: 'absolute',
             right: 0,
             top: 0,

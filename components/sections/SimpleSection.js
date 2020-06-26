@@ -19,7 +19,7 @@ const SimpleSection = ({id, style, title, text, button, children}) => {
           button &&
           <Button
             href={button.href}
-            style='primary'
+            style='secondary'
             isExternal={button.external}
             newTab={button.external}
             toggle={button.modal}>

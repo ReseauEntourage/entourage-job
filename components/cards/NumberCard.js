@@ -19,7 +19,7 @@ const NumberCard = ({ value, description }) => (
   </div>
 );
 NumberCard.propTypes = {
-  value: PropTypes.number.isRequired,
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   description: PropTypes.string.isRequired,
 };
 export default NumberCard;

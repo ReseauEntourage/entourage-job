@@ -7,8 +7,9 @@ import {
 import { useRouter } from 'next/router';
 import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
 import AssociationEntourage from './partials/AssociationEntourage';
-import Partenaires from './partials/Partenaires';
+import Partners from './partials/Partners';
 import Button from "./utils/Button";
+import {EXTERNAL_LINKS} from '../constants';
 
 const sharedTitle = 'LinkedOut';
 const sharedDescription =
@@ -21,14 +22,14 @@ const Footer = () => {
   const { asPath } = useRouter();
   return (
     <footer id="footer">
-      <Partenaires />
+      <Partners />
       <AssociationEntourage />
       <Section style="secondary" size="small" preserveColor>
         <GridNoSSR
           middle
           center
           column
-          eachWidths={['3-4', '1-1']}
+          eachWidths={['1-1', '1-1']}
           gap="medium"
         >
           {asPath === '/' && (
@@ -84,18 +85,51 @@ const Footer = () => {
                 </span>
               </span>
               {
-                ' porté par l’association Entourage, qui permet le retour à l’emploi des plus précaires. LinkedIn soutient les valeurs véhiculées par le dispositif, et se félicite de pouvoir contribuer à son succès en lui faisant bénéficier de la renommée de ses marques.'
-              }
+                ' porté par l’association Entourage, qui permet le retour à l’emploi des plus précaires. '}
+              <span
+                style={{
+                  fontWeight: 700,
+                  color: 'white',
+                  fontSize: '16px',
+                }}
+              >
+                  Linked
+                  <span
+                    style={{
+                      background: '#0077b5',
+                      borderRadius: '2px',
+                      display: 'inline-block',
+                      lineHeight: '17px',
+                      marginLeft: '2px',
+                      padding: '0 2px',
+                    }}
+                  >
+                    in
+                  </span>
+                </span>
+                {' soutient les valeurs véhiculées par le dispositif, et se félicite de pouvoir contribuer à son succès en lui faisant bénéficier de la renommée de ses marques.'}
+              <p>
+                L&apos;usage des marques LinkedOut est autorisé dans le cadre d&apos;une licence consentie par la société LinkedIn Ireland Unlimited.
+              </p>
             </p>
           )}
           <GridNoSSR
             row
             center
             middle
-            eachWidths={['expand', 'auto@m']}
+            eachWidths={['auto@m', 'expand', 'auto@m']}
             gap="small"
           >
-            <ul className="uk-subnav uk-subnav-divider uk-flex-left@m uk-flex-center uk-light">
+            <div className="uk-flex uk-flex-center uk-light">
+              <Button
+                href={EXTERNAL_LINKS.DONATION}
+                isExternal
+                newTab
+                style='primary'>
+                Soutenir LinkedOut{' '}<IconNoSSR name="chevron-right" />
+              </Button>
+            </div>
+            <ul className="uk-padding-small uk-subnav uk-subnav-divider uk-flex-left@m uk-flex-center uk-light">
               <li className="uk-text-capitalize">
                 <SimpleLink
                   isExternal

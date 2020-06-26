@@ -27,7 +27,7 @@ const LandingPagePartial = () => {
         <Section container="large" className="uk-padding-remove-bottom">
           <GridNoSSR middle column gap="medium">
             <ImgNoSSR
-              src="/static/img/03-linkedout-blanc-complet.png"
+              src="/static/img/linkedout_logo_white.png"
               alt="LinkedOut by entourage"
               className="uk-width-medium"
               // width="300"

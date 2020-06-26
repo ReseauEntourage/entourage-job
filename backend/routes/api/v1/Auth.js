@@ -6,12 +6,13 @@ const { auth } = require('../../../controllers/Auth');
 const { sendMail } = require('../../../controllers/mail');
 const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
+const {USER_ROLES} = require('../../../../constants');
 
 /**
  * Utilisation d'un "custom callback" pour mieux gérer l'echec d'authentification
  * Source : http://www.passportjs.org/docs/downloads/html/#custom-callback
  */
-router.post('/login', auth.optional, (req, res, next) => {
+router.post('/login', auth(), (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email) {
@@ -51,14 +52,14 @@ router.post('/login', auth.optional, (req, res, next) => {
   )(req, res, next);
 });
 
-router.post('/logout', auth.required, (req, res /* , next */) => {
+router.post('/logout', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res /* , next */) => {
   req.logout();
 
   // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
   res.redirect(process.env.SERVER_URL);
 });
 
-router.post('/forgot', auth.optional, (req, res /* , next */) => {
+router.post('/forgot', auth(), (req, res /* , next */) => {
   let token = null;
   let user = null;
   const { email } = req.body;
@@ -124,7 +125,7 @@ router.post('/forgot', auth.optional, (req, res /* , next */) => {
 /**
  * GET Vérification lien de réinitialisation mot de passe
  */
-router.get('/reset/:userId/:token', auth.optional, (req, res /* , next */) => {
+router.get('/reset/:userId/:token', auth(), (req, res /* , next */) => {
   const infoLog = 'GET /reset/:userId/:token -';
 
   const { userId, token } = req.params;
@@ -161,7 +162,7 @@ router.get('/reset/:userId/:token', auth.optional, (req, res /* , next */) => {
 /**
  * POST Réinitialisation mot de passe
  */
-router.post('/reset/:userId/:token', auth.optional, (req, res /* , next */) => {
+router.post('/reset/:userId/:token', auth(), (req, res /* , next */) => {
   const infoLog = 'POST /reset/:userId/:token -';
   const { userId, token } = req.params;
   const { newPassword, confirmPassword } = req.body;
@@ -223,7 +224,7 @@ router.post('/reset/:userId/:token', auth.optional, (req, res /* , next */) => {
 /**
  * GET current route (required, only authenticated users have access)
  */
-router.get('/current', auth.required, async (req, res /* , next */) => {
+router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), async (req, res /* , next */) => {
   const {
     payload: { id },
   } = req;

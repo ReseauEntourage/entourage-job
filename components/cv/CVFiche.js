@@ -342,16 +342,16 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 <h3 className="uk-margin-small-bottom">Mes infos pratiques</h3>
                 <hr className="uk-divider-small uk-margin-remove-top" />
                 <ul className="uk-list">
-                  {cv.location && cv.location.length > 0 && (
-                    <li>
-                      <IconNoSSR className="uk-text-primary" name="location" />{' '}
-                      {cv.location}
-                    </li>
-                  )}
                   {cv.contracts && cv.contracts.length > 0 && (
                     <li>
                       <IconNoSSR className="uk-text-primary" name="file-text" />{' '}
                       {cv.contracts.join(' / ')}
+                    </li>
+                  )}
+                  {cv.location && cv.location.length > 0 && (
+                    <li>
+                      <IconNoSSR className="uk-text-primary" name="location" />{' '}
+                      {cv.location}
                     </li>
                   )}
                   {cv.languages && cv.languages.length > 0 && (
@@ -410,7 +410,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
             <ImgNoSSR
               alt="logo linkedout"
               className="uk-width-small"
-              src="/static/img/01-linkedout-orange-complet.png"
+              src="/static/img/linkedout_logo_orange.png"
             />
           </GridNoSSR>
         </GridNoSSR>
@@ -424,7 +424,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
         </h2>
         <Button
           disabled={actionDisabled}
-          style='primary'
+          style='secondary'
           toggle="target: #modal-send-opportunity">
           Contactez-moi{' '}<IconNoSSR name="chevron-right" />
         </Button>

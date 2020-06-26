@@ -138,6 +138,7 @@ const getUserByEmail = async (email) => {
 const getUsers = (limit, offset, order) => {
   console.log(`getUsers - Récupérer les Users`);
   return User.findAll({
+    attributes: ATTRIBUTES_USER,
     offset,
     limit,
     order,

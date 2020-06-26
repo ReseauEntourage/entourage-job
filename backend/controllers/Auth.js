@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const jwtExpress = require('express-jwt');
+const expressJwt = require('express-jwt');
 
 function encryptPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
@@ -24,6 +24,16 @@ function generateJWT(user, expiration) {
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + 60);
 
+  let candidatId = null;
+  if(user.coach && user.coach.candidat) {
+    candidatId = user.coach.candidat.id;
+  }
+
+  let coachId = null;
+  if(user.candidat && user.candidat.coach) {
+    coachId = user.candidat.coach.id;
+  }
+
   return jwt.sign(
     {
       email: user.email,
@@ -34,6 +44,8 @@ function generateJWT(user, expiration) {
       gender: user.gender,
       role: user.role,
       exp: parseInt((expiration || expirationDate.getTime()) / 1000, 10),
+      candidatId,
+      coachId
     },
     'secret'
   );
@@ -76,18 +88,22 @@ const getTokenFromHeaders = (req) => {
   return null;
 };
 
-const auth = {
-  required: jwtExpress({
-    secret: 'secret',
-    userProperty: 'payload',
-    getToken: getTokenFromHeaders,
-  }),
-  optional: jwtExpress({
-    secret: 'secret',
-    userProperty: 'payload',
-    getToken: getTokenFromHeaders,
-    credentialsRequired: false,
-  }),
+const auth = (roles= []) => {
+
+  return [
+    expressJwt({
+      secret: 'secret',
+      userProperty: 'payload',
+      getToken: getTokenFromHeaders,
+      credentialsRequired: roles.length > 0,
+    }),
+    (req, res, next) => {
+      if (roles.length > 0 && !roles.includes(req.payload.role)) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+      next();
+    }
+  ];
 };
 
 module.exports = {

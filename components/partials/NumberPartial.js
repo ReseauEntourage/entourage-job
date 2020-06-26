@@ -4,9 +4,9 @@ import { NumberCard } from '../cards';
 import Carousel from "../utils/Carousel";
 
 const numbers = [
-  { value: 73, description: '% des candidats ont retrouvé un job' },
+  { value: '73%', description: 'Des candidats ont retrouvé un job' },
   { value: '120k', description: 'Partages sur les réseaux de leur CV' },
-  { value: 300, description: 'Entreprises solidaires' },
+  { value: '300', description: 'Entreprises solidaires' },
 ];
 const data = [
   {

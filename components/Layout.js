@@ -75,7 +75,7 @@ Layout.defaultProps = {
   title: 'LinkedOut',
   metaTitle:
     'Faites don de votre visibilité avec LinkedOut. Un partage peut tout changer.',
-  metaImage: `${process.env.SERVER_URL}/static/img/entouragejobs-preview.jpg`,
+  metaImage: `${process.env.SERVER_URL}/static/img/linkedout-preview.jpg`,
   metaDescription:
     "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer. @Réseau Entourage",
   metaUrl: process.env.SERVER_URL,
