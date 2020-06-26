@@ -13,11 +13,11 @@ const WaysToJoin = () => {
     },
     {
       description: <div>Les candidats sont <span className="uk-text-bold">orientés par les travailleurs sociaux d’associations partenaires</span> ou de dispositif publics</div>,
-      img: '/static/img/way_3.jpg',
+      img: '/static/img/way_2.jpg',
     },
     {
       description: <div>Les candidats sont orientés par <span className="uk-text-bold">des membres du réseau Entourage</span></div>,
-      img: '/static/img/way_2.jpg',
+      img: '/static/img/way_3.jpg',
     },
     {
       description: <div>Les candidats <span className="uk-text-bold">candidatent spontanément</span> depuis le site internet</div>,
