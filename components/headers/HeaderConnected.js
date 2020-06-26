@@ -96,7 +96,7 @@ const HeaderConnected = ({ isHome }) => {
           <>
             <NavbarLogo
               href="/"
-              src="/static/img/01-linkedout-orange-complet.png"
+              src="/static/img/linkedout_logo_orange.png"
               alt="Linkedout"
             />
             <ul

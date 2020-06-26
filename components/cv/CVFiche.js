@@ -410,7 +410,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
             <ImgNoSSR
               alt="logo linkedout"
               className="uk-width-small"
-              src="/static/img/01-linkedout-orange-complet.png"
+              src="/static/img/linkedout_logo_orange.png"
             />
           </GridNoSSR>
         </GridNoSSR>

@@ -28,7 +28,7 @@ const Header = ({ isHome }) => {
         left={
           <NavbarLogo
             href="/"
-            src="/static/img/03-linkedout-blanc-complet.png"
+            src="/static/img/linkedout_logo_white.png"
             alt="Linkedout"
             alwaysVisible={!isHome}
           />
