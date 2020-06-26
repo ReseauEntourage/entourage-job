@@ -416,7 +416,7 @@ const createCandidatPreviewV2 = async (
     const logoHeight = footerHeight * 0.8;
 
     // recuperation du logo
-    const logo = sharp('./static/img/01-linkedout-orange-complet.png')
+    const logo = sharp('./static/img/linkedout_logo_white.png')
       .resize({ height: logoHeight })
       .png();
     const logoBuffer = await logo.toBuffer();
