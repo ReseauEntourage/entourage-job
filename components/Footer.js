@@ -124,6 +124,7 @@ const Footer = () => {
               <Button
                 href={EXTERNAL_LINKS.DONATION}
                 isExternal
+                newTab
                 style='primary'>
                 Soutenir LinkedOut{' '}<IconNoSSR name="chevron-right" />
               </Button>

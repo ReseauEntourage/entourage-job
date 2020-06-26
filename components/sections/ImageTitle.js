@@ -21,7 +21,7 @@ const ImageTitle = ({id, title, text, img}) => {
           className="uk-background-cover uk-background-center uk-box-shadow-small"
           style={{
             backgroundImage: `url("${img}")`,
-            backgroundPosition: 'center 25%',
+            backgroundPosition: 'center 30%',
             position: 'absolute',
             right: 0,
             top: 0,
