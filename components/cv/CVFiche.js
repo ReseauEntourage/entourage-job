@@ -85,7 +85,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                     ratio={1.4}
                     flip
                   />
-                  {cv.catchphrase}
+                  <span className="uk-margin-small-left uk-margin-small-right">{cv.catchphrase}</span>
                   <IconNoSSR
                     className="uk-text-primary ent-quote-before"
                     name="quote-right"
