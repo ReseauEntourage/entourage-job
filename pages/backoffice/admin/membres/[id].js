@@ -46,7 +46,7 @@ const CVPage = () => {
               className="uk-link-reset"
             >
               <IconNoSSR name="chevron-left" />
-              retour à la liste
+              Retour à la liste
             </SimpleLink>
             <div>
               <div uk-spinner="" />
@@ -68,7 +68,7 @@ const CVPage = () => {
               className="uk-link-reset"
             >
               <IconNoSSR name="chevron-left" />
-              retour à la liste
+              Retour à la liste
             </SimpleLink>
             <div>
               <hr className="ent-divier-backoffice uk-margin-large-top " />
@@ -92,7 +92,7 @@ const CVPage = () => {
             className="uk-link-reset"
           >
             <IconNoSSR name="chevron-left" />
-            retour à la liste
+            Retour à la liste
           </SimpleLink>
           <div>
             <CandidatHeader user={user} />

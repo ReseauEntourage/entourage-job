@@ -370,6 +370,19 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   )}
                 </ul>
               </div>
+              {cv.skills.length > 0 && (
+                <div className="">
+                  <h3 className="uk-margin-small-bottom">Mes atouts</h3>
+                  <hr className="uk-divider-small uk-margin-remove-top" />
+                  <ul className="uk-list">
+                    {cv.skills.map((item, i) => (
+                      <li id={i} key={i}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {cv.passions.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">Mes hobbies</h3>
