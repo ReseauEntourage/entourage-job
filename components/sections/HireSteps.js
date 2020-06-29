@@ -7,7 +7,7 @@ const HireSteps = () => {
     {
       img: '/static/img/illustrations/hire1.png',
       title: 'Repérez un candidat',
-      text: <div>Repérer le candidat LinkedOut qui correspond aux compétences que vous cherchez et envoyez-lui votre offre</div>,
+      text: <div>Repérez le candidat LinkedOut qui correspond aux compétences que vous cherchez et envoyez-lui votre offre</div>,
     },
     {
       img: '/static/img/illustrations/hire2.png',

@@ -17,6 +17,7 @@ import schema from '../forms/schema/formEditOpportunity';
 import Axios from '../../Axios';
 import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
+import {formatParagraph} from "../../utils";
 
 /**
  * Le cv en public et en preview
@@ -84,7 +85,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                     ratio={1.4}
                     flip
                   />
-                  {cv.catchphrase}
+                  <span className="uk-margin-small-left uk-margin-small-right">{cv.catchphrase}</span>
                   <IconNoSSR
                     className="uk-text-primary ent-quote-before"
                     name="quote-right"
@@ -158,7 +159,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   />
                 </a>
               </div>
-              <p className="uk-margin-bottom-small uk-text-lead">
+              <p className="uk-padding-small uk-padding-remove-bottom uk-text-lead">
                 Partager mon CV
               </p>
               <GridNoSSR row gap="small" center>
@@ -249,7 +250,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
               />
             </div>
           </div>
-          <GridNoSSR gap="large" eachWidths={['expand', 'auto@s']}>
+          <GridNoSSR gap="large" eachWidths={['expand', '1-3@m']}>
             <GridNoSSR column>
               {cv.experiences.length > 0 && (
                 <div className="">
@@ -271,7 +272,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                           </dt>
                         )}
                         <dd className="uk-margin-small-top">
-                          {exp.description}
+                          {formatParagraph(exp.description)}
                         </dd>
                       </>
                     ))}
@@ -283,12 +284,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   <h3 className="uk-margin-small-bottom">Mon histoire</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <p className="">
-                    {cv.story.split('\n').reduce((acc, item, key, arr) => {
-                      if (key < arr.length - 1 && key > 0) {
-                        return [...acc, <br />, item];
-                      }
-                      return [...acc, item];
-                    }, [])}
+                    {formatParagraph(cv.story)}
                   </p>
                 </div>
               )}
@@ -306,11 +302,11 @@ const CVFiche = ({ cv, actionDisabled }) => {
                           <div>
                             <IconNoSSR
                               flip
-                              className="uk-text-primary"
+                              className="uk-text-primary uk-margin-small-bottom"
                               name="quote-right"
                               ratio={1.4}
                             />
-                            <p className="uk-margin-remove">{review.text}</p>
+                            <p className="uk-margin-remove">{formatParagraph(review.text)}</p>
                             <GridNoSSR
                               className="uk-margin-small-top"
                               eachWidths={['expand', 'auto']}
@@ -337,7 +333,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 </div>
               )}
             </GridNoSSR>
-            <GridNoSSR column>
+            <GridNoSSR column gap="collapse">
               <div className="">
                 <h3 className="uk-margin-small-bottom">Mes infos pratiques</h3>
                 <hr className="uk-divider-small uk-margin-remove-top" />

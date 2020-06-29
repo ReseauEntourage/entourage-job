@@ -39,7 +39,7 @@ const ActionPartial = ({ style }) => (
         </h2>
         <p>
           Depuis son lancement en juin 2019, de belles rencontres ont emmergé
-          grace aux multiples partages.
+          grâce aux multiples partages.
         </p>
       </div>
 
