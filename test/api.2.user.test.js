@@ -1,24 +1,89 @@
-import Api from '../Axios';
-
 const { assert, expect } = require('chai');
+const Api = require('../Axios');
+
+const UserController = require('../backend/controllers/User');
+const AuthController = require('../backend/controllers/Auth');
+
 const server = require('../backend/server');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
 const TIMEOUT = 20000;
 
-const USER_EXAMPLE = {
-  email: 'test.api.user@mail.fr',
-  firstName: 'Test',
-  lastName: 'Ament',
+const ADMIN = {
+  email: 'test.api.admin@mail.fr',
+  firstName: 'Admin',
+  lastName: 'Admin',
   password: 'azerty',
   salt: 'test',
+  role: 'Admin'
 };
 
+const USER = {
+  email: 'test.api.user@mail.fr',
+  firstName: 'Candidat',
+  lastName: 'Candidat',
+  password: 'azerty',
+  salt: 'test'
+};
+
+const CANDIDAT = {
+  email: 'test.api.candidat@mail.fr',
+  firstName: 'Candidat',
+  lastName: 'Candidat',
+  password: 'azerty',
+  salt: 'test',
+  role: 'Candidat'
+};
+
+const COACH = {
+  email: 'test.api.coach@mail.fr',
+  firstName: 'Coach',
+  lastName: 'Coach',
+  password: 'azerty',
+  salt: 'test',
+  role: 'Coach'
+};
+
+
 describe('Tests des routes API - Partie User', () => {
+  const users = {};
+
   before((done) => {
     server.prepare();
-    server.start(PORT).then(done);
+    server.start(PORT).then(() => {
+      const { hashAdmin, saltAdmin } = AuthController.encryptPassword(ADMIN.password);
+      // Create admin user
+      UserController.createUser({ ...ADMIN, password: hashAdmin, saltAdmin })
+        .then(() => {
+          // Log in with admin to get token
+          Api.post(`/api/v1/auth/login`, {
+            email: ADMIN.email,
+            password: ADMIN.password,
+          })
+            .then((adminData) => {
+              users.admin = adminData;
+
+              // Create generic user
+              const { hashUser, saltUser } = AuthController.encryptPassword(USER.password);
+              UserController.createUser({ ...USER, password: hashUser, saltUser })
+                .then(() => {
+                  // Log in with generic user to get token
+                  Api.post(`/api/v1/auth/login`, {
+                    email: ADMIN.email,
+                    password: ADMIN.password,
+                  })
+                    .then((userData) => {
+                        users.user = userData;
+                        done();
+                      });
+                    })
+                .catch((e) => console.log(e));
+            })
+            .catch((e) => console.log(e));
+        })
+        .catch((e) => console.log(e));
+    });
   });
 
   after(() => {
@@ -29,8 +94,29 @@ describe('Tests des routes API - Partie User', () => {
     let user;
 
     describe('C - Create 1 User', () => {
-      it('doit créer un utilisateur dans la base de données', () => {
-        return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
+
+      it('Créer un utilisateur sans être connecté', () => {
+        return Api.post(`/api/v1/user`, CANDIDAT)
+          .then(() => assert.fail())
+          .catch((err) => assert.strictEqual(err.response.status, 401));
+      }).timeout(TIMEOUT);
+
+      it('Créer un utilisateur sans être administrateur', () => {
+        return Api.post(`/api/v1/user`, {
+          headers: {
+            Token: `Token ${users.admin.token}`
+          }
+        }, CANDIDAT)
+          .then(() => assert.fail())
+          .catch((err) => assert.strictEqual(err.response.status, 401));
+      }).timeout(TIMEOUT);
+
+      it("Créer un utilisateur en tant qu'administrateur", () => {
+        return Api.post(`${process.env.SERVER_URL}/api/v1/user`, {
+          headers: {
+            Token: `Token ${users.admin.token}`
+          }
+        }, CANDIDAT)
           .then((res) => {
             user = res.data;
             assert.isObject(res.data, 'User retourné');
@@ -38,19 +124,20 @@ describe('Tests des routes API - Partie User', () => {
           .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
       }).timeout(TIMEOUT);
 
-      describe('Créer un User avec un email déjà existant', () => {
-        it("Ne doit pas créer de nouveau user si email déjà dans la base", () => {
-          return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
-            .then(() => assert.fail())
-            .catch((err) =>
-              assert.strictEqual(err.response.status, 409, 'Adresse email déjà existante')
-            );
-        }).timeout(TIMEOUT);
-      });
+      it('Créer un utilisateur avec un email déjà existant', () => {
+        return Api.post(`${process.env.SERVER_URL}/api/v1/user`, {
+          headers: {
+            Token: `Token ${users.admin.token}`
+          }
+        }, CANDIDAT)
+          .then(() => assert.fail())
+          .catch((err) =>
+            assert.strictEqual(err.response.status, 409)
+          );
+      }).timeout(TIMEOUT);
     });
 
-
-    describe('R - Read 1 User', () => {
+   /* describe('R - Read 1 User', () => {
       it("doit retourner le User créé précédement à l'appel API", () => {
         return Api.get(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
           .then((res) => {
@@ -81,18 +168,18 @@ describe('Tests des routes API - Partie User', () => {
           })
           .catch((err) => assert.fail(`Delete du User échoué : ${err} `));
       }).timeout(TIMEOUT);
-    });
+    }); */
   });
 
-  describe('Routes User supplémentaires', () => {
+  /* describe('Routes User supplémentaires', () => {
     let user;
     beforeEach((done) => {
-      /* return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
+      /!* return Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
         .then((res) => {
           user = res.data;
           assert.isObject(res.data, 'User retourné');
         })
-        .catch((err) => assert.fail(`Appel API non abouti : ${err} `)); */
+        .catch((err) => assert.fail(`Appel API non abouti : ${err} `)); *!/
       Api.post(`${process.env.SERVER_URL}/api/v1/user`, USER_EXAMPLE)
         .then(() =>
           Api.post(`${process.env.SERVER_URL}/api/v1/auth/login`, {
@@ -225,5 +312,5 @@ describe('Tests des routes API - Partie User', () => {
         }).timeout(TIMEOUT);
       });
     });
-  });
+  }); */
 });

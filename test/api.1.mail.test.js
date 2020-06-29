@@ -18,8 +18,8 @@ describe.skip('Mail', () => {
     done();
   });
 
-  it('doit effectuer l\'envoi de mail "contactez nous"', () => {
-    return Api.post(`${process.env.SERVER_URL}/api/v1/mail/contact-us`, {
+  it("doit effectuer l'envoi de mail \"Contactez-nous\"", () => {
+    return Api.post(`/api/v1/mail/contact-us`, {
       email: 'myemail@myemail.email',
       message: 'mon text de blablabla test',
     })
