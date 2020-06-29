@@ -7,6 +7,7 @@ import schemaformEditExperience from '../forms/schema/formEditExperience';
 import { GridNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalConfirm from '../modals/ModalConfirm';
+import {formatParagraph} from "../../utils";
 
 // PROBLEM: les modals existe. mais ne sont pas present dans le dom react, resultat les evenements ne sont plus géré
 // todo: ONE MODAL, MULTIPLE EDITION
@@ -46,7 +47,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
                 >
                   <>
                     <p className="uk-margin-small-top uk-margin-small">
-                      {exp.description}
+                      {formatParagraph(exp.description)}
                     </p>
                     {exp.skills && (
                       <p className="uk-text-primary">

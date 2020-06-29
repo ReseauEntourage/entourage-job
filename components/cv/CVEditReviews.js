@@ -7,6 +7,7 @@ import ModalEdit from '../modals/ModalEdit';
 import schemaTestimonial from '../forms/schema/formEditTestimonial';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalConfirm from '../modals/ModalConfirm';
+import {formatParagraph} from "../../utils";
 
 const CVEditReviews = ({ reviews, onChange }) => {
   const MAX_REVIEWS = 3;
@@ -39,7 +40,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
               <GridNoSSR eachWidths={['auto', 'expand']}>
                 <IconNoSSR name="quote-right" />
                 <>
-                  <p className="uk-text-small uk-margin-small">{review.text}</p>
+                  <p className="uk-text-small uk-margin-small">{formatParagraph(review.text)}</p>
                   <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
                     {review.name}
                   </p>

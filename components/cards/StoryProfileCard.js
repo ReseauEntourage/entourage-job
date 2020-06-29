@@ -5,6 +5,7 @@ import ModalEdit from '../modals/ModalEdit';
 import schemaStory from '../forms/schema/formEditStory.json';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
+import {formatParagraph} from "../../utils";
 
 const StoryProfileCard = ({ description, onChange }) => (
   <div className="uk-card uk-card-default uk-card-body">
@@ -22,15 +23,15 @@ const StoryProfileCard = ({ description, onChange }) => (
       )}
     </GridNoSSR>
 
-    {description ? (
-      description
-        .split('\n')
-        .map((paragraphe, index) => <p key={index}>{paragraphe}</p>)
-    ) : (
+    {description ?
+      <p>
+        {formatParagraph(description)}
+      </p>
+       :
       <p className="uk-text-italic">
         Aucune histoire n&apos;a encore été ajoutée
       </p>
-    )}
+    }
     {onChange && (
       <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
         <ModalEdit
