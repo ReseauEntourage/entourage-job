@@ -22,7 +22,8 @@ const Layout = ({
     <Head>
       <title>{title}</title>
       <link rel="icon" type="image/png" href="/static/img/fav.png" />
-      <meta name="title" property="og:title" content={metaTitle} />
+      <link rel="canonical" href="https://www.linkedout.fr/" />
+      <meta property="og:site_name" content="LinkedOut" />
       <meta
         name="description"
         property="og:description"
@@ -30,6 +31,7 @@ const Layout = ({
       />
       <meta name="image" property="og:image" content={metaImage} />
       <meta property="og:type" content={metaType} />
+      <meta property="og:title" content={title} />
       <meta property="og:url" content={metaUrl} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={metaTitle} />
@@ -77,7 +79,7 @@ Layout.defaultProps = {
     'Faites don de votre visibilité avec LinkedOut. Un partage peut tout changer.',
   metaImage: `${process.env.SERVER_URL}/static/img/linkedout-preview.jpg`,
   metaDescription:
-    "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer. @Réseau Entourage",
+    "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer.",
   metaUrl: process.env.SERVER_URL,
   metaType: 'website',
 };

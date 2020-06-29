@@ -52,12 +52,10 @@ const CVPageContent = ({ candidatId }) => {
     const unsavedChanges = cv && cv.status === CV_STATUS.Draft.value;
     const message =
       "Voulez-vous quitter l'édition du CV? \nLes modifications que vous avez apportées ne seront peut-être pas enregistrées.";
-    // 'Voulez-vous sauvegarder les modifications que vous avez apportées ?\nvos modifications seront perdues si vous ne les sauvegardez pas.';
     const routeChangeStart = (url) => {
       if (Router.asPath !== url && unsavedChanges && !window.confirm(message)) {
         Router.events.emit('routeChangeError');
         Router.replace(Router, Router.asPath);
-        throw new Error('Abort route change. Please ignore this error.');
       }
     };
 
