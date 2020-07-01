@@ -1,4 +1,6 @@
-import React from 'react';
+/* global UIkit */
+
+import React, {useEffect} from 'react';
 import Layout from '../components/Layout';
 import {
   ActionPartial,
@@ -8,8 +10,14 @@ import {
   NumberPartial,
 } from '../components/partials';
 import Header from '../components/headers/Header';
+import ContestModal from "../components/modals/ContestModal";
 
 const Index = () => {
+
+  useEffect(() => {
+    UIkit.modal(`#modal-contest`).show();
+  }, []);
+
   return (
     <Layout>
       <LandingPagePartial />
@@ -18,6 +26,7 @@ const Index = () => {
       <EmphasePartial />
       <NumberPartial />
       <ActionPartial style="default" />
+      <ContestModal />
     </Layout>
   );
 };
