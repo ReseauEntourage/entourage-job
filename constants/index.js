@@ -114,7 +114,9 @@ const USER_ROLES = {
 };
 
 const EXTERNAL_LINKS = {
-  DONATION: "https://entourage.iraiser.eu/linkedout/~mon-don"
+  DONATION: "https://entourage.iraiser.eu/linkedout/~mon-don",
+  LKO_VG: "https://www.linkedout-vendeeglobe.com",
+  LKO_VG_CONTEST: "https://www.linkedout-vendeeglobe.com/vendeearctique",
 };
 
 module.exports = {
