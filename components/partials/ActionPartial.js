@@ -38,7 +38,7 @@ const ActionPartial = ({ style }) => (
           <span className="uk-text-primary">J&apos;agis</span> avec LinkedOut
         </h2>
         <p>
-          Depuis son lancement en juin 2019, de belles rencontres ont emmergé
+          Depuis son lancement en juin 2019, de belles rencontres ont emergé
           grâce aux multiples partages.
         </p>
       </div>

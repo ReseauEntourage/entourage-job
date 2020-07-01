@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/aria-role */
 /* global UIkit */
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {
@@ -17,7 +17,7 @@ import schema from '../forms/schema/formEditOpportunity';
 import Axios from '../../Axios';
 import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
-import {formatParagraph} from "../../utils";
+import {formatParagraph, sortExperiences, sortReviews} from "../../utils";
 
 /**
  * Le cv en public et en preview
@@ -54,6 +54,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
   };
   const openNewsletterModal = () =>
     UIkit.modal(`#info-share-${cv.user.candidat.firstName}`).show();
+
+  const experiences = sortExperiences(cv.experiences);
 
   return (
     <div id="cv-fiche" className="uk-container uk-position-relative">
@@ -252,12 +254,12 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </div>
           <GridNoSSR gap="large" eachWidths={['expand', '1-3@m']}>
             <GridNoSSR column>
-              {cv.experiences.length > 0 && (
+              {experiences.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">Mes compétences</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <dl className="uk-description-list">
-                    {cv.experiences.map((exp, i) => (
+                    {experiences.map((exp, i) => (
                       <>
                         {exp.skills && (
                           <dt key={i} style={{ display: 'block' }}>
@@ -296,7 +298,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   </h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <GridNoSSR gap="small" column>
-                    {cv.reviews.map((review, i) => (
+                    {sortReviews(cv.reviews).map((review, i) => (
                       <div key={i}>
                         <GridNoSSR gap="small" column>
                           <div>
@@ -358,7 +360,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   )}
                   {cv.transport && cv.transport.length > 0 && (
                     <li>
-                      <IconNoSSR className="uk-text-primary" name="cart" />{' '}
+                      <IconNoSSR className="uk-text-primary" name="car" />{' '}
                       {cv.transport}
                     </li>
                   )}
@@ -385,7 +387,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
               )}
               {cv.passions.length > 0 && (
                 <div className="">
-                  <h3 className="uk-margin-small-bottom">Mes hobbies</h3>
+                  <h3 className="uk-margin-small-bottom">Mes passions</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <ul className="uk-list">
                     {cv.passions.map((item, i) => (
