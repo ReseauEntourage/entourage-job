@@ -72,7 +72,7 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
   {
     model: models.Experience,
     as: 'experiences',
-    attributes: ['id', 'description'],
+    attributes: ['id', 'description', 'order'],
     include: [
       {
         model: models.Skill,
@@ -81,6 +81,9 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
         attributes: ['id', 'name'],
       },
     ],
+    order: [
+      ['order', 'ASC'],
+    ]
   },
   {
     model: models.Review,
@@ -223,6 +226,7 @@ const createCV = async (data) => {
         const modelExperience = await models.Experience.create({
           CVId: modelCV.id,
           description: experience.description,
+          order: experience.order
         });
         // Skills
         if (experience.skills) {
