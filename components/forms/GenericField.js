@@ -172,7 +172,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
   }
   if (data.component === 'select-request-async') {
     let valueToUse = null;
-    if (value) valueToUse = getValue(value);
+    if (value) valueToUse = (typeof(value) === 'string') ? getValue(value) : value;
 
     return (
       <div>
