@@ -1,6 +1,4 @@
-/* global UIkit */
-
-import React, {useEffect} from 'react';
+import React from 'react';
 import Layout from '../components/Layout';
 import {
   ActionPartial,
@@ -13,10 +11,6 @@ import Header from '../components/headers/Header';
 import ContestModal from "../components/modals/ContestModal";
 
 const Index = () => {
-
-  useEffect(() => {
-    UIkit.modal(`#modal-contest`).show();
-  }, []);
 
   return (
     <Layout>
