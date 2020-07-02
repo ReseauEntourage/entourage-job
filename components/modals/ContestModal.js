@@ -46,7 +46,7 @@ const ContestModal = () => {
 
   return(
     <div>
-      <div id="modal-contest" uk-modal>
+      <div id="modal-contest" data-uk-modal>
         <div className="uk-modal-dialog uk-modal-body uk-background-primary">
           <button
             className="uk-modal-close-default"
