@@ -1,4 +1,4 @@
-/* global UIkit */
+import UIkit from 'uikit';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';

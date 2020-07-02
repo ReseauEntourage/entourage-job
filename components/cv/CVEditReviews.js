@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/aria-role */
-/* global UIkit */
+import UIkit from 'uikit';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR, GridNoSSR } from '../utils';
