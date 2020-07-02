@@ -1,4 +1,4 @@
-/* global UIkit */
+import UIkit from 'uikit';
 import React, {useContext, useState, useEffect, useRef} from 'react';
 import { PropTypes } from 'prop-types';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';

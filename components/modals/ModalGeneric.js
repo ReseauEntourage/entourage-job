@@ -1,4 +1,4 @@
-/* global UIkit */
+import UIkit from 'uikit';
 /* eslint-disable no-undef */
 import React from 'react';
 import PropTypes from 'prop-types';

@@ -1,4 +1,4 @@
-/* global UIkit */
+import UIkit from 'uikit';
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';

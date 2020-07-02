@@ -1,4 +1,4 @@
-/* global UIkit */
+import UIkit from 'uikit';
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import React, { useContext, useEffect, useState } from 'react';
