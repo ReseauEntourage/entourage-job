@@ -74,7 +74,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   display: 'flex',
                 }}
               >
-                <p
+                <h4
                   className="uk-position-relative"
                   style={{
                     width: 'fit-content',
@@ -93,11 +93,11 @@ const CVFiche = ({ cv, actionDisabled }) => {
                     name="quote-right"
                     ratio={0.8}
                   />
-                </p>
+                </h4>
               </div>
             )}
             {/* uk-text-emphasis uk-text-bold */}
-            <p className="uk-width-xxlarge uk-margin-auto uk-text-lead">
+            <h3 className="uk-width-xxlarge uk-margin-auto" style={{fontWeight: 500}}>
               J&apos;aimerais beaucoup travailler dans{' '}
               <span
                 className="uk-label uk-text-lowercase"
@@ -137,12 +137,12 @@ const CVFiche = ({ cv, actionDisabled }) => {
               ) : (
                 '.'
               )}
-            </p>
+            </h3>
             <div className="uk-position-relative uk-margin-medium-top">
               <div
                 style={{
                   position: 'absolute',
-                  top: '-20px',
+                  top: '-30px',
                   left: 0,
                   right: 0,
                 }}
@@ -161,7 +161,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   />
                 </a>
               </div>
-              <p className="uk-padding-small uk-padding-remove-bottom uk-text-lead">
+              <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom">
                 Partager mon CV
               </p>
               <GridNoSSR row gap="small" center>
@@ -335,7 +335,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 </div>
               )}
             </GridNoSSR>
-            <GridNoSSR column gap="collapse">
+            <GridNoSSR column gap='medium'>
               <div className="">
                 <h3 className="uk-margin-small-bottom">Mes infos pratiques</h3>
                 <hr className="uk-divider-small uk-margin-remove-top" />
@@ -396,6 +396,15 @@ const CVFiche = ({ cv, actionDisabled }) => {
                       </li>
                     ))}
                   </ul>
+                </div>
+              )}
+              {cv.devise && (
+                <div className="">
+                  <h3 className="uk-margin-small-bottom">Ma devise</h3>
+                  <hr className="uk-divider-small uk-margin-remove-top" />
+                  <p className="">
+                    {cv.devise}
+                  </p>
                 </div>
               )}
             </GridNoSSR>
