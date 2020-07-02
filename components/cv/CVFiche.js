@@ -256,7 +256,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
             <GridNoSSR column>
               {experiences.length > 0 && (
                 <div className="">
-                  <h3 className="uk-margin-small-bottom">Mes compétences</h3>
+                  <h3 className="uk-margin-small-bottom">Mes expériences et compétences</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <dl className="uk-description-list">
                     {experiences.map((exp, i) => (
@@ -342,32 +342,32 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 <ul className="uk-list">
                   {cv.contracts && cv.contracts.length > 0 && (
                     <li>
-                      <IconNoSSR className="uk-text-primary" name="file-text" />{' '}
+                      <IconNoSSR className="uk-text-primary" name="file-text" style={{width: 20}} />{' '}
                       {cv.contracts.join(' / ')}
                     </li>
                   )}
                   {cv.location && cv.location.length > 0 && (
                     <li>
-                      <IconNoSSR className="uk-text-primary" name="location" />{' '}
+                      <IconNoSSR className="uk-text-primary" name="location" style={{width: 20}} />{' '}
                       {cv.location}
+                    </li>
+                  )}
+                  {cv.availability && cv.availability.length > 0 && (
+                    <li>
+                      <IconNoSSR className="uk-text-primary" name="calendar" style={{width: 20}}/>{' '}
+                      {cv.availability}
                     </li>
                   )}
                   {cv.languages && cv.languages.length > 0 && (
                     <li>
-                      <IconNoSSR className="uk-text-primary" name="users" />{' '}
+                      <IconNoSSR className="uk-text-primary" name="users" style={{width: 20}}/>{' '}
                       {cv.languages.join(' / ')}
                     </li>
                   )}
                   {cv.transport && cv.transport.length > 0 && (
                     <li>
-                      <IconNoSSR className="uk-text-primary" name="car" />{' '}
+                      <IconNoSSR className="uk-text-primary" name="car" style={{width: 20}}/>{' '}
                       {cv.transport}
-                    </li>
-                  )}
-                  {cv.availability && cv.availability.length > 0 && (
-                    <li>
-                      <IconNoSSR className="uk-text-primary" name="calendar" />{' '}
-                      {cv.availability}
                     </li>
                   )}
                 </ul>
