@@ -1,4 +1,4 @@
-/* global UIkit */
+import UIkit from 'uikit';
 import React, {useRef} from 'react';
 import Layout from '../components/Layout';
 import { Button, Section, IconNoSSR } from '../components/utils';
