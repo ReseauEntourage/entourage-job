@@ -1,4 +1,4 @@
-import UIkit from 'uikit';
+/* global UIkit */
 import moment from 'moment';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';

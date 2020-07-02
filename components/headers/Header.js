@@ -1,4 +1,4 @@
-import UIkit from 'uikit';
+/* global UIkit */
 import React from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
@@ -8,10 +8,11 @@ import {
   NavbarNoSSR,
   OffcanvasNoSSR,
   HamburgerNoSSR,
-  NavbarLogo, IconNoSSR,
+  NavbarLogo, IconNoSSR
 } from '../utils';
 import './Header.less';
 import Button from "../utils/Button";
+import Icon from "../utils/Icon";
 import {EXTERNAL_LINKS} from '../../constants';
 
 const Header = ({ isHome }) => {
@@ -66,7 +67,7 @@ const Header = ({ isHome }) => {
                   isExternal
                   newTab
                   style='default'>
-                  Actualités{' '}<IconNoSSR name="chevron-right" />
+                  Actualités{' '}<Icon name="chevron-right" />
                 </Button>
               </div>,
               <div className="uk-navbar-item uk-visible@m">

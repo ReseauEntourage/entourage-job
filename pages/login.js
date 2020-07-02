@@ -1,4 +1,4 @@
-import UIkit from 'uikit';
+/* global UIkit */
 import React, {useContext, useEffect, useRef} from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';

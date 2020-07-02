@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/aria-role */
-import UIkit from 'uikit';
+/* global UIkit */
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';

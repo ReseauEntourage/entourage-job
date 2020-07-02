@@ -1,4 +1,4 @@
-import UIkit from 'uikit';
+/* global UIkit */
 
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';

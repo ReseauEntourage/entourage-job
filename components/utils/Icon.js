@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-const Icon = ({ name, ratio, flip, className, id, style }) => (
+const Icon = ({ name, ratio, flip, className, id }) => (
   <span
     id={id}
     data-uk-icon={`icon: ${name}; ratio: ${ratio}`}
     className={className}
-    style={{ transform: flip ? 'scale(-1, 1)' : undefined, ...style }}
+    style={{ transform: flip ? 'scale(-1, 1)' : undefined }}
   />
 );
 Icon.propTypes = {
@@ -15,8 +15,7 @@ Icon.propTypes = {
   name: PropTypes.string.isRequired,
   ratio: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   className: PropTypes.string,
-  flip: PropTypes.bool,
-  style: PropTypes.shape()
+  flip: PropTypes.bool
 };
 Icon.defaultProps = {
   className: '',

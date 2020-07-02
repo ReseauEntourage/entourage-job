@@ -1,4 +1,4 @@
-import UIkit from 'uikit';
+/* global UIkit */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils/Icon';

@@ -1,5 +1,6 @@
+/* global UIkit */
+
 import React, {useState, useEffect} from 'react';
-import UIkit from 'uikit';
 import {Button, CloseButtonNoSSR, IconNoSSR} from "../utils";
 import {EXTERNAL_LINKS} from '../../constants';
 
