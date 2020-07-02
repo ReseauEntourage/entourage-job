@@ -171,6 +171,7 @@ const CVPage = () => {
                       ) : (
                         <ButtonIcon
                           name="pencil"
+                          className="uk-hidden"
                           onClick={() =>
                             UIkit.modal(`#modal-personal-data`).show()
                           }

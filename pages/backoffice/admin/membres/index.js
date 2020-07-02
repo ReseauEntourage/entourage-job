@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
-import { Section, GridNoSSR } from '../../../../components/utils';
+import {Section, GridNoSSR, IconNoSSR} from '../../../../components/utils';
 import HeaderBackoffice from '../../../../components/headers/HeaderBackoffice';
 import axios from '../../../../Axios';
 import ModalEdit from '../../../../components/modals/ModalEdit';
@@ -257,11 +257,14 @@ const MembersAdmin = ({ query: { role } }) => {
                                     ? 'A trouvé un emploi'
                                     : "En recherche d'emploi"}
                                 </span>
-                                <input
-                                  className="uk-checkbox uk-visible@m"
-                                  type="checkbox"
-                                  defaultChecked={member.candidat.employed}
-                                />
+                                {
+                                  member.candidat.employed &&
+                                  <IconNoSSR
+                                    name='check'
+                                    ratio={1.2}
+                                    className="uk-text-primary uk-visible@m"
+                                  />
+                                }
                               </td>
                               <td>
                                 {member.candidat &&
@@ -282,11 +285,14 @@ const MembersAdmin = ({ query: { role } }) => {
                                     ? 'Masqué'
                                     : 'Visible'}
                                 </span>
-                                <input
-                                  className="uk-checkbox uk-visible@m"
-                                  type="checkbox"
-                                  defaultChecked={member.candidat.hidden}
-                                />
+                                {
+                                  member.candidat.hidden &&
+                                  <IconNoSSR
+                                    name='check'
+                                    ratio={1.2}
+                                    className="uk-text-primary uk-visible@m"
+                                  />
+                                }
                               </td>
                             </>
                           )}

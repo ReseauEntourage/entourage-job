@@ -36,29 +36,29 @@ const InfoProfileCard = ({
     </GridNoSSR>
     <ul className="uk-list">
       <li>
-        <IconNoSSR name="file-text" />{' '}
+        <IconNoSSR name="file-text" style={{width: 20}}/>{' '}
         {contracts.length > 0
           ? contracts.join(' / ')
           : 'Type de contrat recherché non renseigné'}
       </li>
       <li>
-        <IconNoSSR name="location" />{' '}
+        <IconNoSSR name="location" style={{width: 20}} />{' '}
         {location && location !== '' ? location : 'Localisation non renseignée'}
       </li>
       <li>
-        <IconNoSSR name="calendar" />{' '}
+        <IconNoSSR name="calendar" style={{width: 20}} />{' '}
         {availability && availability !== ''
           ? availability
           : 'Disponibilités non renseignée'}
       </li>
       <li>
-        <IconNoSSR name="users" />{' '}
+        <IconNoSSR name="users" style={{width: 20}} />{' '}
         {languages.length > 0
           ? languages.join(' / ')
           : 'Langues apprises non renseignées'}
       </li>
       <li>
-        <IconNoSSR name="hashtag" />{' '}
+        <IconNoSSR name="car" style={{width: 20}} />{' '}
         {transport && transport !== ''
           ? transport
           : 'Moyen de transport non renseigné'}
