@@ -7,12 +7,14 @@ import ModalEdit from '../modals/ModalEdit';
 import schemaTestimonial from '../forms/schema/formEditTestimonial';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalConfirm from '../modals/ModalConfirm';
-import {formatParagraph} from "../../utils";
+import {formatParagraph, sortReviews} from "../../utils";
 
 const CVEditReviews = ({ reviews, onChange }) => {
   const MAX_REVIEWS = 3;
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentDefaultValue, setCurrentDefaultValue] = useState({});
+
+  const sortedReviews = sortReviews(reviews);
 
   return (
     <div className="uk-card uk-card-default uk-card-body">
@@ -20,7 +22,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
         <h3 className="uk-card-title">
           Mes <span className="uk-text-primary">recommandations</span>
         </h3>
-        {reviews.length < MAX_REVIEWS && (
+        {sortedReviews.length < MAX_REVIEWS && (
           <ButtonIcon
             onClick={() => {
               UIkit.modal(`#modal-testimonial-add`).show();
@@ -34,8 +36,8 @@ const CVEditReviews = ({ reviews, onChange }) => {
         {/* Il y avait un probleme lors de lapparition de la liste */}
         {/* NotFoundError: Failed to execute 'insertBefore' on 'Node':
         The node before which the new node is to be inserted is not a child of this node. */}
-        {reviews.length > 0 ? (
-          reviews.map((review, i) => (
+        {sortedReviews.length > 0 ? (
+          sortedReviews.map((review, i) => (
             <li id={i} key={i}>
               <GridNoSSR eachWidths={['auto', 'expand']}>
                 <IconNoSSR name="quote-right" />
@@ -92,9 +94,8 @@ const CVEditReviews = ({ reviews, onChange }) => {
         defaultValues={currentDefaultValue}
         onSubmit={(fields, closeModal) => {
           closeModal();
-          const newReviews = reviews;
-          newReviews[currentIndex] = fields;
-          onChange({ reviews: newReviews });
+          sortedReviews[currentIndex] = fields;
+          onChange({ reviews: sortedReviews });
         }}
       />
       <ModalConfirm
@@ -102,8 +103,8 @@ const CVEditReviews = ({ reviews, onChange }) => {
         text="Êtes-vous sûr(e) de vouloir supprimer cette recommandation ?"
         buttonText="Supprimer"
         onConfirm={() => {
-          reviews.splice(currentIndex, 1);
-          onChange({ reviews });
+          sortedReviews.splice(currentIndex, 1);
+          onChange({ reviews: sortedReviews });
         }}
       />
     </div>

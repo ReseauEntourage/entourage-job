@@ -74,7 +74,7 @@ const CandidatCard = ({
               column
               childWidths={['1-1']}
               style={{
-                minHeight: '225px',
+                minHeight: '240px',
               }}
               className="uk-height-1-1"
             >
@@ -83,25 +83,28 @@ const CandidatCard = ({
                   {firstName}
                 </h5>
                 <p
-                  style={{ fontSize: '0.775rem' }}
-                  className="uk-margin-remove ent-line-clamp-3"
+                  style={{
+                    fontSize: '0.775rem',
+                    marginTop: 'O.5px !important'
+                  }}
+                  className="uk-text-small ent-line-clamp-3 uk-margin-remove"
                 >
                   {catchphrase || "cherche un job pour s'en sortir"}
                 </p>
-                {skills && (
-                  <GridNoSSR
-                    column
-                    gap="collapse"
-                    childWidths={['1-1']}
-                    className="uk-text-lowercase uk-text-bold uk-text-primary uk-margin-small-top"
-                    items={skills.slice(0, 2).map((a, index) => (
-                      <span key={index} className="ent-line-clamp-1">
+              </>
+              {skills && (
+                <GridNoSSR
+                  column
+                  gap="collapse"
+                  childWidths={['1-1']}
+                  className="uk-text-lowercase uk-text-bold uk-text-primary"
+                  items={skills.slice(0, 2).map((a, index) => (
+                    <span key={index} className="ent-line-clamp-1">
                         {a}
                       </span>
-                    ))}
-                  />
-                )}
-              </>
+                  ))}
+                />
+              )}
               {ambitions && ambitions.length > 0 && (
                 <>
                   <p

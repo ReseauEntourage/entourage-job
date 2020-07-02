@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/aria-role */
 /* global UIkit */
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {
@@ -17,7 +17,7 @@ import schema from '../forms/schema/formEditOpportunity';
 import Axios from '../../Axios';
 import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
-import {formatParagraph} from "../../utils";
+import {formatParagraph, sortExperiences, sortReviews} from "../../utils";
 
 /**
  * Le cv en public et en preview
@@ -55,6 +55,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
   const openNewsletterModal = () =>
     UIkit.modal(`#info-share-${cv.user.candidat.firstName}`).show();
 
+  const experiences = sortExperiences(cv.experiences);
+
   return (
     <div id="cv-fiche" className="uk-container uk-position-relative">
       <div className="uk-card uk-card-default uk-card-body uk-card-large uk-margin-medium ">
@@ -72,7 +74,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   display: 'flex',
                 }}
               >
-                <p
+                <h4
                   className="uk-position-relative"
                   style={{
                     width: 'fit-content',
@@ -91,11 +93,11 @@ const CVFiche = ({ cv, actionDisabled }) => {
                     name="quote-right"
                     ratio={0.8}
                   />
-                </p>
+                </h4>
               </div>
             )}
             {/* uk-text-emphasis uk-text-bold */}
-            <p className="uk-width-xxlarge uk-margin-auto uk-text-lead">
+            <h3 className="uk-width-xxlarge uk-margin-auto" style={{fontWeight: 500}}>
               J&apos;aimerais beaucoup travailler dans{' '}
               <span
                 className="uk-label uk-text-lowercase"
@@ -135,12 +137,12 @@ const CVFiche = ({ cv, actionDisabled }) => {
               ) : (
                 '.'
               )}
-            </p>
+            </h3>
             <div className="uk-position-relative uk-margin-medium-top">
               <div
                 style={{
                   position: 'absolute',
-                  top: '-20px',
+                  top: '-30px',
                   left: 0,
                   right: 0,
                 }}
@@ -159,7 +161,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   />
                 </a>
               </div>
-              <p className="uk-padding-small uk-padding-remove-bottom uk-text-lead">
+              <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom">
                 Partager mon CV
               </p>
               <GridNoSSR row gap="small" center>
@@ -252,12 +254,12 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </div>
           <GridNoSSR gap="large" eachWidths={['expand', '1-3@m']}>
             <GridNoSSR column>
-              {cv.experiences.length > 0 && (
+              {experiences.length > 0 && (
                 <div className="">
-                  <h3 className="uk-margin-small-bottom">Mes compétences</h3>
+                  <h3 className="uk-margin-small-bottom">Mes expériences et compétences</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <dl className="uk-description-list">
-                    {cv.experiences.map((exp, i) => (
+                    {experiences.map((exp, i) => (
                       <>
                         {exp.skills && (
                           <dt key={i} style={{ display: 'block' }}>
@@ -296,7 +298,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   </h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <GridNoSSR gap="small" column>
-                    {cv.reviews.map((review, i) => (
+                    {sortReviews(cv.reviews).map((review, i) => (
                       <div key={i}>
                         <GridNoSSR gap="small" column>
                           <div>
@@ -333,46 +335,59 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 </div>
               )}
             </GridNoSSR>
-            <GridNoSSR column gap="collapse">
+            <GridNoSSR column gap='medium'>
               <div className="">
                 <h3 className="uk-margin-small-bottom">Mes infos pratiques</h3>
                 <hr className="uk-divider-small uk-margin-remove-top" />
                 <ul className="uk-list">
                   {cv.contracts && cv.contracts.length > 0 && (
                     <li>
-                      <IconNoSSR className="uk-text-primary" name="file-text" />{' '}
+                      <IconNoSSR className="uk-text-primary" name="file-text" style={{width: 20}} />{' '}
                       {cv.contracts.join(' / ')}
                     </li>
                   )}
                   {cv.location && cv.location.length > 0 && (
                     <li>
-                      <IconNoSSR className="uk-text-primary" name="location" />{' '}
+                      <IconNoSSR className="uk-text-primary" name="location" style={{width: 20}} />{' '}
                       {cv.location}
+                    </li>
+                  )}
+                  {cv.availability && cv.availability.length > 0 && (
+                    <li>
+                      <IconNoSSR className="uk-text-primary" name="calendar" style={{width: 20}}/>{' '}
+                      {cv.availability}
                     </li>
                   )}
                   {cv.languages && cv.languages.length > 0 && (
                     <li>
-                      <IconNoSSR className="uk-text-primary" name="users" />{' '}
+                      <IconNoSSR className="uk-text-primary" name="users" style={{width: 20}}/>{' '}
                       {cv.languages.join(' / ')}
                     </li>
                   )}
                   {cv.transport && cv.transport.length > 0 && (
                     <li>
-                      <IconNoSSR className="uk-text-primary" name="cart" />{' '}
+                      <IconNoSSR className="uk-text-primary" name="car" style={{width: 20}}/>{' '}
                       {cv.transport}
-                    </li>
-                  )}
-                  {cv.availability && cv.availability.length > 0 && (
-                    <li>
-                      <IconNoSSR className="uk-text-primary" name="calendar" />{' '}
-                      {cv.availability}
                     </li>
                   )}
                 </ul>
               </div>
+              {cv.skills.length > 0 && (
+                <div className="">
+                  <h3 className="uk-margin-small-bottom">Mes atouts</h3>
+                  <hr className="uk-divider-small uk-margin-remove-top" />
+                  <ul className="uk-list">
+                    {cv.skills.map((item, i) => (
+                      <li id={i} key={i}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {cv.passions.length > 0 && (
                 <div className="">
-                  <h3 className="uk-margin-small-bottom">Mes hobbies</h3>
+                  <h3 className="uk-margin-small-bottom">Mes passions</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <ul className="uk-list">
                     {cv.passions.map((item, i) => (
@@ -381,6 +396,15 @@ const CVFiche = ({ cv, actionDisabled }) => {
                       </li>
                     ))}
                   </ul>
+                </div>
+              )}
+              {cv.devise && (
+                <div className="">
+                  <h3 className="uk-margin-small-bottom">Ma devise</h3>
+                  <hr className="uk-divider-small uk-margin-remove-top" />
+                  <p className="">
+                    {cv.devise}
+                  </p>
                 </div>
               )}
             </GridNoSSR>

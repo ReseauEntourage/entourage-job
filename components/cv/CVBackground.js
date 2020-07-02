@@ -8,7 +8,7 @@ const CVBackground = ({ url }) => (
     style={{
       position: 'relative',
       minHeight: '220px',
-      maxHeight: '300px',
+      maxHeight: '400px',
       height: '50vw',
     }}
   >
@@ -16,7 +16,7 @@ const CVBackground = ({ url }) => (
       className="uk-background-cover uk-background-center uk-box-shadow-small"
       style={{
         backgroundImage: `url("${url}")`,
-        backgroundPosition: 'center',
+        backgroundPosition: 'center 55%',
         position: 'absolute',
         right: 0,
         top: 0,

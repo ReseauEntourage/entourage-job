@@ -8,8 +8,10 @@ import {
   NumberPartial,
 } from '../components/partials';
 import Header from '../components/headers/Header';
+import ContestModal from "../components/modals/ContestModal";
 
 const Index = () => {
+
   return (
     <Layout>
       <LandingPagePartial />
@@ -18,6 +20,7 @@ const Index = () => {
       <EmphasePartial />
       <NumberPartial />
       <ActionPartial style="default" />
+      <ContestModal />
     </Layout>
   );
 };

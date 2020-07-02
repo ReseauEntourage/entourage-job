@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       description: DataTypes.TEXT,
+      order: {
+        type: DataTypes.INTEGER,
+        defaultValue: -1
+      }
     },
     {}
   );
