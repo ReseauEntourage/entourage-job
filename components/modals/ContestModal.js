@@ -1,5 +1,5 @@
 /* global UIkit */
-import UIkit from "uikit";
+
 import React, {useState, useEffect} from 'react';
 import {Button, CloseButtonNoSSR, IconNoSSR} from "../utils";
 import {EXTERNAL_LINKS} from '../../constants';
@@ -37,9 +37,15 @@ const ContestModal = () => {
       }
     }, 1000);
 
-    UIkit.modal(`#modal-contest`).show();
+    const modalInterval = setInterval(() => {
+      if(UIkit) {
+        clearInterval(modalInterval);
+        UIkit.modal(`#modal-contest`).show();
+      }
+    }, 1000);
 
     return () => {
+      clearInterval(modalInterval);
       clearInterval(updateInterval);
     }
 
