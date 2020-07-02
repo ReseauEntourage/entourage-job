@@ -1988,6 +1988,9 @@ select.uk-form-width-xsmall {
   background-color: transparent;
   color: #333;
   border-color: #b2b2b2;
+  color: #000000;
+  border-color: #d8d8d8;
+  background-color: #f2f2f2;
 }
 /* OnClick + Active */
 .uk-button-default:active,
@@ -1995,6 +1998,9 @@ select.uk-form-width-xsmall {
   background-color: transparent;
   color: #333;
   border-color: #999999;
+  color: #000000;
+  border-color: #cccccc;
+  background-color: #e6e6e6;
 }
 /*
  * Primary
@@ -10655,9 +10661,21 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-button-default,
 .uk-overlay-primary .uk-button-default,
 .uk-offcanvas-bar .uk-button-default {
-  background-color: transparent;
   color: #fff;
   border-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid #e5e5e5;
+  text-transform: uppercase;
+  transition: 0.1s ease-in-out;
+  transition-property: color, background-color, border-color;
+  color: black;
+  background-color: white;
+  background-image: none;
+  text-transform: none;
+  border: solid 1px #e5e5e5;
+  padding: 0px 20px;
+  border-radius: 2px;
+  background-color: transparent;
+  color: white;
 }
 .uk-light .uk-button-default:hover,
 .uk-light .uk-button-default:focus,
@@ -10684,6 +10702,8 @@ iframe.uk-cover {
   background-color: transparent;
   color: #fff;
   border-color: #fff;
+  color: #f2f2f2;
+  border-color: #d8d8d8;
 }
 .uk-light .uk-button-default:active,
 .uk-light .uk-button-default.uk-active,
@@ -10710,6 +10730,8 @@ iframe.uk-cover {
   background-color: transparent;
   color: #fff;
   border-color: #fff;
+  color: #e6e6e6;
+  border-color: #cccccc;
 }
 .uk-light .uk-button-primary,
 .uk-section-primary:not(.uk-preserve-color) .uk-button-primary,

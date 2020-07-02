@@ -12,6 +12,7 @@ import {
 } from '../utils';
 import './Header.less';
 import Button from "../utils/Button";
+import {EXTERNAL_LINKS} from '../../constants';
 
 const Header = ({ isHome }) => {
   const LINKS = [
@@ -43,6 +44,7 @@ const Header = ({ isHome }) => {
                       <div className="uk-navbar-item uk-padding-remove-horizontal">
                         <Button
                           href={value.href}
+                          style='default'
                           className="uk-padding-small uk-padding-remove-vertical">
                             {value.name}
                         </Button>
@@ -58,6 +60,15 @@ const Header = ({ isHome }) => {
                 }
               ),
               // separateurs en css .ent-nav
+              <div className="uk-navbar-item uk-visible@m uk-light">
+                <Button
+                  href={EXTERNAL_LINKS.LKO_BLOG}
+                  isExternal
+                  newTab
+                  style='default'>
+                  Actualités{' '}<IconNoSSR name="chevron-right" />
+                </Button>
+              </div>,
               <div className="uk-navbar-item uk-visible@m">
                 <Button
                   href="/lescandidats"

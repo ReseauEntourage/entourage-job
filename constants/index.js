@@ -117,6 +117,7 @@ const EXTERNAL_LINKS = {
   DONATION: "https://entourage.iraiser.eu/linkedout/~mon-don",
   LKO_VG: "https://www.linkedout-vendeeglobe.com",
   LKO_VG_CONTEST: "https://www.linkedout-vendeeglobe.com/vendeearctique",
+  LKO_BLOG: "https://blog.linkedout.fr",
 };
 
 module.exports = {
