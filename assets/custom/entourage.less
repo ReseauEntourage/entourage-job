@@ -52,6 +52,36 @@
   .hook-button();
 }
 
+.hook-button-default-hover() {
+  color: darken(black, 5%);
+  border-color: darken(#e5e5e5, 5%);
+  background-color: darken(white, 5%);
+}
+
+.hook-button-default-active() {
+  color: darken(black, 10%);
+  border-color: darken(#e5e5e5, 10%);
+  background-color: darken(white, 10%);
+}
+
+
+.hook-inverse-button-default() {
+  .hook-button-default();
+  background-color: transparent;
+  color: white;
+}
+
+.hook-inverse-button-default-hover() {
+  color: darken(white, 5%);
+  border-color: darken(#e5e5e5, 5%);
+}
+
+.hook-inverse-button-default-active() {
+  color: darken(white, 10%);
+  border-color: darken(#e5e5e5, 10%);
+}
+
+
 .hook-button-primary() {
   .hook-button();
   color: white;

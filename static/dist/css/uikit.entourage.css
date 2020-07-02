@@ -1,4 +1,4 @@
-/*! UIkit 3.4.6 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
+/*! UIkit 3.5.4 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 /* ========================================================================
    Component: Base
  ========================================================================== */
@@ -736,29 +736,10 @@ a.uk-link-reset,
   list-style: none;
 }
 /*
- * Micro clearfix
- */
-.uk-list > li::before,
-.uk-list > li::after {
-  content: "";
-  display: table;
-}
-.uk-list > li::after {
-  clear: both;
-}
-/*
  * Remove margin from the last-child
  */
 .uk-list > li > :last-child {
   margin-bottom: 0;
-}
-/*
- * Nested lists
- */
-.uk-list ul {
-  margin: 0;
-  padding-left: 30px;
-  list-style: none;
 }
 /*
  * Style
@@ -766,6 +747,62 @@ a.uk-link-reset,
 .uk-list > li:nth-child(n+2),
 .uk-list > li > ul {
   margin-top: 10px;
+}
+/* Type modifiers
+ ========================================================================== */
+.uk-list-disc,
+.uk-list-circle,
+.uk-list-square,
+.uk-list-decimal,
+.uk-list-hyphen {
+  padding-left: 30px;
+}
+.uk-list-disc {
+  list-style-type: disc;
+}
+.uk-list-circle {
+  list-style-type: circle;
+}
+.uk-list-square {
+  list-style-type: square;
+}
+.uk-list-decimal {
+  list-style-type: decimal;
+}
+.uk-list-hyphen {
+  list-style-type: '–  ';
+}
+/* Color modifiers
+ * Doesn't work in Chrome and Edge yet
+ ========================================================================== */
+.uk-list-muted li::marker {
+  color: #999 !important;
+}
+.uk-list-emphasis li::marker {
+  color: #333 !important;
+}
+.uk-list-primary li::marker {
+  color: #f55f24 !important;
+}
+.uk-list-secondary li::marker {
+  color: #222 !important;
+}
+/* Image bullet modifier
+ ========================================================================== */
+.uk-list-bullet > li {
+  position: relative;
+  padding-left: 30px;
+}
+.uk-list-bullet > li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%226%22%20height%3D%226%22%20viewBox%3D%220%200%206%206%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22black%22%20cx%3D%223%22%20cy%3D%223%22%20r%3D%223%22%20%2F%3E%0A%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
 }
 /* Style modifiers
  ========================================================================== */
@@ -792,27 +829,6 @@ a.uk-link-reset,
 }
 .uk-list-striped > li:nth-child(n+2) {
   margin-top: 0;
-}
-/*
- * Bullet
- * 1. Reset display `table` which causes issues in combination with multi column layouts.
- */
-.uk-list-bullet > li {
-  position: relative;
-  padding-left: calc(22px + 10px);
-}
-.uk-list-bullet > li::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 22px;
-  height: 22px;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%226%22%20height%3D%226%22%20viewBox%3D%220%200%206%206%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22black%22%20cx%3D%223%22%20cy%3D%223%22%20r%3D%223%22%20%2F%3E%0A%3C%2Fsvg%3E");
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  /* 1 */
-  display: block;
 }
 /* Size modifier
  ========================================================================== */
@@ -1988,6 +2004,9 @@ select.uk-form-width-xsmall {
   background-color: transparent;
   color: #333;
   border-color: #b2b2b2;
+  color: #000000;
+  border-color: #d8d8d8;
+  background-color: #f2f2f2;
 }
 /* OnClick + Active */
 .uk-button-default:active,
@@ -1995,6 +2014,9 @@ select.uk-form-width-xsmall {
   background-color: transparent;
   color: #333;
   border-color: #999999;
+  color: #000000;
+  border-color: #cccccc;
+  background-color: #e6e6e6;
 }
 /*
  * Primary
@@ -2226,6 +2248,7 @@ select.uk-form-width-xsmall {
  * 1. Make it work with `100vh` and height in general
  */
 .uk-section {
+  display: flow-root;
   box-sizing: border-box;
   /* 1 */
   padding-top: 40px;
@@ -2237,17 +2260,6 @@ select.uk-form-width-xsmall {
     padding-top: 70px;
     padding-bottom: 70px;
   }
-}
-/*
- * Micro clearfix
- */
-.uk-section::before,
-.uk-section::after {
-  content: "";
-  display: table;
-}
-.uk-section::after {
-  clear: both;
 }
 /*
  * Remove margin from the last-child
@@ -2339,6 +2351,7 @@ select.uk-form-width-xsmall {
  *    unaffected by the padding on different breakpoints. It's important for the size modifiers.
  */
 .uk-container {
+  display: flow-root;
   /* 1 */
   box-sizing: content-box;
   max-width: 1200px;
@@ -2360,17 +2373,6 @@ select.uk-form-width-xsmall {
     padding-left: 40px;
     padding-right: 40px;
   }
-}
-/*
- * Micro clearfix
- */
-.uk-container::before,
-.uk-container::after {
-  content: "";
-  display: table;
-}
-.uk-container::after {
-  clear: both;
 }
 /*
  * Remove margin from the last-child
@@ -2864,6 +2866,7 @@ select.uk-form-width-xsmall {
    Component: Tile
  ========================================================================== */
 .uk-tile {
+  display: flow-root;
   position: relative;
   box-sizing: border-box;
   padding-left: 15px;
@@ -2886,17 +2889,6 @@ select.uk-form-width-xsmall {
     padding-top: 70px;
     padding-bottom: 70px;
   }
-}
-/*
- * Micro clearfix
- */
-.uk-tile::before,
-.uk-tile::after {
-  content: "";
-  display: table;
-}
-.uk-tile::after {
-  clear: both;
 }
 /*
  * Remove margin from the last-child
@@ -2985,12 +2977,15 @@ select.uk-form-width-xsmall {
 /* Sections
  ========================================================================== */
 .uk-card-body {
+  display: flow-root;
   padding: 30px 30px;
 }
 .uk-card-header {
+  display: flow-root;
   padding: 15px 30px;
 }
 .uk-card-footer {
+  display: flow-root;
   padding: 15px 30px;
 }
 /* Desktop and bigger */
@@ -3004,23 +2999,6 @@ select.uk-form-width-xsmall {
   .uk-card-footer {
     padding: 20px 40px;
   }
-}
-/*
- * Micro clearfix
- */
-.uk-card-body::before,
-.uk-card-body::after,
-.uk-card-header::before,
-.uk-card-header::after,
-.uk-card-footer::before,
-.uk-card-footer::after {
-  content: "";
-  display: table;
-}
-.uk-card-body::after,
-.uk-card-header::after,
-.uk-card-footer::after {
-  clear: both;
 }
 /*
  * Remove margin from the last-child
@@ -3521,16 +3499,8 @@ select.uk-form-width-xsmall {
 /* ========================================================================
    Component: Article
  ========================================================================== */
-/*
- * Micro clearfix
- */
-.uk-article::before,
-.uk-article::after {
-  content: "";
-  display: table;
-}
-.uk-article::after {
-  clear: both;
+.uk-article {
+  display: flow-root;
 }
 /*
  * Remove margin from the last-child
@@ -3575,25 +3545,13 @@ select.uk-form-width-xsmall {
 /* Sections
  ========================================================================== */
 .uk-comment-body {
+  display: flow-root;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
 .uk-comment-header {
+  display: flow-root;
   margin-bottom: 20px;
-}
-/*
- * Micro clearfix
- */
-.uk-comment-body::before,
-.uk-comment-body::after,
-.uk-comment-header::before,
-.uk-comment-header::after {
-  content: "";
-  display: table;
-}
-.uk-comment-body::after,
-.uk-comment-header::after {
-  clear: both;
 }
 /*
  * Remove margin from the last-child
@@ -5017,18 +4975,8 @@ ul.uk-nav-sub {
 /* Content
  ========================================================================== */
 .uk-accordion-content {
+  display: flow-root;
   margin-top: 20px;
-}
-/*
- * Micro clearfix
- */
-.uk-accordion-content::before,
-.uk-accordion-content::after {
-  content: "";
-  display: table;
-}
-.uk-accordion-content::after {
-  clear: both;
 }
 /*
  * Remove margin from the last-child
@@ -5290,34 +5238,20 @@ ul.uk-nav-sub {
 /* Sections
  ========================================================================== */
 .uk-modal-body {
+  display: flow-root;
   padding: 30px 30px;
 }
 .uk-modal-header {
+  display: flow-root;
   padding: 15px 30px;
   background: #fff;
   border-bottom: 1px solid #e5e5e5;
 }
 .uk-modal-footer {
+  display: flow-root;
   padding: 15px 30px;
   background: #fff;
   border-top: 1px solid #e5e5e5;
-}
-/*
- * Micro clearfix
- */
-.uk-modal-body::before,
-.uk-modal-body::after,
-.uk-modal-header::before,
-.uk-modal-header::after,
-.uk-modal-footer::before,
-.uk-modal-footer::after {
-  content: "";
-  display: table;
-}
-.uk-modal-body::after,
-.uk-modal-header::after,
-.uk-modal-footer::after {
-  clear: both;
 }
 /*
  * Remove margin from the last-child
@@ -6955,7 +6889,7 @@ ul.uk-nav-sub {
 .uk-width-xlarge {
   width: 600px;
 }
-.uk-width-xxlarge {
+.uk-width-2xlarge {
   width: 750px;
 }
 /* Auto */
@@ -7024,7 +6958,7 @@ ul.uk-nav-sub {
   .uk-width-xlarge\@s {
     width: 600px;
   }
-  .uk-width-xxlarge\@s {
+  .uk-width-2xlarge\@s {
     width: 750px;
   }
   /* Auto */
@@ -7094,7 +7028,7 @@ ul.uk-nav-sub {
   .uk-width-xlarge\@m {
     width: 600px;
   }
-  .uk-width-xxlarge\@m {
+  .uk-width-2xlarge\@m {
     width: 750px;
   }
   /* Auto */
@@ -7164,7 +7098,7 @@ ul.uk-nav-sub {
   .uk-width-xlarge\@l {
     width: 600px;
   }
-  .uk-width-xxlarge\@l {
+  .uk-width-2xlarge\@l {
     width: 750px;
   }
   /* Auto */
@@ -7234,7 +7168,7 @@ ul.uk-nav-sub {
   .uk-width-xlarge\@xl {
     width: 600px;
   }
-  .uk-width-xxlarge\@xl {
+  .uk-width-2xlarge\@xl {
     width: 750px;
   }
   /* Auto */
@@ -7958,19 +7892,9 @@ iframe.uk-cover {
 /* Panel
  ========================================================================== */
 .uk-panel {
+  display: flow-root;
   position: relative;
   box-sizing: border-box;
-}
-/*
- * Micro clearfix
- */
-.uk-panel::before,
-.uk-panel::after {
-  content: "";
-  display: table;
-}
-.uk-panel::after {
-  clear: both;
 }
 /*
  * Remove margin from the last-child
@@ -9980,6 +9904,71 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-divider-vertical {
   border-left-color: rgba(255, 255, 255, 0.2);
 }
+.uk-light .uk-list-muted li::marker,
+.uk-section-primary:not(.uk-preserve-color) .uk-list-muted li::marker,
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-muted li::marker,
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-muted li::marker,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-muted li::marker,
+.uk-card-primary.uk-card-body .uk-list-muted li::marker,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-muted li::marker,
+.uk-card-secondary.uk-card-body .uk-list-muted li::marker,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-muted li::marker,
+.uk-overlay-primary .uk-list-muted li::marker,
+.uk-offcanvas-bar .uk-list-muted li::marker {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+.uk-light .uk-list-emphasis li::marker,
+.uk-section-primary:not(.uk-preserve-color) .uk-list-emphasis li::marker,
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-emphasis li::marker,
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-emphasis li::marker,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-emphasis li::marker,
+.uk-card-primary.uk-card-body .uk-list-emphasis li::marker,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-emphasis li::marker,
+.uk-card-secondary.uk-card-body .uk-list-emphasis li::marker,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-emphasis li::marker,
+.uk-overlay-primary .uk-list-emphasis li::marker,
+.uk-offcanvas-bar .uk-list-emphasis li::marker {
+  color: #fff !important;
+}
+.uk-light .uk-list-primary li::marker,
+.uk-section-primary:not(.uk-preserve-color) .uk-list-primary li::marker,
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-primary li::marker,
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-primary li::marker,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-primary li::marker,
+.uk-card-primary.uk-card-body .uk-list-primary li::marker,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-primary li::marker,
+.uk-card-secondary.uk-card-body .uk-list-primary li::marker,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-primary li::marker,
+.uk-overlay-primary .uk-list-primary li::marker,
+.uk-offcanvas-bar .uk-list-primary li::marker {
+  color: #fff !important;
+}
+.uk-light .uk-list-secondary li::marker,
+.uk-section-primary:not(.uk-preserve-color) .uk-list-secondary li::marker,
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-secondary li::marker,
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-secondary li::marker,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-secondary li::marker,
+.uk-card-primary.uk-card-body .uk-list-secondary li::marker,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-secondary li::marker,
+.uk-card-secondary.uk-card-body .uk-list-secondary li::marker,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-secondary li::marker,
+.uk-overlay-primary .uk-list-secondary li::marker,
+.uk-offcanvas-bar .uk-list-secondary li::marker {
+  color: #fff !important;
+}
+.uk-light .uk-list-bullet > li::before,
+.uk-section-primary:not(.uk-preserve-color) .uk-list-bullet > li::before,
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-bullet > li::before,
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-bullet > li::before,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-bullet > li::before,
+.uk-card-primary.uk-card-body .uk-list-bullet > li::before,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-bullet > li::before,
+.uk-card-secondary.uk-card-body .uk-list-bullet > li::before,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-bullet > li::before,
+.uk-overlay-primary .uk-list-bullet > li::before,
+.uk-offcanvas-bar .uk-list-bullet > li::before {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%226%22%20height%3D%226%22%20viewBox%3D%220%200%206%206%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22rgba%28255,%20255,%20255,%200.7%29%22%20cx%3D%223%22%20cy%3D%223%22%20r%3D%223%22%20%2F%3E%0A%3C%2Fsvg%3E");
+}
 .uk-light .uk-list-divider > li:nth-child(n+2),
 .uk-section-primary:not(.uk-preserve-color) .uk-list-divider > li:nth-child(n+2),
 .uk-section-secondary:not(.uk-preserve-color) .uk-list-divider > li:nth-child(n+2),
@@ -10019,19 +10008,6 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-list-striped > li:nth-of-type(odd),
 .uk-offcanvas-bar .uk-list-striped > li:nth-of-type(odd) {
   background-color: rgba(255, 255, 255, 0.1);
-}
-.uk-light .uk-list-bullet > li::before,
-.uk-section-primary:not(.uk-preserve-color) .uk-list-bullet > li::before,
-.uk-section-secondary:not(.uk-preserve-color) .uk-list-bullet > li::before,
-.uk-tile-primary:not(.uk-preserve-color) .uk-list-bullet > li::before,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-list-bullet > li::before,
-.uk-card-primary.uk-card-body .uk-list-bullet > li::before,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-list-bullet > li::before,
-.uk-card-secondary.uk-card-body .uk-list-bullet > li::before,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-bullet > li::before,
-.uk-overlay-primary .uk-list-bullet > li::before,
-.uk-offcanvas-bar .uk-list-bullet > li::before {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%226%22%20height%3D%226%22%20viewBox%3D%220%200%206%206%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22rgba%28255,%20255,%20255,%200.7%29%22%20cx%3D%223%22%20cy%3D%223%22%20r%3D%223%22%20%2F%3E%0A%3C%2Fsvg%3E");
 }
 .uk-light .uk-table th,
 .uk-section-primary:not(.uk-preserve-color) .uk-table th,
@@ -10655,9 +10631,21 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-button-default,
 .uk-overlay-primary .uk-button-default,
 .uk-offcanvas-bar .uk-button-default {
-  background-color: transparent;
   color: #fff;
   border-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid #e5e5e5;
+  text-transform: uppercase;
+  transition: 0.1s ease-in-out;
+  transition-property: color, background-color, border-color;
+  color: black;
+  background-color: white;
+  background-image: none;
+  text-transform: none;
+  border: solid 1px #e5e5e5;
+  padding: 0px 20px;
+  border-radius: 2px;
+  background-color: transparent;
+  color: white;
 }
 .uk-light .uk-button-default:hover,
 .uk-light .uk-button-default:focus,
@@ -10684,6 +10672,8 @@ iframe.uk-cover {
   background-color: transparent;
   color: #fff;
   border-color: #fff;
+  color: #f2f2f2;
+  border-color: #d8d8d8;
 }
 .uk-light .uk-button-default:active,
 .uk-light .uk-button-default.uk-active,
@@ -10710,6 +10700,8 @@ iframe.uk-cover {
   background-color: transparent;
   color: #fff;
   border-color: #fff;
+  color: #e6e6e6;
+  border-color: #cccccc;
 }
 .uk-light .uk-button-primary,
 .uk-section-primary:not(.uk-preserve-color) .uk-button-primary,
