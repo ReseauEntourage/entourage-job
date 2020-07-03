@@ -305,60 +305,62 @@ const Parametres = () => {
             />
           </div>
         </GridNoSSR>
-        <ModalEdit
-          submitText="Envoyer"
-          id="modal-personal-data"
-          title="Édition - Informations personelles"
-          defaultValues={{ phone: userData.phone }}
-          formSchema={schemaPersonalData}
-          onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
-            if (phone !== userData.phone) {
-              setLoadingPersonal(true);
-              Api.put(`/api/v1/user/${userData.id}`, {
-                phone,
-              })
-                .then(() => {
-                  closeModal();
-                  setUserData({ ...userData, phone });
-                  UIkit.notification(
-                    'Votre numéro de téléphone a bien été mis à jour',
-                    'success'
-                  );
+        <div>
+          <ModalEdit
+            submitText="Envoyer"
+            id="modal-personal-data"
+            title="Édition - Informations personelles"
+            defaultValues={{ phone: userData.phone }}
+            formSchema={schemaPersonalData}
+            onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
+              if (phone !== userData.phone) {
+                setLoadingPersonal(true);
+                Api.put(`/api/v1/user/${userData.id}`, {
+                  phone,
                 })
-                .catch((err) => {
-                  console.error(err);
-                  UIkit.notification(
-                    "Une erreur c'est produite lors de la mise à jour de votre email",
-                    'danger'
-                  );
-                })
-                .finally(() => setLoadingPersonal(false));
-            }
+                  .then(() => {
+                    closeModal();
+                    setUserData({ ...userData, phone });
+                    UIkit.notification(
+                      'Votre numéro de téléphone a bien été mis à jour',
+                      'success'
+                    );
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    UIkit.notification(
+                      "Une erreur c'est produite lors de la mise à jour de votre email",
+                      'danger'
+                    );
+                  })
+                  .finally(() => setLoadingPersonal(false));
+              }
 
-            if (userData.email === oldEmail && newEmail0 === newEmail1) {
-              setLoadingPersonal(true);
-              Api.put(`/api/v1/user/${userData.id}`, {
-                email: newEmail0,
-              })
-                .then(() => {
-                  closeModal();
-                  setUserData({ ...userData, email: newEmail0 });
-                  UIkit.notification(
-                    'Votre email a bien été mis à jour',
-                    'success'
-                  );
+              if (userData.email === oldEmail && newEmail0 === newEmail1) {
+                setLoadingPersonal(true);
+                Api.put(`/api/v1/user/${userData.id}`, {
+                  email: newEmail0,
                 })
-                .catch((err) => {
-                  console.error(err);
-                  UIkit.notification(
-                    "Une erreur c'est produite lors de la mise à jour de votre email",
-                    'danger'
-                  );
-                })
-                .finally(() => setLoadingPersonal(false));
-            }
-          }}
-        />
+                  .then(() => {
+                    closeModal();
+                    setUserData({ ...userData, email: newEmail0 });
+                    UIkit.notification(
+                      'Votre email a bien été mis à jour',
+                      'success'
+                    );
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    UIkit.notification(
+                      "Une erreur c'est produite lors de la mise à jour de votre email",
+                      'danger'
+                    );
+                  })
+                  .finally(() => setLoadingPersonal(false));
+              }
+            }}
+          />
+        </div>
       </Section>
     </LayoutBackOffice>
   );

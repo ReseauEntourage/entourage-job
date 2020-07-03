@@ -14,57 +14,59 @@ const ModalShareCV = ({ firstName, id }) => {
   const [form, resetForm] = useResetForm();
 
   return (
-    <StepperModal
-      id={id}
-      title="Merci pour votre partage."
-      resetForm={resetForm}
-      composers={[
-        (close, next) => (
-          <>
-            <p>
-              Pour {firstName}, votre action peut tout changer !<br />
-              <br />
-              Vous souhaitez être informé(e) de la suite pour {firstName} ? Et du
-              projet LinkedOut ?<br />
-              Laissez-nous votre adresse mail :
-            </p>
-            <FormWithValidation
-              ref={form}
-              formSchema={schemaGetEmail}
-              submitText="Envoyer"
-              onCancel={close}
-              onSubmit={({ email }) => {
-                Axios.post('/api/v1/cv/share', { email })
-                  .then(next)
-                  .catch(() =>
-                    UIkit.notification('Une erreur est survenue', 'danger')
-                  );
-              }}
-            />
-          </>
-        ),
-        (close) => (
-          <div className="uk-flex uk-flex-column">
-            <p>
-              Saviez-vous que LinkedOut est porté par l&apos;association Entourage
-              ?
-            </p>
-            <Button
-              isExternal
-              newTab
-              href={EXTERNAL_LINKS.ENTOURAGE}
-              style="link">
-              {EXTERNAL_LINKS.ENTOURAGE}
-            </Button>
-            <div className="uk-margin-top uk-flex uk-flex-right">
-              <Button style="default" onClick={() => close()}>
-                Fermer
+    <div>
+      <StepperModal
+        id={id}
+        title="Merci pour votre partage."
+        resetForm={resetForm}
+        composers={[
+          (close, next) => (
+            <>
+              <p>
+                Pour {firstName}, votre action peut tout changer !<br />
+                <br />
+                Vous souhaitez être informé(e) de la suite pour {firstName} ? Et du
+                projet LinkedOut ?<br />
+                Laissez-nous votre adresse mail :
+              </p>
+              <FormWithValidation
+                ref={form}
+                formSchema={schemaGetEmail}
+                submitText="Envoyer"
+                onCancel={close}
+                onSubmit={({ email }) => {
+                  Axios.post('/api/v1/cv/share', { email })
+                    .then(next)
+                    .catch(() =>
+                      UIkit.notification('Une erreur est survenue', 'danger')
+                    );
+                }}
+              />
+            </>
+          ),
+          (close) => (
+            <div className="uk-flex uk-flex-column">
+              <p>
+                Saviez-vous que LinkedOut est porté par l&apos;association Entourage
+                ?
+              </p>
+              <Button
+                isExternal
+                newTab
+                href={EXTERNAL_LINKS.ENTOURAGE}
+                style="link">
+                {EXTERNAL_LINKS.ENTOURAGE}
               </Button>
+              <div className="uk-margin-top uk-flex uk-flex-right">
+                <Button style="default" onClick={() => close()}>
+                  Fermer
+                </Button>
+              </div>
             </div>
-          </div>
-        ),
-      ]}
-    />
+          ),
+        ]}
+      />
+    </div>
   );
 }
 ModalShareCV.propTypes = {

@@ -448,29 +448,31 @@ const CVFiche = ({ cv, actionDisabled }) => {
           toggle="target: #modal-send-opportunity">
           Contactez-moi{' '}<IconNoSSR name="chevron-right" />
         </Button>
-        <ModalEdit
-          id="modal-send-opportunity"
-          title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
-          description={
-            "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez le coach plus bas dans la page CV !"
-          }
-          submitText="Envoyer"
-          defaultValues={{
-            isPublic: false,
-            candidatId: {
-              value: cv.UserId,
-              label: `${cv.user.candidat.firstName}`,
-            },
-          }}
-          formSchema={schema}
-          onSubmit={(fields, closeModal) => {
-            postOpportunity({
-              ...fields,
-              usersId: [cv.UserId],
-              date: Date.now(),
-            }, closeModal);
-          }}
-        />
+        <div>
+          <ModalEdit
+            id="modal-send-opportunity"
+            title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
+            description={
+              "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez le coach plus bas dans la page CV !"
+            }
+            submitText="Envoyer"
+            defaultValues={{
+              isPublic: false,
+              candidatId: {
+                value: cv.UserId,
+                label: `${cv.user.candidat.firstName}`,
+              },
+            }}
+            formSchema={schema}
+            onSubmit={(fields, closeModal) => {
+              postOpportunity({
+                ...fields,
+                usersId: [cv.UserId],
+                date: Date.now(),
+              }, closeModal);
+            }}
+          />
+        </div>
       </div>
     </div>
   );

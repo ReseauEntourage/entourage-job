@@ -211,13 +211,15 @@ const Opportunites = () => {
                   );
                 })}
             </Filter>
-            <ModalOffer
-              currentOffer={currentOffer}
-              setCurrentOffer={(offer) => {
-                setCurrentOffer(offer);
-                fetchData(candidatId);
-              }}
-            />
+            <div>
+              <ModalOffer
+                currentOffer={currentOffer}
+                setCurrentOffer={(offer) => {
+                  setCurrentOffer(offer);
+                  fetchData(candidatId);
+                }}
+              />
+            </div>
           </>
         )}
       </Section>

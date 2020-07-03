@@ -201,13 +201,15 @@ const LesOpportunites = () => {
                   );
                 })}
             </Filter>
-            <ModalOfferAdmin
-              currentOffer={currentOffer}
-              setCurrentOffer={(offer) => {
-                setCurrentOffer(offer);
-                fetchData();
-              }}
-            />
+            <div>
+              <ModalOfferAdmin
+                currentOffer={currentOffer}
+                setCurrentOffer={(offer) => {
+                  setCurrentOffer(offer);
+                  fetchData();
+                }}
+              />
+            </div>
           </>
         )}
       </Section>
