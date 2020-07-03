@@ -13,7 +13,10 @@ import * as gtag from '../lib/gtag';
 
 class EntourageApp extends App {
   componentDidMount() {
-    Router.events.on('routeChangeComplete', (url) => gtag.pageview(url));
+    Router.events.on('routeChangeComplete', (url) => {
+      gtag.pageview(url);
+      window.scrollTo(0, 0);
+    });
   }
 
   render() {
