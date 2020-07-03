@@ -1,6 +1,7 @@
 import React from 'react';
 import {GridNoSSR, ImgNoSSR, Background, Section, IconNoSSR} from '../utils';
 import Button from "../utils/Button";
+import {EXTERNAL_LINKS} from "../../constants";
 
 const AssociationEntourage = () => (
   <Background blend={{ colorHex: '#484848' }}>
@@ -28,9 +29,10 @@ const AssociationEntourage = () => (
               coordonner des actions de solidarité à l’échelle locale.
             </p>
             <Button
-              href="https://www.entourage.social"
+              href={EXTERNAL_LINKS.ENTOURAGE}
               style="default"
-              isExternal>
+              isExternal
+              newTab>
               Voir le site{' '}<IconNoSSR name="chevron-right" />
             </Button>
           </div>

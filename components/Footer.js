@@ -133,7 +133,8 @@ const Footer = () => {
               <li className="uk-text-capitalize">
                 <SimpleLink
                   isExternal
-                  href="https://www.entourage.social/politique-de-confidentialite/"
+                  target
+                  href={EXTERNAL_LINKS.LEGAL_MENTIONS}
                 >
                   Mentions légales
                 </SimpleLink>
@@ -142,8 +143,8 @@ const Footer = () => {
                 <SimpleLink href="/contact">Contact</SimpleLink>
               </li>
               <li className="uk-text-capitalize">
-                <SimpleLink href="https://www.entourage.social" isExternal>
-                  Entourage social
+                <SimpleLink href={EXTERNAL_LINKS.ENTOURAGE} isExternal>
+                  Association Entourage
                 </SimpleLink>
               </li>
             </ul>

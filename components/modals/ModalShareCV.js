@@ -8,6 +8,7 @@ import schemaGetEmail from '../forms/schema/fromGetEmail.json';
 import Axios from '../../Axios';
 import { Button } from '../utils';
 import {useResetForm} from "../../hooks";
+import {EXTERNAL_LINKS} from "../../constants";
 
 const ModalShareCV = ({ firstName, id }) => {
   const [form, resetForm] = useResetForm();
@@ -48,8 +49,12 @@ const ModalShareCV = ({ firstName, id }) => {
               Saviez-vous que LinkedOut est porté par l&apos;association Entourage
               ?
             </p>
-            <Button isExternal href="https://www.entourage.social/" style="link">
-              https://www.entourage.social/
+            <Button
+              isExternal
+              newTab
+              href={EXTERNAL_LINKS.ENTOURAGE}
+              style="link">
+              {EXTERNAL_LINKS.ENTOURAGE}
             </Button>
             <div className="uk-margin-top uk-flex uk-flex-right">
               <Button style="default" onClick={() => close()}>
