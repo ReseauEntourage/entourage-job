@@ -30,7 +30,10 @@ const Highlights = () => {
   ];
 
   return (
-    <Section style='muted' id="highlights" container="small">
+    <Section
+      id="highlights"
+      style='muted'
+      container="small">
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
           Que vous apporte{' '}<span className="uk-text-primary">LinkedOut&nbsp;?</span>

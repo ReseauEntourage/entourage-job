@@ -32,10 +32,12 @@ const WaysToJoin = () => {
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
           Plusieurs <span className="uk-text-primary">manières de rejoindre</span> LinkedOut
         </h2>
-        <div className="uk-container-small uk-margin-large-bottom">
-          <Carousel containerClasses="uk-child-width-1-1">
-            {content.map(({img, description}, index) => <CarouselItem index={index} img={img} description={description} />)}
-          </Carousel>
+        <div className="uk-width-expand">
+          <div className="uk-container-small uk-margin-large-bottom uk-margin-auto">
+            <Carousel containerClasses="uk-child-width-1-1">
+              {content.map(({img, description}, index) => <CarouselItem index={index} img={img} description={description} />)}
+            </Carousel>
+          </div>
         </div>
         <HireCTA />
       </div>
