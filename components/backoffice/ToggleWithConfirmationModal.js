@@ -41,40 +41,42 @@ const ToggleWithConfirmationModal = ({
           <span className="uk-margin-small-left">{title}</span>
         </label>
       </div>
-      <ModalGeneric id={`modal-confirm-${id}`}>
-        {(closeModal) => (
-          <>
-            <CloseButtonNoSSR className="uk-modal-close-default" />
-            <HeaderModal>{modalTitle}</HeaderModal>
-            {modalDescription && (
-              <p
-                className="uk-text-lead"
-                style={{
-                  lineHeight: '1.2',
-                  fontSize: '1.2rem',
-                  fontWeight: '500',
-                }}
-              >
-                {modalDescription}
-              </p>
-            )}
-            <GridNoSSR className="uk-grid-small uk-flex-center uk-margin-large-top">
-              <Button style="default" onClick={closeModal}>
-                Annuler
-              </Button>
-              <Button
-                style="primary"
-                onClick={() => {
-                  onToggle(true).then(() => setToggle(true));
-                  closeModal();
-                }}
-              >
-                {modalConfirmation}
-              </Button>
-            </GridNoSSR>
-          </>
-        )}
-      </ModalGeneric>
+      <div>
+        <ModalGeneric id={`modal-confirm-${id}`}>
+          {(closeModal) => (
+            <>
+              <CloseButtonNoSSR className="uk-modal-close-default" />
+              <HeaderModal>{modalTitle}</HeaderModal>
+              {modalDescription && (
+                <p
+                  className="uk-text-lead"
+                  style={{
+                    lineHeight: '1.2',
+                    fontSize: '1.2rem',
+                    fontWeight: '500',
+                  }}
+                >
+                  {modalDescription}
+                </p>
+              )}
+              <GridNoSSR className="uk-grid-small uk-flex-center uk-margin-large-top">
+                <Button style="default" onClick={closeModal}>
+                  Annuler
+                </Button>
+                <Button
+                  style="primary"
+                  onClick={() => {
+                    onToggle(true).then(() => setToggle(true));
+                    closeModal();
+                  }}
+                >
+                  {modalConfirmation}
+                </Button>
+              </GridNoSSR>
+            </>
+          )}
+        </ModalGeneric>
+      </div>
     </>
   );
 };

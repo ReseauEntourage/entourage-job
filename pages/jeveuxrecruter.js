@@ -57,17 +57,17 @@ const JeVeuxRecruter = () => {
           </div>
         </div>
         <div className="uk-margin-medium-top">
-          <img src="../static/img/candidats.png" alt="" />
+          <img src="../static/img/candidats.jpg" alt="" />
             <div className="uk-background-primary uk-light uk-padding uk-flex uk-flex-center">
               <div className="uk-container-small">
                 <h4 className="uk-align-center uk-text-center uk-margin-remove">
-                  <IconNoSSR name="triangle-right"/>Personnes ayant connus des parcours de rue
+                  <IconNoSSR name="triangle-right"/>Personnes ayant connu des parcours de rue
                   <br/>
                   <br/>
-                  <IconNoSSR name="triangle-right"/>Personnes accueillies dans des structures d&apos;hébergement temporaires (hotels sociaux, centre d&apos;hébergement d&apos;urgence, etc.)
+                  <IconNoSSR name="triangle-right"/>Personnes accueillies dans des structures d&apos;hébergement temporaire (hôtels sociaux, centres d&apos;hébergement d&apos;urgence, etc.)
                   <br/>
                   <br/>
-                  <IconNoSSR name="triangle-right"/>Personnes sortants de parcours d&apos;insertion, jeunes en précarité&nbsp;...
+                  <IconNoSSR name="triangle-right"/>Personnes sortant de parcours d&apos;insertion, jeunes en précarité&nbsp;...
                 </h4>
               </div>
             </div>
@@ -81,59 +81,61 @@ const JeVeuxRecruter = () => {
         <Reviews />
       */}
       <DiscoverPartial style='default'/>
-      <StepperModal
-        id="modal-offer-add"
-        title="Proposer une opportunité"
-        resetForm={resetForm}
-        composers={[
-          (closeModal, nextStep) => (
-            <div>
-              <p>
-                Cet espace est dédié aux potentiels recruteurs qui souhaitent
-                proposer des opportunités aux candidats. Écrivez vos mots
-                d&apos;encouragement ou contactez le coach plus bas dans la
-                page CV !
-              </p>
-              <FormWithValidation
-                ref={form}
-                submitText="Envoyer"
-                formSchema={schema}
-                onCancel={closeModal}
-                onSubmit={(opportunity) => {
-                  Api.post('/api/v1/opportunity/', opportunity)
-                    .then(nextStep)
-                    .catch((error) => {
-                      console.error(error);
-                      UIkit.notification(
-                        "Une erreur s'est produite lors de l'envoie de l'offre",
-                        { pos: 'bottom-center', status: 'danger' }
-                      );
-                    });
-                }}
-                defaultValues={{
-                  isPublic: true
-                }}
-              />
-            </div>
-          ),
-          (closeModal) => (
-            <div className="uk-flex uk-flex-center uk-margin-large">
-              <div className="uk-card uk-card-body uk-text-center">
-                <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
-                <p className="uk-text-lead">
-                  Merci pour votre offre, nous reviendrons bientôt vers vous.
+      <div>
+        <StepperModal
+          id="modal-offer-add"
+          title="Proposer une opportunité"
+          resetForm={resetForm}
+          composers={[
+            (closeModal, nextStep) => (
+              <div>
+                <p>
+                  Cet espace est dédié aux potentiels recruteurs qui souhaitent
+                  proposer des opportunités aux candidats. Écrivez vos mots
+                  d&apos;encouragement ou contactez le coach plus bas dans la
+                  page CV !
                 </p>
-                <Button
-                  style="secondary"
-                  onClick={closeModal}
-                >
-                  Fermer
-                </Button>
+                <FormWithValidation
+                  ref={form}
+                  submitText="Envoyer"
+                  formSchema={schema}
+                  onCancel={closeModal}
+                  onSubmit={(opportunity) => {
+                    Api.post('/api/v1/opportunity/', opportunity)
+                      .then(nextStep)
+                      .catch((error) => {
+                        console.error(error);
+                        UIkit.notification(
+                          "Une erreur s'est produite lors de l'envoie de l'offre",
+                          { pos: 'bottom-center', status: 'danger' }
+                        );
+                      });
+                  }}
+                  defaultValues={{
+                    isPublic: true
+                  }}
+                />
               </div>
-            </div>
-          ),
-        ]}
-      />
+            ),
+            (closeModal) => (
+              <div className="uk-flex uk-flex-center uk-margin-large">
+                <div className="uk-card uk-card-body uk-text-center">
+                  <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
+                  <p className="uk-text-lead">
+                    Merci pour votre offre, nous reviendrons bientôt vers vous.
+                  </p>
+                  <Button
+                    style="secondary"
+                    onClick={closeModal}
+                  >
+                    Fermer
+                  </Button>
+                </div>
+              </div>
+            ),
+          ]}
+        />
+      </div>
     </Layout>
   );
 };

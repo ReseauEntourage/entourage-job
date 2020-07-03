@@ -1,9 +1,8 @@
 import React from 'react';
 import {Section} from '../utils';
-import MultipleCTA from "../partials/MultipleCTA";
 import HireCTA from "../partials/HireCTA";
 import Carousel from "../utils/Carousel";
-import Grid from "../utils/Grid";
+import CarouselItem from "../partials/CarouselItem";
 
 const WaysToJoin = () => {
   const content = [
@@ -34,23 +33,9 @@ const WaysToJoin = () => {
           Plusieurs <span className="uk-text-primary">manières de rejoindre</span> LinkedOut
         </h2>
         <div className="uk-container-small uk-margin-large-bottom">
-          <Carousel containerClasses="uk-child-width-1-1" itemRenderer={(({description, img}, index) => {
-            return (
-              <li key={index.toString()} className="uk-flex uk-flex-middle">
-                <Grid
-                  childWidths={[`1-2@m`]}
-                  match
-                  className="uk-padding-large uk-padding-remove-vertical uk-margin-medium-top">
-                  <div className="uk-flex-1">
-                    <img src={img} width="" height="" alt="" />
-                  </div>
-                  <div className="uk-flex uk-flex-1 uk-flex-center uk-flex-middle uk-padding-small">
-                    {description}
-                  </div>
-                </Grid>
-              </li>
-            );
-          })} items={content} />
+          <Carousel containerClasses="uk-child-width-1-1">
+            {content.map(({img, description}, index) => <CarouselItem index={index} img={img} description={description} />)}
+          </Carousel>
         </div>
         <HireCTA />
       </div>

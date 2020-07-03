@@ -136,44 +136,50 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           setCurrentDefaultValue={setCurrentDefaultValue}/>
       </div>
       {onChange && (
-        <>
-          <ModalEdit
-            id="modal-experience-add"
-            title="Ajout - Mon expérience"
-            formSchema={schemaformEditExperience}
-            onSubmit={(fields, closeModal) => {
-              closeModal();
-              onChange({
-                experiences: [...sortedExperiences, {
-                  ...fields,
-                  order: experiences.reduce((acc, val) => {
-                    return ( acc === undefined || val.order > acc ) ? val.order : acc;
-                  }, []) + 1
-                }]
-              })
-            }}
-          />
-          <ModalEdit
-            id="modal-experience-edit"
-            title="Édition - Mon expérience"
-            formSchema={schemaformEditExperience}
-            defaultValues={currentDefaultValue}
-            onSubmit={(fields, closeModal) => {
-              closeModal();
-              sortedExperiences[currentIndex] = fields;
-              onChange({ experiences: sortedExperiences });
-            }}
-          />
-          <ModalConfirm
-            id="modal-experience-remove"
-            text="Êtes-vous sûr(e) de vouloir supprimer cette expérience ?"
-            buttonText="Supprimer"
-            onConfirm={() => {
-              sortedExperiences.splice(currentIndex, 1);
-              updateExperiencesOrder(sortedExperiences);
-            }}
-          />
-        </>
+        <div>
+          <div>
+            <ModalEdit
+              id="modal-experience-add"
+              title="Ajout - Mon expérience"
+              formSchema={schemaformEditExperience}
+              onSubmit={(fields, closeModal) => {
+                closeModal();
+                onChange({
+                  experiences: [...sortedExperiences, {
+                    ...fields,
+                    order: experiences.reduce((acc, val) => {
+                      return ( acc === undefined || val.order > acc ) ? val.order : acc;
+                    }, []) + 1
+                  }]
+                })
+              }}
+            />
+          </div>
+          <div>
+            <ModalEdit
+              id="modal-experience-edit"
+              title="Édition - Mon expérience"
+              formSchema={schemaformEditExperience}
+              defaultValues={currentDefaultValue}
+              onSubmit={(fields, closeModal) => {
+                closeModal();
+                sortedExperiences[currentIndex] = fields;
+                onChange({ experiences: sortedExperiences });
+              }}
+            />
+          </div>
+          <div>
+            <ModalConfirm
+              id="modal-experience-remove"
+              text="Êtes-vous sûr(e) de vouloir supprimer cette expérience ?"
+              buttonText="Supprimer"
+              onConfirm={() => {
+                sortedExperiences.splice(currentIndex, 1);
+                updateExperiencesOrder(sortedExperiences);
+              }}
+            />
+          </div>
+        </div>
       )}
     </>
   );

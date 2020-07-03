@@ -57,6 +57,98 @@ const CVFiche = ({ cv, actionDisabled }) => {
 
   const experiences = sortExperiences(cv.experiences);
 
+  const shareSection = () => {
+    return (
+      <>
+        <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom uk-text-center uk-text-muted">
+          Partager mon CV
+        </p>
+        <GridNoSSR row gap="small" center>
+          <LinkedinShareButton
+            disabled={actionDisabled}
+            onShareWindowClose={openNewsletterModal}
+            url={link}
+            title={title}
+            description={sharedDescription}
+            style={{
+              cursor: !actionDisabled && 'pointer',
+              color: actionDisabled ? '#999' : 'white',
+              backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
+              opacity: 1,
+            }}
+            className="uk-icon-link uk-icon-button uk-background-primary"
+          >
+            <IconNoSSR
+              className={!actionDisabled ? 'ent-text-white' : undefined}
+              name="linkedin"
+              ratio={1.2}
+            />
+          </LinkedinShareButton>
+          <FacebookShareButton
+            disabled={actionDisabled}
+            onShareWindowClose={openNewsletterModal}
+            url={link}
+            quote={sharedDescription}
+            hashtags={hashtags}
+            style={{
+              cursor: !actionDisabled && 'pointer',
+              color: actionDisabled ? '#999' : 'white',
+              backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
+              opacity: 1,
+            }}
+            className="uk-icon-link uk-icon-button uk-background-primary"
+          >
+            <IconNoSSR
+              className={!actionDisabled ? 'ent-text-white' : undefined}
+              name="facebook"
+              ratio={1.2}
+            />
+          </FacebookShareButton>
+          <TwitterShareButton
+            disabled={actionDisabled}
+            onShareWindowClose={openNewsletterModal}
+            url={link}
+            title={sharedDescription}
+            hashtags={hashtags}
+            via="R_Entourage"
+            style={{
+              cursor: !actionDisabled && 'pointer',
+              color: actionDisabled ? '#999' : 'white',
+              backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
+              opacity: 1,
+            }}
+            className="uk-icon-link uk-icon-button uk-background-primary"
+          >
+            <IconNoSSR
+              className={!actionDisabled ? 'ent-text-white' : undefined}
+              name="twitter"
+              ratio={1.2}
+            />
+          </TwitterShareButton>
+          <WhatsappShareButton
+            disabled={actionDisabled}
+            onShareWindowClose={openNewsletterModal}
+            url={link}
+            title={sharedDescription}
+            style={{
+              cursor: !actionDisabled && 'pointer',
+              color: actionDisabled ? '#999' : 'white',
+              backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
+              opacity: 1,
+            }}
+            className="uk-icon-link uk-icon-button uk-background-primary"
+          >
+            <IconNoSSR
+              className={!actionDisabled && 'ent-text-white'}
+              name="whatsapp"
+              ratio={1.2}
+            />
+          </WhatsappShareButton>
+        </GridNoSSR>
+        </>
+    )
+  };
+
   return (
     <div id="cv-fiche" className="uk-container uk-position-relative">
       <div className="uk-card uk-card-default uk-card-body uk-card-large uk-margin-medium ">
@@ -161,91 +253,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   />
                 </a>
               </div>
-              <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom">
-                Partager mon CV
-              </p>
-              <GridNoSSR row gap="small" center>
-                <LinkedinShareButton
-                  disabled={actionDisabled}
-                  onShareWindowClose={openNewsletterModal}
-                  url={link}
-                  title={title}
-                  description={sharedDescription}
-                  style={{
-                    cursor: !actionDisabled && 'pointer',
-                    color: actionDisabled ? '#999' : 'white',
-                    backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
-                    opacity: 1,
-                  }}
-                  className="uk-icon-link uk-icon-button uk-background-primary"
-                >
-                  <IconNoSSR
-                    className={!actionDisabled ? 'ent-text-white' : undefined}
-                    name="linkedin"
-                    ratio={1.2}
-                  />
-                </LinkedinShareButton>
-                <FacebookShareButton
-                  disabled={actionDisabled}
-                  onShareWindowClose={openNewsletterModal}
-                  url={link}
-                  quote={sharedDescription}
-                  hashtags={hashtags}
-                  style={{
-                    cursor: !actionDisabled && 'pointer',
-                    color: actionDisabled ? '#999' : 'white',
-                    backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
-                    opacity: 1,
-                  }}
-                  className="uk-icon-link uk-icon-button uk-background-primary"
-                >
-                  <IconNoSSR
-                    className={!actionDisabled ? 'ent-text-white' : undefined}
-                    name="facebook"
-                    ratio={1.2}
-                  />
-                </FacebookShareButton>
-                <TwitterShareButton
-                  disabled={actionDisabled}
-                  onShareWindowClose={openNewsletterModal}
-                  url={link}
-                  title={sharedDescription}
-                  hashtags={hashtags}
-                  via="R_Entourage"
-                  style={{
-                    cursor: !actionDisabled && 'pointer',
-                    color: actionDisabled ? '#999' : 'white',
-                    backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
-                    opacity: 1,
-                  }}
-                  className="uk-icon-link uk-icon-button uk-background-primary"
-                >
-                  <IconNoSSR
-                    className={!actionDisabled ? 'ent-text-white' : undefined}
-                    name="twitter"
-                    ratio={1.2}
-                  />
-                </TwitterShareButton>
-                <WhatsappShareButton
-                  disabled={actionDisabled}
-                  onShareWindowClose={openNewsletterModal}
-                  url={link}
-                  title={sharedDescription}
-                  style={{
-                    cursor: !actionDisabled && 'pointer',
-                    color: actionDisabled ? '#999' : 'white',
-                    backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
-                    opacity: 1,
-                  }}
-                  className="uk-icon-link uk-icon-button uk-background-primary"
-                >
-                  <IconNoSSR
-                    className={!actionDisabled && 'ent-text-white'}
-                    name="whatsapp"
-                    ratio={1.2}
-                  />
-                </WhatsappShareButton>
-              </GridNoSSR>
+              {shareSection()}
               <ModalShareCV
                 id={`info-share-${cv.user.candidat.firstName}`}
                 firstName={cv.user.candidat.firstName}
@@ -409,6 +417,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
               )}
             </GridNoSSR>
           </GridNoSSR>
+          {shareSection()}
+
           <hr />
           <GridNoSSR column middle>
             <p className="uk-text-center uk-width-xlarge@m">
@@ -448,29 +458,31 @@ const CVFiche = ({ cv, actionDisabled }) => {
           toggle="target: #modal-send-opportunity">
           Contactez-moi{' '}<IconNoSSR name="chevron-right" />
         </Button>
-        <ModalEdit
-          id="modal-send-opportunity"
-          title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
-          description={
-            "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez le coach plus bas dans la page CV !"
-          }
-          submitText="Envoyer"
-          defaultValues={{
-            isPublic: false,
-            candidatId: {
-              value: cv.UserId,
-              label: `${cv.user.candidat.firstName}`,
-            },
-          }}
-          formSchema={schema}
-          onSubmit={(fields, closeModal) => {
-            postOpportunity({
-              ...fields,
-              usersId: [cv.UserId],
-              date: Date.now(),
-            }, closeModal);
-          }}
-        />
+        <div>
+          <ModalEdit
+            id="modal-send-opportunity"
+            title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
+            description={
+              "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez le coach plus bas dans la page CV !"
+            }
+            submitText="Envoyer"
+            defaultValues={{
+              isPublic: false,
+              candidatId: {
+                value: cv.UserId,
+                label: `${cv.user.candidat.firstName}`,
+              },
+            }}
+            formSchema={schema}
+            onSubmit={(fields, closeModal) => {
+              postOpportunity({
+                ...fields,
+                usersId: [cv.UserId],
+                date: Date.now(),
+              }, closeModal);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
