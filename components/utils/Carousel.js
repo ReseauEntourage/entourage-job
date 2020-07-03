@@ -2,15 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import {IconNoSSR} from "./Icon";
 
-const Carousel = ({style, items, itemRenderer, containerClasses}) => (
+const Carousel = ({style, children, containerClasses}) => (
   <div className="uk-position-relative" data-uk-slider="">
     <div className={`uk-slider-container uk-background-${style}`}>
       <ul className={`uk-slider-items ${containerClasses}`}>
-        {items.map((item, index) => itemRenderer(item, index))}
+        {children}
       </ul>
-      <ul className="uk-slider-nav uk-dotnav uk-flex-center uk-margin" />
     </div>
-    <div className="uk-hidden@l">
+    <ul className="uk-slider-nav uk-dotnav uk-flex-center uk-margin" />
+    <div className="uk-hidden@m">
       <a
         href="#"
         className="uk-position-center-left uk-position-small"
@@ -34,7 +34,7 @@ const Carousel = ({style, items, itemRenderer, containerClasses}) => (
         />
       </a>
     </div>
-    <div className="uk-visible@l">
+    <div className="uk-visible@m">
       <a
         href="#"
         className="uk-position-center-left-out uk-position-small"
@@ -43,7 +43,7 @@ const Carousel = ({style, items, itemRenderer, containerClasses}) => (
         <IconNoSSR
           className="uk-text-primary"
           name="chevron-left"
-          ratio={2}
+          ratio={3}
         />
       </a>
       <a
@@ -54,7 +54,7 @@ const Carousel = ({style, items, itemRenderer, containerClasses}) => (
         <IconNoSSR
           className="uk-text-primary"
           name="chevron-right"
-          ratio={2}
+          ratio={3}
         />
       </a>
     </div>
@@ -63,8 +63,7 @@ const Carousel = ({style, items, itemRenderer, containerClasses}) => (
 
 Carousel.propTypes = {
   style: PropTypes.string,
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  itemRenderer: PropTypes.func.isRequired,
+  children: PropTypes.element.isRequired,
   containerClasses: PropTypes.string.isRequired
 };
 Carousel.defaultProps = {

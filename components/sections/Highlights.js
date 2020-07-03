@@ -3,6 +3,7 @@ import {IconNoSSR, Section} from '../utils';
 import Layout from "../Layout";
 import Carousel from "../utils/Carousel";
 import Grid from "../utils/Grid";
+import CarouselItem from "../partials/CarouselItem";
 
 const Highlights = () => {
   const highlights = [
@@ -38,23 +39,9 @@ const Highlights = () => {
           LinkedOut vous aide à trouver un travail et à vous intégrer dans votre nouvelle entreprise
         </h3>
         <div className="uk-width-expand">
-          <Carousel containerClasses="uk-child-width-1-1" itemRenderer={(({description, img}, index) => {
-            return (
-              <li key={index.toString()} className="uk-flex uk-flex-middle">
-                <Grid
-                  childWidths={[`1-2@m`]}
-                  match
-                  className="uk-padding-large uk-padding-remove-vertical uk-margin-medium-top">
-                  <div className="uk-flex-1">
-                    <img src={img} width="" height="" alt="" />
-                  </div>
-                  <div className="uk-flex uk-flex-1 uk-flex-center uk-flex-middle uk-padding-small">
-                    {description}
-                  </div>
-                </Grid>
-              </li>
-            );
-          })} items={highlights} />
+          <Carousel containerClasses="uk-child-width-1-1">
+            {highlights.map(({img, description}, index) => <CarouselItem index={index} img={img} description={description} />)}
+          </Carousel>
         </div>
       </div>
     </Section>
