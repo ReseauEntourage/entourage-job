@@ -37,7 +37,7 @@ const CVPage = ({ cv, router }) => {
       metaImage={
         cv.urlImg
           ? `${process.env.AWSS3_URL}${cv.urlImg.replace(
-              '.webp',
+              '.jpg',
               '.preview.jpg'
             )}`
           : `${process.env.SERVER_URL}/static/img/cv/arthur-preview-preview.jpg`

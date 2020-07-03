@@ -55,32 +55,34 @@ const Login = () => {
           </div>
         </div>
       </Section>
-      <StepperModal
-        id="modal-lost-pwd"
-        title="Mot de passe oublié ?"
-        resetForm={resetForm}
-        composers={[
-          (closeModal, nextStep) => (
-            <FormWithValidation
-              ref={form}
-              submitText="Envoyer"
-              formSchema={schemaLostPwd}
-              onCancel={closeModal}
-              onSubmit={(fields, setError) => {
-                Api.post('/api/v1/auth/forgot', fields)
-                  .then(() => nextStep())
-                  .catch(() => setError("Une erreur s'est produite"));
-              }}
-            />
-          ),
-          (closeModal) => (
-            <SuccessModalContent
-              closeModal={closeModal}
-              text="Un e-mail vient d'être envoyé à l'adresse indiquée."
-            />
-          ),
-        ]}
-      />
+      <div>
+        <StepperModal
+          id="modal-lost-pwd"
+          title="Mot de passe oublié ?"
+          resetForm={resetForm}
+          composers={[
+            (closeModal, nextStep) => (
+              <FormWithValidation
+                ref={form}
+                submitText="Envoyer"
+                formSchema={schemaLostPwd}
+                onCancel={closeModal}
+                onSubmit={(fields, setError) => {
+                  Api.post('/api/v1/auth/forgot', fields)
+                    .then(() => nextStep())
+                    .catch(() => setError("Une erreur s'est produite"));
+                }}
+              />
+            ),
+            (closeModal) => (
+              <SuccessModalContent
+                closeModal={closeModal}
+                text="Un e-mail vient d'être envoyé à l'adresse indiquée."
+              />
+            ),
+          ]}
+        />
+      </div>
     </Layout>
   );
 };

@@ -118,6 +118,8 @@ const EXTERNAL_LINKS = {
   LKO_VG: "https://www.linkedout-vendeeglobe.com",
   LKO_VG_CONTEST: "https://www.linkedout-vendeeglobe.com/vendeearctique",
   LKO_BLOG: "https://blog.linkedout.fr",
+  ENTOURAGE: "https://www.entourage.social",
+  LEGAL_MENTIONS: "https://docs.google.com/document/d/1a1IU9Y6qVDr4pvWJRE5XMVZ2fNhg0rhXMTL_lqY_f1M/pub"
 };
 
 module.exports = {

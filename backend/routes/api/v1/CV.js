@@ -26,7 +26,7 @@ router.post(
     // si le cv est une string json le parser, sinon prendre l'objet
     const reqCV =
       typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
-    checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
+      checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
 
       switch (req.payload.role) {
         case USER_ROLES.CANDIDAT:
@@ -49,11 +49,11 @@ router.post(
         try {
           const fileBuffer = await sharp(path)
             .trim()
-            .webp()
+            .jpeg({quality: 75})
             .toBuffer();
           reqCV.urlImg = await S3.upload(
             fileBuffer,
-            `${reqCV.UserId}.${reqCV.status}.webp`
+            `${reqCV.UserId}.${reqCV.status}.jpg`
           );
         } catch (error) {
           console.error(error);
@@ -65,7 +65,7 @@ router.post(
       if (reqCV.status === CV_STATUS.Published.value) {
         try {
           const {Body} = await S3.download(reqCV.urlImg);
-          reqCV.urlImg = await S3.upload(Body, `${reqCV.UserId}.Published.webp`);
+          reqCV.urlImg = await S3.upload(Body, `${reqCV.UserId}.Published.jpg`);
         } catch (error) {
           console.error(error);
         }

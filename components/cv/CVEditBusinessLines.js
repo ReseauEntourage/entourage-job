@@ -40,20 +40,22 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => (
       )}
     </p>
     {onChange && (
-      <ModalEdit
-        id="modal-cv-businesslines"
-        title="Édition - Mots clés"
-        formSchema={schemaEditCVBusinessLines}
-        defaultValues={{
-          businessLines,
-        }}
-        onSubmit={(fields, closeModal) => {
-          closeModal();
-          onChange({
-            ...fields,
-          });
-        }}
-      />
+      <div>
+        <ModalEdit
+          id="modal-cv-businesslines"
+          title="Édition - Mots clés"
+          formSchema={schemaEditCVBusinessLines}
+          defaultValues={{
+            businessLines,
+          }}
+          onSubmit={(fields, closeModal) => {
+            closeModal();
+            onChange({
+              ...fields,
+            });
+          }}
+        />
+      </div>
     )}
   </div>
 );

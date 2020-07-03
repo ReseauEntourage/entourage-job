@@ -10,6 +10,8 @@ import Textarea from './fields/Textarea';
 import Checkbox from './fields/Checkbox';
 import Input from './fields/Input';
 import FormValidatorErrorMessage from "./FormValidatorErrorMessage";
+import {SimpleLink} from "../utils";
+import {EXTERNAL_LINKS} from "../../constants";
 
 const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
 
@@ -160,7 +162,14 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
         name={data.name}
         title={
           <span>
-            J&apos;accepte les <a>CGU</a>
+            J&apos;accepte les{' '}
+            <SimpleLink
+              isExternal
+              target
+              href={EXTERNAL_LINKS.LEGAL_MENTIONS}
+            >
+            CGU
+          </SimpleLink>
           </span>
         }
         value={value}

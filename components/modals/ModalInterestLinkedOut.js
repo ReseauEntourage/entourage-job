@@ -10,32 +10,34 @@ const ModalInterestLinkedOut = () => {
   const [form, resetForm] = useResetForm();
 
   return (
-    <StepperModal
-      id="modal-interest-linkedOut"
-      title="Vous êtes intéressés par LinkedOut ?"
-      resetForm={resetForm}
-      composers={[
-        (closeModal, nextStep) => (
-          <FormWithValidation
-            ref={form}
-            submitText="Envoyer"
-            formSchema={interestLinkedOutSchema}
-            onCancel={closeModal}
-            onSubmit={(fields, setError) => {
-              Api.post('/api/v1/mail/contact-us', fields)
-                .then(() => nextStep())
-                .catch(() => setError("Une erreur s'est produite"));
-            }}
-          />
-        ),
-        (closeModal) => (
-          <SuccessModalContent
-            closeModal={closeModal}
-            text="Merci pour votre message."
-          />
-        ),
-      ]}
-    />
+    <div>
+      <StepperModal
+        id="modal-interest-linkedOut"
+        title="Vous êtes intéressés par LinkedOut ?"
+        resetForm={resetForm}
+        composers={[
+          (closeModal, nextStep) => (
+            <FormWithValidation
+              ref={form}
+              submitText="Envoyer"
+              formSchema={interestLinkedOutSchema}
+              onCancel={closeModal}
+              onSubmit={(fields, setError) => {
+                Api.post('/api/v1/mail/contact-us', fields)
+                  .then(() => nextStep())
+                  .catch(() => setError("Une erreur s'est produite"));
+              }}
+            />
+          ),
+          (closeModal) => (
+            <SuccessModalContent
+              closeModal={closeModal}
+              text="Merci pour votre message."
+            />
+          ),
+        ]}
+      />
+    </div>
   );
 };
 
