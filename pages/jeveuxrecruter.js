@@ -57,7 +57,7 @@ const JeVeuxRecruter = () => {
           </div>
         </div>
         <div className="uk-margin-medium-top">
-          <img src="../static/img/candidats.png" alt="" />
+          <img src="../static/img/candidats.jpg" alt="" />
             <div className="uk-background-primary uk-light uk-padding uk-flex uk-flex-center">
               <div className="uk-container-small">
                 <h4 className="uk-align-center uk-text-center uk-margin-remove">
