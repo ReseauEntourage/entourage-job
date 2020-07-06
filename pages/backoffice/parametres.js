@@ -46,7 +46,7 @@ const UserInformationCard = ({ title, user }) => {
       <Card style="secondary" title={title}>
         <GridNoSSR column gap="small">
           <GridNoSSR row gap="small">
-            <IconNoSSR name="user" />
+            <IconNoSSR name="user" style={{width: 20}} />
             <span>{`${linkedUser.firstName} ${linkedUser.lastName}`}</span>
           </GridNoSSR>
 
@@ -56,7 +56,7 @@ const UserInformationCard = ({ title, user }) => {
             isExternal
           >
             <GridNoSSR row gap="small">
-              <IconNoSSR name="mail" />
+              <IconNoSSR name="mail" style={{width: 20}} />
               <span>{linkedUser.email}</span>
             </GridNoSSR>
           </SimpleLink>
@@ -67,13 +67,13 @@ const UserInformationCard = ({ title, user }) => {
               isExternal
             >
               <GridNoSSR row gap="small">
-                <IconNoSSR name="phone" />
+                <IconNoSSR name="phone" style={{width: 20}} />
                 <span>{linkedUser.phone}</span>
               </GridNoSSR>
             </SimpleLink>
           ) : (
             <GridNoSSR row gap="small">
-              <IconNoSSR name="phone" />
+              <IconNoSSR name="phone" style={{width: 20}} />
               <span className="uk-text-italic">
                 Numéro de téléphone non renseigné
               </span>
@@ -86,14 +86,14 @@ const UserInformationCard = ({ title, user }) => {
               href={`/cv/${userCandidat.url}`}
             >
               <GridNoSSR row gap="small">
-                <IconNoSSR name="link" />
+                <IconNoSSR name="link" style={{width: 20}} />
                 <span className="uk-text-italic">{userCandidat.url}</span>
               </GridNoSSR>
             </SimpleLink>
           )}
           {user.role === USER_ROLES.COACH && (
             <GridNoSSR row gap="small">
-              <IconNoSSR name="cog" />
+              <IconNoSSR name="cog" style={{width: 20}} />
               <span className="uk-text-italic">
                 {userCandidat.hidden ? 'CV caché' : 'CV visible'}
               </span>
@@ -101,7 +101,7 @@ const UserInformationCard = ({ title, user }) => {
           )}
           {user.role === USER_ROLES.COACH && (
             <GridNoSSR row gap="small">
-              <IconNoSSR name="cog" />
+              <IconNoSSR name="cog" style={{width: 20}} />
               <span className="uk-text-italic">
                 {userCandidat.employed
                   ? 'A retrouvé un emploi'
@@ -230,15 +230,19 @@ const Parametres = () => {
               {userData ? (
                 <GridNoSSR column gap="small">
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="user" />
+                    <IconNoSSR name="user" style={{width: 20}} />
                     <span>{`${userData.firstName} ${userData.lastName}`}</span>
                   </GridNoSSR>
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="mail" />
+                    <IconNoSSR name="gender" style={{width: 20}} />
+                    <span>{`${user.gender === 0 ? 'Homme' : 'Femme'}`}</span>
+                  </GridNoSSR>
+                  <GridNoSSR row gap="small">
+                    <IconNoSSR name="mail" style={{width: 20}} />
                     <span>{userData.email}</span>
                   </GridNoSSR>
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="phone" />
+                    <IconNoSSR name="phone" style={{width: 20}} />
                     {userData.phone ? (
                       <span>{userData.phone}</span>
                     ) : (

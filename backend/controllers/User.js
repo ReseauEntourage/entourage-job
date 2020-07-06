@@ -250,10 +250,13 @@ const searchUsers = (query, role) => {
   return User.findAll(options);
 };
 
-const setUser = async (id, user) =>
-  User.update(user, {
+const setUser = async (id, user) => {
+  await User.update(user, {
     where: { id },
   });
+  return getUser(id);
+};
+
 
 const setUserCandidat = async (candidatId, candidat) => {
   return User_Candidat.update(candidat, {
