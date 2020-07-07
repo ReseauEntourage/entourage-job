@@ -1,6 +1,6 @@
 # Entourage Job
 
-Architecture en place :
+##Architecture en place
 
 - _.next_ : **Next.js**
 - _api_ : Contrôleurs côté serveur (routes API) **Express.js** et **Sequelize**
@@ -31,13 +31,28 @@ Architecture en place :
 - _next.config.js_ : Fichier de configuration pour **Next.js**
 - _serveur-express.js_ : Partie **Express.js**
 
-Pour la base de données :
-(Initialisation)
+## Setup
 
-- Si elle n'existe pas : sequelize db:create
-- Migrations de la structure : sequelize db:migrate
-- Intégration de données de test : sequelize db:seed:all
+### Init & start the project locally
 
-(Par la suite)
+## 1# Prerequisite
 
-- sequelize db:migrate
+To run the project you will need to install **Docker** and **NodeJs**.
+
+### Instantiate and populate the db
+
+- `docker run --name entourage-db -e POSTGRES_PASSWORD=entourage -d -p 5432:5432 postgres`
+
+- You will need to get the .env file and populate it with your DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:5432/entourag`)
+
+- `npx sequelize db:create`
+
+- `npx sequelize db:migrate`
+
+- `npx sequelize db:seed:all`
+
+- For dev purpose you will need to run dev/dev-front scripts
+
+- `npm run dev`
+
+### You are all set !
