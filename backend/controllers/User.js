@@ -254,9 +254,49 @@ const setUser = async (id, user) => {
   await User.update(user, {
     where: { id },
   });
+
   return getUser(id);
 };
 
+const changeUserRole = async (id, user) => {
+  const dbUser = await getUser(id);
+
+  if(dbUser.role !== user.role) {
+    if(dbUser.role === USER_ROLES.CANDIDAT && user.role !== USER_ROLES.CANDIDAT) {
+      await User_Candidat.destroy({
+        where: {
+          candidatId: id
+        },
+      });
+    }
+    else if(dbUser.role !== USER_ROLES.CANDIDAT && user.role === USER_ROLES.CANDIDAT) {
+      if(dbUser.role === USER_ROLES.COACH) {
+        try {
+          await User_Candidat.update(
+            {
+              coachId: null
+            },
+            {
+              where: {
+                candidatId: dbUser.coach.candidat.id
+              },
+            });
+        }
+        catch(e) {
+          console.log('Pas de candidat associé');
+        }
+      }
+
+      await User_Candidat.create({
+        candidatId: id,
+        url: `${user.firstName.toLowerCase()}-${id.substring(0, 8)}`,
+      });
+
+      await setUser(id, {role: user.role})
+    }
+
+  }
+};
 
 const setUserCandidat = async (candidatId, candidat) => {
   return User_Candidat.update(candidat, {
@@ -337,6 +377,7 @@ module.exports = {
   getUserByEmail,
   getUsers,
   setUser,
+  changeUserRole,
   searchUsers,
   getMembers,
   setUserCandidat,

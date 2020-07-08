@@ -252,15 +252,33 @@ router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
  */
 router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   checkUserAuthorization(req, res, req.params.id, () => {
-    UserController.setUser(req.params.id, req.body)
-      .then((user) => {
-        console.log(`User modifié`);
-        res.status(200).json(user);
-      })
-      .catch((err) => {
-        console.log(`Une erreur est survenue`);
-        res.status(401).send(err);
+
+    const setUser = () => {
+      UserController.setUser(req.params.id, req.body)
+        .then((user) => {
+          console.log(`User modifié`);
+          res.status(200).json(user);
+        })
+        .catch((err) => {
+          console.log(`Une erreur est survenue`);
+          res.status(401).send(err);
+        });
+    };
+
+    const keys = Object.keys(req.body);
+    const authorizedKeys = ['email', 'phone'];
+
+    if(req.payload.role === USER_ROLES.ADMIN) {
+      UserController.changeUserRole(req.params.id, req.body).then(() => {
+         setUser();
       });
+    }
+    else if(keys.some((key) => !authorizedKeys.includes(key))) {
+      res.status(401).send({message: "Unauthorized"});
+    }
+    else {
+      setUser();
+    }
   });
 });
 

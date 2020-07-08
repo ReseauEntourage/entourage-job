@@ -24,7 +24,7 @@ const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [loadingPersonal, setLoadingPersonal] = useState(false);
+
   const {
     query: { id },
   } = useRouter();
@@ -42,9 +42,16 @@ const CVPage = () => {
   const userToCoach = schemaEditUser.fields[
     schemaEditUser.fields.findIndex((field) => field.id === 'userToCoach')
   ];
-
   userToCoach.disabled = () => true;
   userToCoach.hidden = () => true;
+
+  const role = schemaEditUser.fields[
+    schemaEditUser.fields.findIndex((field) => field.id === 'role')
+  ];
+  const indexToHide = role.options.findIndex((option) => option.value === USER_ROLES.ADMIN);
+  role.options[indexToHide].hidden = true;
+
+  const isCandidat = user && user.candidat && user.role === USER_ROLES.CANDIDAT;
 
   if (loading) {
     return (
@@ -165,59 +172,61 @@ const CVPage = () => {
           {onglet === 'settings' && (
             <GridNoSSR childWidths={['1-2@m']}>
               {(user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
-                <GridNoSSR childWidths={['1-1']}>
-                  {
-                    user.candidat &&
-                    <Card title="Préférences du CV">
-                      <ToggleWithConfirmationModal
-                        id="employed"
-                        title="A retrouvé un emploi"
-                        modalTitle="Le candidat a retrouvé un emploi ?"
-                        modalConfirmation="Oui, il a retrouvé un emploi"
-                        defaultValue={user.candidat.employed}
-                        onToggle={(employed) =>
-                          Api.put(`/api/v1/user/candidat/${user.id}`, {
-                            employed,
-                          })
-                            .then(() =>
-                              UIkit.notification(
-                                'Le profil du candidat a été mis à jour !',
-                                'success'
+                <GridNoSSR gap={isCandidat ? 'medium' : 'collapse'}childWidths={['1-1']}>
+                  <div>
+                    {
+                      isCandidat &&
+                      <Card title="Préférences du CV">
+                        <ToggleWithConfirmationModal
+                          id="employed"
+                          title="A retrouvé un emploi"
+                          modalTitle="Le candidat a retrouvé un emploi ?"
+                          modalConfirmation="Oui, il a retrouvé un emploi"
+                          defaultValue={user.candidat.employed}
+                          onToggle={(employed) =>
+                            Api.put(`/api/v1/user/candidat/${user.id}`, {
+                              employed,
+                            })
+                              .then(() =>
+                                UIkit.notification(
+                                  'Le profil du candidat a été mis à jour !',
+                                  'success'
+                                )
                               )
-                            )
-                            .catch(() =>
-                              UIkit.notification('Une erreur est survenue', 'danger')
-                            )
-                        }
-                      />
-                      <ToggleWithConfirmationModal
-                        id="hidden"
-                        title="Masquer le CV"
-                        modalTitle="Changer la visibilité du CV en ligne ?"
-                        modalConfirmation="Oui, masquer le CV"
-                        defaultValue={user.candidat.hidden}
-                        onToggle={(hidden) =>
-                          Api.put(`/api/v1/user/candidat/${user.id}`, {
-                            hidden,
-                          })
-                            .then(() =>
-                              UIkit.notification(
-                                hidden
-                                  ? 'Le CV est désormais masqué'
-                                  : 'Le CV est désormais visible',
-                                'success'
+                              .catch(() =>
+                                UIkit.notification('Une erreur est survenue', 'danger')
                               )
-                            )
-                            .catch(() =>
-                              UIkit.notification(
-                                'Une erreur est survenue lors du masquage du profil',
-                                'danger'
+                          }
+                        />
+                        <ToggleWithConfirmationModal
+                          id="hidden"
+                          title="Masquer le CV"
+                          modalTitle="Changer la visibilité du CV en ligne ?"
+                          modalConfirmation="Oui, masquer le CV"
+                          defaultValue={user.candidat.hidden}
+                          onToggle={(hidden) =>
+                            Api.put(`/api/v1/user/candidat/${user.id}`, {
+                              hidden,
+                            })
+                              .then(() =>
+                                UIkit.notification(
+                                  hidden
+                                    ? 'Le CV est désormais masqué'
+                                    : 'Le CV est désormais visible',
+                                  'success'
+                                )
                               )
-                            )
-                        }
-                      />
-                    </Card>
-                  }
+                              .catch(() =>
+                                UIkit.notification(
+                                  'Une erreur est survenue lors du masquage du profil',
+                                  'danger'
+                                )
+                              )
+                          }
+                        />
+                      </Card>
+                    }
+                  </div>
                   <div className="uk-card uk-card-default uk-card-body">
                     <GridNoSSR
                       gap="small"
@@ -266,45 +275,56 @@ const CVPage = () => {
                       id="edit-user"
                       formSchema={schemaEditUser}
                       title="Edition d'un membre"
-                      description="Merci de modifier les informations que vous souhaitez concernant le membre"
+                      description="Merci de modifier les informations que vous souhaitez concernant le membre."
                       submitText="Modifier le membre"
-                      defaultValues={user}
+                      defaultValues={{
+                        ...user,
+                        gender: user.gender.toString()
+                      }}
                       onSubmit={async (fields, closeModal) => {
-                        setLoadingPersonal(true);
-                        if(fields.role !== user.role) {
+                        const updateUser = async (onError) => {
                           try {
-                            const data = await Api.put(`api/v1/user/candidat/${user.id}`, {
-                              coachId: null,
+                            const {data} = await Api.put(`api/v1/user/${user.id}`, fields);
+                            if (data) {
+                              closeModal();
+                              UIkit.notification('Le membre a bien été modifié', 'success');
+                              setUser(data);
+                            } else {
+                              throw new Error('réponse de la requete vide');
+                            }
+                          } catch (error) {
+                            console.error(error);
+                            if(onError) onError();
+                            if (error.response.status === 409) {
+                              UIkit.notification(
+                                "Cette adresse email est déjà utilisée",
+                                'danger'
+                              );
+                            } else {
+                              UIkit.notification(
+                                "Une erreur s'est produite lors de la modification du membre",
+                                'danger'
+                              );
+                            }
+                          }
+                        };
+
+                        if(fields.role !== user.role) {
+                          UIkit.modal.confirm("Attention, si vous modifiez le rôle d'un candidat, tout son suivi sera perdu et son CV sera dépublié. Êtes-vous sûr de vouloir continuer ?",
+                            {
+                              labels: {
+                                ok: 'Valider',
+                                cancel: 'Annuler'
+                              }
+                            })
+                            .then(async () => {
+                              await updateUser(() => UIkit.modal(`#edit-user`).show());
+                            }, () => {
+                              UIkit.modal(`#edit-user`).show()
                             });
-                          } catch (e) {
-                            throw new Error('erreur sur la modification de la liaison');
-                          }
                         }
-                        try {
-                          const {data} = await Api.put(`api/v1/user/${user.id}`, fields);
-                          if (data) {
-                            closeModal();
-                            UIkit.notification('Le membre a bien été modifié', 'success');
-                            setUser(data);
-                          }
-                          else {
-                            throw new Error('réponse de la requete vide');
-                          }
-                        } catch (error) {
-                          setLoadingPersonal(false);
-                          console.error(error);
-                          if(error.response.status === 409) {
-                            UIkit.notification(
-                              "Cette adresse email est déjà utilisée",
-                              'danger'
-                            );
-                          }
-                          else {
-                            UIkit.notification(
-                              "Une erreur s'est produite lors de la modification du membre",
-                              'danger'
-                            );
-                          }
+                        else {
+                          await updateUser();
                         }
                       }}
                     />

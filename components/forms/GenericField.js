@@ -109,7 +109,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
     }
 
     let valueToUse = value;
-    if (valueToUse === null || valueToUse === undefined) valueToUse = options[0].value;
+    if (!valueToUse) valueToUse = options[0].value;
 
     return (
       <Select
