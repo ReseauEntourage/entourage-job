@@ -46,7 +46,7 @@ const UserInformationCard = ({ title, user }) => {
       <Card style="secondary" title={title}>
         <GridNoSSR column gap="small">
           <GridNoSSR row gap="small">
-            <IconNoSSR name="user" />
+            <IconNoSSR name="user" style={{width: 20}} />
             <span>{`${linkedUser.firstName} ${linkedUser.lastName}`}</span>
           </GridNoSSR>
 
@@ -56,7 +56,7 @@ const UserInformationCard = ({ title, user }) => {
             isExternal
           >
             <GridNoSSR row gap="small">
-              <IconNoSSR name="mail" />
+              <IconNoSSR name="mail" style={{width: 20}} />
               <span>{linkedUser.email}</span>
             </GridNoSSR>
           </SimpleLink>
@@ -67,13 +67,13 @@ const UserInformationCard = ({ title, user }) => {
               isExternal
             >
               <GridNoSSR row gap="small">
-                <IconNoSSR name="phone" />
+                <IconNoSSR name="phone" style={{width: 20}} />
                 <span>{linkedUser.phone}</span>
               </GridNoSSR>
             </SimpleLink>
           ) : (
             <GridNoSSR row gap="small">
-              <IconNoSSR name="phone" />
+              <IconNoSSR name="phone" style={{width: 20}} />
               <span className="uk-text-italic">
                 Numéro de téléphone non renseigné
               </span>
@@ -86,14 +86,14 @@ const UserInformationCard = ({ title, user }) => {
               href={`/cv/${userCandidat.url}`}
             >
               <GridNoSSR row gap="small">
-                <IconNoSSR name="link" />
+                <IconNoSSR name="link" style={{width: 20}} />
                 <span className="uk-text-italic">{userCandidat.url}</span>
               </GridNoSSR>
             </SimpleLink>
           )}
           {user.role === USER_ROLES.COACH && (
             <GridNoSSR row gap="small">
-              <IconNoSSR name="cog" />
+              <IconNoSSR name="cog" style={{width: 20}} />
               <span className="uk-text-italic">
                 {userCandidat.hidden ? 'CV caché' : 'CV visible'}
               </span>
@@ -101,7 +101,7 @@ const UserInformationCard = ({ title, user }) => {
           )}
           {user.role === USER_ROLES.COACH && (
             <GridNoSSR row gap="small">
-              <IconNoSSR name="cog" />
+              <IconNoSSR name="cog" style={{width: 20}} />
               <span className="uk-text-italic">
                 {userCandidat.employed
                   ? 'A retrouvé un emploi'
@@ -142,6 +142,24 @@ const Parametres = () => {
         .finally(() => setLoadingPersonal(false));
     }
   }, [user]);
+
+  if(userData && userData.role !== USER_ROLES.ADMIN) {
+    const firstName = schemaPersonalData.fields[
+      schemaPersonalData.fields.findIndex((field) => field.id === 'firstName')
+    ];
+    const lastName = schemaPersonalData.fields[
+      schemaPersonalData.fields.findIndex((field) => field.id === 'lastName')
+    ];
+    const gender = schemaPersonalData.fields[
+      schemaPersonalData.fields.findIndex((field) => field.id === 'gender')
+    ];
+    firstName.hidden = () => true;
+    firstName.disabled = () => true;
+    lastName.hidden = () => true;
+    lastName.disabled = () => true;
+    gender.hidden = () => true;
+    gender.disabled = () => true;
+  }
 
   if (!user) return null;
 
@@ -230,15 +248,19 @@ const Parametres = () => {
               {userData ? (
                 <GridNoSSR column gap="small">
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="user" />
+                    <IconNoSSR name="user" style={{width: 20}} />
                     <span>{`${userData.firstName} ${userData.lastName}`}</span>
                   </GridNoSSR>
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="mail" />
+                    <IconNoSSR name="gender" style={{width: 20}} />
+                    <span>{`${userData.gender === 0 ? 'Homme' : 'Femme'}`}</span>
+                  </GridNoSSR>
+                  <GridNoSSR row gap="small">
+                    <IconNoSSR name="mail" style={{width: 20}} />
                     <span>{userData.email}</span>
                   </GridNoSSR>
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="phone" />
+                    <IconNoSSR name="phone" style={{width: 20}} />
                     {userData.phone ? (
                       <span>{userData.phone}</span>
                     ) : (
@@ -310,54 +332,50 @@ const Parametres = () => {
             submitText="Envoyer"
             id="modal-personal-data"
             title="Édition - Informations personelles"
-            defaultValues={{ phone: userData.phone }}
+            defaultValues={{
+              firstName: userData.firstName,
+              lastName: userData.lastName,
+              gender: userData && userData.gender.toString(),
+              phone: userData.phone
+            }}
             formSchema={schemaPersonalData}
-            onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
-              if (phone !== userData.phone) {
-                setLoadingPersonal(true);
-                Api.put(`/api/v1/user/${userData.id}`, {
-                  phone,
-                })
-                  .then(() => {
-                    closeModal();
-                    setUserData({ ...userData, phone });
-                    UIkit.notification(
-                      'Votre numéro de téléphone a bien été mis à jour',
-                      'success'
-                    );
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                    UIkit.notification(
-                      "Une erreur c'est produite lors de la mise à jour de votre email",
-                      'danger'
-                    );
-                  })
-                  .finally(() => setLoadingPersonal(false));
+            onSubmit={({ firstName, lastName, gender, phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
+              let newUserData = {};
+              if(userData.role === USER_ROLES.ADMIN) {
+                newUserData = {firstName, lastName, gender};
+                if (phone !== userData.phone) {
+                  newUserData.phone = phone;
+                }
+                if (userData.email === oldEmail && newEmail0 === newEmail1) {
+                  newUserData.email = newEmail0;
+                }
               }
-
-              if (userData.email === oldEmail && newEmail0 === newEmail1) {
-                setLoadingPersonal(true);
-                Api.put(`/api/v1/user/${userData.id}`, {
-                  email: newEmail0,
-                })
-                  .then(() => {
-                    closeModal();
-                    setUserData({ ...userData, email: newEmail0 });
-                    UIkit.notification(
-                      'Votre email a bien été mis à jour',
-                      'success'
-                    );
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                    UIkit.notification(
-                      "Une erreur c'est produite lors de la mise à jour de votre email",
-                      'danger'
-                    );
-                  })
-                  .finally(() => setLoadingPersonal(false));
+              else {
+                if (phone !== userData.phone) {
+                  newUserData.phone = phone;
+                }
+                if (userData.email === oldEmail && newEmail0 === newEmail1) {
+                  newUserData.email = newEmail0;
+                }
               }
+              setLoadingPersonal(true);
+              Api.put(`/api/v1/user/${userData.id}`, newUserData)
+                .then(() => {
+                  closeModal();
+                  setUserData({ ...userData, ...newUserData });
+                  UIkit.notification(
+                    'Vos informations personnelles ont bien été mises à jour',
+                    'success'
+                  );
+                })
+                .catch((err) => {
+                  console.error(err);
+                  UIkit.notification(
+                    "Une erreur c'est produite lors de la mise à jour de vos informations personnelles",
+                    'danger'
+                  );
+                })
+                .finally(() => setLoadingPersonal(false));
             }}
           />
         </div>

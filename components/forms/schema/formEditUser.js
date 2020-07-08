@@ -2,7 +2,7 @@ import axios from '../../../Axios';
 import {USER_ROLES} from "../../../constants";
 
 export default {
-  id: 'form-add-user',
+  id: 'form-edit-user',
   fields: [
     {
       id: 'firstName',

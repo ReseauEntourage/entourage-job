@@ -1,32 +1,13 @@
-/* global UIkit */
-import React, {useRef} from 'react';
+import React from 'react';
 import Layout from '../components/Layout';
-import { Button, Section, IconNoSSR } from '../components/utils';
+import { Section, IconNoSSR } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
-import schema from '../components/forms/schema/formEditOpportunity';
-import Api from '../Axios';
-import StepperModal from '../components/modals/StepperModal';
-import FormWithValidation from '../components/forms/FormWithValidation';
 import ImageTitle from "../components/sections/ImageTitle";
 import HireSteps from "../components/sections/HireSteps";
 import WhatItBrings from "../components/sections/WhatItBrings";
 import WaysToJoin from "../components/sections/WaysToJoin";
-import Reviews from "../components/sections/Reviews";
-import {useResetForm} from "../hooks";
 
 const JeVeuxRecruter = () => {
-  const [form, resetForm] = useResetForm();
-
-  const candidatId = schema.fields[
-    schema.fields.findIndex((field) => field.id === 'candidatId')
-  ];
-
-  candidatId.disabled = () => true;
-  candidatId.hidden = () => true;
-
-  schema.fields[
-    schema.fields.findIndex((field) => field.id === 'isPublic')
-  ].disabled = true;
 
   return (
     <Layout title="Je veux recruter - LinkedOut">
@@ -81,61 +62,6 @@ const JeVeuxRecruter = () => {
         <Reviews />
       */}
       <DiscoverPartial style='default'/>
-      <div>
-        <StepperModal
-          id="modal-offer-add"
-          title="Proposer une opportunité"
-          resetForm={resetForm}
-          composers={[
-            (closeModal, nextStep) => (
-              <div>
-                <p>
-                  Cet espace est dédié aux potentiels recruteurs qui souhaitent
-                  proposer des opportunités aux candidats. Écrivez vos mots
-                  d&apos;encouragement ou contactez le coach plus bas dans la
-                  page CV !
-                </p>
-                <FormWithValidation
-                  ref={form}
-                  submitText="Envoyer"
-                  formSchema={schema}
-                  onCancel={closeModal}
-                  onSubmit={(opportunity) => {
-                    Api.post('/api/v1/opportunity/', opportunity)
-                      .then(nextStep)
-                      .catch((error) => {
-                        console.error(error);
-                        UIkit.notification(
-                          "Une erreur s'est produite lors de l'envoie de l'offre",
-                          { pos: 'bottom-center', status: 'danger' }
-                        );
-                      });
-                  }}
-                  defaultValues={{
-                    isPublic: true
-                  }}
-                />
-              </div>
-            ),
-            (closeModal) => (
-              <div className="uk-flex uk-flex-center uk-margin-large">
-                <div className="uk-card uk-card-body uk-text-center">
-                  <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
-                  <p className="uk-text-lead">
-                    Merci pour votre offre, nous reviendrons bientôt vers vous.
-                  </p>
-                  <Button
-                    style="secondary"
-                    onClick={closeModal}
-                  >
-                    Fermer
-                  </Button>
-                </div>
-              </div>
-            ),
-          ]}
-        />
-      </div>
     </Layout>
   );
 };

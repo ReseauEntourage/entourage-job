@@ -9,7 +9,7 @@ import {Section, GridNoSSR, IconNoSSR} from '../../../../components/utils';
 import HeaderBackoffice from '../../../../components/headers/HeaderBackoffice';
 import axios from '../../../../Axios';
 import ModalEdit from '../../../../components/modals/ModalEdit';
-import schemaCreateUser from '../../../../components/forms/schema/formCreateUser';
+import schemaCreateUser from '../../../../components/forms/schema/formEditUser';
 import ImgProfile from '../../../../components/headers/ImgProfile';
 import {CV_STATUS, USER_ROLES} from "../../../../constants";
 import Button from "../../../../components/utils/Button";

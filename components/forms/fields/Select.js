@@ -53,11 +53,18 @@ const Select = ({
           }}
           disabled={disabled}
         >
-          {options.map((item, i) => (
-            <option value={item.value} key={i}>
-              {item.label}
-            </option>
-          ))}
+          {
+            options.map((item, i) => {
+              return (
+                !item.hidden ?
+                  <option value={item.value} key={i}>
+                    {item.label}
+                  </option>
+                  :
+                  undefined
+              );
+            }
+          )}
         </select>
       </div>
       <FormValidatorErrorMessage validObj={valid} />

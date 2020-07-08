@@ -35,7 +35,7 @@ const NoCV = ({ candidatId, user, setCV }) => (
               }).then(({ data }) => setCV(data))
             }
           >
-            Creer le CV
+            Créer le CV
           </Button>
         </>
       )}
