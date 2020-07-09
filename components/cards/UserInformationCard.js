@@ -5,11 +5,12 @@ import { GridNoSSR, IconNoSSR, SimpleLink, Card } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalEdit from '../modals/ModalEdit';
 import schema from '../forms/schema/formEditLinkedUser';
-import axios from '../../Axios';
+import Api from '../../Axios';
 import {USER_ROLES} from "../../constants";
+import ToggleWithConfirmationModal from "../backoffice/ToggleWithConfirmationModal";
 
 // userId du candidat ou coach lié
-const UserInformationCard = ({ user, onChange }) => {
+const UserInformationCard = ({ isAdmin, user, onChange }) => {
   // données du candidat ou coach lié
   const [linkedUser, setLinkedUser] = useState();
   const [userCandidat, setUserCandidat] = useState();
@@ -95,7 +96,7 @@ const UserInformationCard = ({ user, onChange }) => {
           </GridNoSSR>
         </SimpleLink>
       )}
-      {user.role === USER_ROLES.COACH && userCandidat && (
+      {isAdmin && user.role === USER_ROLES.COACH && userCandidat && (
         <GridNoSSR row gap="small">
           <IconNoSSR name="cog" />
           <span className="uk-text-italic">
@@ -103,7 +104,7 @@ const UserInformationCard = ({ user, onChange }) => {
           </span>
         </GridNoSSR>
       )}
-      {user.role === USER_ROLES.COACH && userCandidat && (
+      {isAdmin && user.role === USER_ROLES.COACH && userCandidat && (
         <GridNoSSR row gap="small">
           <IconNoSSR name="cog" />
           <span className="uk-text-italic">
@@ -119,22 +120,77 @@ const UserInformationCard = ({ user, onChange }) => {
   );
 
   return (
-    <>
+    <GridNoSSR gap={user.role === USER_ROLES.COACH ? 'medium' : 'collapse'} childWidths={['1-1']}>
+      {
+        !isAdmin && userCandidat && user.role === USER_ROLES.COACH &&
+        <Card style="secondary" title="Préférences du CV">
+          <ToggleWithConfirmationModal
+            id="employedLinked"
+            title="A retrouvé un emploi"
+            modalTitle="Le candidat a retrouvé un emploi ?"
+            modalConfirmation="Oui, il a retrouvé un emploi"
+            defaultValue={userCandidat.employed}
+            onToggle={(employed) =>
+              Api.put(`/api/v1/user/candidat/${linkedUser.id}`, {
+                employed,
+              })
+                .then(() =>
+                  UIkit.notification(
+                    'Le profil du candidat a été mis à jour !',
+                    'success'
+                  )
+                )
+                .catch(() =>
+                  UIkit.notification('Une erreur est survenue', 'danger')
+                )
+            }
+          />
+          <ToggleWithConfirmationModal
+            id="hiddenLinked"
+            title="Masquer le CV"
+            modalTitle="Changer la visibilité du CV en ligne ?"
+            modalConfirmation="Oui, masquer le CV"
+            defaultValue={userCandidat.hidden}
+            onToggle={(hidden) =>
+              Api.put(`/api/v1/user/candidat/${linkedUser.id}`, {
+                hidden,
+              })
+                .then(() => {
+                    UIkit.notification(
+                      hidden
+                        ? 'Le CV est désormais masqué'
+                        : 'Le CV est désormais visible',
+                      'success'
+                    );
+                })
+                .catch(() =>
+                  UIkit.notification(
+                    'Une erreur est survenue lors du masquage du profil',
+                    'danger'
+                  )
+                )
+            }
+          />
+        </Card>
+      }
       <Card
         style="secondary"
         title={`Information du${
           user.role === USER_ROLES.COACH ? ' candidat' : ' coach'
         }`}
-        badge={
-          loading ? (
-            <div data-uk-spinner="ratio: .8" />
-          ) : (
-            <ButtonIcon
+        badge={(() => {
+          if(isAdmin) {
+            if(loading) {
+              return (<div data-uk-spinner="ratio: .8" />)
+            }
+            return (
+              <ButtonIcon
               name="pencil"
-              onClick={() => UIkit.modal(`#modal-edit-linked-user`).show()}
-            />
-          )
-        }
+              onClick={() => UIkit.modal(`#modal-edit-linked-user`).show()} />
+            );
+          }
+          return null;
+        })()}
       >
         {cardContent}
       </Card>
@@ -157,26 +213,26 @@ const UserInformationCard = ({ user, onChange }) => {
           let promise = null;
           if (user.role === USER_ROLES.CANDIDAT) {
             // on lui assigne ou eleve un coach
-            promise = axios.put(`api/v1/user/candidat/${user.id}`, {
+            promise = Api.put(`api/v1/user/candidat/${user.id}`, {
               coachId: linkedUserId || null,
             });
           }
           if (user.role === USER_ROLES.COACH) {
             // on l'assigne à un candidat
             if (linkedUserId) {
-              promise = axios.put(`api/v1/user/candidat/${linkedUserId}`, {
+              promise = Api.put(`api/v1/user/candidat/${linkedUserId}`, {
                 coachId: user.id,
               });
             } else {
               // on lui enleve son candidat
-              promise = axios.put(`api/v1/user/candidat/${linkedUser.id}`, {
+              promise = Api.put(`api/v1/user/candidat/${linkedUser.id}`, {
                 coachId: null,
               });
             }
           }
           if (promise) {
             promise
-              .then(() => axios.get(`/api/v1/user/${user.id}`))
+              .then(() => Api.get(`/api/v1/user/${user.id}`))
               .then(({ data }) => {
                 closeModal();
                 assignUser(data);
@@ -194,15 +250,17 @@ const UserInformationCard = ({ user, onChange }) => {
           }
         }}
       />
-    </>
+    </GridNoSSR>
   );
 };
 UserInformationCard.propTypes = {
-  user: PropTypes.shape.isRequired,
+  isAdmin: PropTypes.bool,
+  user: PropTypes.shape().isRequired,
   onChange: PropTypes.func,
 };
 
 UserInformationCard.defaultProps = {
+  isAdmin: false,
   onChange: () => {},
 };
 

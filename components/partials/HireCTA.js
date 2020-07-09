@@ -18,8 +18,8 @@ const HireCTA = ({inverse}) => {
     schema.fields.findIndex((field) => field.id === 'candidatId')
     ];
 
-  candidatId.disabled = () => true;
-  candidatId.hidden = () => true;
+  candidatId.disabled = true;
+  candidatId.hidden = true;
 
   schema.fields[
     schema.fields.findIndex((field) => field.id === 'isPublic')
