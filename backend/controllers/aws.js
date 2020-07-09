@@ -7,7 +7,7 @@ const s3 = new S3({
   secretAccessKey: process.env.AWSS3_SECRET,
 });
 
-const upload = (data, outputPath) => {
+const upload = (data, contentType, outputPath) => {
   return new Promise((resolve, reject) => {
     // Uploading files to the bucket
     s3.upload(
@@ -16,6 +16,7 @@ const upload = (data, outputPath) => {
         Key: `${process.env.AWSS3_DIRECTORY}${outputPath}`, // File name you want to save as in S3
         Body: data,
         ACL: 'public-read', // allow public reading access to the file
+        ContentType: contentType
       },
       (err, { Key }) => {
         if (err) {

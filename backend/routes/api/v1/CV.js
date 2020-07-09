@@ -53,6 +53,7 @@ router.post(
             .toBuffer();
           reqCV.urlImg = await S3.upload(
             fileBuffer,
+            'image/jpeg',
             `${reqCV.UserId}.${reqCV.status}.jpg`
           );
         } catch (error) {
@@ -65,7 +66,7 @@ router.post(
       if (reqCV.status === CV_STATUS.Published.value) {
         try {
           const {Body} = await S3.download(reqCV.urlImg);
-          reqCV.urlImg = await S3.upload(Body, `${reqCV.UserId}.Published.jpg`);
+          reqCV.urlImg = await S3.upload(Body, 'image/jpeg', `${reqCV.UserId}.Published.jpg`);
         } catch (error) {
           console.error(error);
         }
@@ -88,7 +89,7 @@ router.post(
           )
           .then((sharpData) => sharpData.jpeg().toBuffer())
           .then((buffer) =>
-            S3.upload(buffer, `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
+            S3.upload(buffer, 'image/jpeg', `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
           )
           .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
           .catch(console.error)
