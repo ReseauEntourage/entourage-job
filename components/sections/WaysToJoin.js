@@ -39,7 +39,7 @@ const WaysToJoin = () => {
             </Carousel>
           </div>
         </div>
-        <HireCTA />
+        <HireCTA id="waysToJoin" />
       </div>
     </Section>
   );
