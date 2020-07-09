@@ -11,7 +11,7 @@ import Api from "../../Axios";
 import {useResetForm} from "../../hooks";
 import {mutateFormSchema} from "../../utils";
 
-const HireCTA = ({inverse}) => {
+const HireCTA = ({id, inverse}) => {
 
   const [form, resetForm] = useResetForm();
 
@@ -38,7 +38,7 @@ const HireCTA = ({inverse}) => {
         }
       ]
     },
-  ]);
+  ], id);
 
   const data = [
     {
@@ -56,7 +56,7 @@ const HireCTA = ({inverse}) => {
       button: {
         label: "J’envoie mon offre à LinkedOut",
         href: process.env.AIRTABLE_LINK_BECOME_COACH,
-        modal: "#modal-offer-add",
+        modal: `#modal-offer-add-${id}`,
         external: true
       }
     }
@@ -111,7 +111,7 @@ const HireCTA = ({inverse}) => {
       />
       <div>
         <StepperModal
-          id="modal-offer-add"
+          id={`modal-offer-add-${id}`}
           title="Proposer une opportunité"
           resetForm={resetForm}
           composers={[
@@ -164,12 +164,12 @@ const HireCTA = ({inverse}) => {
           ]}
         />
       </div>
-
     </>
   );
 };
 
 HireCTA.propTypes = {
+  id: PropTypes.string.isRequired,
   inverse: PropTypes.bool
 };
 

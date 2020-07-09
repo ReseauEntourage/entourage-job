@@ -67,7 +67,7 @@ export default {
       id: 'isPublic',
       name: 'isPublic',
       component: 'checkbox',
-      title: "L'offre est-elle générale?",
+      title: "J'adresse cette offre à tous les candidats",
     },
     {
       id: 'candidatId',
