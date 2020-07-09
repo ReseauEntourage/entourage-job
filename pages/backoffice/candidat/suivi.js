@@ -15,6 +15,24 @@ import { UserContext } from '../../../components/store/UserProvider';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import {USER_ROLES} from "../../../constants";
 
+const Wrapper = ({ title, description, children }) => (
+  <LayoutBackOffice title={title}>
+    <Section>
+      <HeaderBackoffice
+        title={title}
+        description={description}
+      />
+      {children}
+    </Section>
+  </LayoutBackOffice>
+);
+
+Wrapper.propTypes = {
+  children: PropTypes.element.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+};
+
 const Suivi = () => {
   const { user } = useContext(UserContext);
   const [userCandidat, setUserCandidat] = useState(null);
@@ -27,21 +45,6 @@ const Suivi = () => {
     "Vous pouvez prendre des notes sur la progression de vos recherches, noter vos différents rendez-vous, etc. Profitez de cet espace d'écriture libre qui vous est dédié."
     :
     "Le candidat peut prendre des notes sur la progression de ses recherches, noter ses différents rendez-vous, etc. Profitez de cet espace d'écriture libre qui vous est dédié.";
-
-  const Wrapper = ({ children }) => (
-    <LayoutBackOffice title={title}>
-      <Section>
-        <HeaderBackoffice
-          title={title}
-          description={description}
-        />
-        {children}
-      </Section>
-    </LayoutBackOffice>
-  );
-  Wrapper.propTypes = {
-    children: PropTypes.element.isRequired,
-  };
 
   const updateValue = (text) => {
     setLabelClass(text && text.length > 0 && ' stay-small');
@@ -88,11 +91,12 @@ const Suivi = () => {
         .finally(() => setLoading(false));
     }
   }, [user]);
+
   if (!user) return null;
 
   if (loading) {
     return (
-      <Wrapper>
+      <Wrapper title={title} description={description}>
         <div
           className="uk-width-1-1 uk-flex uk-flex-center"
           data-uk-spinner=""
@@ -102,7 +106,7 @@ const Suivi = () => {
   }
   if (userCandidat === null) {
     return (
-      <Wrapper>
+      <Wrapper title={title} description={description}>
         <h2 className="uk-text-bold">
           <span className="uk-text-primary">
             {user.role === USER_ROLES.COACH ? 'Aucun candidat' : 'Aucun bénévole coach'}
@@ -117,7 +121,7 @@ const Suivi = () => {
     );
   }
   return (
-    <Wrapper>
+    <Wrapper title={title} description={description}>
         <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
           <label
             className={`uk-form-label ${labelClass}`}
