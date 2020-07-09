@@ -1,6 +1,6 @@
 export function mutateFormSchema(schema, fields) {
   const newSchema = {
-    formId: schema.formId,
+    id: schema.id,
     fields: [
       ...schema.fields
     ],
