@@ -89,7 +89,7 @@ Select.propTypes = {
     isInvalid: PropTypes.bool,
     message: PropTypes.string,
   }),
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   options: PropTypes.arrayOf(
     PropTypes.objectOf({
       value: PropTypes.oneOfType([

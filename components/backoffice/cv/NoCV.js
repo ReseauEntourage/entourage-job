@@ -7,7 +7,7 @@ import Api from "../../../Axios";
 const NoCV = ({ candidatId, user, setCV }) => (
   <GridNoSSR column middle>
     <div>
-      {user.role === USER_ROLES.COACH && !user.candidatId && (
+      {user.role === USER_ROLES.COACH && !user.candidat && (
         <>
           <h2 className="uk-text-bold">
             <span className="uk-text-primary">Aucun candidat</span>{' '}
@@ -21,7 +21,7 @@ const NoCV = ({ candidatId, user, setCV }) => (
       )}
       {(user.role === USER_ROLES.ADMIN ||
         user.role === USER_ROLES.CANDIDAT ||
-        (user.role === USER_ROLES.COACH && user.candidatId)) && (
+        (user.role === USER_ROLES.COACH && user.candidat)) && (
         <>
           <h2 className="uk-text-bold">
             <span className="uk-text-primary">Aucun CV</span> n&apos;est
@@ -31,7 +31,7 @@ const NoCV = ({ candidatId, user, setCV }) => (
             style="primary"
             onClick={() =>
               Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                cv: { userId: candidatId, status: CV_STATUS.New.value },
+                cv: { UserId: candidatId, status: CV_STATUS.New.value },
               }).then(({ data }) => setCV(data))
             }
           >
@@ -46,7 +46,7 @@ NoCV.propTypes = {
   candidatId: PropTypes.string.isRequired,
   user: PropTypes.shape({
     role: PropTypes.string,
-    candidatId: PropTypes.string.isRequired,
+    candidat: PropTypes.shape().isRequired,
   }).isRequired,
   setCV: PropTypes.func.isRequired
 };

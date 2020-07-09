@@ -12,6 +12,7 @@ const Filter = ({ id, loading, filters, children, search }) => {
         <ul className="uk-subnav ent-subnav">
           {filters.map(({ title, tag, active }, i) => (
             <li
+              key={i}
               uk-filter-control={`.tag-${tag}`}
               className={active ? 'uk-active' : ''}
             >

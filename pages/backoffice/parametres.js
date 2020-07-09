@@ -20,110 +20,7 @@ import schemaChangePassword from '../../components/forms/schema/formChangePasswo
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
 import {USER_ROLES} from "../../constants";
 import {useResetForm} from "../../hooks";
-
-// userId du candidat ou coach lié
-const UserInformationCard = ({ title, user }) => {
-  // données du candidat ou coach lié
-  const [linkedUser, setLinkedUser] = useState();
-  const [userCandidat, setUserCandidat] = useState();
-
-  useEffect(() => {
-    if (user) {
-      if (user.role === USER_ROLES.COACH && user.coach) {
-        setLinkedUser(user.coach.candidat);
-        setUserCandidat(user.coach);
-      }
-      if (user.role === USER_ROLES.CANDIDAT && user.candidat) {
-        setLinkedUser(user.candidat.coach);
-        setUserCandidat(user.candidat);
-      }
-    }
-  }, [user]);
-
-  // si membre lié
-  if (linkedUser) {
-    return (
-      <Card style="secondary" title={title}>
-        <GridNoSSR column gap="small">
-          <GridNoSSR row gap="small">
-            <IconNoSSR name="user" style={{width: 20}} />
-            <span>{`${linkedUser.firstName} ${linkedUser.lastName}`}</span>
-          </GridNoSSR>
-
-          <SimpleLink
-            href={`mailto:${linkedUser.email}`}
-            className="uk-link-muted"
-            isExternal
-          >
-            <GridNoSSR row gap="small">
-              <IconNoSSR name="mail" style={{width: 20}} />
-              <span>{linkedUser.email}</span>
-            </GridNoSSR>
-          </SimpleLink>
-          {linkedUser.phone ? (
-            <SimpleLink
-              href={`tel:${linkedUser.phone}`}
-              className="uk-link-muted"
-              isExternal
-            >
-              <GridNoSSR row gap="small">
-                <IconNoSSR name="phone" style={{width: 20}} />
-                <span>{linkedUser.phone}</span>
-              </GridNoSSR>
-            </SimpleLink>
-          ) : (
-            <GridNoSSR row gap="small">
-              <IconNoSSR name="phone" style={{width: 20}} />
-              <span className="uk-text-italic">
-                Numéro de téléphone non renseigné
-              </span>
-            </GridNoSSR>
-          )}
-          {user.role === USER_ROLES.COACH && (
-            <SimpleLink
-              className="uk-link-muted"
-              target="_blank"
-              href={`/cv/${userCandidat.url}`}
-            >
-              <GridNoSSR row gap="small">
-                <IconNoSSR name="link" style={{width: 20}} />
-                <span className="uk-text-italic">{userCandidat.url}</span>
-              </GridNoSSR>
-            </SimpleLink>
-          )}
-          {user.role === USER_ROLES.COACH && (
-            <GridNoSSR row gap="small">
-              <IconNoSSR name="cog" style={{width: 20}} />
-              <span className="uk-text-italic">
-                {userCandidat.hidden ? 'CV caché' : 'CV visible'}
-              </span>
-            </GridNoSSR>
-          )}
-          {user.role === USER_ROLES.COACH && (
-            <GridNoSSR row gap="small">
-              <IconNoSSR name="cog" style={{width: 20}} />
-              <span className="uk-text-italic">
-                {userCandidat.employed
-                  ? 'A retrouvé un emploi'
-                  : "N'a pas retrouvé d'emploi"}
-              </span>
-            </GridNoSSR>
-          )}
-        </GridNoSSR>
-      </Card>
-    );
-  }
-  // si pas de membre lié
-  return (
-    <Card style="secondary" title={title}>
-      <span className="uk-text-italic">Aucun membre lié</span>
-    </Card>
-  );
-};
-UserInformationCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  user: PropTypes.shape.isRequired,
-};
+import UserInformationCard from "../../components/cards/UserInformationCard";
 
 const Parametres = () => {
   const { user } = useContext(UserContext);
@@ -153,12 +50,12 @@ const Parametres = () => {
     const gender = schemaPersonalData.fields[
       schemaPersonalData.fields.findIndex((field) => field.id === 'gender')
     ];
-    firstName.hidden = () => true;
-    firstName.disabled = () => true;
-    lastName.hidden = () => true;
-    lastName.disabled = () => true;
-    gender.hidden = () => true;
-    gender.disabled = () => true;
+    firstName.hidden = true;
+    firstName.disabled = true;
+    lastName.hidden = true;
+    lastName.disabled = true;
+    gender.hidden = true;
+    gender.disabled = true;
   }
 
   if (!user) return null;
@@ -170,7 +67,7 @@ const Parametres = () => {
           title="Mes paramètres"
           description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
         />
-        <GridNoSSR childWidths={['1-2@m']} match>
+        <GridNoSSR childWidths={['1-2@m']}>
           <GridNoSSR childWidths={['1-1']}>
             {/* Preferences du CV */}
             {userData.role === USER_ROLES.CANDIDAT && (
@@ -274,10 +171,12 @@ const Parametres = () => {
                 undefined
               )}
             </div>
-
             {(userData.role === USER_ROLES.CANDIDAT || userData.role === USER_ROLES.COACH) && (
               <UserInformationCard
                 user={userData}
+                onChange={(data) => {
+                  setUserData(data);
+                }}
               />
             )}
           </GridNoSSR>

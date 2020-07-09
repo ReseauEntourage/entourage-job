@@ -42,8 +42,8 @@ const CVPage = () => {
   const userToCoach = schemaEditUser.fields[
     schemaEditUser.fields.findIndex((field) => field.id === 'userToCoach')
   ];
-  userToCoach.disabled = () => true;
-  userToCoach.hidden = () => true;
+  userToCoach.disabled = true;
+  userToCoach.hidden = true;
 
   const role = schemaEditUser.fields[
     schemaEditUser.fields.findIndex((field) => field.id === 'role')
@@ -172,7 +172,7 @@ const CVPage = () => {
           {onglet === 'settings' && (
             <GridNoSSR childWidths={['1-2@m']}>
               {(user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
-                <GridNoSSR gap={isCandidat ? 'medium' : 'collapse'}childWidths={['1-1']}>
+                <GridNoSSR gap={isCandidat ? 'medium' : 'collapse'} childWidths={['1-1']}>
                   <div>
                     {
                       isCandidat &&
@@ -334,6 +334,7 @@ const CVPage = () => {
               {
                 (user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
                 <UserInformationCard
+                  isAdmin
                   user={user}
                   onChange={(data) => {
                     setUser(data);

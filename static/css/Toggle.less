@@ -11,8 +11,10 @@
   display: inline-block;
   width: @width;
   height: @height;
+  border: 2px solid white;
+  border-radius: @height;
 
-  input { 
+  input {
     opacity: 0;
     width: 0;
     height: 0;
@@ -20,11 +22,11 @@
     &:checked + .ent-slider {
       background-color: @orange;
     }
-    
+
     &:focus + .ent-slider {
       box-shadow: 0 0 1px @orange;
     }
-    
+
     &:checked + .ent-slider:before {
       -webkit-transform: translateX(@test);
       -ms-transform: translateX(@test);
