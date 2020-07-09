@@ -165,7 +165,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
             J&apos;accepte les{' '}
             <SimpleLink
               isExternal
-              target
+              target="_blank"
               href={EXTERNAL_LINKS.LEGAL_MENTIONS}
             >
             CGU

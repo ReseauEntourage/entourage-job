@@ -9,21 +9,36 @@ import FormWithValidation from "../forms/FormWithValidation";
 import schema from "../forms/schema/formEditOpportunity";
 import Api from "../../Axios";
 import {useResetForm} from "../../hooks";
+import {mutateFormSchema} from "../../utils";
 
 const HireCTA = ({inverse}) => {
 
   const [form, resetForm] = useResetForm();
 
-  const candidatId = schema.fields[
-    schema.fields.findIndex((field) => field.id === 'candidatId')
-    ];
-
-  candidatId.disabled = true;
-  candidatId.hidden = true;
-
-  schema.fields[
-    schema.fields.findIndex((field) => field.id === 'isPublic')
-    ].disabled = true;
+  const mutatedSchema = mutateFormSchema(schema, [
+    {
+      fieldId: 'candidatId',
+      props: [
+        {
+          propName: 'disabled',
+          value: true
+        },
+        {
+          propName: 'hidden',
+          value: true
+        }
+      ]
+    },
+    {
+      fieldId: 'isPublic',
+      props: [
+        {
+          propName: 'disabled',
+          value: true
+        }
+      ]
+    },
+  ]);
 
   const data = [
     {
@@ -111,7 +126,7 @@ const HireCTA = ({inverse}) => {
                 <FormWithValidation
                   ref={form}
                   submitText="Envoyer"
-                  formSchema={schema}
+                  formSchema={mutatedSchema}
                   onCancel={closeModal}
                   onSubmit={(opportunity) => {
                     Api.post('/api/v1/opportunity/', opportunity)

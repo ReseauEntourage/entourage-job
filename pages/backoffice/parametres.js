@@ -21,6 +21,7 @@ import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithC
 import {USER_ROLES} from "../../constants";
 import {useResetForm} from "../../hooks";
 import UserInformationCard from "../../components/cards/UserInformationCard";
+import {mutateFormSchema} from "../../utils";
 
 const Parametres = () => {
   const { user } = useContext(UserContext);
@@ -40,22 +41,50 @@ const Parametres = () => {
     }
   }, [user]);
 
+  let mutatedSchema = schemaPersonalData;
+
   if(userData && userData.role !== USER_ROLES.ADMIN) {
-    const firstName = schemaPersonalData.fields[
-      schemaPersonalData.fields.findIndex((field) => field.id === 'firstName')
-    ];
-    const lastName = schemaPersonalData.fields[
-      schemaPersonalData.fields.findIndex((field) => field.id === 'lastName')
-    ];
-    const gender = schemaPersonalData.fields[
-      schemaPersonalData.fields.findIndex((field) => field.id === 'gender')
-    ];
-    firstName.hidden = true;
-    firstName.disabled = true;
-    lastName.hidden = true;
-    lastName.disabled = true;
-    gender.hidden = true;
-    gender.disabled = true;
+    mutatedSchema = mutateFormSchema(schemaPersonalData, [
+      {
+        fieldId: 'firstName',
+        props: [
+          {
+            propName: 'disabled',
+            value: true
+          },
+          {
+            propName: 'hidden',
+            value: true
+          }
+        ]
+      },
+      {
+        fieldId: 'lastName',
+        props: [
+          {
+            propName: 'disabled',
+            value: true
+          },
+          {
+            propName: 'hidden',
+            value: true
+          }
+        ]
+      },
+      {
+        fieldId: 'gender',
+        props: [
+          {
+            propName: 'disabled',
+            value: true
+          },
+          {
+            propName: 'hidden',
+            value: true
+          }
+        ]
+      },
+    ]);
   }
 
   if (!user) return null;
@@ -237,7 +266,7 @@ const Parametres = () => {
               gender: userData && userData.gender.toString(),
               phone: userData.phone
             }}
-            formSchema={schemaPersonalData}
+            formSchema={mutatedSchema}
             onSubmit={({ firstName, lastName, gender, phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
               let newUserData = {};
               if(userData.role === USER_ROLES.ADMIN) {
