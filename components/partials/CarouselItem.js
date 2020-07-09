@@ -30,7 +30,7 @@ const CarouselItem = ({index, img, description}) => {
 CarouselItem.propTypes = {
   index: PropTypes.number.isRequired,
   img: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired
+  description: PropTypes.element.isRequired
 };
 
 CarouselItem.defaultProps = {
