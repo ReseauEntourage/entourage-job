@@ -19,6 +19,7 @@ import ModalEdit from '../../../../components/modals/ModalEdit';
 import {USER_ROLES} from "../../../../constants";
 import ToggleWithConfirmationModal
   from "../../../../components/backoffice/ToggleWithConfirmationModal";
+import {mutateFormSchema} from "../../../../utils";
 
 const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
@@ -39,17 +40,31 @@ const CVPage = () => {
     }
   }, [id]);
 
-  const userToCoach = schemaEditUser.fields[
-    schemaEditUser.fields.findIndex((field) => field.id === 'userToCoach')
-  ];
-  userToCoach.disabled = true;
-  userToCoach.hidden = true;
-
-  const role = schemaEditUser.fields[
-    schemaEditUser.fields.findIndex((field) => field.id === 'role')
-  ];
-  const indexToHide = role.options.findIndex((option) => option.value === USER_ROLES.ADMIN);
-  role.options[indexToHide].hidden = true;
+  const mutatedSchema = mutateFormSchema(schemaEditUser, [
+    {
+      fieldId: 'userToCoach',
+      props: [
+        {
+          propName: 'disabled',
+          value: true
+        },
+        {
+          propName: 'hidden',
+          value: true
+        }
+      ]
+    },
+    {
+      fieldId: 'role',
+      props: [
+        {
+          propName: 'hidden',
+          value: true,
+          option: USER_ROLES.ADMIN
+        }
+      ]
+    },
+  ]);
 
   const isCandidat = user && user.candidat && user.role === USER_ROLES.CANDIDAT;
 
@@ -273,7 +288,7 @@ const CVPage = () => {
                   <div>
                     <ModalEdit
                       id="edit-user"
-                      formSchema={schemaEditUser}
+                      formSchema={mutatedSchema}
                       title="Edition d'un membre"
                       description="Merci de modifier les informations que vous souhaitez concernant le membre."
                       submitText="Modifier le membre"
