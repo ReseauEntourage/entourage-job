@@ -131,6 +131,7 @@ const HireCTA = ({id, inverse}) => {
                   onSubmit={(opportunity) => {
                     Api.post('/api/v1/opportunity/', {
                       ...opportunity,
+                      date: Date.now()
                     })
                       .then(nextStep)
                       .catch((error) => {
