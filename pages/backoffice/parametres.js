@@ -267,7 +267,28 @@ const Parametres = () => {
               phone: userData.phone
             }}
             formSchema={mutatedSchema}
-            onSubmit={({ firstName, lastName, gender, phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
+            onSubmit={({ firstName, lastName, gender, phone, oldEmail, newEmail0, newEmail1 }, closeModal, setError) => {
+              const updateUser = (newUserData) => {
+                setLoadingPersonal(true);
+                Api.put(`/api/v1/user/${userData.id}`, newUserData)
+                  .then(() => {
+                    closeModal();
+                    setUserData({ ...userData, ...newUserData });
+                    UIkit.notification(
+                      'Vos informations personnelles ont bien été mises à jour',
+                      'success'
+                    );
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    UIkit.notification(
+                      "Une erreur c'est produite lors de la mise à jour de vos informations personnelles",
+                      'danger'
+                    );
+                  })
+                  .finally(() => setLoadingPersonal(false));
+              };
+
               let newUserData = {};
               if(userData.role === USER_ROLES.ADMIN) {
                 newUserData = {firstName, lastName, gender};
@@ -277,33 +298,29 @@ const Parametres = () => {
                 if (userData.email === oldEmail && newEmail0 === newEmail1) {
                   newUserData.email = newEmail0;
                 }
+                updateUser(newUserData);
               }
               else {
                 if (phone !== userData.phone) {
                   newUserData.phone = phone;
                 }
-                if (userData.email === oldEmail && newEmail0 === newEmail1) {
-                  newUserData.email = newEmail0;
+                if(oldEmail || newEmail0 || newEmail1) {
+                  if (userData.email !== oldEmail) {
+                    setError("L'ancienne adresse email n'est pas valide");
+                  }
+                  else if(newEmail0.length === 0 || newEmail0 !== newEmail1) {
+                    setError("Les deux adresses email ne sont pas indentiques");
+                  }
+                  else {
+                    newUserData.email = newEmail0;
+                    updateUser(newUserData);
+                    setError("");
+                  }
+                }
+                else {
+                  updateUser(newUserData);
                 }
               }
-              setLoadingPersonal(true);
-              Api.put(`/api/v1/user/${userData.id}`, newUserData)
-                .then(() => {
-                  closeModal();
-                  setUserData({ ...userData, ...newUserData });
-                  UIkit.notification(
-                    'Vos informations personnelles ont bien été mises à jour',
-                    'success'
-                  );
-                })
-                .catch((err) => {
-                  console.error(err);
-                  UIkit.notification(
-                    "Une erreur c'est produite lors de la mise à jour de vos informations personnelles",
-                    'danger'
-                  );
-                })
-                .finally(() => setLoadingPersonal(false));
             }}
           />
         </div>

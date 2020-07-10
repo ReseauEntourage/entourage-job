@@ -490,7 +490,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
             onSubmit={(fields, closeModal) => {
               postOpportunity({
                 ...fields,
-                usersId: [cv.UserId],
+                candidatId: cv.UserId,
                 date: Date.now(),
               }, closeModal);
             }}

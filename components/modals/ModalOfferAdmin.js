@@ -2,7 +2,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import PropsType from 'prop-types';
 import moment from 'moment';
-import axios from '../../Axios';
+import Api from '../../Axios';
 import schema from '../forms/schema/formEditOpportunity';
 import FormWithValidation from '../forms/FormWithValidation';
 import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
@@ -25,8 +25,8 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
     setError(false);
     setLoading(true);
     try {
-      const { data } = await axios.put(
-        `${process.env.SERVER_URL}/api/v1/opportunity/`,
+      const { data } = await Api.put(
+        `/api/v1/opportunity/`,
         opportunity
       );
       setCurrentOffer(data);

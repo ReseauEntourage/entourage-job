@@ -129,7 +129,9 @@ const HireCTA = ({id, inverse}) => {
                   formSchema={mutatedSchema}
                   onCancel={closeModal}
                   onSubmit={(opportunity) => {
-                    Api.post('/api/v1/opportunity/', opportunity)
+                    Api.post('/api/v1/opportunity/', {
+                      ...opportunity,
+                    })
                       .then(nextStep)
                       .catch((error) => {
                         console.error(error);

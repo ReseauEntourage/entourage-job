@@ -29,7 +29,7 @@ const SharePartial = ({padding}) => (
           isExternal
           newTab
           key={key}>
-          {title} <IconNoSSR name={name} />
+          {title}&nbsp;<IconNoSSR name={name} />
         </Button>
       ))}
     </GridNoSSR>
