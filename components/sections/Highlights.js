@@ -43,7 +43,7 @@ const Highlights = () => {
         </h3>
         <div className="uk-width-expand">
           <Carousel containerClasses="uk-child-width-1-1">
-            {highlights.map(({img, description}, index) => <CarouselItem index={index} img={img} description={description} />)}
+            {highlights.map(({img, description}, index) => <CarouselItem key={index} index={index} img={img} description={description} />)}
           </Carousel>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Section } from '../utils';
 import MultipleCTA from "../partials/MultipleCTA";
-import Layout from "../Layout";
 import HireCTA from "../partials/HireCTA";
 
 const WhatItBrings = () => {
@@ -29,7 +28,7 @@ const WhatItBrings = () => {
           spacing="medium"
           className="uk-margin-large-bottom uk-container-small"
         />
-        <HireCTA inverse/>
+        <HireCTA id="whatItBrings" inverse/>
       </div>
     </Section>
   );

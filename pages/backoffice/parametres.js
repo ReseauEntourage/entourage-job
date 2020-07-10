@@ -20,110 +20,8 @@ import schemaChangePassword from '../../components/forms/schema/formChangePasswo
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
 import {USER_ROLES} from "../../constants";
 import {useResetForm} from "../../hooks";
-
-// userId du candidat ou coach lié
-const UserInformationCard = ({ title, user }) => {
-  // données du candidat ou coach lié
-  const [linkedUser, setLinkedUser] = useState();
-  const [userCandidat, setUserCandidat] = useState();
-
-  useEffect(() => {
-    if (user) {
-      if (user.role === USER_ROLES.COACH && user.coach) {
-        setLinkedUser(user.coach.candidat);
-        setUserCandidat(user.coach);
-      }
-      if (user.role === USER_ROLES.CANDIDAT && user.candidat) {
-        setLinkedUser(user.candidat.coach);
-        setUserCandidat(user.candidat);
-      }
-    }
-  }, [user]);
-
-  // si membre lié
-  if (linkedUser) {
-    return (
-      <Card style="secondary" title={title}>
-        <GridNoSSR column gap="small">
-          <GridNoSSR row gap="small">
-            <IconNoSSR name="user" />
-            <span>{`${linkedUser.firstName} ${linkedUser.lastName}`}</span>
-          </GridNoSSR>
-
-          <SimpleLink
-            href={`mailto:${linkedUser.email}`}
-            className="uk-link-muted"
-            isExternal
-          >
-            <GridNoSSR row gap="small">
-              <IconNoSSR name="mail" />
-              <span>{linkedUser.email}</span>
-            </GridNoSSR>
-          </SimpleLink>
-          {linkedUser.phone ? (
-            <SimpleLink
-              href={`tel:${linkedUser.phone}`}
-              className="uk-link-muted"
-              isExternal
-            >
-              <GridNoSSR row gap="small">
-                <IconNoSSR name="phone" />
-                <span>{linkedUser.phone}</span>
-              </GridNoSSR>
-            </SimpleLink>
-          ) : (
-            <GridNoSSR row gap="small">
-              <IconNoSSR name="phone" />
-              <span className="uk-text-italic">
-                Numéro de téléphone non renseigné
-              </span>
-            </GridNoSSR>
-          )}
-          {user.role === USER_ROLES.COACH && (
-            <SimpleLink
-              className="uk-link-muted"
-              target="_blank"
-              href={`/cv/${userCandidat.url}`}
-            >
-              <GridNoSSR row gap="small">
-                <IconNoSSR name="link" />
-                <span className="uk-text-italic">{userCandidat.url}</span>
-              </GridNoSSR>
-            </SimpleLink>
-          )}
-          {user.role === USER_ROLES.COACH && (
-            <GridNoSSR row gap="small">
-              <IconNoSSR name="cog" />
-              <span className="uk-text-italic">
-                {userCandidat.hidden ? 'CV caché' : 'CV visible'}
-              </span>
-            </GridNoSSR>
-          )}
-          {user.role === USER_ROLES.COACH && (
-            <GridNoSSR row gap="small">
-              <IconNoSSR name="cog" />
-              <span className="uk-text-italic">
-                {userCandidat.employed
-                  ? 'A retrouvé un emploi'
-                  : "N'a pas retrouvé d'emploi"}
-              </span>
-            </GridNoSSR>
-          )}
-        </GridNoSSR>
-      </Card>
-    );
-  }
-  // si pas de membre lié
-  return (
-    <Card style="secondary" title={title}>
-      <span className="uk-text-italic">Aucun membre lié</span>
-    </Card>
-  );
-};
-UserInformationCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  user: PropTypes.shape.isRequired,
-};
+import UserInformationCard from "../../components/cards/UserInformationCard";
+import {mutateFormSchema} from "../../utils";
 
 const Parametres = () => {
   const { user } = useContext(UserContext);
@@ -143,6 +41,52 @@ const Parametres = () => {
     }
   }, [user]);
 
+  let mutatedSchema = schemaPersonalData;
+
+  if(userData && userData.role !== USER_ROLES.ADMIN) {
+    mutatedSchema = mutateFormSchema(schemaPersonalData, [
+      {
+        fieldId: 'firstName',
+        props: [
+          {
+            propName: 'disabled',
+            value: true
+          },
+          {
+            propName: 'hidden',
+            value: true
+          }
+        ]
+      },
+      {
+        fieldId: 'lastName',
+        props: [
+          {
+            propName: 'disabled',
+            value: true
+          },
+          {
+            propName: 'hidden',
+            value: true
+          }
+        ]
+      },
+      {
+        fieldId: 'gender',
+        props: [
+          {
+            propName: 'disabled',
+            value: true
+          },
+          {
+            propName: 'hidden',
+            value: true
+          }
+        ]
+      },
+    ]);
+  }
+
   if (!user) return null;
 
   return (
@@ -152,7 +96,7 @@ const Parametres = () => {
           title="Mes paramètres"
           description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
         />
-        <GridNoSSR childWidths={['1-2@m']} match>
+        <GridNoSSR childWidths={['1-2@m']}>
           <GridNoSSR childWidths={['1-1']}>
             {/* Preferences du CV */}
             {userData.role === USER_ROLES.CANDIDAT && (
@@ -230,15 +174,19 @@ const Parametres = () => {
               {userData ? (
                 <GridNoSSR column gap="small">
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="user" />
+                    <IconNoSSR name="user" style={{width: 20}} />
                     <span>{`${userData.firstName} ${userData.lastName}`}</span>
                   </GridNoSSR>
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="mail" />
+                    <IconNoSSR name="gender" style={{width: 20}} />
+                    <span>{`${userData.gender === 0 ? 'Homme' : 'Femme'}`}</span>
+                  </GridNoSSR>
+                  <GridNoSSR row gap="small">
+                    <IconNoSSR name="mail" style={{width: 20}} />
                     <span>{userData.email}</span>
                   </GridNoSSR>
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="phone" />
+                    <IconNoSSR name="phone" style={{width: 20}} />
                     {userData.phone ? (
                       <span>{userData.phone}</span>
                     ) : (
@@ -252,10 +200,12 @@ const Parametres = () => {
                 undefined
               )}
             </div>
-
             {(userData.role === USER_ROLES.CANDIDAT || userData.role === USER_ROLES.COACH) && (
               <UserInformationCard
                 user={userData}
+                onChange={(data) => {
+                  setUserData(data);
+                }}
               />
             )}
           </GridNoSSR>
@@ -310,53 +260,66 @@ const Parametres = () => {
             submitText="Envoyer"
             id="modal-personal-data"
             title="Édition - Informations personelles"
-            defaultValues={{ phone: userData.phone }}
-            formSchema={schemaPersonalData}
-            onSubmit={({ phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
-              if (phone !== userData.phone) {
+            defaultValues={{
+              firstName: userData.firstName,
+              lastName: userData.lastName,
+              gender: userData && userData.gender.toString(),
+              phone: userData.phone
+            }}
+            formSchema={mutatedSchema}
+            onSubmit={({ firstName, lastName, gender, phone, oldEmail, newEmail0, newEmail1 }, closeModal, setError) => {
+              const updateUser = (newUserData) => {
                 setLoadingPersonal(true);
-                Api.put(`/api/v1/user/${userData.id}`, {
-                  phone,
-                })
+                Api.put(`/api/v1/user/${userData.id}`, newUserData)
                   .then(() => {
                     closeModal();
-                    setUserData({ ...userData, phone });
+                    setUserData({ ...userData, ...newUserData });
                     UIkit.notification(
-                      'Votre numéro de téléphone a bien été mis à jour',
+                      'Vos informations personnelles ont bien été mises à jour',
                       'success'
                     );
                   })
                   .catch((err) => {
                     console.error(err);
                     UIkit.notification(
-                      "Une erreur c'est produite lors de la mise à jour de votre email",
+                      "Une erreur c'est produite lors de la mise à jour de vos informations personnelles",
                       'danger'
                     );
                   })
                   .finally(() => setLoadingPersonal(false));
-              }
+              };
 
-              if (userData.email === oldEmail && newEmail0 === newEmail1) {
-                setLoadingPersonal(true);
-                Api.put(`/api/v1/user/${userData.id}`, {
-                  email: newEmail0,
-                })
-                  .then(() => {
-                    closeModal();
-                    setUserData({ ...userData, email: newEmail0 });
-                    UIkit.notification(
-                      'Votre email a bien été mis à jour',
-                      'success'
-                    );
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                    UIkit.notification(
-                      "Une erreur c'est produite lors de la mise à jour de votre email",
-                      'danger'
-                    );
-                  })
-                  .finally(() => setLoadingPersonal(false));
+              let newUserData = {};
+              if(userData.role === USER_ROLES.ADMIN) {
+                newUserData = {firstName, lastName, gender};
+                if (phone !== userData.phone) {
+                  newUserData.phone = phone;
+                }
+                if (userData.email === oldEmail && newEmail0 === newEmail1) {
+                  newUserData.email = newEmail0;
+                }
+                updateUser(newUserData);
+              }
+              else {
+                if (phone !== userData.phone) {
+                  newUserData.phone = phone;
+                }
+                if(oldEmail || newEmail0 || newEmail1) {
+                  if (userData.email !== oldEmail) {
+                    setError("L'ancienne adresse email n'est pas valide");
+                  }
+                  else if(newEmail0.length === 0 || newEmail0 !== newEmail1) {
+                    setError("Les deux adresses email ne sont pas indentiques");
+                  }
+                  else {
+                    newUserData.email = newEmail0;
+                    updateUser(newUserData);
+                    setError("");
+                  }
+                }
+                else {
+                  updateUser(newUserData);
+                }
               }
             }}
           />

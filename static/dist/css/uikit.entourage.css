@@ -48,8 +48,9 @@ a:hover,
 .uk-link:hover,
 .uk-link-toggle:hover .uk-link,
 .uk-link-toggle:focus .uk-link {
-  color: #0f6ecd;
+  color: #d53f00;
   text-decoration: underline;
+  text-decoration: none;
 }
 /* Text-level semantics
  ========================================================================== */
@@ -2196,7 +2197,7 @@ select.uk-form-width-xsmall {
 /* Hover + Focus */
 .uk-button-link:hover,
 .uk-button-link:focus {
-  color: #0f6ecd;
+  color: #d53f00;
   text-decoration: underline;
 }
 /* Disabled */

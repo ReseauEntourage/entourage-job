@@ -1,6 +1,33 @@
 {
-  "id": "form-catchphrase",
+  "id": "form-personal-data",
   "fields": [
+    {
+      "id": "firstName",
+      "name": "firstName",
+      "type": "text",
+      "component": "input",
+      "placeholder": "Tapez le prénom",
+      "title": "Prénom*"
+    },
+    {
+      "id": "lastName",
+      "name": "lastName",
+      "type": "text",
+      "component": "input",
+      "placeholder": "Tapez le nom",
+      "title": "Nom*"
+    },
+    {
+      "id": "gender",
+      "title": "Genre*",
+      "name": "gender",
+      "component": "select",
+      "options": [
+        { "value": -1, "label": "Choisissez un genre" },
+        { "value": 0, "label": "Homme" },
+        { "value": 1, "label": "Femme" }
+      ]
+    },
     { "title": "Modifier l'adresse mail", "component": "text" },
     {
       "id": "oldEmail",
@@ -33,6 +60,39 @@
     }
   ],
   "rules": [
+    {
+      "field": "firstName",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "lastName",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
+    {
+      "field": "gender",
+      "method": "isEmpty",
+      "args": [
+        {
+          "ignore_whitespace": true
+        }
+      ],
+      "validWhen": false,
+      "message": "Obligatoire"
+    },
     {
       "field": "phone",
       "method": "isLength",

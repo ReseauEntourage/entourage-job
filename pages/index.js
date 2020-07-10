@@ -19,7 +19,6 @@ const Index = () => {
       <EmphasePartial />
       <NumberPartial />
       <ActionPartial style="default" />
-      <ContestModal />
     </Layout>
   );
 };

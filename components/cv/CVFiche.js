@@ -17,7 +17,7 @@ import schema from '../forms/schema/formEditOpportunity';
 import Axios from '../../Axios';
 import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
-import {formatParagraph, sortExperiences, sortReviews} from "../../utils";
+import {formatParagraph, mutateFormSchema, sortExperiences, sortReviews} from "../../utils";
 
 /**
  * Le cv en public et en preview
@@ -32,13 +32,26 @@ const CVFiche = ({ cv, actionDisabled }) => {
   const title = `${cv.user.candidat.firstName} - LinkedOut`;
 
   // desactivation des champs candidat et publique
-  schema.fields[
-    schema.fields.findIndex((field) => field.id === 'candidatId')
-  ].disable = () => true;
-
-  schema.fields[
-    schema.fields.findIndex((field) => field.id === 'isPublic')
-  ].disabled = true;
+  const mutatedSchema = mutateFormSchema(schema, [
+    {
+      fieldId: 'candidatId',
+      props: [
+        {
+          propName: 'disable',
+          value: () => true
+        }
+      ]
+    },
+    {
+      fieldId: 'isPublic',
+      props: [
+        {
+          propName: 'disabled',
+          value: true
+        }
+      ]
+    },
+  ]);
 
   const postOpportunity = async (opportunity, closeModal) => {
     try {
@@ -473,11 +486,11 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 label: `${cv.user.candidat.firstName}`,
               },
             }}
-            formSchema={schema}
+            formSchema={mutatedSchema}
             onSubmit={(fields, closeModal) => {
               postOpportunity({
                 ...fields,
-                usersId: [cv.UserId],
+                candidatId: cv.UserId,
                 date: Date.now(),
               }, closeModal);
             }}

@@ -63,7 +63,7 @@ const Carousel = ({style, children, containerClasses}) => (
 
 Carousel.propTypes = {
   style: PropTypes.string,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.arrayOf(PropTypes.element).isRequired,
   containerClasses: PropTypes.string.isRequired
 };
 Carousel.defaultProps = {

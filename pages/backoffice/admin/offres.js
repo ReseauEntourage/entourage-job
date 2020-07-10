@@ -54,7 +54,6 @@ const LesOpportunites = () => {
             },
           }
         );
-        console.log(data);
         setOffers(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
         setLoading(false);
         return data;
@@ -71,7 +70,7 @@ const LesOpportunites = () => {
     try {
       await Axios.post(`/api/v1/opportunity/`, opportunity);
       closeModal();
-      UIkit.notification(`L'oppotunité a été ajoutée.`, 'success');
+      UIkit.notification(`L'opportunité a été ajoutée.`, 'success');
       fetchData();
     } catch (err) {
       UIkit.notification(`Une erreur est survenue.`, 'danger');
@@ -83,7 +82,6 @@ const LesOpportunites = () => {
       if (data) {
         const offer = data.find((o) => o.id === opportunityId);
         if (offer) {
-          console.log(offer);
           setCurrentOffer(offer);
           UIkit.modal('#modal-offer-admin').show();
         }
@@ -114,6 +112,9 @@ const LesOpportunites = () => {
             title="Ajouter une opportunité"
             submitText="Envoyer"
             formSchema={schema}
+            defaultValues={{
+              isPublic: true
+            }}
             onSubmit={(fields, closeModal) => {
               postOpportunity({
                 ...fields,

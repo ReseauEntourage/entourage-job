@@ -35,11 +35,11 @@ const WaysToJoin = () => {
         <div className="uk-width-expand">
           <div className="uk-container-small uk-margin-large-bottom uk-margin-auto">
             <Carousel containerClasses="uk-child-width-1-1">
-              {content.map(({img, description}, index) => <CarouselItem index={index} img={img} description={description} />)}
+              {content.map(({img, description}, index) => <CarouselItem key={index} index={index} img={img} description={description} />)}
             </Carousel>
           </div>
         </div>
-        <HireCTA />
+        <HireCTA id="waysToJoin" />
       </div>
     </Section>
   );

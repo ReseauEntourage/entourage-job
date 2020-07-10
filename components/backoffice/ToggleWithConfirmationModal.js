@@ -84,7 +84,7 @@ ToggleWithConfirmationModal.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   modalTitle: PropTypes.string.isRequired,
-  modalDescription: PropTypes.string,
+  modalDescription: PropTypes.element,
   modalConfirmation: PropTypes.string,
   onToggle: PropTypes.func.isRequired,
   defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),

@@ -165,7 +165,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
             J&apos;accepte les{' '}
             <SimpleLink
               isExternal
-              target
+              target="_blank"
               href={EXTERNAL_LINKS.LEGAL_MENTIONS}
             >
             CGU
@@ -291,7 +291,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
 GenericField.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
   formId: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+  value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string, PropTypes.number, PropTypes.arrayOf(PropTypes.string)]),
   onChange: PropTypes.func.isRequired,
   getValid: PropTypes.func.isRequired,
   getValue: PropTypes.func.isRequired

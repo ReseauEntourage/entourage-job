@@ -53,11 +53,18 @@ const Select = ({
           }}
           disabled={disabled}
         >
-          {options.map((item, i) => (
-            <option value={item.value} key={i}>
-              {item.label}
-            </option>
-          ))}
+          {
+            options.map((item, i) => {
+              return (
+                !item.hidden ?
+                  <option value={item.value} key={i}>
+                    {item.label}
+                  </option>
+                  :
+                  undefined
+              );
+            }
+          )}
         </select>
       </div>
       <FormValidatorErrorMessage validObj={valid} />
@@ -82,7 +89,7 @@ Select.propTypes = {
     isInvalid: PropTypes.bool,
     message: PropTypes.string,
   }),
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   options: PropTypes.arrayOf(
     PropTypes.objectOf({
       value: PropTypes.oneOfType([

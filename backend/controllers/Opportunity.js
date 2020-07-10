@@ -59,14 +59,12 @@ const createOpportunity = async (data) => {
     modelOpportunity.addBusinessLines(businessLines);
   }
 
-  if (data.usersId) {
-    console.log(`Etape 4 - Déterminer les Users à qui l'opportunité s'adresse`);
-    data.usersId.forEach((userId) =>
-      Opportunity_User.create({
-        OpportunityId: modelOpportunity.id,
-        UserId: userId, // to rename in userId
-      })
-    );
+  if (data.candidatId) {
+    console.log(`Etape 4 - Détermine le User à qui l'opportunité s'adresse`);
+    Opportunity_User.create({
+      OpportunityId: modelOpportunity.id,
+      UserId: data.candidatId, // to rename in userId
+    });
   }
 
   console.log(`Etape finale - Reprendre l'opportunité complète à retourner`);
