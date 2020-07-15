@@ -9,7 +9,7 @@
     "dev-front": "node -r dotenv/config ./backend/serveur-next.js",
     "dev-debug": "nodemon --inspect --watch ./backend/* -r dotenv/config ./backend/serveur-next.js",
     "pretest": "mv ./test/justForMocha.babelrc .babelrc",
-    "test": "mocha --require @babel/register './test/*.test.js' || npm run posttest",
+    "test": "jest",
     "posttest": "mv .babelrc ./test/justForMocha.babelrc",
     "pretest-windows": "copy /Y .\\test\\justForMocha.babelrc .\\.babelrc",
     "test-windows": "mocha --require @babel/register './test/*.test.js' || npm run posttest-windows",
@@ -88,12 +88,12 @@
     "webpack": "^4.41.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/preset-env": "^7.8.4",
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.8.3",
     "@babel/register": "^7.8.3",
     "babel-eslint": "^10.1.0",
-    "chai": "*",
+    "babel-jest": "^26.1.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.8.0",
@@ -103,7 +103,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
-    "mocha": "^7.1.2",
+    "jest": "^26.1.0",
     "nodemon": "^1.19.4",
     "prettier": "^1.19.1"
   }
