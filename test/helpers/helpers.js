@@ -1,25 +1,29 @@
-const dotenv = require('dotenv');
-const path = require('path');
 const Sequelize = require('sequelize');
 const server = require('../../backend/server');
+const loadEnvironnementVariables = require('../../backend/utils/env');
 
-const loadEnvironnementVariables = () => {
-    const envPath = process.env.NODE_ENV === 'test' ? '../.env.test' : '../.env';
 
-    dotenv.config({ path: path.resolve(__dirname, envPath) });
 
-}
-
+/**
+ * Start a server according to .env variables
+ */
 const startTestServer = async () => {
     loadEnvironnementVariables();
     server.prepare();
     server.start(process.env.PORT);
 }
 
+/**
+ * stop the server
+ */
 const stopTestServer = async () => {
     server.close()
 }
 
+/**
+ * Create a test database accoding to env variables
+ * @returns the db connection
+ */
 const recreateTestDB = async () => {
     loadEnvironnementVariables();
     const db = new Sequelize(
@@ -39,16 +43,23 @@ const recreateTestDB = async () => {
     return db;
 };
 
+/**
+ * Drops all the tables content
+ */
 const resetTestDB = async () => {
     Sequelize.drop();
 }
 
-const createData = async (factory, number) => {
+/**
+ * Create many entities using a factory
+ * @param {An Entity factory} factory an entity factory
+ * @param {*} n the number of entities to create
+ * @returns
+ */
+const createData = async (factory, n) => {
     const entityArray = [];
+    // TODO: should run a factory n times
     // Promise.all
-    for (let i = 0; i < number; i += 1) {
-        entityArray.push(await factory)
-    }
 
     return entityArray
 }

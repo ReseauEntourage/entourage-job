@@ -8,7 +8,7 @@
     "dev-server": "nodemon --watch ./backend/* -r dotenv/config ./backend/serveur-next.js",
     "dev-front": "node -r dotenv/config ./backend/serveur-next.js",
     "dev-debug": "nodemon --inspect --watch ./backend/* -r dotenv/config ./backend/serveur-next.js",
-    "test": "NODE_ENV=test npx jest --runInBand --verbose",
+    "test": "NODE_ENV=test npx jest --config=jest.config.js --runInBand",
     "posttest": "mv .babelrc ./test/justForMocha.babelrc",
     "pretest-windows": "copy /Y .\\test\\justForMocha.babelrc .\\.babelrc",
     "test-windows": "mocha --require @babel/register './test/*.test.js' || npm run posttest-windows",

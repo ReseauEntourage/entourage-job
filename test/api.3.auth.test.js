@@ -1,6 +1,5 @@
 import Api from '../Axios';
 
-const { assert } = require('chai');
 const server = require('../backend/server');
 const AuthController = require('../backend/controllers/Auth');
 require('dotenv').config();
