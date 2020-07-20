@@ -50,7 +50,7 @@ const USER_EXAMPLE = {
   password: 'azerty',
 };
 
-describe('Tests des routes API - Partie CV', () => {
+describe.skip('Tests des routes API - Partie CV', () => {
   let user;
 
   before((done) => {

@@ -1,5 +1,5 @@
 const faker = require('faker');
-const user = require('../../backend/db/models');
+const User = require('../../backend/db/models/user');
 const { USER_ROLES } = require('../../constants');
 
 /**
@@ -28,4 +28,4 @@ const data = async (props = {}) => {
  * @param {*} props Properties to use to create User
  * @return a User
  */
-export default async (props = {}) => user.create(await data(props));
+export default async (props = {}) => User.create(await data(props));

@@ -1,4 +1,3 @@
-const { assert, expect } = require('chai');
 const Api = require('../Axios');
 
 const UserController = require('../backend/controllers/User');
@@ -46,7 +45,7 @@ const COACH = {
 };
 
 
-describe('Tests des routes API - Partie User', () => {
+describe.skip('Tests des routes API - Partie User', () => {
   const users = {};
 
   before((done) => {
@@ -74,10 +73,10 @@ describe('Tests des routes API - Partie User', () => {
                     password: ADMIN.password,
                   })
                     .then((userData) => {
-                        users.user = userData;
-                        done();
-                      });
-                    })
+                      users.user = userData;
+                      done();
+                    });
+                })
                 .catch((e) => console.log(e));
             })
             .catch((e) => console.log(e));
@@ -137,38 +136,38 @@ describe('Tests des routes API - Partie User', () => {
       }).timeout(TIMEOUT);
     });
 
-   /* describe('R - Read 1 User', () => {
-      it("doit retourner le User créé précédement à l'appel API", () => {
-        return Api.get(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
-          .then((res) => {
-            assert.isObject(res.data, 'User reçu');
-          })
-          .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
-      }).timeout(TIMEOUT);
-    });
-    describe('U - Update 1 User', () => {
-      const userUpdated = USER_EXAMPLE;
-      userUpdated.lastName = 'Updated';
-      it('doit mettre à jour les données du User dans la base de données', () => {
-        return Api.put(
-          `${process.env.SERVER_URL}/api/v1/user/${user.id}`,
-          userUpdated
-        )
-          .then((res) => {
-            assert.equal(res.data, 1, 'Update du User effectué');
-          })
-          .catch((err) => assert.fail(`Update User échoué : ${err} `));
-      }).timeout(TIMEOUT);
-    });
-    describe('D - Delete 1 User', () => {
-      it('doit supprimer le User de test dans la base de données', () => {
-        return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
-          .then((res) => {
-            assert.equal(res.data, 1, 'Delete du User effectué');
-          })
-          .catch((err) => assert.fail(`Delete du User échoué : ${err} `));
-      }).timeout(TIMEOUT);
-    }); */
+    /* describe('R - Read 1 User', () => {
+       it("doit retourner le User créé précédement à l'appel API", () => {
+         return Api.get(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
+           .then((res) => {
+             assert.isObject(res.data, 'User reçu');
+           })
+           .catch((err) => assert.fail(`Appel API non abouti : ${err} `));
+       }).timeout(TIMEOUT);
+     });
+     describe('U - Update 1 User', () => {
+       const userUpdated = USER_EXAMPLE;
+       userUpdated.lastName = 'Updated';
+       it('doit mettre à jour les données du User dans la base de données', () => {
+         return Api.put(
+           `${process.env.SERVER_URL}/api/v1/user/${user.id}`,
+           userUpdated
+         )
+           .then((res) => {
+             assert.equal(res.data, 1, 'Update du User effectué');
+           })
+           .catch((err) => assert.fail(`Update User échoué : ${err} `));
+       }).timeout(TIMEOUT);
+     });
+     describe('D - Delete 1 User', () => {
+       it('doit supprimer le User de test dans la base de données', () => {
+         return Api.delete(`${process.env.SERVER_URL}/api/v1/user/${user.id}`)
+           .then((res) => {
+             assert.equal(res.data, 1, 'Delete du User effectué');
+           })
+           .catch((err) => assert.fail(`Delete du User échoué : ${err} `));
+       }).timeout(TIMEOUT);
+     }); */
   });
 
   /* describe('Routes User supplémentaires', () => {

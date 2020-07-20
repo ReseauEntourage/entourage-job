@@ -1,4 +1,4 @@
-const {USER_ROLES} = require("../../constants");
+const { USER_ROLES } = require("../../constants");
 
 const {
   models: { User, User_Candidat, CV },
@@ -261,16 +261,16 @@ const setUser = async (id, user) => {
 const changeUserRole = async (id, user) => {
   const dbUser = await getUser(id);
 
-  if(dbUser.role !== user.role) {
-    if(dbUser.role === USER_ROLES.CANDIDAT && user.role !== USER_ROLES.CANDIDAT) {
+  if (dbUser.role !== user.role) {
+    if (dbUser.role === USER_ROLES.CANDIDAT && user.role !== USER_ROLES.CANDIDAT) {
       await User_Candidat.destroy({
         where: {
           candidatId: id
         },
       });
     }
-    else if(dbUser.role !== USER_ROLES.CANDIDAT && user.role === USER_ROLES.CANDIDAT) {
-      if(dbUser.role === USER_ROLES.COACH) {
+    else if (dbUser.role !== USER_ROLES.CANDIDAT && user.role === USER_ROLES.CANDIDAT) {
+      if (dbUser.role === USER_ROLES.COACH) {
         try {
           await User_Candidat.update(
             {
@@ -282,7 +282,7 @@ const changeUserRole = async (id, user) => {
               },
             });
         }
-        catch(e) {
+        catch (e) {
           console.log('Pas de candidat associé');
         }
       }
@@ -292,7 +292,7 @@ const changeUserRole = async (id, user) => {
         url: `${user.firstName.toLowerCase()}-${id.substring(0, 8)}`,
       });
 
-      await setUser(id, {role: user.role})
+      await setUser(id, { role: user.role })
     }
 
   }
@@ -325,7 +325,8 @@ const getUserCandidat = async (candidatId) => {
 };
 
 const getUserCandidatOpt = async ({ candidatId, coachId }) => {
-  // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: Error: WHERE parameter "coachId" has invalid "undefined" value
+  // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: 
+  // Error: WHERE parameter "coachId" has invalid "undefined" value
   const findWhere = {};
   if (candidatId) {
     findWhere.candidatId = candidatId;
