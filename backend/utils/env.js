@@ -6,5 +6,6 @@ const path = require('path');
  */
 export default () => {
     const envPath = process.env.NODE_ENV === 'test' ? '../../.env.test' : '../../.env';
+    console.log('ENV PATH', envPath);
     dotenv.config({ path: path.resolve(__dirname, envPath) });
 }

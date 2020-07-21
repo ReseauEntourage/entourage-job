@@ -13,7 +13,7 @@ const data = async (props = {}) => {
         email: faker.internet.email(),
         firstName: faker.firstName(),
         lastName: faker.lastName(),
-        role: USER_ROLES.CANDIDAT,
+        role: faker.random.objectElement(USER_ROLES),
         password: faker.password(),
         gender: faker.gender(),
         salt: faker.salt(),
@@ -24,8 +24,21 @@ const data = async (props = {}) => {
 }
 
 /**
- * Generate a User.
+ * Create a User in DB.
  * @param {*} props Properties to use to create User
  * @return a User
  */
-export default async (props = {}) => User.create(await data(props));
+export default async (props = {}) => {
+    let userData;
+    try {
+        userData = await data(props);
+    } catch (e) {
+        throw new Error(`Error while creating User data: ${e}`);
+    }
+    try {
+        User.create(userData);
+    } catch (e) {
+        throw new Error(`Error while inserting User in DB: ${e}`);
+    }
+    return userData;
+};

@@ -1,8 +1,7 @@
+import loadEnvironnementVariables from '../../backend/utils/env';
+
 const Sequelize = require('sequelize');
 const server = require('../../backend/server');
-const loadEnvironnementVariables = require('../../backend/utils/env');
-
-
 
 /**
  * Start a server according to .env variables
@@ -32,7 +31,8 @@ const recreateTestDB = async () => {
             logging: process.env.DEBUG_MODE ? console.log : false,
         }
     );
-    db.authenticate()
+
+    await db.authenticate()
         .then(() => {
             console.log('Connecté à la base de données');
         })
@@ -56,12 +56,9 @@ const resetTestDB = async () => {
  * @param {*} n the number of entities to create
  * @returns
  */
-const createData = async (factory, n) => {
-    const entityArray = [];
-    // TODO: should run a factory n times
-    // Promise.all
-
-    return entityArray
+const createMany = async (factory, n) => {
+    return Promise.all(Array(n).fill(0).map(factory))
+        .catch((e) => console.error(e));
 }
 
 module.exports = {
@@ -69,5 +66,5 @@ module.exports = {
     stopTestServer,
     recreateTestDB,
     resetTestDB,
-    createData,
+    createMany,
 };
