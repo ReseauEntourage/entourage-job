@@ -32,13 +32,12 @@ const recreateTestDB = async () => {
         }
     );
 
-    await db.authenticate()
-        .then(() => {
-            console.log('Connecté à la base de données');
-        })
-        .catch((err) => {
-            console.error('Impossible de se connecter à la base de données : ', err);
-        });
+    try {
+        await db.authenticate()
+        console.log('Connecté à la base de données');
+    } catch (error) {
+        console.error('Impossible de se connecter à la base de données : ', error);
+    }
 
     return db;
 };
