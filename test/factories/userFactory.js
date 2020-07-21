@@ -1,8 +1,13 @@
-import User from '../../backend/db/models/user';
+const {
+  models: {
+    User
+  },
+} = require('../../backend/db/models');
 
 const faker = require('faker');
-// const User = require('../../backend/db/models/user');
-const { USER_ROLES } = require('../../constants');
+const {
+  USER_ROLES
+} = require('../../constants');
 const Auth = require('../../backend/controllers/Auth');
 
 /**
@@ -12,20 +17,26 @@ const Auth = require('../../backend/controllers/Auth');
  * @return An object to build the user from.
  */
 const data = async (props = {}) => {
-    const { salt, hash } = Auth.encryptPassword(faker.internet.password());
-    const defaultProps = {
-        email: faker.internet.email(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        role: faker.random.objectElement(USER_ROLES),
-        password: hash,
-        gender: faker.random.arrayElement([0, 1]),
-        salt,
-        phone: faker.phone.phoneNumber(),
-        lastConnection: faker.date.past(),
-    }
+  const {
+    salt,
+    hash
+  } = Auth.encryptPassword(faker.internet.password());
+  const defaultProps = {
+    email: faker.internet.email(),
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    role: faker.random.objectElement(USER_ROLES),
+    password: hash,
+    gender: faker.random.arrayElement([0, 1]),
+    salt,
+    phone: faker.phone.phoneNumber(),
+    lastConnection: faker.date.past(),
+  }
 
-    return { ...defaultProps, ...props };
+  return {
+    ...defaultProps,
+    ...props
+  };
 }
 
 /**
@@ -34,8 +45,8 @@ const data = async (props = {}) => {
  * @return a User
  */
 export default async (props = {}) => {
-    const userData = await data(props);
-    const user = await User.create(userData);
+  const userData = await data(props);
+  const user = await User.create(userData);
 
-    return user;
+  return user;
 };
