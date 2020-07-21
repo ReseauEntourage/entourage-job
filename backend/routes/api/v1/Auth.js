@@ -95,14 +95,7 @@ router.post('/forgot', auth(), (req, res /* , next */) => {
         saltReset: salt,
       });
     })
-    .then((nbUpdate) => {
-      if (!nbUpdate) {
-        return res.status(200).send('Demande envoyée');
-      }
-      console.log(`Nombre de User mis à jour : ${nbUpdate}`);
-      if (!nbUpdate[0]) {
-        return res.status(401).send(`Une erreur est survenue`);
-      }
+    .then(() => {
       // Envoi du mail
       sendMail({
         toEmail: user.email,
