@@ -56,7 +56,7 @@ const resetTestDB = async () => {
  * @param {*} n the number of entities to create
  * @returns
  */
-const createMany = async (factory, n) => {
+const createEntities = async (factory, n) => {
     return Promise.all(Array(n).fill(0).map(factory))
         .catch((e) => console.error(e));
 }
@@ -66,5 +66,5 @@ module.exports = {
     stopTestServer,
     recreateTestDB,
     resetTestDB,
-    createMany,
+    createEntities,
 };
