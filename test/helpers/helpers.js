@@ -1,6 +1,6 @@
-import loadEnvironnementVariables from '../../backend/utils/env';
-
 const Sequelize = require('sequelize');
+const loadEnvironnementVariables = require('../../backend/utils/env');
+
 const server = require('../../backend/server');
 
 /**
@@ -25,6 +25,7 @@ const stopTestServer = async () => {
  */
 const recreateTestDB = async () => {
     loadEnvironnementVariables();
+    console.log('DB URL: ', process.env.DATABASE_URL);
     const db = new Sequelize(
         process.env.DATABASE_URL,
         {

@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const dotenv = require('dotenv');
+const loadEnvironementVariables = require('../../utils/env');
 
-dotenv.config();
+loadEnvironementVariables();
+
 const db = { models: {} };
 const basename = path.basename(__filename);
 

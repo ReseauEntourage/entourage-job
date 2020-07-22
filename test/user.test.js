@@ -1,5 +1,4 @@
-import userFactory from './factories/userFactory';
-
+const userFactory = require('./factories/userFactory');
 const {
     startTestServer,
     recreateTestDB,
@@ -20,7 +19,7 @@ describe('User', () => {
         console.log('USER BEFORE ALL');
         await startTestServer();
         await recreateTestDB();
-        await userFactory().then((user) => console.log('USER FACTORY', user));
+        // await userFactory().then((user) => console.log('USER FACTORY', user));
         // console.log('CREATE MANY USERS', createEntities(userFactory(), 5));
     });
     afterAll(async () => {

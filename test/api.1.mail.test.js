@@ -1,5 +1,3 @@
-import Api from '../Axios';
-
 const server = require('../backend/server');
 require('dotenv').config();
 

@@ -4,8 +4,12 @@ const path = require('path');
 /**
  * load envionement vairables located in ./.env or ./env.test depending on NODE_ENV
  */
-export default () => {
+const loadEnvironnementVariables = () => {
     const envPath = process.env.NODE_ENV === 'test' ? '../../.env.test' : '../../.env';
-    console.log('ENV PATH', envPath);
     dotenv.config({ path: path.resolve(__dirname, envPath) });
+    console.log('ENV: ', process.env.NODE_ENV);
+    console.log('ENV PATH', path.resolve(__dirname, envPath));
+    console.log('ENV PORT', process.env.PORT);
 }
+
+module.exports = loadEnvironnementVariables;
