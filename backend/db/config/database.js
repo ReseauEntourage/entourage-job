@@ -1,6 +1,9 @@
 // const dotenv = require('dotenv');
 
 // dotenv.config();
+const loadEnvironementVariables = require('../../utils/env');
+
+loadEnvironementVariables();
 
 module.exports = {
   development: {
