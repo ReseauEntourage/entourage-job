@@ -1,14 +1,18 @@
 const Sequelize = require('sequelize');
+const request = require('supertest');
 const loadEnvironnementVariables = require('../../backend/utils/env');
 
 const server = require('../../backend/server');
+const userFactory = require('../factories/userFactory');
+const { USER_ROLES } = require('../../constants');
 
+let app;
 /**
  * Start a server according to .env variables
  */
 const startTestServer = async () => {
     loadEnvironnementVariables();
-    const app = server.prepare();
+    app = server.prepare();
     server.start(process.env.PORT);
     return app;
 }
@@ -62,10 +66,35 @@ const createEntities = async (factory, props = {}, n) => {
         .catch((e) => console.error(e));
 }
 
+const getToken = async (user) => {
+    const response = await request(app)
+        .post(`/api/v1/auth/login`)
+        .send({
+            email: user.email,
+            password: user.password,
+        })
+        .expect(res => res.body != null);
+    if (response.status !== 200) {
+        console.error('Token couldn\'t be fetched', JSON.stringify(response.body));
+        throw new Error('Token couldn\'t be fectched');
+    }
+
+    return response.body.token;
+}
+
+const getLoggedInUser = async (props = {}) => {
+    const admin = userFactory(props);
+    const token = await getToken(admin);
+
+    return { token, admin }
+}
+
+
 module.exports = {
     startTestServer,
     stopTestServer,
     recreateTestDB,
     resetTestDB,
     createEntities,
+    getLoggedInUser,
 };
