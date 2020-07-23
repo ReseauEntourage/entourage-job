@@ -66,7 +66,13 @@ const createEntities = async (factory, props = {}, n) => {
         .catch((e) => console.error(e));
 }
 
+/**
+ * Login a user
+ * @param {*} user 
+ * @returns {string} token
+ */
 const getToken = async (user) => {
+    console.log('GET TOKEN USER MAIL: ', user.email);
     const response = await request(app)
         .post(`/api/v1/auth/login`)
         .send({
@@ -82,11 +88,15 @@ const getToken = async (user) => {
     return response.body.token;
 }
 
+/**
+ * 
+ * @param {*} props 
+ */
 const getLoggedInUser = async (props = {}) => {
-    const admin = userFactory(props);
-    const token = await getToken(admin);
+    const user = await userFactory(props);
+    const token = await getToken(user);
 
-    return { token, admin }
+    return { token, user }
 }
 
 

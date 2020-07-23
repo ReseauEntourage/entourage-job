@@ -1,7 +1,7 @@
 const validator = require('validator');
 const express = require('express');
-const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../../../utils');
-const {USER_ROLES} = require("../../../../constants");
+const { checkCandidatOrCoachAuthorization, checkUserAuthorization } = require('../../../utils');
+const { USER_ROLES } = require("../../../../constants");
 const { auth } = require('../../../controllers/Auth');
 const { sendMail } = require('../../../controllers/mail');
 
@@ -45,7 +45,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      if(err.name === "SequelizeUniqueConstraintError") {
+      if (err.name === "SequelizeUniqueConstraintError") {
         res.status(409).send('Adresse email déjà existante');
       }
       else {
@@ -130,7 +130,7 @@ router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
 router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  if(req.payload.id === req.query.coachId || req.payload.id === req.query.candidatId || req.payload.role === USER_ROLES.ADMIN) {
+  if (req.payload.id === req.query.coachId || req.payload.id === req.query.candidatId || req.payload.role === USER_ROLES.ADMIN) {
     UserController.getUserCandidatOpt(req.query)
       .then((user) => {
         res.status(200).json(user);
@@ -141,7 +141,7 @@ router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.
       });
   }
   else {
-    res.status(401).send({message: "Unauthorized"});
+    res.status(401).send({ message: "Unauthorized" });
   }
 });
 
@@ -175,8 +175,8 @@ router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.
 router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   checkUserAuthorization(req, res, req.params.id, () => {
     (validator.isEmail(req.params.id)
-        ? UserController.getUserByEmail(req.params.id)
-        : UserController.getUser(req.params.id)
+      ? UserController.getUserByEmail(req.params.id)
+      : UserController.getUser(req.params.id)
     )
       .then((user) => {
         console.log(`User trouvé`);
@@ -228,7 +228,7 @@ router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLE
 });
 
 /**
- * Route : PUT /api/<VERSION>/user/<ID>
+ * Route : PUT /api/<VERSION>/user/candidat/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
 router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
@@ -268,13 +268,13 @@ router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
     const keys = Object.keys(req.body);
     const authorizedKeys = ['email', 'phone'];
 
-    if(req.payload.role === USER_ROLES.ADMIN) {
+    if (req.payload.role === USER_ROLES.ADMIN) {
       UserController.changeUserRole(req.params.id, req.body).then(() => {
-         setUser();
+        setUser();
       });
     }
-    else if(keys.some((key) => !authorizedKeys.includes(key))) {
-      res.status(401).send({message: "Unauthorized"});
+    else if (keys.some((key) => !authorizedKeys.includes(key))) {
+      res.status(401).send({ message: "Unauthorized" });
     }
     else {
       setUser();
