@@ -20,7 +20,7 @@ module.exports.prepare = () => {
   const dev = process.env.NODE_ENV !== 'production';
 
   // enable ssl redirect
-  if(!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  if (!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
   app.use(express.json());
 
@@ -52,12 +52,12 @@ module.exports.prepare = () => {
 
   app.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
-      res.status(err.status).send({message: err.message});
+      res.status(err.status).send({ message: err.message });
       return;
     }
     next();
   });
-
+  return app;
 };
 
 module.exports.get = (path, handle) => {

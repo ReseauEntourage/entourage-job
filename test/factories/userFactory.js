@@ -44,11 +44,13 @@ const data = async (props = {}) => {
  * @param {*} props Properties to use to create User
  * @return a User
  */
-const userFactory = async (props = {}) => {
+const userFactory = async (props = {}, insertInDB = true) => {
     const userData = await data(props);
-    const user = await User.create(userData);
+    if (insertInDB) {
+        await User.create(userData);
+    }
 
-    return user;
+    return userData;
 };
 
 module.exports = userFactory;

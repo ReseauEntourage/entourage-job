@@ -8,8 +8,9 @@ const server = require('../../backend/server');
  */
 const startTestServer = async () => {
     loadEnvironnementVariables();
-    server.prepare();
+    const app = server.prepare();
     server.start(process.env.PORT);
+    return app;
 }
 
 /**
@@ -56,8 +57,8 @@ const resetTestDB = async () => {
  * @param {*} n the number of entities to create
  * @returns
  */
-const createEntities = async (factory, n) => {
-    return Promise.all(Array(n).fill(0).map(factory))
+const createEntities = async (factory, props = {}, n) => {
+    return Promise.all(Array(n).fill(0).map(() => factory(props)))
         .catch((e) => console.error(e));
 }
 
