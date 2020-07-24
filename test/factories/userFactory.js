@@ -13,7 +13,7 @@ const Auth = require('../../backend/controllers/Auth');
 /**
  * Generate an oject which contains the data necessary
  * to build a user.
- * @param {*} props Properties to use to create User
+ * @param {Object} props Properties to use to create User
  * @return An object to build the user from.
  */
 const data = async (props = {}) => {
@@ -41,7 +41,7 @@ const data = async (props = {}) => {
 
 /**
  * Create a User in DB.
- * @param {*} props Properties to use to create User
+ * @param {Object} props Properties to use to create User
  * @return a User
  */
 const userFactory = async (props = {}, insertInDB = true) => {

@@ -4,9 +4,10 @@ const loadEnvironnementVariables = require('../../backend/utils/env');
 
 const server = require('../../backend/server');
 const userFactory = require('../factories/userFactory');
-const { USER_ROLES } = require('../../constants');
 
 let app;
+let db;
+
 /**
  * Start a server according to .env variables
  */
@@ -25,13 +26,14 @@ const stopTestServer = async () => {
 }
 
 /**
- * Create a test database accoding to env variables
+ * Create a test database according to env variables
+ * 
  * @returns the db connection
  */
 const recreateTestDB = async () => {
     loadEnvironnementVariables();
     console.log('DB URL: ', process.env.DATABASE_URL);
-    const db = new Sequelize(
+    db = new Sequelize(
         process.env.DATABASE_URL,
         {
             logging: process.env.DEBUG_MODE ? console.log : false,
@@ -52,13 +54,17 @@ const recreateTestDB = async () => {
  * Drops all the tables content
  */
 const resetTestDB = async () => {
-    Sequelize.drop();
+    db.drop({
+        force: true,
+        match: "/test$/",
+    });
 }
 
 /**
  * Create many entities using a factory
- * @param {An Entity factory} factory an entity factory
- * @param {*} n the number of entities to create
+ * 
+ * @param {function} factory an entity factory
+ * @param {number} n the number of entities to create
  * @returns
  */
 const createEntities = async (factory, props = {}, n) => {
@@ -68,7 +74,8 @@ const createEntities = async (factory, props = {}, n) => {
 
 /**
  * Login a user
- * @param {*} user 
+ * 
+ * @param {Object} user 
  * @returns {string} token
  */
 const getToken = async (user) => {
@@ -89,14 +96,15 @@ const getToken = async (user) => {
 }
 
 /**
+ * Create a user and get associated token
  * 
- * @param {*} props 
+ * @param {Object} props user data
  */
 const getLoggedInUser = async (props = {}) => {
     const user = await userFactory(props);
     const token = await getToken(user);
 
-    return { token, user }
+    return { token, user };
 }
 
 
@@ -107,4 +115,4 @@ module.exports = {
     resetTestDB,
     createEntities,
     getLoggedInUser,
-};
+}
