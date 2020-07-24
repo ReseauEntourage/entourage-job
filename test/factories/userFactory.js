@@ -38,14 +38,13 @@ const data = async (props = {}) => {
 /**
  * Create a User in DB.
  * @param {Object} props Properties to use to create User
- * @return a User
+ * @return Promise<User>
  */
 const userFactory = async (props = {}, insertInDB = true) => {
   const userData = await data(props);
 
-  console.log(userData);
-
   if (insertInDB) {
+    console.log('Creating user', userData.email, props.password);
     await User.create(userData);
   }
 

@@ -15,7 +15,7 @@ const startTestServer = async () => {
   loadEnvironnementVariables();
   app = server.prepare();
   console.log('server port: ', process.env.PORT);
-  server.start(process.env.PORT);
+  await server.start(process.env.PORT);
   return app;
 }
 
@@ -28,7 +28,7 @@ const stopTestServer = async () => {
 
 /**
  * Create a test database according to env variables
- * 
+ *
  * @returns the db connection
  */
 const recreateTestDB = async () => {
@@ -61,7 +61,7 @@ const resetTestDB = async () => {
 
 /**
  * Create many entities using a factory
- * 
+ *
  * @param {function} factory an entity factory
  * @param {number} n the number of entities to create
  * @returns
@@ -73,22 +73,21 @@ const createEntities = async (factory, props = {}, n) => {
 
 /**
  * Login a user
- * 
- * @param {Object} user 
+ *
+ * @param {Object} user
  * @returns {string} token
  */
 const getToken = async (user) => {
-  console.log('GET TOKEN USER MAIL: ', user.email);
+  console.log('GET TOKEN USER MAIL: ', user.email, user.password);
   const response = await request(app)
     .post(`/api/v1/auth/login`)
     .send({
       email: user.email,
       password: user.password,
-    })
-    .expect(res => res.body != null);
+    });
 
   if (response.status !== 200) {
-    console.error('Token couldn\'t be fetched', JSON.stringify(response.body));
+    console.error('Token couldn\'t be fetched', JSON.stringify(response.text));
     throw new Error('Token couldn\'t be fectched');
   }
 
@@ -97,19 +96,12 @@ const getToken = async (user) => {
 
 /**
  * Create a user and get associated token
- * 
+ *
  * @param {Object} props user data
  */
 const getLoggedInUser = async (props = {}) => {
-  console.log('4');
-
   const user = await userFactory(props);
-  console.log('5');
-
-  const token = await getToken(user);
-  console.log('6');
-
-  console.log(token, user);
+  const token = await getToken({ ...user, password: props.password });
 
   return {
     token,

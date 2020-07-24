@@ -103,7 +103,7 @@ router.post(
           const mailSubject = 'Soumission CV';
           const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
           // notification de l'admin
-          sendMail({
+          await sendMail({
             toEmail: process.env.MAILJET_TO_EMAIL,
             subject: mailSubject,
             text: mailText,

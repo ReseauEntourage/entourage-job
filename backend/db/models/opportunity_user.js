@@ -87,7 +87,7 @@ module.exports = (sequelize, DataTypes) => {
           ]);
 
           // mail admin
-          sendMailEmbauche(
+          await sendMailEmbauche(
             process.env.MAILJET_TO_EMAIL,
             firstName,
             title,
@@ -99,7 +99,7 @@ module.exports = (sequelize, DataTypes) => {
             const { email } = await models.User.findByPk(userToCoach, {
               attributes: ['email'],
             });
-            sendMailEmbauche(
+            await sendMailEmbauche(
               email,
               firstName,
               title,

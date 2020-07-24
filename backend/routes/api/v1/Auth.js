@@ -37,6 +37,7 @@ router.post('/login', auth(), (req, res, next) => {
     (err, passportUser, info) => {
       // console.log('route in authenticate : ', err, passportUser, info);
       if (err) {
+        console.log('error while auth')
         return next(err);
       }
 
@@ -232,7 +233,7 @@ router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.A
   if (!user) {
     return res.sendStatus(400);
   }
-  UserController.setUser(id, { lastConnection: Date.now() });
+  await UserController.setUser(id, { lastConnection: Date.now() });
   return res.json({ user: AuthController.toAuthJSON(user) });
 });
 

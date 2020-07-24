@@ -21,6 +21,7 @@ module.exports = {
         (email, password, done) => {
           UserController.getUserByEmail(email)
             .then((user) => {
+              process.exit(JSON.stringify(email));
               if (
                 !user ||
                 !AuthController.validatePassword(

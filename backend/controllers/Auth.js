@@ -8,6 +8,7 @@ function encryptPassword(password) {
   const hash = crypto
     .pbkdf2Sync(password, salt, 10000, 512, 'sha512')
     .toString('hex');
+  console.log('ENCRYPT', { password, salt, hash });
   return { salt, hash };
 }
 
@@ -15,6 +16,8 @@ function validatePassword(password, hash, salt) {
   const passwordHash = crypto
     .pbkdf2Sync(password, salt, 10000, 512, 'sha512')
     .toString('hex');
+
+  console.log('VERIFY', { password, salt, hash, passwordHash });
   return passwordHash === hash;
 }
 
