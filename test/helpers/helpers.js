@@ -36,7 +36,7 @@ const recreateTestDB = async () => {
   console.log('DB URL: ', process.env.DATABASE_URL);
   db = new Sequelize(
     process.env.DATABASE_URL, {
-      logging: process.env.DEBUG_MODE ? console.log : false,
+      logging: console.log,
     }
   );
 
@@ -86,6 +86,7 @@ const getToken = async (user) => {
       password: user.password,
     });
 
+  console.log(response.body.token);
   if (response.status !== 200) {
     console.error('Token couldn\'t be fetched', JSON.stringify(response.text));
     throw new Error('Token couldn\'t be fectched');
@@ -101,7 +102,10 @@ const getToken = async (user) => {
  */
 const getLoggedInUser = async (props = {}) => {
   const user = await userFactory(props);
-  const token = await getToken({ ...user, password: props.password });
+  const token = await getToken({
+    ...user,
+    password: props.password
+  });
 
   return {
     token,

@@ -1,7 +1,8 @@
 const faker = require('faker');
 const {
   models: {
-    User
+    User,
+    User_Candidat
   },
 } = require('../../backend/db/models');
 
@@ -16,13 +17,13 @@ const Auth = require('../../backend/controllers/Auth');
  * @param {Object} props Properties to use to create User
  * @return An object to build the user from.
  */
-const data = async (props = {}) => {
+const generateUser = async (props = {}) => {
   const {
     salt,
     hash
   } = Auth.encryptPassword(props.password ? props.password : faker.internet.password());
 
-  return defaultProps = {
+  return {
     email: props.email || faker.internet.email(),
     firstName: props.firstName || faker.name.firstName(),
     lastName: props.lastName || faker.name.lastName(),
@@ -35,17 +36,41 @@ const data = async (props = {}) => {
   };
 }
 
+
+/**
+ * Generate an oject which contains the data necessary
+ * to build a user.
+ * @param {Object} props Properties to use to create User
+ * @param {string} candidatId The userId to link to
+ * @return An object to build the user from.
+ */
+const generateUserCandidat = async (candidatId, props = {}) => {
+  return {
+    candidatId: candidatId,
+    coachId: props.coachId || null,
+    employed: props.employed || faker.random.boolean(),
+    hidden: props.hidden || faker.random.boolean(),
+    url: 'test - url',
+  };
+}
+
+
 /**
  * Create a User in DB.
  * @param {Object} props Properties to use to create User
  * @return Promise<User>
  */
 const userFactory = async (props = {}, insertInDB = true) => {
-  const userData = await data(props);
+  const userData = await generateUser(props);
 
   if (insertInDB) {
     console.log('Creating user', userData.email, props.password);
-    await User.create(userData);
+    const user = await User.create(userData);
+    console.log(user);
+
+    const userCandidatData = await generateUserCandidat(user.id);
+
+    await User_Candidat.create(userCandidatData);
   }
 
   return userData;
