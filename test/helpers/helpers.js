@@ -78,17 +78,17 @@ const createEntities = async (factory, props = {}, n) => {
  * @returns {string} token
  */
 const getToken = async (user) => {
-    console.log('GET TOKEN USER MAIL: ', user.email);
+    console.log('GET TOKEN USER MAIL: ', user.email, user.password);
     const response = await request(app)
         .post(`/api/v1/auth/login`)
         .send({
             email: user.email,
             password: user.password,
-        })
-        .expect(res => res.body != null);
+        });
 
+    console.log(response.body.token);
     if (response.status !== 200) {
-        console.error('Token couldn\'t be fetched', JSON.stringify(response.body));
+        console.error('Token couldn\'t be fetched', JSON.stringify(response.text));
         throw new Error('Token couldn\'t be fectched');
     }
 
@@ -101,15 +101,11 @@ const getToken = async (user) => {
  * @param {Object} props user data
  */
 const getLoggedInUser = async (props = {}) => {
-    console.log('4');
-
     const user = await userFactory(props);
-    console.log('5');
-
-    const token = await getToken(user);
-    console.log('6');
-
-    console.log(token, user);
+    const token = await getToken({
+        ...user,
+        password: props.password
+    });
 
     return {
         token,

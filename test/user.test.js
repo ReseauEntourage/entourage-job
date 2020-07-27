@@ -7,7 +7,9 @@ const {
   resetTestDB,
   getLoggedInUser,
 } = require('./helpers/helpers');
-const { USER_ROLES } = require('../constants');
+const {
+  USER_ROLES
+} = require('../constants');
 
 let serverTest;
 let loggedInAdmin;
@@ -41,13 +43,15 @@ describe('User', () => {
         password: 'admin',
       });
 
-      const candidat = await userFactory({ role: USER_ROLES.CANDIDAT }, false);
+      const candidat = await userFactory({
+        role: USER_ROLES.CANDIDAT
+      }, false);
       const response = await request(serverTest)
         .post(`/api/v1/user`)
         .set('authorization', `Token ${loggedInAdmin.token}`)
         .send(candidat);
       expect(response.status).toBe(200);
-    })
+    });
     // it('Should reutrn unauthorized if user is not logged in.', async () => {
     //   const candidat = userFactory({ role: USER_ROLES.CANDIDAT }, false);
     //   const response = await request(serverTest)
