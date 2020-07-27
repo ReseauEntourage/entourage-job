@@ -21,14 +21,14 @@ describe('User', () => {
     serverTest = await startTestServer();
     // await userFactory().then((user) => console.log('USER FACTORY', user));
     // await createEntities(userFactory(), {}, 5).then((user) => console.log('MANY MANY MANY', user));
-    // loggedInAdmin = await getLoggedInUser({
-    //   role: USER_ROLES.ADMIN,
-    //   password: 'admin',
-    // });
-    // loggedInUser = await getLoggedInUser({
-    //   role: USER_ROLES.CANDIDAT,
-    //   password: 'candidat',
-    // });
+    loggedInAdmin = await getLoggedInUser({
+      role: USER_ROLES.ADMIN,
+      password: 'admin',
+    });
+    loggedInUser = await getLoggedInUser({
+      role: USER_ROLES.CANDIDAT,
+      password: 'candidat',
+    });
   });
 
   afterAll(async () => {
@@ -38,18 +38,15 @@ describe('User', () => {
 
   describe('C - Create 1 User', () => {
     it('Should return the created user.', async () => {
-      loggedInAdmin = await getLoggedInUser({
-        role: USER_ROLES.ADMIN,
-        password: 'admin',
-      });
-
       const candidat = await userFactory({
         role: USER_ROLES.CANDIDAT
       }, false);
+
       const response = await request(serverTest)
         .post(`/api/v1/user`)
         .set('authorization', `Token ${loggedInAdmin.token}`)
         .send(candidat);
+
       expect(response.status).toBe(200);
     });
     // it('Should reutrn unauthorized if user is not logged in.', async () => {

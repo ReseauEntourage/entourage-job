@@ -1,14 +1,15 @@
 const faker = require('faker');
-const {
-  models: {
-    User,
-    User_Candidat
-  },
-} = require('../../backend/db/models');
 
 const {
   USER_ROLES
 } = require('../../constants');
+
+const {
+  models: {
+    User,
+  },
+} = require('../../backend/db/models');
+
 const Auth = require('../../backend/controllers/Auth');
 
 /**
@@ -24,7 +25,7 @@ const generateUser = async (props = {}) => {
   } = Auth.encryptPassword(props.password ? props.password : faker.internet.password());
 
   return {
-    email: props.email || faker.internet.email(),
+    email: props.email || faker.internet.email().toLowerCase(),
     firstName: props.firstName || faker.name.firstName(),
     lastName: props.lastName || faker.name.lastName(),
     role: props.role || faker.random.objectElement(USER_ROLES),
@@ -64,15 +65,8 @@ const userFactory = async (props = {}, insertInDB = true) => {
   const userData = await generateUser(props);
 
   if (insertInDB) {
-    console.log('Creating user', userData.email, props.password);
-    const user = await User.create(userData);
-    console.log(user);
-
-    const userCandidatData = await generateUserCandidat(user.id);
-
-    await User_Candidat.create(userCandidatData);
+    await User.create(userData);
   }
-
   return userData;
 };
 
