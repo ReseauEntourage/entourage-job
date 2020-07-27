@@ -251,9 +251,11 @@ const searchUsers = (query, role) => {
 };
 
 const setUser = async (id, user) => {
-  await User.update(user, {
+  const [updateCount] = await User.update(user, {
     where: { id },
   });
+
+  if (updateCount === 0) throw new Error(`Failed to update user with id ${id}`);
 
   return getUser(id);
 };
