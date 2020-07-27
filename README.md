@@ -71,6 +71,6 @@ Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
 
 ## 6# Lancer les test
 
-- `npm run dev`
+- `npm run test`
 
 ### You are all set !
