@@ -13,15 +13,14 @@ passport.deserializeUser((user, done) => done(null, user));
 module.exports = {
   initialize() {
     passport.use(
-      new LocalStrategy(
-        {
+      new LocalStrategy({
           usernameField: 'email',
           passwordField: 'password',
         },
         (email, password, done) => {
+
           UserController.getUserByEmail(email)
             .then((user) => {
-              process.exit(JSON.stringify(email));
               if (
                 !user ||
                 !AuthController.validatePassword(
