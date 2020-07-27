@@ -41,3 +41,33 @@ Pour la base de données :
 (Par la suite)
 
 - sequelize db:migrate
+
+## Setup
+
+### Init & start the project locally
+
+## 1# Prerequisite
+
+To run the project you will need to install **Docker** and **NodeJs**.
+
+### Instantiate and populate the db
+- `docker run --name entourage-db -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 5432:5432 postgres`
+
+- You will need to get the .env file and populate it with your DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:5432/entourag`)
+
+- `npx sequelize db:create`
+
+- `npx sequelize db:migrate`
+
+- `npx sequelize db:seed:all`
+
+- For dev purpose you will need to run dev/dev-front scripts
+
+- `npm run dev`
+
+### Instantiate the test db
+
+- `docker run --name entourage-db-test -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 54300:5432 postgres`
+- `NODE_ENV=test npx sequelize db:migrate`
+
+### You are all set !
