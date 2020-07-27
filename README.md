@@ -43,7 +43,7 @@ Pour lancer le projet vous avez besoin de **Docker** ainsi que de **NodeJs**.
 
 - `docker run --name entourage-db -e POSTGRES_PASSWORD=entourage -d -p 5432:5432 postgres`
 
-- Vous avez besoin des données du fichier **`.env`** et de renseigner le champs DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:5432/entourag`) avec votre adresse.
+- Vous avez besoin des données du fichier **`.env`** et de renseigner le champs DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:5432/entourage`) avec votre adresse.
 
 - `npx sequelize db:create`
 
@@ -58,6 +58,18 @@ Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
 - Insérez les données présentes dans le fichier qui se trouve dans **/migrations** grâce à la commande suivante: `psql -h localhost -d entourage -U entourage -f ./migrations/local-2020_07_08_17_16_25-dump.sql`
 
 ## 4# Lancer le projet en mode développement
+
+- `npm run dev`
+
+## 5# Initialisation de la BDD de test
+
+- `docker run --name entourage-db-test -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 54300:5432 entourage`
+
+- Vous avez besoin des données du fichier **`.env.test`** et de renseigner le champs DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:54300/entourage`) avec votre adresse.
+
+- `NODE_ENV=test npx sequelize db:migrate`
+
+## 6# Lancer les test
 
 - `npm run dev`
 
