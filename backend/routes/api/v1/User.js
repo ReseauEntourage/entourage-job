@@ -211,6 +211,9 @@ router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLE
           salt,
         })
           .then((user) => {
+            if(!user) {
+              res.status(401).send(`Utilisateur inexistant`);
+            }
             console.log(`User modifié`);
             res.status(200).json(user);
           })
@@ -255,9 +258,12 @@ router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
 
     const setUser = () => {
       UserController.setUser(req.params.id, req.body)
-        .then((user) => {
+        .then((updatedUser) => {
+          if(!updatedUser) {
+            res.status(401).send(`Utilisateur inexistant`);
+          }
           console.log(`User modifié`);
-          res.status(200).json(user);
+          res.status(200).json(updatedUser);
         })
         .catch((err) => {
           console.log(`Une erreur est survenue`);

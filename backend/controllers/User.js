@@ -255,7 +255,7 @@ const setUser = async (id, user) => {
     where: { id },
   });
 
-  if (updateCount === 0) throw new Error(`Failed to update user with id ${id}`);
+  if (updateCount === 0) return null;
 
   return getUser(id);
 };

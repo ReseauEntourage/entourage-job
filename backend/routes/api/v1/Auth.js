@@ -95,7 +95,10 @@ router.post('/forgot', auth(), (req, res /* , next */) => {
         saltReset: salt,
       });
     })
-    .then(() => {
+    .then((updatedUser) => {
+      if (!updatedUser) {
+        return res.status(401).send(`L'adresse mail est inexistante`);
+      }
       // Envoi du mail
       sendMail({
         toEmail: user.email,
@@ -225,8 +228,14 @@ router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.A
   if (!user) {
     return res.sendStatus(400);
   }
-  UserController.setUser(id, { lastConnection: Date.now() });
-  return res.json({ user: AuthController.toAuthJSON(user) });
+  UserController.setUser(id, { lastConnection: Date.now() }).then((updatedUser) => {
+    if(!updatedUser) {
+      return res.status(401).send(`Utilisateur inexistant`);
+    }
+    return res.json({ user: AuthController.toAuthJSON(user) });
+  }).catch((err) => {
+    return res.status(401).send(`Une erreur est survenue`);
+  })
 });
 
 module.exports = router;
