@@ -97,7 +97,7 @@ router.post('/forgot', auth(), (req, res /* , next */) => {
     })
     .then((updatedUser) => {
       if (!updatedUser) {
-        return res.status(401).send(`L'adresse mail est inexistante`);
+        return res.status(404).send(`Utilisateur inexistant`);
       }
       // Envoi du mail
       sendMail({

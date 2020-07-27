@@ -70,7 +70,7 @@ const Login = () => {
                 onSubmit={(fields, setError) => {
                   Api.post('/api/v1/auth/forgot', fields)
                     .then(() => nextStep())
-                    .catch(() => setError("Une erreur s'est produite"));
+                    .catch(() => setError("L'adresse mail ne correspond à aucun utilisateur"));
                 }}
               />
             ),
