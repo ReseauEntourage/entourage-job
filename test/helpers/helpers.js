@@ -14,7 +14,6 @@ let db;
 const startTestServer = async () => {
     loadEnvironnementVariables();
     app = server.prepare();
-    console.log('server port: ', process.env.PORT);
     server.start(process.env.PORT);
     return app;
 }
@@ -33,7 +32,6 @@ const stopTestServer = async () => {
  */
 const recreateTestDB = async () => {
     loadEnvironnementVariables();
-    console.log('DB URL: ', process.env.DATABASE_URL);
     db = new Sequelize(
         process.env.DATABASE_URL, {
         logging: console.log,
@@ -95,13 +93,10 @@ const getToken = async (user) => {
  */
 const getLoggedInUser = async (props = {}) => {
     const user = await userFactory(props);
-
-
     const token = await getToken({
         ...user,
         password: props.password
     });
-
 
     return {
         token,
