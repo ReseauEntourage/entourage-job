@@ -20,6 +20,6 @@ module.exports = {
     "@/(.*)": "<rootDir>/src/$1"
   },
   collectCoverage: true,
-  collectCoverageFrom: ["src/**/*.js"],
+  collectCoverageFrom: ["backend/**/*.js"],
   verbose: true
 };
