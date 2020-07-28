@@ -35,10 +35,10 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
   } = AuthController.encryptPassword(userPassword);
 
   UserController.createUser({
-      ...req.body,
-      password: hash,
-      salt
-    })
+    ...req.body,
+    password: hash,
+    salt
+  })
     .then((users) => {
       console.log(
         '# User créé',
@@ -98,12 +98,12 @@ router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
     ['firstName', 'ASC']
   ];
   UserController.getMembers(
-      req.query.limit,
-      req.query.offset,
-      order,
-      req.query.role,
-      req.query.query
-    )
+    req.query.limit,
+    req.query.offset,
+    order,
+    req.query.role,
+    req.query.query
+  )
     .then((users) => {
       console.log(`Users récupérés (Total : ${users.length})`);
       res.status(200).json(
@@ -192,12 +192,13 @@ router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
 router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+  console.log('::::::::::::: GET ::::::::::::');
   checkUserAuthorization(req, res, req.params.id, () => {
     (validator.isEmail(req.params.id) ?
       UserController.getUserByEmail(req.params.id) :
       UserController.getUser(req.params.id)
     )
-    .then((user) => {
+      .then((user) => {
         console.log(`User trouvé`);
         res.status(200).json(user);
       })
@@ -233,9 +234,9 @@ router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLE
           req.body.newPassword
         );
         UserController.setUser(req.payload.id, {
-            password: hash,
-            salt,
-          })
+          password: hash,
+          salt,
+        })
           .then((user) => {
             console.log(`User modifié`);
             res.status(200).json(user);

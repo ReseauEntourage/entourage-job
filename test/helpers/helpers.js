@@ -33,9 +33,10 @@ const stopTestServer = async () => {
 const recreateTestDB = async () => {
     loadEnvironnementVariables();
     db = new Sequelize(
-        process.env.DATABASE_URL, {
-        logging: console.log,
-    }
+        process.env.DATABASE_URL,
+        {
+            logging: process.env.DEBUG_MODE ? console.log : false,
+        }
     );
 
     try {
@@ -51,10 +52,16 @@ const recreateTestDB = async () => {
  * Drops all the tables content
  */
 const resetTestDB = async () => {
-    db.drop({
-        force: true,
-        match: "/test$/",
-    });
+    console.log('::::::::::::::: RESET DB ::::::::::::::::')
+    try {
+        db.drop();
+        db.sync({
+            force: true,
+        });
+    } catch (e) {
+        throw new Error(`Unable to reset Data Base: ${e}`);
+    }
+
 }
 
 /**
@@ -91,7 +98,7 @@ const getToken = async (user) => {
  * 
  * @param {Object} props user data
  */
-const getLoggedInUser = async (props = {}) => {
+const createLoggedInUser = async (props = {}) => {
     const user = await userFactory(props);
     const token = await getToken({
         ...user,
@@ -111,5 +118,5 @@ module.exports = {
     recreateTestDB,
     resetTestDB,
     createEntities,
-    getLoggedInUser,
+    createLoggedInUser,
 }

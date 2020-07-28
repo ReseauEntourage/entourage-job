@@ -30,12 +30,12 @@ const sendMail = async ({ toEmail, subject, text, html }) => {
     'Text-part': text,
     'HTML-part': html,
   });
-  console.log(
-    `# Email sent`,
-    `- from: ${process.env.MAILJET_FROM_EMAIL})`,
-    `- to: ${toEmail}`,
-    `- subject: ${subject}`
-  );
+  // console.log(
+  //   `# Email sent`,
+  //   `- from: ${process.env.MAILJET_FROM_EMAIL})`,
+  //   `- to: ${toEmail}`,
+  //   `- subject: ${subject}`
+  // );
   return res;
 };
 

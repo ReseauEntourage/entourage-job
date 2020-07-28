@@ -42,10 +42,9 @@ router.post('/login', auth(), (req, res, next) => {
 
   return passport.authenticate(
     'local', {
-      session: false
-    },
+    session: false
+  },
     (err, passportUser, info) => {
-      console.log('route in authenticate : ', err, passportUser, info);
       if (err) {
         console.log('error while auth')
         return next(err);
@@ -68,14 +67,14 @@ router.post('/login', auth(), (req, res, next) => {
 });
 
 router.post('/logout', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
-  res /* , next */ ) => {
+  res /* , next */) => {
   req.logout();
 
   // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
   res.redirect(process.env.SERVER_URL);
 });
 
-router.post('/forgot', auth(), (req, res /* , next */ ) => {
+router.post('/forgot', auth(), (req, res /* , next */) => {
   let token = null;
   let user = null;
   const {
@@ -149,7 +148,7 @@ router.post('/forgot', auth(), (req, res /* , next */ ) => {
 /**
  * GET Vérification lien de réinitialisation mot de passe
  */
-router.get('/reset/:userId/:token', auth(), (req, res /* , next */ ) => {
+router.get('/reset/:userId/:token', auth(), (req, res /* , next */) => {
   const infoLog = 'GET /reset/:userId/:token -';
 
   const {
@@ -194,7 +193,7 @@ router.get('/reset/:userId/:token', auth(), (req, res /* , next */ ) => {
 /**
  * POST Réinitialisation mot de passe
  */
-router.post('/reset/:userId/:token', auth(), (req, res /* , next */ ) => {
+router.post('/reset/:userId/:token', auth(), (req, res /* , next */) => {
   const infoLog = 'POST /reset/:userId/:token -';
   const {
     userId,
@@ -272,7 +271,7 @@ router.post('/reset/:userId/:token', auth(), (req, res /* , next */ ) => {
  * GET current route (required, only authenticated users have access)
  */
 router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), async (req,
-  res /* , next */ ) => {
+  res /* , next */) => {
   const {
     payload: {
       id

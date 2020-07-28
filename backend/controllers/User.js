@@ -132,6 +132,7 @@ const getUserByEmail = async (email) => {
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
     include: INCLUDE_USER_CANDIDAT,
   });
+
   return user;
 };
 

@@ -20,12 +20,6 @@ function validatePassword(password, hash, salt) {
     .pbkdf2Sync(password, salt, 10000, 512, 'sha512')
     .toString('hex');
 
-  console.log('VERIFY', {
-    password,
-    salt,
-    hash,
-    passwordHash
-  });
   return passwordHash === hash;
 }
 
@@ -46,17 +40,17 @@ function generateJWT(user, expiration) {
   }
 
   return jwt.sign({
-      email: user.email,
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phone: user.phone,
-      gender: user.gender,
-      role: user.role,
-      exp: parseInt((expiration || expirationDate.getTime()) / 1000, 10),
-      candidatId,
-      coachId
-    },
+    email: user.email,
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    phone: user.phone,
+    gender: user.gender,
+    role: user.role,
+    exp: parseInt((expiration || expirationDate.getTime()) / 1000, 10),
+    candidatId,
+    coachId
+  },
     'secret'
   );
 }

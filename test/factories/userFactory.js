@@ -33,7 +33,7 @@ const generateUser = async (props = {}) => {
     gender: props.gender || faker.random.arrayElement([0, 1]),
     salt,
     phone: props.phone || faker.phone.phoneNumber(),
-    lastConnection: props.lastConnection || faker.date.past(),
+    lastConnection: props.lastConnection || `${faker.date.past()}`,
   };
 }
 
@@ -47,7 +47,7 @@ const generateUser = async (props = {}) => {
  */
 const generateUserCandidat = async (candidatId, props = {}) => {
   return {
-    candidatId: candidatId,
+    candidatId,
     coachId: props.coachId || null,
     employed: props.employed || faker.random.boolean(),
     hidden: props.hidden || faker.random.boolean(),
