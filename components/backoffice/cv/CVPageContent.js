@@ -64,6 +64,8 @@ const CVPageContent = ({ candidatId }) => {
       if (Router.asPath !== url && unsavedChanges && !window.confirm(message)) {
         Router.events.emit('routeChangeError');
         Router.replace(Router, Router.asPath);
+
+        // Keep this string error to stop Next.js from navigating
         throw 'Abort route change. Please ignore this error.';
       }
     };
@@ -105,6 +107,7 @@ const CVPageContent = ({ candidatId }) => {
     })
       .then(({ data }) => {
         setCV(data);
+        currentVersion += 1;
 
         // Use hash to reload image if an update is done
         const previewHash = Date.now();
@@ -143,6 +146,7 @@ const CVPageContent = ({ candidatId }) => {
       },
     })
       .then(() => {
+        console.log('Auto-save succeeded.');
         currentVersion += 1;
       })
       .catch(() => {

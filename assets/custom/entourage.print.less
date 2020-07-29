@@ -1,0 +1,86 @@
+// Import UIkit default theme (or uikit.less with only core styles)
+@import "../src/less/uikit.theme.less";
+
+// Your custom code goes here, e.g. mixins, variables.
+// See "how to create a theme" below for more info.
+
+//Font families
+@global-font-family: Roboto, sans-serif;
+@global-font-weight: normal;
+@global-font-size: 17px;
+@global-line-height: 22px;
+@global-color: black;
+
+@dotnav-item-background: fade(@global-color, 0%);
+@dotnav-item-hover-background: fade(#F55F24, 100%);
+@dotnav-item-onclick-background: fade(#F55F24, 20%);
+@dotnav-item-active-background: fade(#F55F24, 100%);
+@dotnav-item-border: fade(#F55F24, 100%);
+@grid-divider-border: #F55F24;
+
+@icon-button-background: @global-primary-background;
+@icon-button-color: white;
+@icon-button-hover-background: darken(@icon-button-background, 5%);
+@icon-button-hover-color: @icon-button-color;
+@icon-button-active-background: darken(@icon-button-background, 10%);
+@icon-button-active-color: @icon-button-color;
+
+@inverse-icon-button-background: white;
+@inverse-icon-button-color: @global-primary-background;
+@inverse-icon-button-hover-background: darken(@inverse-icon-button-background, 5%);
+@inverse-icon-button-hover-color: @inverse-icon-button-color;
+@inverse-icon-button-active-background: darken(@inverse-icon-button-background, 10%);
+@inverse-icon-button-active-color: @inverse-icon-button-color;
+
+@base-body-font-family: Roboto, sans-serif;
+@base-body-font-weight: normal;
+@base-body-color: black;
+
+@base-heading-font-family: Roboto, sans-serif;
+@base-heading-color: black;
+
+// overlay
+@global-primary-background: #f55f24;
+
+@global-muted-background: #F2F2F0;
+
+@overlay-primary-background: fade(@global-primary-background, 70%);
+
+//Link
+@global-link-color: #f55f24;
+@global-link-hover-color: #d53f00;
+
+* {
+  -webkit-print-color-adjust: exact !important;
+}
+
+
+.uk-background-default {
+  background-color: white !important;
+}
+
+.uk-background-muted {
+  background-color: @global-muted-background !important;
+}
+
+.uk-background-primary {
+  background-color: @global-primary-background !important;
+}
+
+.uk-badge {
+  background-color: #f2f2f0 !important;
+  color: #333 !important;
+}
+
+.uk-label {
+  background-color: @global-primary-background !important;
+  color: white !important;
+}
+
+.uk-text-primary {
+  color: @global-primary-background !important;
+}
+
+.uk-text-meta {
+  color: #999 !important;
+}
