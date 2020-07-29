@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/aria-role */
 /* global UIkit */
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
@@ -9,7 +8,8 @@ import {
   TwitterShareButton,
   WhatsappShareButton,
 } from 'react-share';
-import { Section, ImgNoSSR } from '../utils';
+
+import { ImgNoSSR } from '../utils';
 import { GridNoSSR } from '../utils/Grid';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
@@ -18,9 +18,11 @@ import Api from '../../Axios';
 import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
 import {formatParagraph, mutateFormSchema, sortExperiences, sortReviews} from "../../utils";
+import ButtonIcon from "../utils/ButtonIcon";
 import {SharesCountContext} from "../store/SharesCountProvider";
 import {event} from "../../lib/gtag";
 import TAGS from "../../constants/tags";
+import ButtonPost from "../backoffice/cv/ButtonPost";
 
 /**
  * Le cv en public et en preview
@@ -83,11 +85,11 @@ const CVFiche = ({ cv, actionDisabled }) => {
 
   const shareSection = () => {
     return (
-      <>
+      <div className="uk-flex uk-flex-column uk-flex-middle">
         <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom uk-text-center uk-text-muted">
           Partager mon CV
         </p>
-        <GridNoSSR row gap="small" center>
+        <GridNoSSR row gap="small" center middle>
           <LinkedinShareButton
             disabled={actionDisabled}
             onShareWindowClose={() => {
@@ -161,7 +163,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
             />
           </WhatsappShareButton>
         </GridNoSSR>
-        </>
+      </div>
     )
   };
 
@@ -241,8 +243,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   <>
                     {
                       ` mais reste ${
-                          cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
-                        } à toutes autres propositions.`}
+                        cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
+                      } à toutes autres propositions.`}
                   </>
                 ) : (
                   '.'
@@ -447,7 +449,29 @@ const CVFiche = ({ cv, actionDisabled }) => {
             </GridNoSSR>
           </GridNoSSR>
           {shareSection()}
-
+          <div className="uk-flex uk-flex-center">
+            <ButtonPost
+              text="Télécharger le CV"
+              icon="download"
+              action={() => {
+                return Api.get(`${process.env.SERVER_URL}/api/v1/cv/pdf/${cv.user.url}`, {
+                  responseType: 'arraybuffer',
+                  headers: {
+                    'Accept': 'application/pdf'
+                  }
+                })
+                  .then(({data}) => {
+                    const blob = new Blob([data], {type: 'application/pdf'});
+                    const pdfLink = document.createElement('a');
+                    pdfLink.href = window.URL.createObjectURL(blob);
+                    pdfLink.download = `CV_${cv.user.candidat.firstName}_${cv.user.candidat.lastName}.pdf`;
+                    pdfLink.click()
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }}/>
+          </div>
           <hr />
           <div className="uk-text-center">
             <h2 className="uk-text-bold">
