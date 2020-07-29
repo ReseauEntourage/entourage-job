@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import ModalEdit from '../modals/ModalEdit';
 import schemaCareerPath from '../forms/schema/formEditCareerPath.json';
 import ButtonIcon from '../utils/ButtonIcon';
-import { GridNoSSR } from '../utils';
+import {GridNoSSR} from '../utils';
 
-const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
+const CVEditCareerPath = ({ambitions, careerPathOpen, onChange, gender}) => {
   const ContentByGender = () => {
     if (ambitions.length === 0) {
       if (!careerPathOpen) {
@@ -45,21 +45,19 @@ const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
     );
   };
   return (
-    <>
-      <div className="uk-card uk-card-default uk-card-body">
-        <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
-          <h3 className="uk-card-title">
-            Mon <span className="uk-text-primary">projet professionnel</span>
-          </h3>
-          {onChange && (
-            <ButtonIcon
-              name="pencil"
-              onClick={() => UIkit.modal(`#modal-career-path`).show()}
-            />
-          )}
-        </GridNoSSR>
-        <ContentByGender />
-      </div>
+    <div className="uk-card uk-card-default uk-card-body">
+      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+        <h3 className="uk-card-title">
+          Mon <span className="uk-text-primary">projet professionnel</span>
+        </h3>
+        {onChange && (
+          <ButtonIcon
+            name="pencil"
+            onClick={() => UIkit.modal(`#modal-career-path`).show()}
+          />
+        )}
+      </GridNoSSR>
+      <ContentByGender />
       {onChange && (
         <div>
           <ModalEdit
@@ -71,7 +69,7 @@ const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
               careerPath1: ambitions.length > 1 ? ambitions[1] : null,
               careerPathOpen,
             }}
-            onSubmit={({ careerPathOpen: isOpen, careerPath0, careerPath1 }, closeModal) => {
+            onSubmit={({careerPathOpen: isOpen, careerPath0, careerPath1}, closeModal) => {
               closeModal();
               onChange({
                 ambitions: [careerPath0, careerPath1].filter((a) => a || null),
@@ -81,7 +79,7 @@ const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
           />
         </div>
       )}
-    </>
+    </div>
   );
 };
 CVEditCareerPath.propTypes = {

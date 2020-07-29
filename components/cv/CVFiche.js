@@ -419,15 +419,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   </ul>
                 </div>
               )}
-              {cv.devise && (
-                <div className="">
-                  <h3 className="uk-margin-small-bottom">Ma devise</h3>
-                  <hr className="uk-divider-small uk-margin-remove-top" />
-                  <p className="">
-                    {cv.devise}
-                  </p>
-                </div>
-              )}
             </GridNoSSR>
           </GridNoSSR>
           {shareSection()}

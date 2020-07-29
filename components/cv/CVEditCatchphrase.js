@@ -8,42 +8,42 @@ import { GridNoSSR } from '../utils';
 
 const CVEditCatchphrase = ({ catchphrase, onChange }) => {
   return (
-    <>
-      <div className="uk-card uk-card-default uk-card-body">
-        <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
-          <h3 className="uk-card-title">
-            Ma <span className="uk-text-primary">phrase d&apos;accroche</span>
-          </h3>
-          {onChange && (
-            <ButtonIcon
-              name="pencil"
-              onClick={() => {
-                UIkit.modal(`#modal-catchphrase`).show();
-              }}
-            />
-          )}
-        </GridNoSSR>
-        {catchphrase ? (
-          <p>{catchphrase}</p>
-        ) : (
-          <p className="uk-text-italic">
-            Aucune phrase d&apos;accroche n&apos;a encore été créé
-          </p>
+    <div className="uk-card uk-card-default uk-card-body">
+      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+        <h3 className="uk-card-title">
+          Ma <span className="uk-text-primary">phrase d&apos;accroche</span>
+        </h3>
+        {onChange && (
+          <ButtonIcon
+            name="pencil"
+            onClick={() => {
+              UIkit.modal(`#modal-catchphrase`).show();
+            }}
+          />
         )}
-      </div>
-      {onChange && (
-        <ModalEdit
-          id="modal-catchphrase"
-          title="Édition - Ma phrase d'accroche"
-          formSchema={schemaCatchphrase}
-          defaultValues={{ catchphrase }}
-          onSubmit={(fields, closeModal) => {
-            closeModal();
-            onChange(fields);
-          }}
-        />
+      </GridNoSSR>
+      {catchphrase ? (
+        <p>{catchphrase}</p>
+      ) : (
+        <p className="uk-text-italic">
+          Aucune phrase d&apos;accroche n&apos;a encore été créé
+        </p>
       )}
-    </>
+      {onChange && (
+        <div>
+          <ModalEdit
+            id="modal-catchphrase"
+            title="Édition - Ma phrase d'accroche"
+            formSchema={schemaCatchphrase}
+            defaultValues={{ catchphrase }}
+            onSubmit={(fields, closeModal) => {
+              closeModal();
+              onChange(fields);
+            }}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 CVEditCatchphrase.propTypes = {
