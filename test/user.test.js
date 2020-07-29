@@ -11,6 +11,7 @@ const {
   USER_ROLES
 } = require('../constants');
 
+const route = '/api/v1/user';
 let serverTest;
 let loggedInAdmin;
 let loggedInCoach;
@@ -21,8 +22,6 @@ describe('User', () => {
   beforeAll(async () => {
     await recreateTestDB();
     serverTest = await startTestServer();
-    // await userFactory().then((user) => console.log('USER FACTORY', user));
-    // await createEntities(userFactory(), {}, 5).then((user) => console.log('MANY MANY MANY', user));
     loggedInAdmin = await createLoggedInUser({
       role: USER_ROLES.ADMIN,
       password: 'admin',
@@ -54,7 +53,7 @@ describe('User', () => {
           false
         );
         const response = await request(serverTest)
-          .post(`/api/v1/user`)
+          .post(`${route}`)
           .set('authorization', `Token ${loggedInAdmin.token}`)
           .send(candidat);
 
@@ -65,7 +64,7 @@ describe('User', () => {
           role: USER_ROLES.CANDIDAT
         }, false);
         const response = await request(serverTest)
-          .post(`/api/v1/user`)
+          .post(`${route}`)
           .send(candidat);
         expect(response.status).toBe(401);
       });
@@ -74,7 +73,7 @@ describe('User', () => {
           role: USER_ROLES.CANDIDAT
         }, false);
         const response = await request(serverTest)
-          .post(`/api/v1/user`)
+          .post(`${route}`)
           .set('authorization', `Token ${loggedInCandidat.token}`)
           .send(candidat);
         expect(response.status).toBe(401);
@@ -84,7 +83,7 @@ describe('User', () => {
           role: USER_ROLES.CANDIDAT
         }, true);
         const response = await request(serverTest)
-          .post(`/api/v1/user`)
+          .post(`${route}`)
           .set('authorization', `Token ${loggedInAdmin.token}`)
           .send(candidat);
         expect(response.status).toBe(409);
@@ -94,32 +93,32 @@ describe('User', () => {
     describe('R - Read 1 User', () => {
       it('Should return 401 when the user is not logged in.', async () => {
         const response = await request(serverTest)
-          .get(`/api/v1/user/${knownCandidat.email}`);
+          .get(`${route}/${knownCandidat.email}`);
         expect(response.status).toBe(401);
       });
       it('Should return 200 when logged-in candidat get himself', async () => {
         const response = await request(serverTest)
-          .get(`/api/v1/user/${loggedInCandidat.user.email}`)
+          .get(`${route}/${loggedInCandidat.user.email}`)
           .set('authorization', `Token ${loggedInCandidat.token}`);
         expect(response.status).toBe(200);
         expect(response.body.email).toEqual(loggedInCandidat.user.email);
       });
       it('Should return 200 when logged-in coach get himself', async () => {
         const response = await request(serverTest)
-          .get(`/api/v1/user/${loggedInCoach.user.email}`)
+          .get(`${route}/${loggedInCoach.user.email}`)
           .set('authorization', `Token ${loggedInCoach.token}`);
         expect(response.status).toBe(200);
         expect(response.body.email).toEqual(loggedInCoach.user.email);
       });
       it('Should return 401 when logged-in coach get a candidat', async () => {
         const response = await request(serverTest)
-          .get(`/api/v1/user/${knownCandidat.email}`)
+          .get(`${route}/${knownCandidat.email}`)
           .set('authorization', `Token ${loggedInCoach.token}`);
         expect(response.status).toBe(401);
       })
       it('Should return 200 and get a user by email.', async () => {
         const response = await request(serverTest)
-          .get(`/api/v1/user/${knownCandidat.email}`)
+          .get(`${route}/${knownCandidat.email}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
         expect(response.status).toBe(200);
         const receivedUser = response.body;
@@ -128,7 +127,7 @@ describe('User', () => {
       });
       it('Should return 200 and get a user by id.', async () => {
         const response = await request(serverTest)
-          .get(`/api/v1/user/${knownCandidat.id}`)
+          .get(`${route}/${knownCandidat.id}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
         expect(response.status).toBe(200);
         expect(response.body.id).toEqual(knownCandidat.id);
@@ -140,7 +139,7 @@ describe('User', () => {
       describe('Update password', () => {
         it('Should return 401 if invalid password', async () => {
           const response = await request(serverTest)
-            .put(`/api/v1/user/change-pwd`)
+            .put(`${route}/change-pwd`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
             .send({
               email: loggedInCandidat.user.email,
@@ -151,7 +150,7 @@ describe('User', () => {
         });
         it('Should return 2OO and updated user', async () => {
           const response = await request(serverTest)
-            .put(`/api/v1/user/change-pwd`)
+            .put(`${route}/change-pwd`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
             .send({
               email: loggedInCandidat.user.email,
@@ -166,7 +165,7 @@ describe('User', () => {
         it('Should return 401 if user is not logged in', async () => {
           const updates = await userFactory({}, false);
           const response = await request(serverTest)
-            .put(`/api/v1/user/${knownCandidat.id}`)
+            .put(`${route}/${knownCandidat.id}`)
             .send({
               phone: updates.phone,
               firstName: updates.firstName,
@@ -176,7 +175,7 @@ describe('User', () => {
         it('Should return 401 if user do not have the rights to update targeted user', async () => {
           const updates = await userFactory({}, false);
           const response = await request(serverTest)
-            .put(`/api/v1/user/${knownCandidat.id}`)
+            .put(`${route}/${knownCandidat.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
             .send({
               phone: updates.phone,
@@ -187,34 +186,30 @@ describe('User', () => {
         it('Should return 200 and updated user when a candiate update himself', async () => {
           const updates = await userFactory({}, false);
           const response = await request(serverTest)
-            .put(`/api/v1/user/${loggedInCandidat.user.id}`)
+            .put(`${route}/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
             .send({
-              phone: updates.phone,
               firstName: updates.firstName,
             });
           expect(response.status).toBe(200);
-          expect(response.body).toEqual({
-            ...loggedInCandidat.user,
-            phone: updates.phone,
-            firstName: updates.firstName,
-          });
+          expect(response.body.firstName).toEqual(updates.firstName);
         });
         it('Should return 200 and updated user when coach update himself', async () => {
           const updates = await userFactory({}, false);
           const response = await request(serverTest)
-            .put(`/api/v1/user/${loggedInCoach.user.id}`)
+            .put(`${route}/${loggedInCoach.user.id}`)
             .set('authorization', `Token ${loggedInCoach.token}`)
             .send({
               phone: updates.phone,
             });
           expect(response.status).toBe(200);
+          expect(response.body.phone).toEqual(updates.phone);
         });
         it('Should return 200 and updated user when an admin update a user', async () => {
           const updates = await userFactory({}, false);
           const response = await request(serverTest)
-            .put(`/api/v1/user/${knownCandidat.id}`)
-            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .put(`${route}/${knownCandidat.id}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
             .send({
               phone: updates.phone,
             });
@@ -222,15 +217,14 @@ describe('User', () => {
           expect(response.body.phone).toEqual(updates.phone);
         });
         it('Should return 200 and updated user when an admin update a user role', async () => {
-          const updates = await userFactory({ role: USER_ROLES.COCaACH }, true);
           const response = await request(serverTest)
-            .put(`/api/v1/user/${loggedInCandidat.user.id}`)
-            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .put(`${route}/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
             .send({
-              phone: updates.phone,
-              firstName: updates.firstName,
+              role: USER_ROLES.COACH,
             });
-          expect(response.status).toBe();
+          expect(response.status).toBe(200);
+          expect(response.body.role).toEqual(USER_ROLES.COACH);
         });
       });
     });
@@ -238,18 +232,76 @@ describe('User', () => {
     describe('D - Delete 1 User', () => {
       it('Should return 401 if not logged in admin', async () => {
         const response = await request(serverTest)
-          .delete(`/api/v1/user/${knownCandidat.id}`)
+          .delete(`${route}/${knownCandidat.id}`)
           .set('authorisation', `Token ${loggedInAdmin.token}`);
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(401);
       });
       it('Should return 200', async () => {
         const response = await request(serverTest)
-          .delete(`/api/v1/user/${knownCandidat.id}`)
+          .delete(`${route}/${knownCandidat.id}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
         expect(response.status).toBe(200);
       });
     });
   });
 
+  describe('Other Routes:', () => {
 
+    describe(
+      'Search - search a user where query string in email, first name or last name',
+      () => {
+        it('Should return 401 if user is not a logged in admin', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/search?query=e&role=${USER_ROLES.CANDIDAT}`)
+            .set('authorisation', `Token ${loggedInCandidat.token}`);
+          expect(response.status).toBe(401);
+        });
+        it('Should return 200 and users', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/search?query=e&role=${USER_ROLES.CANDIDAT}`)
+            .set('authorisation', `Token ${loggedInAdmin.token}`)
+            .send({
+              ...loggedInAdmin.user
+            });
+          expect(response.status).toBe(200);
+        });
+      });
+    describe('Candidat - get user associated to a candidate or coach', () => {
+      it('Should return 401 if user is not  a logged in user', async () => {
+        const response = await request(serverTest)
+          .get(`${route}/candidat`)
+          .send({
+            candidatId: loggedInCandidat.user.id
+          });
+        expect(response.status).toBe(401);
+      });
+      it('Should return 200 and users, candidat searching for himself', async () => {
+        const response = await request(serverTest)
+          .get(`${route}/candidat`)
+          .set('authorisation', `Token ${loggedInCandidat.token}`)
+          .send({
+            candidatId: loggedInCandidat.user.id
+          });
+        expect(response.status).toBe(200);
+      });
+      it('Should return 200 and users, coach searching for himself', async () => {
+        const response = await request(serverTest)
+          .get(`${route}/candidat`)
+          .set('authorisation', `Token ${loggedInCoach.token}`)
+          .send({
+            coachId: loggedInCoach.user.id
+          });
+        expect(response.status).toBe(200);
+      });
+      it('Should return 200 and users, admin searching for any users', async () => {
+        const response = await request(serverTest)
+          .get(`${route}/candidat`)
+          .set('authorisation', `Token ${loggedInAdmin.token}`)
+          .send({
+            candidatId: loggedInCoach.user.id,
+          });
+        expect(response.status).toBe(200);
+      });
+    });
+  });
 });

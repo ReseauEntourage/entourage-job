@@ -52,7 +52,6 @@ const recreateTestDB = async () => {
  * Drops all the tables content
  */
 const resetTestDB = async () => {
-    console.log('::::::::::::::: RESET DB ::::::::::::::::')
     try {
         db.drop();
         db.sync({
@@ -80,9 +79,9 @@ const createEntities = async (factory, props = {}, n) => {
  * Login a user
  * 
  * @param {Object} user 
- * @returns {string} token
+ * @returns {string} token and id (generated during user creation)
  */
-const getToken = async (user) => {
+const getTokenAndId = async (user) => {
     const response = await request(app)
         .post(`/api/v1/auth/login`)
         .send({
@@ -90,7 +89,10 @@ const getToken = async (user) => {
             password: user.password,
         });
 
-    return response.body.user.token;
+    return {
+        token: response.body.user.token,
+        id: response.body.user.id
+    };
 }
 
 /**
@@ -100,14 +102,20 @@ const getToken = async (user) => {
  */
 const createLoggedInUser = async (props = {}) => {
     const user = await userFactory(props);
-    const token = await getToken({
+    const {
+        token,
+        id
+    } = await getTokenAndId({
         ...user,
         password: props.password
     });
 
     return {
         token,
-        user
+        user: {
+            ...user,
+            id
+        }
     };
 }
 
