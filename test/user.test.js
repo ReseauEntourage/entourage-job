@@ -6,6 +6,7 @@ const {
   stopTestServer,
   resetTestDB,
   createLoggedInUser,
+  createEntities,
 } = require('./helpers/helpers');
 const {
   USER_ROLES
@@ -13,6 +14,7 @@ const {
 
 const route = '/api/v1/user';
 let serverTest;
+const fakeId = '9bc0065e-b889-4f05-97v8-73i45f49976a';
 let loggedInAdmin;
 let loggedInCoach;
 let loggedInCandidat;
@@ -132,6 +134,12 @@ describe('User', () => {
         expect(response.status).toBe(200);
         expect(response.body.id).toEqual(knownCandidat.id);
       });
+      it('Should return 404 if user not found', async () => {
+        const response = await request(serverTest)
+          .get(`${route}/${fakeId}`)
+          .set('authorization', `Token ${loggedInAdmin.token}`);
+        expect(response.status).toBe(404);
+      });
     });
 
     describe('U - Update 1 User', () => {
@@ -246,7 +254,6 @@ describe('User', () => {
   });
 
   describe('Other Routes:', () => {
-
     describe(
       'Search - search a user where query string in email, first name or last name',
       () => {
@@ -303,5 +310,21 @@ describe('User', () => {
         expect(response.status).toBe(200);
       });
     });
+    describe('Members - get paginated and sorted users', () => {
+      it('Should return 401 if user is not a logged in admin', async () => {
+        const users = await createEntities(userFactory, {}, 6);
+        console.log('::::::::::: USERS ENTITIES :::::::::::::', users);
+        const response = await request(serverTest)
+          .get(`${route}/members`)
+          .set('authorization', `Token ${loggedInAdmin.token}`);
+        expect(response.status).toBe(401);
+      });
+      it('Should return 200 and paginated users', async () => {
+        const response = await request(serverTest)
+          .get(`${route}/members?limit=2&offset=2`)
+          .set('authorization', `Token ${loggedInAdmin.token}`);
+        expect(response.status).toBe(200);
+      });
+    })
   });
 });

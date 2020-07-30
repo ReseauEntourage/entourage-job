@@ -44,7 +44,10 @@ const recreateTestDB = async () => {
     } catch (error) {
         console.error('Impossible de se connecter à la base de données : ', error);
     }
-
+    db.sync({
+        force: true,
+        logging: console.log
+    });
     return db;
 };
 
@@ -52,15 +55,10 @@ const recreateTestDB = async () => {
  * Drops all the tables content
  */
 const resetTestDB = async () => {
-    try {
-        db.drop();
-        db.sync({
-            force: true,
-        });
-    } catch (e) {
-        throw new Error(`Unable to reset Data Base: ${e}`);
-    }
-
+    console.log('::::::::::: RESET DB ::::::::::::::::')
+    db.User.destroy({
+        truncate: true,
+    });
 }
 
 /**
