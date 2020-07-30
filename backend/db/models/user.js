@@ -119,9 +119,13 @@ module.exports = (sequelize, DataTypes) => {
           candidatId: user.id,
           url: `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`,
         });
+        await models.Share.create({
+          CandidatId: user.id
+        });
       }
       return user;
     });
+
   };
   return User;
 };

@@ -55,6 +55,7 @@ const CVList = ({ nb, search }) => {
               skills={cv.skills}
               catchphrase={cv.catchphrase}
               employed={cv.user.employed}
+              id={cv.user.candidat.id}
             />
           ))}
         />

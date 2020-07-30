@@ -1,7 +1,7 @@
 const {USER_ROLES} = require("../../constants");
 
 const {
-  models: { User, User_Candidat, CV },
+  models: { User, User_Candidat, Share, CV },
   Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 
@@ -171,7 +171,7 @@ const getMembers = (limit, offset, order, role, query) => {
             fn('lower', col('User.lastName'))
           ),
           { [Op.like]: `%${lowerCaseQuery}%` }
-        ),
+        ),f
       ],
     };
   }
@@ -260,16 +260,23 @@ const setUser = async (id, user) => {
   return getUser(id);
 };
 
+// TODO Use Hooks
 const changeUserRole = async (id, user) => {
   const dbUser = await getUser(id);
 
   if(dbUser.role !== user.role) {
     if(dbUser.role === USER_ROLES.CANDIDAT && user.role !== USER_ROLES.CANDIDAT) {
-      await User_Candidat.destroy({
-        where: {
-          candidatId: id
-        },
-      });
+      try {
+        await User_Candidat.destroy({
+          where: {
+            candidatId: id
+          },
+        });
+      }
+      catch (e) {
+        console.log('Candidat inexistant');
+      }
+
     }
     else if(dbUser.role !== USER_ROLES.CANDIDAT && user.role === USER_ROLES.CANDIDAT) {
       if(dbUser.role === USER_ROLES.COACH) {
@@ -289,10 +296,21 @@ const changeUserRole = async (id, user) => {
         }
       }
 
-      await User_Candidat.create({
-        candidatId: id,
-        url: `${user.firstName.toLowerCase()}-${id.substring(0, 8)}`,
-      });
+      try {
+        await User_Candidat.create({
+          candidatId: id,
+          url: `${user.firstName.toLowerCase()}-${id.substring(0, 8)}`,
+        });
+
+        await Share.findOrCreate({
+          where: {
+            CandidatId: id
+          }
+        });
+      }
+      catch (e) {
+        console.log(e);
+      }
 
       await setUser(id, {role: user.role})
     }

@@ -266,7 +266,7 @@ const updateOpportunity = async (opportunity) => {
     });
   }
 
-  // maybe in trigger
+  // TODO maybe in trigger
   if (opportunity.isPublic) {
     await Opportunity_User.destroy({
       where: {

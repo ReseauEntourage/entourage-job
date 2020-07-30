@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/aria-role */
 /* global UIkit */
-import React, {useEffect} from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {
@@ -14,15 +14,18 @@ import { GridNoSSR } from '../utils/Grid';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
 import schema from '../forms/schema/formEditOpportunity';
-import Axios from '../../Axios';
+import Api from '../../Axios';
 import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
 import {formatParagraph, mutateFormSchema, sortExperiences, sortReviews} from "../../utils";
+import {SharesCountContext} from "../store/SharesCountProvider";
 
 /**
  * Le cv en public et en preview
  */
 const CVFiche = ({ cv, actionDisabled }) => {
+  const { incrementSharesCount } = useContext(SharesCountContext);
+
   const router = useRouter();
   const hostname = process.env.SERVER_URL;
   const link = `${hostname}${router.asPath}`;
@@ -55,7 +58,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
 
   const postOpportunity = async (opportunity, closeModal) => {
     try {
-      await Axios.post(`/api/v1/opportunity/`, opportunity);
+      await Api.post(`/api/v1/opportunity/`, opportunity);
       closeModal();
       UIkit.notification(
         `Merci pour votre message, ${cv.user.candidat.firstName} et son coach reviennent vers vous bientôt.`,
@@ -65,8 +68,19 @@ const CVFiche = ({ cv, actionDisabled }) => {
       UIkit.notification(`Une erreur est survenue.`, 'danger');
     }
   };
+
   const openNewsletterModal = () =>
     UIkit.modal(`#info-share-${cv.user.candidat.firstName}`).show();
+
+  const updateShareCount = (candidatId, type) => {
+    Api.post('api/v1/cv/count', {
+      candidatId, type
+    }).then(() => {
+      incrementSharesCount();
+    }).catch((e) => {
+      console.log(e);
+    })
+  };
 
   const experiences = sortExperiences(cv.experiences);
 
@@ -79,7 +93,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
         <GridNoSSR row gap="small" center>
           <LinkedinShareButton
             disabled={actionDisabled}
-            onShareWindowClose={openNewsletterModal}
+            onShareWindowClose={() => {
+              updateShareCount(cv.UserId, 'linkedin');
+              openNewsletterModal();
+            }}
             url={link}
             title={title}
             description={sharedDescription}
@@ -99,7 +116,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </LinkedinShareButton>
           <FacebookShareButton
             disabled={actionDisabled}
-            onShareWindowClose={openNewsletterModal}
+            onShareWindowClose={() => {
+              updateShareCount(cv.UserId, 'facebook');
+              openNewsletterModal();
+            }}
             url={link}
             quote={sharedDescription}
             hashtags={hashtags}
@@ -119,7 +139,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </FacebookShareButton>
           <TwitterShareButton
             disabled={actionDisabled}
-            onShareWindowClose={openNewsletterModal}
+            onShareWindowClose={() => {
+              updateShareCount(cv.UserId, 'twitter');
+              openNewsletterModal();
+            }}
             url={link}
             title={sharedDescription}
             hashtags={hashtags}
@@ -140,8 +163,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </TwitterShareButton>
           <WhatsappShareButton
             disabled={actionDisabled}
-            onShareWindowClose={openNewsletterModal}
-            url={link}
+            onShareWindowClose={() => {
+              updateShareCount(cv.UserId, 'whatsapp');
+              openNewsletterModal();
+            }}            url={link}
             title={sharedDescription}
             style={{
               cursor: !actionDisabled && 'pointer',
