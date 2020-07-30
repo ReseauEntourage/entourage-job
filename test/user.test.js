@@ -11,6 +11,7 @@ const {
 const {
   USER_ROLES
 } = require('../constants');
+const cvFactory = require('./factories/cvFactory');
 
 const route = '/api/v1/user';
 let serverTest;
@@ -58,9 +59,19 @@ describe('User', () => {
           .post(`${route}`)
           .set('authorization', `Token ${loggedInAdmin.token}`)
           .send(candidat);
-
         expect(response.status).toBe(200);
       });
+      it('Should return 400 when user data contain wrong data types', async () => {
+        const wrongData = {
+          ...await userFactory({}, false),
+          firstName: 123,
+        }
+        const response = await request(serverTest)
+          .post(`${route}`)
+          .set('authorization', `Token ${loggedInAdmin.token}`)
+          .send(wrongData);
+        expect(response.status).toBe(400);
+      })
       it('Should return 401 when the user is not logged-in.', async () => {
         const candidat = userFactory({
           role: USER_ROLES.CANDIDAT
@@ -312,7 +323,14 @@ describe('User', () => {
     });
     describe('Members - get paginated and sorted users', () => {
       it('Should return 401 if user is not a logged in admin', async () => {
-        const users = await createEntities(userFactory, {}, 6);
+        const cv = [];
+        const users = await createEntities(createLoggedInUser, {}, 6)
+        users.forEach((u) => {
+          if (u.user.role === USER_ROLES.CANDIDAT) {
+            cv.push(createEntities(cvFactory, { userId: u.user.id }, 1))
+          }
+        });
+        console.log(cv)
         console.log('::::::::::: USERS ENTITIES :::::::::::::', users);
         const response = await request(serverTest)
           .get(`${route}/members`)

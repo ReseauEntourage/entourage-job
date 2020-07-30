@@ -59,6 +59,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(200).json(users);
     })
     .catch((err) => {
+      console.log('::::::::::::::::: ERRROR USER CREATE:::::::::::', err)
       console.log(err);
       if (err.name === "SequelizeUniqueConstraintError") {
         res.status(409).send('Adresse email déjà existante');
@@ -147,6 +148,10 @@ router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
  */
 router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
   res) => {
+  console.log('::::::::::::::::CANDIDAT::::::::::::::', {
+    query: req.query.query,
+    role: req.query.role
+  });
   if (req.payload.id === req.query.coachId || req.payload.id === req.query.candidatId || req
     .payload.role === USER_ROLES.ADMIN) {
     UserController.getUserCandidatOpt(req.query)
@@ -192,7 +197,6 @@ router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
 router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  console.log('::::::::::::: GET ::::::::::::');
   checkUserAuthorization(req, res, req.params.id, () => {
     (validator.isEmail(req.params.id) ?
       UserController.getUserByEmail(req.params.id) :
@@ -204,7 +208,7 @@ router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
       })
       .catch((err) => {
         console.log(`Aucun User trouvé`);
-        res.status(401).send(err);
+        res.status(404).send(err);
       });
   });
 });
@@ -280,7 +284,6 @@ router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
  */
 router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   checkUserAuthorization(req, res, req.params.id, () => {
-
     const setUser = () => {
       UserController.setUser(req.params.id, req.body)
         .then((user) => {

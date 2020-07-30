@@ -44,10 +44,7 @@ const recreateTestDB = async () => {
     } catch (error) {
         console.error('Impossible de se connecter à la base de données : ', error);
     }
-    db.sync({
-        force: true,
-        logging: console.log
-    });
+
     return db;
 };
 
