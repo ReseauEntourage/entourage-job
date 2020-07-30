@@ -18,6 +18,7 @@ const Partners = () => {
       '../../static/img/partner9.png',
       '../../static/img/partner8.png',
       '../../static/img/partner1.png',
+      '../../static/img/partner12.png',
     ]
   };
 
