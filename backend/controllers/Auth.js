@@ -47,7 +47,7 @@ function generateJWT(user, expiration) {
       candidatId,
       coachId
     },
-    'secret'
+    process.env.JWT_SECRET
   );
 }
 
@@ -92,7 +92,7 @@ const auth = (roles= []) => {
 
   return [
     expressJwt({
-      secret: 'secret',
+      secret: process.env.JWT_SECRET,
       userProperty: 'payload',
       getToken: getTokenFromHeaders,
       credentialsRequired: roles.length > 0,
