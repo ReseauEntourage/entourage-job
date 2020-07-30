@@ -1,10 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
+import CountUp from "react-countup";
+import PropTypes from "prop-types";
 import {GridNoSSR, IconNoSSR, Section} from '../utils';
 import CVList from '../cv/CVList';
 import Button from "../utils/Button";
 
-const CandidatListPartial = () => (
+const CandidatListPartial = ({nbShares}) => (
   <Section style="muted" id="candidat" className="uk-padding">
     <GridNoSSR column middle eachWidths={['2-3@m', '1-1']}>
       <div className="uk-text-center">
@@ -21,6 +23,22 @@ const CandidatListPartial = () => (
           nous que l&apos;exclusion ne doit pas être un frein, partagez votre
           réseau professionnel à ceux qui en ont le plus besoin.
         </p>
+        <h4 className="uk-text-bold">
+          Grâce à vous, ce sont déjà{' '}
+          <span className="uk-text-primary uk-text-large">
+             {
+               nbShares > 0 ?
+                 <CountUp
+                   duration={5}
+                   delay={3}
+                   end={nbShares}
+                   preserveValue
+                 />
+                 : 0
+             }
+          </span>
+          {' '}partages de CV&nbsp;!
+        </h4>
       </div>
       <CVList nb={9} />
       <GridNoSSR middle column gap="collapse">
@@ -45,5 +63,13 @@ const CandidatListPartial = () => (
     </GridNoSSR>
   </Section>
 );
+
+CandidatListPartial.propTypes = {
+  nbShares: PropTypes.number,
+};
+
+CandidatListPartial.defaultProps = {
+  nbShares: 0
+};
 
 export default CandidatListPartial;

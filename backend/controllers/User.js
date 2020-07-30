@@ -1,7 +1,7 @@
 const {USER_ROLES} = require("../../constants");
 
 const {
-  models: { User, User_Candidat, CV },
+  models: { User, User_Candidat, Share, CV },
   Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 
@@ -171,7 +171,7 @@ const getMembers = (limit, offset, order, role, query) => {
             fn('lower', col('User.lastName'))
           ),
           { [Op.like]: `%${lowerCaseQuery}%` }
-        ),
+        ),f
       ],
     };
   }
@@ -260,46 +260,6 @@ const setUser = async (id, user) => {
   return getUser(id);
 };
 
-const changeUserRole = async (id, user) => {
-  const dbUser = await getUser(id);
-
-  if(dbUser.role !== user.role) {
-    if(dbUser.role === USER_ROLES.CANDIDAT && user.role !== USER_ROLES.CANDIDAT) {
-      await User_Candidat.destroy({
-        where: {
-          candidatId: id
-        },
-      });
-    }
-    else if(dbUser.role !== USER_ROLES.CANDIDAT && user.role === USER_ROLES.CANDIDAT) {
-      if(dbUser.role === USER_ROLES.COACH) {
-        try {
-          await User_Candidat.update(
-            {
-              coachId: null
-            },
-            {
-              where: {
-                candidatId: dbUser.coach.candidat.id
-              },
-            });
-        }
-        catch(e) {
-          console.log('Pas de candidat associé');
-        }
-      }
-
-      await User_Candidat.create({
-        candidatId: id,
-        url: `${user.firstName.toLowerCase()}-${id.substring(0, 8)}`,
-      });
-
-      await setUser(id, {role: user.role})
-    }
-
-  }
-};
-
 const setUserCandidat = async (candidatId, candidat) => {
   return User_Candidat.update(candidat, {
     where: { candidatId },
@@ -379,7 +339,6 @@ module.exports = {
   getUserByEmail,
   getUsers,
   setUser,
-  changeUserRole,
   searchUsers,
   getMembers,
   setUserCandidat,

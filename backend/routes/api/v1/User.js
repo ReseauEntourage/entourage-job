@@ -275,9 +275,7 @@ router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
     const authorizedKeys = ['email', 'phone'];
 
     if(req.payload.role === USER_ROLES.ADMIN) {
-      UserController.changeUserRole(req.params.id, req.body).then(() => {
-         setUser();
-      });
+      setUser();
     }
     else if(keys.some((key) => !authorizedKeys.includes(key))) {
       res.status(401).send({message: "Unauthorized"});

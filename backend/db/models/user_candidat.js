@@ -81,6 +81,7 @@ module.exports = (sequelize, DataTypes) => {
       }
       return userCandidat;
     });
+
     UserCandidat.beforeUpdate(async (instance, option) => {
       const nextData = instance.dataValues;
       const previousData = instance._previousDataValues;
