@@ -37,11 +37,10 @@ describe('User', () => {
       role: USER_ROLES.CANDIDAT,
       password: 'candidat',
     });
-    otherCandidat = await createLoggedInUser(
-      {
-        role: USER_ROLES.CANDIDAT,
-        password: 'user'
-      });
+    otherCandidat = await createLoggedInUser({
+      role: USER_ROLES.CANDIDAT,
+      password: 'user'
+    });
   });
 
   afterAll(async () => {
@@ -166,15 +165,16 @@ describe('User', () => {
             });
           expect(response.status).toBe(401);
         });
-        it('Should return 200 and users, candidat searching for himself', async () => {
-          const response = await request(serverTest)
-            .get(`${route}/candidat`)
-            .set('authorisation', `Token ${loggedInCandidat.token}`)
-            .send({
-              candidatId: loggedInCandidat.user.id
-            });
-          expect(response.status).toBe(200);
-        });
+        it('Should return 200 and users, candidat searching for himself',
+          async () => {
+            const response = await request(serverTest)
+              .get(`${route}/candidat`)
+              .set('authorisation', `Token ${loggedInCandidat.token}`)
+              .send({
+                candidatId: loggedInCandidat.user.id
+              });
+            expect(response.status).toBe(200);
+          });
         it('Should return 200 and users, coach searching for himself', async () => {
           const response = await request(serverTest)
             .get(`${route}/candidat`)
@@ -184,15 +184,16 @@ describe('User', () => {
             });
           expect(response.status).toBe(200);
         });
-        it('Should return 200 and users, admin searching for any users', async () => {
-          const response = await request(serverTest)
-            .get(`${route}/candidat`)
-            .set('authorisation', `Token ${loggedInAdmin.token}`)
-            .send({
-              candidatId: loggedInCoach.user.id,
-            });
-          expect(response.status).toBe(200);
-        });
+        it('Should return 200 and users, admin searching for any users',
+          async () => {
+            const response = await request(serverTest)
+              .get(`${route}/candidat`)
+              .set('authorisation', `Token ${loggedInAdmin.token}`)
+              .send({
+                candidatId: loggedInCoach.user.id,
+              });
+            expect(response.status).toBe(200);
+          });
       });
     });
 

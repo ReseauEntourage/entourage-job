@@ -31,10 +31,9 @@ const stopTestServer = async () => {
 const recreateTestDB = async () => {
     loadEnvironnementVariables();
     db = new Sequelize(
-        process.env.DATABASE_URL,
-        {
-            logging: process.env.DEBUG_MODE ? console.log : false,
-        }
+        process.env.DATABASE_URL, {
+        logging: process.env.DEBUG_MODE ? console.log : false,
+    }
     );
 
     try {
@@ -50,9 +49,13 @@ const recreateTestDB = async () => {
  * Drops all the tables content
  */
 const resetTestDB = async () => {
-    db.User.destroy({
-        truncate: true,
-    });
+    console.log('::::::::::: RESET DB ::::::::::::::::')
+    await db.query('DELETE FROM "Users"');
+    await db.query('DELETE FROM "User_Candidats"');
+
+    // await sequelize.truncate({
+    //   force: true
+    // });
 }
 
 /**
