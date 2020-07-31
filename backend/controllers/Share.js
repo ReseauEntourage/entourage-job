@@ -31,7 +31,7 @@ const updateShareCount = async (candidatId, type) => {
 
 
 const getTotalShares = async () => {
-  let totalShares = 120000;
+  let totalShares = VALUES.SHARES;
   try {
     const shares = await Share.findAll({
       attributes: [

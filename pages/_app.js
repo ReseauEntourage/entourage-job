@@ -8,9 +8,9 @@ import React from 'react';
 import App from 'next/app';
 import Router from 'next/router';
 import UserProvider from '../components/store/UserProvider';
+import SharesCountProvider from "../components/store/SharesCountProvider";
 
 import * as gtag from '../lib/gtag';
-import SharesCountProvider from "../components/store/SharesCountProvider";
 
 class EntourageApp extends App {
   componentDidMount() {

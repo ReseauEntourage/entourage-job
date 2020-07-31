@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import PropTypes from "prop-types";
 import {GridNoSSR, Section} from '../utils';
 import {NumberCard} from '../cards';
+import {VALUES} from '../../constants';
 import CVFiche from "../cv/CVFiche";
 
 const staticNumbers = [
@@ -63,7 +64,7 @@ const NumberPartial = ({nbShares}) => {
   useEffect(() => {
     const updatedNumbers = numbers;
 
-    const stringNumber = nbShares ? nbShares.toString() : '0';
+    const stringNumber = nbShares.toString();
 
     updatedNumbers[1].value = `${stringNumber.substring(0, stringNumber.length - 3)}k`;
 
@@ -176,7 +177,7 @@ NumberPartial.propTypes = {
 };
 
 NumberPartial.defaultProps = {
-  nbShares: 120000
+  nbShares: VALUES.SHARES
 };
 
 export default NumberPartial;

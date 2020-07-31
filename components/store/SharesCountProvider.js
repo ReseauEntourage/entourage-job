@@ -2,8 +2,9 @@
 import React, { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Api from '../../Axios';
+import {VALUES} from '../../constants';
 
-export const SharesCountContext = createContext();
+export const SharesCountContext = createContext({totalShares: 0});
 
 const SharesCountProvider = ({ children }) => {
   const [totalShares, setTotalShares] = useState(0);
@@ -17,7 +18,7 @@ const SharesCountProvider = ({ children }) => {
       setTotalShares(data.total);
     }).catch((e) => {
       console.log(e);
-      setTotalShares(120000);
+      setTotalShares(VALUES.SHARES);
     })
   }, []);
 
