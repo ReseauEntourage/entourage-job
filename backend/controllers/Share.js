@@ -1,6 +1,6 @@
 const sequelize = require('sequelize');
 
-const {USER_ROLES} = require("../../constants");
+const {VALUES} = require("../../constants");
 
 const {
   models: { Share },
