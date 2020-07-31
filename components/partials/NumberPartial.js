@@ -63,7 +63,7 @@ const NumberPartial = ({nbShares}) => {
   useEffect(() => {
     const updatedNumbers = numbers;
 
-    const stringNumber = nbShares.toString();
+    const stringNumber = nbShares ? nbShares.toString() : '0';
 
     updatedNumbers[1].value = `${stringNumber.substring(0, stringNumber.length - 3)}k`;
 
