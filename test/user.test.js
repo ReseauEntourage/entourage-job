@@ -5,9 +5,9 @@ const {
   recreateTestDB,
   stopTestServer,
   resetTestDB,
-  createLoggedInUser,
   createEntities,
 } = require('./helpers/helpers');
+const createLoggedInUser = require('./helpers/user.helper');
 const {
   USER_ROLES
 } = require('../constants');
@@ -65,7 +65,7 @@ describe('User', () => {
           .send(candidat);
         expect(response.status).toBe(200);
       });
-      it('Should return 401 when user data contain wrong data types', async () => {
+      it('Should return 404 when user data contain wrong data types', async () => {
         const wrongData = {
           ...await userFactory({}, false),
           firstName: 123,
@@ -74,7 +74,7 @@ describe('User', () => {
           .post(`${route}`)
           .set('authorization', `Token ${loggedInAdmin.token}`)
           .send(wrongData);
-        expect(response.status).toBe(401);
+        expect(response.status).toBe(404);
       });
       it('Should return 401 when the user is not logged-in.', async () => {
         const candidat = userFactory({
@@ -221,13 +221,13 @@ describe('User', () => {
         it('Should return 401 if user is not a logged in admin', async () => {
           const cv = [];
           const users = await createEntities(createLoggedInUser, {}, 6)
-          users.forEach((u) => {
+          users.forEach(async (u) => {
             if (u.user.role === USER_ROLES.CANDIDAT) {
-              cv.push(createEntities(cvFactory, { userId: u.user.id }, 1))
+              cv.push(await createEntities(cvFactory, { userId: u.user.id }, 1))
             }
           });
-          console.log(cv)
           console.log('::::::::::: USERS ENTITIES :::::::::::::', users);
+          console.log(cv)
           const response = await request(serverTest)
             .get(`${route}/members`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
@@ -298,10 +298,10 @@ describe('User', () => {
             .put(`${route}/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
             .send({
-              firstName: updates.firstName,
+              phone: updates.phone,
             });
           expect(response.status).toBe(200);
-          expect(response.body.firstName).toEqual(updates.firstName);
+          expect(response.body.phone).toEqual(updates.phone);
         });
         it('Should return 200 and updated user when coach update himself', async () => {
           const updates = await userFactory({}, false);
@@ -313,6 +313,26 @@ describe('User', () => {
             });
           expect(response.status).toBe(200);
           expect(response.body.phone).toEqual(updates.phone);
+        });
+        it('Should return 401 when a not admin user updates his first name', async () => {
+          const updates = await userFactory({}, false);
+          const response = await request(serverTest)
+            .put(`${route}/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({
+              firstName: updates.firstName,
+            });
+          expect(response.status).toBe(401);
+        });
+        it('Should return 401 when a not admin user updates his last name', async () => {
+          const updates = await userFactory({}, false);
+          const response = await request(serverTest)
+            .put(`${route}/${loggedInCoach.user.id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`)
+            .send({
+              lastName: updates.lastName,
+            });
+          expect(response.status).toBe(401);
         });
         it('Should return 200 and updated user when an admin update a user', async () => {
           const updates = await userFactory({}, false);

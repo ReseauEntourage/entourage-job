@@ -31,10 +31,18 @@ const generateCv = async (props = {}) => {
  * @param {boolean} insertInDB 
  * @return 
  */
-const cvFactory = async (props = {}, insertInDB = true) => {
+const cvFactory = async (
+    props = {},
+    associationsId = {},
+    insertInDB = true
+) => {
     const cvData = await generateCv(props);
+    const cvFull = {
+        ...cvData,
+        ...associationsId
+    }
 
-    return insertInDB ? CV.create(cvData) : cvData;
+    return insertInDB ? CV.create(cvFull) : cvData;
 }
 
 module.exports = cvFactory;
