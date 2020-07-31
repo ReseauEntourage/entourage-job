@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+
 const request = require('supertest');
 const loadEnvironnementVariables = require('../../backend/utils/env');
 
@@ -12,17 +13,17 @@ let db;
  * Start a server according to .env variables
  */
 const startTestServer = async () => {
-    loadEnvironnementVariables();
-    app = server.prepare();
-    server.start(process.env.PORT);
-    return app;
+  loadEnvironnementVariables();
+  app = server.prepare();
+  server.start(process.env.PORT);
+  return app;
 }
 
 /**
  * stop the server
  */
 const stopTestServer = async () => {
-    server.close()
+  server.close()
 }
 
 /**
@@ -31,31 +32,33 @@ const stopTestServer = async () => {
  * @returns the db connection
  */
 const recreateTestDB = async () => {
-    loadEnvironnementVariables();
-    db = new Sequelize(
-        process.env.DATABASE_URL,
-        {
-            logging: process.env.DEBUG_MODE ? console.log : false,
-        }
-    );
-
-    try {
-        await db.authenticate()
-    } catch (error) {
-        console.error('Impossible de se connecter à la base de données : ', error);
+  loadEnvironnementVariables();
+  db = new Sequelize(
+    process.env.DATABASE_URL, {
+      logging: process.env.DEBUG_MODE ? console.log : false,
     }
+  );
 
-    return db;
+  try {
+    await db.authenticate()
+  } catch (error) {
+    console.error('Impossible de se connecter à la base de données : ', error);
+  }
+
+  return db;
 };
 
 /**
  * Drops all the tables content
  */
 const resetTestDB = async () => {
-    console.log('::::::::::: RESET DB ::::::::::::::::')
-    db.User.destroy({
-        truncate: true,
-    });
+  console.log('::::::::::: RESET DB ::::::::::::::::')
+  await db.query('DELETE FROM "Users"');
+  await db.query('DELETE FROM "User_Candidats"');
+
+  // await sequelize.truncate({
+  //   force: true
+  // });
 }
 
 /**
@@ -66,8 +69,8 @@ const resetTestDB = async () => {
  * @returns
  */
 const createEntities = async (factory, props = {}, n) => {
-    return Promise.all(Array(n).fill(0).map(() => factory(props)))
-        .catch((e) => console.error(e));
+  return Promise.all(Array(n).fill(0).map(() => factory(props)))
+    .catch((e) => console.error(e));
 }
 
 /**
@@ -77,17 +80,17 @@ const createEntities = async (factory, props = {}, n) => {
  * @returns {string} token and id (generated during user creation)
  */
 const getTokenAndId = async (user) => {
-    const response = await request(app)
-        .post(`/api/v1/auth/login`)
-        .send({
-            email: user.email,
-            password: user.password,
-        });
+  const response = await request(app)
+    .post(`/api/v1/auth/login`)
+    .send({
+      email: user.email,
+      password: user.password,
+    });
 
-    return {
-        token: response.body.user.token,
-        id: response.body.user.id
-    };
+  return {
+    token: response.body.user.token,
+    id: response.body.user.id
+  };
 }
 
 /**
@@ -96,30 +99,30 @@ const getTokenAndId = async (user) => {
  * @param {Object} props user data
  */
 const createLoggedInUser = async (props = {}) => {
-    const user = await userFactory(props);
-    const {
-        token,
-        id
-    } = await getTokenAndId({
-        ...user,
-        password: props.password
-    });
+  const user = await userFactory(props);
+  const {
+    token,
+    id
+  } = await getTokenAndId({
+    ...user,
+    password: props.password
+  });
 
-    return {
-        token,
-        user: {
-            ...user,
-            id
-        }
-    };
+  return {
+    token,
+    user: {
+      ...user,
+      id
+    }
+  };
 }
 
 
 module.exports = {
-    startTestServer,
-    stopTestServer,
-    recreateTestDB,
-    resetTestDB,
-    createEntities,
-    createLoggedInUser,
+  startTestServer,
+  stopTestServer,
+  recreateTestDB,
+  resetTestDB,
+  createEntities,
+  createLoggedInUser,
 }
