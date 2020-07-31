@@ -2,8 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const uid = require('uid-safe');
 const enforce = require('express-sslify');
-const RateLimit = require('express-rate-limit');
-const RedisStore = require('rate-limit-redis');
+
 const passport = require('./config/passport');
 
 const routeCV = require('./routes/api/v1/CV');
@@ -13,24 +12,13 @@ const routeUser = require('./routes/api/v1/User');
 const routeMail = require('./routes/api/v1/Mail');
 const routeOpportunity = require('./routes/api/v1/Opportunity');
 
+const RateLimiter = require('./utils/RateLimiter');
+
 const app = express();
 
 let server;
 
-const redisStore = new RedisStore({
-  redisURL: process.env.REDIS_URL
-});
-
-const apiLimiter = new RateLimit({
-  store: redisStore,
-  max: 100
-});
-
-const loginLimiter = new RateLimit({
-  store: redisStore,
-  max: 5
-});
-
+const apiLimiter = RateLimiter.createLimiter(50);
 
 module.exports.prepare = () => {
 
@@ -38,6 +26,8 @@ module.exports.prepare = () => {
 
   // enable ssl redirect
   if(!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
+
+  app.set('trust proxy', 1);
 
   app.use(express.json());
 
@@ -61,15 +51,12 @@ module.exports.prepare = () => {
   app.use(passport.session());
 
   // adding routes
-  app.use('/api/v1/auth', routeAuth);
-  app.use('/api/v1/cv', routeCV);
-  app.use('/api/v1/mail', routeMail);
-  // app.use('/api/v1/message', routeMessage);
-  app.use('/api/v1/opportunity', routeOpportunity);
-  app.use('/api/v1/user', routeUser);
-
-  app.use("/api", apiLimiter);
-  app.use("/api/v1/login", loginLimiter);
+  app.use('/api/v1/auth', apiLimiter, routeAuth);
+  app.use('/api/v1/cv', apiLimiter, routeCV);
+  app.use('/api/v1/mail', apiLimiter, routeMail);
+  // app.use('/api/v1/message', apiLimiter, routeMessage);
+  app.use('/api/v1/opportunity', apiLimiter, routeOpportunity);
+  app.use('/api/v1/user', apiLimiter, routeUser);
 
   app.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {

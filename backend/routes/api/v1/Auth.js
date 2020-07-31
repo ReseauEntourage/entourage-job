@@ -7,12 +7,15 @@ const { sendMail } = require('../../../controllers/mail');
 const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const {USER_ROLES} = require('../../../../constants');
+const RateLimiter = require('../../../utils/RateLimiter');
+
+const authLimiter = RateLimiter.createLimiter(10);
 
 /**
  * Utilisation d'un "custom callback" pour mieux gérer l'echec d'authentification
  * Source : http://www.passportjs.org/docs/downloads/html/#custom-callback
  */
-router.post('/login', auth(), (req, res, next) => {
+router.post('/login', authLimiter, auth(), (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email) {
@@ -52,14 +55,14 @@ router.post('/login', auth(), (req, res, next) => {
   )(req, res, next);
 });
 
-router.post('/logout', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res /* , next */) => {
+router.post('/logout', authLimiter, auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res /* , next */) => {
   req.logout();
 
   // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
   res.redirect(process.env.SERVER_URL);
 });
 
-router.post('/forgot', auth(), (req, res /* , next */) => {
+router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
   let token = null;
   let user = null;
   const { email } = req.body;
@@ -121,7 +124,7 @@ router.post('/forgot', auth(), (req, res /* , next */) => {
 /**
  * GET Vérification lien de réinitialisation mot de passe
  */
-router.get('/reset/:userId/:token', auth(), (req, res /* , next */) => {
+router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */) => {
   const infoLog = 'GET /reset/:userId/:token -';
 
   const { userId, token } = req.params;
