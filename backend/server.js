@@ -2,6 +2,8 @@ const express = require('express');
 const session = require('express-session');
 const uid = require('uid-safe');
 const enforce = require('express-sslify');
+const RateLimit = require('express-rate-limit');
+const RedisStore = require('rate-limit-redis');
 const passport = require('./config/passport');
 
 const routeCV = require('./routes/api/v1/CV');
@@ -14,6 +16,21 @@ const routeOpportunity = require('./routes/api/v1/Opportunity');
 const app = express();
 
 let server;
+
+const redisStore = new RedisStore({
+  redisURL: process.env.REDIS_URL
+});
+
+const apiLimiter = new RateLimit({
+  store: redisStore,
+  max: 100
+});
+
+const loginLimiter = new RateLimit({
+  store: redisStore,
+  max: 5
+});
+
 
 module.exports.prepare = () => {
 
@@ -38,6 +55,7 @@ module.exports.prepare = () => {
     })
   );
 
+
   // adding Passport
   app.use(passport.initialize());
   app.use(passport.session());
@@ -49,6 +67,9 @@ module.exports.prepare = () => {
   // app.use('/api/v1/message', routeMessage);
   app.use('/api/v1/opportunity', routeOpportunity);
   app.use('/api/v1/user', routeUser);
+
+  app.use("/api", apiLimiter);
+  app.use("/api/v1/login", loginLimiter);
 
   app.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
