@@ -19,13 +19,11 @@ const CandidatListPartial = ({nbShares}) => (
           <span className="uk-text-primary">changer</span>
         </h3>
         <p className="uk-margin-remove-bottom">
-          Eux ont du talent. Vous, vous avez du réseau. Si vous pensez comme
-          nous que l&apos;exclusion ne doit pas être un frein, partagez votre
-          réseau professionnel à ceux qui en ont le plus besoin.
+          Ils ont du talent, vous du réseau. Si vous pensez que l&apos;exclusion ne doit pas être un frein, partagez votre réseau professionnel à ceux qui en ont le plus besoin.
         </p>
         <h4 className="uk-text-bold">
-          Grâce à vous, ce sont déjà{' '}
-          <span className="uk-text-primary uk-text-large">
+          Grâce à vous, ce sont déjà{' '}&nbsp;
+          <span className="uk-text-primary uk-text-normal" style={{fontSize: 38, fontWeight: 500}}>
              {
                nbShares > 0 ?
                  <CountUp
@@ -33,11 +31,24 @@ const CandidatListPartial = ({nbShares}) => (
                    delay={3}
                    end={nbShares}
                    preserveValue
+                   formattingFn={(number) => {
+                     let stringNumber = number.toString();
+                     if(stringNumber.length > 4) {
+                       stringNumber = `${stringNumber.slice(0, -3)} ${stringNumber.slice(-3)}`;
+                     }
+                     if(stringNumber.length > 7) {
+                       stringNumber = `${stringNumber.slice(0, -7)} ${stringNumber.slice(-7)}`;
+                     }
+                     if(stringNumber.length > 10) {
+                       stringNumber = `${stringNumber.slice(0, -11)} ${stringNumber.slice(-11)}`;
+                     }
+                     return stringNumber;
+                   }}
                  />
                  : 0
              }
           </span>
-          {' '}partages de CV&nbsp;!
+          &nbsp;{' '}partages de CV&nbsp;!
         </h4>
       </div>
       <CVList nb={9} />
