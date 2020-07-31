@@ -122,10 +122,15 @@ const EXTERNAL_LINKS = {
   LEGAL_MENTIONS: "https://docs.google.com/document/d/1a1IU9Y6qVDr4pvWJRE5XMVZ2fNhg0rhXMTL_lqY_f1M/pub"
 };
 
+const VALUES = {
+  SHARES: 120000
+};
+
 module.exports = {
   OFFER_STATUS,
   CV_STATUS,
   USER_ROLES,
   BUSINESS_LINES,
-  EXTERNAL_LINKS
+  EXTERNAL_LINKS,
+  VALUES
 };
