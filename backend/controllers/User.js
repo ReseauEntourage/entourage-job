@@ -171,7 +171,7 @@ const getMembers = (limit, offset, order, role, query) => {
             fn('lower', col('User.lastName'))
           ),
           { [Op.like]: `%${lowerCaseQuery}%` }
-        ),f
+        ),
       ],
     };
   }
@@ -253,6 +253,7 @@ const searchUsers = (query, role) => {
 const setUser = async (id, user) => {
   const [updateCount] = await User.update(user, {
     where: { id },
+    individualHooks: true
   });
 
   if (updateCount === 0) return null;
