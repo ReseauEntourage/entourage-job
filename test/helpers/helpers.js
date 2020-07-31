@@ -10,17 +10,17 @@ let db;
  * Start a server according to .env variables
  */
 const startTestServer = async () => {
-    loadEnvironnementVariables();
-    app = server.prepare();
-    server.start(process.env.PORT);
-    return app;
+  loadEnvironnementVariables();
+  app = server.prepare();
+  server.start(process.env.PORT);
+  return app;
 }
 
 /**
  * stop the server
  */
 const stopTestServer = async () => {
-    server.close()
+  server.close()
 }
 
 /**
@@ -29,33 +29,33 @@ const stopTestServer = async () => {
  * @returns the db connection
  */
 const recreateTestDB = async () => {
-    loadEnvironnementVariables();
-    db = new Sequelize(
-        process.env.DATABASE_URL, {
-        logging: process.env.DEBUG_MODE ? console.log : false,
+  loadEnvironnementVariables();
+  db = new Sequelize(
+    process.env.DATABASE_URL, {
+      logging: process.env.DEBUG_MODE ? console.log : false,
     }
-    );
+  );
 
-    try {
-        await db.authenticate()
-    } catch (error) {
-        console.error('Impossible de se connecter à la base de données : ', error);
-    }
+  try {
+    await db.authenticate()
+  } catch (error) {
+    console.error('Impossible de se connecter à la base de données : ', error);
+  }
 
-    return db;
+  return db;
 };
 
 /**
  * Drops all the tables content
  */
 const resetTestDB = async () => {
-    console.log('::::::::::: RESET DB ::::::::::::::::')
-    await db.query('DELETE FROM "Users"');
-    await db.query('DELETE FROM "User_Candidats"');
+  console.log('::::::::::: RESET DB ::::::::::::::::')
+  await db.query('DELETE FROM "Users"');
+  await db.query('DELETE FROM "User_Candidats"');
 
-    // await sequelize.truncate({
-    //   force: true
-    // });
+  // await sequelize.truncate({
+  //   force: true
+  // });
 }
 
 /**
@@ -66,15 +66,19 @@ const resetTestDB = async () => {
  * @returns
  */
 const createEntities = async (factory, props = {}, n) => {
-    return Promise.all(Array(n).fill(0).map(() => factory(props)))
-        .catch((e) => console.error(e));
+  return Promise.all(Array(n).fill(0).map(() => factory(props)))
+    .catch((e) => console.error(e));
+}
+
+const getApp = () => {
+  return app;
 }
 
 module.exports = {
-    startTestServer,
-    stopTestServer,
-    recreateTestDB,
-    resetTestDB,
-    createEntities,
-    app,
+  startTestServer,
+  stopTestServer,
+  recreateTestDB,
+  resetTestDB,
+  createEntities,
+  getApp,
 }
