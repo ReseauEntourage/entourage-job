@@ -4,8 +4,9 @@ import { GridNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import axios from '../../Axios';
 
-const CVList = ({ nb, search }) => {
+const CVList = ({ nb, search, filters }) => {
   const [cvs, setCVs] = useState(undefined);
+  const [filteredCvs, setFilteredCvs] = useState(undefined);
   const [error, setError] = useState(undefined);
 
   useEffect(() => {
@@ -18,19 +19,40 @@ const CVList = ({ nb, search }) => {
           nb,
         },
       })
-      .then(({ data }) => setCVs(data))
+      .then(({ data }) => setCVs([...data, ...data, ...data, ...data, ...data]))
       .catch((err) => {
         console.error(err);
         setError('Impossible de récupérer les CVs.');
       });
   }, [nb, search]);
 
+  useEffect(() => {
+    setFilteredCvs(undefined);
+    setError(undefined);
+    let filteredList = cvs;
+    if(cvs && filters && filters.businessLines && filters.businessLines.length > 0) {
+      filteredList = cvs.filter((cv) => {
+        if (cv.businessLines.length === 0) {
+          return false;
+        }
+
+        return filters.businessLines.every((filterBusinessLine) => {
+          return cv.businessLines.findIndex((businessLine) => {
+            return filterBusinessLine.value === businessLine
+          }) >= 0;
+        });
+      });
+    }
+    setFilteredCvs(filteredList);
+
+  }, [filters, cvs]);
+
   if (error) {
     return <p className="uk-text-center uk-text-italic">{error}</p>;
   }
 
-  if (cvs) {
-    if (cvs.length <= 0) {
+  if (cvs && filteredCvs) {
+    if (filteredCvs.length <= 0) {
       return (
         <p className="uk-text-center uk-text-italic">Aucuns CVs trouvés</p>
       );
@@ -42,7 +64,7 @@ const CVList = ({ nb, search }) => {
           gap="small"
           row
           center
-          items={cvs.map((cv) => (
+          items={filteredCvs.map((cv) => (
             <CandidatCard
               url={cv.user.url}
               imgSrc={
@@ -72,10 +94,12 @@ const CVList = ({ nb, search }) => {
 CVList.propTypes = {
   nb: PropTypes.number,
   search: PropTypes.string,
+  filters: PropTypes.shape()
 };
 
 CVList.defaultProps = {
   nb: undefined,
   search: undefined,
+  filters: undefined
 };
 export default CVList;
