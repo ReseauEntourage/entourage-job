@@ -19,7 +19,7 @@ const fakeId = '9bc0065e-b889-4f05-97v8-73i45f49976a';
 let loggedInAdmin;
 let loggedInCoach;
 let loggedInCandidat;
-let knownCandidat;
+let otherCandidat;
 
 describe('User', () => {
   beforeAll(async () => {
@@ -37,7 +37,11 @@ describe('User', () => {
       role: USER_ROLES.CANDIDAT,
       password: 'candidat',
     });
-    knownCandidat = await userFactory({ role: USER_ROLES.CANDIDAT });
+    otherCandidat = await createLoggedInUser(
+      {
+        role: USER_ROLES.CANDIDAT,
+        password: 'user'
+      });
   });
 
   afterAll(async () => {
@@ -61,7 +65,7 @@ describe('User', () => {
           .send(candidat);
         expect(response.status).toBe(200);
       });
-      it('Should return 400 when user data contain wrong data types', async () => {
+      it('Should return 401 when user data contain wrong data types', async () => {
         const wrongData = {
           ...await userFactory({}, false),
           firstName: 123,
@@ -70,8 +74,8 @@ describe('User', () => {
           .post(`${route}`)
           .set('authorization', `Token ${loggedInAdmin.token}`)
           .send(wrongData);
-        expect(response.status).toBe(400);
-      })
+        expect(response.status).toBe(401);
+      });
       it('Should return 401 when the user is not logged-in.', async () => {
         const candidat = userFactory({
           role: USER_ROLES.CANDIDAT
@@ -104,55 +108,141 @@ describe('User', () => {
     });
 
     describe('R - Read 1 User', () => {
-      it('Should return 401 when the user is not logged in.', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/${knownCandidat.email}`);
-        expect(response.status).toBe(401);
+      describe('/ - Get a user by ID or EMAIL', () => {
+        it('Should return 401 when the user is not logged in.', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${otherCandidat.user.email}`);
+          expect(response.status).toBe(401);
+        });
+        it('Should return 200 when logged-in candidat get himself', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${loggedInCandidat.user.email}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.email).toEqual(loggedInCandidat.user.email);
+        });
+        it('Should return 200 when logged-in coach get himself', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${loggedInCoach.user.email}`)
+            .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.email).toEqual(loggedInCoach.user.email);
+        });
+        it('Should return 401 when logged-in coach get a candidat', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${otherCandidat.user.email}`)
+            .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(response.status).toBe(401);
+        })
+        it('Should return 200 and get a user by email.', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${otherCandidat.user.email}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          const receivedUser = response.body;
+          expect(receivedUser.email).toEqual(otherCandidat.user.email);
+        });
+        it('Should return 200 and get a user by id.', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${otherCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.id).toEqual(otherCandidat.user.id);
+        });
+        it('Should return 404 if user not found', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${fakeId}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(404);
+        });
       });
-      it('Should return 200 when logged-in candidat get himself', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/${loggedInCandidat.user.email}`)
-          .set('authorization', `Token ${loggedInCandidat.token}`);
-        expect(response.status).toBe(200);
-        expect(response.body.email).toEqual(loggedInCandidat.user.email);
-      });
-      it('Should return 200 when logged-in coach get himself', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/${loggedInCoach.user.email}`)
-          .set('authorization', `Token ${loggedInCoach.token}`);
-        expect(response.status).toBe(200);
-        expect(response.body.email).toEqual(loggedInCoach.user.email);
-      });
-      it('Should return 401 when logged-in coach get a candidat', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/${knownCandidat.email}`)
-          .set('authorization', `Token ${loggedInCoach.token}`);
-        expect(response.status).toBe(401);
-      })
-      it('Should return 200 and get a user by email.', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/${knownCandidat.email}`)
-          .set('authorization', `Token ${loggedInAdmin.token}`);
-        expect(response.status).toBe(200);
-        const receivedUser = response.body;
-        expect(receivedUser.email).toEqual(knownCandidat.email);
-        knownCandidat.id = receivedUser.id;
-      });
-      it('Should return 200 and get a user by id.', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/${knownCandidat.id}`)
-          .set('authorization', `Token ${loggedInAdmin.token}`);
-        expect(response.status).toBe(200);
-        expect(response.body.id).toEqual(knownCandidat.id);
-      });
-      it('Should return 404 if user not found', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/${fakeId}`)
-          .set('authorization', `Token ${loggedInAdmin.token}`);
-        expect(response.status).toBe(404);
+
+      describe('Candidat - get user associated to a candidate or coach', () => {
+        it('Should return 401 if user is not  a logged in user', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/candidat`)
+            .send({
+              candidatId: loggedInCandidat.user.id
+            });
+          expect(response.status).toBe(401);
+        });
+        it('Should return 200 and users, candidat searching for himself', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/candidat`)
+            .set('authorisation', `Token ${loggedInCandidat.token}`)
+            .send({
+              candidatId: loggedInCandidat.user.id
+            });
+          expect(response.status).toBe(200);
+        });
+        it('Should return 200 and users, coach searching for himself', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/candidat`)
+            .set('authorisation', `Token ${loggedInCoach.token}`)
+            .send({
+              coachId: loggedInCoach.user.id
+            });
+          expect(response.status).toBe(200);
+        });
+        it('Should return 200 and users, admin searching for any users', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/candidat`)
+            .set('authorisation', `Token ${loggedInAdmin.token}`)
+            .send({
+              candidatId: loggedInCoach.user.id,
+            });
+          expect(response.status).toBe(200);
+        });
       });
     });
 
+    describe('R - Many Users', () => {
+      describe(
+        'Search - search a user where query string in email, first name or last name',
+        () => {
+          it('Should return 401 if user is not a logged in admin', async () => {
+            const response = await request(serverTest)
+              .get(`${route}/search?query=e&role=${USER_ROLES.CANDIDAT}`)
+              .set('authorisation', `Token ${loggedInCandidat.token}`);
+            expect(response.status).toBe(401);
+          });
+          it('Should return 200 and users', async () => {
+            const response = await request(serverTest)
+              .get(`${route}/search?query=e&role=${USER_ROLES.CANDIDAT}`)
+              .set('authorisation', `Token ${loggedInAdmin.token}`)
+              .send({
+                ...loggedInAdmin.user
+              });
+            expect(response.status).toBe(200);
+          });
+        });
+
+      describe('Members - get paginated and sorted users', () => {
+        it('Should return 401 if user is not a logged in admin', async () => {
+          const cv = [];
+          const users = await createEntities(createLoggedInUser, {}, 6)
+          users.forEach((u) => {
+            if (u.user.role === USER_ROLES.CANDIDAT) {
+              cv.push(createEntities(cvFactory, { userId: u.user.id }, 1))
+            }
+          });
+          console.log(cv)
+          console.log('::::::::::: USERS ENTITIES :::::::::::::', users);
+          const response = await request(serverTest)
+            .get(`${route}/members`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(401);
+        });
+        it('Should return 200 and paginated users', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/members?limit=2&offset=2`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+        });
+      })
+
+
+    });
     describe('U - Update 1 User', () => {
 
       describe('Update password', () => {
@@ -184,7 +274,7 @@ describe('User', () => {
         it('Should return 401 if user is not logged in', async () => {
           const updates = await userFactory({}, false);
           const response = await request(serverTest)
-            .put(`${route}/${knownCandidat.id}`)
+            .put(`${route}/${otherCandidat.user.id}`)
             .send({
               phone: updates.phone,
               firstName: updates.firstName,
@@ -194,7 +284,7 @@ describe('User', () => {
         it('Should return 401 if user do not have the rights to update targeted user', async () => {
           const updates = await userFactory({}, false);
           const response = await request(serverTest)
-            .put(`${route}/${knownCandidat.id}`)
+            .put(`${route}/${otherCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
             .send({
               phone: updates.phone,
@@ -227,7 +317,7 @@ describe('User', () => {
         it('Should return 200 and updated user when an admin update a user', async () => {
           const updates = await userFactory({}, false);
           const response = await request(serverTest)
-            .put(`${route}/${knownCandidat.id}`)
+            .put(`${route}/${otherCandidat.user.id}`)
             .set('authorization', `Token ${loggedInAdmin.token}`)
             .send({
               phone: updates.phone,
@@ -251,98 +341,16 @@ describe('User', () => {
     describe('D - Delete 1 User', () => {
       it('Should return 401 if not logged in admin', async () => {
         const response = await request(serverTest)
-          .delete(`${route}/${knownCandidat.id}`)
+          .delete(`${route}/${otherCandidat.user.id}`)
           .set('authorisation', `Token ${loggedInAdmin.token}`);
         expect(response.status).toBe(401);
       });
       it('Should return 200', async () => {
         const response = await request(serverTest)
-          .delete(`${route}/${knownCandidat.id}`)
+          .delete(`${route}/${otherCandidat.user.id}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
         expect(response.status).toBe(200);
       });
     });
-  });
-
-  describe('Other Routes:', () => {
-    describe(
-      'Search - search a user where query string in email, first name or last name',
-      () => {
-        it('Should return 401 if user is not a logged in admin', async () => {
-          const response = await request(serverTest)
-            .get(`${route}/search?query=e&role=${USER_ROLES.CANDIDAT}`)
-            .set('authorisation', `Token ${loggedInCandidat.token}`);
-          expect(response.status).toBe(401);
-        });
-        it('Should return 200 and users', async () => {
-          const response = await request(serverTest)
-            .get(`${route}/search?query=e&role=${USER_ROLES.CANDIDAT}`)
-            .set('authorisation', `Token ${loggedInAdmin.token}`)
-            .send({
-              ...loggedInAdmin.user
-            });
-          expect(response.status).toBe(200);
-        });
-      });
-    describe('Candidat - get user associated to a candidate or coach', () => {
-      it('Should return 401 if user is not  a logged in user', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/candidat`)
-          .send({
-            candidatId: loggedInCandidat.user.id
-          });
-        expect(response.status).toBe(401);
-      });
-      it('Should return 200 and users, candidat searching for himself', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/candidat`)
-          .set('authorisation', `Token ${loggedInCandidat.token}`)
-          .send({
-            candidatId: loggedInCandidat.user.id
-          });
-        expect(response.status).toBe(200);
-      });
-      it('Should return 200 and users, coach searching for himself', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/candidat`)
-          .set('authorisation', `Token ${loggedInCoach.token}`)
-          .send({
-            coachId: loggedInCoach.user.id
-          });
-        expect(response.status).toBe(200);
-      });
-      it('Should return 200 and users, admin searching for any users', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/candidat`)
-          .set('authorisation', `Token ${loggedInAdmin.token}`)
-          .send({
-            candidatId: loggedInCoach.user.id,
-          });
-        expect(response.status).toBe(200);
-      });
-    });
-    describe('Members - get paginated and sorted users', () => {
-      it('Should return 401 if user is not a logged in admin', async () => {
-        const cv = [];
-        const users = await createEntities(createLoggedInUser, {}, 6)
-        users.forEach((u) => {
-          if (u.user.role === USER_ROLES.CANDIDAT) {
-            cv.push(createEntities(cvFactory, { userId: u.user.id }, 1))
-          }
-        });
-        console.log(cv)
-        console.log('::::::::::: USERS ENTITIES :::::::::::::', users);
-        const response = await request(serverTest)
-          .get(`${route}/members`)
-          .set('authorization', `Token ${loggedInAdmin.token}`);
-        expect(response.status).toBe(401);
-      });
-      it('Should return 200 and paginated users', async () => {
-        const response = await request(serverTest)
-          .get(`${route}/members?limit=2&offset=2`)
-          .set('authorization', `Token ${loggedInAdmin.token}`);
-        expect(response.status).toBe(200);
-      });
-    })
   });
 });
