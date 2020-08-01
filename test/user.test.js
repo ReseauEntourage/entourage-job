@@ -12,6 +12,7 @@ const {
   USER_ROLES
 } = require('../constants');
 const cvFactory = require('./factories/cvFactory');
+const createCvWithAssociations = require('./helpers/cv.helper');
 
 const route = '/api/v1/user';
 let serverTest;
@@ -20,6 +21,7 @@ let loggedInAdmin;
 let loggedInCoach;
 let loggedInCandidat;
 let otherCandidat;
+let usersAndCVs;
 
 describe('User', () => {
   beforeAll(async () => {
@@ -45,6 +47,7 @@ describe('User', () => {
 
   afterAll(async () => {
     await resetTestDB();
+    usersAndCVs = await createEntities(createCvWithAssociations, 10, {}, { candidat: true });
     await stopTestServer();
   });
 
@@ -54,8 +57,8 @@ describe('User', () => {
     describe('C - Create 1 User', () => {
       it('Should return 200 and a created user.', async () => {
         const candidat = await userFactory({
-            role: USER_ROLES.CANDIDAT
-          },
+          role: USER_ROLES.CANDIDAT
+        },
           false
         );
         const response = await request(serverTest)
@@ -221,29 +224,40 @@ describe('User', () => {
         });
 
       describe('Members - get paginated and sorted users', () => {
-        it('Should return 401 if user is not a logged in admin', async () => {
-          const cv = [];
-          const users = await createEntities(createLoggedInUser, {}, 6)
-          users.forEach(async (u) => {
-            if (u.user.role === USER_ROLES.CANDIDAT) {
-              cv.push(await createEntities(cvFactory, {
-                userId: u.user.id
-              }, 1))
-            }
+        beforeEach(async () => {
+          await resetTestDB()
+          loggedInAdmin = await createLoggedInUser({
+            role: USER_ROLES.ADMIN,
+            password: 'admin',
           });
-          console.log('::::::::::: USERS ENTITIES :::::::::::::', users);
-          console.log(cv)
+          loggedInCoach = await createLoggedInUser({
+            role: USER_ROLES.COACH,
+            password: 'coach',
+          })
+          loggedInCandidat = await createLoggedInUser({
+            role: USER_ROLES.CANDIDAT,
+            password: 'candidat',
+          });
+          otherCandidat = await createLoggedInUser({
+            role: USER_ROLES.CANDIDAT,
+            password: 'user'
+          });
+          usersAndCVs = await createEntities(createCvWithAssociations, 10, {}, { candidat: true });
+          console.log('::::::::::: USERS ENTITIES :::::::::::::', usersAndCVs);
+        })
+        it('Should return 401 if user is not a logged in admin', async () => {
           const response = await request(serverTest)
             .get(`${route}/members`)
-            .set('authorization', `Token ${loggedInAdmin.token}`);
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          console.log('======= members =======', response)
           expect(response.status).toBe(401);
         });
-        it('Should return 200 and paginated users', async () => {
-          const response = await request(serverTest)
-            .get(`${route}/members?limit=2&offset=2`)
-            .set('authorization', `Token ${loggedInAdmin.token}`);
-          expect(response.status).toBe(200);
-        });
+        // it('Should return 200 and paginated users', async () => {
+        //   const response = await request(serverTest)
+        //     .get(`${route}/members?limit=2&offset=2`)
+        //     .set('authorization', `Token ${loggedInAdmin.token}`);
+        //   expect(response.status).toBe(200);
+        // });
       })
 
 
@@ -374,7 +388,7 @@ describe('User', () => {
       it('Should return 401 if not logged in admin', async () => {
         const response = await request(serverTest)
           .delete(`${route}/${otherCandidat.user.id}`)
-          .set('authorization', `Token ${loggedInAdmin.token}`);
+          .set('authorization', `Token ${loggedInCoach.token}`);
         expect(response.status).toBe(401);
       });
       it('Should return 200', async () => {
