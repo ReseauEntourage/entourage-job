@@ -30,19 +30,21 @@ const CVList = ({ nb, search, filters }) => {
     setFilteredCvs(undefined);
     setError(undefined);
     let filteredList = cvs;
+
     if(cvs && filters && filters.businessLines && filters.businessLines.length > 0) {
       filteredList = cvs.filter((cv) => {
         if (cv.businessLines.length === 0) {
           return false;
         }
 
-        return filters.businessLines.every((filterBusinessLine) => {
+        return filters.businessLines.some((filterBusinessLine) => {
           return cv.businessLines.findIndex((businessLine) => {
             return filterBusinessLine.value.toLowerCase().includes(businessLine.toLowerCase());
           }) >= 0;
         });
       });
     }
+
     setFilteredCvs(filteredList);
 
   }, [filters, cvs]);
