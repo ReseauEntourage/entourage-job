@@ -10,69 +10,97 @@ const OFFER_STATUS = [
 
 const BUSINESS_LINES = [
   {
-    value: 'Accueil',
-    label: 'Accueil',
+    value: "Accueil",
+    label: "Accueil",
   },
   {
-    value: 'Administratif',
-    label: 'Administratif',
+    value: "Administratif",
+    label: "Administratif",
   },
   {
-    value: 'Animalier',
-    label: 'Animalier',
+    value: "Animalier",
+    label: "Animalier",
   },
   {
-    value: 'Artisanat',
-    label: 'Artisanat',
+    value: "Artisanat",
+    label: "Artisanat",
   },
   {
-    value: 'Associatif',
-    label: 'Associatif',
+    value: "Associatif",
+    label: "Associatif",
   },
   {
-    value: 'Assurance/Banque',
-    label: 'Assurance/Banque',
+    value: "Assurance / Banque",
+    label: "Assurance / Banque",
   },
   {
-    value: 'BTP',
-    label: 'BTP',
+    value: "Communication",
+    label: "Communication",
   },
   {
-    value: 'Communication',
-    label: 'Communication',
+    value: "Construction / BTP",
+    label: "Construction / BTP",
   },
   {
-    value: 'Culture',
-    label: 'Culture',
+    value: "Culture",
+    label: "Culture",
   },
   {
-    value: 'Informatique',
-    label: 'Informatique',
+    value: "Entretien",
+    label: "Entretien"
   },
   {
-    value: 'Interprétariat',
-    label: 'Interprétariat',
+    value: "Hôtellerie / Restauration",
+    label: "Hôtellerie / Restauration"
   },
   {
-    value: 'Médico-social',
-    label: 'Médico-social',
+    value: "Industrie",
+    label: "Industrie"
   },
   {
-    value: 'Restauration',
-    label: 'Restauration',
+    value: "Informatique",
+    label: "Informatique",
   },
   {
-    value: 'Social',
-    label: 'Social',
+    value: "Interprétariat",
+    label: "Interprétariat",
   },
   {
-    value: 'Transports',
-    label: 'Transports',
+    value: "Médico-social",
+    label: "Médico-social",
   },
   {
-    value: 'Vente / Commerce',
-    label: 'Vente / Commerce',
+    value: "Secrétariat / Assistanat",
+    label: "Secrétariat / Assistanat"
   },
+  {
+    value: "Services à la personne",
+    label: "Services à la personne",
+  },
+  {
+    value: "Social",
+    label: "Social",
+  },
+  {
+    value: "Transports / Logistique",
+    label: "Transports / Logistique",
+  },
+  {
+    value: "Vente / Commerce",
+    label: "Vente / Commerce",
+  },
+];
+
+const LOCATIONS = [
+  {
+    value: "93",
+    label: "Seine Saint-Denis (93)",
+  },
+  {
+    value: "Paris et ",
+    label: "Paris et ses alentours",
+  },
+
 ];
 
 const CV_STATUS = {
@@ -108,9 +136,9 @@ const CV_STATUS = {
 };
 
 const USER_ROLES = {
-  COACH: 'Coach',
-  CANDIDAT: 'Candidat',
-  ADMIN: 'Admin',
+  COACH: "Coach",
+  CANDIDAT: "Candidat",
+  ADMIN: "Admin",
 };
 
 const EXTERNAL_LINKS = {

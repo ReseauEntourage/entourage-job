@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
-import {
-  LandingPagePartial,
-  EmphasePartial,
-  CandidatListPartial,
-  NumberPartial,
-} from '../components/partials';
-import Header from '../components/headers/Header';
 import CVList from '../components/cv/CVList';
 import {Section, GridNoSSR, IconNoSSR, Button} from '../components/utils';
+import ButtonIcon from '../components/utils/ButtonIcon';
 import {BUSINESS_LINES} from "../constants";
 
 const LesCandidats = () => {
   const [search, setSearch] = useState();
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
-  const [filters, setFilters] = useState({
-    businessLines: []
-  });
+  const [filters, setFilters] = useState({businessLines: []});
+
+  const resetFilters = () => {
+    setFilters({businessLines: []});
+  };
 
   return (
     <Layout title="Les candidats - LinkedOut">
@@ -56,41 +52,61 @@ const LesCandidats = () => {
               </form>
             </div>
           </nav>
-          <div className="uk-margin-large-left uk-margin-large-right uk-flex uk-flex-middle uk-flex-column">
-            <Button
-              style="text"
-              className="uk-margin-medium-bottom"
-              toggle="target: #toggle-animation; animation: uk-animation-fade"
-              onClick={() => {
-                setFilterMenuOpened(!filterMenuOpened);
-              }}>
-              Filtrer par{' '}&nbsp;<IconNoSSR ratio={1.2} name={`chevron-${filterMenuOpened ? 'up' : 'down'}`} />
-            </Button>
-            <div id="toggle-animation" hidden className="">
+          <div className="uk-margin-large-left uk-margin-large-right uk-flex uk-flex-column">
+            <div className="uk-flex uk-flex-between uk-flex-middle">
+              <Button
+                style="text"
+                toggle="target: #toggle-animation; animation: uk-animation-fade"
+                onClick={() => {
+                  setFilterMenuOpened(!filterMenuOpened);
+                }}>
+                Filtrer par{' '}&nbsp;<IconNoSSR ratio={1.2} name={`chevron-${filterMenuOpened ? 'up' : 'down'}`} />
+              </Button>
+              <div className="uk-text-meta uk-flex uk-flex-middle">
+                {filters.businessLines.length} filtre(s) activé(s)
+                {
+                  filters.businessLines.length > 0 &&
+                  <div className="uk-flex uk-flex-middle uk-text-danger uk-margin-small-left"><ButtonIcon ratio={0.9} name='close' onClick={resetFilters}/></div>
+                }
+              </div>
+            </div>
+
+            <div id="toggle-animation" hidden className="uk-margin-medium-top">
               <span className="uk-text-bold">Secteurs d&apos;activité</span>
               <div className="uk-flex uk-flex-wrap">
                 {
                   BUSINESS_LINES.map((businessLine, idx) => {
 
                     const index = filters.businessLines.findIndex((business) => {
-                      return business.value.includes(businessLine.value);
+                      return business.value === businessLine.value;
                     });
 
-                    return (
-                      <div key={idx} className="uk-user uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
-                        <div
-                          className={`ent-filter${index < 0 ? '' : '-activated'} uk-`}
-                          onClick={() => {
-                            const updatedFilters = {...filters};
-                            if(index < 0) {
-                              updatedFilters.businessLines.push(businessLine);
-                            }
-                            else {
-                              updatedFilters.businessLines.splice(index, 1);
-                            }
-                            setFilters(updatedFilters);
+                    const onFilterClick = () => {
+                      const updatedFilters = {...filters};
+                      if(index < 0) {
+                        updatedFilters.businessLines.push(businessLine);
+                      }
+                      else {
+                        updatedFilters.businessLines.splice(index, 1);
+                      }
 
-                          }}>{businessLine.label}</div>
+                      setFilters(updatedFilters);
+                    };
+
+                    const handleKeyDown = (ev) => {
+                      if (ev.key === "Enter") {
+                        onFilterClick();
+                      }
+                    };
+
+                    return (
+                      <div key={idx} className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={handleKeyDown}
+                          className={`ent-filter${index < 0 ? '' : '-activated'}`}
+                          onClick={onFilterClick}>{businessLine.label}</div>
                       </div>
                     )
                   })
