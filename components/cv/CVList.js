@@ -19,7 +19,7 @@ const CVList = ({ nb, search, filters }) => {
           nb,
         },
       })
-      .then(({ data }) => setCVs([...data, ...data, ...data, ...data, ...data]))
+      .then(({ data }) => setCVs(data))
       .catch((err) => {
         console.error(err);
         setError('Impossible de récupérer les CVs.');
@@ -38,7 +38,7 @@ const CVList = ({ nb, search, filters }) => {
 
         return filters.businessLines.every((filterBusinessLine) => {
           return cv.businessLines.findIndex((businessLine) => {
-            return filterBusinessLine.value === businessLine
+            return filterBusinessLine.value.toLowerCase().includes(businessLine.toLowerCase());
           }) >= 0;
         });
       });
