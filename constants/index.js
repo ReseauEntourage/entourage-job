@@ -101,14 +101,29 @@ const BUSINESS_LINES = [
 
 const LOCATIONS = [
   {
-    value: "93",
-    label: "Seine Saint-Denis (93)",
+    value: "94",
+    label: "Val-de-Marne (94)"
   },
   {
-    value: "Paris et ",
-    label: "Paris et ses alentours",
+    value: "93",
+    label: "Seine-Saint-Denis (93)",
   },
-
+  {
+    value: "92",
+    label: "Hauts-de-Seine (92)",
+  },
+  {
+    value: "75",
+    label: "Paris (75)",
+  },
+  {
+    value: "75+",
+    label: "Île-de-France",
+  },
+  {
+    value: "59",
+    label: "Lille (59)"
+  }
 ];
 
 const CV_STATUS = {
