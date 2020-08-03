@@ -1,26 +1,46 @@
 const fakerStatic = require('faker');
 const { CV_STATUS } = require('../../constants');
-const CV = require('../../backend/db/models/cv');
+const {
+    models: {
+        CV,
+    }
+} = require('../../backend/db/models');
+
+/**
+ * Extract cv status values from CV_STATUS constant
+ * 
+ * @param {Obect} cvStatus : CV_STATUS conctant
+ * @retrn array of status values
+ */
+const getCvStatusValues = (cvStatus) => {
+    return Object.keys(cvStatus).map((status) => cvStatus[status].value);
+}
+
 /**
  * Generate data to create a CV
  * 
- * @param {Object} props valid user candidat Id must be provided
+ * @param {Object<{
+ *                  UserId: }>
+ * } props valid UserId corresponding to a user_candidat
+ * must be provided.
  */
 const generateCv = async (props = {}) => {
+    const fakeData = {
+        urlImg: fakerStatic.image.imageUrl(),
+        intro: fakerStatic.lorem.sentence(),
+        story: fakerStatic.lorem.text(),
+        location: fakerStatic.address.city(),
+        availability: fakerStatic.lorem.sentence(),
+        transport: fakerStatic.lorem.sentence(),
+        catchphrase: fakerStatic.lorem.sentence(),
+        devise: fakerStatic.lorem.sentence(),
+        careerPathOpen: fakerStatic.random.boolean(),
+        status: fakerStatic.random.arrayElement(getCvStatusValues(CV_STATUS)),
+        version: 1,
+    }
     return {
-        userId: props.userId || fakerStatic.random.uuid(),
-        urlImg: props.urlImg || fakerStatic.image.imageUrl(),
-        intro: props.intro || fakerStatic.lorem.sentence(),
-        story: props.story || fakerStatic.lorem.text(),
-        location: props.location || fakerStatic.address.city(),
-        availability: props.availability || fakerStatic.lorem.sentence(),
-        transport: props.transport || fakerStatic.lorem.sentence(),
-        catchphrase: props.catchphrase || fakerStatic.lorem.sentence(),
-        devise: props.devise || fakerStatic.lorem.sentence(),
-        careerPathOpen: props.careerPathOpen || fakerStatic.random.boolean(),
-        status: props.status ||
-            fakerStatic.random.arrayElement(CV_STATUS.map((status => status.value))),
-        version: props.version || 1,
+        ...fakeData,
+        ...props
     }
 }
 
@@ -34,7 +54,7 @@ const generateCv = async (props = {}) => {
 const cvFactory = async (
     props = {},
     associationsId = {},
-    insertInDB = true
+    insertInDB = true,
 ) => {
     const cvData = await generateCv(props);
     const cvFull = {
@@ -42,7 +62,7 @@ const cvFactory = async (
         ...associationsId
     }
 
-    return insertInDB ? CV.create(cvFull) : cvData;
+    return insertInDB ? CV.create(cvFull) : cvFull;
 }
 
 module.exports = cvFactory;

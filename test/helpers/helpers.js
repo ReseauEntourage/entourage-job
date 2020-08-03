@@ -32,8 +32,8 @@ const recreateTestDB = async () => {
   loadEnvironnementVariables();
   db = new Sequelize(
     process.env.DATABASE_URL, {
-      logging: process.env.DEBUG_MODE ? console.log : false,
-    }
+    logging: process.env.DEBUG_MODE ? console.log : false,
+  }
   );
 
   try {
@@ -65,8 +65,8 @@ const resetTestDB = async () => {
  * @param {number} n the number of entities to create
  * @returns
  */
-const createEntities = async (factory, props = {}, n) => {
-  return Promise.all(Array(n).fill(0).map(() => factory(props)))
+const createEntities = async (factory, n, props = {}, ...args) => {
+  return Promise.all(Array(n).fill(0).map(() => factory(props, ...args)))
     .catch((e) => console.error(e));
 }
 

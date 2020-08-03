@@ -7,12 +7,12 @@ const {
   resetTestDB,
   createEntities,
 } = require('./helpers/helpers');
-const createLoggedInUser = require('./helpers/user.helper');
+const createLoggedInUser = require('./helpers/user.helpers');
 const {
   USER_ROLES
 } = require('../constants');
 const cvFactory = require('./factories/cvFactory');
-const createCvWithAssociations = require('./helpers/cv.helper');
+const createCvWithAssociations = require('./helpers/cv.helpers');
 
 const route = '/api/v1/user';
 let serverTest;
@@ -21,7 +21,8 @@ let loggedInAdmin;
 let loggedInCoach;
 let loggedInCandidat;
 let otherCandidat;
-let usersAndCVs;
+let cvLoggedInCandidat;
+let cvOtherCandidat;
 
 describe('User', () => {
   beforeAll(async () => {
@@ -43,11 +44,15 @@ describe('User', () => {
       role: USER_ROLES.CANDIDAT,
       password: 'user'
     });
+
+    cvLoggedInCandidat = await createCvWithAssociations({ UserId: loggedInCandidat.user.id });
+    cvOtherCandidat = await createCvWithAssociations({ UserId: otherCandidat.user.id });
+
+    // userAndCvList = await createEntities(createCvWithAssociations, 6, {});
   });
 
   afterAll(async () => {
     await resetTestDB();
-    usersAndCVs = await createEntities(createCvWithAssociations, 10, {}, { candidat: true });
     await stopTestServer();
   });
 
@@ -55,12 +60,22 @@ describe('User', () => {
   describe('CRUD User', () => {
 
     describe('C - Create 1 User', () => {
-      it('Should return 200 and a created user.', async () => {
+      it('Should return 200 and a created user (create user with password).', async () => {
         const candidat = await userFactory({
           role: USER_ROLES.CANDIDAT
         },
           false
         );
+        const response = await request(serverTest)
+          .post(`${route}`)
+          .set('authorization', `Token ${loggedInAdmin.token}`)
+          .send(candidat);
+        expect(response.status).toBe(200);
+      });
+      it('Should return 200 and a created user (create user without password).', async () => {
+        const candidat = await userFactory({ role: USER_ROLES.CANDIDAT }, false);
+        delete candidat.password;
+        delete candidat.hash;
         const response = await request(serverTest)
           .post(`${route}`)
           .set('authorization', `Token ${loggedInAdmin.token}`)
@@ -189,6 +204,16 @@ describe('User', () => {
 
           expect(response.status).toBe(200);
         });
+        it('Should return 401 if a not admin user search fro others than himself.', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/candidat`)
+            .set('authorization', `Token ${loggedInCoach.token}`)
+            .query({
+              coachId: loggedInCandidat.user.id
+            });
+
+          expect(response.status).toBe(401);
+        });
         it('Should return 200 and users, admin searching for any users',
           async () => {
             const response = await request(serverTest)
@@ -224,42 +249,36 @@ describe('User', () => {
         });
 
       describe('Members - get paginated and sorted users', () => {
-        beforeEach(async () => {
-          await resetTestDB()
-          loggedInAdmin = await createLoggedInUser({
-            role: USER_ROLES.ADMIN,
-            password: 'admin',
-          });
-          loggedInCoach = await createLoggedInUser({
-            role: USER_ROLES.COACH,
-            password: 'coach',
-          })
-          loggedInCandidat = await createLoggedInUser({
-            role: USER_ROLES.CANDIDAT,
-            password: 'candidat',
-          });
-          otherCandidat = await createLoggedInUser({
-            role: USER_ROLES.CANDIDAT,
-            password: 'user'
-          });
-          usersAndCVs = await createEntities(createCvWithAssociations, 10, {}, { candidat: true });
-          console.log('::::::::::: USERS ENTITIES :::::::::::::', usersAndCVs);
-        })
         it('Should return 401 if user is not a logged in admin', async () => {
           const response = await request(serverTest)
             .get(`${route}/members`)
             .set('authorization', `Token ${loggedInCandidat.token}`);
-          console.log('======= members =======', response)
           expect(response.status).toBe(401);
         });
-        // it('Should return 200 and paginated users', async () => {
-        //   const response = await request(serverTest)
-        //     .get(`${route}/members?limit=2&offset=2`)
-        //     .set('authorization', `Token ${loggedInAdmin.token}`);
-        //   expect(response.status).toBe(200);
-        // });
-      })
+        it('Should return 200 and a page of the 2th candidats', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/members?limit=2&role=${USER_ROLES.CANDIDAT}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.length).toBe(2);
+        });
+        it('Should return 200 and a page of one COACH', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/members?limit=10&role=${USER_ROLES.COACH}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          console.log('RESPONSE ^+++++++++++++', response.body)
+          expect(response.body.length).toBe(1);
+          expect(response.body[0].id).toEqual(loggedInCoach.user.id);
+          expect(response.body[0].role).toEqual(loggedInCoach.user.role);
+        });
+        it('Should return 200 and the 4th and 5th candidats users', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/mambers?limit=2&offset=2&role=${USER_ROLES.CANDIDAT}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
 
+        })
+      });
 
     });
     describe('U - Update 1 User', () => {
