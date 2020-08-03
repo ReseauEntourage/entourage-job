@@ -6,7 +6,7 @@ import { GridNoSSR } from '../utils/Grid';
 import { IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalEdit from '../modals/ModalEdit';
-import schemaEditCVBusinessLines from '../forms/schema/formEditCVBusinessLines.json';
+import schemaEditCVBusinessLines from '../forms/schema/formEditCVBusinessLines';
 
 const CVEditBusinessLines = ({ businessLines, onChange }) => (
   <div className="uk-card uk-card-default uk-card-body">
