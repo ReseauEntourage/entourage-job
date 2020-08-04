@@ -2,10 +2,7 @@ const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
   const Location = sequelize.define('Location', {
-    name: {
-      type: DataTypes.STRING,
-      unique: true
-    }
+    name: DataTypes.STRING
   }, {});
 
   Location.beforeCreate((businessLine, _) => {

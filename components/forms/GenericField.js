@@ -17,7 +17,6 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
 
   const parseValueToUseSelect = () => {
     let valueToUse = null;
-    console.log('value', value);
     if (data.isMulti && Array.isArray(value) && value.length > 0) {
       valueToUse = value.map((item) => ({
         value: item,

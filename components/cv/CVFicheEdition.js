@@ -85,7 +85,7 @@ const CVFicheEdition = ({cv, gender, onChange, disablePicture}) => {
       <GridNoSSR childWidths={['1-2@s']} match>
         <InfoProfileCard
           contracts={cv.contracts}
-          location={cv.location}
+          locations={cv.locations}
           availability={cv.availability}
           languages={cv.languages}
           transport={cv.transport}
@@ -117,7 +117,7 @@ CVFicheEdition.propTypes = {
   cv: PropTypes.shape({
     catchphrase: PropTypes.string,
     story: PropTypes.string,
-    location: PropTypes.string,
+    locations: PropTypes.array,
     availability: PropTypes.string,
     urlImg: PropTypes.string,
     gender: PropTypes.number,
