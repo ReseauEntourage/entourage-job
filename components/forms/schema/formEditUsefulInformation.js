@@ -1,4 +1,6 @@
-{
+import {LOCATIONS} from '../../../constants';
+
+export default {
   "id": "form-usefullinformation",
   "fields": [
     {
@@ -12,9 +14,11 @@
     {
       "id": "location",
       "name": "location",
-      "component": "input",
       "type": "text",
-      "title": "Lieu de travail souhaité"
+      "title": "Lieu de travail souhaité",
+      "component": "select-request-creatable",
+      "options": LOCATIONS,
+      "isMulti": true
     },
     {
       "id": "availability",

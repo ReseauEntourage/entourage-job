@@ -101,27 +101,27 @@ const BUSINESS_LINES = [
 
 const LOCATIONS = [
   {
-    value: "94",
+    value: "Val-de-Marne (94)",
     label: "Val-de-Marne (94)"
   },
   {
-    value: "93",
+    value: "Seine-Saint-Denis (93)",
     label: "Seine-Saint-Denis (93)",
   },
   {
-    value: "92",
+    value: "Hauts-de-Seine (92)",
     label: "Hauts-de-Seine (92)",
   },
   {
-    value: "75",
+    value: "Paris (75)",
     label: "Paris (75)",
   },
   {
-    value: "75+",
-    label: "Île-de-France",
+    value: "Île-de-France (hors Paris & proche banlieue)",
+    label: "Île-de-France (hors Paris & proche banlieue)",
   },
   {
-    value: "59",
+    value: "Lille (59)",
     label: "Lille (59)"
   }
 ];
@@ -183,5 +183,6 @@ module.exports = {
   USER_ROLES,
   BUSINESS_LINES,
   EXTERNAL_LINKS,
-  VALUES
+  VALUES,
+  LOCATIONS
 };

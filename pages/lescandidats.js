@@ -3,15 +3,59 @@ import Layout from '../components/Layout';
 import CVList from '../components/cv/CVList';
 import {Section, GridNoSSR, IconNoSSR, Button} from '../components/utils';
 import ButtonIcon from '../components/utils/ButtonIcon';
-import {BUSINESS_LINES} from "../constants";
+import {BUSINESS_LINES, LOCATIONS} from "../constants";
 
 const LesCandidats = () => {
   const [search, setSearch] = useState();
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
-  const [filters, setFilters] = useState({businessLines: []});
+  const [filters, setFilters] = useState({businessLines: [], locations: []});
 
   const resetFilters = () => {
-    setFilters({businessLines: []});
+    setFilters({businessLines: [], locations: []});
+  };
+
+  const renderFilters = (filterConstants, key) => {
+    return filterConstants.map((filterConst, idx) => {
+
+      const index = filters[key].findIndex((filter) => {
+        return filter.value === filterConst.value;
+      });
+
+      const onFilterClick = () => {
+        const updatedFilters = {...filters};
+        if(index < 0) {
+          updatedFilters[key].push(filterConst);
+        }
+        else {
+          updatedFilters[key].splice(index, 1);
+        }
+
+        setFilters(updatedFilters);
+      };
+
+      const handleKeyDown = (ev) => {
+        if (ev.key === "Enter") {
+          onFilterClick();
+        }
+      };
+
+      return (
+        <div key={idx} className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
+          <div
+            role="button"
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
+            className={`ent-filter${index < 0 ? '' : '-activated'}`}
+            onClick={onFilterClick}>{filterConst.label}</div>
+        </div>
+      )
+    })
+  };
+
+  const getNumberFilters = () => {
+    return Object.values(filters).reduce((acc, curr) => {
+      return acc + curr.length;
+    }, 0)
   };
 
   return (
@@ -72,7 +116,7 @@ const LesCandidats = () => {
                 </Button>
               </div>
               {
-                filters.businessLines.length > 0 &&
+                getNumberFilters() > 0 &&
                 <div className="uk-flex uk-flex-middle uk-flex-right">
                   <div className="uk-flex uk-flex-right uk-flex-wrap uk-flex-1">
                     {
@@ -99,44 +143,12 @@ const LesCandidats = () => {
 
             <div id="toggle-animation" hidden className="uk-margin-medium-top">
               <span className="uk-text-bold">Secteurs d&apos;activité</span>
+              <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom">
+                {renderFilters(BUSINESS_LINES, 'businessLines')}
+              </div>
+              <span className="uk-text-bold">Zones géographiques</span>
               <div className="uk-flex uk-flex-wrap">
-                {
-                  BUSINESS_LINES.map((businessLine, idx) => {
-
-                    const index = filters.businessLines.findIndex((business) => {
-                      return business.value === businessLine.value;
-                    });
-
-                    const onFilterClick = () => {
-                      const updatedFilters = {...filters};
-                      if(index < 0) {
-                        updatedFilters.businessLines.push(businessLine);
-                      }
-                      else {
-                        updatedFilters.businessLines.splice(index, 1);
-                      }
-
-                      setFilters(updatedFilters);
-                    };
-
-                    const handleKeyDown = (ev) => {
-                      if (ev.key === "Enter") {
-                        onFilterClick();
-                      }
-                    };
-
-                    return (
-                      <div key={idx} className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
-                        <div
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={handleKeyDown}
-                          className={`ent-filter${index < 0 ? '' : '-activated'}`}
-                          onClick={onFilterClick}>{businessLine.label}</div>
-                      </div>
-                    )
-                  })
-                }
+                {renderFilters(LOCATIONS, 'locations')}
               </div>
               <div className="uk-flex uk-flex-center uk-margin-medium-top">
                 <Button
