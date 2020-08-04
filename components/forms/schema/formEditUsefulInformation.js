@@ -12,8 +12,8 @@ export default {
       "isMulti": true
     },
     {
-      "id": "location",
-      "name": "location",
+      "id": "locations",
+      "name": "locations",
       "type": "text",
       "title": "Lieu de travail souhaité",
       "component": "select-request-creatable",
