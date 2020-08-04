@@ -119,6 +119,11 @@ module.exports = (sequelize, DataTypes) => {
       as: 'skills',
     });
 
+    CV.belongsToMany(models.Location, {
+      through: 'CV_Locations',
+      as: 'locations',
+    });
+
     CV.hasMany(models.Experience, {
       as: 'experiences',
     });

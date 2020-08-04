@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
-import schemaUsefulInformation from '../forms/schema/formEditUsefulInformation.json';
+import schemaUsefulInformation from '../forms/schema/formEditUsefulInformation';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
 

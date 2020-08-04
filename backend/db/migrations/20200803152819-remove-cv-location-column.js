@@ -1,0 +1,59 @@
+const {Op} = require("sequelize");
+const {LOCATIONS} = require("../../../constants");
+const {models} = require('../models');
+
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return models.CV.findAll({
+      where: {
+        location: {
+          [Op.not]: null
+        }
+      }
+    })
+      .then((cvList) => {
+        cvList.map((cv) => {
+          let locations = [];
+          if (cv.location.includes('Île-de-France') || cv.location.includes('Ile de France') || cv.location.includes('Région') || cv.location.includes('région')) {
+            locations = [LOCATIONS[0], LOCATIONS[1], LOCATIONS[2], LOCATIONS[3], LOCATIONS[4]];
+          } else if (cv.location.includes('banlieue') || cv.location.includes('Banlieue')) {
+            locations = [LOCATIONS[0], LOCATIONS[1], LOCATIONS[2], LOCATIONS[3]];
+          } else if (cv.location.includes('Villejuif')) {
+            locations = [LOCATIONS[0]];
+          } else if (cv.location.includes('Paris')) {
+            locations = [LOCATIONS[3]];
+          }
+
+          return queryInterface.sequelize.transaction((t) => {
+            return Promise.all(
+              locations.map((location) => {
+                return models.Location.findOrCreate({
+                  where: {name: location.value},
+                  transaction: t
+                })
+                  .then((model) => model)
+              })
+            ).then((newLocations) => {
+              return cv.addLocations(newLocations, {transaction: t}).then(() => {
+               /* return queryInterface.removeColumn('CVs', 'location', {
+                  transaction: t
+                });*/
+              });
+            })
+          });
+        })
+      });
+  },
+
+  down: (queryInterface, Sequelize) => {
+   /* return queryInterface.addColumn(
+      'CVs',
+      'location',
+      {
+        type: Sequelize.STRING
+      }
+    );*/
+
+   return Promise.resolve();
+  }
+};

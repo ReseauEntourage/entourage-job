@@ -70,6 +70,12 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
     attributes: ['id', 'name'],
   },
   {
+    model: models.Location,
+    as: 'locations',
+    through: { attributes: [] },
+    attributes: ['id', 'name'],
+  },
+  {
     model: models.Experience,
     as: 'experiences',
     attributes: ['id', 'description', 'order'],
@@ -216,6 +222,19 @@ const createCV = async (data) => {
       })
     );
     modelCV.addBusinessLines(businessLines);
+  }
+
+  // Locations
+  if (data.locations) {
+    console.log(`createCV - Locations`);
+    const locations = await Promise.all(
+      data.locations.map((name) => {
+        return models.Location.findOrCreate({
+          where: { name: controlText(name) },
+        }).then((model) => model[0]);
+      })
+    );
+    modelCV.addLocations(locations);
   }
 
   // Experiences
@@ -383,6 +402,12 @@ and (cv."id" in (
       {
         model: models.BusinessLine,
         as: 'businessLines',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      {
+        model: models.Location,
+        as: 'location',
         through: { attributes: [] },
         attributes: ['name'],
       },
