@@ -41,10 +41,12 @@ const getTotalShares = async () => {
         [sequelize.fn('sum', sequelize.col('whatsapp')), 'whatsapp'],
       ],
     });
-
-    totalShares += Object.keys(shares[0].dataValues).reduce((previous, key) => {
-      return previous + parseInt(shares[0].dataValues[key], 10);
-    }, 0);
+    const shareCounts = Object.values(shares[0].dataValues);
+    if(shareCounts.every((shareCount) => !!shareCount)) {
+      totalShares += Object.keys(shares[0].dataValues).reduce((previous, key) => {
+        return previous + parseInt(shares[0].dataValues[key], 10);
+      }, 0);
+    }
   }
   catch (e) {
     console.log(e);
