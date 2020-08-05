@@ -12608,7 +12608,7 @@ iframe.uk-cover {
   border: 1px solid;
   border-radius: 5px;
   padding: 0 15px;
-  height: 36px;
+  min-height: 36px;
   line-height: 36px;
   cursor: pointer;
   border-color: #e5e5e5;
@@ -12619,7 +12619,7 @@ iframe.uk-cover {
   border: 1px solid;
   border-radius: 5px;
   padding: 0 15px;
-  height: 36px;
+  min-height: 36px;
   line-height: 36px;
   cursor: pointer;
   background-color: #F55F24;

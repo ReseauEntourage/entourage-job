@@ -5,13 +5,28 @@ import {Section, GridNoSSR, IconNoSSR, Button} from '../components/utils';
 import ButtonIcon from '../components/utils/ButtonIcon';
 import {BUSINESS_LINES, LOCATIONS} from "../constants";
 
+const filtersData = [
+  {
+    key: 'businessLines',
+    constants: BUSINESS_LINES,
+    title: "Secteurs d'activité"
+  },
+  {
+    key: 'locations',
+    constants: LOCATIONS,
+    title: "Zones géographiques"
+  }
+];
+
+const initializeFilters = () => Object.fromEntries(filtersData.map(({key}) => [key, []]));
+
 const LesCandidats = () => {
   const [search, setSearch] = useState();
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
-  const [filters, setFilters] = useState({businessLines: [], locations: []});
+  const [filters, setFilters] = useState(initializeFilters());
 
   const resetFilters = () => {
-    setFilters({businessLines: [], locations: []});
+    setFilters(initializeFilters());
   };
 
   const renderFilters = (filterConstants, key) => {
@@ -120,7 +135,9 @@ const LesCandidats = () => {
                 <div className="uk-flex uk-flex-middle uk-flex-right">
                   <div className="uk-flex uk-flex-right uk-flex-wrap uk-flex-1">
                     {
-                      filters.businessLines.map((filter) =>
+                      Object.values(filters).reduce((acc, curr) => {
+                        return acc.concat(curr);
+                      }, []).map((filter) =>
                         <div className="uk-flex uk-flex-center uk-flex-middle" style={{
                           paddingRight: 5,
                           paddingTop: 5,
@@ -142,14 +159,18 @@ const LesCandidats = () => {
             </GridNoSSR>
 
             <div id="toggle-animation" hidden className="uk-margin-medium-top">
-              <span className="uk-text-bold">Secteurs d&apos;activité</span>
-              <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom">
-                {renderFilters(BUSINESS_LINES, 'businessLines')}
-              </div>
-              <span className="uk-text-bold">Zones géographiques</span>
-              <div className="uk-flex uk-flex-wrap">
-                {renderFilters(LOCATIONS, 'locations')}
-              </div>
+              {
+                filtersData.map(({title, constants, key}) => {
+                  return (
+                    <div key={key}>
+                      <span className="uk-text-bold">{title}</span>
+                      <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom">
+                        {renderFilters(constants, key)}
+                      </div>
+                    </div>
+                  )
+                })
+              }
               <div className="uk-flex uk-flex-center uk-margin-medium-top">
                 <Button
                   style="text"
