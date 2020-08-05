@@ -18,12 +18,12 @@ const LesCandidats = () => {
     <Layout title="Les candidats - LinkedOut">
       <Section style="default">
         <GridNoSSR
-          gap="large"
+          gap="medium"
           column
           middle
           eachWidths={['2-3@s', '1-1', '1-1', '1-1']}
         >
-          <div className="uk-text-center">
+          <div className="uk-text-center uk-margin-medium-bottom">
             <h2 className="uk-text-bold">
               Découvrez les <span className="uk-text-primary">Candidats</span>
             </h2>
@@ -52,24 +52,50 @@ const LesCandidats = () => {
               </form>
             </div>
           </nav>
-          <div className="uk-margin-large-left uk-margin-large-right uk-flex uk-flex-column">
-            <div className="uk-flex uk-flex-between uk-flex-middle">
-              <Button
-                style="text"
-                toggle="target: #toggle-animation; animation: uk-animation-fade"
-                onClick={() => {
-                  setFilterMenuOpened(!filterMenuOpened);
-                }}>
-                Filtrer par{' '}&nbsp;<IconNoSSR ratio={1.2} name={`chevron-${filterMenuOpened ? 'up' : 'down'}`} />
-              </Button>
-              <div className="uk-text-meta uk-flex uk-flex-middle">
-                {filters.businessLines.length} filtre(s) activé(s)
-                {
-                  filters.businessLines.length > 0 &&
-                  <div className="uk-flex uk-flex-middle uk-text-danger uk-margin-small-left"><ButtonIcon ratio={0.9} name='close' onClick={resetFilters}/></div>
-                }
+          <div className="uk-margin-large-left uk-margin-large-right uk-flex uk-flex-column uk-margin-small-bottom uk-margin-small-top">
+            <GridNoSSR
+              middle
+              gap='small'
+              eachWidths={['1-4@m', '3-4@m']}
+            >
+              <div className="uk-flex uk-flex-middle uk-flex-left" style={{
+                paddingTop: 5,
+                paddingBottom: 5
+              }}>
+                <Button
+                  style="text"
+                  toggle="target: #toggle-animation; animation: uk-animation-fade"
+                  onClick={() => {
+                    setFilterMenuOpened(!filterMenuOpened);
+                  }}>
+                  Filtrer par{' '}&nbsp;<IconNoSSR ratio={1.2} name={`chevron-${filterMenuOpened ? 'up' : 'down'}`} />
+                </Button>
               </div>
-            </div>
+              {
+                filters.businessLines.length > 0 &&
+                <div className="uk-flex uk-flex-middle uk-flex-right">
+                  <div className="uk-flex uk-flex-right uk-flex-wrap uk-flex-1">
+                    {
+                      filters.businessLines.map((filter) =>
+                        <div className="uk-flex uk-flex-center uk-flex-middle" style={{
+                          paddingRight: 5,
+                          paddingTop: 5,
+                          paddingBottom: 5
+                        }}>
+                          <span className="uk-badge">{filter.label}</span>
+                        </div>
+                      )
+                    }
+                  </div>
+                  <div className="uk-margin-small-left">
+                    <ButtonIcon
+                      ratio={0.9}
+                      name='close'
+                      onClick={resetFilters} />
+                  </div>
+                </div>
+              }
+            </GridNoSSR>
 
             <div id="toggle-animation" hidden className="uk-margin-medium-top">
               <span className="uk-text-bold">Secteurs d&apos;activité</span>
@@ -111,6 +137,17 @@ const LesCandidats = () => {
                     )
                   })
                 }
+              </div>
+              <div className="uk-flex uk-flex-center uk-margin-medium-top">
+                <Button
+                  style="text"
+                  toggle="target: #toggle-animation; animation: uk-animation-fade"
+                  onClick={() => {
+                    setFilterMenuOpened(!filterMenuOpened);
+                  }}>
+                  Fermer la liste{' '}&nbsp;
+                  <IconNoSSR ratio={1.2} name='chevron-up' />
+                </Button>
               </div>
             </div>
           </div>
