@@ -22,7 +22,6 @@ const getTokenAndId = async (user) => {
       email: user.email,
       password: user.password,
     });
-  console.log(':::::::: LOGIN ::::::', response.body.token)
   return {
     token: response.body.user.token,
     id: response.body.user.id

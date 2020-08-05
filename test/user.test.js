@@ -267,7 +267,6 @@ describe('User', () => {
             .get(`${route}/members?limit=10&role=${USER_ROLES.COACH}`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
-          console.log('RESPONSE ^+++++++++++++', response.body)
           expect(response.body.length).toBe(1);
           expect(response.body[0].id).toEqual(loggedInCoach.user.id);
           expect(response.body[0].role).toEqual(loggedInCoach.user.role);
