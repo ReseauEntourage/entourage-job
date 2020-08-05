@@ -55,7 +55,7 @@ const LesCandidats = () => {
       };
 
       return (
-        <div key={idx} className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
+        <div key={key + idx} className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
           <div
             role="button"
             tabIndex={0}
@@ -137,8 +137,8 @@ const LesCandidats = () => {
                     {
                       Object.values(filters).reduce((acc, curr) => {
                         return acc.concat(curr);
-                      }, []).map((filter) =>
-                        <div className="uk-flex uk-flex-center uk-flex-middle" style={{
+                      }, []).map((filter, index) =>
+                        <div key={filter.label + index} className="uk-flex uk-flex-center uk-flex-middle" style={{
                           paddingRight: 5,
                           paddingTop: 5,
                           paddingBottom: 5
@@ -148,7 +148,8 @@ const LesCandidats = () => {
                       )
                     }
                   </div>
-                  <div className="uk-margin-small-left">
+                  <div className="uk-flex">
+                    {' '}&nbsp;
                     <ButtonIcon
                       ratio={0.9}
                       name='close'
