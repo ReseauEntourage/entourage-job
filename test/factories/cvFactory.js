@@ -20,7 +20,8 @@ const getCvStatusValues = (cvStatus) => {
  * Generate data to create a CV
  * 
  * @param {Object<{
- *                  UserId: }>
+ *                  UserId: 
+ *         }>
  * } props valid UserId corresponding to a user_candidat
  * must be provided.
  */
@@ -61,8 +62,8 @@ const cvFactory = async (
         ...cvData,
         ...associationsId
     }
-
-    return insertInDB ? CV.create(cvFull) : cvFull;
+    const cvDB = await CV.create(cvFull);
+    return insertInDB ? cvDB.dataValues : cvFull;
 }
 
 module.exports = cvFactory;
