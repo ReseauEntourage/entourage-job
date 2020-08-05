@@ -481,12 +481,15 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </div>{' '}
           à me proposer ?
         </h2>
-        <Button
-          disabled={actionDisabled}
-          style='secondary'
-          toggle="target: #modal-send-opportunity">
-          Contactez-moi{' '}<IconNoSSR name="chevron-right" />
-        </Button>
+        <div className="uk-flex uk-flex-center">
+          <Button
+            disabled={actionDisabled}
+            style='secondary'
+            toggle="target: #modal-send-opportunity">
+            Contactez-moi{' '}<IconNoSSR name="chevron-right" />
+          </Button>
+        </div>
+
         <div>
           <ModalEdit
             id="modal-send-opportunity"

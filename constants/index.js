@@ -66,6 +66,14 @@ const BUSINESS_LINES = [
     label: "Interprétariat",
   },
   {
+    value: "Jardinage / Espaces verts",
+    label: "Jardinage / Espaces verts",
+  },
+  {
+    value: "Mécanique",
+    label: "Mécanique",
+  },
+  {
     value: "Médico-social",
     label: "Médico-social",
   },
