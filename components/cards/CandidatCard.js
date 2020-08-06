@@ -11,6 +11,8 @@ import { SimpleLink, GridNoSSR, IconNoSSR, ImgNoSSR } from '../utils';
 import ModalShareCV from '../modals/ModalShareCV';
 import Api from '../../Axios';
 import {SharesCountContext} from "../store/SharesCountProvider";
+import {hasAsChild} from "../../utils";
+import {LOCATIONS} from '../../constants';
 
 const CandidatCard = ({
   url,
@@ -47,11 +49,38 @@ const CandidatCard = ({
     })
   };
 
+  const getReducedLocations = () => {
+    if(locations && locations.length > 0)  {
+      let indexesToRemove = [];
+      const reducedLocations = locations;
+      for(let i = 0; i < locations.length; i += 1) {
+        for(let j = 0; j < locations.length; j += 1) {
+           if(hasAsChild(LOCATIONS, locations[i], locations[j])) {
+             indexesToRemove.push(j);
+           }
+        }
+      }
+
+      indexesToRemove = indexesToRemove.filter((index, idx) => indexesToRemove.indexOf(index) === idx);
+      indexesToRemove.sort((a,b) => b - a);
+
+      for(let i = indexesToRemove.length -1; i >= 0; i -= 1) {
+        reducedLocations.splice(indexesToRemove[i], 1);
+      }
+      return reducedLocations;
+    }
+    return [];
+  };
+
+  const reducedLocations = getReducedLocations();
+
   return (
     <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small uk-text-left">
       {/* Contenue de la carte */}
       <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
-        <div className="uk-cover-container uk-height-medium uk-margin-bottom">
+        <div className="uk-cover-container uk-margin-bottom" style={{
+          height: 350
+        }}>
           {/* Image de fond */}
           <img src={imgSrc} alt={imgAlt} data-uk-cover />
           {/* Bandeau à retrouvé un emploie */}
@@ -93,11 +122,13 @@ const CandidatCard = ({
               column
               childWidths={['1-1']}
               style={{
-                minHeight: '240px',
+                minHeight: 240,
               }}
               className="uk-height-1-1"
             >
-              <>
+              <div style={{
+                marginBottom: 5
+              }}>
                 <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold ent-line-clamp-1">
                   {firstName}
                 </h5>
@@ -110,13 +141,17 @@ const CandidatCard = ({
                 >
                   {catchphrase || "cherche un job pour s'en sortir"}
                 </p>
-              </>
+              </div>
               {skills && (
                 <GridNoSSR
                   column
+                  style={{
+                    marginTop: 5,
+                    marginBottom: 5
+                  }}
                   gap="collapse"
                   childWidths={['1-1']}
-                  className="uk-text-lowercase uk-text-bold uk-text-primary"
+                  className="uk-text-lowercase uk-text-bold uk-text-primary "
                   items={skills.slice(0, 2).map((a, index) => (
                     <span key={index} className="ent-line-clamp-1">
                         {a}
@@ -146,7 +181,10 @@ const CandidatCard = ({
                 </>
               )} */}
               {businessLines && businessLines.length > 0 && (
-                <>
+                <div style={{
+                  marginTop: 5,
+                  marginBottom: 5
+                }}>
                   <p
                     style={{ fontSize: '0.775rem' }}
                     className="uk-margin-remove uk-margin-small-top"
@@ -164,11 +202,11 @@ const CandidatCard = ({
                       </span>
                     ))}
                   </GridNoSSR>
-                </>
+                </div>
               )}
-              {locations && locations.length > 0 && (
-                <GridNoSSR column gap="collapse" childWidths={['1-1']} style={{marginTop: 5}}>
-                  {locations.slice(0, 2).map((text, index) => (
+              {reducedLocations && reducedLocations.length > 0 && (
+                <GridNoSSR column gap="collapse" childWidths={['1-1']} style={{marginTop: 10}}>
+                  {reducedLocations.slice(0, 2).map((text, index) => (
                     <div key={text + index} className="uk-flex uk-flex-middle">
                       <IconNoSSR name='location' ratio={0.6} />&nbsp;
                       <span className="uk-text-meta uk-flex-1" style={{

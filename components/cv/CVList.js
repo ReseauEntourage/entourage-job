@@ -4,27 +4,8 @@ import { GridNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import Api from '../../Axios';
 import {FILTERS_DATA} from "../../constants";
-import {findFilter} from "../../utils";
+import {hasAsChild} from "../../utils";
 
-const hasAsChild = (filters, parent, value, isFirst) => {
-  let parentFilter = parent;
-
-  if(isFirst) {
-    parentFilter = findFilter(filters, parent);
-  }
-
-  if(parentFilter && parentFilter.children && parentFilter.children.length > 0) {
-    const index = parentFilter.children.findIndex((filter) => {
-      const found = value.toLowerCase().includes(filter.value.toLowerCase());
-      if(!found && filter.children && filter.children.length > 0) {
-        return hasAsChild(filter.children, filter, value);
-      }
-      return found;
-    });
-    return index >= 0;
-  }
-  return false;
-};
 
 const CVList = ({ nb, search, filters }) => {
   const [cvs, setCVs] = useState(undefined);
@@ -74,7 +55,7 @@ const CVList = ({ nb, search, filters }) => {
               else if(cv[keys[i]].length > 0) {
                 hasFound = filters[keys[i]].some((currentFilter) => {
                   return cv[keys[i]].findIndex((value) => {
-                    const isInChildren = hasAsChild(currentFilterConstants, value, currentFilter.value, true);
+                    const isInChildren = hasAsChild(currentFilterConstants, value, currentFilter.value);
                     return isInChildren || value.toLowerCase().includes(currentFilter.value.toLowerCase());
                   }) >= 0;
                 });
