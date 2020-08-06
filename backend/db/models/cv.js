@@ -40,6 +40,9 @@ module.exports = (sequelize, DataTypes) => {
           },
         }, */
       },
+      location: {
+        type: DataTypes.TEXT,
+      },
       availability: {
         type: DataTypes.STRING,
       },

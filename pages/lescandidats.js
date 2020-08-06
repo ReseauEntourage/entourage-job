@@ -3,22 +3,11 @@ import Layout from '../components/Layout';
 import CVList from '../components/cv/CVList';
 import {Section, GridNoSSR, IconNoSSR, Button} from '../components/utils';
 import ButtonIcon from '../components/utils/ButtonIcon';
-import {BUSINESS_LINES, LOCATIONS} from "../constants";
+import {FILTERS_DATA} from "../constants";
+import {getChildrenFilters} from "../utils";
 
-const filtersData = [
-  {
-    key: 'businessLines',
-    constants: BUSINESS_LINES,
-    title: "Secteurs d'activité"
-  },
-  {
-    key: 'locations',
-    constants: LOCATIONS,
-    title: "Zones géographiques"
-  }
-];
 
-const initializeFilters = () => Object.fromEntries(filtersData.map(({key}) => [key, []]));
+const initializeFilters = () => Object.fromEntries(FILTERS_DATA.map(({key}) => [key, []]));
 
 const LesCandidats = () => {
   const [search, setSearch] = useState();
@@ -30,7 +19,9 @@ const LesCandidats = () => {
   };
 
   const renderFilters = (filterConstants, key) => {
-    return filterConstants.map((filterConst, idx) => {
+    const reducedFilters = getChildrenFilters(filterConstants);
+
+    return reducedFilters.map((filterConst, idx) => {
 
       const index = filters[key].findIndex((filter) => {
         return filter.value === filterConst.value;
@@ -161,7 +152,7 @@ const LesCandidats = () => {
 
             <div id="toggle-animation" hidden className="uk-margin-medium-top">
               {
-                filtersData.map(({title, constants, key}) => {
+                FILTERS_DATA.map(({title, constants, key}) => {
                   return (
                     <div key={key}>
                       <span className="uk-text-bold">{title}</span>
