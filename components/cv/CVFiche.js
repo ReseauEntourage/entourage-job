@@ -392,10 +392,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
                       {cv.contracts.join(' / ')}
                     </li>
                   )}
-                  {cv.location && cv.location.length > 0 && (
+                  {cv.locations && cv.locations.length > 0 && (
                     <li>
                       <IconNoSSR className="uk-text-primary" name="location" style={{width: 20}} />{' '}
-                      {cv.location}
+                      {cv.locations.join(' / ')}
                     </li>
                   )}
                   {cv.availability && cv.availability.length > 0 && (
@@ -481,12 +481,14 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </div>{' '}
           à me proposer ?
         </h2>
-        <Button
-          disabled={actionDisabled}
-          style='secondary'
-          toggle="target: #modal-send-opportunity">
-          Contactez-moi{' '}<IconNoSSR name="chevron-right" />
-        </Button>
+        <div className="uk-flex uk-flex-center">
+          <Button
+            disabled={actionDisabled}
+            style='secondary'
+            toggle="target: #modal-send-opportunity">
+            Contactez-moi{' '}<IconNoSSR name="chevron-right" />
+          </Button>
+        </div>
         <div>
           <ModalEdit
             id="modal-send-opportunity"

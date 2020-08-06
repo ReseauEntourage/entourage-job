@@ -184,7 +184,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
     if (value) valueToUse = (typeof(value) === 'string') ? getValue(value) : value;
 
     return (
-      <div>
+      <div className="uk-padding-small uk-padding-remove-left uk-padding-remove-right">
         {data.title && (
           <label className="uk-form-label" htmlFor={data.id}>
             {data.title}
@@ -214,7 +214,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
   }
   if (data.component === 'select-request') {
     return (
-      <div>
+      <div className="uk-padding-small uk-padding-remove-left uk-padding-remove-right">
         {data.title && (
           <label className="uk-form-label" htmlFor={data.id}>
             {data.title}
@@ -252,7 +252,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
     };
 
     return (
-      <div>
+      <div className="uk-padding-small uk-padding-remove-left uk-padding-remove-right">
         {data.title && (
           <label className="uk-form-label" htmlFor={data.id}>
             {data.title}

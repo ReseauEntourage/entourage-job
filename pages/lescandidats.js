@@ -3,27 +3,77 @@ import Layout from '../components/Layout';
 import CVList from '../components/cv/CVList';
 import {Section, GridNoSSR, IconNoSSR, Button} from '../components/utils';
 import ButtonIcon from '../components/utils/ButtonIcon';
-import {BUSINESS_LINES} from "../constants";
+import {FILTERS_DATA} from "../constants";
+import {getChildrenFilters} from "../utils";
+
+
+const initializeFilters = () => Object.fromEntries(FILTERS_DATA.map(({key}) => [key, []]));
 
 const LesCandidats = () => {
   const [search, setSearch] = useState();
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
-  const [filters, setFilters] = useState({businessLines: []});
+  const [filters, setFilters] = useState(initializeFilters());
 
   const resetFilters = () => {
-    setFilters({businessLines: []});
+    setFilters(initializeFilters());
+  };
+
+  const renderFilters = (filterConstants, key) => {
+    const reducedFilters = getChildrenFilters(filterConstants);
+
+    return reducedFilters.map((filterConst, idx) => {
+
+      const index = filters[key].findIndex((filter) => {
+        return filter.value === filterConst.value;
+      });
+
+      const onFilterClick = () => {
+        const updatedFilters = {...filters};
+        if(index < 0) {
+          updatedFilters[key].push(filterConst);
+        }
+        else {
+          updatedFilters[key].splice(index, 1);
+        }
+
+        setFilters(updatedFilters);
+      };
+
+      const handleKeyDown = (ev) => {
+        if (ev.key === "Enter") {
+          onFilterClick();
+        }
+      };
+
+      return (
+        <div key={key + idx} className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
+          <div
+            role="button"
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
+            className={`ent-filter${index < 0 ? '' : '-activated'}`}
+            onClick={onFilterClick}>{filterConst.label}</div>
+        </div>
+      )
+    })
+  };
+
+  const getNumberFilters = () => {
+    return Object.values(filters).reduce((acc, curr) => {
+      return acc + curr.length;
+    }, 0)
   };
 
   return (
     <Layout title="Les candidats - LinkedOut">
       <Section style="default">
         <GridNoSSR
-          gap="large"
+          gap="medium"
           column
           middle
           eachWidths={['2-3@s', '1-1', '1-1', '1-1']}
         >
-          <div className="uk-text-center">
+          <div className="uk-text-center uk-margin-medium-bottom">
             <h2 className="uk-text-bold">
               Découvrez les <span className="uk-text-primary">Candidats</span>
             </h2>
@@ -52,65 +102,77 @@ const LesCandidats = () => {
               </form>
             </div>
           </nav>
-          <div className="uk-margin-large-left uk-margin-large-right uk-flex uk-flex-column">
-            <div className="uk-flex uk-flex-between uk-flex-middle">
-              <Button
-                style="text"
-                toggle="target: #toggle-animation; animation: uk-animation-fade"
-                onClick={() => {
-                  setFilterMenuOpened(!filterMenuOpened);
-                }}>
-                Filtrer par{' '}&nbsp;<IconNoSSR ratio={1.2} name={`chevron-${filterMenuOpened ? 'up' : 'down'}`} />
-              </Button>
-              <div className="uk-text-meta uk-flex uk-flex-middle">
-                {filters.businessLines.length} filtre(s) activé(s)
-                {
-                  filters.businessLines.length > 0 &&
-                  <div className="uk-flex uk-flex-middle uk-text-danger uk-margin-small-left"><ButtonIcon ratio={0.9} name='close' onClick={resetFilters}/></div>
-                }
+          <div className="uk-margin-large-left uk-margin-large-right uk-flex uk-flex-column uk-margin-small-bottom uk-margin-small-top">
+            <GridNoSSR
+              middle
+              gap='small'
+              eachWidths={['1-4@m', '3-4@m']}
+            >
+              <div className="uk-flex uk-flex-middle uk-flex-left" style={{
+                paddingTop: 5,
+                paddingBottom: 5
+              }}>
+                <Button
+                  style="text"
+                  toggle="target: #toggle-animation; animation: uk-animation-fade"
+                  onClick={() => {
+                    setFilterMenuOpened(!filterMenuOpened);
+                  }}>
+                  Filtrer par{' '}&nbsp;<IconNoSSR ratio={1.2} name={`chevron-${filterMenuOpened ? 'up' : 'down'}`} />
+                </Button>
               </div>
-            </div>
+              {
+                getNumberFilters() > 0 &&
+                <div className="uk-flex uk-flex-middle uk-flex-right">
+                  <div className="uk-flex uk-flex-right uk-flex-wrap uk-flex-1">
+                    {
+                      Object.values(filters).reduce((acc, curr) => {
+                        return acc.concat(curr);
+                      }, []).map((filter, index) =>
+                        <div key={filter.label + index} className="uk-flex uk-flex-center uk-flex-middle" style={{
+                          paddingRight: 5,
+                          paddingTop: 5,
+                          paddingBottom: 5
+                        }}>
+                          <span className="uk-badge">{filter.label}</span>
+                        </div>
+                      )
+                    }
+                  </div>
+                  <div className="uk-flex">
+                    {' '}&nbsp;
+                    <ButtonIcon
+                      ratio={0.9}
+                      name='close'
+                      onClick={resetFilters} />
+                  </div>
+                </div>
+              }
+            </GridNoSSR>
 
             <div id="toggle-animation" hidden className="uk-margin-medium-top">
-              <span className="uk-text-bold">Secteurs d&apos;activité</span>
-              <div className="uk-flex uk-flex-wrap">
-                {
-                  BUSINESS_LINES.map((businessLine, idx) => {
-
-                    const index = filters.businessLines.findIndex((business) => {
-                      return business.value === businessLine.value;
-                    });
-
-                    const onFilterClick = () => {
-                      const updatedFilters = {...filters};
-                      if(index < 0) {
-                        updatedFilters.businessLines.push(businessLine);
-                      }
-                      else {
-                        updatedFilters.businessLines.splice(index, 1);
-                      }
-
-                      setFilters(updatedFilters);
-                    };
-
-                    const handleKeyDown = (ev) => {
-                      if (ev.key === "Enter") {
-                        onFilterClick();
-                      }
-                    };
-
-                    return (
-                      <div key={idx} className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
-                        <div
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={handleKeyDown}
-                          className={`ent-filter${index < 0 ? '' : '-activated'}`}
-                          onClick={onFilterClick}>{businessLine.label}</div>
+              {
+                FILTERS_DATA.map(({title, constants, key}) => {
+                  return (
+                    <div key={key}>
+                      <span className="uk-text-bold">{title}</span>
+                      <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom">
+                        {renderFilters(constants, key)}
                       </div>
-                    )
-                  })
-                }
+                    </div>
+                  )
+                })
+              }
+              <div className="uk-flex uk-flex-center uk-margin-medium-top">
+                <Button
+                  style="text"
+                  toggle="target: #toggle-animation; animation: uk-animation-fade"
+                  onClick={() => {
+                    setFilterMenuOpened(!filterMenuOpened);
+                  }}>
+                  Fermer la liste{' '}&nbsp;
+                  <IconNoSSR ratio={1.2} name='chevron-up' />
+                </Button>
               </div>
             </div>
           </div>
