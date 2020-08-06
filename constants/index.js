@@ -159,7 +159,7 @@ const FILTERS_DATA = [
   {
     key: 'locations',
     constants: LOCATIONS,
-    title: "Zones géographiques"
+    title: "Secteurs géographiques"
   }
 ];
 

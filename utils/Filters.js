@@ -40,3 +40,23 @@ export const findFilter = (filters, value) => {
   }, null);
 };
 
+export const hasAsChild = (filters, parent, value, notFirst) => {
+  let parentFilter = parent;
+
+  if(!notFirst) {
+    parentFilter = findFilter(filters, parent);
+  }
+
+  if(parentFilter && parentFilter.children && parentFilter.children.length > 0) {
+    const index = parentFilter.children.findIndex((filter) => {
+      const found = value.toLowerCase().includes(filter.value.toLowerCase());
+      if(!found && filter.children && filter.children.length > 0) {
+        return hasAsChild(filter.children, filter, value, true);
+      }
+      return found;
+    });
+    return index >= 0;
+  }
+  return false;
+};
+
