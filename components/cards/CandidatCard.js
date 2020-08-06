@@ -19,6 +19,8 @@ const CandidatCard = ({
   gender,
   firstName,
   ambitions,
+  businessLines,
+  locations,
   skills,
   catchphrase,
   employed,
@@ -102,7 +104,7 @@ const CandidatCard = ({
                 <p
                   style={{
                     fontSize: '0.775rem',
-                    marginTop: 'O.5px !important'
+                    marginTop: '5px !important'
                   }}
                   className="uk-text-small ent-line-clamp-3 uk-margin-remove"
                 >
@@ -122,7 +124,7 @@ const CandidatCard = ({
                   ))}
                 />
               )}
-              {ambitions && ambitions.length > 0 && (
+             {/* {ambitions && ambitions.length > 0 && (
                 <>
                   <p
                     style={{ fontSize: '0.775rem' }}
@@ -142,6 +144,39 @@ const CandidatCard = ({
                     ))}
                   </GridNoSSR>
                 </>
+              )} */}
+              {businessLines && businessLines.length > 0 && (
+                <>
+                  <p
+                    style={{ fontSize: '0.775rem' }}
+                    className="uk-margin-remove uk-margin-small-top"
+                  >
+                    {gender === 1 ? 'Elle' : 'Il'} souhaite
+                    <br /> travailler dans :
+                  </p>
+                  <GridNoSSR column gap="collapse" childWidths={['1-1']}>
+                    {businessLines.slice(0, 2).map((text, index) => (
+                      <span
+                        key={index}
+                        className="uk-label uk-text-lowercase ent-card-ambition"
+                      >
+                        {text}
+                      </span>
+                    ))}
+                  </GridNoSSR>
+                </>
+              )}
+              {locations && locations.length > 0 && (
+                <GridNoSSR column gap="collapse" childWidths={['1-1']} style={{marginTop: 5}}>
+                  {locations.slice(0, 2).map((text, index) => (
+                    <div key={text + index} className="uk-flex uk-flex-middle">
+                      <IconNoSSR name='location' ratio={0.6} />&nbsp;
+                      <span className="uk-text-meta uk-flex-1" style={{
+                        fontSize: '0.775rem'
+                      }}>{text}</span>
+                    </div>
+                  ))}
+                </GridNoSSR>
               )}
             </GridNoSSR>
           </div>
@@ -232,7 +267,9 @@ const CandidatCard = ({
 CandidatCard.propTypes = {
   url: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
-  ambitions: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  ambitions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  businessLines: PropTypes.arrayOf(PropTypes.string).isRequired,
+  locations: PropTypes.arrayOf(PropTypes.string).isRequired,
   imgSrc: PropTypes.string,
   imgAlt: PropTypes.string.isRequired,
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,

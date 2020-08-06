@@ -3,7 +3,28 @@ import PropTypes from 'prop-types';
 import { GridNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import Api from '../../Axios';
+import {FILTERS_DATA} from "../../constants";
+import {findFilter} from "../../utils";
 
+const hasAsChild = (filters, parent, value, isFirst) => {
+  let parentFilter = parent;
+
+  if(isFirst) {
+    parentFilter = findFilter(filters, parent);
+  }
+
+  if(parentFilter && parentFilter.children && parentFilter.children.length > 0) {
+    const index = parentFilter.children.findIndex((filter) => {
+      const found = value.toLowerCase().includes(filter.value.toLowerCase());
+      if(!found && filter.children && filter.children.length > 0) {
+        return hasAsChild(filter.children, filter, value);
+      }
+      return found;
+    });
+    return index >= 0;
+  }
+  return false;
+};
 
 const CVList = ({ nb, search, filters }) => {
   const [cvs, setCVs] = useState(undefined);
@@ -44,6 +65,8 @@ const CVList = ({ nb, search, filters }) => {
           filteredList = cvs.filter((cv) => {
             const resultForEachFilter = [];
             for(let i = 0; i < keys.length; i += 1) {
+              const currentFilterConstants = FILTERS_DATA.find((data) => data.key === keys[i]).constants;
+
               let hasFound = false;
               if(filters[keys[i]].length === 0) {
                 hasFound = true;
@@ -51,7 +74,8 @@ const CVList = ({ nb, search, filters }) => {
               else if(cv[keys[i]].length > 0) {
                 hasFound = filters[keys[i]].some((currentFilter) => {
                   return cv[keys[i]].findIndex((value) => {
-                    return value.toLowerCase().includes(currentFilter.value.toLowerCase());
+                    const isInChildren = hasAsChild(currentFilterConstants, value, currentFilter.value, true);
+                    return isInChildren || value.toLowerCase().includes(currentFilter.value.toLowerCase());
                   }) >= 0;
                 });
               }
@@ -85,8 +109,8 @@ const CVList = ({ nb, search, filters }) => {
           gap="small"
           row
           center
-          items={filteredCvs.map((cv) => (
-            <CandidatCard
+          items={filteredCvs.map((cv) => {
+            return <CandidatCard
               url={cv.user.url}
               imgSrc={
                 (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) || undefined
@@ -95,12 +119,14 @@ const CVList = ({ nb, search, filters }) => {
               firstName={cv.user.candidat.firstName}
               gender={cv.user.candidat.gender}
               ambitions={cv.ambitions}
+              businessLines={cv.businessLines}
+              locations={cv.locations}
               skills={cv.skills}
               catchphrase={cv.catchphrase}
               employed={cv.user.employed}
               id={cv.user.candidat.id}
             />
-          ))}
+          })}
         />
       </div>
     );

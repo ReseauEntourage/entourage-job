@@ -1,4 +1,6 @@
 import {LOCATIONS} from '../../../constants';
+import {getAllFilters} from "../../../utils";
+
 
 export default {
   "id": "form-usefullinformation",
@@ -17,7 +19,7 @@ export default {
       "type": "text",
       "title": "Lieu de travail souhaité",
       "component": "select-request-creatable",
-      "options": LOCATIONS,
+      "options": getAllFilters(LOCATIONS),
       "isMulti": true
     },
     {

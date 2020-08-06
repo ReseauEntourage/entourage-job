@@ -30,8 +30,8 @@ const BUSINESS_LINES = [
     label: "Associatif",
   },
   {
-    value: "Assurance / Banque",
-    label: "Assurance / Banque",
+    value: "Assurances / Banques",
+    label: "Assurances / Banques",
   },
   {
     value: "Communication",
@@ -101,28 +101,65 @@ const BUSINESS_LINES = [
 
 const LOCATIONS = [
   {
-    value: "Val-de-Marne (94)",
-    label: "Val-de-Marne (94)"
-  },
-  {
-    value: "Seine-Saint-Denis (93)",
-    label: "Seine-Saint-Denis (93)",
-  },
-  {
-    value: "Hauts-de-Seine (92)",
-    label: "Hauts-de-Seine (92)",
-  },
-  {
-    value: "Paris (75)",
-    label: "Paris (75)",
-  },
-  {
-    value: "Île-de-France (hors Paris & proche banlieue)",
-    label: "Île-de-France (hors Paris & proche banlieue)",
+    value: "Île-de-France",
+    label: "Île-de-France",
+    children: [
+      {
+        value: "Paris & proche banlieue",
+        label: "Paris & proche banlieue",
+        children: [
+          {
+            value: "Val-de-Marne (94)",
+            label: "Val-de-Marne (94)"
+          },
+          {
+            value: "Seine-Saint-Denis (93)",
+            label: "Seine-Saint-Denis (93)",
+          },
+          {
+            value: "Hauts-de-Seine (92)",
+            label: "Hauts-de-Seine (92)",
+          },
+          {
+            value: "Paris (75)",
+            label: "Paris (75)",
+          },
+        ]
+      },
+      {
+        value: "Val-d'Oise (95)",
+        label: "Val-d'Oise (95)"
+      },
+      {
+        value: "Essonne (91)",
+        label: "Essonne (91)",
+      },
+      {
+        value: "Yvelines (78)",
+        label: "Yvelines (78)",
+      },
+      {
+        value: "Seine-et-Marne (77)",
+        label: "Seine-et-Marne (77)"
+      },
+    ]
   },
   {
     value: "Lille (59)",
     label: "Lille (59)"
+  }
+];
+
+const FILTERS_DATA = [
+  {
+    key: 'businessLines',
+    constants: BUSINESS_LINES,
+    title: "Secteurs d'activité"
+  },
+  {
+    key: 'locations',
+    constants: LOCATIONS,
+    title: "Zones géographiques"
   }
 ];
 
@@ -184,5 +221,6 @@ module.exports = {
   BUSINESS_LINES,
   EXTERNAL_LINKS,
   VALUES,
-  LOCATIONS
+  LOCATIONS,
+  FILTERS_DATA
 };
