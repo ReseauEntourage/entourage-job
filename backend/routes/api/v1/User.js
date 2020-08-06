@@ -39,13 +39,13 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
     password: hash,
     salt
   })
-    .then((users) => {
+    .then(async (users) => {
       console.log(
         '# User créé',
         `login : ${req.body.email}`,
         `password: ${userPassword}`
       );
-      sendMail({
+      await sendMail({
         toEmail: req.body.email,
         subject: 'Bienvenue chez LinkedOut',
         text: 'Bonjour,\n' +
@@ -147,8 +147,9 @@ router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
  */
 router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
   res) => {
-  if (req.payload.id === req.query.coachId || req.payload.id === req.query.candidatId || req
-    .payload.role === USER_ROLES.ADMIN) {
+  if (req.payload.id === req.query.coachId ||
+    req.payload.id === req.query.candidatId ||
+    req.payload.role === USER_ROLES.ADMIN) {
     UserController.getUserCandidatOpt(req.query)
       .then((user) => {
         res.status(200).json(user);

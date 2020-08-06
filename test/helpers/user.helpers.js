@@ -3,6 +3,12 @@ const {
   getApp
 } = require('./helpers');
 const userFactory = require('../factories/userFactory');
+const { USER_ROLES } = require('../../constants');
+const {
+  models: {
+    User_Candidat,
+  }
+} = require('../../backend/db/models/');
 
 let app;
 
@@ -27,6 +33,18 @@ const getTokenAndId = async (user) => {
     id: response.body.user.id
   };
 }
+/**
+ * Get a candidat url from the table user_candidat
+ * 
+ * @param {string} id of a user candidat
+ */
+const getCandidatUrl = async (id) => {
+  const user = await User_Candidat.findOne({
+    where: { candidatId: id },
+    attributes: ['url']
+  });
+  return user;
+}
 
 /**
  * Create a user and get associated token
@@ -42,8 +60,15 @@ const createLoggedInUser = async (props = {}) => {
     ...user,
     password: props.password
   });
+  // const url = (user.role === USER_ROLES.CANDIDAT
+  // ) ? (
+  //     await getCandidatUrl(id)
+  //   ) : (
+  //     null
+  //   );
 
   return {
+    // url: url || null,
     token,
     user: {
       ...user,

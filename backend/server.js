@@ -76,7 +76,7 @@ module.exports.start = (port) => {
   });
 };
 
-module.exports.close = () => {
+module.exports.close = async () => {
   if (!server) throw 'The express server is not started'; // eslint-disable-line no-throw-literal
-  server.close();
+  await server.close();
 };

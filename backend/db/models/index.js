@@ -23,13 +23,12 @@ fs.readdirSync(__dirname)
     db.models[model.name] = model;
   });
 
-Object.keys(db.models).forEach((modelName) => {
+Object.keys(db.models).forEach(async (modelName) => {
   if (db.models[modelName].associate) {
-    db.models[modelName].associate(db.models);
+    await db.models[modelName].associate(db.models);
   }
 });
 
-db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;

@@ -11,40 +11,42 @@ const USER_ROLES = require('../constants');
 const cvFactory = require('./factories/cvFactory');
 const { CV_STATUS } = require('../constants');
 
-const route = '/api/v1/cv';
-let serverTest;
-let loggedInAdmin;
-let loggedInCandidat;
-let loggedInCoach;
-
-beforeAll(async () => {
-    await recreateTestDB();
-    serverTest = await startTestServer();
-    loggedInAdmin = await createLoggedInUser({
-        role: USER_ROLES.ADMIN,
-        password: 'admin',
-    });
-    loggedInCoach = await createLoggedInUser({
-        role: USER_ROLES.COACH,
-        password: 'coach',
-    })
-    loggedInCandidat = await createLoggedInUser({
-        role: USER_ROLES.CANDIDAT,
-        password: 'candidat',
-    });
-
-});
-
-afterAll(async () => {
-    await resetTestDB();
-    await stopTestServer();
-});
+const HALF_MINUTE = 30 * 1000;
+jest.setTimeout(HALF_MINUTE);
 
 describe('CV', () => {
+    const route = '/api/v1/cv';
+    let serverTest;
+    let loggedInAdmin;
+    let loggedInCandidat;
+    let loggedInCoach;
+    beforeAll(async () => {
+        serverTest = await startTestServer();
+        await recreateTestDB();
+        loggedInAdmin = await createLoggedInUser({
+            role: USER_ROLES.ADMIN,
+            password: 'admin',
+        });
+        loggedInCoach = await createLoggedInUser({
+            role: USER_ROLES.COACH,
+            password: 'coach',
+        });
+        loggedInCandidat = await createLoggedInUser({
+            role: USER_ROLES.CANDIDAT,
+            password: 'candidat',
+        });
+    });
+
+    afterAll(async () => {
+        await resetTestDB();
+        await stopTestServer();
+    });
     describe('CRUD CV', () => {
         describe('C - Create 1 CV', () => {
-            it('Should return 200 and CV if loggged in user', async () => {
-                const cv = await cvFactory({ UserId: loggedInCandidat.user.id }, {}, false);
+            it('Should return 200 and CV if logged in user', async () => {
+                const cv = await cvFactory({
+                    UserId: loggedInCandidat.user.id,
+                }, {}, false);
                 const cvResponse = { ...cv };
                 delete cvResponse.status;
                 const response = await request(serverTest)
@@ -55,7 +57,11 @@ describe('CV', () => {
                 expect(response.body).toMatchObject(cvResponse);
             });
             it('Should return 200 and CV with cv status set as published, if logged in coach', async () => {
-                const cv = await cvFactory({ UserId: loggedInCoach.user.id }, {}, false);
+                const cv = await cvFactory({
+                    UserId: loggedInCandidat.user.id,
+                    status: CV_STATUS.Published.value,
+                    urlImg: null,
+                }, {}, false);
                 delete cv.status;
                 const response = await request(serverTest)
                     .post(`${route}/`)
@@ -66,15 +72,22 @@ describe('CV', () => {
 
             });
             it('Should return 200 and CV with cv status set as published, if logged in admin', async () => {
-                const cv = await cvFactory({ UserId: loggedInCandidat.user.id, }, {}, false);
+                const cv = await cvFactory(
+                    {
+                        UserId: loggedInCandidat.user.id,
+                        urlImg: null,
+                    }, {}, false);
                 delete cv.status;
+                const cvResponse = {
+                    ...cv,
+                    status: CV_STATUS.Published.value,
+                }
                 const response = await request(serverTest)
                     .post(`${route}/`)
                     .set('authorization', `Token ${loggedInCandidat.token}`)
                     .send({ cv });
                 expect(response.status).toBe(200);
-                expect(response.body.status).toMatchObject(CV_STATUS.Published.value);
-
+                expect(response.body).toMatchObject(cvResponse);
             });
             it('Should return 200 and CV with cv status set as draft, if logged in admin', async () => {
                 const cv = await cvFactory(
@@ -100,23 +113,25 @@ describe('CV', () => {
                 expect(response.status).toBe(401);
             });
         });
-        describe('R - Read 1 CV', () => {
+        describe.skip('R - Read 1 CV', () => {
+            it('Should return 200', async () => {
+                const response = await request(serverTest)
+                    .get(`${route}/?userId=${loggedInCandidat.user.id}`);
+                expect(response.status).toBe(200);
+            })
+        });
+        describe.skip('R - Read List of CVs', () => {
 
         });
-        describe('R - Read List of CVs', () => {
-
-        });
-        describe('U - Update 1 CV', () => {
+        describe.skip('U - Update 1 CV', () => {
 
         });
         describe('D - Delete 1 CV', () => {
-            it('Should return 200 an ??? , if logged in admin', async () => {
+            it('Should return 200, if logged in admin', async () => {
                 const cv = await cvFactory({ UserId: loggedInCandidat.user.id });
-                console.log('::::::::::: CREATE CV IN DB :::::::::', cv);
                 const response = await request(serverTest)
                     .delete(`${route}/${cv.id}`)
                     .set('authorization', `Token ${loggedInAdmin.token}`);
-                console.log(':::::::::::::::::::: DELETE ::::::::::::::::::::::::::', response.body);
                 expect(response.status).toBe(200);
             });
             it('Should return 401, if cv not found', async () => {

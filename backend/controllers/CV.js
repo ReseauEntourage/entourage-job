@@ -9,7 +9,7 @@ const {
 } = require('../db/models');
 const { cleanCV, controlText } = require('./tools');
 
-const {CV_STATUS} = require('../../constants');
+const { CV_STATUS } = require('../../constants');
 
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
@@ -343,8 +343,8 @@ and "User_Candidats"."candidatId" = cv."UserId"
 and "User_Candidats".hidden = false
 
 ${
-  query
-    ? `
+    query
+      ? `
 /* recherche CV par mots clés et prénom */
 and (cv."id" in (
       select distinct "CV_BusinessLines"."CVId"
@@ -358,8 +358,8 @@ and (cv."id" in (
       where "CVs"."UserId" = "Users"."id"
       and lower("Users"."firstName") like '%${query.toLowerCase()}%'
 ))`
-    : ''
-}`,
+      : ''
+    }`,
     {
       type: QueryTypes.SELECT,
     }

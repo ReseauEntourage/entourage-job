@@ -9,6 +9,7 @@ const db = new Sequelize(process.env.DATABASE_URL, {
 
 module.exports = db;
 
+
 db.authenticate()
   .then(() => {
     console.log('Connecté à la base de données');

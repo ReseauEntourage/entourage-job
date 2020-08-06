@@ -12,7 +12,7 @@ let db;
 const startTestServer = async () => {
   loadEnvironnementVariables();
   app = server.prepare();
-  server.start(process.env.PORT);
+  await server.start(process.env.PORT);
   return app;
 }
 
@@ -20,7 +20,7 @@ const startTestServer = async () => {
  * stop the server
  */
 const stopTestServer = async () => {
-  server.close()
+  await server.close()
 }
 
 /**
