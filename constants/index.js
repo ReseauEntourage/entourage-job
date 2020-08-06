@@ -30,8 +30,8 @@ const BUSINESS_LINES = [
     label: "Associatif",
   },
   {
-    value: "Assurance / Banque",
-    label: "Assurance / Banque",
+    value: "Assurances / Banques",
+    label: "Assurances / Banques",
   },
   {
     value: "Communication",
@@ -66,6 +66,14 @@ const BUSINESS_LINES = [
     label: "Interprétariat",
   },
   {
+    value: "Jardinage / Espaces verts",
+    label: "Jardinage / Espaces verts",
+  },
+  {
+    value: "Mécanique",
+    label: "Mécanique",
+  },
+  {
     value: "Médico-social",
     label: "Médico-social",
   },
@@ -93,14 +101,66 @@ const BUSINESS_LINES = [
 
 const LOCATIONS = [
   {
-    value: "93",
-    label: "Seine Saint-Denis (93)",
+    value: "Île-de-France",
+    label: "Île-de-France",
+    children: [
+      {
+        value: "Paris & proche banlieue",
+        label: "Paris & proche banlieue",
+        children: [
+          {
+            value: "Val-de-Marne (94)",
+            label: "Val-de-Marne (94)"
+          },
+          {
+            value: "Seine-Saint-Denis (93)",
+            label: "Seine-Saint-Denis (93)",
+          },
+          {
+            value: "Hauts-de-Seine (92)",
+            label: "Hauts-de-Seine (92)",
+          },
+          {
+            value: "Paris (75)",
+            label: "Paris (75)",
+          },
+        ]
+      },
+      {
+        value: "Val-d'Oise (95)",
+        label: "Val-d'Oise (95)"
+      },
+      {
+        value: "Essonne (91)",
+        label: "Essonne (91)",
+      },
+      {
+        value: "Yvelines (78)",
+        label: "Yvelines (78)",
+      },
+      {
+        value: "Seine-et-Marne (77)",
+        label: "Seine-et-Marne (77)"
+      },
+    ]
   },
   {
-    value: "Paris et ",
-    label: "Paris et ses alentours",
-  },
+    value: "Lille (59)",
+    label: "Lille (59)"
+  }
+];
 
+const FILTERS_DATA = [
+  {
+    key: 'businessLines',
+    constants: BUSINESS_LINES,
+    title: "Secteurs d'activité"
+  },
+  {
+    key: 'locations',
+    constants: LOCATIONS,
+    title: "Secteurs géographiques"
+  }
 ];
 
 const CV_STATUS = {
@@ -160,5 +220,7 @@ module.exports = {
   USER_ROLES,
   BUSINESS_LINES,
   EXTERNAL_LINKS,
-  VALUES
+  VALUES,
+  LOCATIONS,
+  FILTERS_DATA
 };

@@ -1,4 +1,8 @@
-{
+import {LOCATIONS} from '../../../constants';
+import {getAllFilters} from "../../../utils";
+
+
+export default {
   "id": "form-usefullinformation",
   "fields": [
     {
@@ -10,11 +14,13 @@
       "isMulti": true
     },
     {
-      "id": "location",
-      "name": "location",
-      "component": "input",
+      "id": "locations",
+      "name": "locations",
       "type": "text",
-      "title": "Lieu de travail souhaité"
+      "title": "Lieu de travail souhaité",
+      "component": "select-request-creatable",
+      "options": getAllFilters(LOCATIONS),
+      "isMulti": true
     },
     {
       "id": "availability",

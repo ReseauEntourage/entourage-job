@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
-import axios from '../../Axios';
+import Api from '../../Axios';
+import {FILTERS_DATA} from "../../constants";
+import {hasAsChild} from "../../utils";
+
 
 const CVList = ({ nb, search, filters }) => {
   const [cvs, setCVs] = useState(undefined);
@@ -12,7 +15,7 @@ const CVList = ({ nb, search, filters }) => {
   useEffect(() => {
     setCVs(undefined);
     setError(undefined);
-    axios
+    Api
       .get(`/api/v1/cv/cards/random`, {
         params: {
           q: search,
@@ -30,19 +33,42 @@ const CVList = ({ nb, search, filters }) => {
     setFilteredCvs(undefined);
     setError(undefined);
     let filteredList = cvs;
-    if(cvs && filters && filters.businessLines && filters.businessLines.length > 0) {
-      filteredList = cvs.filter((cv) => {
-        if (cv.businessLines.length === 0) {
-          return false;
-        }
 
-        return filters.businessLines.every((filterBusinessLine) => {
-          return cv.businessLines.findIndex((businessLine) => {
-            return filterBusinessLine.value.toLowerCase().includes(businessLine.toLowerCase());
-          }) >= 0;
-        });
-      });
+    if(cvs && filters) {
+      const keys = Object.keys(filters);
+
+      if(keys.length > 0) {
+        const totalFilters = keys.reduce((acc, curr) => {
+          return acc + filters[curr].length;
+        }, 0);
+
+        if(totalFilters > 0) {
+          filteredList = cvs.filter((cv) => {
+            const resultForEachFilter = [];
+            for(let i = 0; i < keys.length; i += 1) {
+              const currentFilterConstants = FILTERS_DATA.find((data) => data.key === keys[i]).constants;
+
+              let hasFound = false;
+              if(filters[keys[i]].length === 0) {
+                hasFound = true;
+              }
+              else if(cv[keys[i]].length > 0) {
+                hasFound = filters[keys[i]].some((currentFilter) => {
+                  return cv[keys[i]].findIndex((value) => {
+                    const isInChildren = hasAsChild(currentFilterConstants, value, currentFilter.value);
+                    return isInChildren || value.toLowerCase().includes(currentFilter.value.toLowerCase());
+                  }) >= 0;
+                });
+              }
+              resultForEachFilter.push(hasFound);
+            }
+
+            return resultForEachFilter.every((value) => value);
+          });
+        }
+      }
     }
+
     setFilteredCvs(filteredList);
 
   }, [filters, cvs]);
@@ -64,8 +90,8 @@ const CVList = ({ nb, search, filters }) => {
           gap="small"
           row
           center
-          items={filteredCvs.map((cv) => (
-            <CandidatCard
+          items={filteredCvs.map((cv) => {
+            return <CandidatCard
               url={cv.user.url}
               imgSrc={
                 (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) || undefined
@@ -74,12 +100,14 @@ const CVList = ({ nb, search, filters }) => {
               firstName={cv.user.candidat.firstName}
               gender={cv.user.candidat.gender}
               ambitions={cv.ambitions}
+              businessLines={cv.businessLines}
+              locations={cv.locations}
               skills={cv.skills}
               catchphrase={cv.catchphrase}
               employed={cv.user.employed}
               id={cv.user.candidat.id}
             />
-          ))}
+          })}
         />
       </div>
     );

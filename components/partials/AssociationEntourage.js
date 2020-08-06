@@ -28,13 +28,15 @@ const AssociationEntourage = () => (
               l’application mobile &apos;Entourage&apos; qui permet de
               coordonner des actions de solidarité à l’échelle locale.
             </p>
-            <Button
-              href={EXTERNAL_LINKS.ENTOURAGE}
-              style="default"
-              isExternal
-              newTab>
-              Voir le site{' '}<IconNoSSR name="chevron-right" />
-            </Button>
+            <div className="uk-flex uk-flex-center">
+              <Button
+                href={EXTERNAL_LINKS.ENTOURAGE}
+                style="default"
+                isExternal
+                newTab>
+                Voir le site{' '}<IconNoSSR name="chevron-right" />
+              </Button>
+            </div>
           </div>
           <div className="uk-flex uk-flex-middle">
             <hr className="uk-divider-vertical uk-visible@s" />
