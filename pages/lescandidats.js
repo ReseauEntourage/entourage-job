@@ -7,7 +7,12 @@ import {FILTERS_DATA} from "../constants";
 import {getChildrenFilters} from "../utils";
 
 
-const initializeFilters = () => Object.fromEntries(FILTERS_DATA.map(({key}) => [key, []]));
+const initializeFilters = () => {
+  return FILTERS_DATA.reduce((acc, curr) => {
+    acc[curr.key] = [];
+    return acc;
+  }, {});
+};
 
 const LesCandidats = () => {
   const [search, setSearch] = useState();
@@ -130,7 +135,7 @@ const LesCandidats = () => {
                 {
                   showNumberOfResults && numberOfFilters > 0 &&
                   <div className="uk-text-meta uk-margin-small-left uk-text-italic">
-                    {numberOfResults} résultats
+                    {numberOfResults} résultat{numberOfResults !== 1 ? 's' : ''}
                   </div>
                 }
               </div>
