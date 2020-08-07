@@ -80,7 +80,7 @@ const CVList = ({ nb, search, filters }) => {
   if (cvs && filteredCvs) {
     if (filteredCvs.length <= 0) {
       return (
-        <p className="uk-text-center uk-text-italic">Aucuns CVs trouvés</p>
+        <p className="uk-text-center uk-text-italic">Aucun CV trouvé</p>
       );
     }
     return (

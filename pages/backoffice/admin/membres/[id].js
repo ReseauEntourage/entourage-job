@@ -75,7 +75,7 @@ const CVPage = () => {
           <GridNoSSR column gap="large">
             <SimpleLink
               href="/backoffice/admin/membres"
-              className="uk-link-reset"
+              className="uk-link-reset uk-flex uk-flex-middle"
             >
               <IconNoSSR name="chevron-left" />
               Retour à la liste
@@ -97,7 +97,7 @@ const CVPage = () => {
           <GridNoSSR column gap="large">
             <SimpleLink
               href="/backoffice/admin/membres"
-              className="uk-link-reset"
+              className="uk-link-reset uk-flex uk-flex-middle"
             >
               <IconNoSSR name="chevron-left" />
               Retour à la liste
@@ -121,7 +121,7 @@ const CVPage = () => {
         <GridNoSSR column gap="large">
           <SimpleLink
             href={`/backoffice/admin/membres?role=${user.role}`}
-            className="uk-link-reset"
+            className="uk-link-reset uk-flex uk-flex-middle"
           >
             <IconNoSSR name="chevron-left" />
             Retour à la liste
