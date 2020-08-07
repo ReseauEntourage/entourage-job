@@ -7,7 +7,7 @@ import {FILTERS_DATA} from "../../constants";
 import {hasAsChild} from "../../utils";
 
 
-const CVList = ({ nb, search, filters }) => {
+const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
   const [cvs, setCVs] = useState(undefined);
   const [filteredCvs, setFilteredCvs] = useState(undefined);
   const [error, setError] = useState(undefined);
@@ -73,6 +73,12 @@ const CVList = ({ nb, search, filters }) => {
 
   }, [filters, cvs]);
 
+  useEffect(() => {
+    if(filteredCvs) {
+      updateNumberOfResults(filteredCvs.length);
+    }
+  }, [filteredCvs]);
+
   if (error) {
     return <p className="uk-text-center uk-text-italic">{error}</p>;
   }
@@ -122,12 +128,14 @@ const CVList = ({ nb, search, filters }) => {
 CVList.propTypes = {
   nb: PropTypes.number,
   search: PropTypes.string,
-  filters: PropTypes.shape()
+  filters: PropTypes.shape(),
+  updateNumberOfResults: PropTypes.func
 };
 
 CVList.defaultProps = {
   nb: undefined,
   search: undefined,
-  filters: undefined
+  filters: undefined,
+  updateNumberOfResults: () => {}
 };
 export default CVList;
