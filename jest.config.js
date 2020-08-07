@@ -19,7 +19,7 @@ module.exports = {
   moduleNameMapper: {
     "@/(.*)": "<rootDir>/src/$1"
   },
-  collectCoverage: true,
+  collectCoverage: false,
   collectCoverageFrom: ["backend/**/*.js"],
   verbose: true
 };

@@ -101,16 +101,12 @@ const deleteUser = (id) => {
 
 // avec mot de passe
 // Je narrive pas a recuperer candidat depuis l'id dun utilisateur coach
-const getUser = (id) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getUser -';
-    console.log(`${infoLog} Récupérer un User à partir de son id : ${id}`);
-    User.findByPk(id, {
-      attributes: ATTRIBUTES_USER,
-      include: INCLUDE_USER_CANDIDAT,
-    })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+const getUser = async (id) => {
+  const infoLog = 'getUser -';
+  console.log(`${infoLog} Récupérer un User à partir de son id : ${id}`);
+  return User.findByPk(id, {
+    attributes: ATTRIBUTES_USER,
+    include: INCLUDE_USER_CANDIDAT,
   });
 };
 

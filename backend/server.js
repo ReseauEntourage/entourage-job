@@ -63,7 +63,7 @@ module.exports.get = (path, handle) => {
   app.get(path, handle);
 };
 
-module.exports.start = async (port) => {
+module.exports.start = (port) => {
   return new Promise((resolve, reject) => {
     server = app.listen(port, (err) => {
       if (err) reject(err);

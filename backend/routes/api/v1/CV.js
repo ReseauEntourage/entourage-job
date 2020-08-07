@@ -109,7 +109,9 @@ router.post(
             text: mailText,
           });
           // Récupération de l'email du coach pour l'envoie du mail
-          UserController.getUser(req.payload.userToCoach)
+          console.log('USERID', req.payload.userToCoach);
+
+          await UserController.getUser(req.payload.userToCoach)
             .then(({ email }) =>
               sendMail({
                 toEmail: email,

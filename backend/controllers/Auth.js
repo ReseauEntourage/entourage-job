@@ -95,7 +95,6 @@ const getTokenFromHeaders = (req) => {
 };
 
 const auth = (roles = []) => {
-
   return [
     expressJwt({
       secret: 'secret',
@@ -109,7 +108,7 @@ const auth = (roles = []) => {
           message: 'Unauthorized'
         });
       }
-      next();
+      return next();
     }
   ];
 };

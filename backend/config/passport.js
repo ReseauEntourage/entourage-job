@@ -14,11 +14,10 @@ module.exports = {
   initialize() {
     passport.use(
       new LocalStrategy({
-          usernameField: 'email',
-          passwordField: 'password',
-        },
+        usernameField: 'email',
+        passwordField: 'password',
+      },
         (email, password, done) => {
-
           UserController.getUserByEmail(email)
             .then((user) => {
               if (
@@ -35,7 +34,7 @@ module.exports = {
               }
               return done(null, user);
             })
-            .catch(done);
+            .catch((err) => { console.log('ERR', err); done(err) });
         }
       )
     );
