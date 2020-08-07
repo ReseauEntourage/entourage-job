@@ -46,6 +46,7 @@ describe('CV', () => {
             it('Should return 200 and CV if logged in user', async () => {
                 const cv = await cvFactory({
                     UserId: loggedInCandidat.user.id,
+                    urlImg: null,
                 }, {}, false);
                 const cvResponse = { ...cv };
                 delete cvResponse.status;
@@ -94,6 +95,7 @@ describe('CV', () => {
                     {
                         UserId: loggedInCandidat.user.id,
                         status: CV_STATUS.Draft.value
+                        urlImg: null,
                     },
                     {},
                     false

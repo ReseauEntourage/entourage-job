@@ -3,14 +3,14 @@ const express = require('express');
 const router = express.Router();
 const { auth } = require('../../../controllers/Auth');
 const OpportunityController = require('../../../controllers/Opportunity');
-const {USER_ROLES} = require('../../../../constants');
-const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../../../utils');
+const { USER_ROLES } = require('../../../../constants');
+const { checkCandidatOrCoachAuthorization, checkUserAuthorization } = require('../../../utils');
 
 /**
  * Route : POST /api/<VERSION>/opportunity
  * Description : Créé l'opportunité
  */
-router.post('/', auth(), (req, res) => {
+router.post('/', auth(), async (req, res) => {
   OpportunityController.createOpportunity(req.body)
     .then((opportunity) => res.status(200).json(opportunity))
     .catch((err) => {
@@ -23,7 +23,7 @@ router.post('/', auth(), (req, res) => {
  * Route : GET /api/<VERSION>/opportunity
  * Description : Récupère toutes les opportunités
  */
-router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
+router.get('/admin', auth([USER_ROLES.ADMIN]), async (req, res) => {
   OpportunityController.getOpportunities(req.query.query)
     .then((listeOpportunities) => {
       console.log(
@@ -41,35 +41,41 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Route : GET /api/<VERSION>/...
  * Description : ...
  */
-router.get('/user/private/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
-    OpportunityController.getPrivateUserOpportunities(req.params.id)
-    .then((listeOpportunities) => {
-      res.status(200).json(listeOpportunities);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(401).send('Une erreur est survenue');
+router.get(
+  '/user/private/:id',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  async (req, res) => {
+    checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
+      OpportunityController.getPrivateUserOpportunities(req.params.id)
+        .then((listeOpportunities) => {
+          res.status(200).json(listeOpportunities);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(401).send('Une erreur est survenue');
+        });
     });
   });
-});
 
 /**
  * Route : GET /api/<VERSION>/...
  * Description : ...
  */
-router.get('/user/all/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
-    OpportunityController.getAllUserOpportunities(req.params.id)
-      .then((listeOpportunities) => {
-        res.status(200).json(listeOpportunities);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(401).send('Une erreur est survenue');
-      });
+router.get(
+  '/user/all/:id',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  async (req, res) => {
+    checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
+      OpportunityController.getAllUserOpportunities(req.params.id)
+        .then((listeOpportunities) => {
+          res.status(200).json(listeOpportunities);
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(401).send('Une erreur est survenue');
+        });
+    });
   });
-});
 
 /**
  * Route : GET /api/<VERSION>/opportunity/<ID>
@@ -99,21 +105,24 @@ router.get('/user/all/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
  * Route : POST /api/<VERSION>/...
  * Description : ...
  */
-router.post('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
-    OpportunityController.addUserToOpportunity(
-    req.body.opportunityId,
-    req.body.userId
-  )
-    .then((opportunity) => res.status(200).json(opportunity))
-    .catch((err) => {
-      console.error(err);
-      res.status(401).send(`Une erreur est survenue`);
+router.post(
+  '/join',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  async (req, res) => {
+    checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
+      OpportunityController.addUserToOpportunity(
+        req.body.opportunityId,
+        req.body.userId
+      )
+        .then((opportunity) => res.status(200).json(opportunity))
+        .catch((err) => {
+          console.error(err);
+          res.status(401).send(`Une erreur est survenue`);
+        });
     });
   });
-});
 
-router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
+router.put('/', auth([USER_ROLES.ADMIN]), async (req, res) => {
   OpportunityController.updateOpportunity(req.body)
     .then((opp) => {
       res.status(200).json(opp);
@@ -125,7 +134,7 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
 });
 
 router.put('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkCandidatOrCoachAuthorization(req, res, req.body.UserId, () => {
+  checkCandidatOrCoachAuthorization(req, res, req.body.UserId, async () => {
     OpportunityController.updateOpportunityUser(req.body)
       .then((oppUs) => {
         res.status(200).json(oppUs);
@@ -144,7 +153,7 @@ router.put('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMI
  * - id : ID du CV à supprimer
  * Exemple : <server_url>/api/v1/cv/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
+router.delete('/:id', auth([USER_ROLES.ADMIN]), async (req, res) => {
   OpportunityController.deleteOpportunity(req.params.id)
     .then((result) => {
       res.status(200).json(result);

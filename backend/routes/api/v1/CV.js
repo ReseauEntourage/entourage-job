@@ -63,7 +63,7 @@ router.post(
         }
       }
       // création de l'image publiée
-      if (reqCV.status === CV_STATUS.Published.value && reqCV.urlImg) {
+      if (reqCV.status === CV_STATUS.Published.value) {
         try {
           const { Body } = await S3.download(reqCV.urlImg);
           reqCV.urlImg = await S3.upload(Body, 'image/jpeg', `${reqCV.UserId}.Published.jpg`);
@@ -162,7 +162,7 @@ router.post('/share', auth(), (req, res) => {
  * Route : GET /api/<VERSION>/cv
  * Description :  Récupère le CV lié au userId passé en query
  */
-router.get('/', auth(), (req, res) => {
+router.get('/', auth(), async (req, res) => {
   const { userId } = req.query;
   CVController.getCVbyUserId(userId)
     .then((listeCVs) => {
@@ -220,7 +220,7 @@ router.get('/', auth(), (req, res) => {
  * - nb : Nombre de CVs à retourner (11 par défaut)
  * Exemple : <server_url>/api/v1/cv/cards/random?nb=2
  */
-router.get('/cards/random', auth(), (req, res) => {
+router.get('/cards/random', auth(), async (req, res) => {
   CVController.getRandomShortCVs(req.query.nb, req.query.q)
     .then((listeCVs) => {
       res.status(200).json(listeCVs);
@@ -235,7 +235,7 @@ router.get('/cards/random', auth(), (req, res) => {
  * Route : GET /api/<VERSION>/cv/<URL>
  * Description : Récupère le CV associé à l'<URL> fournit
  */
-router.get('/:url', auth(), (req, res) => {
+router.get('/:url', auth(), async (req, res) => {
   CVController.getCVbyUrl(req.params.url)
     .then((cv) => {
       if (cv) {
@@ -291,7 +291,7 @@ router.get('/:url', auth(), (req, res) => {
  * - id : ID du CV à supprimer
  * Exemple : <server_url>/api/v1/cv/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
+router.delete('/:id', auth([USER_ROLES.ADMIN]), async (req, res) => {
   CVController.deleteCV(req.params.id)
     .then((result) => {
       res.status(200).json(result);

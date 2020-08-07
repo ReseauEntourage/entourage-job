@@ -5,7 +5,6 @@ const enforce = require('express-sslify');
 const passport = require('./config/passport');
 
 const routeCV = require('./routes/api/v1/CV');
-const routeMessage = require('./routes/api/v1/Message');
 const routeAuth = require('./routes/api/v1/Auth');
 const routeUser = require('./routes/api/v1/User');
 const routeMail = require('./routes/api/v1/Mail');
@@ -64,7 +63,7 @@ module.exports.get = (path, handle) => {
   app.get(path, handle);
 };
 
-module.exports.start = (port) => {
+module.exports.start = async (port) => {
   return new Promise((resolve, reject) => {
     server = app.listen(port, (err) => {
       if (err) reject(err);

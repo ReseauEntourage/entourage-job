@@ -57,7 +57,7 @@ const capitalizeName = (name) => {
   return capitalizedName;
 };
 
-const createUser = (newUser) => {
+const createUser = async (newUser) => {
   const infoLog = 'createUser -';
   console.log(`${infoLog} Création du User`);
 
@@ -87,7 +87,7 @@ const createUser = (newUser) => {
   });
 };
 
-const deleteUser = (id) => {
+const deleteUser = async (id) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'deleteUser -';
     console.log(`${infoLog} Suppression d'un User à partir de son id`);
@@ -101,7 +101,7 @@ const deleteUser = (id) => {
 
 // avec mot de passe
 // Je narrive pas a recuperer candidat depuis l'id dun utilisateur coach
-const getUser = (id) => {
+const getUser = async (id) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getUser -';
     console.log(`${infoLog} Récupérer un User à partir de son id : ${id}`);
@@ -114,7 +114,7 @@ const getUser = (id) => {
   });
 };
 
-const getCompleteUser = (id) => {
+const getCompleteUser = async (id) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getCompleteUser -';
     console.log(`${infoLog} Récupérer un User à partir de son id : ${id}`);
@@ -136,7 +136,7 @@ const getUserByEmail = async (email) => {
   return user;
 };
 
-const getUsers = (limit, offset, order) => {
+const getUsers = async (limit, offset, order) => {
   console.log(`getUsers - Récupérer les Users`);
   return User.findAll({
     attributes: ATTRIBUTES_USER,
@@ -146,7 +146,7 @@ const getUsers = (limit, offset, order) => {
   });
 };
 
-const getMembers = (limit, offset, order, role, query) => {
+const getMembers = async (limit, offset, order, role, query) => {
   const options = {
     offset,
     limit,
@@ -226,7 +226,7 @@ const getMembers = (limit, offset, order, role, query) => {
   return User.findAll(options);
 };
 
-const searchUsers = (query, role) => {
+const searchUsers = async (query, role) => {
   const lowerCaseQuery = query.toLowerCase();
   const options = {
     attributes: ATTRIBUTES_USER,
