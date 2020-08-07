@@ -4,13 +4,13 @@ const router = express.Router();
 const { auth } = require('../../../controllers/Auth');
 const OpportunityController = require('../../../controllers/Opportunity');
 const { USER_ROLES } = require('../../../../constants');
-const { checkCandidatOrCoachAuthorization, checkUserAuthorization } = require('../../../utils');
+const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
 /**
  * Route : POST /api/<VERSION>/opportunity
  * Description : Créé l'opportunité
  */
-router.post('/', auth(), async (req, res) => {
+router.post('/', auth(), (req, res) => {
   OpportunityController.createOpportunity(req.body)
     .then((opportunity) => res.status(200).json(opportunity))
     .catch((err) => {
@@ -23,7 +23,7 @@ router.post('/', auth(), async (req, res) => {
  * Route : GET /api/<VERSION>/opportunity
  * Description : Récupère toutes les opportunités
  */
-router.get('/admin', auth([USER_ROLES.ADMIN]), async (req, res) => {
+router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.getOpportunities(req.query.query)
     .then((listeOpportunities) => {
       console.log(
@@ -44,7 +44,7 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), async (req, res) => {
 router.get(
   '/user/private/:id',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
-  async (req, res) => {
+  (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
       OpportunityController.getPrivateUserOpportunities(req.params.id)
         .then((listeOpportunities) => {
@@ -64,7 +64,7 @@ router.get(
 router.get(
   '/user/all/:id',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
-  async (req, res) => {
+  (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
       OpportunityController.getAllUserOpportunities(req.params.id)
         .then((listeOpportunities) => {
@@ -108,7 +108,7 @@ router.get(
 router.post(
   '/join',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
-  async (req, res) => {
+  (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
       OpportunityController.addUserToOpportunity(
         req.body.opportunityId,
@@ -122,7 +122,7 @@ router.post(
     });
   });
 
-router.put('/', auth([USER_ROLES.ADMIN]), async (req, res) => {
+router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.updateOpportunity(req.body)
     .then((opp) => {
       res.status(200).json(opp);
@@ -134,7 +134,7 @@ router.put('/', auth([USER_ROLES.ADMIN]), async (req, res) => {
 });
 
 router.put('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkCandidatOrCoachAuthorization(req, res, req.body.UserId, async () => {
+  checkCandidatOrCoachAuthorization(req, res, req.body.UserId, () => {
     OpportunityController.updateOpportunityUser(req.body)
       .then((oppUs) => {
         res.status(200).json(oppUs);
@@ -153,7 +153,7 @@ router.put('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMI
  * - id : ID du CV à supprimer
  * Exemple : <server_url>/api/v1/cv/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', auth([USER_ROLES.ADMIN]), async (req, res) => {
+router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.deleteOpportunity(req.params.id)
     .then((result) => {
       res.status(200).json(result);

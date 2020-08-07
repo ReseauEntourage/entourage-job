@@ -87,7 +87,7 @@ const createUser = async (newUser) => {
   });
 };
 
-const deleteUser = async (id) => {
+const deleteUser = (id) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'deleteUser -';
     console.log(`${infoLog} Suppression d'un User à partir de son id`);
@@ -101,7 +101,7 @@ const deleteUser = async (id) => {
 
 // avec mot de passe
 // Je narrive pas a recuperer candidat depuis l'id dun utilisateur coach
-const getUser = async (id) => {
+const getUser = (id) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getUser -';
     console.log(`${infoLog} Récupérer un User à partir de son id : ${id}`);
@@ -114,7 +114,7 @@ const getUser = async (id) => {
   });
 };
 
-const getCompleteUser = async (id) => {
+const getCompleteUser = (id) => {
   return new Promise((resolve, reject) => {
     const infoLog = 'getCompleteUser -';
     console.log(`${infoLog} Récupérer un User à partir de son id : ${id}`);
@@ -136,7 +136,7 @@ const getUserByEmail = async (email) => {
   return user;
 };
 
-const getUsers = async (limit, offset, order) => {
+const getUsers = (limit, offset, order) => {
   console.log(`getUsers - Récupérer les Users`);
   return User.findAll({
     attributes: ATTRIBUTES_USER,
@@ -146,7 +146,7 @@ const getUsers = async (limit, offset, order) => {
   });
 };
 
-const getMembers = async (limit, offset, order, role, query) => {
+const getMembers = (limit, offset, order, role, query) => {
   const options = {
     offset,
     limit,
@@ -226,7 +226,7 @@ const getMembers = async (limit, offset, order, role, query) => {
   return User.findAll(options);
 };
 
-const searchUsers = async (query, role) => {
+const searchUsers = (query, role) => {
   const lowerCaseQuery = query.toLowerCase();
   const options = {
     attributes: ATTRIBUTES_USER,
@@ -299,14 +299,14 @@ const changeUserRole = async (id, user) => {
   }
 };
 
-const setUserCandidat = async (candidatId, candidat) => {
+const setUserCandidat = (candidatId, candidat) => {
   return User_Candidat.update(candidat, {
     where: { candidatId },
     individualHooks: true,
   });
 };
 
-const getUserCandidat = async (candidatId) => {
+const getUserCandidat = (candidatId) => {
   return User_Candidat.findOne({
     where: { candidatId },
     attributes: ATTRIBUTES_USER_CANDIDAT,
@@ -325,7 +325,7 @@ const getUserCandidat = async (candidatId) => {
   });
 };
 
-const getUserCandidatOpt = async ({ candidatId, coachId }) => {
+const getUserCandidatOpt = ({ candidatId, coachId }) => {
   // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: 
   // Error: WHERE parameter "coachId" has invalid "undefined" value
   const findWhere = {};
@@ -353,7 +353,7 @@ const getUserCandidatOpt = async ({ candidatId, coachId }) => {
   });
 };
 
-const getUserCandidats = async () => {
+const getUserCandidats = () => {
   return User_Candidat.findAll({
     attributes: ATTRIBUTES_USER_CANDIDAT,
     include: [

@@ -22,7 +22,7 @@ router.post(
   '/',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   upload.single('profileImage'),
-  async (req, res) => {
+  (req, res) => {
     // si le cv est une string json le parser, sinon prendre l'objet
     const reqCV =
       typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
@@ -74,7 +74,7 @@ router.post(
       // completion asynchrone de la generation de limage de preview
       const previewPromise = reqCV.urlImg
         ? UserController.getUser(reqCV.UserId)
-          .then(async ({ firstName, gender }) =>
+          .then(({ firstName, gender }) =>
             // Génération de la photo de preview
             S3.download(reqCV.urlImg).then(({ Body }) =>
               createPreviewImage(
@@ -87,8 +87,8 @@ router.post(
               )
             )
           )
-          .then(async (sharpData) => sharpData.jpeg().toBuffer())
-          .then(async (buffer) =>
+          .then((sharpData) => sharpData.jpeg().toBuffer())
+          .then((buffer) =>
             S3.upload(buffer, 'image/jpeg', `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
           )
           .then((previewUrl) => console.log('preview uploaded: ', previewUrl))
@@ -110,7 +110,7 @@ router.post(
           });
           // Récupération de l'email du coach pour l'envoie du mail
           UserController.getUser(req.payload.userToCoach)
-            .then(async ({ email }) =>
+            .then(({ email }) =>
               sendMail({
                 toEmail: email,
                 subject: mailSubject,
@@ -162,7 +162,7 @@ router.post('/share', auth(), (req, res) => {
  * Route : GET /api/<VERSION>/cv
  * Description :  Récupère le CV lié au userId passé en query
  */
-router.get('/', auth(), async (req, res) => {
+router.get('/', auth(), (req, res) => {
   const { userId } = req.query;
   CVController.getCVbyUserId(userId)
     .then((listeCVs) => {
@@ -220,7 +220,7 @@ router.get('/', auth(), async (req, res) => {
  * - nb : Nombre de CVs à retourner (11 par défaut)
  * Exemple : <server_url>/api/v1/cv/cards/random?nb=2
  */
-router.get('/cards/random', auth(), async (req, res) => {
+router.get('/cards/random', auth(), (req, res) => {
   CVController.getRandomShortCVs(req.query.nb, req.query.q)
     .then((listeCVs) => {
       res.status(200).json(listeCVs);
@@ -235,7 +235,7 @@ router.get('/cards/random', auth(), async (req, res) => {
  * Route : GET /api/<VERSION>/cv/<URL>
  * Description : Récupère le CV associé à l'<URL> fournit
  */
-router.get('/:url', auth(), async (req, res) => {
+router.get('/:url', auth(), (req, res) => {
   CVController.getCVbyUrl(req.params.url)
     .then((cv) => {
       if (cv) {
@@ -291,7 +291,7 @@ router.get('/:url', auth(), async (req, res) => {
  * - id : ID du CV à supprimer
  * Exemple : <server_url>/api/v1/cv/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', auth([USER_ROLES.ADMIN]), async (req, res) => {
+router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
   CVController.deleteCV(req.params.id)
     .then((result) => {
       res.status(200).json(result);

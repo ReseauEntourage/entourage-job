@@ -129,7 +129,7 @@ router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Route : GET /api/<VERSION>/user
  * Description : Récupère tous les Users
  */
-router.get('/search', auth([USER_ROLES.ADMIN]), async (req, res) => {
+router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
   UserController.searchUsers(req.query.query, req.query.role)
     .then((users) => {
       console.log(`Users récupérés (Total : ${users.length})`);
@@ -145,7 +145,7 @@ router.get('/search', auth([USER_ROLES.ADMIN]), async (req, res) => {
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), async (req,
+router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
   res) => {
   if (req.payload.id === req.query.coachId ||
     req.payload.id === req.query.candidatId ||
@@ -196,7 +196,7 @@ router.get(
   '/:id',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
-    checkUserAuthorization(req, res, req.params.id, async () => {
+    checkUserAuthorization(req, res, req.params.id, () => {
       (validator.isEmail(req.params.id) ?
         UserController.getUserByEmail(req.params.id) :
         UserController.getUser(req.params.id)
@@ -220,7 +220,7 @@ router.get(
 router.put(
   '/change-pwd',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
-  async (req, res) => {
+  (req, res) => {
     UserController.getUserByEmail(req.payload.email)
       .then(({
         salt: oldSalt,
@@ -265,7 +265,7 @@ router.put(
  */
 router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
   res) => {
-  checkCandidatOrCoachAuthorization(req, res, req.params.id, async () => {
+  checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
     UserController.setUserCandidat(req.params.id, req.body)
       .then((user) => {
         console.log('Visibilité CV candidat - mise à jour réussie');
@@ -284,8 +284,8 @@ router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
  * Description : Modifie le User associé à l'<ID> fournit
  */
 router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkUserAuthorization(req, res, req.params.id, async () => {
-    const setUser = async () => {
+  checkUserAuthorization(req, res, req.params.id, () => {
+    const setUser = () => {
       UserController.setUser(req.params.id, req.body)
         .then((user) => {
           console.log(`User modifié`);
@@ -321,7 +321,7 @@ router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
  * - id : ID du User à supprimer
  * Exemple : <server_url>/api/v1/user/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', auth([USER_ROLES.ADMIN]), async (req, res) => {
+router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
   UserController.deleteUser(req.params.id)
     .then((result) => {
       res.status(200).json(result);

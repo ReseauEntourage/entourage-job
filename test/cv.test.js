@@ -38,6 +38,7 @@ describe('CV', () => {
     });
 
     afterAll(async () => {
+        await resetTestDB();
         await stopTestServer();
     });
     describe('CRUD CV', () => {
@@ -56,6 +57,7 @@ describe('CV', () => {
                 expect(response.status).toBe(200);
                 expect(response.body).toMatchObject(cvResponse);
             });
+
             it('Should return 200 and CV with cv status set as published, if logged in coach', async () => {
                 const cv = await cvFactory({
                     UserId: loggedInCandidat.user.id,
