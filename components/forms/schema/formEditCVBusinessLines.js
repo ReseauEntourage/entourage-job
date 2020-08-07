@@ -7,7 +7,7 @@ export default {
       "id": "businessLines",
       "name": "businessLines",
       "type": "text",
-      "title": "Mots clés",
+      "title": "Secteurs d'activité",
       "component": "select-request-creatable",
       "options": BUSINESS_LINES,
       "isMulti": true

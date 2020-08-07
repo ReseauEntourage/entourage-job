@@ -165,7 +165,7 @@ const CandidatCard = ({
                     style={{ fontSize: '0.775rem' }}
                     className="uk-margin-remove uk-margin-small-top"
                   >
-                    {gender === 1 ? 'Elle' : 'Il'} souhaite
+                    Je souhaite
                     <br /> travailler dans :
                   </p>
                   <GridNoSSR column gap="collapse" childWidths={['1-1']}>
@@ -189,8 +189,7 @@ const CandidatCard = ({
                     style={{ fontSize: '0.775rem' }}
                     className="uk-margin-remove uk-margin-small-top"
                   >
-                    {gender === 1 ? 'Elle' : 'Il'} souhaite
-                    <br /> travailler dans :
+                    Secteurs d&apos;activité&nbsp;:
                   </p>
                   <GridNoSSR column gap="collapse" childWidths={['1-1']}>
                     {businessLines.slice(0, 2).map((text, index) => (
