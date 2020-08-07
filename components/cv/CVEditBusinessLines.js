@@ -17,7 +17,7 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => (
             <IconNoSSR name="info" />
           </span>
         )}
-        Mes <span className="uk-text-primary">mots clés</span>
+        Mes <span className="uk-text-primary">secteurs d&apos;activité</span>
       </h3>
       {onChange && (
         <ButtonIcon
@@ -36,14 +36,14 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => (
           </span>
         ))
       ) : (
-        <p className="uk-text-italic">Aucun mots clés non renseignées</p>
+        <p className="uk-text-italic">Aucun secteur d&apos;activité renseigné</p>
       )}
     </p>
     {onChange && (
       <div>
         <ModalEdit
           id="modal-cv-businesslines"
-          title="Édition - Mots clés"
+          title="Édition - Secteurs d'activité"
           formSchema={schemaEditCVBusinessLines}
           defaultValues={{
             businessLines,

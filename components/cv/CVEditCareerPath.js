@@ -19,8 +19,7 @@ const CVEditCareerPath = ({ambitions, careerPathOpen, onChange, gender}) => {
       if (careerPathOpen) {
         return (
           <p>
-            Je reste {gender === 1 ? 'ouverte' : 'ouvert'} à toute autre
-            proposition.
+            Je reste {gender === 1 ? 'ouverte' : 'ouvert'} à toutes propositions.
           </p>
         );
       }
@@ -38,8 +37,8 @@ const CVEditCareerPath = ({ambitions, careerPathOpen, onChange, gender}) => {
           ''
         )}
         {careerPathOpen
-          ? ` mais reste ${gender === 1 ? 'ouverte' : 'ouvert'} à toute autre
-            proposition.`
+          ? ` mais reste ${gender === 1 ? 'ouverte' : 'ouvert'} à toutes autres
+            propositions.`
           : '.'}
       </p>
     );
