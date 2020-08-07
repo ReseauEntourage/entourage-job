@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import CVList from '../components/cv/CVList';
 import {Section, GridNoSSR, IconNoSSR, Button} from '../components/utils';
@@ -13,6 +13,8 @@ const LesCandidats = () => {
   const [search, setSearch] = useState();
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
   const [filters, setFilters] = useState(initializeFilters());
+  const [numberOfResults, setNumberOfResults] = useState(0);
+  const [showNumberOfResults, setShowNumberOfResults] = useState(false);
 
   const resetFilters = () => {
     setFilters(initializeFilters());
@@ -58,11 +60,16 @@ const LesCandidats = () => {
     })
   };
 
-  const getNumberFilters = () => {
-    return Object.values(filters).reduce((acc, curr) => {
-      return acc + curr.length;
-    }, 0)
-  };
+  const numberOfFilters = Object.values(filters).reduce((acc, curr) => acc + curr.length, 0);
+
+  useEffect(() => {
+    if(numberOfFilters > 0) {
+      setShowNumberOfResults(true);
+    }
+    else {
+      setShowNumberOfResults(false);
+    }
+  }, [numberOfResults]);
 
   return (
     <Layout title="Les candidats - LinkedOut">
@@ -120,9 +127,15 @@ const LesCandidats = () => {
                   }}>
                   Filtrer par{' '}&nbsp;<IconNoSSR ratio={1.2} name={`chevron-${filterMenuOpened ? 'up' : 'down'}`} />
                 </Button>
+                {
+                  showNumberOfResults && numberOfFilters > 0 &&
+                  <div className="uk-text-meta uk-margin-small-left uk-text-italic">
+                    {numberOfResults} résultats
+                  </div>
+                }
               </div>
               {
-                getNumberFilters() > 0 &&
+                numberOfFilters > 0 &&
                 <div className="uk-flex uk-flex-middle uk-flex-right">
                   <div className="uk-flex uk-flex-right uk-flex-wrap uk-flex-1">
                     {
@@ -176,7 +189,7 @@ const LesCandidats = () => {
               </div>
             </div>
           </div>
-          <CVList nb={10000} search={search} filters={filters}/>
+          <CVList nb={10000} search={search} filters={filters} updateNumberOfResults={setNumberOfResults}/>
         </GridNoSSR>
       </Section>
     </Layout>
