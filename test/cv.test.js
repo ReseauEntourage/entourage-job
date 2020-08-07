@@ -5,14 +5,13 @@ const {
     recreateTestDB,
     stopTestServer,
     resetTestDB,
-} = require('./helpers/helpers');
-const createLoggedInUser = require('./helpers/user.helpers');
-const USER_ROLES = require('../constants');
+    associateCoachAndCandidat,
+    createLoggedInUser,
+} = require('./helpers');
 const cvFactory = require('./factories/cvFactory');
+const USER_ROLES = require('../constants');
 const { CV_STATUS } = require('../constants');
 
-const HALF_MINUTE = 30 * 1000;
-jest.setTimeout(HALF_MINUTE);
 
 describe('CV', () => {
     const route = '/api/v1/cv';
@@ -35,10 +34,10 @@ describe('CV', () => {
             role: USER_ROLES.CANDIDAT,
             password: 'candidat',
         });
+        await associateCoachAndCandidat(loggedInCoach.user.id, loggedInCandidat.user.id);
     });
 
     afterAll(async () => {
-        await resetTestDB();
         await stopTestServer();
     });
     describe('CRUD CV', () => {
@@ -77,7 +76,10 @@ describe('CV', () => {
                     {
                         UserId: loggedInCandidat.user.id,
                         urlImg: null,
-                    }, {}, false);
+                    },
+                    {},
+                    false
+                );
                 delete cv.status;
                 const cvResponse = {
                     ...cv,
@@ -94,7 +96,7 @@ describe('CV', () => {
                 const cv = await cvFactory(
                     {
                         UserId: loggedInCandidat.user.id,
-                        status: CV_STATUS.Draft.value
+                        status: CV_STATUS.Draft.value,
                         urlImg: null,
                     },
                     {},

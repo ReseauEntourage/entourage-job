@@ -10,7 +10,7 @@ const { sendMail } = require('../../../controllers/mail');
 const { airtable } = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
 const { USER_ROLES, CV_STATUS } = require("../../../../constants");
-const { checkCandidatOrCoachAuthorization, checkUserAuthorization } = require('../../../utils');
+const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
 const upload = multer({ dest: 'uploads/' });
 
