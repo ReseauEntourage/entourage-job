@@ -77,16 +77,17 @@ router.post(
         ? UserController.getUser(reqCV.UserId)
           .then(({firstName, gender}) =>
             // Génération de la photo de preview
-            S3.download(reqCV.urlImg).then(({Body}) =>
-              createPreviewImage(
-                Body,
-                firstName,
-                reqCV.catchphrase,
-                reqCV.ambitions,
-                reqCV.skills,
-                gender
-              )
-            )
+            S3.download(reqCV.urlImg).then(({Body}) => {
+                return createPreviewImage(
+                  Body,
+                  firstName,
+                  reqCV.catchphrase,
+                  reqCV.ambitions,
+                  reqCV.skills,
+                  reqCV.locations,
+                  gender
+                );
+            })
           )
           .then((sharpData) => sharpData.jpeg().toBuffer())
           .then((buffer) =>
