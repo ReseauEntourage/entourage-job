@@ -18,7 +18,7 @@ const app = express();
 
 let server;
 
-const apiLimiter = RateLimiter.createLimiter(50);
+const apiLimiter = RateLimiter.createLimiter(100);
 
 module.exports.prepare = () => {
 
