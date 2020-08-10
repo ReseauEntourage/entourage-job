@@ -37,6 +37,7 @@ const DiscoverPartial = ({style}) => {
             skills={cv.skills}
             catchphrase={cv.catchphrase}
             employed={cv.user.employed}
+            id={cv.user.candidat.id}
           />
         ))}
       />

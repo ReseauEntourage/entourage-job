@@ -6,7 +6,7 @@ import { GridNoSSR } from '../utils/Grid';
 import { IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalEdit from '../modals/ModalEdit';
-import schemaEditCVBusinessLines from '../forms/schema/formEditCVBusinessLines.json';
+import schemaEditCVBusinessLines from '../forms/schema/formEditCVBusinessLines';
 
 const CVEditBusinessLines = ({ businessLines, onChange }) => (
   <div className="uk-card uk-card-default uk-card-body">
@@ -17,7 +17,7 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => (
             <IconNoSSR name="info" />
           </span>
         )}
-        Mes <span className="uk-text-primary">mots clés</span>
+        Mes <span className="uk-text-primary">secteurs d&apos;activité</span>
       </h3>
       {onChange && (
         <ButtonIcon
@@ -36,14 +36,14 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => (
           </span>
         ))
       ) : (
-        <p className="uk-text-italic">Aucun mots clés non renseignées</p>
+        <p className="uk-text-italic">Aucun secteur d&apos;activité renseigné</p>
       )}
     </p>
     {onChange && (
       <div>
         <ModalEdit
           id="modal-cv-businesslines"
-          title="Édition - Mots clés"
+          title="Édition - Secteurs d'activité"
           formSchema={schemaEditCVBusinessLines}
           defaultValues={{
             businessLines,

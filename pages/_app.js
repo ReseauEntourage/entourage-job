@@ -8,6 +8,7 @@ import React from 'react';
 import App from 'next/app';
 import Router from 'next/router';
 import UserProvider from '../components/store/UserProvider';
+import SharesCountProvider from "../components/store/SharesCountProvider";
 
 import * as gtag from '../lib/gtag';
 
@@ -22,9 +23,11 @@ class EntourageApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     return (
-      <UserProvider>
-        <Component {...pageProps} />
-      </UserProvider>
+      <SharesCountProvider>
+        <UserProvider>
+          <Component {...pageProps} />
+        </UserProvider>
+      </SharesCountProvider>
     );
   }
 }

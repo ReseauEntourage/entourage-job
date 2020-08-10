@@ -40,7 +40,7 @@ const CVPage = ({ cv, router }) => {
               '.jpg',
               '.preview.jpg'
             )}`
-          : `${process.env.SERVER_URL}/static/img/cv/linkedout-preview.jpg`
+          : `${process.env.SERVER_URL}/static/img/linkedout-preview.jpg`
       }
       metaType="profile"
     >

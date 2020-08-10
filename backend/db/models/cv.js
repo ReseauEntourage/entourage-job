@@ -41,17 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         }, */
       },
       location: {
-        type: DataTypes.STRING,
-        /* validate: {
-          len: {
-            args: [1, 100],
-            msg: '100 caractères maximum pour la localisation',
-          },
-          notEmpty: {
-            args: true,
-            msg: 'La localisation est requise',
-          },
-        }, */
+        type: DataTypes.TEXT,
       },
       availability: {
         type: DataTypes.STRING,
@@ -70,7 +60,6 @@ module.exports = (sequelize, DataTypes) => {
         }, */
       },
       catchphrase: DataTypes.STRING,
-      devise: DataTypes.STRING,
       careerPathOpen: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -118,6 +107,11 @@ module.exports = (sequelize, DataTypes) => {
     CV.belongsToMany(models.Skill, {
       through: 'CV_Skills',
       as: 'skills',
+    });
+
+    CV.belongsToMany(models.Location, {
+      through: 'CV_Locations',
+      as: 'locations',
     });
 
     CV.hasMany(models.Experience, {

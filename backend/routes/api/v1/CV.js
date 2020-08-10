@@ -5,6 +5,7 @@ const fs = require('fs');
 const {auth} = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
+const ShareController = require('../../../controllers/Share');
 const S3 = require('../../../controllers/aws');
 const {sendMail} = require('../../../controllers/mail');
 const {airtable} = require('../../../controllers/airtable');
@@ -76,16 +77,17 @@ router.post(
         ? UserController.getUser(reqCV.UserId)
           .then(({firstName, gender}) =>
             // Génération de la photo de preview
-            S3.download(reqCV.urlImg).then(({Body}) =>
-              createPreviewImage(
-                Body,
-                firstName,
-                reqCV.catchphrase,
-                reqCV.ambitions,
-                reqCV.skills,
-                gender
-              )
-            )
+            S3.download(reqCV.urlImg).then(({Body}) => {
+                return createPreviewImage(
+                  Body,
+                  firstName,
+                  reqCV.catchphrase,
+                  reqCV.ambitions,
+                  reqCV.skills,
+                  reqCV.locations,
+                  gender
+                );
+            })
           )
           .then((sharpData) => sharpData.jpeg().toBuffer())
           .then((buffer) =>
@@ -156,6 +158,36 @@ router.post('/share', auth(), (req, res) => {
       return res.status(200).json(records);
     }
   );
+});
+
+/**
+ * Route : POST /api/<VERSION>/cv/count
+ * Description : Incrementation du compteur de partage
+ */
+router.post('/count', auth(), (req, res) => {
+  ShareController.updateShareCount(req.body.candidatId, req.body.type)
+    .then(() => {
+      res.status(200).json();
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Route : get /api/<VERSION>/cv/shares
+ * Description : récupère total de partage
+ */
+router.get('/shares', auth(), (req, res) => {
+  ShareController.getTotalShares()
+    .then((total) => {
+      res.status(200).json({total});
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
 });
 
 /**
