@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/aria-role */
 /* global UIkit */
-import React, {useEffect} from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {
@@ -14,15 +14,18 @@ import { GridNoSSR } from '../utils/Grid';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
 import schema from '../forms/schema/formEditOpportunity';
-import Axios from '../../Axios';
+import Api from '../../Axios';
 import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
 import {formatParagraph, mutateFormSchema, sortExperiences, sortReviews} from "../../utils";
+import {SharesCountContext} from "../store/SharesCountProvider";
 
 /**
  * Le cv en public et en preview
  */
 const CVFiche = ({ cv, actionDisabled }) => {
+  const { incrementSharesCount } = useContext(SharesCountContext);
+
   const router = useRouter();
   const hostname = process.env.SERVER_URL;
   const link = `${hostname}${router.asPath}`;
@@ -55,7 +58,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
 
   const postOpportunity = async (opportunity, closeModal) => {
     try {
-      await Axios.post(`/api/v1/opportunity/`, opportunity);
+      await Api.post(`/api/v1/opportunity/`, opportunity);
       closeModal();
       UIkit.notification(
         `Merci pour votre message, ${cv.user.candidat.firstName} et son coach reviennent vers vous bientôt.`,
@@ -65,8 +68,19 @@ const CVFiche = ({ cv, actionDisabled }) => {
       UIkit.notification(`Une erreur est survenue.`, 'danger');
     }
   };
+
   const openNewsletterModal = () =>
     UIkit.modal(`#info-share-${cv.user.candidat.firstName}`).show();
+
+  const updateShareCount = (candidatId, type) => {
+    Api.post('api/v1/cv/count', {
+      candidatId, type
+    }).then(() => {
+      incrementSharesCount();
+    }).catch((e) => {
+      console.log(e);
+    })
+  };
 
   const experiences = sortExperiences(cv.experiences);
 
@@ -79,7 +93,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
         <GridNoSSR row gap="small" center>
           <LinkedinShareButton
             disabled={actionDisabled}
-            onShareWindowClose={openNewsletterModal}
+            onShareWindowClose={() => {
+              updateShareCount(cv.UserId, 'linkedin');
+              openNewsletterModal();
+            }}
             url={link}
             title={title}
             description={sharedDescription}
@@ -99,7 +116,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </LinkedinShareButton>
           <FacebookShareButton
             disabled={actionDisabled}
-            onShareWindowClose={openNewsletterModal}
+            onShareWindowClose={() => {
+              updateShareCount(cv.UserId, 'facebook');
+              openNewsletterModal();
+            }}
             url={link}
             quote={sharedDescription}
             hashtags={hashtags}
@@ -119,7 +139,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </FacebookShareButton>
           <TwitterShareButton
             disabled={actionDisabled}
-            onShareWindowClose={openNewsletterModal}
+            onShareWindowClose={() => {
+              updateShareCount(cv.UserId, 'twitter');
+              openNewsletterModal();
+            }}
             url={link}
             title={sharedDescription}
             hashtags={hashtags}
@@ -140,8 +163,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </TwitterShareButton>
           <WhatsappShareButton
             disabled={actionDisabled}
-            onShareWindowClose={openNewsletterModal}
-            url={link}
+            onShareWindowClose={() => {
+              updateShareCount(cv.UserId, 'whatsapp');
+              openNewsletterModal();
+            }}            url={link}
             title={sharedDescription}
             style={{
               cursor: !actionDisabled && 'pointer',
@@ -236,8 +261,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 <>
                   {` mais reste ${
                     cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
-                  } à toute autre
-            proposition.`}
+                  } à toutes autres
+            propositions.`}
                 </>
               ) : (
                 '.'
@@ -357,38 +382,57 @@ const CVFiche = ({ cv, actionDisabled }) => {
               )}
             </GridNoSSR>
             <GridNoSSR column gap='medium'>
+              {cv.businessLines && cv.businessLines.length > 0 && (
+                <div className="">
+                  <h3 className="uk-margin-small-bottom">Mes secteurs d&apos;activité</h3>
+                  <hr className="uk-divider-small uk-margin-remove-top" />
+                  <div className="uk-flex uk-flex-left uk-flex-wrap uk-flex-1">
+                    {
+                      cv.businessLines.map((line, index) =>
+                        <div key={index} className="uk-flex uk-flex-center uk-flex-middle" style={{
+                          paddingRight: 5,
+                          paddingTop: 5,
+                          paddingBottom: 5
+                        }}>
+                          <span className="uk-badge uk-text-small">{line}</span>
+                        </div>
+                      )
+                    }
+                  </div>
+                </div>
+              )}
               <div className="">
                 <h3 className="uk-margin-small-bottom">Mes infos pratiques</h3>
                 <hr className="uk-divider-small uk-margin-remove-top" />
                 <ul className="uk-list">
                   {cv.contracts && cv.contracts.length > 0 && (
-                    <li>
-                      <IconNoSSR className="uk-text-primary" name="file-text" style={{width: 20}} />{' '}
-                      {cv.contracts.join(' / ')}
+                    <li className="uk-flex uk-flex-middle">
+                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="file-text" style={{width: 20}} />{' '}
+                      <span className="uk-flex-1">{cv.contracts.join(' / ')}</span>
                     </li>
                   )}
-                  {cv.location && cv.location.length > 0 && (
-                    <li>
-                      <IconNoSSR className="uk-text-primary" name="location" style={{width: 20}} />{' '}
-                      {cv.location}
+                  {cv.locations && cv.locations.length > 0 && (
+                    <li className="uk-flex uk-flex-middle">
+                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="location" style={{width: 20}} />{' '}
+                      <span className="uk-flex-1">{cv.locations.join(' / ')}</span>
                     </li>
                   )}
                   {cv.availability && cv.availability.length > 0 && (
-                    <li>
-                      <IconNoSSR className="uk-text-primary" name="calendar" style={{width: 20}}/>{' '}
-                      {cv.availability}
+                    <li className="uk-flex uk-flex-middle">
+                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="calendar" style={{width: 20}}/>{' '}
+                      <span className="uk-flex-1">{cv.availability}</span>
                     </li>
                   )}
                   {cv.languages && cv.languages.length > 0 && (
-                    <li>
-                      <IconNoSSR className="uk-text-primary" name="users" style={{width: 20}}/>{' '}
-                      {cv.languages.join(' / ')}
+                    <li className="uk-flex uk-flex-middle">
+                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="users" style={{width: 20}}/>{' '}
+                      <span className="uk-flex-1">{cv.languages.join(' / ')}</span>
                     </li>
                   )}
                   {cv.transport && cv.transport.length > 0 && (
-                    <li>
-                      <IconNoSSR className="uk-text-primary" name="car" style={{width: 20}}/>{' '}
-                      {cv.transport}
+                    <li className="uk-flex uk-flex-middle">
+                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="car" style={{width: 20}}/>{' '}
+                      <span className="uk-flex-1">{cv.transport}</span>
                     </li>
                   )}
                 </ul>
@@ -417,15 +461,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
                       </li>
                     ))}
                   </ul>
-                </div>
-              )}
-              {cv.devise && (
-                <div className="">
-                  <h3 className="uk-margin-small-bottom">Ma devise</h3>
-                  <hr className="uk-divider-small uk-margin-remove-top" />
-                  <p className="">
-                    {cv.devise}
-                  </p>
                 </div>
               )}
             </GridNoSSR>
@@ -465,12 +500,14 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </div>{' '}
           à me proposer ?
         </h2>
-        <Button
-          disabled={actionDisabled}
-          style='secondary'
-          toggle="target: #modal-send-opportunity">
-          Contactez-moi{' '}<IconNoSSR name="chevron-right" />
-        </Button>
+        <div className="uk-flex uk-flex-center">
+          <Button
+            disabled={actionDisabled}
+            style='secondary'
+            toggle="target: #modal-send-opportunity">
+            Contactez-moi{' '}<IconNoSSR name="chevron-right" />
+          </Button>
+        </div>
         <div>
           <ModalEdit
             id="modal-send-opportunity"

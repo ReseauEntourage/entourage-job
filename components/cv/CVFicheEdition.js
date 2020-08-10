@@ -1,22 +1,21 @@
 /* eslint-disable jsx-a11y/aria-role */
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import { GridNoSSR } from '../utils/Grid';
+import {GridNoSSR} from '../utils/Grid';
 import {
-  SkillsCard,
-  PassionsCard,
-  InfoProfileCard,
-  StoryProfileCard,
   ExperiencesProfileCard,
+  InfoProfileCard,
+  PassionsCard,
+  SkillsCard,
+  StoryProfileCard,
 } from '../cards';
-import { CVEditCatchphrase, CVEditPicture, CVEditReviews } from '.';
+import {CVEditCatchphrase, CVEditPicture, CVEditReviews} from '.';
 import CVEditBusinessLines from './CVEditBusinessLines';
-import CVEditDevise from './CVEditDevise';
 import CVEditCareerPath from './CVEditCareerPath';
-import { ImgNoSSR } from '../utils';
+import {ImgNoSSR} from '../utils';
 import {CV_STATUS} from '../../constants';
 
-const CVFicheEdition = ({ cv, gender, onChange, disablePicture }) => {
+const CVFicheEdition = ({cv, gender, onChange, disablePicture}) => {
   const [previewUrl, setPreviewUrl] = useState(undefined);
   useEffect(() => {
     if (cv.status !== CV_STATUS.Draft.value) {
@@ -31,14 +30,11 @@ const CVFicheEdition = ({ cv, gender, onChange, disablePicture }) => {
   return (
     <GridNoSSR childWidths={['1-1']}>
       <GridNoSSR childWidths={['1-2@s']} match>
-        <CVEditDevise devise={cv.devise} onChange={onChange} />
-        <CVEditBusinessLines
-          businessLines={cv.businessLines}
-          onChange={onChange}
-        />
-      </GridNoSSR>
-      <GridNoSSR childWidths={['1-2@s']} match>
-        <GridNoSSR childWidths={['1-1']}>
+        <GridNoSSR childWidths={['1-1']} match>
+          <CVEditBusinessLines
+            businessLines={cv.businessLines}
+            onChange={onChange}
+          />
           <CVEditCatchphrase catchphrase={cv.catchphrase} onChange={onChange} />
           <CVEditCareerPath
             ambitions={cv.ambitions}
@@ -47,35 +43,11 @@ const CVFicheEdition = ({ cv, gender, onChange, disablePicture }) => {
             onChange={onChange}
           />
         </GridNoSSR>
-        <CVEditPicture
-          urlImg={process.env.AWSS3_URL + cv.urlImg || undefined}
-          onChange={onChange}
-          disablePicture={disablePicture}
-        />
-      </GridNoSSR>
-      <GridNoSSR childWidths={['1-2@s']} match>
-        <InfoProfileCard
-          contracts={cv.contracts}
-          location={cv.location}
-          availability={cv.availability}
-          languages={cv.languages}
-          transport={cv.transport}
-          onChange={onChange}
-        />
-        <GridNoSSR childWidths={['1-2@m']} match>
-          <SkillsCard list={cv.skills} onChange={onChange} />
-          <PassionsCard list={cv.passions} onChange={onChange} />
-        </GridNoSSR>
-      </GridNoSSR>
-      <GridNoSSR childWidths={['1-2@s']}>
-        <GridNoSSR childWidths={['1-1']}>
-          <StoryProfileCard description={cv.story} onChange={onChange} />
-          <CVEditReviews reviews={cv.reviews} onChange={onChange} />
-        </GridNoSSR>
-        <GridNoSSR childWidths={['1-1']}>
-          <ExperiencesProfileCard
-            experiences={cv.experiences}
+        <GridNoSSR childWidths={['1-1']} match>
+          <CVEditPicture
+            urlImg={process.env.AWSS3_URL + cv.urlImg || undefined}
             onChange={onChange}
+            disablePicture={disablePicture}
           />
           {cv.urlImg && (
             <div className="uk-card uk-card-default">
@@ -110,16 +82,42 @@ const CVFicheEdition = ({ cv, gender, onChange, disablePicture }) => {
           )}
         </GridNoSSR>
       </GridNoSSR>
+      <GridNoSSR childWidths={['1-2@s']} match>
+        <InfoProfileCard
+          contracts={cv.contracts}
+          locations={cv.locations}
+          availability={cv.availability}
+          languages={cv.languages}
+          transport={cv.transport}
+          onChange={onChange}
+        />
+        <GridNoSSR childWidths={['1-2@m']} match>
+          <SkillsCard list={cv.skills} onChange={onChange} />
+          <PassionsCard list={cv.passions} onChange={onChange} />
+        </GridNoSSR>
+      </GridNoSSR>
+      <GridNoSSR childWidths={['1-2@s']}>
+        <GridNoSSR childWidths={['1-1']}>
+          <StoryProfileCard description={cv.story} onChange={onChange} />
+          <CVEditReviews reviews={cv.reviews} onChange={onChange} />
+        </GridNoSSR>
+        <GridNoSSR childWidths={['1-1']}>
+          <ExperiencesProfileCard
+            experiences={cv.experiences}
+            onChange={onChange}
+          />
+
+        </GridNoSSR>
+      </GridNoSSR>
     </GridNoSSR>
   );
 };
 
 CVFicheEdition.propTypes = {
   cv: PropTypes.shape({
-    devise: PropTypes.string,
     catchphrase: PropTypes.string,
     story: PropTypes.string,
-    location: PropTypes.string,
+    locations: PropTypes.array,
     availability: PropTypes.string,
     urlImg: PropTypes.string,
     gender: PropTypes.number,

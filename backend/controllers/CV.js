@@ -70,6 +70,12 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
     attributes: ['id', 'name'],
   },
   {
+    model: models.Location,
+    as: 'locations',
+    through: { attributes: [] },
+    attributes: ['id', 'name'],
+  },
+  {
     model: models.Experience,
     as: 'experiences',
     attributes: ['id', 'description', 'order'],
@@ -139,7 +145,7 @@ const createCV = async (data) => {
       data.skills.map((name) =>
         // on trouve ou créé la donné
         models.Skill.findOrCreate({
-          where: { name: controlText(name) },
+          where: { name },
         })
           // on recupere de model retourné
           .then((model) => model[0])
@@ -157,7 +163,7 @@ const createCV = async (data) => {
       data.languages.map((name) =>
         // on trouve ou créé la donné
         models.Language.findOrCreate({
-          where: { name: controlText(name) },
+          where: { name },
           // on recupere de model retourné
         }).then((model) => model[0])
       )
@@ -172,7 +178,7 @@ const createCV = async (data) => {
     const contracts = await Promise.all(
       data.contracts.map((name) => {
         return models.Contract.findOrCreate({
-          where: { name: controlText(name) },
+          where: { name },
         }).then((model) => model[0]);
       })
     );
@@ -185,7 +191,7 @@ const createCV = async (data) => {
     const passions = await Promise.all(
       data.passions.map((name) => {
         return models.Passion.findOrCreate({
-          where: { name: controlText(name) },
+          where: { name },
         }).then((model) => model[0]);
       })
     );
@@ -211,11 +217,24 @@ const createCV = async (data) => {
     const businessLines = await Promise.all(
       data.businessLines.map((name) => {
         return models.BusinessLine.findOrCreate({
-          where: { name: controlText(name) },
+          where: { name },
         }).then((model) => model[0]);
       })
     );
     modelCV.addBusinessLines(businessLines);
+  }
+
+  // Locations
+  if (data.locations) {
+    console.log(`createCV - Locations`);
+    const locations = await Promise.all(
+      data.locations.map((name) => {
+        return models.Location.findOrCreate({
+          where: { name },
+        }).then((model) => model[0]);
+      })
+    );
+    modelCV.addLocations(locations);
   }
 
   // Experiences
@@ -234,7 +253,7 @@ const createCV = async (data) => {
           Promise.all(
             experience.skills.map((name) => {
               return models.Skill.findOrCreate({
-                where: { name: controlText(name) },
+                where: { name },
               }).then((model) => model[0]);
             })
           ).then((skills) => modelExperience.addSkills(skills));
@@ -280,7 +299,6 @@ const getCVbyUrl = async (url) => {
     type: QueryTypes.SELECT,
   });
 
-  console.log('CCLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
   console.log(cvs);
   const modelCV = await models.CV.findByPk(cvs[0].id, {
     include: [...INCLUDES_COMPLETE_CV_WITHOUT_USER, INCLUDE_ALL_USERS],
@@ -383,6 +401,12 @@ and (cv."id" in (
       {
         model: models.BusinessLine,
         as: 'businessLines',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      {
+        model: models.Location,
+        as: 'locations',
         through: { attributes: [] },
         attributes: ['name'],
       },

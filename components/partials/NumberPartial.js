@@ -1,13 +1,16 @@
-import React from 'react';
-import { GridNoSSR, Section, IconNoSSR } from '../utils';
-import { NumberCard } from '../cards';
-import Carousel from "../utils/Carousel";
+import React, {useEffect, useState} from 'react';
+import PropTypes from "prop-types";
+import {GridNoSSR, Section} from '../utils';
+import {NumberCard} from '../cards';
+import {VALUES} from '../../constants';
+import CVFiche from "../cv/CVFiche";
 
-const numbers = [
-  { value: '73%', description: 'Des candidats ont retrouvé un job' },
-  { value: '120k', description: 'Partages sur les réseaux de leur CV' },
-  { value: '300', description: 'Entreprises solidaires' },
+const staticNumbers = [
+  {value: '73%', description: 'Des candidats ont retrouvé un job'},
+  {value: '120k', description: 'Partages sur les réseaux de leur CV'},
+  {value: '300', description: 'Entreprises solidaires'},
 ];
+
 const data = [
   {
     imgSrc: '/static/img/arthur.png',
@@ -53,51 +56,66 @@ const data = [
   },
 ];
 
-const NumberPartial = () => (
-  <Section style="muted" id="profiles">
-    <GridNoSSR
-      gap="large"
-      column
-      middle
-      eachWidths={['1-1', '1-1', '1-1', '1-1']}
-    >
-      {/* <GridNoSSR center eachWidths={['auto', '2-3@s']}> */}
-      <div className="uk-text-center">
-        <h2 className="uk-text-bold">
-          Et le mieux c&apos;est que{' '}
-          <span className="uk-text-primary">ça marche</span> !
-        </h2>
-        <p className="uk-text-center">
-          Miah, Abdul, Anais, Manuel,... ont retrouvé un emploi grâce à
-          LinkedOut
-        </p>
-      </div>
 
+const NumberPartial = ({nbShares}) => {
+
+  const [numbers, setNumbers] = useState(staticNumbers);
+
+  useEffect(() => {
+    const updatedNumbers = numbers;
+
+    const stringNumber = nbShares.toString();
+
+    updatedNumbers[1].value = `${stringNumber.substring(0, stringNumber.length - 3)}k`;
+
+    setNumbers([...updatedNumbers]);
+  }, [nbShares]);
+
+  return (
+    <Section style="muted" id="profiles">
       <GridNoSSR
-        center
-        childWidths={['1-1', '1-2@s', '1-3@l']}
-        items={numbers.map((content) => (
-          <div className="uk-flex uk-flex-center">
-            <NumberCard
-              value={content.value}
-              description={content.description}
-            />
-          </div>
-        ))}
-      />
+        gap="large"
+        column
+        middle
+        eachWidths={['1-1', '1-1', '1-1', '1-1']}
+      >
+        {/* <GridNoSSR center eachWidths={['auto', '2-3@s']}> */}
+        <div className="uk-text-center">
+          <h2 className="uk-text-bold">
+            Et le mieux c&apos;est que{' '}
+            <span className="uk-text-primary">ça marche</span> !
+          </h2>
+          <p className="uk-text-center">
+            Miah, Abdul, Anais, Manuel,... ont retrouvé un emploi grâce à
+            LinkedOut
+          </p>
+        </div>
 
-      <iframe
-        src="https://www.youtube.com/embed/1cfmgC2IqWs"
-        width="1280"
-        height="720"
-        frameBorder="0"
-        allowFullScreen
-        data-uk-responsive
-        data-uk-video="automute: true; autoplay: inview"
-        title="linkedout"
-      />
+        <GridNoSSR
+          center
+          childWidths={['1-1', '1-2@s', '1-3@l']}
+          items={numbers.map((content) => (
+            <div className="uk-flex uk-flex-center">
+              <NumberCard
+                value={content.value}
+                description={content.description}
+              />
+            </div>
+          ))}
+        />
 
-      {/*
+        <iframe
+          src="https://www.youtube.com/embed/1cfmgC2IqWs"
+          width="1280"
+          height="720"
+          frameBorder="0"
+          allowFullScreen
+          data-uk-responsive
+          data-uk-video="automute: true; autoplay: inview"
+          title="linkedout"
+        />
+
+        {/*
         TODO Unhide when we'll have real testimonies
         <Carousel
           itemRenderer={({ title, description, role, imgSrc, imgAlt }, i) => (
@@ -149,7 +167,17 @@ const NumberPartial = () => (
           items={data}
           containerClasses="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small" />
       */}
-    </GridNoSSR>
-  </Section>
-);
+      </GridNoSSR>
+    </Section>
+  )
+};
+
+NumberPartial.propTypes = {
+  nbShares: PropTypes.number,
+};
+
+NumberPartial.defaultProps = {
+  nbShares: VALUES.SHARES
+};
+
 export default NumberPartial;

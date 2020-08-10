@@ -1,4 +1,4 @@
-export function mutateFormSchema(schema, fields, id) {
+export const mutateFormSchema = (schema, fields, id) => {
   const newSchema = {
     id: id ? schema.id + id : schema.id,
     fields: [
@@ -9,7 +9,7 @@ export function mutateFormSchema(schema, fields, id) {
     ]
   };
 
-  const updatedFields = fields.map(({fieldId, props}) => {
+  fields.map(({fieldId, props}) => {
     const indexToUpdate = newSchema.fields.findIndex((field) => field.id === fieldId);
 
     const fieldToUpdate = {
@@ -32,4 +32,4 @@ export function mutateFormSchema(schema, fields, id) {
   });
 
   return newSchema;
-}
+};

@@ -1958,6 +1958,9 @@ select.uk-form-width-xsmall {
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
   border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .uk-button:not(:disabled) {
   cursor: pointer;
@@ -1998,6 +2001,9 @@ select.uk-form-width-xsmall {
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
   border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 /* Hover + Focus */
 .uk-button-default:hover,
@@ -2036,6 +2042,9 @@ select.uk-form-width-xsmall {
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
   border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
   background-color: #F55F24;
   border: none;
@@ -2071,6 +2080,9 @@ select.uk-form-width-xsmall {
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
   border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #F55F24;
   color: white;
   border: none;
@@ -2155,6 +2167,8 @@ select.uk-form-width-xsmall {
   /* 2 */
   color: #333;
   position: relative;
+  border: none;
+  font-size: 17px;
 }
 .uk-button-text::before {
   content: "";
@@ -3421,6 +3435,9 @@ select.uk-form-width-xsmall {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  font-size: 14px;
+  color: #333;
+  background-color: #F2F2F0;
 }
 /*
  * Required for `a`
@@ -3430,6 +3447,8 @@ select.uk-form-width-xsmall {
   color: #fff;
   text-decoration: none;
   outline: none;
+  color: #333;
+  background-color: #F2F2F0;
 }
 /* ========================================================================
    Component: Label
@@ -10645,6 +10664,9 @@ iframe.uk-cover {
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
   border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: transparent;
   color: white;
 }
@@ -10790,6 +10812,9 @@ iframe.uk-cover {
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
   border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #F55F24;
   color: white;
   border: none;
@@ -12578,4 +12603,42 @@ iframe.uk-cover {
 }
 .ent-divier-backoffice {
   border-top: 1px solid black;
+}
+.ent-filter {
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 0 15px;
+  min-height: 36px;
+  line-height: 36px;
+  cursor: pointer;
+  border-color: #e5e5e5;
+  background-color: white;
+  color: black;
+}
+.ent-filter-activated {
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 0 15px;
+  min-height: 36px;
+  line-height: 36px;
+  cursor: pointer;
+  background-color: #F55F24;
+  border-color: #F55F24;
+  color: white;
+}
+.ent-filter:hover {
+  border-color: #d8d8d8;
+  background-color: #f2f2f2;
+}
+.ent-filter:active {
+  border-color: #cccccc;
+  background-color: #e6e6e6;
+}
+.ent-filter-activated:hover {
+  border-color: #f44d0c;
+  background-color: #f44d0c;
+}
+.ent-filter-activated:active {
+  border-color: #dc450a;
+  background-color: #dc450a;
 }

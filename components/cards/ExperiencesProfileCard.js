@@ -118,7 +118,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
       <div className="uk-card uk-card-default uk-card-body">
         <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
           <h3 className="uk-card-title">
-            Mon <span className="uk-text-primary">expérience</span>
+            Mes <span className="uk-text-primary">expériences</span> et <span className="uk-text-primary">compétences</span>
           </h3>
           {onChange && (
             <ButtonIcon

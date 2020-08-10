@@ -350,7 +350,7 @@ const MembersAdmin = ({ query: { role } }) => {
             )}
             {!loading && allLoaded && members.length <= 0 && (
               <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
-                <p className="uk-text-italic">Aucuns membres trouvé</p>
+                <p className="uk-text-italic">Aucun membre trouvé</p>
               </div>
             )}
           </>

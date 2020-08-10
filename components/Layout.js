@@ -25,11 +25,15 @@ const Layout = ({
       <link rel="canonical" href="https://www.linkedout.fr/" />
       <meta property="og:site_name" content="LinkedOut" />
       <meta
-        name="description"
         property="og:description"
         content={metaDescription}
       />
-      <meta name="image" property="og:image" content={metaImage} />
+      <meta
+        name="description"
+        content={metaDescription}
+      />
+      <meta property="og:image" content={metaImage} />
+      <meta name="image" content={metaImage} />
       <meta property="og:type" content={metaType} />
       <meta property="og:title" content={title} />
       <meta property="og:url" content={metaUrl} />
