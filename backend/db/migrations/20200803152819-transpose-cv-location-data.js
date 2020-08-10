@@ -20,7 +20,7 @@ module.exports = {
             } else if (cv.location.includes('banlieue') || cv.location.includes('Banlieue')) {
               locations = [LOCATIONS[0].children[0]];
             } else if (cv.location.includes('Villejuif')) {
-              locations = [LOCATIONS[0].children[0].children[0]];
+              locations = [LOCATIONS[0].children[0].children[0], {value: 'Villejuif', label: 'Villejuif'}];
             } else if (cv.location.includes('Paris')) {
               locations = [LOCATIONS[0].children[0].children[3]];
             }
@@ -52,6 +52,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-
+    return Promise.resolve();
   }
 };
