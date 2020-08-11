@@ -47,11 +47,12 @@ const Layout = ({
     <UserContext.Consumer>
       {({ isAuthentificated }) =>
         isAuthentificated &&
-        router.asPath !== '/jeveuxaider' &&
-        router.asPath !== '/jeveuxtravailler' &&
-        router.asPath !== '/jeveuxrecruter' &&
-        router.asPath !== '/lescandidats' &&
-        router.asPath !== '/contact' ? (
+        router.asPath.includes('/jeveuxaider') &&
+        router.asPath.includes('/jeveuxtravailler') &&
+        router.asPath.includes('/jeveuxrecruter') &&
+        router.asPath.includes('/lescandidats') &&
+        router.asPath.includes('/lespartenaires') &&
+        router.asPath.includes('/contact') ? (
           <HeaderConnected />
         ) : (
           router.asPath !== '/' && <Header isHome={false} />
