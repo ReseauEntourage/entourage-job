@@ -52,22 +52,28 @@ export default {
   ],
   finance: [
     {
-      key: 'cera'
+      key: 'cera',
+      title: 'Fondation CERA'
     },
     {
-      key: 'airliquide'
+      key: 'airliquide',
+      title: 'Fondation Air Liquide'
     },
     {
-      key: 'safran'
+      key: 'safran',
+      title: 'Fondation Safran'
     },
     {
-      key: 'nuitdubiencommun'
+      key: 'nuitdubiencommun',
+      title: 'La Nuit du Bien Commun'
     },
     {
-      key: 'kleever'
+      key: 'kleever',
+      title: 'Kleever'
     },
     {
-      key: 'caissedesdepots'
+      key: 'caissedesdepots',
+      title: 'Caisse des Dépôts'
     }
   ],
   associations: [

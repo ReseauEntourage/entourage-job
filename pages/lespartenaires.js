@@ -4,14 +4,19 @@ import PARTNERS from '../constants/partners';
 import Grid from "../components/utils/Grid";
 import {ImgNoSSR, Section} from "../components/utils";
 import {formatParagraph} from "../utils";
+import CarouselItem from "../components/partials/CarouselItem";
+import Carousel from "../components/utils/Carousel";
 
 const LesPartenaires = () => {
+
+  const viewportHeightWithoutHeader = 'calc(100vh - 80px)';
+  const viewportHeightWithoutHeaderAndPadding = 'calc(100vh - 220px)';
 
   const renderTitle = (title, overlay, inverse = false) => {
     return (
       <div
         className="uk-inline uk-cover-container uk-flex uk-flex-center uk-flex-middle"
-        style={{height: 'calc(100vh - 80px)'}}>
+        style={{minHeight: viewportHeightWithoutHeader}}>
         <div
           className="uk-position-cover uk-background uk-background-cover uk-background-center-center"
           style={{backgroundImage: 'url(/static/img/partners.jpg)'}}
@@ -39,11 +44,11 @@ const LesPartenaires = () => {
     const firstDirection = reverse ? 'left' : 'right';
     const secondDirection = reverse ? 'right' : 'left';
     return (
-      <Section container='large' style={index % 2 === 0 ? 'muted' : 'default'}>
+      <Section container='large' style={index % 2 === 0 ? 'muted' : 'default'} key={index}>
         <div
           className="uk-flex uk-flex-center uk-flex-middle"
           uk-scrollspy="target: .animate; cls: uk-animation-fade; delay: 200;"
-          style={{minHeight: 'calc(100vh - 220px)'}}>
+          style={{minHeight: viewportHeightWithoutHeaderAndPadding}}>
           <div className="animate uk-flex uk-flex-column uk-flex-center uk-flex-middle">
             <h1
               className="uk-text-primary uk-text-center uk-text-bold uk-margin-large-bottom">{title}</h1>
@@ -132,6 +137,32 @@ const LesPartenaires = () => {
         PARTNERS.strategy.map(({title, desc, question, answer, author, key, bis}, index) => renderPartner(title, desc, question, answer, author, key, bis, index))
       }
       {renderTitle(
+        <>Ils nous donnent <span className="uk-text-primary">les moyens d&apos;agir</span></>,
+        'secondary'
+      )}
+      {
+        <Section container='large' style='muted'>
+          <div
+            className="uk-flex uk-flex-center uk-flex-middle"
+            style={{minHeight: viewportHeightWithoutHeaderAndPadding}}>
+            <div className="uk-width-expand">
+              <div className="uk-container-large">
+                <Carousel containerClasses="uk-child-width-1-1">
+                  {PARTNERS.finance.map(({key, title}, index) => {
+                    return (
+                      <li key={index} className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
+                        <h2 className="uk-text-primary uk-text-center uk-text-bold uk-margin-large-bottom">{title}</h2>
+                        <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-medium' />
+                      </li>
+                    )
+                  })}
+                </Carousel>
+              </div>
+            </div>
+          </div>
+        </Section>
+      }
+      {renderTitle(
         <><span className="uk-light"><span className="uk-text-primary">Ils se mobilisent</span></span> <span className="uk-text-primary">à nos côtés</span></>,
         'default',
         true
@@ -139,26 +170,7 @@ const LesPartenaires = () => {
       {
         PARTNERS.associations.map(({title, desc, question, answer, author, key, bis}, index) => renderPartner(title, desc, question, answer, author, key, bis, index))
       }
-      {/*<Grid
-        childWidths={[`1-${PARTNERS.strategy.length}@m`]}
-        match
-        middle
-        items={PARTNERS.strategy.map(({key, bis}, index) => {
-          return (
-            <>
-              <div className="uk-width-small">
-                <img src={`/static/img/partners/${key}/small.png`} width="" height="" alt="" />
-              </div>
-              {
-                bis &&
-                <div className="uk-width-small">
-                  <img src={`/static/img/partners/${key}/small_bis.png`} width="" height="" alt="" />
-                </div>
-              }
-            </>
-          );
-        })}
-      />
+      {/*
       <h4
         className="uk-text-primary uk-text-bold uk-margin-large-top">
         Avec le soutien précieux de
