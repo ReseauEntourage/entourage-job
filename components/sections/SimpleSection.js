@@ -38,7 +38,7 @@ SimpleSection.propTypes = {
   title: PropTypes.element.isRequired,
   button: PropTypes.shape({
     label: PropTypes.string.isRequired,
-    href: PropTypes.string.isRequired,
+    href: PropTypes.string,
     external: PropTypes.bool,
     modal: PropTypes.bool
   }),
