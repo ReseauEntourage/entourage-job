@@ -251,7 +251,12 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
         className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${currentOffer.isArchived &&
           'uk-light uk-background-secondary'}`}
       >
-        <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm} />
+        <CloseButtonNoSSR className="uk-modal-close-default" onClick={() => {
+          if(isEditing) {
+            setIsEditing(false);
+          }
+          resetForm();
+        }} />
         <div className="uk-modal-body">{contentBuilder()}</div>
       </div>
     </div>
