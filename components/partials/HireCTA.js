@@ -35,6 +35,10 @@ const HireCTA = ({id, inverse}) => {
         {
           propName: 'disabled',
           value: true
+        },
+        {
+          propName: 'hidden',
+          value: true
         }
       ]
     },
@@ -119,9 +123,7 @@ const HireCTA = ({id, inverse}) => {
               <div>
                 <p>
                   Cet espace est dédié aux potentiels recruteurs qui souhaitent
-                  proposer des opportunités aux candidats. Écrivez vos mots
-                  d&apos;encouragement ou contactez le coach plus bas dans la
-                  page CV !
+                  proposer une opportunité visible par tous les candidats.
                 </p>
                 <FormWithValidation
                   ref={form}
