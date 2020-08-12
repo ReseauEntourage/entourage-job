@@ -5,6 +5,29 @@ import PARTNERS from '../../constants/partners';
 import SimpleLink from "../utils/SimpleLink";
 
 const Partners = () => {
+
+  const logoList = (data) => {
+    return (
+      <Grid
+        childWidths={[`1-${data.length}@m`]}
+        match
+        middle
+        center
+        items={data.map(({key, link}, index) => {
+          return (
+            <SimpleLink
+              className="uk-width-small uk-flex uk-flex-center"
+              isExternal
+              target="_blank"
+              href={link}>
+              <img src={`/static/img/partners/${key}/logo.png`} style={{maxHeight: 100}} width="" height="" alt="" />
+            </SimpleLink>
+          );
+        })}
+      />
+    );
+  }
+
   return (
     <Background blend={{colorHex: '#484848'}}>
       <Section container="large">
@@ -19,34 +42,12 @@ const Partners = () => {
               className="uk-text-primary uk-text-bold">
               Ce projet est développé en partenariat avec
             </h4>
-            <Grid
-              childWidths={[`1-${PARTNERS.strategy.length}@m`]}
-              match
-              middle
-              items={PARTNERS.strategy.map(({key}, index) => {
-                return (
-                  <div className="uk-width-small uk-flex uk-flex-center">
-                    <img src={`/static/img/partners/${key}/logo.png`} style={{maxHeight: 100}} width="" height="" alt="" />
-                  </div>
-                );
-              })}
-            />
+            {logoList(PARTNERS.strategy)}
             <h4
               className="uk-text-primary uk-text-bold uk-margin-large-top">
               Avec le soutien précieux de
             </h4>
-            <Grid
-              childWidths={[`1-${PARTNERS.finance.length}@m`]}
-              match
-              middle
-              items={PARTNERS.finance.map(({key}, index) => {
-                return (
-                  <div className="uk-width-small uk-flex uk-flex-center">
-                    <img src={`/static/img/partners/${key}/logo.png`} style={{maxHeight: 100}} width="" height="" alt="" />
-                  </div>
-                );
-              })}
-            />
+            {logoList(PARTNERS.finance)}
             <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-large-top">
               <SimpleLink href="/lespartenaires">
                 En savoir plus{' '}<IconNoSSR name="arrow-right" />

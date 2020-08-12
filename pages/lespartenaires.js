@@ -6,6 +6,9 @@ import {ImgNoSSR, Section} from "../components/utils";
 import {formatParagraph} from "../utils";
 import CarouselItem from "../components/partials/CarouselItem";
 import Carousel from "../components/utils/Carousel";
+import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
+import SimpleSection from "../components/sections/SimpleSection";
+import SimpleLink from "../components/utils/SimpleLink";
 
 const LesPartenaires = () => {
 
@@ -39,7 +42,7 @@ const LesPartenaires = () => {
     )
   };
 
-  const renderPartner = (title, desc, question, answer, author, key, bis, index) => {
+  const renderPartner = ({title, desc, question, answer, author, key, bis, link}, index) => {
     const reverse = index % 2 !== 0;
     const firstDirection = reverse ? 'left' : 'right';
     const secondDirection = reverse ? 'right' : 'left';
@@ -49,7 +52,11 @@ const LesPartenaires = () => {
           className="uk-flex uk-flex-center uk-flex-middle"
           uk-scrollspy="target: .animate; cls: uk-animation-fade; delay: 200;"
           style={{minHeight: viewportHeightWithoutHeaderAndPadding}}>
-          <div className="animate uk-flex uk-flex-column uk-flex-center uk-flex-middle">
+          <SimpleLink
+            className="animate uk-flex uk-flex-column uk-flex-center uk-flex-middle"
+            isExternal
+            target="_blank"
+            href={link}>
             <h1
               className="uk-text-primary uk-text-center uk-text-bold uk-margin-large-bottom">{title}</h1>
             <Grid
@@ -121,7 +128,7 @@ const LesPartenaires = () => {
                 }
               </div>
             </Grid>
-          </div>
+          </SimpleLink>
         </div>
       </Section>
     );
@@ -130,39 +137,13 @@ const LesPartenaires = () => {
   return (
     <Layout title="Les partenaires - LinkedOut">
       {renderTitle(
-        <>Ils construisent le projet <span className="uk-text-primary">avec nous</span></>,
-        'primary'
+        <><span className="uk-light"><span className="uk-text-primary">Ils construisent le projet</span></span> <span className="uk-text-primary">avec nous</span></>,
+        'default',
+        true
       )}
       {
-        PARTNERS.strategy.map(({title, desc, question, answer, author, key, bis}, index) => renderPartner(title, desc, question, answer, author, key, bis, index))
+        PARTNERS.strategy.map((partner, index) => renderPartner(partner, index))
       }
-     {/* {renderTitle(
-        <>Ils nous donnent <span className="uk-text-primary">les moyens d&apos;agir</span></>,
-        'secondary'
-      )}
-      {
-        <Section container='large' style='muted'>
-          <div
-            className="uk-flex uk-flex-center uk-flex-middle"
-            style={{minHeight: viewportHeightWithoutHeaderAndPadding}}>
-            <div className="uk-width-expand">
-              <div className="uk-container-large">
-                <Carousel containerClasses="uk-child-width-1-1">
-                  {PARTNERS.finance.map(({key, title}, index) => {
-                    return (
-                      <li key={index} className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
-                        <div className="uk-width-large">
-                          <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-medium' />
-                        </div>
-                      </li>
-                    )
-                  })}
-                </Carousel>
-              </div>
-            </div>
-          </div>
-        </Section>
-      }*/}
       <div
         className="uk-inline uk-cover-container uk-flex uk-flex-center uk-flex-middle"
         style={{minHeight: viewportHeightWithoutHeader}}>
@@ -170,7 +151,7 @@ const LesPartenaires = () => {
           className="uk-position-cover uk-background uk-background-cover uk-background-center-center"
           style={{backgroundImage: 'url(/static/img/partners.jpg)'}}
           uk-scrollspy="cls: uk-animation-kenburns uk-animation-reverse; delay: 200;" />
-        <div className='uk-background-blend-overlay uk-position-cover' style={{backgroundColor: 'rgba(0,0,0,0.7)'}}/>
+        <div className='uk-overlay-primary uk-position-cover' style={{backgroundColor: 'rgba(0,0,0,0.7)'}}/>
         <div className="uk-overlay uk-position-center">
           <Section
             style='muted'
@@ -184,12 +165,17 @@ const LesPartenaires = () => {
                 <div className="uk-width-expand">
                   <div className="uk-container-small">
                     <Carousel containerClasses="uk-child-width-1-1">
-                      {PARTNERS.finance.map(({key, title}, index) => {
+                      {PARTNERS.finance.map(({key, link}, index) => {
                         return (
                           <li key={index} className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
-                            <div className="uk-width-large uk-flex uk-flex-center uk-flex-middle">
-                              <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
-                            </div>
+                            <SimpleLink
+                              isExternal
+                              target="_blank"
+                              href={link}>
+                              <div className="uk-width-large uk-flex uk-flex-center uk-flex-middle">
+                                <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
+                              </div>
+                            </SimpleLink>
                           </li>
                         )
                       })}
@@ -201,29 +187,26 @@ const LesPartenaires = () => {
         </div>
       </div>
       {renderTitle(
-        <><span className="uk-light"><span className="uk-text-primary">Ils se mobilisent</span></span> <span className="uk-text-primary">à nos côtés</span></>,
-        'default',
-        true
+        <>Ils se mobilisent <span className="uk-text-primary">à nos côtés</span></>,
+        'primary'
       )}
       {
-        PARTNERS.associations.map(({title, desc, question, answer, author, key, bis}, index) => renderPartner(title, desc, question, answer, author, key, bis, index))
+        PARTNERS.associations.map((partner, index) => renderPartner(partner, index))
       }
-      {/*
-      <h4
-        className="uk-text-primary uk-text-bold uk-margin-large-top">
-        Avec le soutien précieux de
-      </h4>
-      <Grid
-        childWidths={[`1-${PARTNERS.finance.length}@m`]}
-        match
-        middle
-        items={PARTNERS.finance.map(({key}, index) => {
-          return (
-            <div className="uk-width-small">
-              <img src={`/static/img/partners/${key}/small.png`} width="" height="" alt="" />
-            </div>
-          );
-        })}*/}
+      <SimpleSection
+        title={
+          <>
+            Rejoignez{' '}<span className="uk-text-primary">LinkedOut&nbsp;!</span>
+          </>
+        }
+        text="Vous êtes intéressé(e) par l’approche de LinkedOut et souhaitez coopérer avec nous ? Contactez-nous pour devenir partenaire !"
+        id="give"
+        style="muted"
+        button={{
+          label: "Nous écrire",
+          modal: "target: #modal-interest-linkedOut"
+        }} />
+      <ModalInterestLinkedOut />
     </Layout>
   )
 };
