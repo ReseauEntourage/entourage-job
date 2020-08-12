@@ -16,7 +16,7 @@ const Partners = () => {
         items={data.map(({key, link}, index) => {
           return (
             <SimpleLink
-              className="uk-width-small uk-flex uk-flex-center"
+              className="uk-width-small"
               isExternal
               target="_blank"
               href={link}>
