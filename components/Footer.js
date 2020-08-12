@@ -22,7 +22,7 @@ const Footer = () => {
   const { asPath } = useRouter();
   return (
     <footer id="footer">
-      <Partners />
+      {asPath !== '/lespartenaires' && <Partners />}
       <AssociationEntourage />
       <Section style="secondary" size="small" preserveColor>
         <GridNoSSR

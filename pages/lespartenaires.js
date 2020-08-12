@@ -111,7 +111,7 @@ const LesPartenaires = () => {
                         </h4>
                         {
                           author &&
-                          <div className={`uk-flex-1 uk-text-${firstDirection} uk-margin-small-top`}>
+                          <div className={`uk-flex-1 uk-text-${firstDirection} uk-margin-small-top uk-text-secondary`}>
                             <span className="uk-text-bold">{author.name}</span>, {author.status}</div>
                         }
                       </div>
@@ -167,16 +167,16 @@ const LesPartenaires = () => {
                     <Carousel containerClasses="uk-child-width-1-1">
                       {PARTNERS.finance.map(({key, link}, index) => {
                         return (
-                          <li key={index} className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
-                            <SimpleLink
-                              isExternal
-                              target="_blank"
-                              href={link}>
+                          <SimpleLink
+                            isExternal
+                            target="_blank"
+                            href={link}
+                            key={index}
+                            className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
                               <div className="uk-width-large uk-flex uk-flex-center uk-flex-middle">
                                 <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
                               </div>
-                            </SimpleLink>
-                          </li>
+                          </SimpleLink>
                         )
                       })}
                     </Carousel>
