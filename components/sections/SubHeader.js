@@ -1,11 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Section } from '../utils';
+import Grid from "../utils/Grid";
 
 const SubHeader = ({id, style, data}) => {
   return (
     <Section id={id} style={style}>
-      <div className="uk-flex uk-flex-wrap uk-flex-middle uk-flex-center uk-flex-around">
+      <Grid
+        childWidths={[`1-${data.length}@m`]}
+        match
+        middle
+        center
+        gap="small">
         {data.map((item, index) =>
           <a
             key={index.toString()}
@@ -15,7 +21,7 @@ const SubHeader = ({id, style, data}) => {
             <h3 className="uk-text-primary uk-text-center uk-text-middle uk-margin-remove-vertical">{item.label}</h3>
           </a>
         )}
-      </div>
+      </Grid>
     </Section>
   );
 };

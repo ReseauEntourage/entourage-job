@@ -16,23 +16,27 @@ const JeVeuxAider = () => (
     <ImageTitle img='static/img/header_pic_help.jpg' id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider&nbsp;?</span></>} text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"} />
     <SubHeader id="profile" data={[
       {
-        href: "#private",
-        label: "Je suis un particulier"
+        href: "#particulier",
+        label: "Vous êtes un particulier"
       },
       {
-        href: "#actor",
-        label: "Je suis un acteur social ou associatif"
+        href: "#acteur",
+        label: "Vous êtes un acteur social ou associatif"
       },
       {
-        href: "#give",
-        label: "Je deviens mécène"
+        href: "#entreprise",
+        label: "Vous êtes une entreprise"
+      },
+      {
+        href: "#mécène",
+        label: "Devenez mécène"
       },
     ]} style="muted"/>
     <Section container="small" style="default">
       {/* Fix so that the anchor scroll to the right height */}
-      <div id="private" style={{marginTop: -140, paddingTop: 140}} />
+      <div id="particulier" style={{marginTop: -140, paddingTop: 140}} />
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-        Je suis un{' '}
+        Vous êtes un{' '}
         <span className="uk-text-primary">particulier</span>
       </h2>
       <MultipleCTA
@@ -41,7 +45,7 @@ const JeVeuxAider = () => (
             title: "Partagez votre réseau pour donner une visibilité inédite à une personne exclue en recherche d’emploi",
             text: <div>Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut. Votre partage permet de donner une visibilité inédite aux candidats auprès de potentiels recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer&nbsp;!</div>,
             button: {
-              label: "Je partage un CV",
+              label: "Partager un CV",
               href: "/lescandidats"
             }
           },
@@ -49,7 +53,7 @@ const JeVeuxAider = () => (
             title: "Coachez une personne exclue vers l’emploi\xa0!",
             text: <div>Vous souhaitez donner de votre temps pour tisser une relation de proximité avec un candidat et le coacher dans son retour à l’emploi&nbsp;? Entourage vous forme à la mission de bénévole-coach et vous donne les outils.</div>,
             button: {
-              label: "Je deviens bénévole-coach",
+              label: "Devenir bénévole-coach",
               href: process.env.AIRTABLE_LINK_BECOME_COACH,
               external: true
             }
@@ -60,9 +64,9 @@ const JeVeuxAider = () => (
     </Section>
     <Section container="small" style="muted">
       {/* Fix so that the anchor scroll to the right height */}
-      <div id="actor" style={{marginTop: -140, paddingTop: 140}} />
+      <div id="acteur" style={{marginTop: -140, paddingTop: 140}} />
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-        Je suis un{' '}<span className="uk-text-primary">acteur de l&apos;insertion</span>
+        Vous êtes un{' '}<span className="uk-text-primary">acteur de l&apos;insertion</span>
         {' '}sociale et professionnelle
       </h2>
       <MultipleCTA
@@ -70,7 +74,7 @@ const JeVeuxAider = () => (
           {
             title: "Vous accompagnez une personne en démarche d'insertion professionnelle\xa0?",
             button: {
-              label: "Je vous l'oriente",
+              label: "Nous l'orienter",
               href: process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION,
               external: true
             }
@@ -78,7 +82,7 @@ const JeVeuxAider = () => (
           {
             title: "Vous êtes intéressé(e) par l’approche de LinkedOut et souhaitez coopérer avec nous\xa0?",
             button: {
-              label: "Écrivez-nous",
+              label: "Nous écrire",
               modal: "target: #modal-interest-linkedOut"
             }
           }
@@ -88,18 +92,31 @@ const JeVeuxAider = () => (
     <SimpleSection
       title={
         <>
-          Je deviens{' '}<span className="uk-text-primary">mécène</span>
+          Vous êtes une{' '}<span className="uk-text-primary">entreprise</span>
         </>
       }
-      text="Je souhaite soutenir financièrement le projet LinkedOut et participer à la construction d’une société plus inclusive"
-      id="give"
+      text="Votre entreprise peut aussi jouer un rôle ! Que vous soyez une TPE, une grande entreprise ou une start-up, nous vous proposons différents moyens de vous engager"
+      id="entreprise"
       button={{
-        label: "Je fais un don",
+        label: "Nous écrire",
+        modal: "target: #modal-interest-linkedOut"
+      }} />
+    <SimpleSection
+      title={
+        <>
+          Devenez{' '}<span className="uk-text-primary">mécène</span>
+        </>
+      }
+      text="Vous souhaitez soutenir financièrement le projet LinkedOut et participer à la construction d’une société plus inclusive"
+      id="mécène"
+      style='muted'
+      button={{
+        label: "Faire un don",
         href: EXTERNAL_LINKS.DONATION,
         external: true
       }} />
-    <HowItWorks />
-    <Section style='muted' className="uk-padding-remove-top">
+    <HowItWorks style='default' />
+    <Section style='muted'>
       <GridNoSSR gap="large" column>
         <ContactPartial padding={false} />
         <SharePartial/>
