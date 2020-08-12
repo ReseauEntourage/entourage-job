@@ -10,7 +10,7 @@ const Carousel = ({style, children, containerClasses}) => (
       </ul>
     </div>
     <ul className="uk-slider-nav uk-dotnav uk-flex-center uk-margin" />
-    <div className="uk-hidden@m">
+    <div className="uk-hidden">
       <a
         href="#"
         className="uk-position-center-left uk-position-small"
