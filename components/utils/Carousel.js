@@ -3,14 +3,14 @@ import PropTypes from "prop-types";
 import {IconNoSSR} from "./Icon";
 
 const Carousel = ({style, children, containerClasses}) => (
-  <div className="uk-position-relative" data-uk-slider="">
+  <div className="uk-position-relative" data-uk-slider="autoplay: true; pause-on-hover: true;">
     <div className={`uk-slider-container uk-background-${style}`}>
       <ul className={`uk-slider-items ${containerClasses}`}>
         {children}
       </ul>
     </div>
     <ul className="uk-slider-nav uk-dotnav uk-flex-center uk-margin" />
-    <div className="uk-hidden@m">
+    <div className="uk-hidden">
       <a
         href="#"
         className="uk-position-center-left uk-position-small"

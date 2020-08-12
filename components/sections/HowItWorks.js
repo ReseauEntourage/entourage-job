@@ -1,8 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { Section } from '../utils';
 import MultipleCTA from "../partials/MultipleCTA";
 
-const HowItWorks = () => {
+
+const HowItWorks = ({style}) => {
   const content = [
     {
       img: '/static/img/illustrations/how1.png',
@@ -24,7 +27,7 @@ const HowItWorks = () => {
 
 
   return (
-    <Section id="howItWorks" style="muted">
+    <Section id="howItWorks" style={style}>
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
         Comment fonctionne{' '}
         <span className="uk-text-primary">LinkedOut&nbsp;?</span>
@@ -35,10 +38,11 @@ const HowItWorks = () => {
 };
 
 HowItWorks.propTypes = {
-
+ style: PropTypes.string
 };
 
 HowItWorks.defaultProps = {
+  style: 'muted'
 };
 
 export default HowItWorks;

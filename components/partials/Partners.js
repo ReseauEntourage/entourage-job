@@ -1,26 +1,32 @@
 import React from 'react';
-import {Background, Section} from '../utils';
+import {Background, IconNoSSR, Section} from '../utils';
 import Grid from "../utils/Grid";
+import PARTNERS from '../../constants/partners';
+import SimpleLink from "../utils/SimpleLink";
 
 const Partners = () => {
-  const partners = {
-    strategy: [
-      '../../static/img/partner10.png',
-      '../../static/img/partner2.png',
-      '../../static/img/partner5.png',
-      '../../static/img/partner6.png',
-      '../../static/img/partner3.png',
-      '../../static/img/partner7.png',
-    ],
-    finance: [
-      '../../static/img/partner11.png',
-      '../../static/img/partner4.png',
-      '../../static/img/partner9.png',
-      '../../static/img/partner8.png',
-      '../../static/img/partner1.png',
-      '../../static/img/partner12.png',
-    ]
-  };
+
+  const logoList = (data) => {
+    return (
+      <Grid
+        childWidths={[`1-${data.length}@m`]}
+        match
+        middle
+        center
+        items={data.map(({key, link}, index) => {
+          return (
+            <SimpleLink
+              className="uk-width-small uk-flex uk-flex-center"
+              isExternal
+              target="_blank"
+              href={link}>
+              <img src={`/static/img/partners/${key}/logo.png`} style={{maxHeight: 100}} width="" height="" alt="" />
+            </SimpleLink>
+          );
+        })}
+      />
+    );
+  }
 
   return (
     <Background blend={{colorHex: '#484848'}}>
@@ -36,34 +42,18 @@ const Partners = () => {
               className="uk-text-primary uk-text-bold">
               Ce projet est développé en partenariat avec
             </h4>
-            <Grid
-              childWidths={[`1-${partners.strategy.length}@m`]}
-              match
-              middle
-              items={partners.strategy.map((img, index) => {
-                return (
-                  <div className="uk-width-small">
-                    <img src={img} width="" height="" alt="" />
-                  </div>
-                );
-              })}
-            />
+            {logoList(PARTNERS.strategy)}
             <h4
               className="uk-text-primary uk-text-bold uk-margin-large-top">
               Avec le soutien précieux de
             </h4>
-            <Grid
-              childWidths={[`1-${partners.finance.length}@m`]}
-              match
-              middle
-              items={partners.finance.map((img, index) => {
-                return (
-                  <div className="uk-width-small">
-                    <img src={img} width="" height="" alt="" />
-                  </div>
-                );
-              })}
-            />
+            {logoList(PARTNERS.finance)}
+            <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-large-top">
+              <SimpleLink href="/lespartenaires">
+                En savoir plus{' '}<IconNoSSR name="arrow-right" />
+              </SimpleLink>
+            </div>
+
           </div>
         </div>
       </Section>
