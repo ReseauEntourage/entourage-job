@@ -136,7 +136,7 @@ const LesPartenaires = () => {
       {
         PARTNERS.strategy.map(({title, desc, question, answer, author, key, bis}, index) => renderPartner(title, desc, question, answer, author, key, bis, index))
       }
-      {renderTitle(
+     {/* {renderTitle(
         <>Ils nous donnent <span className="uk-text-primary">les moyens d&apos;agir</span></>,
         'secondary'
       )}
@@ -151,8 +151,9 @@ const LesPartenaires = () => {
                   {PARTNERS.finance.map(({key, title}, index) => {
                     return (
                       <li key={index} className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
-                        <h2 className="uk-text-primary uk-text-center uk-text-bold uk-margin-large-bottom">{title}</h2>
-                        <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-medium' />
+                        <div className="uk-width-large">
+                          <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-medium' />
+                        </div>
                       </li>
                     )
                   })}
@@ -161,7 +162,44 @@ const LesPartenaires = () => {
             </div>
           </div>
         </Section>
-      }
+      }*/}
+      <div
+        className="uk-inline uk-cover-container uk-flex uk-flex-center uk-flex-middle"
+        style={{minHeight: viewportHeightWithoutHeader}}>
+        <div
+          className="uk-position-cover uk-background uk-background-cover uk-background-center-center"
+          style={{backgroundImage: 'url(/static/img/partners.jpg)'}}
+          uk-scrollspy="cls: uk-animation-kenburns uk-animation-reverse; delay: 200;" />
+        <div className='uk-background-blend-overlay uk-position-cover' style={{backgroundColor: 'rgba(0,0,0,0.7)'}}/>
+        <div className="uk-overlay uk-position-center">
+          <Section
+            style='muted'
+            preserveColor
+            className="uk-box-shadow-medium uk-padding-large">
+            <div uk-scrollspy="cls: uk-animation-fade; delay: 200;">
+              <h1
+                className="uk-text-bold uk-align-center uk-text-center">
+                Ils nous donnent <span className="uk-text-primary">les moyens d&apos;agir</span>
+              </h1>
+                <div className="uk-width-expand">
+                  <div className="uk-container-small">
+                    <Carousel containerClasses="uk-child-width-1-1">
+                      {PARTNERS.finance.map(({key, title}, index) => {
+                        return (
+                          <li key={index} className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
+                            <div className="uk-width-large uk-flex uk-flex-center uk-flex-middle">
+                              <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
+                            </div>
+                          </li>
+                        )
+                      })}
+                    </Carousel>
+                </div>
+              </div>
+            </div>
+          </Section>
+        </div>
+      </div>
       {renderTitle(
         <><span className="uk-light"><span className="uk-text-primary">Ils se mobilisent</span></span> <span className="uk-text-primary">à nos côtés</span></>,
         'default',
