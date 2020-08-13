@@ -175,8 +175,7 @@ const getPrivateUserOpportunities = async (userId) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     where: {
       id: opportunityUsers.map((model) => model.OpportunityId),
-      isPublic: false,
-      isValidated: true,
+      isPublic: false
     },
   });
 
