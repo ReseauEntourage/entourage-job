@@ -40,20 +40,15 @@ const CVFiche = ({ cv, actionDisabled }) => {
       fieldId: 'candidatId',
       props: [
         {
-          propName: 'disable',
-          value: () => true
-        }
-      ]
-    },
-    {
-      fieldId: 'isPublic',
-      props: [
-        {
           propName: 'disabled',
+          value: true
+        },
+        {
+          propName: 'hidden',
           value: true
         }
       ]
-    },
+    }
   ]);
 
   const postOpportunity = async (opportunity, closeModal) => {
@@ -512,9 +507,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           <ModalEdit
             id="modal-send-opportunity"
             title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
-            description={
-              "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez le coach plus bas dans la page CV !"
-            }
+            description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
             submitText="Envoyer"
             defaultValues={{
               isPublic: false,
