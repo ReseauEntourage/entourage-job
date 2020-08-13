@@ -88,7 +88,8 @@
     "uikit": "^3.5.4",
     "uuid": "^3.4.0",
     "validator": "^11.1.0",
-    "webpack": "^4.41.6"
+    "webpack": "^4.44.1",
+    "serialize-javascript": "^3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
