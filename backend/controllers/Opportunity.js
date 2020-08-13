@@ -9,16 +9,16 @@ const {
     Opportunity,
     User,
   },
-  Sequelize: { Op, fn, col, where },
+  Sequelize: {Op, fn, col, where},
 } = require('../db/models');
-const { cleanOpportunity, controlText } = require('./tools');
+const {cleanOpportunity, controlText} = require('./tools');
 
 const INCLUDE_OPPORTUNITY_COMPLETE = [
   {
     model: BusinessLine,
     as: 'businessLines',
     attributes: ['name'],
-    through: { attributes: [] },
+    through: {attributes: []},
   },
   {
     model: Opportunity_User,
@@ -41,6 +41,42 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
   },
 ];
 
+const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
+  {
+    model: BusinessLine,
+    as: 'businessLines',
+    attributes: ['name'],
+    through: {attributes: []},
+  },
+  {
+    model: Opportunity_User,
+    as: 'userOpportunity',
+    include: [
+      {
+        model: User,
+        attributes: [
+          'id',
+          'email',
+          'firstName',
+          'lastName',
+          'gender',
+          'email',
+        ],
+      },
+    ],
+    attributes: [
+      'id',
+      'UserId',
+      'status',
+      'bookmarked',
+      'archived',
+      'note',
+      'seen',
+    ],
+  },
+];
+
+
 const createOpportunity = async (data) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
@@ -52,7 +88,7 @@ const createOpportunity = async (data) => {
     const businessLines = await Promise.all(
       data.businessLines.map((name) =>
         BusinessLine.findOrCreate({
-          where: { name: controlText(name) },
+          where: {name: controlText(name)},
         }).then((model) => model[0])
       )
     );
@@ -77,7 +113,7 @@ const deleteOpportunity = (id) => {
     `deleteOpportunity - Suppression d'une opportunité à partir de son id`
   );
   return Opportunity.destroy({
-    where: { id },
+    where: {id},
   });
 };
 
@@ -90,40 +126,7 @@ const getOpportunity = async (id) => {
 
 const getOpportunities = async (search) => {
   const options = {
-    include: [
-      {
-        model: BusinessLine,
-        as: 'businessLines',
-        attributes: ['name'],
-        through: { attributes: [] },
-      },
-      {
-        model: Opportunity_User,
-        as: 'userOpportunity',
-        include: [
-          {
-            model: User,
-            attributes: [
-              'id',
-              'email',
-              'firstName',
-              'lastName',
-              'gender',
-              'email',
-            ],
-          },
-        ],
-        attributes: [
-          'id',
-          'UserId',
-          'status',
-          'bookmarked',
-          'archived',
-          'note',
-          'seen',
-        ],
-      },
-    ],
+    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN
   };
   if (search) {
     const lowerCaseSearch = search.toLowerCase();
@@ -164,30 +167,25 @@ const getPublicOpportunities = async () => {
 const getPrivateUserOpportunities = async (userId) => {
   console.log(`getOpportunities - Récupérer les opportunités`);
   const opportunityUsers = await Opportunity_User.findAll({
-    where: { UserId: userId },
+    where: {UserId: userId},
     attributes: ['OpportunityId'],
   });
+
   const opportunities = await Opportunity.findAll({
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     where: {
       id: opportunityUsers.map((model) => model.OpportunityId),
-      isPublic: false,
-      isValidated: true,
+      isPublic: false
     },
   });
-  return opportunities.map((model) => {
-    const opportunity = cleanOpportunity(model);
-    opportunity.userOpportunity = opportunity.userOpportunity.find(
-      ({ UserId }) => UserId === userId
-    );
-    return opportunity;
-  });
+
+  return opportunities.map((model) => cleanOpportunity(model));
 };
 
 const getAllUserOpportunities = async (userId) => {
   // private
   const opportunityUsers = await Opportunity_User.findAll({
-    where: { UserId: userId },
+    where: {UserId: userId},
     attributes: ['OpportunityId'],
   });
 
@@ -195,7 +193,7 @@ const getAllUserOpportunities = async (userId) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       [Op.or]: [
-        { isPublic: true, isValidated: true },
+        {isPublic: true, isValidated: true},
         {
           id: opportunityUsers.map((model) => model.OpportunityId),
           isPublic: false,
@@ -225,7 +223,7 @@ const addUserToOpportunity = (opportunityId, userId) =>
 
 const updateOpportunityUser = async (opportunityUser) => {
   await Opportunity_User.update(opportunityUser, {
-    where: { id: opportunityUser.id },
+    where: {id: opportunityUser.id},
     individualHooks: true,
   });
   return Opportunity_User.findByPk(opportunityUser.id, {
@@ -243,7 +241,7 @@ const updateOpportunityUser = async (opportunityUser) => {
 
 const updateOpportunity = async (opportunity) => {
   Opportunity.update(opportunity, {
-    where: { id: opportunity.id },
+    where: {id: opportunity.id},
   });
 
   const modelOpportunity = await Opportunity.findByPk(opportunity.id, {
@@ -253,7 +251,7 @@ const updateOpportunity = async (opportunity) => {
     const businessLines = await Promise.all(
       opportunity.businessLines.map((name) =>
         BusinessLine.findOrCreate({
-          where: { name: controlText(name) },
+          where: {name: controlText(name)},
         }).then((model) => model[0])
       )
     );
@@ -261,7 +259,7 @@ const updateOpportunity = async (opportunity) => {
     await Opportunity_BusinessLine.destroy({
       where: {
         OpportunityId: opportunity.id,
-        BusinessLineId: { [Op.not]: businessLines.map((bl) => bl.id) },
+        BusinessLineId: {[Op.not]: businessLines.map((bl) => bl.id)},
       },
     });
   }
@@ -288,7 +286,7 @@ const updateOpportunity = async (opportunity) => {
     await Opportunity_User.destroy({
       where: {
         OpportunityId: modelOpportunity.id,
-        UserId: { [Op.not]: opportunityUsers.map((bl) => bl.UserId) },
+        UserId: {[Op.not]: opportunityUsers.map((bl) => bl.UserId)},
       },
     });
   }

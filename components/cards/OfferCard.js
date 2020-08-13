@@ -24,12 +24,12 @@ const OfferCard = ({
   date,
 }) => (
   <div
-    className={`ent-offer uk-card uk-card- uk-card-hover uk-card-body uk-card-${
+    className={`ent-offer uk-card uk-card-hover uk-card-body uk-card-${
       archived ? 'secondary' : 'default'
     }`}
   >
     {isNew && <div className="ent-offer-badge" />}
-    <GridNoSSR gap="medium" childWidths={['1-1']}>
+    <GridNoSSR className="uk-height-max-large" gap="medium" childWidths={['1-1']}>
       <GridNoSSR eachWidths={['expand', 'auto']}>
         <h5 className="uk-text-bold">{title}</h5>
         {isStared === undefined ? (
