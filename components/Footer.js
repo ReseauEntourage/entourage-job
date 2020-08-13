@@ -150,39 +150,11 @@ const Footer = () => {
                   Association Entourage
                 </SimpleLink>
               </li>
+              <li className="uk-text-capitalize">
+                <SimpleLink href="/pourquoilinkedout">Pourquoi LinkedOut&nbsp;?</SimpleLink>
+              </li>
             </ul>
             <GridNoSSR row middle className="uk-flex-right@m uk-flex-center">
-              <GridNoSSR row middle childWidths={['auto']} gap="small" className="uk-light">
-                <div>Partager</div>
-                <FacebookShareButton
-                  className="uk-icon-button uk-icon-link"
-                  url={sharedURL}
-                  quote={sharedDescription}
-                  hashtags={hashtags}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <IconNoSSR name="facebook" />
-                </FacebookShareButton>
-                <LinkedinShareButton
-                  className="uk-icon-button uk-icon-link"
-                  url={sharedURL}
-                  title={sharedTitle}
-                  description={sharedDescription}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <IconNoSSR name="linkedin" />
-                </LinkedinShareButton>
-                <TwitterShareButton
-                  url={sharedURL}
-                  title={sharedDescription}
-                  hashtags={hashtags}
-                  via={viaTwitter}
-                  style={{ cursor: 'pointer' }}
-                  className="uk-icon-button uk-icon-link"
-                >
-                  <IconNoSSR name="twitter" />
-                </TwitterShareButton>
-              </GridNoSSR>
               <Button
                 href="/login"
                 style='primary'>
