@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 import {Section, SimpleLink} from "../components/utils";
 import Grid from "../components/utils/Grid";
 
-const Chapter = ({title, content, imgSrc, style}) => {
+const Chapter = ({title, content, imgSrc, style, animate}) => {
   return (
     <Section container="small" style={style}>
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
@@ -14,7 +14,25 @@ const Chapter = ({title, content, imgSrc, style}) => {
         <h4 className="uk-margin-remove-top uk-margin-large-bottom">
           {content}
         </h4>
-        <img src={imgSrc} width="" height="" alt="" style={{maxHeight: 600}} />
+        <div className="uk-overflow-hidden">
+          {animate ?
+            <img
+              uk-scrollspy="cls: uk-animation-kenburns; delay: 200;"
+              src={imgSrc}
+              width=""
+              height=""
+              alt=""
+              className="uk-animation-reverse"
+              style={{maxHeight: 600}} />
+              :
+              <img
+                src={imgSrc}
+                width=""
+                height=""
+                alt=""
+                style={{maxHeight: 600}} />
+          }
+        </div>
       </div>
     </Section>
   )
@@ -24,7 +42,8 @@ Chapter.propTypes = {
   title: PropTypes.element.isRequired,
   content: PropTypes.element.isRequired,
   imgSrc: PropTypes.string.isRequired,
-  style: PropTypes.oneOf(['muted', 'default']).isRequired
+  style: PropTypes.oneOf(['muted', 'default']).isRequired,
+  animate: PropTypes.bool.isRequired,
 };
 
 
@@ -52,7 +71,6 @@ const innovations = [
 
 const PourquoiLinkedOut = () => {
   const renderCard = (text, number) => {
-    console.log(text);
     return (
       <div
         uk-scrollspy={`cls:uk-animation-slide-bottom-small; delay: ${100*number};`}
@@ -89,6 +107,7 @@ const PourquoiLinkedOut = () => {
           </>
         }
         imgSrc='../static/img/why_1.jpg'
+        animate
       />
       <Chapter
         style="muted"
@@ -126,6 +145,7 @@ const PourquoiLinkedOut = () => {
           </>
         }
         imgSrc='../static/img/why_2.jpg'
+        animate={false}
       />
       <Chapter
         style="default"
@@ -151,6 +171,7 @@ const PourquoiLinkedOut = () => {
           </>
         }
         imgSrc='../static/img/why_3.jpg'
+        animate={false}
       />
       <Chapter
         style="muted"
@@ -164,6 +185,7 @@ const PourquoiLinkedOut = () => {
           </>
         }
         imgSrc='../static/img/why_4.jpg'
+        animate
       />
       <Section container="small" style="default">
         <div
