@@ -48,7 +48,7 @@ const EntourageApp = ({Component, pageProps}) => {
           className="uk-inline uk-width-expand uk-overflow-hidden">
           <Component {...pageProps} />
           <div
-            style={{height: '100vh', zIndex: 9999}}
+            style={{height: '100vh', zIndex: 9999, opacity: 0}}
             className={`${loading ? 'uk-visible' : 'uk-hidden'} ${fading ? 'uk-animation-fade uk-animation-reverse' : ''} uk-position-cover uk-background-default`}>
             <SplashScreenNoSSR />
           </div>
