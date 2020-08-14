@@ -18,6 +18,13 @@ const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthentificated, setIsAuthentificated] = useState(false);
 
+  const resetAndRedirect = () => {
+    localStorage.removeItem('access-token');
+    setIsAuthentificated(false);
+    setUser(null);
+    Router.push('/login');
+  } ;
+
   // la restriction devrait etre faite des le serveur !
   const restrictAccessByRole = (role) => {
     if (
@@ -34,10 +41,7 @@ const UserProvider = ({ children }) => {
     try {
       await Api.post('/api/v1/auth/logout');
     } finally {
-      localStorage.removeItem('access-token');
-      setIsAuthentificated(false);
-      setUser(null);
-      Router.push('/login');
+      resetAndRedirect();
     }
   };
 
@@ -66,13 +70,12 @@ const UserProvider = ({ children }) => {
         })
         .catch((err) => {
           console.log(err);
-          localStorage.removeItem('access-token');
-          Router.push('/login');
+          resetAndRedirect();
         });
     } else {
       console.log('no token');
       if (Router.pathname.includes('/backoffice')) {
-        Router.push('/login');
+        resetAndRedirect();
       }
     }
   }, [children]);
