@@ -63,6 +63,7 @@ const Layout = ({
     <Footer />
   </>
 );
+
 Layout.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.element,
@@ -78,6 +79,7 @@ Layout.propTypes = {
     asPath: PropTypes.string,
   }).isRequired,
 };
+
 Layout.defaultProps = {
   title: 'LinkedOut',
   metaTitle:
