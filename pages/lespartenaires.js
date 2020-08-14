@@ -10,6 +10,7 @@ import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut"
 import SimpleSection from "../components/sections/SimpleSection";
 import SimpleLink from "../components/utils/SimpleLink";
 
+
 const LesPartenaires = () => {
 
   const viewportHeightWithoutHeader = 'calc(100vh - 80px)';
@@ -42,7 +43,7 @@ const LesPartenaires = () => {
     )
   };
 
-  const renderPartner = ({title, desc, question, answer, author, key, bis, link}, index) => {
+  const renderPartner = (title, desc, question, answer, author, key, bis, link, index) => {
     const reverse = index % 2 !== 0;
     const firstDirection = reverse ? 'left' : 'right';
     const secondDirection = reverse ? 'right' : 'left';
@@ -142,7 +143,7 @@ const LesPartenaires = () => {
         true
       )}
       {
-        PARTNERS.strategy.map((partner, index) => renderPartner(partner, index))
+        PARTNERS.strategy.map(({title, desc, question, answer, author, key, bis, link}, index) => renderPartner(title, desc, question, answer, author, key, bis, link, index))
       }
       <div
         className="uk-inline uk-cover-container uk-flex uk-flex-center uk-flex-middle"
@@ -191,7 +192,7 @@ const LesPartenaires = () => {
         'primary'
       )}
       {
-        PARTNERS.associations.map((partner, index) => renderPartner(partner, index))
+        PARTNERS.associations.map(({title, desc, question, answer, author, key, bis, link}, index) => renderPartner(title, desc, question, answer, author, key, bis, link, index))
       }
       <SimpleSection
         title={

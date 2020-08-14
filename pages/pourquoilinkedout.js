@@ -46,6 +46,27 @@ Chapter.propTypes = {
   animate: PropTypes.bool.isRequired,
 };
 
+const Card = ({text, number}) => {
+  return (
+    <div
+      key={number}
+      uk-scrollspy={`cls:uk-animation-slide-bottom-small; delay: ${100*number};`}
+      className="uk-flex uk-card uk-card-small uk-card-primary uk-card-body uk-box-shadow-medium">
+      <div
+        className="uk-text-bold uk-text-primary uk-text-large uk-margin-small-right"
+        style={{fontSize: 46, lineHeight: 1}}>{number}</div>
+      <div className="uk-text-primary uk-margin-small-left">
+        {text}
+      </div>
+    </div>
+  )
+};
+
+Card.propTypes = {
+  text: PropTypes.element.isRequired,
+  number: PropTypes.number.isRequired
+};
+
 
 const innovations = [
   {
@@ -71,21 +92,6 @@ const innovations = [
 ];
 
 const PourquoiLinkedOut = () => {
-  const renderCard = (text, number) => {
-    return (
-      <div
-        key={number}
-        uk-scrollspy={`cls:uk-animation-slide-bottom-small; delay: ${100*number};`}
-        className="uk-flex uk-card uk-card-small uk-card-primary uk-card-body uk-box-shadow-medium">
-        <div
-          className="uk-text-bold uk-text-primary uk-text-large uk-margin-small-right"
-          style={{fontSize: 46, lineHeight: 1}}>{number}</div>
-        <div className="uk-text-primary uk-margin-small-left">
-          {text}
-        </div>
-      </div>
-    )
-  };
 
   return (
     <Layout title="Pourquoi LinkedOut ? - LinkedOut">
@@ -131,7 +137,7 @@ const PourquoiLinkedOut = () => {
               uk-scrollspy="cls:uk-animation-slide-bottom; target: > li; delay: 200;"
               className="uk-list uk-list-disc">
               <li className="uk-text-primary">
-                <span className="uk-text-secondary"><span className="uk-text-bold">la plateforme <SimpleLink href="https://linkedout.fr">www.linkedout.fr</SimpleLink></span> sur laquelle les citoyens peuvent viraliser les CV de candidats sur leurs réseaux, en un clic pour générer des opportunités d&apos;emploi</span>
+                <span className="uk-text-secondary"><span className="uk-text-bold">la plateforme <SimpleLink href="/">www.linkedout.fr</SimpleLink></span> sur laquelle les citoyens peuvent viraliser les CV de candidats sur leurs réseaux, en un clic pour générer des opportunités d&apos;emploi</span>
               </li>
               <li className="uk-text-primary">
                 <span className="uk-text-secondary"><span className="uk-text-bold">un soutien de proximité</span> par des bénévoles-coachs sur la durée</span>
@@ -199,19 +205,17 @@ const PourquoiLinkedOut = () => {
             left
             gap='medium'
             eachWidths={['1-3@m', '2-3@m']}>
-            {
-              renderCard(innovations.splice(0, 1)[0].text, 1)
-            }
-            <Grid
-              masonry
-              top
-              left
-              gap='medium'
-              childWidths={['1-2@m']}>
-            {
-              innovations.map(({text}, index) => renderCard(text, index + 2))
-            }
-            </Grid>
+              <Card key={0} text={innovations.splice(0, 1)[0].text} number={1} />
+              <Grid
+                masonry
+                top
+                left
+                gap='medium'
+                childWidths={['1-2@m']}>
+                {
+                  innovations.map(({text}, index) => <Card key={index} text={text} number={index + 2} />)
+                }
+              </Grid>
           </Grid>
         </div>
       </Section>

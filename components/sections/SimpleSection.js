@@ -40,7 +40,7 @@ SimpleSection.propTypes = {
     label: PropTypes.string.isRequired,
     href: PropTypes.string,
     external: PropTypes.bool,
-    modal: PropTypes.bool
+    modal: PropTypes.string
   }),
   text: PropTypes.string.isRequired,
   children: PropTypes.element
