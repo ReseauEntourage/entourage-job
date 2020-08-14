@@ -82,14 +82,14 @@
     "react-sortable-hoc": "^1.11.0",
     "sequelize": "^5.21.5",
     "sequelize-cli": "^5.5.1",
+    "serialize-javascript": "^3.1.0",
     "sharp": "^0.23.4",
     "text-to-svg": "^3.1.5",
     "uid-safe": "^2.1.5",
     "uikit": "^3.5.4",
     "uuid": "^3.4.0",
     "validator": "^11.1.0",
-    "webpack": "^4.44.1",
-    "serialize-javascript": "^3.1.0"
+    "webpack": "^4.41.6"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

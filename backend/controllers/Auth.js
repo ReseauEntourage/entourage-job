@@ -94,6 +94,7 @@ const auth = (roles= []) => {
     expressJwt({
       secret: process.env.JWT_SECRET,
       userProperty: 'payload',
+      algorithms: ['HS256'],
       getToken: getTokenFromHeaders,
       credentialsRequired: roles.length > 0,
     }),
