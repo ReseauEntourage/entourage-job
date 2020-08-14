@@ -65,7 +65,8 @@ const innovations = [
       <div>Une posture de coaching bénévole et de proximité, complémentaire à un accompagnement professionnel.</div>
   },
   {
-    text: <div>En plus de l’insertion professionnelle, un réseau d’amitié sur lequel compter.</div>
+    text:
+      <div>En plus de l’insertion professionnelle, un réseau d’amitié sur lequel compter.</div>
   }
 ];
 
@@ -73,6 +74,7 @@ const PourquoiLinkedOut = () => {
   const renderCard = (text, number) => {
     return (
       <div
+        key={number}
         uk-scrollspy={`cls:uk-animation-slide-bottom-small; delay: ${100*number};`}
         className="uk-flex uk-card uk-card-small uk-card-primary uk-card-body uk-box-shadow-medium">
         <div
@@ -129,8 +131,7 @@ const PourquoiLinkedOut = () => {
               uk-scrollspy="cls:uk-animation-slide-bottom; target: > li; delay: 200;"
               className="uk-list uk-list-disc">
               <li className="uk-text-primary">
-                <span className="uk-text-secondary"><span className="uk-text-bold">la plateforme <SimpleLink
-                  href="https://linkedout.fr">www.linkedout.fr</SimpleLink></span> sur laquelle les citoyens peuvent viraliser les CV de candidats sur leurs réseaux, en un clic pour générer des opportunités d&apos;emploi</span>
+                <span className="uk-text-secondary"><span className="uk-text-bold">la plateforme <SimpleLink href="https://linkedout.fr">www.linkedout.fr</SimpleLink></span> sur laquelle les citoyens peuvent viraliser les CV de candidats sur leurs réseaux, en un clic pour générer des opportunités d&apos;emploi</span>
               </li>
               <li className="uk-text-primary">
                 <span className="uk-text-secondary"><span className="uk-text-bold">un soutien de proximité</span> par des bénévoles-coachs sur la durée</span>
@@ -158,14 +159,13 @@ const PourquoiLinkedOut = () => {
             <ul
               uk-scrollspy="cls:uk-animation-slide-bottom; target: > li; delay: 200;"
               className="uk-list uk-list-disc uk-list-primary">
-              <li className="uk-text-primary"><span className="uk-text-secondary">Ils sont en <span
-                className="uk-text-bold uk-text-primary">situation d’exclusion</span> ou de <span
-                className="uk-text-bold uk-text-primary">précarité</span>&nbsp;</span></li>
-              <li className="uk-text-primary"><span className="uk-text-secondary">Sont en <span
-                className="uk-text-bold uk-text-primary">capacité</span> de travailler&nbsp;;</span>
+              <li className="uk-text-primary">
+                <span className="uk-text-secondary">Ils sont en <span className="uk-text-bold uk-text-primary">situation d’exclusion</span> ou de <span className="uk-text-bold uk-text-primary">précarité</span>&nbsp;;</span></li>
+              <li className="uk-text-primary">
+                <span className="uk-text-secondary">Sont en <span className="uk-text-bold uk-text-primary">capacité</span> de travailler&nbsp;;</span>
               </li>
               <li className="uk-text-primary">
-                <span className="uk-text-secondary">Et <span className="uk-text-bold uk-text-primary">motivés</span> pour retrouver un emploi.&nbsp;</span>
+                <span className="uk-text-secondary">Et <span className="uk-text-bold uk-text-primary">motivés</span> pour retrouver un emploi.</span>
               </li>
             </ul>
           </>
