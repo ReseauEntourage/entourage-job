@@ -4,26 +4,32 @@ import Layout from '../components/Layout';
 import {Section, SimpleLink} from "../components/utils";
 import Grid from "../components/utils/Grid";
 
-const Chapter = ({title, content, imgSrc, style, animate}) => {
+const Chapter = ({title, content, imgSrc, style, animate, direction}) => {
   return (
-    <Section container="small" style={style}>
+    <Section container={direction !== 'column' ? 'large' : 'small'} style={style}>
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
           {title}
         </h2>
-        <h4 className="uk-margin-remove-top uk-margin-large-bottom">
-          {content}
-        </h4>
-        <div className="uk-overflow-hidden">
-          {animate ?
-            <img
-              uk-scrollspy="cls: uk-animation-kenburns; delay: 200;"
-              src={imgSrc}
-              width=""
-              height=""
-              alt=""
-              className="uk-animation-reverse"
-              style={{maxHeight: 600}} />
+        <Grid
+          childWidths={[`1-${direction !== 'column' ? '2' : '1'}@m`]}
+          center
+          middle
+          gap='large'
+          className={direction === 'left' ? 'uk-flex-row-reverse' : ''}>
+          <h4 className="uk-margin-remove-top">
+            {content}
+          </h4>
+          <div className="uk-overflow-hidden uk-flex uk-flex-center uk-flex-middle">
+            {animate ?
+              <img
+                uk-scrollspy="cls: uk-animation-kenburns; delay: 200;"
+                src={imgSrc}
+                width=""
+                height=""
+                alt=""
+                className="uk-animation-reverse"
+                style={{maxHeight: 600}} />
               :
               <img
                 src={imgSrc}
@@ -31,8 +37,10 @@ const Chapter = ({title, content, imgSrc, style, animate}) => {
                 height=""
                 alt=""
                 style={{maxHeight: 600}} />
-          }
-        </div>
+            }
+          </div>
+        </Grid>
+
       </div>
     </Section>
   )
@@ -43,6 +51,7 @@ Chapter.propTypes = {
   content: PropTypes.element.isRequired,
   imgSrc: PropTypes.string.isRequired,
   style: PropTypes.oneOf(['muted', 'default']).isRequired,
+  direction: PropTypes.oneOf(['left', 'right', 'column']).isRequired,
   animate: PropTypes.bool.isRequired,
 };
 
@@ -116,6 +125,7 @@ const PourquoiLinkedOut = () => {
         }
         imgSrc='../static/img/why_1.jpg'
         animate
+        direction='column'
       />
       <Chapter
         style="muted"
@@ -153,6 +163,7 @@ const PourquoiLinkedOut = () => {
         }
         imgSrc='../static/img/why_2.jpg'
         animate={false}
+        direction='column'
       />
       <Chapter
         style="default"
@@ -178,6 +189,7 @@ const PourquoiLinkedOut = () => {
         }
         imgSrc='../static/img/why_3.jpg'
         animate={false}
+        direction='left'
       />
       <Chapter
         style="muted"
@@ -192,6 +204,7 @@ const PourquoiLinkedOut = () => {
         }
         imgSrc='../static/img/why_4.jpg'
         animate
+        direction='right'
       />
       <Section container="small" style="default">
         <div
