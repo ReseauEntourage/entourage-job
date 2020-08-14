@@ -8,7 +8,7 @@ const Chapter = ({title, content, imgSrc, style, animate, direction}) => {
   return (
     <Section container={direction !== 'column' ? 'large' : 'small'} style={style}>
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top uk-width-1-2@m">
           {title}
         </h2>
         <Grid
@@ -101,6 +101,8 @@ const innovations = [
 ];
 
 const PourquoiLinkedOut = () => {
+
+  const tempInnovations = [...innovations];
 
   return (
     <Layout title="Pourquoi LinkedOut ? - LinkedOut">
@@ -218,7 +220,7 @@ const PourquoiLinkedOut = () => {
             left
             gap='medium'
             eachWidths={['1-3@m', '2-3@m']}>
-              <Card key={0} text={innovations.splice(0, 1)[0].text} number={1} />
+              <Card key={0} text={tempInnovations.splice(0, 1)[0].text} number={1} />
               <Grid
                 masonry
                 top
@@ -226,7 +228,7 @@ const PourquoiLinkedOut = () => {
                 gap='medium'
                 childWidths={['1-2@m']}>
                 {
-                  innovations.map(({text}, index) => <Card key={index} text={text} number={index + 2} />)
+                  tempInnovations.map(({text}, index) => <Card key={index} text={text} number={index + 2} />)
                 }
               </Grid>
           </Grid>
