@@ -198,7 +198,7 @@ const Linkedout = () => {
         title={<>LinkedOut, une <span className="uk-text-primary">brique supplémentaire</span> dans l’écosystème de l’inclusion et l’emploi</>}
         content={
           <>
-            LinkedOut vise à agir en collaboration avec les acteurs du retour vers l’emploi en proposant une brique complémentaire à l’existant (acteurs sociaux publics et associatifs, structures d’insertion, structures d’hébergement, jobboards solidaires), fondée sur une approche réseau.
+            LinkedOut vise à agir en collaboration avec les acteurs du retour vers l’emploi en proposant une brique complémentaire à l’existant (acteurs sociaux publics et associatifs, structures d’insertion, structures d’hébergement, job-boards solidaires), fondée sur une approche réseau.
             <br />
             <br />
             Pour les personnes sortant de parcours d’insertion, il s’inscrit dans la continuité de l’accompagnement socio-professionnel réalisé en amont par les travailleurs sociaux et/ou les associations, essentiel à la réussite du projet.

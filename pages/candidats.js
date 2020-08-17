@@ -15,7 +15,7 @@ const initializeFilters = () => {
   }, {});
 };
 
-const LesCandidats = () => {
+const Candidats = () => {
   const [search, setSearch] = useState();
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
   const [filters, setFilters] = useState(initializeFilters());
@@ -207,4 +207,4 @@ const LesCandidats = () => {
     </Layout>
   );
 };
-export default LesCandidats;
+export default Candidats;

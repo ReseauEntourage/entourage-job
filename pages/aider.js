@@ -11,8 +11,8 @@ import SubHeader from "../components/sections/SubHeader";
 import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
 
 
-const JeVeuxAider = () => (
-  <Layout title="Je veux aider - LinkedOut">
+const Aider = () => (
+  <Layout title="Aider - LinkedOut">
     <ImageTitle img='static/img/header_pic_help.jpg' id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider&nbsp;?</span></>} text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"} />
     <SubHeader id="profile" data={[
       {
@@ -46,7 +46,7 @@ const JeVeuxAider = () => (
             text: <div>Ouvrez votre réseau en partageant le CV d’un ou de plusieurs candidats LinkedOut. Votre partage permet de donner une visibilité inédite aux candidats auprès de potentiels recruteurs et de générer des opportunités d’emploi. Un partage peut tout changer&nbsp;!</div>,
             button: {
               label: "Partager un CV",
-              href: "/lescandidats"
+              href: "/candidats"
             }
           },
           {
@@ -126,4 +126,4 @@ const JeVeuxAider = () => (
   </Layout>
 );
 
-export default JeVeuxAider;
+export default Aider;

@@ -1,3 +1,5 @@
+/* global UIkit */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import Layout from '../components/Layout';
@@ -7,63 +9,22 @@ import SimpleSection from "../components/sections/SimpleSection";
 import Img from "../components/utils/Img";
 import MultipleCTA from "../components/partials/MultipleCTA";
 import Button from "../components/utils/Button";
+import ModalEdit from "../components/modals/ModalEdit";
+import schemaGetEmail from '../components/forms/schema/formGetEmail.json';
+import Axios from "../Axios";
+import ImageTitle from "../components/sections/ImageTitle";
+import Carousel from "../components/utils/Carousel";
+import PARTNERS from "../constants/partners";
 
-const Chapter = ({title, content, imgSrc, style, animate, direction}) => {
-  return (
-    <Section container={direction !== 'column' ? 'large' : 'small'} style={style}>
-      <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top uk-width-1-2@m">
-          {title}
-        </h2>
-        <Grid
-          childWidths={[`1-${direction !== 'column' ? '2' : '1'}@m`]}
-          center
-          middle
-          gap='large'
-          className={direction === 'left' ? 'uk-flex-row-reverse' : ''}>
-          <h4 className="uk-margin-remove-top">
-            {content}
-          </h4>
-          <div className="uk-overflow-hidden uk-flex uk-flex-center uk-flex-middle">
-            {animate ?
-              <img
-                uk-scrollspy="cls: uk-animation-kenburns; delay: 200;"
-                src={imgSrc}
-                width=""
-                height=""
-                alt=""
-                className="uk-animation-reverse"
-                style={{maxHeight: 600}} />
-              :
-              <img
-                src={imgSrc}
-                width=""
-                height=""
-                alt=""
-                style={{maxHeight: 600}} />
-            }
-          </div>
-        </Grid>
-
-      </div>
-    </Section>
-  )
-};
-
-Chapter.propTypes = {
-  title: PropTypes.element.isRequired,
-  content: PropTypes.element.isRequired,
-  imgSrc: PropTypes.string.isRequired,
-  style: PropTypes.oneOf(['muted', 'default']).isRequired,
-  direction: PropTypes.oneOf(['left', 'right', 'column']).isRequired,
-  animate: PropTypes.bool.isRequired,
-};
-
-
-const JeVeuxOrienter = () => {
+const Orienter = () => {
 
   return (
-    <Layout title="Je veux orienter ? - LinkedOut">
+    <Layout title="Orienter - LinkedOut">
+      <ImageTitle
+        img='static/img/header_pic_guide.jpg'
+        id="guide-title"
+        title={<>Vous souhaitez nous <span className="uk-text-primary">orienter des candidats&nbsp;?</span></>}
+        text={"On a tous un rôle à jouer dans la réinsertion des personnes exclues\xa0!"} />
       <SimpleSection
         title={<>LinkedOut, un programme de <span className="uk-text-primary">l&apos;association Entourage</span></>}
         text={
@@ -72,13 +33,13 @@ const JeVeuxOrienter = () => {
           </>
         }
         id="entourage"
-        style='default'>
+        style='muted'>
         <div className="uk-width-medium uk-padding uk-padding-remove-vertical">
           <Img src='../static/img/logo-entourage.png' alt='Logo Entourage' />
         </div>
       </SimpleSection>
       <SimpleSection
-        style="muted"
+        style="default"
         container="large"
         title={<>Quels sont les <span className="uk-text-primary">points communs</span> des candidats LinkedOut&nbsp;?</>}
         text={
@@ -105,7 +66,7 @@ const JeVeuxOrienter = () => {
         </h3>
       </SimpleSection>
       <SimpleSection
-        style="default"
+        style="muted"
         title={<><span className="uk-text-primary">Comment</span> ça marche&nbsp;?</>}
         text={
           <>
@@ -117,12 +78,14 @@ const JeVeuxOrienter = () => {
         }
         button={{
           label: "Télécharger le kit du dispositif",
-          modal: ""
+          href: `${process.env.AWSS3_URL}${process.env.KIT_FILE}`,
+          external: true,
+          newTab: true
         }}
         id="howItWorks" />
-      <Section id="also" style="muted" container="small">
+      <Section style="default" container="small">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-          <span className="uk-text-primary">LinkedOut&nbsp;?</span> c&apos;est aussi&nbsp;:
+          <span className="uk-text-primary">LinkedOut</span>, c&apos;est aussi&nbsp;:
         </h2>
         <MultipleCTA data={[
           {
@@ -139,19 +102,60 @@ const JeVeuxOrienter = () => {
           },
         ]}
         animate />
-        <hr className="uk-divider-small"/>
-        <div className="uk-flex uk-flex-top uk-flex-center uk-padding-small">
+        <div className="uk-margin-large-top uk-flex uk-flex-column uk-flex-center uk-flex-middle">
+          <hr className="uk-divider-small uk-margin-remove"/>
+          <h3 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-top uk-margin-small-bottom">
+            Vous souhaitez être informé de l’ouverture de la prochaine promotion LinkedOut&nbsp;?
+          </h3>
           <Button
             style="secondary"
             className="uk-margin-medium-top"
-            isExternal
-            href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
-          >Je souhaite être informé de l’ouverture de la prochaine promotion LinkedOut<IconNoSSR name="chevron-right" /></Button>
+            toggle="#modal-get-info">
+            S&apos;abonner à la newsletter&nbsp;<IconNoSSR name="chevron-right" />
+          </Button>
         </div>
       </Section>
+      <Section style="muted" container="small">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top uk-width-1-2@m">
+          Ils nous ont orienté des candidats
+        </h2>
+        <div className="uk-width-expand">
+          <div className="uk-container-small">
+            <Carousel containerClasses="uk-child-width-1-1">
+              {PARTNERS.associations.map(({key, link}, index) => {
+                return (
+                  <SimpleLink
+                    isExternal
+                    target="_blank"
+                    href={link}
+                    key={index}
+                    className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
+                    <div className="uk-width-large uk-flex uk-flex-center uk-flex-middle">
+                      <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
+                    </div>
+                  </SimpleLink>
+                )
+              })}
+            </Carousel>
+          </div>
+        </div>
+      </Section>
+      <ModalEdit
+        formSchema={schemaGetEmail}
+        onSubmit={({email}) => {
+          Axios.post('/api/v1/cv/share', { email })
+            .then(() => {
+              UIkit.notification('Votre inscription à la newsletter a bien été prise en compte !', 'success');
+            })
+            .catch(() =>
+              UIkit.notification('Une erreur est survenue', 'danger')
+            );
+        }}
+        title="S'abonner à la newsletter LinkedOut"
+        id='modal-get-info' />
     </Layout>
   )
 };
 
 
-export default JeVeuxOrienter;
+export default Orienter;
