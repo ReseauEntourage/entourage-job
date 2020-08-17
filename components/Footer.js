@@ -151,7 +151,7 @@ const Footer = () => {
                 </SimpleLink>
               </li>
               <li className="uk-text-capitalize">
-                <SimpleLink href="/pourquoilinkedout">Pourquoi LinkedOut&nbsp;?</SimpleLink>
+                <SimpleLink href="/linkedout">Pourquoi LinkedOut&nbsp;?</SimpleLink>
               </li>
             </ul>
             <GridNoSSR row middle className="uk-flex-right@m uk-flex-center">
