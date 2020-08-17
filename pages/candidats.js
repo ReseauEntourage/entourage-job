@@ -6,6 +6,7 @@ import ButtonIcon from '../components/utils/ButtonIcon';
 import {FILTERS_DATA} from "../constants";
 import {getChildrenFilters} from "../utils";
 
+let debounceTimeoutId;
 
 const initializeFilters = () => {
   return FILTERS_DATA.reduce((acc, curr) => {
@@ -14,7 +15,7 @@ const initializeFilters = () => {
   }, {});
 };
 
-const LesCandidats = () => {
+const Candidats = () => {
   const [search, setSearch] = useState();
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
   const [filters, setFilters] = useState(initializeFilters());
@@ -76,6 +77,14 @@ const LesCandidats = () => {
     }
   }, [numberOfResults]);
 
+  const startSearch = (event) => {
+    if (event.target.value) {
+      setSearch(event.target.value);
+    } else {
+      setSearch(null);
+    }
+  };
+
   return (
     <Layout title="Les candidats - LinkedOut">
       <Section style="default">
@@ -102,13 +111,11 @@ const LesCandidats = () => {
                 <input
                   className="uk-search-input"
                   type="search"
-                  placeholder="Search..."
+                  placeholder="Rechercher un candidat..."
                   onChange={(event) => {
-                    if (event.target.value) {
-                      setSearch(event.target.value);
-                    } else {
-                      setSearch(null);
-                    }
+                    clearTimeout(debounceTimeoutId);
+                    event.persist();
+                    debounceTimeoutId = setTimeout(() => startSearch(event), 500);
                   }}
                 />
               </form>
@@ -200,4 +207,4 @@ const LesCandidats = () => {
     </Layout>
   );
 };
-export default LesCandidats;
+export default Candidats;

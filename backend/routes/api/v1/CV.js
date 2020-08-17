@@ -25,10 +25,9 @@ router.post(
   upload.single('profileImage'),
   async (req, res) => {
     // si le cv est une string json le parser, sinon prendre l'objet
-    const reqCV =
-      typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
-      checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
+    const reqCV = typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
 
+    checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
       switch (req.payload.role) {
         case USER_ROLES.CANDIDAT:
           reqCV.status = CV_STATUS.Pending.value;
