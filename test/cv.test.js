@@ -11,6 +11,7 @@ const {
 const cvFactory = require('./factories/cvFactory');
 const { USER_ROLES } = require('../constants');
 const { CV_STATUS } = require('../constants');
+const userFactory = require('./factories/userFactory');
 
 
 describe('CV', () => {
@@ -22,19 +23,25 @@ describe('CV', () => {
     beforeAll(async () => {
         serverTest = await startTestServer();
         await recreateTestDB();
-        loggedInAdmin = await createLoggedInUser({
+        const admin = await userFactory({
             role: USER_ROLES.ADMIN,
             password: 'admin',
         });
-        loggedInCoach = await createLoggedInUser({
+        const coach = await userFactory({
             role: USER_ROLES.COACH,
             password: 'coach',
         });
-        loggedInCandidat = await createLoggedInUser({
+        const candidat = await userFactory({
             role: USER_ROLES.CANDIDAT,
             password: 'candidat',
         });
-        await associateCoachAndCandidat(loggedInCoach.user.id, loggedInCandidat.user.id);
+        admin.password = 'admin';
+        coach.password = 'coach';
+        candidat.password = 'candidat';
+        await associateCoachAndCandidat(coach, candidat);
+        loggedInAdmin = await createLoggedInUser(admin, false);
+        loggedInCoach = await createLoggedInUser(coach, false);
+        loggedInCandidat = await createLoggedInUser(candidat, false);
     });
 
     afterAll(async () => {
@@ -126,11 +133,17 @@ describe('CV', () => {
             });
         });
         describe('R - Read 1 CV', () => {
-            it('Should return 200', async () => {
+            it('Should return 200 if valid user id provided', async () => {
                 const response = await request(serverTest)
                     .get(`${route}/?userId=${loggedInCandidat.user.id}`);
+                console.log('READ//////////', response.body);
                 expect(response.status).toBe(200);
-            })
+            });
+            it('Should return 401 if invalid user id provided', async () => {
+                const response = await request(serverTest)
+                    .get(`${route}/?userId=123-fakeuserid`);
+                expect(response.status).toBe(401);
+            });
         });
         describe.skip('R - Read List of CVs', () => {
 

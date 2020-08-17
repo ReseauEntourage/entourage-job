@@ -5,30 +5,50 @@ const {
     }
 } = require('../../backend/db/models/');
 
+const { getTokenAndId } = require('./user.helpers');
+
 /**
  * Associate a coach to a candidat
  * 
- * @param {string} coachId 
- * @param {string} candidatId 
+ * @param {Object} coach the coach credentials
+ * @param {string} coach.email the coach email
+ * @param {string} coach.password the coach in unhashed
+ * @param {Object} candidat the candidat credentials
+ * @param {string} candidat.email the candidat email
+ * @param {string} candidat.password the candidat in unhashed
  */
-const associateCoachAndCandidat = async (coachId, candidatId) => {
+const associateCoachAndCandidat = async (coach, candidat) => {
+    const coachCredentials = await getTokenAndId({ ...coach });
+    const candidatCredentials = await getTokenAndId({ ...candidat });
+
     await User_Candidat.update(
         {
-            candidatId,
-            coachId
+            candidatId: candidatCredentials.id,
+            coachId: coachCredentials.id
         },
         {
-            where: { candidatId }
+            where: { candidatId: candidatCredentials.id }
         });
+
     await User.update(
         {
-            coachId,
-            candidatId
+            coachId: coachCredentials.id,
+            candidatId: candidatCredentials.id
         },
         {
-            where: { id: coachId }
+            where: { id: coachCredentials.id }
         }
-    )
+    );
+}
+
+const getCandidatAndCoach = async (id) => {
+    return User_Candidat.findOne(
+        {
+            where: {
+                candidatId: id,
+            }
+        }
+    );
 }
 
 // /**
@@ -44,4 +64,7 @@ const associateCoachAndCandidat = async (coachId, candidatId) => {
 //     return user;
 // }
 
-module.exports = associateCoachAndCandidat;
+module.exports = {
+    associateCoachAndCandidat,
+    getCandidatAndCoach,
+};

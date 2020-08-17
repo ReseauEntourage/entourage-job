@@ -7,8 +7,10 @@ let app;
 /**
  * Login a user
  * 
- * @param {Object} user 
- * @returns {string} token and id (generated during user creation)
+ * @param {Object} user the user credentials
+ * @param {string} user.email the user email
+ * @param {string} user.password the user's password unhashed
+ * @returns {{ token: string, id: string }} token and id (generated during user insertion in DB)
  */
 const getTokenAndId = async (user) => {
   if (!app) {
@@ -20,6 +22,7 @@ const getTokenAndId = async (user) => {
       email: user.email,
       password: user.password,
     });
+
   return {
     token: response.body.user.token,
     id: response.body.user.id
@@ -27,12 +30,12 @@ const getTokenAndId = async (user) => {
 }
 
 /**
- * Create a user and get associated token
+ * Create a user and/or get associated token
  * 
  * @param {Object} props user data
  */
-const createLoggedInUser = async (props = {}) => {
-  const user = await userFactory(props);
+const createLoggedInUser = async (props = {}, insertDB = true) => {
+  const user = await userFactory(props, insertDB);
   const {
     token,
     id
@@ -50,4 +53,7 @@ const createLoggedInUser = async (props = {}) => {
   };
 }
 
-module.exports = createLoggedInUser;
+module.exports = {
+  createLoggedInUser,
+  getTokenAndId,
+};
