@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import Link from "next/link";
 import {Button, IconNoSSR, Section} from '../utils';
 
-const SimpleSection = ({id, style, title, text, button, children}) => {
+const SimpleSection = ({id, style, container, title, text, button, children}) => {
   return (
-    <Section container="small" style={style}>
+    <Section container={container} style={style}>
       {/* Fix so that the anchor scroll to the right height */}
       <div id={id} style={{marginTop: -140, paddingTop: 140}} />
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top uk-width-1-2@m">
           {title}
         </h2>
         <h3 className="uk-align-center uk-text-center uk-margin-large-bottom">
@@ -35,6 +35,7 @@ const SimpleSection = ({id, style, title, text, button, children}) => {
 SimpleSection.propTypes = {
   id: PropTypes.string.isRequired,
   style: PropTypes.string,
+  container: PropTypes.oneOf(['small', 'large']),
   title: PropTypes.element.isRequired,
   button: PropTypes.shape({
     label: PropTypes.string.isRequired,
@@ -48,6 +49,7 @@ SimpleSection.propTypes = {
 
 SimpleSection.defaultProps = {
   style: 'default',
+  container: 'small',
   button: undefined,
   children: undefined
 };

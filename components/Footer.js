@@ -22,14 +22,14 @@ const Footer = () => {
   const { asPath } = useRouter();
   return (
     <footer id="footer">
-      {asPath !== '/lespartenaires' && <Partners />}
+      {asPath !== '/partenaires' && <Partners />}
       <AssociationEntourage />
-      <Section style="secondary" size="small" preserveColor>
+      <Section style="secondary" size="small" container='large' preserveColor>
         <GridNoSSR
           middle
           center
           column
-          eachWidths={['1-1', '1-1']}
+          childWidths={['1-1']}
           gap="medium"
         >
           {asPath === '/' && (
@@ -118,7 +118,7 @@ const Footer = () => {
             center
             middle
             eachWidths={['auto@m', 'expand', 'auto@m']}
-            gap="small"
+            gap="medium"
           >
             <div className="uk-flex uk-flex-center uk-light">
               <Button
@@ -129,7 +129,7 @@ const Footer = () => {
                 Soutenir LinkedOut{' '}<IconNoSSR name="chevron-right" />
               </Button>
             </div>
-            <ul className="uk-padding-small uk-subnav uk-subnav-divider uk-flex-left@m uk-flex-center uk-light">
+            <ul className="uk-padding-small uk-subnav uk-subnav-divider uk-flex-center uk-light">
               <li className="uk-text-capitalize">
                 <SimpleLink
                   isExternal
@@ -151,16 +151,24 @@ const Footer = () => {
                 </SimpleLink>
               </li>
               <li className="uk-text-capitalize">
-                <SimpleLink href="/pourquoilinkedout">Pourquoi LinkedOut&nbsp;?</SimpleLink>
+                <SimpleLink href="/linkedout">Pourquoi LinkedOut&nbsp;?</SimpleLink>
+              </li>
+              <li className="uk-text-capitalize">
+                <SimpleLink
+                  href={EXTERNAL_LINKS.LKO_BLOG}
+                  isExternal
+                  target="_blank">
+                  Actualités
+                </SimpleLink>
               </li>
             </ul>
-            <GridNoSSR row middle className="uk-flex-right@m uk-flex-center">
+            <div className="uk-flex uk-flex-center">
               <Button
                 href="/login"
                 style='primary'>
                 Espace candidat{' '}<IconNoSSR name="chevron-right" />
               </Button>
-            </GridNoSSR>
+            </div>
           </GridNoSSR>
         </GridNoSSR>
       </Section>

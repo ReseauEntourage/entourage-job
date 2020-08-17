@@ -7,10 +7,10 @@ import HireSteps from "../components/sections/HireSteps";
 import WhatItBrings from "../components/sections/WhatItBrings";
 import WaysToJoin from "../components/sections/WaysToJoin";
 
-const JeVeuxRecruter = () => {
+const Recruter = () => {
 
   return (
-    <Layout title="Je veux recruter - LinkedOut">
+    <Layout title="Recruter - LinkedOut">
       <ImageTitle
         img='static/img/header_pic_hire.jpg'
         id="hire-title"
@@ -66,4 +66,4 @@ const JeVeuxRecruter = () => {
   );
 };
 
-export default JeVeuxRecruter;
+export default Recruter;

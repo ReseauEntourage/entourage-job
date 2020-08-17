@@ -11,7 +11,7 @@ import SimpleSection from "../components/sections/SimpleSection";
 import SimpleLink from "../components/utils/SimpleLink";
 
 
-const LesPartenaires = () => {
+const Partenaires = () => {
 
   const viewportHeightWithoutHeader = 'calc(100vh - 80px)';
   const viewportHeightWithoutHeaderAndPadding = 'calc(100vh - 220px)';
@@ -213,4 +213,4 @@ const LesPartenaires = () => {
 };
 
 
-export default LesPartenaires;
+export default Partenaires;

@@ -32,7 +32,7 @@ const HowItWorks = ({style}) => {
         Comment fonctionne{' '}
         <span className="uk-text-primary">LinkedOut&nbsp;?</span>
       </h2>
-      <MultipleCTA data={content} />
+      <MultipleCTA data={content} animate/>
     </Section>
   );
 };

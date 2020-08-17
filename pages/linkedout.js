@@ -80,7 +80,7 @@ Card.propTypes = {
 const innovations = [
   {
     text:
-      <div>Une approche différente, fondée sur l’humain&nbsp;: assumer les parcours de vie compliqués des candidats et leur permettre de se présenter tels qu’ils sont, en valorisant leur qualités et compétences, plutôt que de camoufler les “trous” dans le CV</div>,
+      <div>Une approche différente, fondée sur l’humain&nbsp;: assumer les parcours de vie compliqués des candidats et leur permettre de se présenter tels qu’ils sont, en valorisant leur qualités et compétences, plutôt que de camoufler les “trous” dans le CV.</div>,
   },
   {
     text:
@@ -88,7 +88,7 @@ const innovations = [
   },
   {
     text:
-      <div>Une méthode de mobilisation inédite des citoyens et des recruteurs, via la communication grand public et la viralisation des CV</div>,
+      <div>Une méthode de mobilisation inédite des citoyens et des recruteurs, via la communication grand public et la viralisation des CV.</div>,
   },
   {
     text:
@@ -100,7 +100,7 @@ const innovations = [
   }
 ];
 
-const PourquoiLinkedOut = () => {
+const Linkedout = () => {
 
   const tempInnovations = [...innovations];
 
@@ -198,7 +198,7 @@ const PourquoiLinkedOut = () => {
         title={<>LinkedOut, une <span className="uk-text-primary">brique supplémentaire</span> dans l’écosystème de l’inclusion et l’emploi</>}
         content={
           <>
-            LinkedOut vise à agir en collaboration avec les acteurs du retour vers l’emploi en proposant une brique complémentaire à l’existant (acteurs sociaux publics et associatifs, structures d’insertion, structures d’hébergement, jobboards solidaires), fondée sur une approche réseau.
+            LinkedOut vise à agir en collaboration avec les acteurs du retour vers l’emploi en proposant une brique complémentaire à l’existant (acteurs sociaux publics et associatifs, structures d’insertion, structures d’hébergement, job-boards solidaires), fondée sur une approche réseau.
             <br />
             <br />
             Pour les personnes sortant de parcours d’insertion, il s’inscrit dans la continuité de l’accompagnement socio-professionnel réalisé en amont par les travailleurs sociaux et/ou les associations, essentiel à la réussite du projet.
@@ -239,4 +239,4 @@ const PourquoiLinkedOut = () => {
 };
 
 
-export default PourquoiLinkedOut;
+export default Linkedout;

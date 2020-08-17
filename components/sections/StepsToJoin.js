@@ -28,7 +28,7 @@ const StepsToJoin = () => {
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
         Quelles sont <span className="uk-text-primary">les étapes</span> du parcours LinkedOut ?
       </h2>
-      <MultipleCTA data={content} showNumbers/>
+      <MultipleCTA data={content} showNumbers animate/>
       <div className="uk-flex uk-flex-top uk-flex-center uk-padding-small">
         <Button
           style="secondary"
