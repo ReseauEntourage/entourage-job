@@ -9,7 +9,7 @@ const SimpleSection = ({id, style, container, title, text, button, children}) =>
       {/* Fix so that the anchor scroll to the right height */}
       <div id={id} style={{marginTop: -140, paddingTop: 140}} />
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top uk-width-1-2@m">
           {title}
         </h2>
         <h3 className="uk-align-center uk-text-center uk-margin-large-bottom">

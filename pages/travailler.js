@@ -5,8 +5,8 @@ import HowToJoin from "../components/sections/HowToJoin";
 import StepsToJoin from "../components/sections/StepsToJoin";
 import Highlights from "../components/sections/Highlights";
 
-const JeVeuxTravailler = () => (
-  <Layout title="Je veux travailler - LinkedOut">
+const Travailler = () => (
+  <Layout title="Travailler - LinkedOut">
     <ImageTitle
       img='static/img/header_pic_work.jpg'
       id="work-title"
@@ -19,4 +19,4 @@ const JeVeuxTravailler = () => (
 );
 
 
-export default JeVeuxTravailler;
+export default Travailler;

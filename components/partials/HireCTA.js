@@ -50,7 +50,7 @@ const HireCTA = ({id, inverse}) => {
       text: <div>Je cherche un profil en particulier</div>,
       button: {
         label: "Je découvre les candidats",
-        href: "/lescandidats"
+        href: "/candidats"
       }
     },
     {

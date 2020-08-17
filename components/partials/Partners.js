@@ -49,7 +49,7 @@ const Partners = () => {
             </h4>
             {logoList(PARTNERS.finance)}
             <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-large-top">
-              <SimpleLink href="/lespartenaires">
+              <SimpleLink href="/partenaires">
                 En savoir plus{' '}<IconNoSSR name="arrow-right" />
               </SimpleLink>
             </div>

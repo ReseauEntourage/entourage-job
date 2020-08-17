@@ -12,7 +12,7 @@ const ContactPartial = ({ padding }) => {
 
   return (<div id="profiles" className={!padding ? 'uk-padding-remove-vertical' : ''}>
     <div className="uk-text-center">
-      <h4 className='uk-align-center uk-text-bold uk-width-1-2@m'>Je m&apos;inscris à la newsletter
+      <h4 className='uk-align-center uk-text-bold uk-width-1-2@m'>Inscrivez-vous à la newsletter
                                                                   pour avoir des nouvelles des
                                                                   candidats et être informé de
                                                                   l&apos;évolution du projet</h4>
@@ -57,7 +57,7 @@ const ContactPartial = ({ padding }) => {
             }
           }}
          >
-          Écrivez-moi&nbsp;!
+          S&apos;abonner&nbsp;!
         </Button>
       </GridNoSSR>
       <span className="uk-text-danger uk-padding-small">

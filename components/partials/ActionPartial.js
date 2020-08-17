@@ -10,21 +10,21 @@ import MultipleCTA from "./MultipleCTA";
 const datas = [
   {
     button: {
-      href: '/jeveuxaider',
+      href: '/aider',
       label: 'Je veux aider',
     },
     title: 'Je suis un particulier ou un acteur du social',
   },
   {
     button: {
-      href: '/jeveuxrecruter',
+      href: '/recruter',
       label: 'Je veux recruter'
     },
     title: 'Découvrez les profils des candidats',
   },
   {
     button: {
-      href: '/jeveuxtravailler',
+      href: '/travailler',
       label: 'Je veux travailler',
     },
     title: 'Je suis en galère',

@@ -54,7 +54,7 @@ const CandidatListPartial = ({nbShares}) => (
       <CVList nb={9} />
       <GridNoSSR middle column gap="collapse">
         <Button
-          href="/lescandidats"
+          href="/candidats"
           style='secondary'>
           Voir tous les candidats{' '}<IconNoSSR name="chevron-right" />
         </Button>
