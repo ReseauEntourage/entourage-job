@@ -20,6 +20,7 @@ const Header = ({ isHome }) => {
     { href: '/jeveuxaider', name: 'Aider' },
     { href: '/jeveuxrecruter', name: 'Recruter' },
     { href: '/jeveuxtravailler', name: 'Travailler' },
+    { href: '/jeveuxorienter', name: 'Orienter' },
   ];
   const router = useRouter();
   return (
