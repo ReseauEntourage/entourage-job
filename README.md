@@ -69,10 +69,10 @@ Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
 
 - `NODE_ENV=test npx sequelize db:migrate`
 
-## 6# Lancer les test
+## 6# Lancer les tests
 
-- `npm run test` to run the tests with coverage report
+- `npm run test` pour lancer les tests avec un rapport de couverture
 
-- `npm run dev-test` to run the tests in watch mode without coverage report
+- `npm run dev-test` pour lancer les tests en mode watch sans rapport de couverture
 
 ### You are all set !
