@@ -1,5 +1,6 @@
 const {
     models: {
+        User,
         User_Candidat,
     }
 } = require('../../backend/db/models/');
@@ -19,6 +20,15 @@ const associateCoachAndCandidat = async (coachId, candidatId) => {
         {
             where: { candidatId }
         });
+    await User.update(
+        {
+            coachId,
+            candidatId
+        },
+        {
+            where: { id: coachId }
+        }
+    )
 }
 
 // /**
