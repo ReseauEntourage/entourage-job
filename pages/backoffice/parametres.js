@@ -94,7 +94,7 @@ const Parametres = () => {
       <Section>
         <HeaderBackoffice
           title="Mes paramètres"
-          description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
+          description="Ici, vous pouvez gérer les données qui sont liées à votre compte sur LinkedOut. Vous pouvez aussi changer votre mail et votre mot de passe."
         />
         <GridNoSSR childWidths={['1-2@m']}>
           <GridNoSSR childWidths={['1-1']}>
@@ -124,14 +124,14 @@ const Parametres = () => {
                 />
                 <ToggleWithConfirmationModal
                   id="hidden"
-                  title="Je masque mon CV"
+                  title="Masquer mon CV"
                   modalTitle="Changer la visibilité du CV en ligne ?"
                   modalDescription={
                     <>
-                      En masquant ton CV de LinkedOut, il ne sera plus visible
+                      En masquant votre CV de LinkedOut, il ne sera plus visible
                       par les utilisateurs du site.
                       <br />
-                      Tu pourras le remettre en ligne à tout moment.
+                      Vous pourrez le remettre en ligne à tout moment.
                     </>
                   }
                   modalConfirmation="Oui, masquer mon CV"

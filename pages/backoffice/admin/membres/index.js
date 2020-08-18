@@ -77,7 +77,7 @@ const MembersAdmin = ({ query: { role } }) => {
       <Section>
         <HeaderBackoffice
           title="Gestion des membres"
-          description="Ici tu peux accéder à tous les profils des coachs et candidats afin d'effectuer un suivi individuel de leur avancée."
+          description="Ici vous pouvez accéder à tous les profils des coachs et candidats afin d'effectuer un suivi individuel de leur avancée."
         >
           <Button
             style="primary"

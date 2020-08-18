@@ -43,29 +43,6 @@ const HireCTA = ({id}) => {
     },
   ], id);
 
-  const data = [
-    {
-      title: "Vous souhaitez recruter\xa0?",
-      text:
-        <div>Recherchez le candidat qui correspond à vos besoins et proposez lui votre offre</div>,
-      button: {
-        label: "Trouver le bon candidat LinkedOut",
-        href: "/candidats"
-      }
-    },
-    {
-      title: "Mon offre d’emploi concerne plusieurs profils",
-      text: <div>Vous avez régulièrement des besoins de recrutement&nbsp;? Vous avez plusieurs
-                 offres d’emploi à pourvoir&nbsp;?</div>,
-      button: {
-        label: "J’envoie mon offre à LinkedOut",
-        href: process.env.AIRTABLE_LINK_BECOME_COACH,
-        modal: `#modal-offer-add-${id}`,
-        external: true
-      }
-    }
-  ];
-
   return (
     <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
       <div
