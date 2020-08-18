@@ -137,20 +137,22 @@ const Orienter = () => {
           </div>
         </div>
       </Section>
-      <ModalEdit
-        formSchema={schemaGetEmail}
-        onSubmit={({email}) => {
-          Axios.post('/api/v1/cv/share', { email })
-            .then(() => {
-              UIkit.notification('Votre inscription à la newsletter a bien été prise en compte !', 'success');
-            })
-            .catch(() =>
-              UIkit.notification('Une erreur est survenue', 'danger')
-            );
-        }}
-        title="S'abonner à la newsletter LinkedOut"
-        submitText="S'abonner"
-        id='modal-get-info' />
+      <div>
+        <ModalEdit
+          formSchema={schemaGetEmail}
+          onSubmit={({email}) => {
+            Axios.post('/api/v1/cv/share', { email })
+              .then(() => {
+                UIkit.notification('Votre inscription à la newsletter a bien été prise en compte !', 'success');
+              })
+              .catch(() =>
+                UIkit.notification('Une erreur est survenue', 'danger')
+              );
+          }}
+          title="S'abonner à la newsletter LinkedOut"
+          submitText="S'abonner"
+          id='modal-get-info' />
+      </div>
     </Layout>
   )
 };

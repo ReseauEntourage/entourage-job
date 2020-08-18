@@ -301,7 +301,10 @@ const CVPage = () => {
                       onSubmit={async (fields, closeModal) => {
                         const updateUser = async (onError) => {
                           try {
-                            const {data} = await Api.put(`api/v1/user/${user.id}`, fields);
+                            const {data} = await Api.put(`api/v1/user/${user.id}`, {
+                              ...fields,
+                              email: fields.email.toLowerCase()
+                            });
                             if (data) {
                               closeModal();
                               UIkit.notification('Le membre a bien été modifié', 'success');

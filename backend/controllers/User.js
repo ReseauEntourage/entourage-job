@@ -128,7 +128,7 @@ const getCompleteUser = (id) => {
 
 const getUserByEmail = async (email) => {
   const user = await User.findOne({
-    where: { email },
+    where: { email: email.toLowerCase() },
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
     include: INCLUDE_USER_CANDIDAT,
   });
