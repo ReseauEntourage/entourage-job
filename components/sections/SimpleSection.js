@@ -3,18 +3,27 @@ import PropTypes from 'prop-types';
 import Link from "next/link";
 import {Button, IconNoSSR, Section} from '../utils';
 
-const SimpleSection = ({id, style, container, title, text, button, children}) => {
+const SimpleSection = ({id, style, container, title, text, button, children, fontSize}) => {
   return (
     <Section container={container} style={style}>
       {/* Fix so that the anchor scroll to the right height */}
       <div id={id} style={{marginTop: -140, paddingTop: 140}} />
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top uk-width-1-2@m">
-          {title}
-        </h2>
-        <h3 className="uk-align-center uk-text-center uk-margin-large-bottom">
-          {text}
-        </h3>
+        <div className="uk-container-small">
+          <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+            {title}
+          </h2>
+        </div>
+        {
+          fontSize === 'small' ?
+            <h4 className="uk-align-center uk-text-center uk-margin-large-bottom">
+            {text}
+            </h4>
+            :
+            <h3 className="uk-align-center uk-text-center uk-margin-large-bottom">
+              {text}
+            </h3>
+        }
         {
           button &&
           <Button
@@ -44,14 +53,16 @@ SimpleSection.propTypes = {
     modal: PropTypes.string
   }),
   text: PropTypes.string.isRequired,
-  children: PropTypes.element
+  children: PropTypes.element,
+  fontSize: PropTypes.oneOf(['small', 'large']),
 };
 
 SimpleSection.defaultProps = {
   style: 'default',
   container: 'small',
   button: undefined,
-  children: undefined
+  children: undefined,
+  fontSize: 'large'
 };
 
 export default SimpleSection;

@@ -1,11 +1,14 @@
 import React from 'react';
 import Layout from '../components/Layout';
-import { Section, IconNoSSR } from '../components/utils';
+import { Section } from '../components/utils';
 import { DiscoverPartial } from '../components/partials';
 import ImageTitle from "../components/sections/ImageTitle";
 import HireSteps from "../components/sections/HireSteps";
 import WhatItBrings from "../components/sections/WhatItBrings";
 import WaysToJoin from "../components/sections/WaysToJoin";
+import Img from "../components/utils/Img";
+import SimpleSection from "../components/sections/SimpleSection";
+import HireCTA from "../components/partials/HireCTA";
 
 const Recruter = () => {
 
@@ -23,40 +26,43 @@ const Recruter = () => {
         <h4 className="uk-align-center uk-text-center">
           Recruteurs, plus qui quiconque, faites la différence&nbsp;! Soyez des acteurs essentiels du projet LinkedOut en donnant la chance à un ou plusieurs candidats correspondant aux compétences que vous recherchez.
         </h4>
+        <WhatItBrings />
       </Section>
-      <Section
-        id="whereTheyComeFrom"
-        style="default">
-        <div className="uk-flex uk-flex-column uk-flex-middle">
-          <div className="uk-container-small uk-flex uk-flex-column uk-flex-middle">
-            <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-small-bottom uk-margin-remove-top">
-              D&apos;où viennent les candidats <span className="uk-text-primary">LinkedOut&nbsp;?</span>
-            </h2>
-            <h3 className="uk-align-center uk-text-center">
-              LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la capacité et la motivation pour travailler&nbsp;:
-            </h3>
-          </div>
+      <SimpleSection
+        style="default"
+        container="large"
+        title={<>Les candidats LinkedOut sont coachés sur la durée pour une <span className="uk-text-primary">intégration en emploi réussie&nbsp;!</span></>}
+        text={
+          <>
+            <Img src='../static/img/candidats.jpg' alt='' className="uk-padding-large uk-padding-remove-vertical"/>
+          </>
+        }
+        id="common">
+        <div className="uk-container-small">
+          <h4 className="uk-margin-remove uk-align-center uk-text-center">
+            <ul
+              uk-scrollspy="cls:uk-animation-slide-bottom; target: > li, hr; delay: 200;"
+              className="uk-list uk-list-primary uk-margin-remove">
+              <li>
+                LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la <span className="uk-text-bold uk-text-primary">capacité</span> et la <span className="uk-text-bold uk-text-primary">motivation pour travailler</span>
+              </li>
+              <hr className="uk-divider-small"/>
+              <li >
+                Ils sont <span className="uk-text-bold uk-text-primary">soutenus</span> individuellement par des <span className="uk-text-bold uk-text-primary">bénévoles-coach</span> dans leur recherche d’emploi et après la reprise d’un emploi.
+              </li>
+              <hr className="uk-divider-small"/>
+              <li>
+                Tous candidats ont un <span className="uk-text-bold uk-text-primary">logement stable</span> ou <span className="uk-text-bold uk-text-primary">temporaire</span>, bénéficient d’un <span className="uk-text-bold uk-text-primary">accompagnement social</span> et ont les <span className="uk-text-bold uk-text-primary">papiers nécessaires</span> à la réalisation d’un contrat de travail en France.
+              </li>
+            </ul>
+          </h4>
         </div>
-        <div className="uk-margin-medium-top">
-          <img src="../static/img/candidats.jpg" alt="" />
-            <div className="uk-background-primary uk-light uk-padding uk-flex uk-flex-center">
-              <div className="uk-container-small">
-                <h4 className="uk-align-center uk-text-center uk-margin-remove">
-                  <IconNoSSR name="triangle-right"/>Personnes ayant connu des parcours de rue
-                  <br/>
-                  <br/>
-                  <IconNoSSR name="triangle-right"/>Personnes accueillies dans des structures d&apos;hébergement temporaire (hôtels sociaux, centres d&apos;hébergement d&apos;urgence, etc.)
-                  <br/>
-                  <br/>
-                  <IconNoSSR name="triangle-right"/>Personnes sortant de parcours d&apos;insertion, jeunes en précarité&nbsp;...
-                </h4>
-              </div>
-            </div>
-        </div>
-      </Section>
+      </SimpleSection>
       <WaysToJoin />
       <HireSteps />
-      <WhatItBrings />
+      <Section style="muted">
+        <HireCTA id="hirePage" />
+      </Section>
       {/*
         TODO Unhide when we'll have real testimonies
         <Reviews />
