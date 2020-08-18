@@ -140,9 +140,10 @@ const Orienter = () => {
       <div>
         <ModalEdit
           formSchema={schemaGetEmail}
-          onSubmit={({email}) => {
+          onSubmit={({email}, closeModal) => {
             Axios.post('/api/v1/cv/share', { email })
               .then(() => {
+                closeModal();
                 UIkit.notification('Votre inscription à la newsletter a bien été prise en compte !', 'success');
               })
               .catch(() =>
