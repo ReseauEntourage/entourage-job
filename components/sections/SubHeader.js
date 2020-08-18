@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Section } from '../utils';
+import {Section} from '../utils';
 import Grid from "../utils/Grid";
 
 const SubHeader = ({id, style, data}) => {
@@ -13,13 +13,15 @@ const SubHeader = ({id, style, data}) => {
         center
         gap="small">
         {data.map((item, index) =>
-          <a
-            key={index.toString()}
-            className="uk-padding-small"
-            href={item.href}
-            data-uk-scroll>
-            <h3 className="uk-text-primary uk-text-center uk-text-middle uk-margin-remove-vertical">{item.label}</h3>
-          </a>
+          <h3 className="uk-text-center uk-padding-small uk-margin-remove-vertical">
+            <a
+              key={index.toString()}
+              className="uk-link-heading"
+              href={item.href}
+              data-uk-scroll>
+              {item.label}
+            </a>
+          </h3>
         )}
       </Grid>
     </Section>
@@ -30,8 +32,8 @@ SubHeader.propTypes = {
   id: PropTypes.string.isRequired,
   style: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    href: PropTypes.string.isRequired,
   })).isRequired
 };
 

@@ -29,17 +29,13 @@ const WaysToJoin = () => {
       id="waysToJoin"
       style="muted">
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-          Plusieurs <span className="uk-text-primary">manières de rejoindre</span> LinkedOut
-        </h2>
         <div className="uk-width-expand">
-          <div className="uk-container-small uk-margin-large-bottom uk-margin-auto">
+          <div className="uk-container-small uk-margin-auto">
             <Carousel containerClasses="uk-child-width-1-1">
               {content.map(({img, description}, index) => <CarouselItem key={index} index={index} img={img} description={description} />)}
             </Carousel>
           </div>
         </div>
-        <HireCTA id="waysToJoin" />
       </div>
     </Section>
   );

@@ -498,13 +498,15 @@ a.uk-link-text:hover,
 a.uk-link-heading,
 .uk-link-heading a {
   color: inherit;
+  color: #f55f24;
 }
 a.uk-link-heading:hover,
 .uk-link-heading a:hover,
 .uk-link-toggle:hover .uk-link-heading,
 .uk-link-toggle:focus .uk-link-heading {
-  color: #f55f24;
   text-decoration: none;
+  color: #f55f24;
+  text-decoration: underline;
 }
 /* Reset
  ========================================================================== */
