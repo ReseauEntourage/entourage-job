@@ -161,7 +161,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
             onShareWindowClose={() => {
               updateShareCount(cv.UserId, 'whatsapp');
               openNewsletterModal();
-            }}            url={link}
+            }}
+            url={link}
             title={sharedDescription}
             style={{
               cursor: !actionDisabled && 'pointer',
@@ -335,7 +336,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
               {cv.reviews && cv.reviews.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">
-                    Mes recommandations
+                    Ils me recommandent
                   </h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <GridNoSSR gap="small" column>

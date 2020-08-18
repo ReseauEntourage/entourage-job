@@ -65,7 +65,7 @@ const Header = ({ isHome }) => {
                 <Button
                   href="/candidats"
                   style='primary'>
-                  Je partage un CV{' '}<IconNoSSR name="chevron-right" />
+                  Partager un CV{' '}<IconNoSSR name="chevron-right" />
                 </Button>
               </div>,
               <HamburgerNoSSR targetId="offcanvas-guest" hidden="m" />,

@@ -149,6 +149,7 @@ const Orienter = () => {
             );
         }}
         title="S'abonner à la newsletter LinkedOut"
+        submitText="S'abonner"
         id='modal-get-info' />
     </Layout>
   )

@@ -37,6 +37,7 @@ const Login = () => {
             <h1>Connexion</h1>
             <FormWithValidation
               formSchema={schemaLogin}
+              submitText="Se connecter"
               onSubmit={({ email, password }, setError) => {
                 login(email, password).catch(() => {
                   setError(
@@ -64,7 +65,7 @@ const Login = () => {
             (closeModal, nextStep) => (
               <FormWithValidation
                 ref={form}
-                submitText="Envoyer"
+                submitText="Se connecter"
                 formSchema={schemaLostPwd}
                 onCancel={closeModal}
                 onSubmit={(fields, setError) => {
