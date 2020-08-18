@@ -48,7 +48,7 @@ const UserProvider = ({ children }) => {
   const login = async (email, password) => {
     console.log('Start login');
     const { data } = await Api.post('/api/v1/auth/login', {
-      email,
+      email: email.toLowerCase(),
       password,
     });
     localStorage.setItem('access-token', data.user.token);
