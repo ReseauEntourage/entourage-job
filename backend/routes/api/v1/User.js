@@ -34,9 +34,9 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
         subject: 'Bienvenue chez LinkedOut',
         text:
           'Bonjour,\n' +
-          `Tu es maintenant inscrit sur le site LinkedOut. Tu peux accéder à ton espace personnel depuis la plateforme en renseignant ton adresse mail et le mot de passe suivant : ${userPassword}\n` +
-          "Depuis cette espace, tu peux rédiger ton CV avec l'aide de ton bénévole-coach et gérer les opportunités que tu reçois.\n" +
-          "N'hésite pas à aller changer ton mot de passe directement dans tes paramètres afin d'en créer un facile à retenir pour toi.\n\n" +
+          `Vous êtes maintenant inscrit sur le site LinkedOut. Vous pouvez accéder à votre espace personnel depuis la plateforme en renseignant votre adresse mail et le mot de passe suivant : ${userPassword}\n` +
+          "Depuis cette espace, vous pouvez rédiger votre CV avec l'aide de votre bénévole-coach et gérer les opportunités que vous recevez.\n" +
+          "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres afin d'en créer un facile à retenir pour vous.\n\n" +
           'A bientôt,\n\n' +
           "L'équipe Entourage",
       });

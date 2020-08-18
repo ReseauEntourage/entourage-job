@@ -11,6 +11,7 @@ import Axios from '../../../Axios';
 import schema from '../../../components/forms/schema/formEditOpportunity';
 import { UserContext } from '../../../components/store/UserProvider';
 import ModalEdit from '../../../components/modals/ModalEdit';
+import {mutateFormSchema} from "../../../utils";
 
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
@@ -22,6 +23,19 @@ const LesOpportunites = () => {
   const [offers, setOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // desactivation du champ de disclaimer
+  const mutatedSchema = mutateFormSchema(schema, [
+    {
+      fieldId: 'disclaimer',
+      props: [
+        {
+          propName: 'hidden',
+          value: true
+        }
+      ]
+    }
+  ]);
 
   const filters = [
     { tag: 'all', title: 'Toutes les offres' },
@@ -96,7 +110,7 @@ const LesOpportunites = () => {
       <Section>
         <HeaderBackoffice
           title="Modération des offres d'emploi"
-          description="Ici tu peux accéder à toutes les opportunités et valider les offres qui se retrouveront ensuite dans les tableaux des candidats."
+          description="Ici vous pouvez accéder à toutes les opportunités et valider les offres envoyées par les recruteurs !"
         >
           <Button
             style="primary"
@@ -111,7 +125,7 @@ const LesOpportunites = () => {
             id="add-opportunity"
             title="Ajouter une opportunité"
             submitText="Envoyer"
-            formSchema={schema}
+            formSchema={mutatedSchema}
             defaultValues={{
               isPublic: true
             }}

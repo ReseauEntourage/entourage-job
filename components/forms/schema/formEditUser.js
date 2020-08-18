@@ -84,7 +84,7 @@ export default {
           callback([]);
         }
       },
-      placeholder: 'Tapez si candidat son coach et si coach son candidat',
+      placeholder: 'Tapez le nom du coach ou candidat à lier',
       title: 'Coach ou candidat lié',
     },
   ],

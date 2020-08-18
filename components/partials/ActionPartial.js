@@ -11,23 +11,30 @@ const datas = [
   {
     button: {
       href: '/aider',
-      label: 'Je veux aider',
+      label: 'Aider les candidats',
     },
-    title: 'Je suis un particulier ou un acteur du social',
+    title: 'Vous êtes un particulier',
+  },
+  {
+    button: {
+      href: '/orienter',
+      label: 'Orienter des candidats'
+    },
+    title: 'Vous êtes un acteur de l’insertion sociale ou professionnelle',
   },
   {
     button: {
       href: '/recruter',
-      label: 'Je veux recruter'
+      label: 'Recruter des candidats'
     },
-    title: 'Découvrez les profils des candidats',
+    title: 'Vous êtes une entreprise',
   },
   {
     button: {
       href: '/travailler',
-      label: 'Je veux travailler',
+      label: 'Rejoindre LinkedOut',
     },
-    title: 'Je suis en galère',
+    title: 'Vous cherchez du travail',
   },
 ];
 const ActionPartial = ({ style }) => (
@@ -43,15 +50,20 @@ const ActionPartial = ({ style }) => (
         </p>
       </div>
 
-      <MultipleCTA data={datas} className="uk-margin-large-bottom" />
+      <MultipleCTA
+        data={datas}
+        spacing='small'
+        className="uk-margin-large-bottom" />
       <ContactPartial />
       <SharePartial />
     </GridNoSSR>
   </Section>
 );
+
 ActionPartial.propTypes = {
   style: PropTypes.string,
 };
+
 ActionPartial.defaultProps = {
   style: 'default',
 };

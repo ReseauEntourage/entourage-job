@@ -35,7 +35,7 @@ const StepsToJoin = () => {
           className="uk-margin-medium-top"
           isExternal
           href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
-        >Je candidate{' '}<IconNoSSR name="chevron-right" /></Button>
+        >Candidater{' '}<IconNoSSR name="chevron-right" /></Button>
       </div>
       <h4 className="uk-text-center">
         Si vous avez des questions, écrivez-nous à{' '}

@@ -40,11 +40,11 @@ const Suivi = () => {
   const [loading, setLoading] = useState(true);
   const [value, setValue] = useState();
 
-  const title = user && user.role === USER_ROLES.CANDIDAT ? "Mon suivi" : "Suivi du candidat";
+  const title = user && user.role === USER_ROLES.CANDIDAT ? "Suivez votre progression" : "Suivi du candidat";
   const description = user && user.role === USER_ROLES.CANDIDAT ?
-    "Vous pouvez prendre des notes sur la progression de vos recherches, noter vos différents rendez-vous, etc. Profitez de cet espace d'écriture libre qui vous est dédié."
+    "Ici, vous pouvez prendre des notes sur la progression de vos recherches, noter vos différents rendez-vous, etc. et échanger avec votre coach. Profitez de cet espace d'écriture libre qui vous est dédié !"
     :
-    "Le candidat peut prendre des notes sur la progression de ses recherches, noter ses différents rendez-vous, etc. Profitez de cet espace d'écriture libre qui vous est dédié.";
+    "Ici, vous pouvez suivre la progression de votre candidat.e grâce à ses notes, et échanger avec lui/elle. Profitez de cet espace d'échange libre qui vous est dédié !";
 
   const updateValue = (text) => {
     setLabelClass(text && text.length > 0 && ' stay-small');
