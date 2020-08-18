@@ -281,33 +281,7 @@ describe('User', () => {
 
     });
     describe('U - Update 1 User', () => {
-
-      describe('Update password', () => {
-        it('Should return 401 if invalid password', async () => {
-          const response = await request(serverTest)
-            .put(`${route}/change-pwd`)
-            .set('authorization', `Token ${loggedInCandidat.token}`)
-            .send({
-              email: loggedInCandidat.user.email,
-              oldPassword: 'falsePassword',
-              newPassword: 'CANDIDAT',
-            })
-          expect(response.status).toBe(401);
-        });
-        it('Should return 2OO and updated user', async () => {
-          const response = await request(serverTest)
-            .put(`${route}/change-pwd`)
-            .set('authorization', `Token ${loggedInCandidat.token}`)
-            .send({
-              email: loggedInCandidat.user.email,
-              oldPassword: 'candidat',
-              newPassword: 'CANDIDAT',
-            })
-          expect(response.status).toBe(200);
-        });
-      });
-
-      describe('Update user', () => {
+      describe('Update user - /:id', () => {
         it('Should return 401 if user is not logged in', async () => {
           const updates = await userFactory({}, false);
           const response = await request(serverTest)
@@ -400,6 +374,48 @@ describe('User', () => {
             expect(response.body.role).toEqual(USER_ROLES.COACH);
           });
       });
+      describe('Update password - /change-pwd', () => {
+        it('Should return 401 if invalid password', async () => {
+          const response = await request(serverTest)
+            .put(`${route}/change-pwd`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({
+              email: loggedInCandidat.user.email,
+              oldPassword: 'falsePassword',
+              newPassword: 'CANDIDAT',
+            })
+          expect(response.status).toBe(401);
+        });
+        it('Should return 2OO and updated user', async () => {
+          const response = await request(serverTest)
+            .put(`${route}/change-pwd`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({
+              email: loggedInCandidat.user.email,
+              oldPassword: 'candidat',
+              newPassword: 'CANDIDAT',
+            })
+          expect(response.status).toBe(200);
+        });
+      });
+
+      describe('/candidat/:id', () => {
+        it('Should return 200 and updated candidat, if candidat updates himself', async () => {
+
+        });
+        it('Should return 200 and updated candidat, if coach updates candidate associated to him', async () => {
+
+        });
+        it('Should return 200 and updated candidat, if logged in admin', async () => {
+
+        });
+        it('Should return 400 , if candidat doesn\'t updates himself', async () => {
+
+        });
+        it('Should return 400, if coach updates candidate not associated to him', async () => {
+
+        });
+      })
     });
 
     describe('D - Delete 1 User', () => {
