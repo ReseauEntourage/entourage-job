@@ -7,12 +7,12 @@ const {
     resetTestDB,
     associateCoachAndCandidat,
     createLoggedInUser,
+    getCandidatUrl,
 } = require('./helpers');
 const cvFactory = require('./factories/cvFactory');
 const { USER_ROLES } = require('../constants');
 const { CV_STATUS } = require('../constants');
 const userFactory = require('./factories/userFactory');
-
 
 describe('CV', () => {
     const route = '/api/v1/cv';
@@ -20,6 +20,7 @@ describe('CV', () => {
     let loggedInAdmin;
     let loggedInCandidat;
     let loggedInCoach;
+
     beforeAll(async () => {
         serverTest = await startTestServer();
         await recreateTestDB();
@@ -45,7 +46,7 @@ describe('CV', () => {
     });
 
     afterAll(async () => {
-        await resetTestDB();
+        // await resetTestDB();
         await stopTestServer();
     });
     describe('CRUD CV', () => {
@@ -133,23 +134,55 @@ describe('CV', () => {
             });
         });
         describe('R - Read 1 CV', () => {
-            it('Should return 200 if valid user id provided', async () => {
-                const response = await request(serverTest)
-                    .get(`${route}/?userId=${loggedInCandidat.user.id}`);
-                console.log('READ//////////', response.body);
-                expect(response.status).toBe(200);
+            describe('/?userId= Get a CV by user id', () => {
+                it('Should return 200 if valid user id provided', async () => {
+                    const response = await request(serverTest)
+                        .get(`${route}/?userId=${loggedInCandidat.user.id}`);
+                    expect(response.body.UserId).toBe(loggedInCandidat.user.id);
+                    expect(response.status).toBe(200);
+                });
+                it('Should return 401 if invalid user id provided', async () => {
+                    const response = await request(serverTest)
+                        .get(`${route}/?userId=123-fakeuserid`);
+                    expect(response.status).toBe(401);
+                });
             });
-            it('Should return 401 if invalid user id provided', async () => {
-                const response = await request(serverTest)
-                    .get(`${route}/?userId=123-fakeuserid`);
-                expect(response.status).toBe(401);
+            describe('/ - Get a CV by candidat\'s url', () => {
+                it('Should return 200 if valid candidat\'s url provided', async () => {
+                    const candidatUrl = await getCandidatUrl(loggedInCandidat.user.id);
+                    const response = await request(serverTest)
+                        .get(`${route}/${candidatUrl}`);
+                    console.log('URL::::::::::::::::::::::::::::', candidatUrl);
+                    expect(response.status).toBe(200);
+                });
+                it('Should return 204 if valid url provided and candidat doesn\'t have a CV', async () => {
+                    const candidatNoCv = await createLoggedInUser({
+                        role: USER_ROLES.CANDIDAT,
+                        password: 'candidatNoCv',
+                    });
+                    const candidatNoCvUrl = getCandidatUrl(candidatNoCv.user.id);
+                    const response = await request(serverTest)
+                        .get(`${route}/${candidatNoCvUrl}`);
+                    expect(response.status).toBe(204);
+                });
+                it('Should return 401 if candidat\'s url is invalid', async () => {
+                    const response = await request(serverTest)
+                        .get(`${route}/fakeuser-1234553`);
+                    expect(response.status).toBe(401);
+                });
             });
         });
         describe.skip('R - Read List of CVs', () => {
-
-        });
-        describe.skip('U - Update 1 CV', () => {
-
+            it('Should return 200, and 1 cv', async () => {
+                const response = await request(serverTest)
+                    .get(`${route}/cards/random/?nb=1`);
+                expect(response.status).toBe(200);
+            });
+            it('Should return 200, and 1 cv if user\'s first name contain an e', async () => {
+                const response = await request(serverTest)
+                    .get(`${route}/cards/random/?nb=1&q=e`);
+                expect(response.status).toBe(200);
+            });
         });
         describe('D - Delete 1 CV', () => {
             it('Should return 200, if logged in admin', async () => {

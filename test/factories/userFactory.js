@@ -1,15 +1,12 @@
 const faker = require('faker');
-
 const {
   USER_ROLES
 } = require('../../constants');
-
 const {
   models: {
     User,
   },
 } = require('../../backend/db/models');
-
 const Auth = require('../../backend/controllers/Auth');
 
 /**
@@ -59,7 +56,8 @@ const generateUserCandidat = async (candidatId, props = {}) => {
 /**
  * Create a User in DB.
  * @param {Object} props Properties to use to create User
- * @return Promise<User>
+ * @param {boolean} insertInDB @default true
+ * @return {Promise<User>}
  */
 const userFactory = async (props = {}, insertInDB = true) => {
   const userData = await generateUser(props);

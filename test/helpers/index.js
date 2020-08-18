@@ -17,6 +17,7 @@ const {
 const {
     associateCoachAndCandidat,
     getCandidatAndCoach,
+    getCandidatUrl,
 } = require('./user_candidat.helpers')
 
 module.exports = {
@@ -26,9 +27,12 @@ module.exports = {
     resetTestDB,
     createEntities,
     getApp,
+
     createCvWithAssociations,
     createLoggedInUser,
     getTokenAndId,
+
     associateCoachAndCandidat,
     getCandidatAndCoach,
+    getCandidatUrl
 }

@@ -3,6 +3,7 @@ const { CV_STATUS } = require('../../constants');
 const {
     models: {
         CV,
+        User,
     }
 } = require('../../backend/db/models');
 
@@ -19,11 +20,20 @@ const getCvStatusValues = (cvStatus) => {
 /**
  * Generate data to create a CV
  * 
- * @param {Object<{
- *                  UserId: 
- *         }>
- * } props valid UserId corresponding to a user_candidat
+ * @param {Object} props The cv data
+ * @param {string} props.UserId UserId corresponding to a user_candidat
  * must be provided.
+ * @param {string} props.urlImg
+ * @param {string} props.intro
+ * @param {string} props.story
+ * @param {string} props.location
+ * @param {string} props.availability
+ * @param {string} props.transport
+ * @param {string} props.catchphrase
+ * @param {string} props.devise
+ * @param {boolean} props.careerPathOpen
+ * @param {string} props.status
+ * @param {number} props.version
  */
 const generateCv = async (props = {}) => {
     const fakeData = {
@@ -38,7 +48,8 @@ const generateCv = async (props = {}) => {
         careerPathOpen: fakerStatic.random.boolean(),
         status: fakerStatic.random.arrayElement(getCvStatusValues(CV_STATUS)),
         version: 1,
-    }
+    };
+
     return {
         ...fakeData,
         ...props
@@ -48,9 +59,28 @@ const generateCv = async (props = {}) => {
 /**
  * Create a cv in DB.
  * 
- * @param {Object} props valid user candidat Id must be provided
- * @param {boolean} insertInDB 
- * @return 
+ * @param {Object} props The cv data
+ * @param {string} props.UserId UserId corresponding to a user_candidat
+ * must be provided.
+ * @param {string} props.urlImg
+ * @param {string} props.intro
+ * @param {string} props.story
+ * @param {string} props.location
+ * @param {string} props.availability
+ * @param {string} props.transport
+ * @param {string} props.catchphrase
+ * @param {string} props.devise
+ * @param {boolean} props.careerPathOpen
+ * @param {string} props.status
+ * @param {number} props.version
+ * @param {Object} cvComponents The data of cv components:
+ * -ambition
+ * -businesslines
+ * -constract
+ * -language
+ * -skill
+ * @param {boolean} insertInDB @default true
+ * @return {Promise<CV>}
  */
 const cvFactory = async (
     props = {},

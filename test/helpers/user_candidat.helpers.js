@@ -51,20 +51,24 @@ const getCandidatAndCoach = async (id) => {
     );
 }
 
-// /**
-//  * Get a candidat url from the table user_candidat
-//  * 
-//  * @param {string} id of a user candidat
-//  */
-// const getCandidatUrl = async (id) => {
-//     const user = await User_Candidat.findOne({
-//         where: { candidatId: id },
-//         attributes: ['url']
-//     });
-//     return user;
-// }
+/**
+ * Get a candidat url from the table user_candidat
+ * 
+ * @param {string} id of a user candidat
+ * @returns {string} candidat's url
+ */
+const getCandidatUrl = async (id) => {
+    const data = await User_Candidat.findOne({
+        where: { candidatId: id },
+        attributes: ['url']
+    });
+    const { url } = data.dataValues;
+    console.log('getCandidatUrl', url);
+    return url;
+}
 
 module.exports = {
     associateCoachAndCandidat,
     getCandidatAndCoach,
+    getCandidatUrl,
 };
