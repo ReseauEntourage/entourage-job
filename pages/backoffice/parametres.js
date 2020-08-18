@@ -296,7 +296,7 @@ const Parametres = () => {
                   newUserData.phone = phone;
                 }
                 if (userData.email === oldEmail && newEmail0 === newEmail1) {
-                  newUserData.email = newEmail0;
+                  newUserData.email = newEmail0.toLowerCase();
                 }
                 updateUser(newUserData);
               }
@@ -305,14 +305,14 @@ const Parametres = () => {
                   newUserData.phone = phone;
                 }
                 if(oldEmail || newEmail0 || newEmail1) {
-                  if (userData.email !== oldEmail) {
+                  if (userData.email !== oldEmail.toLowerCase()) {
                     setError("L'ancienne adresse email n'est pas valide");
                   }
                   else if(newEmail0.length === 0 || newEmail0 !== newEmail1) {
                     setError("Les deux adresses email ne sont pas indentiques");
                   }
                   else {
-                    newUserData.email = newEmail0;
+                    newUserData.email = newEmail0.toLowerCase();
                     updateUser(newUserData);
                     setError("");
                   }
