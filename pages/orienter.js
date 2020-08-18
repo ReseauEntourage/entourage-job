@@ -114,7 +114,7 @@ const Orienter = () => {
       </Section>
       <Section style="muted" container="small">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top uk-width-1-2@m">
-          Ils nous ont orienté des candidats
+          <span className="uk-text-primary">Ils nous ont orienté</span> des candidats
         </h2>
         <div className="uk-width-expand">
           <div className="uk-container-small">
