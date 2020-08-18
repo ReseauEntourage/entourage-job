@@ -1,10 +1,8 @@
 /* global UIkit */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import Layout from '../components/Layout';
 import {IconNoSSR, Section, SimpleLink} from "../components/utils";
-import Grid from "../components/utils/Grid";
 import SimpleSection from "../components/sections/SimpleSection";
 import Img from "../components/utils/Img";
 import MultipleCTA from "../components/partials/MultipleCTA";
@@ -27,13 +25,10 @@ const Orienter = () => {
         text={"On a tous un rôle à jouer dans la réinsertion des personnes exclues\xa0!"} />
       <SimpleSection
         title={<>LinkedOut, un programme de <span className="uk-text-primary">l&apos;association Entourage</span></>}
-        text={
-          <>
-            Avec l’association Entourage, chaque citoyen est appelé à changer son regard et son comportement envers les personnes isolées et en précarité, pour leur redonner estime de soi et chaleur humaine. Et ce, en complémentarité du travail de l’action sociale. LinkedOut est né dans cette même veine, pour favoriser l’inclusion professionnelle des “exclus” par la mobilisation de tout un chacun.
-          </>
-        }
+        text="Avec l’association Entourage, chaque citoyen est appelé à changer son regard et son comportement envers les personnes isolées et en précarité, pour leur redonner estime de soi et chaleur humaine. Et ce, en complémentarité du travail de l’action sociale. LinkedOut est né dans cette même veine, pour favoriser l’inclusion professionnelle des “exclus” par la mobilisation de tout un chacun."
         id="entourage"
-        style='muted'>
+        style='muted'
+        fontSize='small'>
         <div className="uk-width-medium uk-padding uk-padding-remove-vertical">
           <Img src='../static/img/logo-entourage.png' alt='Logo Entourage' />
         </div>
@@ -52,15 +47,16 @@ const Orienter = () => {
           <ul
             uk-scrollspy="cls:uk-animation-slide-bottom; target: > li, hr; delay: 200;"
             className="uk-list uk-list-primary uk-margin-remove">
-            <li className="uk-text-primary">
-              <span className="uk-text-secondary">Ils sont en <span className="uk-text-bold uk-text-primary">situation d’exclusion</span> ou de <span className="uk-text-bold uk-text-primary">précarité</span>&nbsp;;</span></li>
-            <hr className="uk-divider-small"/>
-            <li className="uk-text-primary">
-              <span className="uk-text-secondary">Ils sont en <span className="uk-text-bold uk-text-primary">capacité</span> de travailler et sont éligibles à un contrat de travail en France&nbsp;;</span>
+            <li>
+              Ils sont en <span className="uk-text-bold uk-text-primary">situation d’exclusion</span> ou de <span className="uk-text-bold uk-text-primary">précarité</span>&nbsp;;
             </li>
             <hr className="uk-divider-small"/>
-            <li className="uk-text-primary">
-              <span className="uk-text-secondary">Et sont <span className="uk-text-bold uk-text-primary">motivés</span> pour retrouver un emploi.</span>
+            <li>
+              Ils sont en <span className="uk-text-bold uk-text-primary">capacité</span> de travailler et sont éligibles à un contrat de travail en France&nbsp;;
+            </li>
+            <hr className="uk-divider-small"/>
+            <li>
+              Et sont <span className="uk-text-bold uk-text-primary">motivés</span> pour retrouver un emploi.
             </li>
           </ul>
         </h3>
@@ -82,7 +78,8 @@ const Orienter = () => {
           external: true,
           newTab: true
         }}
-        id="howItWorks" />
+        id="howItWorks"
+        fontSize="small"/>
       <Section style="default" container="small">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
           <span className="uk-text-primary">LinkedOut</span>, c&apos;est aussi&nbsp;:
