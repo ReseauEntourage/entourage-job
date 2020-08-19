@@ -77,7 +77,7 @@ const CandidatCard = ({
   return (
     <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small uk-text-left">
       {/* Contenue de la carte */}
-      <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
+      <SimpleLink as={`/cv/${url}`} href="/cv/[url]" className="uk-link-toggle">
         <div className="uk-cover-container uk-margin-bottom" style={{
           height: 350
         }}>
@@ -221,7 +221,7 @@ const CandidatCard = ({
       </SimpleLink>
       {/* Bas de carte */}
       <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
-        <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
+        <SimpleLink as={`/cv/${url}`} href="/cv/[url]" className="uk-link-toggle">
           <u className="uk-text-link uk-text-primary">Voir le CV</u>
         </SimpleLink>
         <GridNoSSR middle center gap="small">

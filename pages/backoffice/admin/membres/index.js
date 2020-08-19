@@ -228,7 +228,9 @@ const MembersAdmin = ({ query: { role } }) => {
                 <tbody>
                   {members.map((member, key) => (
                     <tr key={key}>
-                      <Link href={`/backoffice/admin/membres/${member.id}`}>
+                      <Link
+                        as={`/backoffice/admin/membres/${member.id}`}
+                        href="/backoffice/admin/membres/[id]">
                         <a
                           className="uk-link-reset"
                           style={{
