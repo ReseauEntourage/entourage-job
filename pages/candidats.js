@@ -5,6 +5,7 @@ import {Section, GridNoSSR, IconNoSSR, Button} from '../components/utils';
 import ButtonIcon from '../components/utils/ButtonIcon';
 import {FILTERS_DATA} from "../constants";
 import {getChildrenFilters} from "../utils";
+import Icon from "../components/utils/Icon";
 
 let debounceTimeoutId;
 
@@ -103,29 +104,29 @@ const Candidats = () => {
               LinkedOut.
             </p>
           </div>
-
-          <nav className="uk-navbar-container" data-uk-navbar>
-            <div className="uk-navbar-left uk-navbar-item uk-width-1-1">
-              <form className="uk-search uk-search-navbar uk-width-1-1">
-                <span data-uk-search-icon />
-                <input
-                  className="uk-search-input"
-                  type="search"
-                  placeholder="Rechercher un candidat..."
-                  onKeyDown={(ev) => {
-                    if (ev.key === "Enter") {
-                      ev.preventDefault();
-                    }
-                  }}
-                  onChange={(event) => {
-                    clearTimeout(debounceTimeoutId);
-                    event.persist();
-                    debounceTimeoutId = setTimeout(() => startSearch(event), 500);
-                  }}
-                />
-              </form>
+          {/* TODO REMOVE MARGINS IF MOBILE */}
+          <div className="uk-margin-large-left uk-margin-large-right ent-search-bar">
+            <form className="uk-search uk-search-navbar uk-width-expand uk-background-muted">
+              <input
+                className="uk-search-input"
+                type="search"
+                placeholder="Taper un mot-clé ou un terme pour affiner votre recherche..."
+                onKeyDown={(ev) => {
+                  if (ev.key === "Enter") {
+                    ev.preventDefault();
+                  }
+                }}
+                onChange={(event) => {
+                  clearTimeout(debounceTimeoutId);
+                  event.persist();
+                  debounceTimeoutId = setTimeout(() => startSearch(event), 500);
+                }}
+              />
+            </form>
+            <div className="ent-search-icon uk-background-primary uk-light">
+              <Icon name="search" className="uk-text-secondary" />
             </div>
-          </nav>
+          </div>
           <div className="uk-margin-large-left uk-margin-large-right uk-flex uk-flex-column uk-margin-small-bottom uk-margin-small-top">
             <GridNoSSR
               middle

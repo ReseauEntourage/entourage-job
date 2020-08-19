@@ -337,6 +337,8 @@ const getRandomShortCVs = async (nb, query) => {
     `getRandomShortCVs - Récupère des CVs au format court de manière aléatoire`
   );
 
+  const escapedQuery = query ? query.toLowerCase().replace("'", "''") : '';
+
   const cvs = await sequelize.query(`
     /* CV par recherche */
 
@@ -368,75 +370,75 @@ const getRandomShortCVs = async (nb, query) => {
         select distinct "CV_Ambitions"."CVId"
         FROM "CV_Ambitions" INNER JOIN "Ambitions"
         on "CV_Ambitions"."AmbitionId" = "Ambitions".id
-        WHERE lower("Ambitions"."name") like '%${query.toLowerCase()}%'
+        WHERE lower("Ambitions"."name") like '%${escapedQuery}%'
       )
       or cv."id" in (
         select distinct "CV_BusinessLines"."CVId"
         FROM "CV_BusinessLines" INNER JOIN "BusinessLines"
         on "CV_BusinessLines"."BusinessLineId" = "BusinessLines".id
-        where lower("BusinessLines"."name") like '%${query.toLowerCase()}%'
+        where lower("BusinessLines"."name") like '%${escapedQuery}%'
       )
       or cv."id" in (
         select distinct "CV_Contracts"."CVId"
         FROM "CV_Contracts" INNER JOIN "Contracts"
         on "CV_Contracts"."ContractId" = "Contracts".id
-        where lower("Contracts"."name") like '%${query.toLowerCase()}%'
+        where lower("Contracts"."name") like '%${escapedQuery}%'
       )
       or cv."id" in (
         select distinct "CV_Languages"."CVId"
         FROM "CV_Languages" INNER JOIN "Languages"
         on "CV_Languages"."LanguageId" = "Languages".id
-        where lower("Languages"."name") like '%${query.toLowerCase()}%'
+        where lower("Languages"."name") like '%${escapedQuery}%'
       )
       or cv."id" in (
         select distinct "CV_Locations"."CVId"
         FROM "CV_Locations" INNER JOIN "Locations"
         on "CV_Locations"."LocationId" = "Locations".id
-        where lower("Locations"."name") like '%${query.toLowerCase()}%'
+        where lower("Locations"."name") like '%${escapedQuery}%'
       )
       or cv."id" in (
         select distinct "CV_Passions"."CVId"
         FROM "CV_Passions" INNER JOIN "Passions"
         on "CV_Passions"."PassionId" = "Passions".id
-        where lower("Passions"."name") like '%${query.toLowerCase()}%'
+        where lower("Passions"."name") like '%${escapedQuery}%'
       )
       or cv."id" in (
         select distinct "CV_Skills"."CVId"
         FROM "CV_Skills" INNER JOIN "Skills"
         on "CV_Skills"."SkillId" = "Skills".id
-        where lower("Skills"."name") like '%${query.toLowerCase()}%'
+        where lower("Skills"."name") like '%${escapedQuery}%'
       )
       or cv."id" in (
         select distinct exp."CVId"
         FROM "Experiences" exp
-        where lower(exp."description") like '%${query.toLowerCase()}%'
+        where lower(exp."description") like '%${escapedQuery}%'
         or exp."id" in (
             select distinct "Experience_Skills"."ExperienceId"
             FROM "Experience_Skills" INNER JOIN "Skills"
             on "Experience_Skills"."SkillId" = "Skills".id
-            where lower("Skills"."name") like '%${query.toLowerCase()}%'
+            where lower("Skills"."name") like '%${escapedQuery}%'
         )
       )
       or cv."id" in (
           select distinct "Reviews"."CVId"
           FROM "Reviews"
-          where lower("Reviews"."name") like '%${query.toLowerCase()}%'
-          or lower("Reviews"."text") like '%${query.toLowerCase()}%'
-          or lower("Reviews"."status") like '%${query.toLowerCase()}%'
+          where lower("Reviews"."name") like '%${escapedQuery}%'
+          or lower("Reviews"."text") like '%${escapedQuery}%'
+          or lower("Reviews"."status") like '%${escapedQuery}%'
       )
       or cv."id" in (
           select "CVs".id
           FROM "Users" INNER JOIN "CVs"
           on "CVs"."UserId" = "Users"."id"
           where (
-            lower("Users"."firstName") like '%${query.toLowerCase()}%'
-            or lower("Users"."lastName") like '%${query.toLowerCase()}%'
+            lower("Users"."firstName") like '%${escapedQuery}%'
+            or lower("Users"."lastName") like '%${escapedQuery}%'
           )
       )
-      or lower(cv."catchphrase") like '%${query.toLowerCase()}%'
-      or lower(cv."availability") like '%${query.toLowerCase()}%'
-      or lower(cv."story") like '%${query.toLowerCase()}%'
-      or lower(cv."transport") like '%${query.toLowerCase()}%'
+      or lower(cv."catchphrase") like '%${escapedQuery}%'
+      or lower(cv."availability") like '%${escapedQuery}%'
+      or lower(cv."story") like '%${escapedQuery}%'
+      or lower(cv."transport") like '%${escapedQuery}%'
     )` : ''}`,
     {
       type: QueryTypes.SELECT,

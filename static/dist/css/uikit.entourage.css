@@ -3797,6 +3797,10 @@ select.uk-form-width-xsmall {
   height: 40px;
   background: transparent;
   font-size: 1.5rem;
+  line-height: 45px;
+  height: 45px;
+  padding: 0 20px;
+  font-size: 17px;
 }
 /*
  * Icon
@@ -12643,4 +12647,27 @@ iframe.uk-cover {
 .ent-filter-activated:active {
   border-color: #dc450a;
   background-color: #dc450a;
+}
+.ent-search-bar {
+  height: 45px;
+  border-radius: 23px 0 0 23px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.ent-search-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  width: 50px;
+  padding-right: 5px;
+  border-radius: 0 23px 23px 0;
+}
+.hook-search-navbar-input {
+  line-height: 45px;
+  height: 45px;
+  padding: 0 20px;
+  font-size: 17px;
 }
