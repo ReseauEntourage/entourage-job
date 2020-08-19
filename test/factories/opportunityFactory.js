@@ -14,7 +14,7 @@ const generateOpportunity = async (props) => {
         isArchived: faker.random.boolean(),
         company: faker.company.companyName(2),
         recruiterName: faker.name.findName(),
-        recruiterEmail: faker.internet.email(),
+        recruiterMail: faker.internet.email(),
         recruiterPhone: faker.phone.phoneNumber(),
         date: faker.date.past(),
         location: faker.address.city(),
@@ -28,10 +28,11 @@ const generateOpportunity = async (props) => {
 }
 
 const opportunityFactory = async (props = {}, insertInDB = true) => {
-    const opportunityData = await generateOpportunity(props);
+    let opportunityData = await generateOpportunity(props);
 
     if (insertInDB) {
-        await Opportunity.create(opportunityData);
+        const answer = await Opportunity.create(opportunityData);
+        opportunityData = answer.dataValues;
     }
     return opportunityData;
 }
