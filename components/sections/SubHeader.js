@@ -13,7 +13,7 @@ const SubHeader = ({id, style, data}) => {
         center
         gap="small">
         {data.map((item, index) =>
-          <h3 className="uk-text-center uk-padding-small uk-margin-remove-vertical">
+          <h3 key={index} className="uk-text-center uk-padding-small uk-margin-remove-vertical">
             <a
               key={index.toString()}
               className="uk-link-heading"
