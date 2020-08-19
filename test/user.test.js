@@ -5,14 +5,13 @@ const {
   recreateTestDB,
   stopTestServer,
   resetTestDB,
-  createEntities,
-} = require('./helpers/helpers');
-const createLoggedInUser = require('./helpers/user.helpers');
+  createCvWithAssociations,
+  createLoggedInUser,
+  associateCoachAndCandidat,
+} = require('./helpers');
 const {
   USER_ROLES
 } = require('../constants');
-const cvFactory = require('./factories/cvFactory');
-const createCvWithAssociations = require('./helpers/cv.helpers');
 
 const route = '/api/v1/user';
 let serverTest;
@@ -24,22 +23,29 @@ let otherCandidat;
 let cvLoggedInCandidat;
 let cvOtherCandidat;
 
-describe.skip('User', () => {
+describe('User', () => {
   beforeAll(async () => {
     await recreateTestDB();
     serverTest = await startTestServer();
-    loggedInAdmin = await createLoggedInUser({
+    const admin = await userFactory({
       role: USER_ROLES.ADMIN,
       password: 'admin',
     });
-    loggedInCoach = await createLoggedInUser({
+    const coach = await userFactory({
       role: USER_ROLES.COACH,
       password: 'coach',
-    })
-    loggedInCandidat = await createLoggedInUser({
+    });
+    const candidat = await userFactory({
       role: USER_ROLES.CANDIDAT,
       password: 'candidat',
     });
+    admin.password = 'admin';
+    coach.password = 'coach';
+    candidat.password = 'candidat';
+    await associateCoachAndCandidat(coach, candidat);
+    loggedInAdmin = await createLoggedInUser(admin, false);
+    loggedInCoach = await createLoggedInUser(coach, false);
+    loggedInCandidat = await createLoggedInUser(candidat, false);
     otherCandidat = await createLoggedInUser({
       role: USER_ROLES.CANDIDAT,
       password: 'user'
@@ -82,7 +88,7 @@ describe.skip('User', () => {
           .send(candidat);
         expect(response.status).toBe(200);
       });
-      it('Should return 404 when user data contain wrong data types', async () => {
+      it('Should return 401 when user data contain wrong data types', async () => {
         const wrongData = {
           ...await userFactory({}, false),
           firstName: 123,
@@ -91,7 +97,7 @@ describe.skip('User', () => {
           .post(`${route}`)
           .set('authorization', `Token ${loggedInAdmin.token}`)
           .send(wrongData);
-        expect(response.status).toBe(404);
+        expect(response.status).toBe(401);
       });
       it('Should return 401 when the user is not logged-in.', async () => {
         const candidat = userFactory({
@@ -123,7 +129,6 @@ describe.skip('User', () => {
         expect(response.status).toBe(409);
       });
     });
-
     describe('R - Read 1 User', () => {
       describe('/ - Get a user by ID or EMAIL', () => {
         it('Should return 401 when the user is not logged in.', async () => {
@@ -226,7 +231,6 @@ describe.skip('User', () => {
           });
       });
     });
-
     describe('R - Many Users', () => {
       describe(
         'Search - search a user where query string in email, first name or last name',
@@ -398,22 +402,56 @@ describe.skip('User', () => {
           expect(response.status).toBe(200);
         });
       });
-
       describe('/candidat/:id', () => {
-        it('Should return 200 and updated candidat, if candidat updates himself', async () => {
-
+        it('Should return 200, if candidat updates himself', async () => {
+          const response = await request(serverTest)
+            .put(`${route}/candidat/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({
+              hidden: false,
+              note: 'updated note by candidat',
+            });
+          expect(response.status).toBe(200);
         });
-        it('Should return 200 and updated candidat, if coach updates candidate associated to him', async () => {
-
+        it('Should return 200 and updated user_candidat, if coach updates candidate associated to him', async () => {
+          const response = await request(serverTest)
+            .put(`${route}/candidat/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`)
+            .send({
+              employed: false,
+              note: 'updated note by coach',
+            });
+          expect(response.status).toBe(200);
         });
-        it('Should return 200 and updated candidat, if logged in admin', async () => {
-
+        it('Should return 200 and updated user_candidat, if logged in admin', async () => {
+          const response = await request(serverTest)
+            .put(`${route}/candidat/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`)
+            .send({
+              employed: false,
+              note: 'updated note by coach',
+            });
+          expect(response.status).toBe(200);
         });
-        it('Should return 400 , if candidat doesn\'t updates himself', async () => {
-
+        it('Should return 401, if candidat doesn\'t updates himself', async () => {
+          const response = await request(serverTest)
+            .put(`${route}/candidat/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${otherCandidat.token}`)
+            .send({
+              employed: false,
+              note: 'updated note by other',
+            });
+          expect(response.status).toBe(401);
         });
-        it('Should return 400, if coach updates candidate not associated to him', async () => {
-
+        it('Should return 401, if coach updates candidate not associated to him', async () => {
+          const response = await request(serverTest)
+            .put(`${route}/candidat/${otherCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`)
+            .send({
+              employed: false,
+              note: 'updated note by not associated coach',
+            });
+          expect(response.status).toBe(401);
         });
       })
     });

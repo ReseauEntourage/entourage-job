@@ -46,7 +46,7 @@ describe('CV', () => {
     });
 
     afterAll(async () => {
-        // await resetTestDB();
+        await resetTestDB();
         await stopTestServer();
     });
     describe('CRUD CV', () => {
