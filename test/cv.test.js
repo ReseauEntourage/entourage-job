@@ -152,7 +152,6 @@ describe('CV', () => {
                     const candidatUrl = await getCandidatUrl(loggedInCandidat.user.id);
                     const response = await request(serverTest)
                         .get(`${route}/${candidatUrl}`);
-                    console.log('URL::::::::::::::::::::::::::::', candidatUrl);
                     expect(response.status).toBe(200);
                 });
                 it('Should return 204 if valid url provided and candidat doesn\'t have a CV', async () => {

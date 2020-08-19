@@ -52,6 +52,7 @@ const resetTestDB = async () => {
   await db.query('DELETE FROM "Users"');
   await db.query('DELETE FROM "User_Candidats"');
   await db.query('DELETE FROM "CVs"');
+  await db.close();
 
   // await sequelize.truncate({
   //   force: true
