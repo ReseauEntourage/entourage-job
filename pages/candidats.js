@@ -112,6 +112,11 @@ const Candidats = () => {
                   className="uk-search-input"
                   type="search"
                   placeholder="Rechercher un candidat..."
+                  onKeyDown={(ev) => {
+                    if (ev.key === "Enter") {
+                      ev.preventDefault();
+                    }
+                  }}
                   onChange={(event) => {
                     clearTimeout(debounceTimeoutId);
                     event.persist();
