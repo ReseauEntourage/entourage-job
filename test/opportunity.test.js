@@ -16,6 +16,7 @@ const userFactory = require('./factories/userFactory');
 describe('Opportunity', () => {
     let serverTest;
     const route = '/api/v1/opportunity';
+    let nbOpportunity = 10;
     let opportunitiesId;
     let loggedInAdmin;
     let loggedInCoach;
@@ -25,7 +26,12 @@ describe('Opportunity', () => {
     beforeAll(async () => {
         serverTest = await startTestServer();
         await recreateTestDB();
-        const opportunities = await createEntities(opportunityFactory, 10, {}, true);
+        const opportunities = await createEntities(
+            opportunityFactory,
+            nbOpportunity,
+            {},
+            true
+        );
         opportunitiesId = opportunities.map(o => o.id);
 
         const admin = await userFactory({
@@ -65,6 +71,8 @@ describe('Opportunity', () => {
                         .post(`${route}/`)
                         .send(opportunity);
                     expect(response.status).toBe(200);
+                    // eslint-disable-next-line no-plusplus
+                    nbOpportunity++;
                 });
                 it('Should return 401, if invalid opportunity', async () => {
                     const opportunity = await opportunityFactory({}, false);
@@ -116,7 +124,6 @@ describe('Opportunity', () => {
                         .post(`${route}/join`)
                         .set('authorization', `Token ${loggedInCoach.token}`)
                         .send(body);
-                    console.log(response.body);
                     expect(response.status).toBe(200);
                     expect(response.body.OpportunityId).toEqual(opportunityId);
                     expect(response.body.UserId).toEqual(loggedInCandidat.user.id);
@@ -162,70 +169,125 @@ describe('Opportunity', () => {
         describe.skip('R - Read 1 opportunity', () => {
 
         });
-        describe.skip('R - Read Many opportunities', () => {
+        describe('R - Read Many opportunities', () => {
+            // TODO: add a query search
             describe('Read all opportunities - /admin', () => {
-                it('Should return 200 and a list of opportunities, if logged in admin', () => {
-
+                it('Should return 200 and a list of all opportunities, if logged in admin', async () => {
+                    const response = await request(serverTest)
+                        .get(`${route}/admin`)
+                        .set('authorization', `Token ${loggedInAdmin.token}`);
+                    expect(response.status).toBe(200);
+                    expect(response.body.length).toBe(nbOpportunity);
                 });
-                it('Should return 401, if not logged in admin', () => {
-
+                it('Should return 200 and a list of searched opportunities, if logged in admin', async () => {
+                    const response = await request(serverTest)
+                        .get(`${route}/admin?query='e'`)
+                        .set('authorization', `Token ${loggedInAdmin.token}`);
+                    expect(response.status).toBe(200);
+                });
+                it('Should return 401, if not logged in admin', async () => {
+                    const response = await request(serverTest)
+                        .get(`${route}/admin`)
+                        .set('authorization', `Token ${loggedInCandidat.token}`);
+                    expect(response.status).toBe(401);
                 });
             });
             describe('Read a user\'s private opportunities - /user/private/:id', () => {
                 it('should return 200, if candidat read his opportunities', async () => {
-
+                    const response = await request(serverTest)
+                        .get(`${route}/user/private/${loggedInCandidat.user.id}`)
+                        .set('authorization', `Token ${loggedInCandidat.token}`);
+                    expect(response.status).toBe(200);
+                    expect(response.body.length).toBeGreaterThanOrEqual(1);
                 });
                 it(
                     'should return 200, if a coach read his associated candidat opportunities',
                     async () => {
-
+                        const response = await request(serverTest)
+                            .get(`${route}/user/private/${loggedInCandidat.user.id}`)
+                            .set('authorization', `Token ${loggedInCoach.token}`);
+                        expect(response.status).toBe(200);
+                        expect(response.body.length).toBeGreaterThanOrEqual(1);
                     });
                 it(
                     'should return 200, if a admin read his associated candidat opportunities',
                     async () => {
-
+                        const response = await request(serverTest)
+                            .get(`${route}/user/private/${loggedInCandidat.user.id}`)
+                            .set('authorization', `Token ${loggedInAdmin.token}`);
+                        expect(response.status).toBe(200);
+                        expect(response.body.length).toBeGreaterThanOrEqual(1);
                     });
                 it('should return 401, if invalid user id', async () => {
-
+                    const response = await request(serverTest)
+                        .get(`${route}/user/private/a824df-c9e0-42cb-adb6-02267fc9e5f6`)
+                        .set('authorization', `Token ${loggedInAdmin.token}`);
+                    expect(response.status).toBe(401);
                 });
                 it(
                     'should return 401, if candidat reads an other candidat opportunities',
                     async () => {
-
+                        const response = await request(serverTest)
+                            .get(`${route}/user/private/${loggedInCandidat.user.id}`)
+                            .set('authorization', `Token ${otherCandidat.token}`);
+                        expect(response.status).toBe(401);
                     });
                 it(
                     'should return 401, if a coach read not associate candidat\'s opportunities',
                     async () => {
-
+                        const response = await request(serverTest)
+                            .get(`${route}/user/private/${otherCandidat.user.id}`)
+                            .set('authorization', `Token ${loggedInCoach.token}`);
+                        expect(response.status).toBe(401);
                     });
             });
-            // TODO : check if this route also gets private opportunities
-            describe.skip('Read all user\'s opportunities - /user/all/:id', () => {
+            describe('Read all user\'s opportunities - /user/all/:id', () => {
                 it('should return 200, if candidat read his opportunities', async () => {
-
+                    const response = await request(serverTest)
+                        .get(`${route}/user/all/${loggedInCandidat.user.id}`)
+                        .set('authorization', `Token ${loggedInCandidat.token}`);
+                    expect(response.status).toBe(200);
+                    expect(response.body.length).toBeGreaterThanOrEqual(1);
                 });
                 it(
                     'should return 200, if a coach read his associated candidat opportunities',
                     async () => {
-
+                        const response = await request(serverTest)
+                            .get(`${route}/user/all/${loggedInCandidat.user.id}`)
+                            .set('authorization', `Token ${loggedInCoach.token}`);
+                        expect(response.status).toBe(200);
+                        expect(response.body.length).toBeGreaterThanOrEqual(1);
                     });
                 it(
                     'should return 200, if a admin read his associated candidat opportunities',
                     async () => {
-
+                        const response = await request(serverTest)
+                            .get(`${route}/user/all/${loggedInCandidat.user.id}`)
+                            .set('authorization', `Token ${loggedInAdmin.token}`);
+                        expect(response.status).toBe(200);
+                        expect(response.body.length).toBeGreaterThanOrEqual(1);
                     });
                 it('should return 401, if invalid user id', async () => {
-
+                    const response = await request(serverTest)
+                        .get(`${route}/user/all/a824df-c9e0-42cb-adb6-02267fc9e5f6`)
+                        .set('authorization', `Token ${loggedInAdmin.token}`);
+                    expect(response.status).toBe(401);
                 });
                 it(
                     'should return 401, if candidat reads an other candidat opportunities',
                     async () => {
-
+                        const response = await request(serverTest)
+                            .get(`${route}/user/all/${loggedInCandidat.user.id}`)
+                            .set('authorization', `Token ${otherCandidat.token}`);
+                        expect(response.status).toBe(401);
                     });
                 it(
                     'should return 401, if a coach read not associate candidat\'s opportunities',
                     async () => {
-
+                        const response = await request(serverTest)
+                            .get(`${route}/user/all/${otherCandidat.user.id}`)
+                            .set('authorization', `Token ${loggedInCoach.token}`);
+                        expect(response.status).toBe(401);
                     });
             });
         });
