@@ -195,7 +195,7 @@ const getMembers = (limit, offset, order, role, query) => {
           {
             model: CV,
             as: 'cvs',
-            attributes: ['version', 'status'],
+            attributes: ['version', 'status', 'urlImg'],
           },
           {
             model: User,

@@ -46,14 +46,13 @@ const Filter = ({ id, loading, filters, children, search }) => {
           <div data-uk-spinner="" />
         </div>
       ) : (
-        <GridNoSSR
+        <ul
           id={id}
-          childWidths={['1-4@l', '1-3@m', '1-2@s']}
-          left
-          top
+          className="uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l"
+          data-uk-grid=""
         >
           {children}
-        </GridNoSSR>
+        </ul>
       )}
     </div>
   );
