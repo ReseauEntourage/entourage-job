@@ -11,7 +11,8 @@ const {
   },
   Sequelize: {Op, fn, col, where},
 } = require('../db/models');
-const {cleanOpportunity, controlText} = require('./tools');
+
+const {cleanOpportunity, controlText} = require('../utils');
 
 const INCLUDE_OPPORTUNITY_COMPLETE = [
   {

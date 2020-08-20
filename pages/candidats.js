@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import Layout from '../components/Layout';
 import CVList from '../components/cv/CVList';
-import {Section, GridNoSSR, IconNoSSR, Button} from '../components/utils';
+import {Button, GridNoSSR, IconNoSSR, Section} from '../components/utils';
 import ButtonIcon from '../components/utils/ButtonIcon';
 import {FILTERS_DATA} from "../constants";
 import {getChildrenFilters} from "../utils";
@@ -38,10 +38,9 @@ const Candidats = () => {
 
       const onFilterClick = () => {
         const updatedFilters = {...filters};
-        if(index < 0) {
+        if (index < 0) {
           updatedFilters[key].push(filterConst);
-        }
-        else {
+        } else {
           updatedFilters[key].splice(index, 1);
         }
 
@@ -55,7 +54,9 @@ const Candidats = () => {
       };
 
       return (
-        <div key={key + idx} className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
+        <div
+          key={key + idx}
+          className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
           <div
             role="button"
             tabIndex={0}
@@ -70,10 +71,9 @@ const Candidats = () => {
   const numberOfFilters = Object.values(filters).reduce((acc, curr) => acc + curr.length, 0);
 
   useEffect(() => {
-    if(numberOfFilters > 0) {
+    if (numberOfFilters > 0) {
       setShowNumberOfResults(true);
-    }
-    else {
+    } else {
       setShowNumberOfResults(false);
     }
   }, [numberOfResults]);
@@ -90,124 +90,141 @@ const Candidats = () => {
     <Layout title="Les candidats - LinkedOut">
       <Section style="default">
         <GridNoSSR
-          gap="medium"
+          gap="large"
           column
           middle
-          eachWidths={['2-3@s', '1-1', '1-1', '1-1']}
+          center
+          eachWidths={['2-3@s', '1-1', '1-1']}
         >
-          <div className="uk-text-center uk-margin-medium-bottom">
+          <div className="uk-text-center">
             <h2 className="uk-text-bold">
-              Découvrez les <span className="uk-text-primary">Candidats</span>
+              Découvrez les <span className="uk-text-primary">candidats</span>
             </h2>
-            <p>
+            <div>
               Voici les CV de tous les candidats de la promotion actuelle de
               LinkedOut.
-            </p>
-          </div>
-          {/* TODO REMOVE MARGINS IF MOBILE */}
-          <div className="uk-margin-large-left uk-margin-large-right ent-search-bar">
-            <form className="uk-search uk-search-navbar uk-width-expand uk-background-muted">
-              <input
-                className="uk-search-input"
-                type="search"
-                placeholder="Taper un mot-clé ou un terme pour affiner votre recherche..."
-                onKeyDown={(ev) => {
-                  if (ev.key === "Enter") {
-                    ev.preventDefault();
-                  }
-                }}
-                onChange={(event) => {
-                  clearTimeout(debounceTimeoutId);
-                  event.persist();
-                  debounceTimeoutId = setTimeout(() => startSearch(event), 500);
-                }}
-              />
-            </form>
-            <div className="ent-search-icon uk-background-primary uk-light">
-              <Icon name="search" className="uk-text-secondary" />
             </div>
           </div>
-          <div className="uk-margin-large-left uk-margin-large-right uk-flex uk-flex-column uk-margin-small-bottom uk-margin-small-top">
-            <GridNoSSR
-              middle
-              gap='small'
-              eachWidths={['1-4@m', '3-4@m']}
-            >
-              <div className="uk-flex uk-flex-middle uk-flex-left" style={{
-                paddingTop: 5,
-                paddingBottom: 5
-              }}>
-                <Button
-                  style="text"
-                  toggle="target: #toggle-animation; animation: uk-animation-fade"
-                  onClick={() => {
-                    setFilterMenuOpened(!filterMenuOpened);
-                  }}>
-                  Filtrer par{' '}&nbsp;<IconNoSSR ratio={1.2} name={`chevron-${filterMenuOpened ? 'up' : 'down'}`} />
-                </Button>
+          <div className="uk-flex uk-flex-column uk-flex-middle">
+            <div
+              style={{maxWidth: 1000}}
+              className="uk-width-expand ent-search-bar">
+              <form className="uk-search uk-search-navbar uk-width-expand uk-background-muted">
+                <input
+                  className="uk-search-input"
+                  type="search"
+                  placeholder="Taper un mot-clé ou un terme pour affiner votre recherche..."
+                  onKeyDown={(ev) => {
+                    if (ev.key === "Enter") {
+                      ev.preventDefault();
+                    }
+                  }}
+                  onChange={(event) => {
+                    clearTimeout(debounceTimeoutId);
+                    event.persist();
+                    debounceTimeoutId = setTimeout(() => startSearch(event), 500);
+                  }}
+                />
+              </form>
+              <div className="ent-search-icon uk-background-primary uk-light">
+                <Icon name="search" className="uk-text-secondary" />
+              </div>
+            </div>
+
+            <div
+              style={{maxWidth: 1000}}
+              className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-top">
+              <GridNoSSR
+                middle
+                gap='small'
+                eachWidths={['1-4@m', '3-4@m']}
+              >
+                <div
+                  className="uk-flex uk-flex-middle uk-flex-left" style={{
+                  paddingTop: 5,
+                  paddingBottom: 5
+                }}>
+                  <Button
+                    style="text"
+                    toggle="target: #toggle-animation; animation: uk-animation-fade"
+                    onClick={() => {
+                      setFilterMenuOpened(!filterMenuOpened);
+                    }}>
+                    Filtrer par{' '}&nbsp;<IconNoSSR
+                    ratio={1.2}
+                    name={`chevron-${filterMenuOpened ? 'up' : 'down'}`} />
+                  </Button>
+                  {
+                    showNumberOfResults && numberOfFilters > 0 &&
+                    <div className="uk-text-meta uk-margin-small-left uk-text-italic">
+                      {numberOfResults} résultat{numberOfResults !== 1 ? 's' : ''}
+                    </div>
+                  }
+                </div>
                 {
-                  showNumberOfResults && numberOfFilters > 0 &&
-                  <div className="uk-text-meta uk-margin-small-left uk-text-italic">
-                    {numberOfResults} résultat{numberOfResults !== 1 ? 's' : ''}
+                  numberOfFilters > 0 &&
+                  <div className="uk-flex uk-flex-middle uk-flex-right">
+                    <div className="uk-flex uk-flex-right uk-flex-wrap uk-flex-1">
+                      {
+                        Object.values(filters).reduce((acc, curr) => {
+                          return acc.concat(curr);
+                        }, []).map((filter, index) =>
+                          <div
+                            key={filter.label + index}
+                            className="uk-flex uk-flex-center uk-flex-middle"
+                            style={{
+                              paddingRight: 5,
+                              paddingTop: 5,
+                              paddingBottom: 5
+                            }}>
+                            <span className="uk-badge">{filter.label}</span>
+                          </div>
+                        )
+                      }
+                    </div>
+                    <div className="uk-flex">
+                      {' '}&nbsp;
+                      <ButtonIcon
+                        ratio={0.9}
+                        name='close'
+                        onClick={resetFilters} />
+                    </div>
                   </div>
                 }
-              </div>
-              {
-                numberOfFilters > 0 &&
-                <div className="uk-flex uk-flex-middle uk-flex-right">
-                  <div className="uk-flex uk-flex-right uk-flex-wrap uk-flex-1">
-                    {
-                      Object.values(filters).reduce((acc, curr) => {
-                        return acc.concat(curr);
-                      }, []).map((filter, index) =>
-                        <div key={filter.label + index} className="uk-flex uk-flex-center uk-flex-middle" style={{
-                          paddingRight: 5,
-                          paddingTop: 5,
-                          paddingBottom: 5
-                        }}>
-                          <span className="uk-badge">{filter.label}</span>
-                        </div>
-                      )
-                    }
-                  </div>
-                  <div className="uk-flex">
-                    {' '}&nbsp;
-                    <ButtonIcon
-                      ratio={0.9}
-                      name='close'
-                      onClick={resetFilters} />
-                  </div>
-                </div>
-              }
-            </GridNoSSR>
+              </GridNoSSR>
 
-            <div id="toggle-animation" hidden className="uk-margin-medium-top">
-              {
-                FILTERS_DATA.map(({title, constants, key}) => {
-                  return (
-                    <div key={key}>
-                      <span className="uk-text-bold">{title}</span>
-                      <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom">
-                        {renderFilters(constants, key)}
+              <div id="toggle-animation" hidden className="uk-margin-medium-top">
+                {
+                  FILTERS_DATA.map(({title, constants, key}) => {
+                    return (
+                      <div key={key}>
+                        <span className="uk-text-bold">{title}</span>
+                        <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom">
+                          {renderFilters(constants, key)}
+                        </div>
                       </div>
-                    </div>
-                  )
-                })
-              }
-              <div className="uk-flex uk-flex-center uk-margin-medium-top">
-                <Button
-                  style="text"
-                  toggle="target: #toggle-animation; animation: uk-animation-fade"
-                  onClick={() => {
-                    setFilterMenuOpened(!filterMenuOpened);
-                  }}>
-                  Fermer la liste{' '}&nbsp;
-                  <IconNoSSR ratio={1.2} name='chevron-up' />
-                </Button>
+                    )
+                  })
+                }
+                <div className="uk-flex uk-flex-center uk-margin-medium-top">
+                  <Button
+                    style="text"
+                    toggle="target: #toggle-animation; animation: uk-animation-fade"
+                    onClick={() => {
+                      setFilterMenuOpened(!filterMenuOpened);
+                    }}>
+                    Fermer la liste{' '}&nbsp;
+                    <IconNoSSR ratio={1.2} name='chevron-up' />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-          <CVList nb={10000} search={search} filters={filters} updateNumberOfResults={setNumberOfResults}/>
+          <CVList
+            nb={10000}
+            search={search}
+            filters={filters}
+            updateNumberOfResults={setNumberOfResults} />
         </GridNoSSR>
       </Section>
     </Layout>
