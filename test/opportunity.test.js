@@ -66,7 +66,12 @@ describe('Opportunity', () => {
         describe('C - Opportunity', () => {
             describe('Anybody can create opportunities - /', () => {
                 it('Should return 200, if valid opportunity', async () => {
-                    const opportunity = await opportunityFactory({}, false);
+                    const opportunity = await opportunityFactory({
+                        isPublic: true,
+                        isValidated: true,
+                    },
+                        false
+                    );
                     const response = await request(serverTest)
                         .post(`${route}/`)
                         .send(opportunity);
@@ -330,14 +335,26 @@ describe('Opportunity', () => {
                     });
             });
         });
-        describe.skip('D - Delete 1', () => {
+        describe('D - Delete 1', () => {
             it('Should return 200, if admin', async () => {
-
+                const response = await request(serverTest)
+                    .delete(`${route}/${opportunitiesId[9]}`)
+                    .set('authorization', `Token ${loggedInAdmin.token}`);
+                expect(response.status).toBe(200);
             });
             it('Should return 401, if not admin', async () => {
-
+                console.log('ROLE', loggedInCoach.user.role)
+                const response = await request(serverTest)
+                    .delete(`${route}/${opportunitiesId[8]}`)
+                    .set('authorization', `Token ${loggedInCoach.token}`);
+                expect(response.status).toBe(401);
             });
-
+            it('Should return 401, if not opportnity doesn\'t exist', async () => {
+                const response = await request(serverTest)
+                    .delete(`${route}/a824df-c9e0-42cb-adb6-02267fc9e5f6`)
+                    .set('authorization', `Token ${loggedInCoach.token}`);
+                expect(response.status).toBe(401);
+            });
         })
     });
 });
