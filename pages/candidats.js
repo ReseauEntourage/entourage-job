@@ -132,7 +132,7 @@ const Candidats = () => {
             </div>
 
             <div
-              style={{maxWidth: 1000}}
+              style={{maxWidth: 1100}}
               className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-top">
               <GridNoSSR
                 middle
@@ -221,7 +221,6 @@ const Candidats = () => {
             </div>
           </div>
           <CVList
-            nb={10000}
             search={search}
             filters={filters}
             updateNumberOfResults={setNumberOfResults} />
