@@ -8,6 +8,7 @@ const {
     createEntities,
     createLoggedInUser,
     associateCoachAndCandidat,
+    associateOpportunityUser,
 } = require("./helpers");
 const { USER_ROLES } = require('../constants');
 const opportunityFactory = require("./factories/opportunityFactory");
@@ -17,19 +18,24 @@ describe('Opportunity', () => {
     let serverTest;
     const route = '/api/v1/opportunity';
     let nbOpportunity = 10;
+    let opportunities;
     let opportunitiesId;
     let loggedInAdmin;
     let loggedInCoach;
     let loggedInCandidat;
-    let otherCandidat
+    let otherCandidat;
+    let opportunityCandidat;
+    let opportunityOtherCandidat;
 
     beforeAll(async () => {
         serverTest = await startTestServer();
         await recreateTestDB();
-        const opportunities = await createEntities(
+        opportunities = await createEntities(
             opportunityFactory,
             nbOpportunity,
-            {},
+            {
+                isValidated: true,
+            },
             true
         );
         opportunitiesId = opportunities.map(o => o.id);
@@ -46,6 +52,11 @@ describe('Opportunity', () => {
             role: USER_ROLES.CANDIDAT,
             password: 'candidat',
         });
+        opportunityCandidat = await associateOpportunityUser(
+            opportunitiesId[5],
+            candidat.id
+        );
+
         admin.password = 'admin';
         coach.password = 'coach';
         candidat.password = 'candidat';
@@ -57,6 +68,7 @@ describe('Opportunity', () => {
             role: USER_ROLES.CANDIDAT,
             password: 'user',
         });
+
     });
     afterAll(async () => {
         await resetTestDB();
@@ -171,11 +183,7 @@ describe('Opportunity', () => {
                 });
             });
         });
-        describe.skip('R - Read 1 opportunity', () => {
-
-        });
         describe('R - Read Many opportunities', () => {
-            // TODO: add a query search
             describe('Read all opportunities - /admin', () => {
                 it('Should return 200 and a list of all opportunities, if logged in admin', async () => {
                     const response = await request(serverTest)
@@ -296,42 +304,115 @@ describe('Opportunity', () => {
                     });
             });
         });
-        describe.skip('U - Update 1', () => {
+        describe('U - Update 1', () => {
             describe('Update an oppotunity - /', () => {
                 it('Should return 200, if admin updates an opportunity', async () => {
-
+                    const update = {
+                        ...opportunities[0],
+                        isValidated: true,
+                        isPublished: true,
+                        title: 'updated title',
+                    };
+                    const response = await request(serverTest)
+                        .put(`${route}/`)
+                        .set('authorization', `Token ${loggedInAdmin.token}`)
+                        .send(update);
+                    expect(response.status).toBe(200);
+                    expect(response.body.title).toBe('updated title');
                 });
                 it('Should return 401, if no an admin', async () => {
-
+                    const update = {
+                        ...opportunities[1],
+                        isValidated: true,
+                        isPublished: true,
+                        title: 'updated title',
+                    };
+                    const response = await request(serverTest)
+                        .put(`${route}/`)
+                        .set('authorization', `Token ${loggedInCandidat.token}`)
+                        .send(update);
+                    expect(response.status).toBe(401);
                 });
             });
             describe('Update a user opportunity association - /join', () => {
                 it(
                     'should return 200, if candidat updates his opportunities asociations',
                     async () => {
-
+                        const update = {
+                            ...opportunityCandidat,
+                            note: 'noteUpdate'
+                        }
+                        const response = await request(serverTest)
+                            .put(`${route}/join`)
+                            .set('authorization', `Token ${loggedInCandidat.token}`)
+                            .send(update);
+                        expect(response.status).toBe(200);
+                        expect(response.body.note).toBe('noteUpdate');
                     });
                 it(
-                    'should return 200, if a coach updates his associated candidat opportunities asociations', async () => {
-
+                    'should return 200, if a coach updates his associated candidat opportunities asociations',
+                    async () => {
+                        const update = {
+                            ...opportunityCandidat,
+                            seen: true,
+                        }
+                        const response = await request(serverTest)
+                            .put(`${route}/join`)
+                            .set('authorization', `Token ${loggedInCoach.token}`)
+                            .send(update);
+                        expect(response.status).toBe(200);
+                        expect(response.body.seen).toBe(true);
                     });
                 it(
                     'should return 200, if a admin updates candidat opportunities asociations',
                     async () => {
-
+                        const update = {
+                            ...opportunityCandidat,
+                            bookmarked: true
+                        }
+                        const response = await request(serverTest)
+                            .put(`${route}/join`)
+                            .set('authorization', `Token ${loggedInAdmin.token}`)
+                            .send(update);
+                        expect(response.status).toBe(200);
+                        expect(response.body.bookmarked).toBe(true);
                     });
                 it('should return 401, if invalid user id', async () => {
-
+                    const update = {
+                        ...opportunityCandidat,
+                        userId: '1111-invalid-99999',
+                    }
+                    const response = await request(serverTest)
+                        .put(`${route}/join`)
+                        .set('authorization', `Token ${loggedInCoach.token}`)
+                        .send(update);
+                    expect(response.status).toBe(200);
                 });
                 it(
                     'should return 401, if candidat updates an other candidat opportunities asociations',
                     async () => {
-
+                        const update = {
+                            ...opportunityCandidat,
+                            status: 1000,
+                        }
+                        const response = await request(serverTest)
+                            .put(`${route}/join`)
+                            .set('authorization', `Token ${otherCandidat.token}`)
+                            .send(update);
+                        expect(response.status).toBe(401);
                     });
                 it(
                     'should return 401, if a coach updates not associate candidat\'s opportunities asociations',
                     async () => {
+                        const update = {
+                            ...opportunityOtherCandidat,
 
+                        }
+                        const response = await request(serverTest)
+                            .put(`${route}/join`)
+                            .set('authorization', `Token ${loggedInCoach.token}`)
+                            .send(update);
+                        expect(response.status).toBe(401);
                     });
             });
         });
@@ -343,7 +424,6 @@ describe('Opportunity', () => {
                 expect(response.status).toBe(200);
             });
             it('Should return 401, if not admin', async () => {
-                console.log('ROLE', loggedInCoach.user.role)
                 const response = await request(serverTest)
                     .delete(`${route}/${opportunitiesId[8]}`)
                     .set('authorization', `Token ${loggedInCoach.token}`);
