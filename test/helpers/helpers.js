@@ -46,12 +46,17 @@ const recreateTestDB = async () => {
 };
 
 /**
- * Drops all the tables content
+ * Drops all the tables content and close db connection
+ * 
  */
 const resetTestDB = async () => {
   await db.query('DELETE FROM "Users"');
   await db.query('DELETE FROM "User_Candidats"');
   await db.query('DELETE FROM "CVs"');
+  await db.query('DELETE FROM "Opportunities"');
+  await db.query('DELETE FROM "Opportunity_Users"');
+
+  await db.close();
 
   // await sequelize.truncate({
   //   force: true
