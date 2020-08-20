@@ -18,7 +18,9 @@ const {
     associateCoachAndCandidat,
     getCandidatAndCoach,
     getCandidatUrl,
-} = require('./user_candidat.helpers')
+} = require('./user_candidat.helpers');
+
+const associateOpportunityUser = require('./opportunity_user.helpers');
 
 module.exports = {
     startTestServer,
@@ -34,5 +36,7 @@ module.exports = {
 
     associateCoachAndCandidat,
     getCandidatAndCoach,
-    getCandidatUrl
+    getCandidatUrl,
+
+    associateOpportunityUser,
 }
