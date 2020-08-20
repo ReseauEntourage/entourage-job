@@ -8,7 +8,10 @@ const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
 /**
  * Route : POST /api/<VERSION>/opportunity
- * Description : Créé l'opportunité
+ * Description : Create an opportunity
+ * Response: 
+ * -  200 + created opportunity
+ * -  401
  */
 router.post('/', auth(), (req, res) => {
   OpportunityController.createOpportunity(req.body)
@@ -20,8 +23,15 @@ router.post('/', auth(), (req, res) => {
 });
 
 /**
- * Route : GET /api/<VERSION>/opportunity
- * Description : Récupère toutes les opportunités
+ * Route : GET /api/<VERSION>/opportunity/admin/<QUERY>
+ * Description : Read all the opportunities matching the query
+ * on the fields title, recruiterName, location, company. If no
+ * query returns all opportunities.
+ * Params: 
+ * -  QUERY: string, optional
+ * Responses: 
+ * - 200 + list of opportunities
+ * - 401
  */
 router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.getOpportunities(req.query.query)
@@ -38,8 +48,14 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
 });
 
 /**
- * Route : GET /api/<VERSION>/...
- * Description : ...
+ * Route : GET /api/<VERSION>/user/private/<ID>
+ * Description : Read the opportunities associated to a user wich are
+ * private (isPublic: false) and validated (isValidated: true)
+ * Params: 
+ * - ID: string (user's id)
+ * Responses: 
+ * -  200 + a list of the user's opportunities
+ * -  401
  */
 router.get(
   '/user/private/:id',
@@ -58,8 +74,14 @@ router.get(
   });
 
 /**
- * Route : GET /api/<VERSION>/...
- * Description : ...
+ * Route : GET /api/<VERSION>/user/private/<ID>
+ * Description : Read the opportunities associated to a user wich are
+ * validated (isValidated: true)
+ * Params: 
+ * -  ID: string (user's id)
+ * Responses: 
+ * -  200 + a list of the user's opportunities
+ * -  401
  */
 router.get(
   '/user/all/:id',
@@ -102,8 +124,16 @@ router.get(
 */
 
 /**
- * Route : POST /api/<VERSION>/...
- * Description : ...
+ * Route: POST /api/<VERSION>/opportunity/join
+ * Description: Create an association between a user and an opporrtunity
+ * in the table opportunity_user. 
+ * Body: {
+ *          opportunityId: string,
+ *          userID: string,
+ *        }
+ * Responses:
+ * - 200 + created opportunity_user
+ * - 401
  */
 router.post(
   '/join',
@@ -122,6 +152,15 @@ router.post(
     });
   });
 
+/**
+ * Route: PUT /api/<VERSION>/opportunity
+ * Description: Admins can update an opportunity
+ * Body: 
+ * - <Opportunity> : object containint ID and fields to update
+ * Responses: 
+ * - 200 + updated opportunity
+ * - 401
+ */
 router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.updateOpportunity(req.body)
     .then((opp) => {
@@ -132,7 +171,20 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(401).send(`Une erreur est survenue`);
     });
 });
-
+/**
+ * Route: UPDATE /api/<VERSION>/opportunity/join
+ * Description: Update an association between a user and an opporrtunity
+ * in the table opportunity_user. 
+ * Body: {
+ *          id: string, //the opportunity id
+ *          UserId: string,
+ *          status: integer
+ *          bookmarked: boolean
+ *          archived: boolean
+ *          note: string
+ *          seen: boolean
+ * }
+ */
 router.put('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   checkCandidatOrCoachAuthorization(req, res, req.body.UserId, () => {
     OpportunityController.updateOpportunityUser(req.body)
@@ -147,11 +199,13 @@ router.put('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMI
 });
 
 /**
- * Route : DELETE /api/<VERSION>/cv/<ID>
- * Description : Supprime le CV correspondant à l'<id> fournit dans l'URL.
- * Paramètre :
- * - id : ID du CV à supprimer
- * Exemple : <server_url>/api/v1/cv/27272727-aaaa-bbbb-cccc-012345678927
+ * Route : DELETE /api/<VERSION>/opportunity/<ID>
+ * Description : Delete the opportunity specified in params
+ * Params :
+ * - ID : id of the opportunity to delete
+ * Response: 
+ * -  200
+ * -  401
  */
 router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.deleteOpportunity(req.params.id)
