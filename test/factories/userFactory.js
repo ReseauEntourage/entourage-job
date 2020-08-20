@@ -57,13 +57,16 @@ const generateUserCandidat = async (candidatId, props = {}) => {
  * Create a User in DB.
  * @param {Object} props Properties to use to create User
  * @param {boolean} insertInDB @default true
- * @return {Promise<User>}
+ * @return {Promise<User>} a user model,
+ * @optional if no DB insertion @returns generated user data
  */
 const userFactory = async (props = {}, insertInDB = true) => {
-  const userData = await generateUser(props);
+  let userData = await generateUser(props);
 
   if (insertInDB) {
     await User.create(userData);
+    const userDb = await User.findOne({ where: { email: userData.email } });
+    userData = userDb.dataValues;
   }
   return userData;
 };
