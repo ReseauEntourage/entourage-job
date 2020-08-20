@@ -63,7 +63,6 @@ const getCandidatUrl = async (id) => {
         attributes: ['url']
     });
     const { url } = data.dataValues;
-    console.log('getCandidatUrl', url);
     return url;
 }
 
