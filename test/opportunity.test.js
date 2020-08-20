@@ -16,16 +16,17 @@ const userFactory = require('./factories/userFactory');
 describe('Opportunity', () => {
     let serverTest;
     const route = '/api/v1/opportunity';
-    let opportunitiesID;
+    let opportunitiesId;
     let loggedInAdmin;
     let loggedInCoach;
     let loggedInCandidat;
+    let otherCandidat
 
     beforeAll(async () => {
         serverTest = await startTestServer();
         await recreateTestDB();
         const opportunities = await createEntities(opportunityFactory, 10, {}, true);
-        opportunitiesID = opportunities.map(o => o.id);
+        opportunitiesId = opportunities.map(o => o.id);
 
         const admin = await userFactory({
             role: USER_ROLES.ADMIN,
@@ -46,6 +47,10 @@ describe('Opportunity', () => {
         loggedInAdmin = await createLoggedInUser(admin, false);
         loggedInCoach = await createLoggedInUser(coach, false);
         loggedInCandidat = await createLoggedInUser(candidat, false);
+        otherCandidat = await createLoggedInUser({
+            role: USER_ROLES.CANDIDAT,
+            password: 'user',
+        });
     });
     afterAll(async () => {
         await resetTestDB();
@@ -70,26 +75,87 @@ describe('Opportunity', () => {
                     expect(response.status).toBe(401);
                 });
             });
-            describe.skip('Add a user to an opportunity - /join', () => {
+            describe('Add a user to an opportunity - /join', () => {
                 it('should return 200, if candidat had himself to an opportunity', async () => {
-
+                    const opportunityId = opportunitiesId[0];
+                    const body = {
+                        opportunityId,
+                        userId: loggedInCandidat.user.id
+                    };
+                    const response = await request(serverTest)
+                        .post(`${route}/join`)
+                        .set('authorization', `Token ${loggedInCandidat.token}`)
+                        .send(body);
+                    expect(response.status).toBe(200);
+                    expect(response.body.OpportunityId).toEqual(opportunityId);
+                    expect(response.body.UserId).toEqual(loggedInCandidat.user.id);
                 });
                 it(
                     'should return 200, if a coach had his associated candidat to an opportunity',
                     async () => {
-
+                        const opportunityId = opportunitiesId[1];
+                        const body = {
+                            opportunityId,
+                            userId: loggedInCandidat.user.id
+                        };
+                        const response = await request(serverTest)
+                            .post(`${route}/join`)
+                            .set('authorization', `Token ${loggedInCoach.token}`)
+                            .send(body);
+                        expect(response.status).toBe(200);
+                        expect(response.body.OpportunityId).toEqual(opportunityId);
+                        expect(response.body.UserId).toEqual(loggedInCandidat.user.id);
                     });
                 it('should return 200, if admin had candidat to an opportunity', async () => {
-
+                    const opportunityId = opportunitiesId[2];
+                    const body = {
+                        opportunityId,
+                        userId: loggedInCandidat.user.id
+                    };
+                    const response = await request(serverTest)
+                        .post(`${route}/join`)
+                        .set('authorization', `Token ${loggedInCoach.token}`)
+                        .send(body);
+                    console.log(response.body);
+                    expect(response.status).toBe(200);
+                    expect(response.body.OpportunityId).toEqual(opportunityId);
+                    expect(response.body.UserId).toEqual(loggedInCandidat.user.id);
                 });
                 it('should return 401, if invalid opportunity id', async () => {
-
+                    const opportunityId = 'Òa824df-c9e0-42cb-adb6-02267fc9e5f6';
+                    const body = {
+                        opportunityId,
+                        userId: loggedInCandidat.user.id
+                    };
+                    const response = await request(serverTest)
+                        .post(`${route}/join`)
+                        .set('authorization', `Token ${loggedInCoach.token}`)
+                        .send(body);
+                    expect(response.status).toBe(401);
                 });
                 it('should return 401, if candidat updates an other candidat', async () => {
-
+                    const opportunityId = opportunitiesId[3];
+                    const body = {
+                        opportunityId,
+                        userId: otherCandidat.user.id
+                    };
+                    const response = await request(serverTest)
+                        .post(`${route}/join`)
+                        .set('authorization', `Token ${loggedInCandidat.token}`)
+                        .send(body);
+                    expect(response.status).toBe(401);
                 });
                 it('should return 401, if a coach updates not associate candidat', async () => {
-
+                    const opportunityId = opportunitiesId[4];
+                    const body = {
+                        opportunityId,
+                        userId: otherCandidat.user.id
+                    };
+                    const response = await request(serverTest)
+                        .post(`${route}/join`)
+                        .set('authorization', `Token ${loggedInCoach.token}`)
+                        .send(body);
+                    expect(response.status).toBe(401);
                 });
             });
         });
