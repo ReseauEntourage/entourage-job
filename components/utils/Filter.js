@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR } from './Grid';
 
+let debounceTimeoutId;
+
 const Filter = ({ id, loading, filters, children, search }) => {
   if (filters.length > 0 && !filters.some(({ active }) => active)) {
     filters[0].active = true;
@@ -30,7 +32,11 @@ const Filter = ({ id, loading, filters, children, search }) => {
               className="uk-search-input"
               type="search"
               placeholder="Rechercher..."
-              onChange={search}
+              onChange={(event) => {
+                clearTimeout(debounceTimeoutId);
+                event.persist();
+                debounceTimeoutId = setTimeout(() => search(event), 500);
+              }}
             />
           </div>
         </div>

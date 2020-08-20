@@ -22,7 +22,7 @@ const SplashScreen = () => {
         style={{opacity: 0}}>
         <span>Partagez votre </span>
         <span className="uk-text-primary">réseau professionnel</span>
-        <span> avec ceux qui n&apos;en ont plus&nbsp;...</span>
+        <span> avec ceux qui n&apos;en ont plus...</span>
       </h2>
     </div>
   );

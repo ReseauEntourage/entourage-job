@@ -171,7 +171,8 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                   currentOffer.userOpportunity.map(
                     ({ User: { firstName, lastName, id } }) => (
                       <SimpleLink
-                        href={`/backoffice/admin/membres/${id}`}
+                        as={`/backoffice/admin/membres/${id}`}
+                        href="/backoffice/admin/membres/[id]"
                         className="uk-link-muted"
                         target="_blank"
                       >
