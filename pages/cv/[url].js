@@ -54,6 +54,7 @@ const CVPage = ({ cv, router }) => {
     </Layout>
   );
 };
+
 CVPage.getInitialProps = async ({ query }) => {
   return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
     .then(({ data }) => {
