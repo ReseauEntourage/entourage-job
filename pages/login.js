@@ -37,6 +37,7 @@ const Login = () => {
             <h1>Connexion</h1>
             <FormWithValidation
               formSchema={schemaLogin}
+              submitText="Se connecter"
               onSubmit={({ email, password }, setError) => {
                 login(email, password).catch(() => {
                   setError(
@@ -64,11 +65,11 @@ const Login = () => {
             (closeModal, nextStep) => (
               <FormWithValidation
                 ref={form}
-                submitText="Envoyer"
+                submitText="Se connecter"
                 formSchema={schemaLostPwd}
                 onCancel={closeModal}
                 onSubmit={(fields, setError) => {
-                  Api.post('/api/v1/auth/forgot', fields)
+                  Api.post('/api/v1/auth/forgot', {email: email.toLowerCase()})
                     .then(() => nextStep())
                     .catch(() => setError("L'adresse mail ne correspond à aucun utilisateur"));
                 }}

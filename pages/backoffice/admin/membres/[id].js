@@ -20,6 +20,7 @@ import {USER_ROLES} from "../../../../constants";
 import ToggleWithConfirmationModal
   from "../../../../components/backoffice/ToggleWithConfirmationModal";
 import {mutateFormSchema} from "../../../../utils";
+import OpportunitiesList from "../../../../components/opportunities/OpportunitiesList";
 
 const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
@@ -141,11 +142,11 @@ const CVPage = () => {
                 CV
               </a>
             </li>
-            <li className={onglet === 'opportunity' ? 'uk-active' : ''}>
+            <li className={onglet === 'opportunities' ? 'uk-active' : ''}>
               <a
                 aria-hidden="true"
                 onClick={() => {
-                  setOnglet('opportunity');
+                  setOnglet('opportunities');
                 }}
               >
                 Opportunités
@@ -184,6 +185,7 @@ const CVPage = () => {
               )}
             </>
           )}
+          {onglet === 'opportunities' && <OpportunitiesList candidatId={id} />}
           {onglet === 'settings' && (
             <GridNoSSR childWidths={['1-2@m']}>
               {(user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
@@ -299,7 +301,10 @@ const CVPage = () => {
                       onSubmit={async (fields, closeModal) => {
                         const updateUser = async (onError) => {
                           try {
-                            const {data} = await Api.put(`api/v1/user/${user.id}`, fields);
+                            const {data} = await Api.put(`api/v1/user/${user.id}`, {
+                              ...fields,
+                              email: fields.email.toLowerCase()
+                            });
                             if (data) {
                               closeModal();
                               UIkit.notification('Le membre a bien été modifié', 'success');

@@ -29,7 +29,7 @@ const HireSteps = () => {
         <span className="uk-text-primary">comment recruter</span>
         {' '}un candidat LinkedOut&nbsp;?
       </h2>
-      <MultipleCTA data={content} showNumbers showHorizontalDividers />
+      <MultipleCTA data={content} showNumbers showHorizontalDividers animate />
     </Section>
   );
 };

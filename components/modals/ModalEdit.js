@@ -52,7 +52,7 @@ const ModalEdit = ({
       )}
     </ModalGeneric>
   );
-}
+};
 
 ModalEdit.propTypes = {
   id: PropTypes.string.isRequired,

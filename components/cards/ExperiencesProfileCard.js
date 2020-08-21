@@ -140,7 +140,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           <div>
             <ModalEdit
               id="modal-experience-add"
-              title="Ajout - Mon expérience"
+              title="Ajout - Mes expériences et compétences"
               formSchema={schemaformEditExperience}
               onSubmit={(fields, closeModal) => {
                 closeModal();
@@ -158,7 +158,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           <div>
             <ModalEdit
               id="modal-experience-edit"
-              title="Édition - Mon expérience"
+              title="Édition - Mes expériences et compétences"
               formSchema={schemaformEditExperience}
               defaultValues={currentDefaultValue}
               onSubmit={(fields, closeModal) => {

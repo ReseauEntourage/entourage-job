@@ -40,20 +40,15 @@ const CVFiche = ({ cv, actionDisabled }) => {
       fieldId: 'candidatId',
       props: [
         {
-          propName: 'disable',
-          value: () => true
-        }
-      ]
-    },
-    {
-      fieldId: 'isPublic',
-      props: [
-        {
           propName: 'disabled',
+          value: true
+        },
+        {
+          propName: 'hidden',
           value: true
         }
       ]
-    },
+    }
   ]);
 
   const postOpportunity = async (opportunity, closeModal) => {
@@ -166,7 +161,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
             onShareWindowClose={() => {
               updateShareCount(cv.UserId, 'whatsapp');
               openNewsletterModal();
-            }}            url={link}
+            }}
+            url={link}
             title={sharedDescription}
             style={{
               cursor: !actionDisabled && 'pointer',
@@ -340,7 +336,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
               {cv.reviews && cv.reviews.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">
-                    Mes recommandations
+                    Ils me recommandent
                   </h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <GridNoSSR gap="small" column>
@@ -468,72 +464,71 @@ const CVFiche = ({ cv, actionDisabled }) => {
           {shareSection()}
 
           <hr />
-          <GridNoSSR column middle>
-            <p className="uk-text-center uk-width-xlarge@m">
-              Je suis accompagné(e) dans ma recherche d&apos;emploi et mon
-              intégration en entreprise par le projet LinkedOut. Pour plus
-              d&apos;information, contactez:
-              <br />
-              <a
-                className={`uk-link-text uk-text-primary${
-                  actionDisabled ? ' uk-disabled' : ''
-                }`}
-                target='_blank'
-                rel="noopener noreferrer"
-                href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
-              >
-                {process.env.MAILJET_CONTACT_EMAIL}
-              </a>
-            </p>
-            <ImgNoSSR
-              alt="logo linkedout"
-              className="uk-width-small"
-              src="/static/img/linkedout_logo_orange.png"
-            />
-          </GridNoSSR>
+          <div className="uk-text-center">
+            <h2 className="uk-text-bold">
+              <div className="uk-text-primary">
+                Vous avez une offre d&rsquo;emploi
+              </div>{' '}
+              à me proposer ?
+            </h2>
+            <div className="uk-flex uk-flex-center">
+              <Button
+                disabled={actionDisabled}
+                style='secondary'
+                toggle="target: #modal-send-opportunity">
+                Contactez-moi{' '}<IconNoSSR name="chevron-right" />
+              </Button>
+            </div>
+            <div>
+              <ModalEdit
+                id="modal-send-opportunity"
+                title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
+                description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
+                submitText="Envoyer"
+                defaultValues={{
+                  isPublic: false,
+                  candidatId: {
+                    value: cv.UserId,
+                    label: `${cv.user.candidat.firstName}`,
+                  },
+                }}
+                formSchema={mutatedSchema}
+                onSubmit={(fields, closeModal) => {
+                  postOpportunity({
+                    ...fields,
+                    candidatId: cv.UserId,
+                    date: Date.now(),
+                  }, closeModal);
+                }}
+              />
+            </div>
+          </div>
+
         </GridNoSSR>
       </div>
-      <div className="uk-text-center">
-        <h2 className="uk-text-bold">
-          <div className="uk-text-primary">
-            Vous avez une offre d&rsquo;emploi
-          </div>{' '}
-          à me proposer ?
-        </h2>
-        <div className="uk-flex uk-flex-center">
-          <Button
-            disabled={actionDisabled}
-            style='secondary'
-            toggle="target: #modal-send-opportunity">
-            Contactez-moi{' '}<IconNoSSR name="chevron-right" />
-          </Button>
-        </div>
-        <div>
-          <ModalEdit
-            id="modal-send-opportunity"
-            title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
-            description={
-              "Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer des opportunités aux candidats. Écrivez vos mots d'encouragement ou contactez le coach plus bas dans la page CV !"
-            }
-            submitText="Envoyer"
-            defaultValues={{
-              isPublic: false,
-              candidatId: {
-                value: cv.UserId,
-                label: `${cv.user.candidat.firstName}`,
-              },
-            }}
-            formSchema={mutatedSchema}
-            onSubmit={(fields, closeModal) => {
-              postOpportunity({
-                ...fields,
-                candidatId: cv.UserId,
-                date: Date.now(),
-              }, closeModal);
-            }}
-          />
-        </div>
-      </div>
+      <GridNoSSR column middle>
+        <p className="uk-text-center uk-width-xlarge@m">
+          Je suis accompagné(e) dans ma recherche d&apos;emploi et mon
+          intégration en entreprise par le projet LinkedOut. Pour plus
+          d&apos;information, contactez:
+          <br />
+          <a
+            className={`uk-link-text uk-text-primary${
+              actionDisabled ? ' uk-disabled' : ''
+            }`}
+            target='_blank'
+            rel="noopener noreferrer"
+            href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
+          >
+            {process.env.MAILJET_CONTACT_EMAIL}
+          </a>
+        </p>
+        <ImgNoSSR
+          alt="logo linkedout"
+          className="uk-width-small"
+          src="/static/img/linkedout_logo_orange.png"
+        />
+      </GridNoSSR>
     </div>
   );
 };

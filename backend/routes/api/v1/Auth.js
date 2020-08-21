@@ -161,7 +161,7 @@ router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */)
 /**
  * POST Réinitialisation mot de passe
  */
-router.post('/reset/:userId/:token', auth(), (req, res /* , next */) => {
+router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */) => {
   const infoLog = 'POST /reset/:userId/:token -';
   const { userId, token } = req.params;
   const { newPassword, confirmPassword } = req.body;
