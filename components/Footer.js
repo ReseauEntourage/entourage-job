@@ -33,7 +33,7 @@ const Footer = () => {
           gap="medium"
         >
           {asPath === '/' && (
-            <p className="uk-text-center uk-light">
+            <div className="uk-text-center uk-light">
               <a
                 className="ent-logo-hover"
                 href="https://www.linkedin.com/"
@@ -111,7 +111,7 @@ const Footer = () => {
               <p>
                 L&apos;usage des marques LinkedOut est autorisé dans le cadre d&apos;une licence consentie par la société LinkedIn Ireland Unlimited.
               </p>
-            </p>
+            </div>
           )}
           <GridNoSSR
             row

@@ -99,7 +99,7 @@ export default {
       id: 'disclaimer',
       name: 'disclaimer',
       component: 'text',
-      title: "* Les offres font l'objet d'une validation par Entourage avant de devenir publique",
+      title: "* Les offres font l'objet d'une validation par Entourage avant de devenir publiques",
     },
   ],
   rules: [
