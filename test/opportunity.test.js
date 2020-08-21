@@ -14,7 +14,7 @@ const { USER_ROLES } = require('../constants');
 const opportunityFactory = require("./factories/opportunityFactory");
 const userFactory = require('./factories/userFactory');
 
-describe.skip('Opportunity', () => {
+describe('Opportunity', () => {
     let serverTest;
     const route = '/api/v1/opportunity';
     let nbOpportunity = 10;
