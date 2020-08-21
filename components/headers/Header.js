@@ -13,13 +13,13 @@ import {
 } from '../utils';
 import './Header.less';
 import Button from "../utils/Button";
-import {EXTERNAL_LINKS} from '../../constants';
 
 const Header = ({ isHome }) => {
   const LINKS = [
-    { href: '/jeveuxaider', name: 'Aider' },
-    { href: '/jeveuxrecruter', name: 'Recruter' },
-    { href: '/jeveuxtravailler', name: 'Travailler' },
+    { href: '/aider', name: 'Aider' },
+    { href: '/recruter', name: 'Recruter' },
+    { href: '/travailler', name: 'Travailler' },
+    { href: '/orienter', name: 'Orienter' },
   ];
   const router = useRouter();
   return (
@@ -61,20 +61,11 @@ const Header = ({ isHome }) => {
                 }
               ),
               // separateurs en css .ent-nav
-              <div className="uk-navbar-item uk-visible@m uk-light">
-                <Button
-                  href={EXTERNAL_LINKS.LKO_BLOG}
-                  isExternal
-                  newTab
-                  style='default'>
-                  Actualités{' '}<IconNoSSR name="chevron-right" />
-                </Button>
-              </div>,
               <div className="uk-navbar-item uk-visible@m">
                 <Button
-                  href="/lescandidats"
+                  href="/candidats"
                   style='primary'>
-                  Je partage un CV{' '}<IconNoSSR name="chevron-right" />
+                  Partager un CV{' '}<IconNoSSR name="chevron-right" />
                 </Button>
               </div>,
               <HamburgerNoSSR targetId="offcanvas-guest" hidden="m" />,

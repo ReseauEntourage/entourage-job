@@ -498,13 +498,15 @@ a.uk-link-text:hover,
 a.uk-link-heading,
 .uk-link-heading a {
   color: inherit;
+  color: #f55f24;
 }
 a.uk-link-heading:hover,
 .uk-link-heading a:hover,
 .uk-link-toggle:hover .uk-link-heading,
 .uk-link-toggle:focus .uk-link-heading {
-  color: #f55f24;
   text-decoration: none;
+  color: #f55f24;
+  text-decoration: underline;
 }
 /* Reset
  ========================================================================== */
@@ -2097,7 +2099,7 @@ select.uk-form-width-xsmall {
   background-color: #151515;
   color: #fff;
   background-color: #f44d0c;
-  color: #f2f2f2;
+  color: white;
 }
 /* OnClick + Active */
 .uk-button-secondary:active,
@@ -2105,7 +2107,7 @@ select.uk-form-width-xsmall {
   background-color: #080808;
   color: #fff;
   background-color: #dc450a;
-  color: #e6e6e6;
+  color: white;
 }
 /*
  * Danger
@@ -3795,6 +3797,10 @@ select.uk-form-width-xsmall {
   height: 40px;
   background: transparent;
   font-size: 1.5rem;
+  line-height: 45px;
+  height: 45px;
+  padding: 0 25px;
+  font-size: 17px;
 }
 /*
  * Icon
@@ -10848,7 +10854,7 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-button-secondary:hover,
 .uk-offcanvas-bar .uk-button-secondary:focus {
   color: black;
-  color: #f44d0c;
+  color: #F55F24;
   background-color: #f2f2f2;
 }
 .uk-light .uk-button-secondary:active,
@@ -10874,7 +10880,7 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-button-secondary:active,
 .uk-offcanvas-bar .uk-button-secondary.uk-active {
   color: black;
-  color: #dc450a;
+  color: #F55F24;
   background-color: #e6e6e6;
 }
 .uk-light .uk-button-text,
@@ -12641,4 +12647,27 @@ iframe.uk-cover {
 .ent-filter-activated:active {
   border-color: #dc450a;
   background-color: #dc450a;
+}
+.ent-search-bar {
+  height: 45px;
+  border-radius: 23px 0 0 23px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.ent-search-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  width: 55px;
+  padding-right: 5px;
+  border-radius: 0 23px 23px 0;
+}
+.hook-search-navbar-input {
+  line-height: 45px;
+  height: 45px;
+  padding: 0 25px;
+  font-size: 17px;
 }

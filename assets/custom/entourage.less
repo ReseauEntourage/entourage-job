@@ -116,21 +116,21 @@
 
 .hook-button-secondary-hover() {
   background-color: darken(#F55F24, 5%);
-  color: darken(white, 5%);
+  color: white;
 }
 
 .hook-button-secondary-active() {
   background-color: darken(#F55F24, 10%);
-  color: darken(white, 10%);
+  color: white;
 }
 
 .hook-inverse-button-secondary-hover() {
-  color: darken(#F55F24, 5%);
+  color: #F55F24;
   background-color: darken(white, 5%);
 }
 
 .hook-inverse-button-secondary-active() {
-  color: darken(#F55F24, 10%);
+  color: #F55F24;
   background-color: darken(white, 10%);
 }
 
@@ -163,6 +163,15 @@
 .hook-badge-hover() {
   color: #333;
   background-color: #F2F2F0;
+}
+
+.hook-link-heading() {
+  color: @global-primary-background;
+}
+
+.hook-link-heading-hover() {
+  color: @global-primary-background;
+  text-decoration: underline;
 }
 
 .ent-link-muted {
@@ -308,4 +317,28 @@
   background-color: darken(#F55F24, 10%);
 }
 
+.ent-search-bar {
+  height: 45px;
+  border-radius: 23px 0 0 23px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
 
+.ent-search-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  width: 55px;
+  padding-right: 5px;
+  border-radius: 0 23px 23px 0;
+}
+
+.hook-search-navbar-input {
+  line-height: 45px;
+  height: 45px;
+  padding: 0 25px;
+  font-size: @global-font-size;
+}

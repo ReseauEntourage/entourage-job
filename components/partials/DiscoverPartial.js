@@ -49,8 +49,8 @@ const DiscoverPartial = ({style}) => {
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
           Découvrez les <span className="uk-text-primary">candidats</span>
         </h2>
-        <SimpleLink href="/lescandidats">
-          Voir tous les candidats <IconNoSSR name="arrow-right" />
+        <SimpleLink href="/candidats">
+          Voir tous les candidats{' '}<IconNoSSR name="arrow-right" />
         </SimpleLink>
       </div>
       <div className="uk-text-center uk-margin-large-top">

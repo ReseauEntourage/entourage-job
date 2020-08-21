@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import StepperModal from './StepperModal';
 import FormWithValidation from '../forms/FormWithValidation';
-import schemaGetEmail from '../forms/schema/fromGetEmail.json';
+import schemaGetEmail from '../forms/schema/formGetEmail.json';
 import Axios from '../../Axios';
 import { Button } from '../utils';
 import {useResetForm} from "../../hooks";

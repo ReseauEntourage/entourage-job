@@ -144,8 +144,8 @@ const Opportunites = () => {
     <LayoutBackOffice title={user.role === USER_ROLES.CANDIDAT ? "Mes opportunités" : "Opportunités du candidat"}>
       <Section>
         <HeaderBackoffice
-          title={user.role === USER_ROLES.CANDIDAT ? "Consulte toutes tes opportunités de travail" :"Consulte les opportunités de travail du candidat"}
-          description={user.role === USER_ROLES.CANDIDAT ? "Parcours les offres qui t'ont été adressées directement ainsi que celles communes aux différents candidats du parcours LinkedOut." : "Parcours les offres qui ont été adressées à ton candidat rattaché ainsi que celles communes aux différents candidats du parcours LinkedOut."}
+          title={user.role === USER_ROLES.CANDIDAT ? "Consultez toutes les opportunités de travail" : "Consultez les opportunités de travail du candidat"}
+          description={user.role === USER_ROLES.CANDIDAT ? "Parcourez les offres qui vous sont directement adressées ainsi que celles communes aux différents candidats du parcours LinkedOut." : "Parcourez les offres qui ont été adressées à votre candidat ainsi que celles communes aux différents candidats du parcours LinkedOut."}
         />
         {hasError ? (
           <Section className="uk-width-1-1">

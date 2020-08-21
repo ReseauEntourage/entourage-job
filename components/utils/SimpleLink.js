@@ -6,6 +6,7 @@ import { UIKIT_SCREENS } from '../variables';
 const SimpleLink = ({
   visible,
   href,
+  as,
   children,
   className,
   target,
@@ -26,7 +27,7 @@ const SimpleLink = ({
       {children}
     </a>
   ) : (
-    <Link scroll={scroll} href={href}>
+    <Link scroll={scroll} href={href} as={as}>
       <a
         target={target}
         className={classBuffer}
@@ -39,6 +40,7 @@ const SimpleLink = ({
 };
 SimpleLink.propTypes = {
   href: PropTypes.string.isRequired,
+  as: PropTypes.string,
   visible: PropTypes.oneOf(UIKIT_SCREENS),
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -50,6 +52,7 @@ SimpleLink.propTypes = {
   scroll: PropTypes.bool,
 };
 SimpleLink.defaultProps = {
+  as: undefined,
   className: '',
   visible: undefined,
   target: undefined,
