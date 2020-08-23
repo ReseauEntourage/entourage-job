@@ -73,26 +73,29 @@ const generateCv = async (props = {}) => {
  * @param {boolean} props.careerPathOpen
  * @param {string} props.status
  * @param {number} props.version
- * @param {Object} cvComponents The data of cv components:
- * -ambition
- * -businesslines
- * -constract
- * -language
- * -skill
+ * @param {Object} componentsId The ids of cv components:
+ * - {Array<string>} ambition
+ * - {Array<string>} businesslines
+ * - {Array<string>} constract
+ * - {Array<string>} language
+ * - {Array<string>} skill
  * @param {boolean} insertInDB @default true
  * @return {Promise<CV>}
  */
 const cvFactory = async (
     props = {},
-    associationsId = {},
+    componentsId = {},
     insertInDB = true,
 ) => {
     const cvData = await generateCv(props);
     const cvFull = {
         ...cvData,
-        ...associationsId
+        ...componentsId
     }
-    const cvDB = await CV.create(cvFull);
+    let cvDB;
+    if (insertInDB) {
+        cvDB = await CV.create(cvFull);
+    }
     return insertInDB ? cvDB.dataValues : cvFull;
 }
 
