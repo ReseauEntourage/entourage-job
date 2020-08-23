@@ -60,10 +60,12 @@ const generateUserCandidat = async (candidatId, props = {}) => {
  * @return {Promise<User>}
  */
 const userFactory = async (props = {}, insertInDB = true) => {
-  const userData = await generateUser(props);
+  let userData = await generateUser(props);
 
   if (insertInDB) {
     await User.create(userData);
+    const userDB = await User.findOne({ where: { email: userData.email } });
+    userData = userDB.dataValues;
   }
   return userData;
 };
