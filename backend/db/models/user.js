@@ -1,8 +1,9 @@
+/* eslint-disable no-underscore-dangle */
+
 const uuid = require('uuid/v4');
 const {
   USER_ROLES
 } = require("../../../constants");
-
 
 module.exports = (sequelize, DataTypes) => {
 
@@ -120,9 +121,72 @@ module.exports = (sequelize, DataTypes) => {
           candidatId: user.id,
           url: `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`,
         });
+        await models.Share.create({
+          CandidatId: user.id
+        });
       }
       return user;
     });
+
+    User.beforeUpdate(async (instance, option) => {
+      const nextData = instance.dataValues;
+      const previousData = instance._previousDataValues;
+      if (
+        nextData &&
+        previousData &&
+        nextData.role &&
+        nextData.role !== previousData.role
+      ) {
+          if(previousData.role === USER_ROLES.CANDIDAT && nextData.role !== USER_ROLES.CANDIDAT) {
+            try {
+              await models.User_Candidat.destroy({
+                where: {
+                  candidatId: nextData.id
+                },
+              });
+            }
+            catch (e) {
+              console.log('Candidat inexistant');
+            }
+
+          }
+          else if(previousData.role !== USER_ROLES.CANDIDAT && nextData.role === USER_ROLES.CANDIDAT) {
+            if(previousData.role === USER_ROLES.COACH) {
+              try {
+                await models.User_Candidat.update(
+                  {
+                    coachId: null
+                  },
+                  {
+                    where: {
+                      candidatId: previousData.coach.candidat.id
+                    },
+                  });
+              }
+              catch(e) {
+                console.log('Pas de candidat associé');
+              }
+            }
+
+            try {
+              await models.User_Candidat.create({
+                candidatId: nextData.id,
+                url: `${nextData.firstName.toLowerCase()}-${nextData.id.substring(0, 8)}`,
+              });
+
+              await models.Share.findOrCreate({
+                where: {
+                  CandidatId: nextData.id
+                }
+              });
+            }
+            catch (e) {
+              console.log(e);
+            }
+          }
+
+        }
+      })
   };
   return User;
 };

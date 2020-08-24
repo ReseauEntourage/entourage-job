@@ -1,6 +1,6 @@
 # Entourage Job
 
-Architecture en place :
+##Architecture en place
 
 - _.next_ : **Next.js**
 - _api_ : Contrôleurs côté serveur (routes API) **Express.js** et **Sequelize**
@@ -31,14 +31,11 @@ Architecture en place :
 - _next.config.js_ : Fichier de configuration pour **Next.js**
 - _serveur-express.js_ : Partie **Express.js**
 
-Pour la base de données :
-(Initialisation)
+## Setup
 
-- Si elle n'existe pas : sequelize db:create
-- Migrations de la structure : sequelize db:migrate
-- Intégration de données de test : sequelize db:seed:all
+### Initier et démarrer le projet en local
 
-(Par la suite)
+## 1# Prérequis
 
 - sequelize db:migrate
 
@@ -54,7 +51,14 @@ To run the project you will need to install **Docker** and **NodeJs**.
 - `docker run --name entourage-db -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 5432:5432 postgres`
 
 - You will need to get the .env file and populate it with your DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:5432/entourag`)
+Pour lancer le projet vous avez besoin de **Docker** ainsi que de **NodeJs**.
 
+## 2# Initialisation de le BDD
+
+- `docker run --name entourage-db -e POSTGRES_PASSWORD=entourage -d -p 5432:5432 postgres`
+
+- Vous avez besoin des données du fichier **`.env`** et de renseigner le champs DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:5432/entourage`) avec votre adresse.
+Ò
 - `npx sequelize db:create`
 
 - `npx sequelize db:migrate`
@@ -69,5 +73,27 @@ To run the project you will need to install **Docker** and **NodeJs**.
 
 - `docker run --name entourage-db-test -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 54300:5432 postgres`
 - `NODE_ENV=test npx sequelize db:migrate`
+
+## 3# Insertion des données dans la BDD
+
+Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
+
+- Insérez les données présentes dans le fichier qui se trouve dans **/migrations** grâce à la commande suivante: `psql -h localhost -d entourage -U entourage -f ./migrations/local-2020_07_08_17_16_25-dump.sql`
+
+## 4# Lancer le projet en mode développement
+
+- `npm run dev`
+
+## 5# Initialisation de la BDD de test
+
+- `docker run --name entourage-db-test -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 54300:5432 entourage`
+
+- Vous avez besoin des données du fichier **`.env.test`** et de renseigner le champs DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:54300/entourage`) avec votre adresse.
+
+- `NODE_ENV=test npx sequelize db:migrate`
+
+## 6# Lancer les test
+
+- `npm run test`
 
 ### You are all set !

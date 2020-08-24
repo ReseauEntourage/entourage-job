@@ -1,7 +1,6 @@
 import React from 'react';
 import { Section } from '../utils';
 import MultipleCTA from "../partials/MultipleCTA";
-import Layout from "../Layout";
 import HireCTA from "../partials/HireCTA";
 
 const WhatItBrings = () => {
@@ -18,7 +17,7 @@ const WhatItBrings = () => {
   ];
 
   return (
-    <Section id="whatItBrings" style="muted">
+    <div id="whatItBrings" className="uk-margin-large-top">
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
           Ce que LinkedOut <span className="uk-text-primary">vous apporte</span>
@@ -29,9 +28,8 @@ const WhatItBrings = () => {
           spacing="medium"
           className="uk-margin-large-bottom uk-container-small"
         />
-        <HireCTA inverse/>
       </div>
-    </Section>
+    </div>
   );
 };
 

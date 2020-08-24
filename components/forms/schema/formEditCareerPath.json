@@ -19,7 +19,7 @@
       "id": "careerPathOpen",
       "name": "careerPathOpen",
       "component": "checkbox",
-      "title": "Ouvert à toutes proposition ?"
+      "title": "Ouvert à toutes propositions ?"
     }
   ],
   "rules": [

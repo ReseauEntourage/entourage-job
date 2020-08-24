@@ -3,13 +3,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
-import schemaUsefulInformation from '../forms/schema/formEditUsefulInformation.json';
+import schemaUsefulInformation from '../forms/schema/formEditUsefulInformation';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
 
 const InfoProfileCard = ({
   contracts,
-  location,
+  locations,
   availability,
   languages,
   transport,
@@ -43,7 +43,9 @@ const InfoProfileCard = ({
       </li>
       <li>
         <IconNoSSR name="location" style={{width: 20}} />{' '}
-        {location && location !== '' ? location : 'Localisation non renseignée'}
+        {locations.length > 0
+          ? locations.join(' / ')
+          : 'Localisations non renseignées'}
       </li>
       <li>
         <IconNoSSR name="calendar" style={{width: 20}} />{' '}
@@ -70,7 +72,7 @@ const InfoProfileCard = ({
         title="Édition - Informations utiles"
         formSchema={schemaUsefulInformation}
         defaultValues={{
-          location,
+          locations,
           availability,
           transport,
           contracts,
@@ -88,7 +90,7 @@ const InfoProfileCard = ({
 );
 InfoProfileCard.propTypes = {
   contracts: PropTypes.arrayOf(PropTypes.string),
-  location: PropTypes.string,
+  locations: PropTypes.arrayOf(PropTypes.string),
   availability: PropTypes.string,
   languages: PropTypes.arrayOf(PropTypes.string),
   transport: PropTypes.string,
@@ -97,7 +99,7 @@ InfoProfileCard.propTypes = {
 
 InfoProfileCard.defaultProps = {
   contracts: [],
-  location: '',
+  locations: [],
   availability: '',
   languages: [],
   transport: '',

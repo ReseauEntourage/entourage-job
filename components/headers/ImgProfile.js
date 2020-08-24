@@ -6,20 +6,15 @@ import { ImgNoSSR } from '../utils';
 import {USER_ROLES} from '../../constants';
 
 const ImgProfile = ({ user, size }) => {
-  const { id, firstName, role } = user || useContext(UserContext).user;
+  const { id, firstName, role, candidat } = user || useContext(UserContext).user;
   const [urlImg, setUrlImg] = useState(null);
 
   useEffect(() => {
-    if (role === USER_ROLES.CANDIDAT) {
-      // TODO creer un champs dans le user pour recupérer son image de profil
-      // dans notre cas, seul un cv a une image (pas le coach/candidat/admin = USER)
-      Api.get(`/api/v1/cv/?userId=${id}`)
-        .then(({ data }) => {
-          if (data && data.urlImg) {
-            setUrlImg(data.urlImg);
-          }
-        })
-        .catch(console.error);
+    if (role === USER_ROLES.CANDIDAT && candidat && candidat.cvs) {
+      const latestCV = candidat.cvs.reduce((acc, curr) => {
+        return acc.version < curr.version ? curr : acc;
+      }, {version: -1});
+      setUrlImg(latestCV.urlImg);
     }
   }, [user]);
 
@@ -46,7 +41,7 @@ const ImgProfile = ({ user, size }) => {
       ) : (
         <span
           className="uk-text-normal uk-text-uppercase uk-position-center"
-          style={{ fontSize: size / 2, paddingBottom: size / 8, color: '#fff' }}
+          style={{ fontSize: size / 2, color: '#fff' }}
         >
           {firstName.substr(0, 1)}
         </span>
@@ -59,6 +54,12 @@ ImgProfile.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,
     firstName: PropTypes.string.isRequired,
+    candidat: PropTypes.shape({
+      cvs: PropTypes.arrayOf(PropTypes.shape({
+        version: PropTypes.number,
+        urlImg: PropTypes.string
+      }))
+    })
   }),
   size: PropTypes.number,
 };

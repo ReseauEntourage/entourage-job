@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR, Section, IconNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
+import SimpleLink from '../utils/SimpleLink';
 import Api from '../../Axios';
 
 const DiscoverPartial = ({style}) => {
@@ -9,7 +10,7 @@ const DiscoverPartial = ({style}) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    Api.get('/api/v1/cv/cards/random?nb=2')
+    Api.get('/api/v1/cv/cards/random?nb=3')
       .then(({ data }) => setCVs(data))
       .catch((err) => {
         console.error(err);
@@ -22,7 +23,7 @@ const DiscoverPartial = ({style}) => {
     if (cvs === undefined) return <div data-uk-spinner="" />;
     return (
       <GridNoSSR
-        childWidths={['1-2@m']}
+        childWidths={['1-3@m']}
         items={cvs.map((cv) => (
           <CandidatCard
             url={cv.user && cv.user.url}
@@ -36,6 +37,7 @@ const DiscoverPartial = ({style}) => {
             skills={cv.skills}
             catchphrase={cv.catchphrase}
             employed={cv.user.employed}
+            id={cv.user.candidat.id}
           />
         ))}
       />
@@ -47,9 +49,9 @@ const DiscoverPartial = ({style}) => {
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
           Découvrez les <span className="uk-text-primary">candidats</span>
         </h2>
-        <a href="#">
-          Voir tous les candidats <IconNoSSR name="arrow-right" />
-        </a>
+        <SimpleLink href="/candidats">
+          Voir tous les candidats{' '}<IconNoSSR name="arrow-right" />
+        </SimpleLink>
       </div>
       <div className="uk-text-center uk-margin-large-top">
         <Content />
