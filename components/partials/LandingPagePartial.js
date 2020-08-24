@@ -51,8 +51,18 @@ const LandingPagePartial = () => {
               >
                 <IconNoSSR name="facebook" />
               </FacebookShareButton>
-              <LinkedinShareButton
+              <TwitterShareButton
+                url={sharedURL}
+                title={sharedDescription}
+                hashtags={hashtags}
+                via={viaTwitter}
+                style={{ cursor: 'pointer' }}
                 className="uk-icon-button uk-icon-link uk-text-primary uk-margin-right"
+              >
+                <IconNoSSR name="twitter" />
+              </TwitterShareButton>
+              <LinkedinShareButton
+                className="uk-icon-button uk-icon-link uk-text-primary"
                 url={sharedURL}
                 title={sharedTitle}
                 description={sharedDescription}
@@ -60,16 +70,6 @@ const LandingPagePartial = () => {
               >
                 <IconNoSSR name="linkedin" />
               </LinkedinShareButton>
-              <TwitterShareButton
-                url={sharedURL}
-                title={sharedDescription}
-                hashtags={hashtags}
-                via={viaTwitter}
-                style={{ cursor: 'pointer' }}
-                className="uk-icon-button uk-icon-link uk-text-primary primary"
-              >
-                <IconNoSSR name="twitter" />
-              </TwitterShareButton>
             </div>
             <div>
               <a

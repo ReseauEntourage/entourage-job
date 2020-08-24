@@ -25,11 +25,15 @@ const Layout = ({
       <link rel="canonical" href="https://www.linkedout.fr/" />
       <meta property="og:site_name" content="LinkedOut" />
       <meta
-        name="description"
         property="og:description"
         content={metaDescription}
       />
-      <meta name="image" property="og:image" content={metaImage} />
+      <meta
+        name="description"
+        content={metaDescription}
+      />
+      <meta property="og:image" content={metaImage} />
+      <meta name="image" content={metaImage} />
       <meta property="og:type" content={metaType} />
       <meta property="og:title" content={title} />
       <meta property="og:url" content={metaUrl} />
@@ -43,11 +47,12 @@ const Layout = ({
     <UserContext.Consumer>
       {({ isAuthentificated }) =>
         isAuthentificated &&
-        router.asPath !== '/jeveuxaider' &&
-        router.asPath !== '/jeveuxtravailler' &&
-        router.asPath !== '/jeveuxrecruter' &&
-        router.asPath !== '/lescandidats' &&
-        router.asPath !== '/contact' ? (
+        router.asPath.includes('/aider') &&
+        router.asPath.includes('/travailler') &&
+        router.asPath.includes('/recruter') &&
+        router.asPath.includes('/candidats') &&
+        router.asPath.includes('/partenaires') &&
+        router.asPath.includes('/contact') ? (
           <HeaderConnected />
         ) : (
           router.asPath !== '/' && <Header isHome={false} />
@@ -58,6 +63,7 @@ const Layout = ({
     <Footer />
   </>
 );
+
 Layout.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.element,
@@ -73,6 +79,7 @@ Layout.propTypes = {
     asPath: PropTypes.string,
   }).isRequired,
 };
+
 Layout.defaultProps = {
   title: 'LinkedOut',
   metaTitle:

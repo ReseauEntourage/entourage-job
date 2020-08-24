@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Button, IconNoSSR} from "../utils";
 import Grid from '../utils/Grid';
 
-const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers, data, spacing, className}) => {
+const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers, data, spacing, className, animate}) => {
   return (
     <div uk-height-match="target : h3" className={className}>
       <Grid
@@ -14,6 +14,7 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
         items={ data.map((item, index) => {
           return (
             <div
+              uk-scrollspy={animate ? `cls: uk-animation-slide-${index%2 === 0 ? 'bottom' : 'top'}-small; delay: ${100*(index + 1)};` : ''}
               key={index.toString()}
               className="uk-flex uk-flex-column uk-flex-middle">
               {
@@ -76,7 +77,8 @@ MultipleCTA.propTypes = {
       external: PropTypes.bool,
       modal: PropTypes.string
     }),
-  })).isRequired
+  })).isRequired,
+  animate: PropTypes.bool
 };
 
 MultipleCTA.defaultProps = {
@@ -84,7 +86,8 @@ MultipleCTA.defaultProps = {
   showHorizontalDividers: false,
   showVerticalDividers: false,
   spacing: 'large',
-  className: ''
+  className: '',
+  animate: false
 };
 
 export default MultipleCTA;

@@ -48,10 +48,11 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       await sendMail({
         toEmail: req.body.email,
         subject: 'Bienvenue chez LinkedOut',
-        text: 'Bonjour,\n' +
-          `Tu es maintenant inscrit sur le site LinkedOut. Tu peux accéder à ton espace personnel depuis la plateforme en renseignant ton adresse mail et le mot de passe suivant : ${userPassword}\n` +
-          "Depuis cette espace, tu peux rédiger ton CV avec l'aide de ton bénévole-coach et gérer les opportunités que tu reçois.\n" +
-          "N'hésite pas à aller changer ton mot de passe directement dans tes paramètres afin d'en créer un facile à retenir pour toi.\n\n" +
+        text:
+          'Bonjour,\n' +
+          `Vous êtes maintenant inscrit sur le site LinkedOut. Vous pouvez accéder à votre espace personnel depuis la plateforme en renseignant votre adresse mail et le mot de passe suivant : ${userPassword}\n` +
+          "Depuis cette espace, vous pouvez rédiger votre CV avec l'aide de votre bénévole-coach et gérer les opportunités que vous recevez.\n" +
+          "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres afin d'en créer un facile à retenir pour vous.\n\n" +
           'A bientôt,\n\n' +
           "L'équipe Entourage",
       });
@@ -243,6 +244,9 @@ router.put(
             salt,
           })
             .then((user) => {
+              if (!user) {
+                res.status(401).send(`Utilisateur inexistant`);
+              }
               console.log(`User modifié`);
               res.status(200).json(user);
             })
@@ -287,9 +291,12 @@ router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
   checkUserAuthorization(req, res, req.params.id, () => {
     const setUser = () => {
       UserController.setUser(req.params.id, req.body)
-        .then((user) => {
+        .then((updatedUser) => {
+          if (!updatedUser) {
+            res.status(401).send(`Utilisateur inexistant`);
+          }
           console.log(`User modifié`);
-          res.status(200).json(user);
+          res.status(200).json(updatedUser);
         })
         .catch((err) => {
           console.log(`Une erreur est survenue`);
@@ -301,14 +308,12 @@ router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
     const authorizedKeys = ['email', 'phone'];
 
     if (req.payload.role === USER_ROLES.ADMIN) {
-      UserController.changeUserRole(req.params.id, req.body).then(() => {
-        setUser();
-      });
-    } else if (keys.some((key) => !authorizedKeys.includes(key))) {
-      res.status(401).send({
-        message: "Unauthorized"
-      });
-    } else {
+      setUser();
+    }
+    else if (keys.some((key) => !authorizedKeys.includes(key))) {
+      res.status(401).send({ message: "Unauthorized" });
+    }
+    else {
       setUser();
     }
   });

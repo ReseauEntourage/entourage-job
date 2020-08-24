@@ -32,7 +32,7 @@ const upload = (data, contentType, outputPath) => {
 
 const download = (key) => {
   return new Promise((resolve, reject) => {
-    // Uploading files to the bucket
+    // Downloading files
     s3.getObject(
       {
         Bucket: process.env.AWSS3_BUCKET_NAME,

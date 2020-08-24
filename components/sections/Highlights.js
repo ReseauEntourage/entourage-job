@@ -38,12 +38,12 @@ const Highlights = () => {
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
           Que vous apporte{' '}<span className="uk-text-primary">LinkedOut&nbsp;?</span>
         </h2>
-        <h3 className="uk-align-center uk-text-center">
+        <h3 className="uk-align-center uk-text-center uk-margin-large-bottom">
           LinkedOut vous aide à trouver un travail et à vous intégrer dans votre nouvelle entreprise
         </h3>
         <div className="uk-width-expand">
           <Carousel containerClasses="uk-child-width-1-1">
-            {highlights.map(({img, description}, index) => <CarouselItem index={index} img={img} description={description} />)}
+            {highlights.map(({img, description}, index) => <CarouselItem key={index} index={index} img={img} description={description} />)}
           </Carousel>
         </div>
       </div>
