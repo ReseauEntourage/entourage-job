@@ -83,7 +83,6 @@ router.post('/forgot', auth(), (req, res /* , next */) => {
   console.log(
     `Demande de réinitialisation du mot de passe du compte : ${email}`
   );
-
   if (!email) {
     return res.status(422).json({
       errors: {
@@ -110,13 +109,14 @@ router.post('/forgot', auth(), (req, res /* , next */) => {
         hash,
         salt
       } = AuthController.encryptPassword(token);
-
+      console.log('create temp hash and token', hash, '||||||||', salt);
       return UserController.setUser(user.id, {
         hashReset: hash,
         saltReset: salt,
       });
     })
     .then((nbUpdate) => {
+      console.log('nbUpdate', typeof nbUpdate);
       if (!nbUpdate) {
         return res.status(200).send('Demande envoyée');
       }
@@ -124,9 +124,10 @@ router.post('/forgot', auth(), (req, res /* , next */) => {
       console.log(`Nombre de User mis à jour : ${nbUpdate}`);
 
       if (!nbUpdate[0]) {
+        console.log('ERROR')
         return res.status(401).send(`Une erreur est survenue`);
       }
-
+      console.log('sending email');
       // Envoi du mail
       sendMail({
         toEmail: user.email,
@@ -210,6 +211,7 @@ router.post('/reset/:userId/:token', auth(), (req, res /* , next */) => {
 
   UserController.getCompleteUser(userId)
     .then((userFound) => {
+      console.log('USER FOUND', userFound);
       const user = userFound;
       if (!user) {
         console.log(
