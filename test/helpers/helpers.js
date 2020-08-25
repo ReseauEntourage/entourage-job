@@ -21,6 +21,7 @@ const startTestServer = async () => {
  */
 const stopTestServer = async () => {
   await server.close()
+  await db.close();
 }
 
 /**
@@ -55,8 +56,6 @@ const resetTestDB = async () => {
   await db.query('DELETE FROM "CVs"');
   await db.query('DELETE FROM "Opportunities"');
   await db.query('DELETE FROM "Opportunity_Users"');
-
-  await db.close();
 
   // await sequelize.truncate({
   //   force: true

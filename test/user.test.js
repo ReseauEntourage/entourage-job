@@ -25,8 +25,8 @@ let cvOtherCandidat;
 
 describe.skip('User', () => {
   beforeAll(async () => {
-    await recreateTestDB();
     serverTest = await startTestServer();
+    await recreateTestDB();
     const admin = await userFactory({
       role: USER_ROLES.ADMIN,
       password: 'admin',
