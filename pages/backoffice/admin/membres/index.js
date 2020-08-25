@@ -14,6 +14,8 @@ import ImgProfile from '../../../../components/headers/ImgProfile';
 import {CV_STATUS, USER_ROLES} from "../../../../constants";
 import Button from "../../../../components/utils/Button";
 
+let debounceTimeoutId;
+
 function translateStatusCV(status) {
   const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unknown;
   return (
@@ -77,7 +79,7 @@ const MembersAdmin = ({ query: { role } }) => {
       <Section>
         <HeaderBackoffice
           title="Gestion des membres"
-          description="Ici tu peux accéder à tous les profils des coachs et candidats afin d'effectuer un suivi individuel de leur avancée."
+          description="Ici vous pouvez accéder à tous les profils des coachs et candidats afin d'effectuer un suivi individuel de leur avancée."
         >
           <Button
             style="primary"
@@ -197,8 +199,10 @@ const MembersAdmin = ({ query: { role } }) => {
                     className="uk-search-input"
                     type="search"
                     placeholder="Rechercher..."
-                    onChange={({ target: { value } }) => {
-                      fetchData(true, value);
+                    onChange={(event) => {
+                      clearTimeout(debounceTimeoutId);
+                      event.persist();
+                      debounceTimeoutId = setTimeout(() => fetchData(true, event.target.value), 500);
                     }}
                   />
                 </form>
@@ -228,7 +232,9 @@ const MembersAdmin = ({ query: { role } }) => {
                 <tbody>
                   {members.map((member, key) => (
                     <tr key={key}>
-                      <Link href={`/backoffice/admin/membres/${member.id}`}>
+                      <Link
+                        as={`/backoffice/admin/membres/${member.id}`}
+                        href="/backoffice/admin/membres/[id]">
                         <a
                           className="uk-link-reset"
                           style={{
@@ -350,7 +356,7 @@ const MembersAdmin = ({ query: { role } }) => {
             )}
             {!loading && allLoaded && members.length <= 0 && (
               <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
-                <p className="uk-text-italic">Aucuns membres trouvé</p>
+                <p className="uk-text-italic">Aucun membre trouvé</p>
               </div>
             )}
           </>

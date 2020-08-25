@@ -98,104 +98,6 @@ const ellipsisByChar = (text, getWidth, maxWidth) => {
   return line;
 };
 
-// GENERATION
-// Version 1 de la generation d'image
-// permet de générer une carte entourage pour le partage. output: sortie de l'image selon le format voulue
-function generateCVPreview(image, name, description, ambitions) {
-  const ratio = 1.3;
-  // todo: variables a mettre en options
-  const imageWidth = Math.trunc(520 * ratio);
-  const imageHeight = Math.trunc(272 * ratio);
-  const marginTop = 14;
-  const marginBottom = 20;
-  const marginAmbition = 4;
-  const marginTitle = 8;
-
-  const option1 = createSVGOption(24, 'white');
-  const option2 = createSVGOption(16, 'white');
-
-  const texts = ((nameText, descriptionText, ambitionText) => ({
-    // svg générés
-    svg: [
-      textToSVGBold.getSVG(nameText, option1),
-      textToSVG.getSVG(descriptionText, option2),
-      textToSVGBold.getSVG(ambitionText, option2),
-    ],
-    // information sur les dimentions des svg
-    metrics: [
-      textToSVGBold.getMetrics(nameText, option1),
-      textToSVG.getMetrics(descriptionText, option2),
-      textToSVGBold.getMetrics(ambitionText, option2),
-    ],
-  }))(
-    name.toUpperCase(),
-    description,
-    ambitions
-      .slice(0, 2)
-      .map((text) => text.toUpperCase())
-      .join('. ')
-  );
-
-  // definition de la hauteur du masque de couleur entourage
-  // utilisation des tailles de textes et des marges entres elles
-  const overlayHeight = Math.trunc(
-    marginBottom +
-      marginTop +
-      marginAmbition +
-      marginTitle +
-      texts.metrics[2].height +
-      texts.metrics[1].height +
-      texts.metrics[0].height
-  );
-
-  // creation de l'image
-  return sharp(image)
-    .resize(imageWidth, imageHeight)
-    .composite([
-      // masque de couleur entourage
-      {
-        input: {
-          create: {
-            width: imageWidth,
-            height: overlayHeight,
-            channels: 4,
-            background: { r: 245, g: 95, b: 36, alpha: 0.7 }, // couleur entourage
-          },
-        },
-        gravity: 'south',
-      },
-      // les 3 textes et leurs positions dans l'image
-      {
-        input: Buffer.from(texts.svg[0]),
-        top: Math.trunc(
-          imageHeight -
-            (marginBottom + marginAmbition + marginTitle) -
-            texts.metrics[2].height -
-            texts.metrics[1].height -
-            texts.metrics[0].height
-        ),
-        left: Math.trunc(imageWidth / 2 - texts.metrics[0].width / 2),
-      },
-      {
-        input: Buffer.from(texts.svg[1]),
-        top: Math.trunc(
-          imageHeight -
-            marginBottom -
-            marginAmbition -
-            texts.metrics[2].height -
-            texts.metrics[1].height
-        ),
-        left: Math.trunc(imageWidth / 2 - texts.metrics[1].width / 2),
-      },
-      {
-        input: Buffer.from(texts.svg[2]),
-        top: Math.trunc(imageHeight - texts.metrics[2].height - marginBottom),
-        left: Math.trunc(imageWidth / 2 - texts.metrics[2].width / 2),
-      },
-    ])
-    .sharpen();
-}
-
 // permet de générer une carte entourage pour le partage. output: sortie de l'image selon le format voulue
 const createCandidatPreviewV2 = async (
   image,
@@ -203,16 +105,18 @@ const createCandidatPreviewV2 = async (
   description,
   ambitions,
   skills,
-  gender
+  locations,
+  gender,
 ) => {
   const getCadran = async (cadranWidth, cadranHeight, cadranMargin) => {
     const fontRatio = cadranWidth * 2;
     // text
     const options = [
-      createSVGOption(fontRatio * 0.06, '#000'),
-      createSVGOption(fontRatio * 0.04, '#666'),
+      createSVGOption(fontRatio * 0.055, '#000'),
+      createSVGOption(fontRatio * 0.035, '#333'),
       createSVGOption(fontRatio * 0.04, '#f55f24'),
-      createSVGOption(fontRatio * 0.035, '#fff'),
+      createSVGOption(fontRatio * 0.033, '#888'),
+      createSVGOption(fontRatio * 0.033, '#fff'),
     ];
 
     // Name
@@ -227,7 +131,8 @@ const createCandidatPreviewV2 = async (
     );
 
     // description
-    const descriptionMargin = 10;
+    const descriptionMargin = 5;
+    const descriptionSpaces = 1;
     const {
       buffers: descriptionBuffer,
       heights: descriptionHeight,
@@ -235,9 +140,9 @@ const createCandidatPreviewV2 = async (
       ellipsisByWord(
         description && description.length > 0
           ? description
-          : "Il cherche un job pour s'en sortir.",
+          : "Je cherche un job pour m'en sortir.",
         (tmp) => textToSVG.getMetrics(tmp, options[1]).width,
-        cadranWidth,
+        cadranWidth - cadranMargin,
         3
       ),
       textToSVG,
@@ -245,7 +150,8 @@ const createCandidatPreviewV2 = async (
     );
 
     // Skills
-    const skillMargins = 5;
+    const skillMargins = 10;
+    const skillSpaces = 2;
     const { buffers: skillBuffers, heights: skillHeights } = await buildLines(
       skills
         .slice(0, 2)
@@ -268,10 +174,10 @@ const createCandidatPreviewV2 = async (
     } = await buildLines(
       ellipsisByWord(
         ambitions && ambitions.length > 0
-          ? `${gender === 0 ? 'Il' : 'Elle'} souhaite \n travailler dans :`
-          : `${gender === 0 ? 'Il' : 'Elle'} reste ${
+          ? `Je souhaite \n travailler dans :`
+          : `Je reste ${
               gender === 0 ? 'ouvert' : 'ouverte'
-            } à toute autre proposition.`,
+            } à toutes propositions.`,
         (tmp) => textToSVG.getMetrics(tmp, options[1]).width,
         cadranWidth,
         3
@@ -281,9 +187,9 @@ const createCandidatPreviewV2 = async (
     );
 
     // Ambition
-    const ambitionMargins = 5;
+    const ambitionSpaces = 5;
     const ambitionPaddingTopBottom = 2;
-    const ambitionPaddingLeftRight = 20;
+    const ambitionPaddingLeftRight = 10;
     const {
       buffers: ambitionBuffers,
       heights: ambitionHeights,
@@ -294,11 +200,32 @@ const createCandidatPreviewV2 = async (
         .map((text) =>
           ellipsisByChar(
             text.toLowerCase(),
-            (line) => textToSVGBold.getMetrics(line, options[2]).width,
+            (line) => textToSVGBold.getMetrics(line, options[4]).width,
             cadranWidth
           )
         ),
       textToSVGBold,
+      options[4]
+    );
+
+    // Location
+    const locationSpaces = 5;
+    const locationMargin = 10;
+    const {
+      buffers: locationBuffers,
+      heights: locationHeights,
+      widths: locationWidths,
+    } = await buildLines(
+      locations
+        .slice(0, 2)
+        .map((text) =>
+          ellipsisByChar(
+            `- ${text}`,
+            (line) => textToSVGBold.getMetrics(line, options[3]).width,
+            cadranWidth
+          )
+        ),
+      textToSVG,
       options[3]
     );
 
@@ -323,11 +250,12 @@ const createCandidatPreviewV2 = async (
           top:
             cadranMargin +
             nameHeight +
+            descriptionMargin +
             descriptionHeight.reduce((acc, cur, ih) => {
               if (index <= ih) {
                 return acc;
               }
-              return acc + cur;
+              return acc + cur + descriptionSpaces;
             }, 0),
           left: 0,
         })),
@@ -337,11 +265,13 @@ const createCandidatPreviewV2 = async (
             cadranMargin +
             nameHeight +
             descriptionMargin +
+            descriptionSpaces +
+            skillMargins +
             skillHeights.reduce((acc, cur, ih) => {
               if (index <= ih) {
                 return acc;
               }
-              return acc + cur + skillMargins;
+              return acc + cur + skillSpaces;
             }, 0) +
             descriptionHeight.reduce((acc, val) => acc + val, 0),
           left: 0,
@@ -354,16 +284,18 @@ const createCandidatPreviewV2 = async (
             cadranHeight -
             captionHeights.reduce((acc, cur, ih) => {
               if (index <= ih) {
-                return acc + cur;
+                return acc + cur + descriptionSpaces;
               }
               return acc;
             }, 0) -
             ambitionHeights.reduce(
-              (acc, cur) => acc + cur + ambitionMargins,
+              (acc, cur) => acc + cur + ambitionSpaces,
               0
             ) -
             cadranMargin -
-            captionMargin,
+            captionMargin -
+            locationHeights.reduce((acc, cur) => acc + cur + locationSpaces, 0) -
+            locationMargin,
           left: 0,
         })),
         // ambition background
@@ -380,12 +312,14 @@ const createCandidatPreviewV2 = async (
             cadranHeight -
             ambitionHeights.reduce((acc, cur, ih) => {
               if (index <= ih) {
-                return acc + cur + ambitionMargins;
+                return acc + cur + ambitionSpaces;
               }
               return acc;
             }, 0) -
             cadranMargin -
-            ambitionPaddingTopBottom / 2,
+            ambitionPaddingTopBottom / 2 -
+            locationHeights.reduce((acc, cur) => acc + cur + locationSpaces, 0) -
+            locationMargin,
           left: 0,
         })),
         // ambition text
@@ -395,22 +329,39 @@ const createCandidatPreviewV2 = async (
             cadranHeight -
             ambitionHeights.reduce((acc, cur, ih) => {
               if (index <= ih) {
-                return acc + cur + ambitionMargins;
+                return acc + cur + ambitionSpaces;
+              }
+              return acc;
+            }, 0) -
+            cadranMargin -
+            locationHeights.reduce((acc, cur) => acc + cur + locationSpaces, 0) -
+            locationMargin,
+          left: ambitionPaddingLeftRight / 2,
+        })),
+        // location text
+        ...locationBuffers.map((input, index) => ({
+          input,
+          top:
+            cadranHeight -
+            locationHeights.reduce((acc, cur, ih) => {
+              if (index <= ih) {
+                return acc + cur + locationSpaces;
               }
               return acc;
             }, 0) -
             cadranMargin,
-          left: ambitionPaddingLeftRight / 2,
+          left: 0 ,
         })),
       ])
       .png()
       .toBuffer();
   };
+
   const getCard = async (cardCote, cardPadding) => {
     const footerHeight = cardPadding * 4;
     const cardHeight = cardCote + footerHeight;
     const cardWidth = cardCote + cardPadding * 2;
-    const cadranHeight = Math.trunc(cardCote * 0.75);
+    const cadranHeight = Math.trunc(cardCote * 0.80);
     const cadranWidth = Math.trunc(cardWidth / 2);
     const cadranMargin = 10;
     const logoHeight = footerHeight * 0.8;

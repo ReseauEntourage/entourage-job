@@ -10,19 +10,17 @@ const {
 } = require('../../../controllers/mail');
 const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
-const {
-  USER_ROLES
-} = require('../../../../constants');
+const { USER_ROLES } = require('../../../../constants');
+const RateLimiter = require('../../../utils/RateLimiter');
+
+const authLimiter = RateLimiter.createLimiter(10);
 
 /**
  * Utilisation d'un "custom callback" pour mieux gérer l'echec d'authentification
  * Source : http://www.passportjs.org/docs/downloads/html/#custom-callback
  */
-router.post('/login', auth(), (req, res, next) => {
-  const {
-    email,
-    password
-  } = req.body;
+router.post('/login', authLimiter, auth(), (req, res, next) => {
+  const { email, password } = req.body;
 
   if (!email) {
     return res.status(422).json({
@@ -66,15 +64,14 @@ router.post('/login', auth(), (req, res, next) => {
   )(req, res, next);
 });
 
-router.post('/logout', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
-  res /* , next */) => {
+router.post('/logout', authLimiter, auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res /* , next */) => {
   req.logout();
 
   // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
   res.redirect(process.env.SERVER_URL);
 });
 
-router.post('/forgot', auth(), (req, res /* , next */) => {
+router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
   let token = null;
   let user = null;
   const {
@@ -116,15 +113,9 @@ router.post('/forgot', auth(), (req, res /* , next */) => {
         saltReset: salt,
       });
     })
-    .then((nbUpdate) => {
-      if (!nbUpdate) {
-        return res.status(200).send('Demande envoyée');
-      }
-
-      console.log(`Nombre de User mis à jour : ${nbUpdate}`);
-
-      if (!nbUpdate[0]) {
-        return res.status(401).send(`Une erreur est survenue`);
+    .then((updatedUser) => {
+      if (!updatedUser) {
+        return res.status(404).send(`Utilisateur inexistant`);
       }
 
       // Envoi du mail
@@ -148,7 +139,7 @@ router.post('/forgot', auth(), (req, res /* , next */) => {
 /**
  * GET Vérification lien de réinitialisation mot de passe
  */
-router.get('/reset/:userId/:token', auth(), (req, res /* , next */) => {
+router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */) => {
   const infoLog = 'GET /reset/:userId/:token -';
 
   const {
@@ -193,7 +184,7 @@ router.get('/reset/:userId/:token', auth(), (req, res /* , next */) => {
 /**
  * POST Réinitialisation mot de passe
  */
-router.post('/reset/:userId/:token', auth(), (req, res /* , next */) => {
+router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */) => {
   const infoLog = 'POST /reset/:userId/:token -';
   const {
     userId,
@@ -281,12 +272,14 @@ router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.A
   if (!user) {
     return res.sendStatus(400);
   }
-  await UserController.setUser(id, {
-    lastConnection: Date.now()
-  });
-  return res.json({
-    user: AuthController.toAuthJSON(user)
-  });
+  UserController.setUser(id, { lastConnection: Date.now() }).then((updatedUser) => {
+    if (!updatedUser) {
+      return res.status(401).send(`Utilisateur inexistant`);
+    }
+    return res.json({ user: AuthController.toAuthJSON(user) });
+  }).catch((err) => {
+    return res.status(401).send(`Une erreur est survenue`);
+  })
 });
 
 module.exports = router;

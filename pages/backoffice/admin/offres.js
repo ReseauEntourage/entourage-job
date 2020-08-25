@@ -11,6 +11,7 @@ import Axios from '../../../Axios';
 import schema from '../../../components/forms/schema/formEditOpportunity';
 import { UserContext } from '../../../components/store/UserProvider';
 import ModalEdit from '../../../components/modals/ModalEdit';
+import {mutateFormSchema} from "../../../utils";
 
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
@@ -22,6 +23,19 @@ const LesOpportunites = () => {
   const [offers, setOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // desactivation du champ de disclaimer
+  const mutatedSchema = mutateFormSchema(schema, [
+    {
+      fieldId: 'disclaimer',
+      props: [
+        {
+          propName: 'hidden',
+          value: true
+        }
+      ]
+    }
+  ]);
 
   const filters = [
     { tag: 'all', title: 'Toutes les offres' },
@@ -54,7 +68,6 @@ const LesOpportunites = () => {
             },
           }
         );
-        console.log(data);
         setOffers(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
         setLoading(false);
         return data;
@@ -71,7 +84,7 @@ const LesOpportunites = () => {
     try {
       await Axios.post(`/api/v1/opportunity/`, opportunity);
       closeModal();
-      UIkit.notification(`L'oppotunité a été ajoutée.`, 'success');
+      UIkit.notification(`L'opportunité a été ajoutée.`, 'success');
       fetchData();
     } catch (err) {
       UIkit.notification(`Une erreur est survenue.`, 'danger');
@@ -83,7 +96,6 @@ const LesOpportunites = () => {
       if (data) {
         const offer = data.find((o) => o.id === opportunityId);
         if (offer) {
-          console.log(offer);
           setCurrentOffer(offer);
           UIkit.modal('#modal-offer-admin').show();
         }
@@ -98,7 +110,7 @@ const LesOpportunites = () => {
       <Section>
         <HeaderBackoffice
           title="Modération des offres d'emploi"
-          description="Ici tu peux accéder à toutes les opportunités et valider les offres qui se retrouveront ensuite dans les tableaux des candidats."
+          description="Ici vous pouvez accéder à toutes les opportunités et valider les offres envoyées par les recruteurs !"
         >
           <Button
             style="primary"
@@ -113,7 +125,10 @@ const LesOpportunites = () => {
             id="add-opportunity"
             title="Ajouter une opportunité"
             submitText="Envoyer"
-            formSchema={schema}
+            formSchema={mutatedSchema}
+            defaultValues={{
+              isPublic: true
+            }}
             onSubmit={(fields, closeModal) => {
               postOpportunity({
                 ...fields,

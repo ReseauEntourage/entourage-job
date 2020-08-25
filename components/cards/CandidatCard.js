@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import '../../static/css/Toggle.less';
 import {
@@ -9,6 +9,10 @@ import {
 } from 'react-share';
 import { SimpleLink, GridNoSSR, IconNoSSR, ImgNoSSR } from '../utils';
 import ModalShareCV from '../modals/ModalShareCV';
+import Api from '../../Axios';
+import {SharesCountContext} from "../store/SharesCountProvider";
+import {hasAsChild} from "../../utils";
+import {LOCATIONS} from '../../constants';
 
 const CandidatCard = ({
   url,
@@ -17,22 +21,66 @@ const CandidatCard = ({
   gender,
   firstName,
   ambitions,
+  businessLines,
+  locations,
   skills,
   catchphrase,
   employed,
+  id
 }) => {
   // petit systeme pour ne pas avoir a afficher la modal a chaque carte
   // optimisation possible
   const [showModal, setShowModal] = useState(false);
+
+  const { incrementSharesCount } = useContext(SharesCountContext);
+
   const openNewsletterModal = () => {
     setShowModal(true);
     UIkit.modal(`#info-share-${firstName}`).show();
   };
+
+  const updateShareCount = (candidatId, type) => {
+    Api.post('api/v1/cv/count', {
+      candidatId, type
+    }).then(() => {
+      incrementSharesCount();
+    }).catch((e) => {
+      console.log(e);
+    })
+  };
+
+  const getReducedLocations = () => {
+    if(locations && locations.length > 0)  {
+      let indexesToRemove = [];
+      const reducedLocations = locations;
+      for(let i = 0; i < locations.length; i += 1) {
+        for(let j = 0; j < locations.length; j += 1) {
+           if(hasAsChild(LOCATIONS, locations[i], locations[j])) {
+             indexesToRemove.push(j);
+           }
+        }
+      }
+
+      indexesToRemove = indexesToRemove.filter((index, idx) => indexesToRemove.indexOf(index) === idx);
+      indexesToRemove.sort((a,b) => b - a);
+
+      for(let i = indexesToRemove.length -1; i >= 0; i -= 1) {
+        reducedLocations.splice(indexesToRemove[i], 1);
+      }
+      return reducedLocations;
+    }
+    return [];
+  };
+
+  const reducedLocations = getReducedLocations();
+
   return (
     <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small uk-text-left">
       {/* Contenue de la carte */}
-      <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
-        <div className="uk-cover-container uk-height-medium uk-margin-bottom">
+      <SimpleLink as={`/cv/${url}`} href="/cv/[url]" className="uk-link-toggle">
+        <div className="uk-cover-container uk-margin-bottom" style={{
+          height: 350
+        }}>
           {/* Image de fond */}
           <img src={imgSrc} alt={imgAlt} data-uk-cover />
           {/* Bandeau à retrouvé un emploie */}
@@ -74,30 +122,36 @@ const CandidatCard = ({
               column
               childWidths={['1-1']}
               style={{
-                minHeight: '240px',
+                minHeight: 240,
               }}
               className="uk-height-1-1"
             >
-              <>
+              <div style={{
+                marginBottom: 5
+              }}>
                 <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold ent-line-clamp-1">
                   {firstName}
                 </h5>
                 <p
                   style={{
                     fontSize: '0.775rem',
-                    marginTop: 'O.5px !important'
+                    marginTop: '5px !important'
                   }}
                   className="uk-text-small ent-line-clamp-3 uk-margin-remove"
                 >
                   {catchphrase || "cherche un job pour s'en sortir"}
                 </p>
-              </>
+              </div>
               {skills && (
                 <GridNoSSR
                   column
+                  style={{
+                    marginTop: 5,
+                    marginBottom: 5
+                  }}
                   gap="collapse"
                   childWidths={['1-1']}
-                  className="uk-text-lowercase uk-text-bold uk-text-primary"
+                  className="uk-text-lowercase uk-text-bold uk-text-primary "
                   items={skills.slice(0, 2).map((a, index) => (
                     <span key={index} className="ent-line-clamp-1">
                         {a}
@@ -105,13 +159,13 @@ const CandidatCard = ({
                   ))}
                 />
               )}
-              {ambitions && ambitions.length > 0 && (
+             {/* {ambitions && ambitions.length > 0 && (
                 <>
                   <p
                     style={{ fontSize: '0.775rem' }}
                     className="uk-margin-remove uk-margin-small-top"
                   >
-                    {gender === 1 ? 'Elle' : 'Il'} souhaite
+                    Je souhaite
                     <br /> travailler dans :
                   </p>
                   <GridNoSSR column gap="collapse" childWidths={['1-1']}>
@@ -125,6 +179,41 @@ const CandidatCard = ({
                     ))}
                   </GridNoSSR>
                 </>
+              )} */}
+              {businessLines && businessLines.length > 0 && (
+                <div style={{
+                  marginTop: 5,
+                  marginBottom: 5
+                }}>
+                  <p
+                    style={{ fontSize: '0.775rem' }}
+                    className="uk-margin-remove uk-margin-small-top"
+                  >
+                    Secteurs d&apos;activité&nbsp;:
+                  </p>
+                  <GridNoSSR column gap="collapse" childWidths={['1-1']}>
+                    {businessLines.slice(0, 2).map((text, index) => (
+                      <span
+                        key={index}
+                        className="uk-label uk-text-lowercase ent-card-ambition"
+                      >
+                        {text}
+                      </span>
+                    ))}
+                  </GridNoSSR>
+                </div>
+              )}
+              {reducedLocations && reducedLocations.length > 0 && (
+                <GridNoSSR column gap="collapse" childWidths={['1-1']} style={{marginTop: 10}}>
+                  {reducedLocations.slice(0, 2).map((text, index) => (
+                    <div key={text + index} className="uk-flex uk-flex-middle">
+                      <IconNoSSR name='location' ratio={0.6} />&nbsp;
+                      <span className="uk-text-meta uk-flex-1" style={{
+                        fontSize: '0.775rem'
+                      }}>{text}</span>
+                    </div>
+                  ))}
+                </GridNoSSR>
               )}
             </GridNoSSR>
           </div>
@@ -132,15 +221,40 @@ const CandidatCard = ({
       </SimpleLink>
       {/* Bas de carte */}
       <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
-        <SimpleLink href={`/cv/${url}`} className="uk-link-toggle">
+        <SimpleLink as={`/cv/${url}`} href="/cv/[url]" className="uk-link-toggle">
           <u className="uk-text-link uk-text-primary">Voir le CV</u>
         </SimpleLink>
         <GridNoSSR middle center gap="small">
           <span>Partager :</span>
           <ul className="uk-iconnav">
             <li>
+              <LinkedinShareButton
+                onShareWindowClose={() => {
+                  updateShareCount(id, 'linkedin');
+                  openNewsletterModal();
+                }}
+                url={`${process.env.SERVER_URL}/cv/${url}`}
+                title={`${firstName.charAt(0).toUpperCase() +
+                firstName.slice(1).toLowerCase()} - LinkedOut`}
+                description={
+                  "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
+                }
+                style={{ cursor: 'pointer' }}
+                className="uk-icon-link uk-text-primary"
+              >
+                <IconNoSSR
+                  name="linkedin"
+                  ratio={0.9}
+                  className={`share-linkedin-${firstName}`}
+                />
+              </LinkedinShareButton>
+            </li>
+            <li>
               <FacebookShareButton
-                onShareWindowClose={openNewsletterModal}
+                onShareWindowClose={() => {
+                  updateShareCount(id, 'facebook');
+                  openNewsletterModal();
+                }}
                 url={`${process.env.SERVER_URL}/cv/${url}`}
                 quote={
                   "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
@@ -158,7 +272,10 @@ const CandidatCard = ({
             </li>
             <li>
               <TwitterShareButton
-                onShareWindowClose={openNewsletterModal}
+                onShareWindowClose={() => {
+                  updateShareCount(id, 'twitter');
+                  openNewsletterModal();
+                }}
                 url={`${process.env.SERVER_URL}/cv/${url}`}
                 title={
                   "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
@@ -175,25 +292,6 @@ const CandidatCard = ({
                 />
               </TwitterShareButton>
             </li>
-            <li>
-              <LinkedinShareButton
-                onShareWindowClose={openNewsletterModal}
-                url={`${process.env.SERVER_URL}/cv/${url}`}
-                title={`${firstName.charAt(0).toUpperCase() +
-                  firstName.slice(1).toLowerCase()} - LinkedOut`}
-                description={
-                  "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
-                }
-                style={{ cursor: 'pointer' }}
-                className="uk-icon-link uk-text-primary"
-              >
-                <IconNoSSR
-                  name="linkedin"
-                  ratio={0.9}
-                  className={`share-linkedin-${firstName}`}
-                />
-              </LinkedinShareButton>
-            </li>
           </ul>
         </GridNoSSR>
       </GridNoSSR>
@@ -206,13 +304,16 @@ const CandidatCard = ({
 CandidatCard.propTypes = {
   url: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
-  ambitions: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  ambitions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  businessLines: PropTypes.arrayOf(PropTypes.string).isRequired,
+  locations: PropTypes.arrayOf(PropTypes.string).isRequired,
   imgSrc: PropTypes.string,
   imgAlt: PropTypes.string.isRequired,
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
   catchphrase: PropTypes.string,
   employed: PropTypes.bool,
   gender: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired
 };
 
 CandidatCard.defaultProps = {

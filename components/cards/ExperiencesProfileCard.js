@@ -118,7 +118,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
       <div className="uk-card uk-card-default uk-card-body">
         <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
           <h3 className="uk-card-title">
-            Mon <span className="uk-text-primary">expérience</span>
+            Mes <span className="uk-text-primary">expériences</span> et <span className="uk-text-primary">compétences</span>
           </h3>
           {onChange && (
             <ButtonIcon
@@ -140,7 +140,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           <div>
             <ModalEdit
               id="modal-experience-add"
-              title="Ajout - Mon expérience"
+              title="Ajout - Mes expériences et compétences"
               formSchema={schemaformEditExperience}
               onSubmit={(fields, closeModal) => {
                 closeModal();
@@ -158,7 +158,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           <div>
             <ModalEdit
               id="modal-experience-edit"
-              title="Édition - Mon expérience"
+              title="Édition - Mes expériences et compétences"
               formSchema={schemaformEditExperience}
               defaultValues={currentDefaultValue}
               onSubmit={(fields, closeModal) => {

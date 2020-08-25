@@ -54,7 +54,7 @@ const HeaderConnected = ({ isHome }) => {
       },
       {
         href: '/backoffice/candidat/suivi',
-        name: 'Mon Suivi',
+        name: 'Mon suivi',
         icon: 'file-text',
       },
       {
