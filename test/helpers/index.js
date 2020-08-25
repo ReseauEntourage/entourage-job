@@ -20,7 +20,10 @@ const {
     getCandidatUrl,
 } = require('./user_candidat.helpers');
 
-const associateOpportunityUser = require('./opportunity_user.helpers');
+const {
+    associateOpportunityUser,
+    associateManyOpportunitiesUser,
+} = require('./opportunity_user.helpers');
 
 const getResetLinkAndUser = require('./auth.helpers');
 
@@ -41,6 +44,7 @@ module.exports = {
     getCandidatUrl,
 
     associateOpportunityUser,
+    associateManyOpportunitiesUser,
 
     getResetLinkAndUser,
 }

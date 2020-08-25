@@ -8,6 +8,7 @@ const {
     createEntities,
     createLoggedInUser,
     associateCoachAndCandidat,
+    associateManyOpportunitiesUser,
     associateOpportunityUser,
 } = require("./helpers");
 const { USER_ROLES } = require('../constants');
@@ -17,14 +18,16 @@ const userFactory = require('./factories/userFactory');
 describe('Opportunity', () => {
     let serverTest;
     const route = '/api/v1/opportunity';
-    let nbOpportunity = 10;
+    const nbOpportunity = 10;
+    const nbPrivateOpportunity = 5;
+    let totalOpp = nbOpportunity + nbPrivateOpportunity;
     let opportunities;
     let opportunitiesId;
     let loggedInAdmin;
     let loggedInCoach;
     let loggedInCandidat;
     let otherCandidat;
-    let opportunityCandidat;
+    let opportunitiesCandidat;
     let opportunityOtherCandidat;
 
     beforeAll(async () => {
@@ -52,11 +55,21 @@ describe('Opportunity', () => {
             role: USER_ROLES.CANDIDAT,
             password: 'candidat',
         });
-        opportunityCandidat = await associateOpportunityUser(
-            opportunitiesId[5],
+        const privateOpportunities = await createEntities(
+            opportunityFactory,
+            nbPrivateOpportunity,
+            {
+                isValidated: true,
+                isPrivate: true,
+                isPublished: true,
+            },
+            true
+        );
+        const privateOpportunitiesId = privateOpportunities.map(op => op.id);
+        opportunitiesCandidat = await associateManyOpportunitiesUser(
+            privateOpportunitiesId,
             candidat.id
         );
-
         admin.password = 'admin';
         coach.password = 'coach';
         candidat.password = 'candidat';
@@ -68,7 +81,14 @@ describe('Opportunity', () => {
             role: USER_ROLES.CANDIDAT,
             password: 'user',
         });
-
+        // opportunityOtherCandidat = await opportunityFactory({
+        //     isValidated: true,
+        //     isPublished: true,
+        //     isPublic: true,
+        // });
+        // console.log('opportunityOtherCandidat :>> ', opportunityOtherCandidat);
+        // console.log('otherCandidat :>> ', otherCandidat);
+        // await associateOpportunityUser(opportunityOtherCandidat.id, otherCandidat.user.id)
     });
     afterAll(async () => {
         await resetTestDB();
@@ -89,7 +109,7 @@ describe('Opportunity', () => {
                         .send(opportunity);
                     expect(response.status).toBe(200);
                     // eslint-disable-next-line no-plusplus
-                    nbOpportunity++;
+                    totalOpp++;
                 });
                 it('Should return 401, if invalid opportunity', async () => {
                     const opportunity = await opportunityFactory({}, false);
@@ -190,7 +210,7 @@ describe('Opportunity', () => {
                         .get(`${route}/admin`)
                         .set('authorization', `Token ${loggedInAdmin.token}`);
                     expect(response.status).toBe(200);
-                    expect(response.body.length).toBe(nbOpportunity);
+                    expect(response.body.length).toBe(totalOpp);
                 });
                 it('Should return 200 and a list of searched opportunities, if logged in admin', async () => {
                     const response = await request(serverTest)
@@ -339,7 +359,7 @@ describe('Opportunity', () => {
                     'should return 200, if candidat updates his opportunities asociations',
                     async () => {
                         const update = {
-                            ...opportunityCandidat,
+                            ...opportunitiesCandidat[0],
                             note: 'noteUpdate'
                         }
                         const response = await request(serverTest)
@@ -353,7 +373,7 @@ describe('Opportunity', () => {
                     'should return 200, if a coach updates his associated candidat opportunities asociations',
                     async () => {
                         const update = {
-                            ...opportunityCandidat,
+                            ...opportunitiesCandidat[1],
                             seen: true,
                         }
                         const response = await request(serverTest)
@@ -367,7 +387,7 @@ describe('Opportunity', () => {
                     'should return 200, if a admin updates candidat opportunities asociations',
                     async () => {
                         const update = {
-                            ...opportunityCandidat,
+                            ...opportunitiesCandidat[2],
                             bookmarked: true
                         }
                         const response = await request(serverTest)
@@ -379,7 +399,7 @@ describe('Opportunity', () => {
                     });
                 it('should return 401, if invalid user id', async () => {
                     const update = {
-                        ...opportunityCandidat,
+                        ...opportunitiesCandidat[3],
                         userId: '1111-invalid-99999',
                     }
                     const response = await request(serverTest)
@@ -392,7 +412,7 @@ describe('Opportunity', () => {
                     'should return 401, if candidat updates an other candidat opportunities asociations',
                     async () => {
                         const update = {
-                            ...opportunityCandidat,
+                            ...opportunitiesCandidat[4],
                             status: 1000,
                         }
                         const response = await request(serverTest)
@@ -406,7 +426,7 @@ describe('Opportunity', () => {
                     async () => {
                         const update = {
                             ...opportunityOtherCandidat,
-
+                            bookmarked: true
                         }
                         const response = await request(serverTest)
                             .put(`${route}/join`)
