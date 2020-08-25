@@ -22,6 +22,8 @@ const {
 
 const associateOpportunityUser = require('./opportunity_user.helpers');
 
+const getResetLinkAndUser = require('./auth.helpers');
+
 module.exports = {
     startTestServer,
     stopTestServer,
@@ -39,4 +41,6 @@ module.exports = {
     getCandidatUrl,
 
     associateOpportunityUser,
+
+    getResetLinkAndUser,
 }
