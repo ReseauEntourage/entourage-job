@@ -22,6 +22,7 @@ const generateUser = async (props = {}) => {
   } = Auth.encryptPassword(props.password ? props.password : faker.internet.password());
 
   return {
+    id: faker.random.uuid(),
     email: props.email || faker.internet.email().toLowerCase(),
     firstName: props.firstName || faker.name.firstName(),
     lastName: props.lastName || faker.name.lastName(),
