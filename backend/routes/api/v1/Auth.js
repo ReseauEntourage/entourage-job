@@ -106,7 +106,6 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
         hash,
         salt
       } = AuthController.encryptPassword(token);
-      console.log('create temp hash and token', hash, '||||||||', salt);
       return UserController.setUser(user.id, {
         hashReset: hash,
         saltReset: salt,
