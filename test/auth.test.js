@@ -55,7 +55,7 @@ describe('Auth', () => {
         await resetTestDB();
         await stopTestServer();
     });
-    describe.skip('Login - login/', () => {
+    describe('Login - login/', () => {
         it('Should return 200 and user\'s info with token, if valid email and password', async () => {
             const response = await request(serverTest)
                 .post(`${route}/login`)
@@ -102,7 +102,7 @@ describe('Auth', () => {
             expect(response.status).toBe(422);
         });
     });
-    describe.skip('Logout - logout/', () => {
+    describe('Logout - logout/', () => {
         // TODO: Rediretion or logout?
         it(`Should logout the user`, async () => {
             await request(serverTest)
@@ -118,7 +118,7 @@ describe('Auth', () => {
             expect(response.status).toBe(401);
         });
     });
-    describe.skip('Forgot - forgot/', () => {
+    describe('Forgot - forgot/', () => {
         it('Should return 422; if no user email provided', async () => {
             const response = await request(serverTest)
                 .post(`${route}/forgot`)
@@ -153,9 +153,22 @@ describe('Auth', () => {
                 const response = await request(serverTest)
                     .get(`${route}/${reset.link}`)
                 expect(response.status).toBe(200);
-            })
+            });
+            it('Should return 403, if invalid id in link', async () => {
+                const reset = await getResetLinkAndUser(loggedInCandidat.user);
+                const response = await request(serverTest)
+                    .get(`${route}/reset/${unknownUser.id}/${reset.token}`)
+                expect(response.status).toBe(403);
+            });
+            it('Should return 403, if invalid id in link', async () => {
+                const reset = await getResetLinkAndUser(loggedInCandidat.user);
+                const response = await request(serverTest)
+                    .get(`${route}/reset/${reset.updatedUser.id}/${invalidToken}`)
+                expect(response.status).toBe(403);
+                expect(response.body.error).toBe('Lien non valide');
+            });
         });
-        describe.skip('Reset password', () => {
+        describe('Reset password', () => {
             it('Should return 200 and updated user, if valid link', async () => {
                 const reset = await getResetLinkAndUser(loggedInCandidat.user);
                 const response = await request(serverTest)
@@ -190,19 +203,19 @@ describe('Auth', () => {
                 console.log(response.status);
                 expect(response.status).toBe(403);
             });
-            it('Should return 401 if invalid user token', async () => {
+            it('Should return 403 if invalid user token', async () => {
                 const reset = await getResetLinkAndUser(loggedInCandidat.user);
                 const response = await request(serverTest)
-                    .post(`${route}/reset/${reset.updatedUser}/${invalidToken}`)
+                    .post(`${route}/reset/${reset.updatedUser.id}/${invalidToken}`)
                     .send({
                         newPassword: 'newPassword',
                         confirmPassword: 'newPassword'
                     });
-                expect(response.status).toBe(401);
+                expect(response.status).toBe(403);
             });
         });
     });
-    describe.skip('Current - /current', () => {
+    describe('Current - /current', () => {
         it('Should return a user with token if valid token provided', async () => {
             const response = await request(serverTest)
                 .get(`${route}/current`)
