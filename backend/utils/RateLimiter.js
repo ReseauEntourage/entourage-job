@@ -4,7 +4,7 @@ const RedisStore = require('rate-limit-redis');
 
 class RateLimiter {
   getStore() {
-    if(!this.redisStore) {
+    if (!this.redisStore) {
       this.redisStore = new RedisStore({
         redisURL: process.env.REDIS_URL
       });
@@ -12,7 +12,7 @@ class RateLimiter {
     return this.redisStore;
   }
 
-  createLimiter(max)  {
+  createLimiter(max) {
     return new RateLimit({
       store: this.getStore(),
       max

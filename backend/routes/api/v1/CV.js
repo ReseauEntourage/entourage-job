@@ -25,13 +25,7 @@ router.post(
   upload.single('profileImage'),
   (req, res) => {
     // si le cv est une string json le parser, sinon prendre l'objet
-<<<<<<< HEAD
-    const reqCV =
-      typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
-    checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
-=======
     const reqCV = typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
->>>>>>> develop
 
     checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
       switch (req.payload.role) {
@@ -82,30 +76,17 @@ router.post(
         ? UserController.getUser(reqCV.UserId)
           .then(({ firstName, gender }) =>
             // Génération de la photo de preview
-<<<<<<< HEAD
-            S3.download(reqCV.urlImg).then(({ Body }) =>
-              createPreviewImage(
+            S3.download(reqCV.urlImg).then(({ Body }) => {
+              return createPreviewImage(
                 Body,
                 firstName,
                 reqCV.catchphrase,
                 reqCV.ambitions,
                 reqCV.skills,
+                reqCV.locations,
                 gender
-              )
-            )
-=======
-            S3.download(reqCV.urlImg).then(({Body}) => {
-                return createPreviewImage(
-                  Body,
-                  firstName,
-                  reqCV.catchphrase,
-                  reqCV.ambitions,
-                  reqCV.skills,
-                  reqCV.locations,
-                  gender
-                );
+              );
             })
->>>>>>> develop
           )
           .then((sharpData) => sharpData.jpeg().toBuffer())
           .then((buffer) =>
@@ -202,7 +183,7 @@ router.post('/count', auth(), (req, res) => {
 router.get('/shares', auth(), (req, res) => {
   ShareController.getTotalShares()
     .then((total) => {
-      res.status(200).json({total});
+      res.status(200).json({ total });
     })
     .catch((err) => {
       console.log(err);
