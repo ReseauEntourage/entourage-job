@@ -199,8 +199,8 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
 
   UserController.getCompleteUser(userId)
     .then((userFound) => {
-      console.log('USER FOUND', userFound);
       const user = userFound;
+      console.log('user foudn ', user);
       if (!user) {
         console.log(
           `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
@@ -242,16 +242,16 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
         salt,
         hashReset: null,
         saltReset: null,
+      }).then((userUpdated) => {
+        if (userUpdated) {
+          console.log(`${infoLog} Mise à jour réussie`);
+          return res.status(200).json(userUpdated);
+        }
+        return res.status(401).send(`Une erreur inconnue est survenue`);
       });
     })
-    .then((userUpdated) => {
-      if (userUpdated) {
-        console.log(`${infoLog} Mise à jour réussie`);
-        return res.status(200).json(userUpdated);
-      }
-      return res.status(401).send(`Une erreur inconnue est survenue`);
-    })
     .catch((err) => {
+      console.log('HERE')
       console.log(err);
       return res.status(401).send(`Une erreur est survenue`);
     });
@@ -271,14 +271,19 @@ router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.A
   if (!user) {
     return res.sendStatus(400);
   }
-  UserController.setUser(id, { lastConnection: Date.now() }).then((updatedUser) => {
-    if (!updatedUser) {
-      return res.status(401).send(`Utilisateur inexistant`);
-    }
-    return res.json({ user: AuthController.toAuthJSON(user) });
-  }).catch((err) => {
-    return res.status(401).send(`Une erreur est survenue`);
-  })
+  UserController.setUser(
+    id,
+    { lastConnection: Date.now() }
+  )
+    .then((updatedUser) => {
+      if (!updatedUser) {
+        console.log('HERE')
+        return res.status(401).send(`Utilisateur inexistant`);
+      }
+      return res.json({ user: AuthController.toAuthJSON(user) });
+    }).catch((err) => {
+      return res.status(401).send(`Une erreur est survenue`);
+    })
 });
 
 module.exports = router;
