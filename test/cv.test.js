@@ -16,7 +16,7 @@ const {
 const cvFactory = require('./factories/cvFactory');
 const userFactory = require('./factories/userFactory');
 
-describe.skip('CV', () => {
+describe('CV', () => {
     const route = '/api/v1/cv';
     let serverTest;
     let loggedInAdmin;
@@ -159,7 +159,7 @@ describe.skip('CV', () => {
                     expect(response.status).toBe(401);
                 });
             });
-            describe('/ - Get a CV by candidat\'s url', () => {
+            describe('Get a CV by candidat\'s url - /', () => {
                 it('Should return 200 if valid candidat\'s url provided', async () => {
                     const candidatUrl = await getCandidatUrl(candidatCV.id);
                     console.log({
@@ -193,38 +193,48 @@ describe.skip('CV', () => {
             });
         });
         describe('R - Read List of CVs', () => {
-            it('Should return 200, and 1 cv', async () => {
-                const response = await request(serverTest)
-                    .get(`${route}/cards/random/?nb=2`);
-                expect(response.status).toBe(200);
-                expect(response.body.length).toBe(2);
-            });
-            it('Should return 200, and 1 cv if user\'s first name or buisness line contain the query', async () => {
-                const newUser = await userFactory({
-                    firstName: 'xxxxKnownFirstNamexxxx',
-                    role: USER_ROLES.CANDIDAT,
+            describe('Get a list n random cv matching a search - /cards/random/?nb=&q=', () => {
+                it('Should return 200, and 1 cv', async () => {
+                    const response = await request(serverTest)
+                        .get(`${route}/cards/random/?nb=2`);
+                    expect(response.status).toBe(200);
+                    expect(response.body.length).toBe(2);
                 });
-                const newCV = await cvFactory({
-                    status: CV_STATUS.Published.value,
-                    UserId: newUser.id,
+                it('Should return 200, and 1 cv if user\'s first name or buisness line contain the query', async () => {
+                    const newUser = await userFactory({
+                        firstName: 'xxxxKnownFirstNamexxxx',
+                        role: USER_ROLES.CANDIDAT,
+                    });
+                    const newCV = await cvFactory({
+                        status: CV_STATUS.Published.value,
+                        UserId: newUser.id,
+                    });
+                    const response = await request(serverTest)
+                        .get(`${route}/cards/random/?nb=1&q=xxxxKnownFirstNamexxxx`);
+                    expect(response.status).toBe(200);
+                    expect(response.body.length).toBe(1);
+                    expect(response.body[0].id).toBe(newCV.id);
                 });
+                it('Should return 200 and empty list, if no result found', async () => {
+                    const response = await request(serverTest)
+                        .get(`${route}/cards/random/?nb=1&q=zzzzzzz`);
+                    expect(response.status).toBe(200);
+                    expect(response.body.length).toBe(0);
+                });
+                it('Should return 200 and many cv, if no nb provided', async () => {
+                    const response = await request(serverTest)
+                        .get(`${route}/cards/random/`);
+                    expect(response.status).toBe(200);
+                    expect(response.body.length).toBeGreaterThan(1);
+                });
+            })
+        });
+        describe('R - Read number of shares', () => {
+            it('Should return 2OO and the number of shares', async () => {
                 const response = await request(serverTest)
-                    .get(`${route}/cards/random/?nb=1&q=xxxxKnownFirstNamexxxx`);
+                    .get(`${route}/shares`);
                 expect(response.status).toBe(200);
-                expect(response.body.length).toBe(1);
-                expect(response.body[0].id).toBe(newCV.id);
-            });
-            it('Should return 200 and empty list, if no result found', async () => {
-                const response = await request(serverTest)
-                    .get(`${route}/cards/random/?nb=1&q=zzzzzzz`);
-                expect(response.status).toBe(200);
-                expect(response.body.length).toBe(0);
-            });
-            it('Should return 200 and many cv, if no nb provided', async () => {
-                const response = await request(serverTest)
-                    .get(`${route}/cards/random/`);
-                expect(response.status).toBe(200);
-                expect(response.body.length).toBeGreaterThan(1);
+                expect(response.body.total).toBeTruthy()
             });
         });
         describe('D - Delete 1 CV', () => {
