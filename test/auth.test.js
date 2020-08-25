@@ -5,6 +5,7 @@ const {
     resetTestDB,
     stopTestServer,
     createLoggedInUser,
+    getResetLinkAndUser,
 } = require("./helpers");
 const userFactory = require("./factories/userFactory");
 const { USER_ROLES } = require("../constants");
@@ -13,7 +14,7 @@ describe('Auth', () => {
     const route = '/api/v1/auth';
     let serverTest;
     let candidat;
-    let candidatInfo;
+    let candidatResponse;
     let loggedInCandidat;
     let unknownUser;
     const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxheW5lX2JhaHJpbmdlckBob3RtYWlsLmNvbSIsImlkIjoiMWM0NzI0MzEtZTg4NS00MGVhLWI0MWEtMjA1M2RlODJhZDJlIiwiZmlyc3ROYW1lIjoiT2N0YXZpYSIsImxhc3ROYW1lIjoiWXVuZHQiLCJwaG9uZSI6IjI2Mi0wMzItOTY2NCB4NzY5NCIsImdlbmRlciI6MCwicm9sZSI6IkNhbmRpZGF0IiwiZXhwIjoxNjAzNDM3OTE4LCJjYW5kaWRhdElkIjpudWxsLCJjb2FjaElkIjpudWxsLCJpYXQiOjE1OTgyNTM5MTh9.TrUmF20O7TJR2NwqjyyJJvEoBjs59Q3ClqX6PEHUsOw';
@@ -32,23 +33,23 @@ describe('Auth', () => {
             role: USER_ROLES.CANDIDAT,
             password: 'loggedInCandidat',
         });
-        console.log('logged in user', loggedInCandidat)
     });
     beforeEach(async () => {
         candidat = await userFactory({
             role: USER_ROLES.CANDIDAT,
             password: 'candidat',
         });
-        candidatInfo = {
+        candidatResponse = {
             ...candidat
         }
-        delete candidatInfo.createdAt;
-        delete candidatInfo.hashReset;
-        delete candidatInfo.lastConnection;
-        delete candidatInfo.password;
-        delete candidatInfo.salt;
-        delete candidatInfo.saltReset;
-        delete candidatInfo.updatedAt;
+        delete candidatResponse.createdAt;
+        delete candidatResponse.hashReset;
+        delete candidatResponse.lastConnection;
+        delete candidatResponse.password;
+        delete candidatResponse.salt;
+        delete candidatResponse.saltReset;
+        delete candidatResponse.updatedAt;
+
     });
     afterAll(async () => {
         await resetTestDB();
@@ -63,7 +64,7 @@ describe('Auth', () => {
                     password: 'candidat',
                 });
             expect(response.status).toBe(200);
-            expect(response.body.user).toMatchObject(candidatInfo);
+            expect(response.body.user).toMatchObject(candidatResponse);
             expect(response.body.user.token).toBeTruthy();
         });
         it('Should return 400, if invalid email', async () => {
@@ -117,7 +118,7 @@ describe('Auth', () => {
             expect(response.status).toBe(401);
         });
     });
-    describe('Forgot - forgot/', () => {
+    describe.skip('Forgot - forgot/', () => {
         it('Should return 422; if no user email provided', async () => {
             const response = await request(serverTest)
                 .post(`${route}/forgot`)
@@ -146,65 +147,77 @@ describe('Auth', () => {
         });
     });
     describe('reset - reset/:userId/:token', () => {
-        describe('Verify password reinitialisation link', () => {
-            it('Should return 200 and a string, if valid link', async () => {
-                await request(serverTest)
-                    .post(`${route}/forgot`)
-                    .send({
-                        email: loggedInCandidat.user.email
-                    });
+        describe('Verify password\'s reset link', () => {
+            it('Should return 200, if valid link', async () => {
+                const reset = await getResetLinkAndUser(loggedInCandidat.user);
                 const response = await request(serverTest)
-                    .post(`${route}/reset/${loggedInCandidat.user.id}/${loggedInCandidat.token}`)
+                    .get(`${route}/${reset.link}`)
+                expect(response.status).toBe(200);
+            })
+        });
+        describe.skip('Reset password', () => {
+            it('Should return 200 and updated user, if valid link', async () => {
+                const reset = await getResetLinkAndUser(loggedInCandidat.user);
+                const response = await request(serverTest)
+                    .post(`${route}/${reset.link}`)
                     .send({
                         newPassword: 'newPassword',
                         confirmPassword: 'newPassword'
                     });
                 expect(response.status).toBe(200);
+                console.log('RESPONSE', response.body)
+                expect(response.body.id).toBe(loggedInCandidat.user.id);
             });
             it('Should return 400, if not matching passwords', async () => {
+                const reset = await getResetLinkAndUser(loggedInCandidat.user);
                 const response = await request(serverTest)
-                    .post(`${route}/reset/${loggedInCandidat.user.id}/${loggedInCandidat.token}`)
+                    .post(`${route}/${reset.link}`)
                     .send({
                         newPassword: 'newPassword',
                         confirmPassword: 'Password'
                     });
+
                 expect(response.status).toBe(400);
             });
-            // it('Should return 401, if invalid user id', async () => {
-            //     const response = await request(serverTest)
-            //         .post(`${route}/reset/${unknownUser.id}/${loggedInCandidat.token}`)
-            //         .send({
-            //             newPassword: 'newPassword',
-            //             confirmPassword: 'newPassword'
-            //         });
-            //     console.log(response.status);
-            //     expect(response.status).toBe(401);
-            // });
-            // it('Should return 401 if invalid user token', async () => {
-            //     const response = await request(serverTest)
-            //         .post(`${route}/reset/${loggedInCandidat.user.id}/${invalidToken}`)
-            //         .send({
-            //             newPassword: 'newPassword',
-            //             confirmPassword: 'newPassword'
-            //         });
-            //     expect(response.status).toBe(401);
-            // });
-        });
-        describe('Password reinitialisation', () => {
-            it('Should return 200 and updated user', async () => {
-
-            })
-            it('Should return 401', async () => {
-
+            it('Should return 403, if invalid user id', async () => {
+                const reset = await getResetLinkAndUser(loggedInCandidat.user);
+                const response = await request(serverTest)
+                    .post(`${route}/reset/${unknownUser.id}/${reset.token}`)
+                    .send({
+                        newPassword: 'newPassword',
+                        confirmPassword: 'newPassword'
+                    });
+                console.log(response.status);
+                expect(response.status).toBe(403);
+            });
+            it('Should return 401 if invalid user token', async () => {
+                const reset = await getResetLinkAndUser(loggedInCandidat.user);
+                const response = await request(serverTest)
+                    .post(`${route}/reset/${reset.updatedUser}/${invalidToken}`)
+                    .send({
+                        newPassword: 'newPassword',
+                        confirmPassword: 'newPassword'
+                    });
+                expect(response.status).toBe(401);
             });
         });
     });
-    describe('Current - /current', () => {
-        it('Should return a user with token if valid user id provided', async () => {
-
+    describe.skip('Current - /current', () => {
+        it('Should return a user with token if valid token provided', async () => {
+            const response = await request(serverTest)
+                .get(`${route}/current`)
+                .set('authorization', `Token ${loggedInCandidat.token}`);
+            expect(response.status).toBe(200);
+            expect(response.body.user.token).toBeTruthy();
+            expect(response.body.user.id).toBe(loggedInCandidat.user.id);
         });
-        it('Should return 400, if invalid user id provided', async () => {
-
+        it('Should return 401, if invalid token', async () => {
+            console.log(loggedInCandidat.user.id);
+            const response = await request(serverTest)
+                .get(`${route}/current`)
+                .set('authorization', `Token ${invalidToken}`)
+            console.log(response.body.user);
+            expect(response.status).toBe(401);
         });
     });
 })
