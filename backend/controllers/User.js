@@ -1,7 +1,7 @@
 const { USER_ROLES } = require("../../constants");
 
 const {
-  models: { User, User_Candidat, CV },
+  models: { User, User_Candidat, Share, CV },
   Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 
@@ -124,7 +124,7 @@ const getCompleteUser = (id) => {
 
 const getUserByEmail = async (email) => {
   const user = await User.findOne({
-    where: { email },
+    where: { email: email.toLowerCase() },
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
     include: INCLUDE_USER_CANDIDAT,
   });
@@ -180,45 +180,40 @@ const getMembers = (limit, offset, order, role, query) => {
       role,
     };
   }
+
   // recuperer la derniere version de cv
-  // todo trouver un moyen d'ameliorer la recuperation
-  if (role === USER_ROLES.CANDIDAT) {
-    options.include = [
-      {
-        model: User_Candidat,
-        as: 'candidat',
-        attributes: ATTRIBUTES_USER_CANDIDAT,
-        include: [
-          {
-            model: CV,
-            as: 'cvs',
-            attributes: ['version', 'status'],
-          },
-          {
-            model: User,
-            as: 'coach',
-            attributes: ATTRIBUTES_USER,
-          },
-        ],
-      },
-    ];
-  }
-  if (role === USER_ROLES.COACH) {
-    options.include = [
-      {
-        model: User_Candidat,
-        as: 'candidat',
-        attributes: ATTRIBUTES_USER_CANDIDAT,
-        include: [
-          {
-            model: User,
-            as: 'candidat',
-            attributes: ATTRIBUTES_USER,
-          },
-        ],
-      },
-    ];
-  }
+  options.include = [
+    {
+      model: User_Candidat,
+      as: 'candidat',
+      attributes: ATTRIBUTES_USER_CANDIDAT,
+      include: [
+        {
+          model: CV,
+          as: 'cvs',
+          attributes: ['version', 'status', 'urlImg'],
+        },
+        {
+          model: User,
+          as: 'coach',
+          attributes: ATTRIBUTES_USER,
+        },
+      ],
+    },
+    {
+      model: User_Candidat,
+      as: 'coach',
+      attributes: ATTRIBUTES_USER_CANDIDAT,
+      include: [
+        {
+          model: User,
+          as: 'candidat',
+          attributes: ATTRIBUTES_USER,
+        },
+      ],
+    }
+  ];
+
   return User.findAll(options);
 };
 
@@ -248,51 +243,14 @@ const searchUsers = (query, role) => {
 };
 
 const setUser = async (id, user) => {
-  await User.update(user, {
+  const [updateCount] = await User.update(user, {
     where: { id },
+    individualHooks: true
   });
 
+  if (updateCount === 0) return null;
+
   return getUser(id);
-};
-
-const changeUserRole = async (id, user) => {
-  const dbUser = await getUser(id);
-
-  if (dbUser.role !== user.role) {
-    if (dbUser.role === USER_ROLES.CANDIDAT && user.role !== USER_ROLES.CANDIDAT) {
-      await User_Candidat.destroy({
-        where: {
-          candidatId: id
-        },
-      });
-    }
-    else if (dbUser.role !== USER_ROLES.CANDIDAT && user.role === USER_ROLES.CANDIDAT) {
-      if (dbUser.role === USER_ROLES.COACH) {
-        try {
-          await User_Candidat.update(
-            {
-              coachId: null
-            },
-            {
-              where: {
-                candidatId: dbUser.coach.candidat.id
-              },
-            });
-        }
-        catch (e) {
-          console.log('Pas de candidat associé');
-        }
-      }
-
-      await User_Candidat.create({
-        candidatId: id,
-        url: `${user.firstName.toLowerCase()}-${id.substring(0, 8)}`,
-      });
-
-      await setUser(id, { role: user.role })
-    }
-
-  }
 };
 
 const setUserCandidat = (candidatId, candidat) => {
@@ -321,9 +279,8 @@ const getUserCandidat = (candidatId) => {
   });
 };
 
-const getUserCandidatOpt = ({ candidatId, coachId }) => {
-  // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: 
-  // Error: WHERE parameter "coachId" has invalid "undefined" value
+const getUserCandidatOpt = async ({ candidatId, coachId }) => {
+  // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: Error: WHERE parameter "coachId" has invalid "undefined" value
   const findWhere = {};
   if (candidatId) {
     findWhere.candidatId = candidatId;
@@ -375,7 +332,6 @@ module.exports = {
   getUserByEmail,
   getUsers,
   setUser,
-  changeUserRole,
   searchUsers,
   getMembers,
   setUserCandidat,

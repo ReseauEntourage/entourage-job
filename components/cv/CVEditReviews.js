@@ -20,7 +20,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
     <div className="uk-card uk-card-default uk-card-body">
       <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
         <h3 className="uk-card-title">
-          Mes <span className="uk-text-primary">recommandations</span>
+          Ils me <span className="uk-text-primary">recommandent</span>
         </h3>
         {sortedReviews.length < MAX_REVIEWS && (
           <ButtonIcon
@@ -38,8 +38,10 @@ const CVEditReviews = ({ reviews, onChange }) => {
         The node before which the new node is to be inserted is not a child of this node. */}
         {sortedReviews.length > 0 ? (
           sortedReviews.map((review, i) => (
-            <li id={i} key={i}>
-              <GridNoSSR eachWidths={['auto', 'expand']}>
+            <li id={i} key={i} className="">
+              <GridNoSSR
+                eachWidths={['auto', 'expand']}
+                className="uk-padding-small uk-padding-remove-horizontal">
                 <IconNoSSR name="quote-right" />
                 <>
                   <p className="uk-text-small uk-margin-small">{formatParagraph(review.text)}</p>
@@ -78,7 +80,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
       </ul>
       <ModalEdit
         id="modal-testimonial-add"
-        title="Ajout - Mes recommandations"
+        title="Ajout - Ils me recommandent"
         formSchema={schemaTestimonial}
         onSubmit={(fields, closeModal) => {
           closeModal();
@@ -89,7 +91,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
       />
       <ModalEdit
         id="modal-testimonial-edit"
-        title="Édition - Mes recommandations"
+        title="Édition - Ils me recommandent"
         formSchema={schemaTestimonial}
         defaultValues={currentDefaultValue}
         onSubmit={(fields, closeModal) => {

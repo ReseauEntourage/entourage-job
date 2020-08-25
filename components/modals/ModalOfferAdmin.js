@@ -2,7 +2,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import PropsType from 'prop-types';
 import moment from 'moment';
-import axios from '../../Axios';
+import Api from '../../Axios';
 import schema from '../forms/schema/formEditOpportunity';
 import FormWithValidation from '../forms/FormWithValidation';
 import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
@@ -25,8 +25,8 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
     setError(false);
     setLoading(true);
     try {
-      const { data } = await axios.put(
-        `${process.env.SERVER_URL}/api/v1/opportunity/`,
+      const { data } = await Api.put(
+        `/api/v1/opportunity/`,
         opportunity
       );
       setCurrentOffer(data);
@@ -171,7 +171,8 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                   currentOffer.userOpportunity.map(
                     ({ User: { firstName, lastName, id } }) => (
                       <SimpleLink
-                        href={`/backoffice/admin/membres/${id}`}
+                        as={`/backoffice/admin/membres/${id}`}
+                        href="/backoffice/admin/membres/[id]"
                         className="uk-link-muted"
                         target="_blank"
                       >
@@ -251,7 +252,12 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
         className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${currentOffer.isArchived &&
           'uk-light uk-background-secondary'}`}
       >
-        <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm} />
+        <CloseButtonNoSSR className="uk-modal-close-default" onClick={() => {
+          if(isEditing) {
+            setIsEditing(false);
+          }
+          resetForm();
+        }} />
         <div className="uk-modal-body">{contentBuilder()}</div>
       </div>
     </div>

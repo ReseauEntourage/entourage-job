@@ -22,6 +22,7 @@ const Grid = ({
   row,
   masonry,
   style,
+  reverse
 }) => {
   let classBuffer = '';
   let gridBuffer = '';
@@ -41,6 +42,7 @@ const Grid = ({
   if (bottom) classBuffer += ' uk-flex-bottom';
   if (column) classBuffer += ' uk-flex-column';
   if (row) classBuffer += ' uk-flex-row';
+  if (reverse) classBuffer += ' uk-flex-row-reverse';
 
   if (className) classBuffer += ` ${className}`;
   const content = (() => {
@@ -85,9 +87,9 @@ Grid.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.element, PropTypes.bool])
   ),
-  children: PropTypes.arrayOf(
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.element, PropTypes.bool])
-  ),
+  )]),
   className: PropTypes.string,
   around: PropTypes.bool,
   top: PropTypes.bool,
@@ -97,6 +99,7 @@ Grid.propTypes = {
   row: PropTypes.bool,
   masonry: PropTypes.bool,
   style: PropTypes.shape(),
+  reverse: PropTypes.bool
 };
 Grid.defaultProps = {
   match: false,
@@ -118,6 +121,7 @@ Grid.defaultProps = {
   row: false,
   masonry: false,
   style: undefined,
+  reverse: false
 };
 
 export const GridNoSSR = dynamic(() => import('./Grid'), { ssr: false });

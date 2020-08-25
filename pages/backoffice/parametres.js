@@ -21,6 +21,7 @@ import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithC
 import {USER_ROLES} from "../../constants";
 import {useResetForm} from "../../hooks";
 import UserInformationCard from "../../components/cards/UserInformationCard";
+import {mutateFormSchema} from "../../utils";
 
 const Parametres = () => {
   const { user } = useContext(UserContext);
@@ -40,22 +41,50 @@ const Parametres = () => {
     }
   }, [user]);
 
+  let mutatedSchema = schemaPersonalData;
+
   if(userData && userData.role !== USER_ROLES.ADMIN) {
-    const firstName = schemaPersonalData.fields[
-      schemaPersonalData.fields.findIndex((field) => field.id === 'firstName')
-    ];
-    const lastName = schemaPersonalData.fields[
-      schemaPersonalData.fields.findIndex((field) => field.id === 'lastName')
-    ];
-    const gender = schemaPersonalData.fields[
-      schemaPersonalData.fields.findIndex((field) => field.id === 'gender')
-    ];
-    firstName.hidden = true;
-    firstName.disabled = true;
-    lastName.hidden = true;
-    lastName.disabled = true;
-    gender.hidden = true;
-    gender.disabled = true;
+    mutatedSchema = mutateFormSchema(schemaPersonalData, [
+      {
+        fieldId: 'firstName',
+        props: [
+          {
+            propName: 'disabled',
+            value: true
+          },
+          {
+            propName: 'hidden',
+            value: true
+          }
+        ]
+      },
+      {
+        fieldId: 'lastName',
+        props: [
+          {
+            propName: 'disabled',
+            value: true
+          },
+          {
+            propName: 'hidden',
+            value: true
+          }
+        ]
+      },
+      {
+        fieldId: 'gender',
+        props: [
+          {
+            propName: 'disabled',
+            value: true
+          },
+          {
+            propName: 'hidden',
+            value: true
+          }
+        ]
+      },
+    ]);
   }
 
   if (!user) return null;
@@ -65,7 +94,7 @@ const Parametres = () => {
       <Section>
         <HeaderBackoffice
           title="Mes paramètres"
-          description="Ici, tu peux gérer les données qui sont liées à ton compte sur LinkedOut. Tu peux aussi changer ton mail et ton mot de passe."
+          description="Ici, vous pouvez gérer les données qui sont liées à votre compte sur LinkedOut. Vous pouvez aussi changer votre mail et votre mot de passe."
         />
         <GridNoSSR childWidths={['1-2@m']}>
           <GridNoSSR childWidths={['1-1']}>
@@ -95,14 +124,14 @@ const Parametres = () => {
                 />
                 <ToggleWithConfirmationModal
                   id="hidden"
-                  title="Je masque mon CV"
+                  title="Masquer mon CV"
                   modalTitle="Changer la visibilité du CV en ligne ?"
                   modalDescription={
                     <>
-                      En masquant ton CV de LinkedOut, il ne sera plus visible
+                      En masquant votre CV de LinkedOut, il ne sera plus visible
                       par les utilisateurs du site.
                       <br />
-                      Tu pourras le remettre en ligne à tout moment.
+                      Vous pourrez le remettre en ligne à tout moment.
                     </>
                   }
                   modalConfirmation="Oui, masquer mon CV"
@@ -237,8 +266,29 @@ const Parametres = () => {
               gender: userData && userData.gender.toString(),
               phone: userData.phone
             }}
-            formSchema={schemaPersonalData}
-            onSubmit={({ firstName, lastName, gender, phone, oldEmail, newEmail0, newEmail1 }, closeModal) => {
+            formSchema={mutatedSchema}
+            onSubmit={({ firstName, lastName, gender, phone, oldEmail, newEmail0, newEmail1 }, closeModal, setError) => {
+              const updateUser = (newUserData) => {
+                setLoadingPersonal(true);
+                Api.put(`/api/v1/user/${userData.id}`, newUserData)
+                  .then(() => {
+                    closeModal();
+                    setUserData({ ...userData, ...newUserData });
+                    UIkit.notification(
+                      'Vos informations personnelles ont bien été mises à jour',
+                      'success'
+                    );
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    UIkit.notification(
+                      "Une erreur c'est produite lors de la mise à jour de vos informations personnelles",
+                      'danger'
+                    );
+                  })
+                  .finally(() => setLoadingPersonal(false));
+              };
+
               let newUserData = {};
               if(userData.role === USER_ROLES.ADMIN) {
                 newUserData = {firstName, lastName, gender};
@@ -246,35 +296,31 @@ const Parametres = () => {
                   newUserData.phone = phone;
                 }
                 if (userData.email === oldEmail && newEmail0 === newEmail1) {
-                  newUserData.email = newEmail0;
+                  newUserData.email = newEmail0.toLowerCase();
                 }
+                updateUser(newUserData);
               }
               else {
                 if (phone !== userData.phone) {
                   newUserData.phone = phone;
                 }
-                if (userData.email === oldEmail && newEmail0 === newEmail1) {
-                  newUserData.email = newEmail0;
+                if(oldEmail || newEmail0 || newEmail1) {
+                  if (userData.email !== oldEmail.toLowerCase()) {
+                    setError("L'ancienne adresse email n'est pas valide");
+                  }
+                  else if(newEmail0.length === 0 || newEmail0 !== newEmail1) {
+                    setError("Les deux adresses email ne sont pas indentiques");
+                  }
+                  else {
+                    newUserData.email = newEmail0.toLowerCase();
+                    updateUser(newUserData);
+                    setError("");
+                  }
+                }
+                else {
+                  updateUser(newUserData);
                 }
               }
-              setLoadingPersonal(true);
-              Api.put(`/api/v1/user/${userData.id}`, newUserData)
-                .then(() => {
-                  closeModal();
-                  setUserData({ ...userData, ...newUserData });
-                  UIkit.notification(
-                    'Vos informations personnelles ont bien été mises à jour',
-                    'success'
-                  );
-                })
-                .catch((err) => {
-                  console.error(err);
-                  UIkit.notification(
-                    "Une erreur c'est produite lors de la mise à jour de vos informations personnelles",
-                    'danger'
-                  );
-                })
-                .finally(() => setLoadingPersonal(false));
             }}
           />
         </div>

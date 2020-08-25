@@ -67,7 +67,7 @@ export default {
       id: 'isPublic',
       name: 'isPublic',
       component: 'checkbox',
-      title: "L'offre est-elle générale?",
+      title: "Adresser cette offre à tous les candidats",
     },
     {
       id: 'candidatId',
@@ -94,6 +94,12 @@ export default {
           )
           .then(callback);
       },
+    },
+    {
+      id: 'disclaimer',
+      name: 'disclaimer',
+      component: 'text',
+      title: "* Les offres font l'objet d'une validation par Entourage avant de devenir publiques",
     },
   ],
   rules: [

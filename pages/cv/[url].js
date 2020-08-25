@@ -40,7 +40,7 @@ const CVPage = ({ cv, router }) => {
               '.jpg',
               '.preview.jpg'
             )}`
-          : `${process.env.SERVER_URL}/static/img/cv/linkedout-preview.jpg`
+          : `${process.env.SERVER_URL}/static/img/linkedout-preview.jpg`
       }
       metaType="profile"
     >
@@ -54,6 +54,7 @@ const CVPage = ({ cv, router }) => {
     </Layout>
   );
 };
+
 CVPage.getInitialProps = async ({ query }) => {
   return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
     .then(({ data }) => {

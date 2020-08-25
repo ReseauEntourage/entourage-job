@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function formatParagraph(text) {
+export const formatParagraph = (text) => {
   if(text) {
     return text.split('\n').reduce((acc, item, key, arr) => {
       if (key < arr.length && key > 0) {
@@ -10,4 +10,4 @@ export function formatParagraph(text) {
     }, [])
   }
   return text;
-}
+};

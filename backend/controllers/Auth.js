@@ -39,19 +39,20 @@ function generateJWT(user, expiration) {
     coachId = user.candidat.coach.id;
   }
 
-  return jwt.sign({
-    email: user.email,
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    phone: user.phone,
-    gender: user.gender,
-    role: user.role,
-    exp: parseInt((expiration || expirationDate.getTime()) / 1000, 10),
-    candidatId,
-    coachId
-  },
-    'secret'
+  return jwt.sign(
+    {
+      email: user.email,
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: user.phone,
+      gender: user.gender,
+      role: user.role,
+      exp: parseInt((expiration || expirationDate.getTime()) / 1000, 10),
+      candidatId,
+      coachId
+    },
+    process.env.JWT_SECRET
   );
 }
 
@@ -97,8 +98,9 @@ const getTokenFromHeaders = (req) => {
 const auth = (roles = []) => {
   return [
     expressJwt({
-      secret: 'secret',
+      secret: process.env.JWT_SECRET,
       userProperty: 'payload',
+      algorithms: ['HS256'],
       getToken: getTokenFromHeaders,
       credentialsRequired: roles.length > 0,
     }),
