@@ -200,7 +200,6 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
   UserController.getCompleteUser(userId)
     .then((userFound) => {
       const user = userFound;
-      console.log('user foudn ', user);
       if (!user) {
         console.log(
           `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
@@ -251,7 +250,6 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
       });
     })
     .catch((err) => {
-      console.log('HERE')
       console.log(err);
       return res.status(401).send(`Une erreur est survenue`);
     });
@@ -277,7 +275,6 @@ router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.A
   )
     .then((updatedUser) => {
       if (!updatedUser) {
-        console.log('HERE')
         return res.status(401).send(`Utilisateur inexistant`);
       }
       return res.json({ user: AuthController.toAuthJSON(user) });
