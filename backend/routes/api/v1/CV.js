@@ -19,14 +19,15 @@ const upload = multer({ dest: 'uploads/' });
  * Route : POST /api/<VERSION>/cv
  * Description : Créé le CV
  */
+debugger
 router.post(
   '/',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   upload.single('profileImage'),
   (req, res) => {
     // si le cv est une string json le parser, sinon prendre l'objet
+    console.log('req.file :>> ', req);
     const reqCV = typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
-
     checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
       switch (req.payload.role) {
         case USER_ROLES.CANDIDAT:

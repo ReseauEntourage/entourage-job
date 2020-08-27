@@ -27,6 +27,11 @@ const {
 
 const getResetLinkAndUser = require('./auth.helpers');
 
+const {
+    createTestImage,
+    deleteTestImage,
+} = require('./cvImage.helpers');
+
 module.exports = {
     startTestServer,
     stopTestServer,
@@ -47,4 +52,7 @@ module.exports = {
     associateManyOpportunitiesUser,
 
     getResetLinkAndUser,
+
+    createTestImage,
+    deleteTestImage,
 }
