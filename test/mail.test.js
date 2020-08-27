@@ -5,7 +5,7 @@ const {
     stopTestServer,
 } = require('./helpers');
 
-describe('Mail', () => {
+describe.skip('Mail', () => {
     const route = '/api/v1/mail';
     let serverTest;
     let data;
