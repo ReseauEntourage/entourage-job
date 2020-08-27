@@ -1,10 +1,12 @@
 const fakerStatic = require('faker');
-const { CV_STATUS } = require('../../constants');
 const {
-    models: {
-        CV,
-        User,
-    }
+  CV_STATUS
+} = require('../../constants');
+const {
+  models: {
+    CV,
+    User,
+  }
 } = require('../../backend/db/models');
 
 /**
@@ -14,7 +16,7 @@ const {
  * @retrn array of status values
  */
 const getCvStatusValues = (cvStatus) => {
-    return Object.keys(cvStatus).map((status) => cvStatus[status].value);
+  return Object.keys(cvStatus).map((status) => cvStatus[status].value);
 }
 
 /**
@@ -35,23 +37,23 @@ const getCvStatusValues = (cvStatus) => {
  * @param {number} props.version
  */
 const generateCv = async (props = {}) => {
-    const fakeData = {
-        urlImg: fakerStatic.image.imageUrl(),
-        intro: fakerStatic.lorem.sentence(),
-        story: fakerStatic.lorem.text(),
-        location: fakerStatic.address.city(),
-        availability: fakerStatic.lorem.sentence(),
-        transport: fakerStatic.lorem.sentence(),
-        catchphrase: fakerStatic.lorem.sentence(),
-        careerPathOpen: fakerStatic.random.boolean(),
-        status: fakerStatic.random.arrayElement(getCvStatusValues(CV_STATUS)),
-        version: 1,
-    };
+  const fakeData = {
+    urlImg: `images/${props.UserId}.Pending.jpg`,
+    intro: fakerStatic.lorem.sentence(),
+    story: fakerStatic.lorem.text(),
+    location: fakerStatic.address.city(),
+    availability: fakerStatic.lorem.sentence(),
+    transport: fakerStatic.lorem.sentence(),
+    catchphrase: fakerStatic.lorem.sentence(),
+    careerPathOpen: fakerStatic.random.boolean(),
+    status: fakerStatic.random.arrayElement(getCvStatusValues(CV_STATUS)),
+    version: 1,
+  };
 
-    return {
-        ...fakeData,
-        ...props
-    }
+  return {
+    ...fakeData,
+    ...props
+  }
 }
 
 /**
@@ -80,20 +82,20 @@ const generateCv = async (props = {}) => {
  * @return {Promise<CV>}
  */
 const cvFactory = async (
-    props = {},
-    componentsId = {},
-    insertInDB = true,
+  props = {},
+  componentsId = {},
+  insertInDB = true,
 ) => {
-    const cvData = await generateCv(props);
-    const cvFull = {
-        ...cvData,
-        ...componentsId
-    }
-    let cvDB;
-    if (insertInDB) {
-        cvDB = await CV.create(cvFull);
-    }
-    return insertInDB ? cvDB.dataValues : cvFull;
+  const cvData = await generateCv(props);
+  const cvFull = {
+    ...cvData,
+    ...componentsId
+  }
+  let cvDB;
+  if (insertInDB) {
+    cvDB = await CV.create(cvFull);
+  }
+  return insertInDB ? cvDB.dataValues : cvFull;
 }
 
 module.exports = cvFactory;
