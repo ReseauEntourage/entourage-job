@@ -23,7 +23,7 @@ let otherCandidat;
 let cvLoggedInCandidat;
 let cvOtherCandidat;
 
-describe('User', () => {
+describe.skip('User', () => {
   beforeAll(async () => {
     serverTest = await startTestServer();
     await recreateTestDB();
