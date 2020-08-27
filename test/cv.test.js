@@ -8,6 +8,7 @@ const {
     associateCoachAndCandidat,
     createLoggedInUser,
     getCandidatUrl,
+    createTestImage,
 } = require('./helpers');
 const {
     USER_ROLES,
@@ -82,6 +83,7 @@ describe('CV', () => {
                 expect(response.body).toMatchObject(cvResponse);
             });
             it('Should return 200 and CV with cv status set as published, if logged in user is coach of cv\'s owner', async () => {
+                const path = createTestImage();
                 const cv = await cvFactory(
                     {
                         UserId: loggedInCandidat.user.id,
@@ -95,7 +97,8 @@ describe('CV', () => {
                 const response = await request(serverTest)
                     .post(`${route}/`)
                     .set('authorization', `Token ${loggedInCoach.token}`)
-                    .send({ cv });
+                    .field('cv', cv)
+                    .attach('file', path);
                 expect(response.status).toBe(200);
                 expect(response.body.status).toMatch(CV_STATUS.Published.value);
             });
