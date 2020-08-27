@@ -97,7 +97,8 @@ describe('CV', () => {
                 const response = await request(serverTest)
                     .post(`${route}/`)
                     .set('authorization', `Token ${loggedInCoach.token}`)
-                    .field('cv', cv)
+                    .set("Content-Type", "multipart/form-data")
+                    .field('cv', JSON.stringify(cv))
                     .attach('file', path);
                 expect(response.status).toBe(200);
                 expect(response.body.status).toMatch(CV_STATUS.Published.value);
