@@ -8,6 +8,8 @@ const {
     associateCoachAndCandidat,
     createLoggedInUser,
     getCandidatUrl,
+    createTestImage,
+    deleteTestImage,
 } = require('./helpers');
 const {
     USER_ROLES,
@@ -24,6 +26,7 @@ describe('CV', () => {
     let loggedInCoach;
     let candidatCV;
     let cvCandidat;
+    let path;
 
     beforeAll(async () => {
         serverTest = await startTestServer();
@@ -55,29 +58,37 @@ describe('CV', () => {
         loggedInAdmin = await createLoggedInUser(admin, false);
         loggedInCoach = await createLoggedInUser(coach, false);
         loggedInCandidat = await createLoggedInUser(candidat, false);
+
+        path = createTestImage();
+
     });
 
     afterAll(async () => {
+        // deleteTestImage(path);
         await resetTestDB();
         await stopTestServer();
     });
     describe('CRUD CV', () => {
         describe('C - Create 1 CV', () => {
             it('Should return 200 and CV if logged in user', async () => {
-                const cv = await cvFactory(
-                    {
-                        UserId: loggedInCandidat.user.id,
-                        urlImg: null,
-                    },
+                const cv = await cvFactory({
+                    UserId: loggedInCandidat.user.id,
+                    // urlImg: `images/${loggedInCandidat.user.id}.Pending.jpg`,
+                },
                     {},
                     false
                 );
-                const cvResponse = { ...cv };
+                const cvResponse = {
+                    ...cv
+                };
                 delete cvResponse.status;
+                console.log('path :>> ', path);
                 const response = await request(serverTest)
                     .post(`${route}/`)
                     .set('authorization', `Token ${loggedInCandidat.token}`)
-                    .send({ cv });
+                    .set("Content-Type", "multipart/form-data")
+                    .field('cv', JSON.stringify(cv))
+                    .attach('profileImage', path);
                 expect(response.status).toBe(200);
                 expect(response.body).toMatchObject(cvResponse);
             });
@@ -95,7 +106,8 @@ describe('CV', () => {
                 const response = await request(serverTest)
                     .post(`${route}/`)
                     .set('authorization', `Token ${loggedInCoach.token}`)
-                    .send({ cv });
+                    .field('cv', JSON.stringify(cv))
+                    .attach('profileImage', path);
                 expect(response.status).toBe(200);
                 expect(response.body.status).toMatch(CV_STATUS.Published.value);
             });
@@ -200,21 +212,22 @@ describe('CV', () => {
                     expect(response.status).toBe(200);
                     expect(response.body.length).toBe(2);
                 });
-                it('Should return 200, and 1 cv if user\'s first name or buisness line contain the query', async () => {
-                    const newUser = await userFactory({
-                        firstName: 'xxxxKnownFirstNamexxxx',
-                        role: USER_ROLES.CANDIDAT,
+                it('Should return 200, and 1 cv if user\'s first name or buisness line contain the query',
+                    async () => {
+                        const newUser = await userFactory({
+                            firstName: 'xxxxKnownFirstNamexxxx',
+                            role: USER_ROLES.CANDIDAT,
+                        });
+                        const newCV = await cvFactory({
+                            status: CV_STATUS.Published.value,
+                            UserId: newUser.id,
+                        });
+                        const response = await request(serverTest)
+                            .get(`${route}/cards/random/?nb=1&q=xxxxKnownFirstNamexxxx`);
+                        expect(response.status).toBe(200);
+                        expect(response.body.length).toBe(1);
+                        expect(response.body[0].id).toBe(newCV.id);
                     });
-                    const newCV = await cvFactory({
-                        status: CV_STATUS.Published.value,
-                        UserId: newUser.id,
-                    });
-                    const response = await request(serverTest)
-                        .get(`${route}/cards/random/?nb=1&q=xxxxKnownFirstNamexxxx`);
-                    expect(response.status).toBe(200);
-                    expect(response.body.length).toBe(1);
-                    expect(response.body[0].id).toBe(newCV.id);
-                });
                 it('Should return 200 and empty list, if no result found', async () => {
                     const response = await request(serverTest)
                         .get(`${route}/cards/random/?nb=1&q=zzzzzzz`);
@@ -239,7 +252,9 @@ describe('CV', () => {
         });
         describe('D - Delete 1 CV', () => {
             it('Should return 200, if logged in admin', async () => {
-                const cv = await cvFactory({ UserId: loggedInCandidat.user.id });
+                const cv = await cvFactory({
+                    UserId: loggedInCandidat.user.id
+                });
                 const response = await request(serverTest)
                     .delete(`${route}/${cv.id}`)
                     .set('authorization', `Token ${loggedInAdmin.token}`);
@@ -251,7 +266,9 @@ describe('CV', () => {
                 expect(response.status).toBe(401);
             });
             it('Should return 401, if not logged in admin', async () => {
-                const cv = await cvFactory({ UserId: loggedInCandidat.user.id });
+                const cv = await cvFactory({
+                    UserId: loggedInCandidat.user.id
+                });
                 const response = await request(serverTest)
                     .delete(`${route}/${cv.id}`)
                 expect(response.status).toBe(401);
