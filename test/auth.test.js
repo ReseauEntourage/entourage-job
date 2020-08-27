@@ -10,7 +10,7 @@ const {
 const userFactory = require("./factories/userFactory");
 const { USER_ROLES } = require("../constants");
 
-describe.skip('Auth', () => {
+describe('Auth', () => {
     const route = '/api/v1/auth';
     let serverTest;
     let candidat;
