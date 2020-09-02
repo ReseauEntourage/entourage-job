@@ -7,12 +7,4 @@ assets/uikit
 assets/*.vpp.bak*
 _next
 backend/lib/aws_lambda/.serverless/
-static/img/illustrations/aide dans les démarches (1).png
-static/img/illustrations/aide dans les démarches.png
-static/img/illustrations/amitié sdf riverain (face à face).png
-static/img/illustrations/café solidaire V1.png
-static/img/illustrations/démo appli.png
-static/img/illustrations/donner accès à une ressource 2.png
-static/img/illustrations/donner accès à une ressource.png
-static/img/illustrations/SDF-femme à la rue.png
-static/img/illustrations/vegetation déco rue.png
+
