@@ -19,7 +19,7 @@ const dev = process.env.NODE_ENV !== 'production';
 
 let server;
 
-const apiLimiter = dev ? () => { } : RateLimiter.createLimiter(100);
+const apiLimiter = dev ? (req, res, next) => next() : RateLimiter.createLimiter(100);
 
 module.exports.prepare = () => {
   // enable ssl redirect
