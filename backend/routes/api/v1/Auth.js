@@ -6,10 +6,10 @@ const { auth } = require('../../../controllers/Auth');
 const { sendMail } = require('../../../controllers/mail');
 const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
-const {USER_ROLES} = require('../../../../constants');
+const { USER_ROLES } = require('../../../../constants');
 const RateLimiter = require('../../../utils/RateLimiter');
 
-const authLimiter = RateLimiter.createLimiter(10);
+const authLimiter = process.env.NODE_ENV !== 'production' ? () => { } : RateLimiter.createLimiter(10);
 
 /**
  * Utilisation d'un "custom callback" pour mieux gérer l'echec d'authentification
@@ -232,7 +232,7 @@ router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.A
     return res.sendStatus(400);
   }
   UserController.setUser(id, { lastConnection: Date.now() }).then((updatedUser) => {
-    if(!updatedUser) {
+    if (!updatedUser) {
       return res.status(401).send(`Utilisateur inexistant`);
     }
     return res.json({ user: AuthController.toAuthJSON(user) });
