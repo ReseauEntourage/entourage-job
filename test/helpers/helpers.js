@@ -6,13 +6,15 @@ const server = require('../../backend/server');
 let app;
 let db;
 
+const PORT = process.env.PORT || 3001;
+
 /**
  * Start a server according to .env variables
  */
 const startTestServer = async () => {
   loadEnvironnementVariables();
   app = server.prepare();
-  await server.start(process.env.PORT);
+  await server.start(PORT);
   return app;
 }
 
@@ -48,7 +50,7 @@ const recreateTestDB = async () => {
 
 /**
  * Drops all the tables content and close db connection
- * 
+ *
  */
 const resetTestDB = async () => {
   await db.query('DELETE FROM "Users"');
@@ -64,7 +66,7 @@ const resetTestDB = async () => {
 
 /**
  * Create many entities using a factory
- * 
+ *
  * @param {function} factory an entity factory
  * @param {number} n the number of entities to create
  * @returns
