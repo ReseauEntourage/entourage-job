@@ -13,7 +13,7 @@ const UserController = require('../../../controllers/User');
 const { USER_ROLES } = require('../../../../constants');
 const RateLimiter = require('../../../utils/RateLimiter');
 
-const authLimiter = RateLimiter.createLimiter(10);
+const authLimiter = process.env.NODE_ENV !== 'production' ? (req, res, next) => next() : RateLimiter.createLimiter(10);
 
 /**
  * Utilisation d'un "custom callback" pour mieux gérer l'echec d'authentification

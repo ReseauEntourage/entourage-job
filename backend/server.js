@@ -14,15 +14,13 @@ const routeOpportunity = require('./routes/api/v1/Opportunity');
 const RateLimiter = require('./utils/RateLimiter');
 
 const app = express();
+const dev = process.env.NODE_ENV !== 'production';
 
 let server;
 
-const apiLimiter = RateLimiter.createLimiter(100);
+const apiLimiter = dev ? (req, res, next) => next() : RateLimiter.createLimiter(100);
 
 module.exports.prepare = () => {
-
-  const dev = process.env.NODE_ENV !== 'production';
-
   // enable ssl redirect
   if (!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
