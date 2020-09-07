@@ -41,7 +41,7 @@ Pour lancer le projet vous avez besoin de **Docker** ainsi que de **NodeJs**.
 
 ## 2# Initialisation de le BDD
 
-- `docker run --name entourage-db -e POSTGRES_PASSWORD=entourage -d -p 5432:5432 postgres`
+- `docker run --name entourage-db -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 5432:5432 postgres`
 
 - Vous avez besoin des données du fichier **`.env`** et de renseigner le champs DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:5432/entourage`) avec votre adresse.
 
