@@ -3,7 +3,6 @@
 node_modules
 .idea
 .vscode
-.DS_Store
 assets/uikit
 assets/*.vpp.bak*
 _next
