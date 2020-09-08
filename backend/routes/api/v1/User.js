@@ -1,18 +1,9 @@
 const validator = require('validator');
 const express = require('express');
-const {
-  checkCandidatOrCoachAuthorization,
-  checkUserAuthorization
-} = require('../../../utils');
-const {
-  USER_ROLES
-} = require("../../../../constants");
-const {
-  auth
-} = require('../../../controllers/Auth');
-const {
-  sendMail
-} = require('../../../controllers/mail');
+const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../../../utils');
+const {USER_ROLES} = require("../../../../constants");
+const {auth} = require('../../../controllers/Auth');
+const {sendMail} = require('../../../controllers/mail');
 
 const router = express.Router();
 const UserController = require('../../../controllers/User');
@@ -30,10 +21,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
   }
 
   const userPassword = req.body.password || fakePassword();
-  const {
-    hash,
-    salt
-  } = AuthController.encryptPassword(userPassword);
+  const {hash, salt} = AuthController.encryptPassword(userPassword);
 
   UserController.createUser({
     ...req.body,
@@ -147,8 +135,7 @@ router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
-                                                                                          res) => {
+router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   if (req.payload.id === req.query.coachId ||
     req.payload.id === req.query.candidatId ||
     req.payload.role === USER_ROLES.ADMIN) {
@@ -219,9 +206,7 @@ router.get(
  * Description : Modifie le User associé à l'<ID> fournit
  */
 // TODO check
-router.put(
-  '/change-pwd',
-  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
     UserController.getUserByEmail(req.payload.email)
       .then(({
@@ -234,10 +219,7 @@ router.put(
           oldSalt
         );
         if (validated) {
-          const {
-            hash,
-            salt
-          } = AuthController.encryptPassword(
+          const {hash, salt} = AuthController.encryptPassword(
             req.body.newPassword
           );
           UserController.setUser(req.payload.id, {

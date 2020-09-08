@@ -2,12 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 const passport = require('passport');
-const {
-  auth
-} = require('../../../controllers/Auth');
-const {
-  sendMail
-} = require('../../../controllers/mail');
+const {auth} = require('../../../controllers/Auth');
+const {sendMail} = require('../../../controllers/mail');
 const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const {USER_ROLES} = require('../../../../constants');
@@ -74,9 +70,7 @@ router.post('/logout', authLimiter, auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH,
 router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
   let token = null;
   let user = null;
-  const {
-    email
-  } = req.body;
+  const {email} = req.body;
   console.log(
     `Demande de réinitialisation du mot de passe du compte : ${email}`
   );
@@ -141,10 +135,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
 router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */) => {
   const infoLog = 'GET /reset/:userId/:token -';
 
-  const {
-    userId,
-    token
-  } = req.params;
+  const {userId, token} = req.params;
   console.log(
     `${infoLog} Vérification du lien de réinitialisation de mot de passe`
   );
@@ -185,14 +176,8 @@ router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */)
  */
 router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */) => {
   const infoLog = 'POST /reset/:userId/:token -';
-  const {
-    userId,
-    token
-  } = req.params;
-  const {
-    newPassword,
-    confirmPassword
-  } = req.body;
+  const {userId, token} = req.params;
+  const {newPassword, confirmPassword} = req.body;
   console.log(
     `${infoLog} Vérification du lien de réinitialisation de mot de passe`
   );
@@ -270,16 +255,12 @@ router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.A
   if (!user) {
     return res.sendStatus(400);
   }
-  UserController.setUser(
-    id,
-    {lastConnection: Date.now()}
-  )
-    .then((updatedUser) => {
-      if (!updatedUser) {
-        return res.status(401).send(`Utilisateur inexistant`);
-      }
-      return res.json({user: AuthController.toAuthJSON(user)});
-    }).catch((err) => {
+  UserController.setUser(id, {lastConnection: Date.now()}).then((updatedUser) => {
+    if (!updatedUser) {
+      return res.status(401).send(`Utilisateur inexistant`);
+    }
+    return res.json({user: AuthController.toAuthJSON(user)});
+  }).catch((err) => {
     return res.status(401).send(`Une erreur est survenue`);
   })
 });
