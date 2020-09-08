@@ -23,7 +23,7 @@ const apiLimiter = dev ? (req, res, next) => next() : RateLimiter.createLimiter(
 
 module.exports.prepare = () => {
   // enable ssl redirect
-  if (!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  if (!dev) app.use(enforce.HTTPS({trustProtoHeader: true}));
 
   app.set('trust proxy', 1);
 
@@ -58,7 +58,7 @@ module.exports.prepare = () => {
 
   app.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
-      res.status(err.status).send({ message: err.message });
+      res.status(err.status).send({message: err.message});
       return;
     }
     next();
@@ -73,8 +73,9 @@ module.exports.get = (path, handle) => {
 module.exports.start = (port) => {
   return new Promise((resolve, reject) => {
     server = app.listen(port, (err) => {
-      if (err) reject(err);
-      else {
+      if (err) {
+        reject(err);
+      } else {
         console.log(`> Site disponible sur http://localhost:${port}`);
         resolve();
       }

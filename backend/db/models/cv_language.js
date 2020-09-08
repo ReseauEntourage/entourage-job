@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  CV_Language.associate = function(models) {
+  CV_Language.associate = function (models) {
     // associations can be defined here
   };
   return CV_Language;

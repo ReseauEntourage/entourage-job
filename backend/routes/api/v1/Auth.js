@@ -2,11 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 const passport = require('passport');
-const { auth } = require('../../../controllers/Auth');
-const { sendMail } = require('../../../controllers/mail');
+const {auth} = require('../../../controllers/Auth');
+const {sendMail} = require('../../../controllers/mail');
 const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
-const { USER_ROLES } = require('../../../../constants');
+const {USER_ROLES} = require('../../../../constants');
 const RateLimiter = require('../../../utils/RateLimiter');
 
 const authLimiter = process.env.NODE_ENV !== 'production' ? (req, res, next) => next() : RateLimiter.createLimiter(10);
@@ -16,7 +16,7 @@ const authLimiter = process.env.NODE_ENV !== 'production' ? (req, res, next) => 
  * Source : http://www.passportjs.org/docs/downloads/html/#custom-callback
  */
 router.post('/login', authLimiter, auth(), (req, res, next) => {
-  const { email, password } = req.body;
+  const {email, password} = req.body;
 
   if (!email) {
     return res.status(422).json({
@@ -36,7 +36,7 @@ router.post('/login', authLimiter, auth(), (req, res, next) => {
 
   return passport.authenticate(
     'local',
-    { session: false },
+    {session: false},
     (err, passportUser, info) => {
       // console.log('route in authenticate : ', err, passportUser, info);
       if (err) {
@@ -47,10 +47,10 @@ router.post('/login', authLimiter, auth(), (req, res, next) => {
         const user = passportUser;
         user.token = AuthController.generateJWT(passportUser);
 
-        return res.json({ user: AuthController.toAuthJSON(user) });
+        return res.json({user: AuthController.toAuthJSON(user)});
       }
 
-      return res.status(400).json({ error: info.error });
+      return res.status(400).json({error: info.error});
     }
   )(req, res, next);
 });
@@ -65,7 +65,7 @@ router.post('/logout', authLimiter, auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH,
 router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
   let token = null;
   let user = null;
-  const { email } = req.body;
+  const {email} = req.body;
   console.log(
     `Demande de réinitialisation du mot de passe du compte : ${email}`
   );
@@ -90,7 +90,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       const endDate = Date.now() + 1000 * 60 * 60 * 24;
       token = AuthController.generateJWT(user, endDate);
       // console.log(token);
-      const { hash, salt } = AuthController.encryptPassword(token);
+      const {hash, salt} = AuthController.encryptPassword(token);
       // console.log(hash);
       // console.log(salt);
       return UserController.setUser(user.id, {
@@ -127,7 +127,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
 router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */) => {
   const infoLog = 'GET /reset/:userId/:token -';
 
-  const { userId, token } = req.params;
+  const {userId, token} = req.params;
   console.log(
     `${infoLog} Vérification du lien de réinitialisation de mot de passe`
   );
@@ -140,7 +140,7 @@ router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */)
         console.log(
           `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
         );
-        return res.status(403).send({ error: 'Lien non valide' });
+        return res.status(403).send({error: 'Lien non valide'});
       }
       /* console.log(`${infoLog} DEBUG :`);
       console.log(user); */
@@ -148,7 +148,7 @@ router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */)
         !AuthController.validatePassword(token, user.hashReset, user.saltReset)
       ) {
         console.log(` ${infoLog} Token invalide`);
-        return res.status(403).send({ error: 'Lien non valide' });
+        return res.status(403).send({error: 'Lien non valide'});
       }
       return res.status(200).send('Lien valide');
     })
@@ -163,8 +163,8 @@ router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */)
  */
 router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */) => {
   const infoLog = 'POST /reset/:userId/:token -';
-  const { userId, token } = req.params;
-  const { newPassword, confirmPassword } = req.body;
+  const {userId, token} = req.params;
+  const {newPassword, confirmPassword} = req.body;
   console.log(
     `${infoLog} Vérification du lien de réinitialisation de mot de passe`
   );
@@ -177,7 +177,7 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
         console.log(
           `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
         );
-        return res.status(403).send({ error: 'Lien non valide' });
+        return res.status(403).send({error: 'Lien non valide'});
       }
       /* console.log(`${infoLog} DEBUG :`);
       console.log(user); */
@@ -185,7 +185,7 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
         !AuthController.validatePassword(token, user.hashReset, user.saltReset)
       ) {
         console.log(`${infoLog} Token invalide`);
-        return res.status(403).send({ error: 'Lien non valide' });
+        return res.status(403).send({error: 'Lien non valide'});
       }
       console.log(`${infoLog} Lien valide`);
       if (newPassword !== confirmPassword) {
@@ -194,11 +194,11 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
         );
         return res
           .status(400)
-          .send({ error: `La confirmation du mot de passe est incorrecte` });
+          .send({error: `La confirmation du mot de passe est incorrecte`});
       }
       console.log(`${infoLog} Les 2 mots de passe sont valides`);
       console.log(`${infoLog} Chiffrement du nouveau mot de passe`);
-      const { hash, salt } = AuthController.encryptPassword(newPassword);
+      const {hash, salt} = AuthController.encryptPassword(newPassword);
       console.log(`${infoLog} Mise à jour du mot de passe de l'utilisateur`);
       return UserController.setUser(user.id, {
         password: hash,
@@ -225,17 +225,17 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
  */
 router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), async (req, res /* , next */) => {
   const {
-    payload: { id },
+    payload: {id},
   } = req;
   const user = await UserController.getUser(id);
   if (!user) {
     return res.sendStatus(400);
   }
-  UserController.setUser(id, { lastConnection: Date.now() }).then((updatedUser) => {
+  UserController.setUser(id, {lastConnection: Date.now()}).then((updatedUser) => {
     if (!updatedUser) {
       return res.status(401).send(`Utilisateur inexistant`);
     }
-    return res.json({ user: AuthController.toAuthJSON(user) });
+    return res.json({user: AuthController.toAuthJSON(user)});
   }).catch((err) => {
     return res.status(401).send(`Une erreur est survenue`);
   })

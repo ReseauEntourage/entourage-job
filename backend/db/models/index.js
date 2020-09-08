@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
 
 dotenv.config();
-const db = { models: {} };
+const db = {models: {}};
 const basename = path.basename(__filename);
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
