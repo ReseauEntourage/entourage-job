@@ -94,8 +94,9 @@ Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
 
 ## 6# Lancer les tests
 
-- `npm run test` pour lancer les tests avec un rapport de couverture
-
+- `npm run test` est utilisé pour l'intégration continue pour lancer les tests avec les valeurs du fichier `.env`
+- `npm run dev-test-coverage` pour lancer les tests avec un rapport de couverture
 - `npm run dev-test` pour lancer les tests en mode watch sans rapport de couverture
+
 
 ### You are all set !

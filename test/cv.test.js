@@ -8,8 +8,7 @@ const {
     associateCoachAndCandidat,
     createLoggedInUser,
     getCandidatUrl,
-    createTestImage,
-    deleteTestImage,
+    getTestImagePath
 } = require('./helpers');
 const {
     USER_ROLES,
@@ -59,7 +58,7 @@ describe('CV', () => {
         loggedInCoach = await createLoggedInUser(coach, false);
         loggedInCandidat = await createLoggedInUser(candidat, false);
 
-        path = createTestImage();
+        path = getTestImagePath();
 
     });
 

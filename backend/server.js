@@ -32,9 +32,7 @@ module.exports.prepare = () => {
   app.use(
     session({
       secret: uid.sync(18),
-      // secret: 'entouragejobs-passport',
       cookie: {
-        // maxAge: 60000,
         maxAge: 86400 * 1000, // 24 hours in milliseconds
       },
       resave: false,
