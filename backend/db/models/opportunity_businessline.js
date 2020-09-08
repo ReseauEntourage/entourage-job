@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Opportunity_BusinessLine.associate = function(models) {
+  Opportunity_BusinessLine.associate = function (models) {
     // associations can be defined here
   };
   return Opportunity_BusinessLine;

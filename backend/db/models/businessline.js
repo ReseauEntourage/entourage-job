@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     bl.id = uuid();
     return bl;
   });
-  BusinessLine.associate = function(models) {
+  BusinessLine.associate = function (models) {
     BusinessLine.belongsToMany(models.Opportunity, {
       through: 'Opportunity_BusinessLine',
       as: 'Opportunities',

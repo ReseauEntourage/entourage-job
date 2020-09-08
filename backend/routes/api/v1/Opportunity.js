@@ -1,15 +1,15 @@
 const express = require('express');
 
 const router = express.Router();
-const { auth } = require('../../../controllers/Auth');
+const {auth} = require('../../../controllers/Auth');
 const OpportunityController = require('../../../controllers/Opportunity');
-const { USER_ROLES } = require('../../../../constants');
-const { checkCandidatOrCoachAuthorization } = require('../../../utils');
+const {USER_ROLES} = require('../../../../constants');
+const {checkCandidatOrCoachAuthorization} = require('../../../utils');
 
 /**
  * Route : POST /api/<VERSION>/opportunity
  * Description : Create an opportunity
- * Response: 
+ * Response:
  * -  200 + created opportunity
  * -  401
  */
@@ -27,9 +27,9 @@ router.post('/', auth(), (req, res) => {
  * Description : Read all the opportunities matching the query
  * on the fields title, recruiterName, location, company. If no
  * query returns all opportunities.
- * Params: 
+ * Params:
  * -  QUERY: string, optional
- * Responses: 
+ * Responses:
  * - 200 + list of opportunities
  * - 401
  */
@@ -51,9 +51,9 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Route : GET /api/<VERSION>/user/private/<ID>
  * Description : Read the opportunities associated to a user wich are
  * private (isPublic: false) and validated (isValidated: true)
- * Params: 
+ * Params:
  * - ID: string (user's id)
- * Responses: 
+ * Responses:
  * -  200 + a list of the user's opportunities
  * -  401
  */
@@ -77,9 +77,9 @@ router.get(
  * Route : GET /api/<VERSION>/user/private/<ID>
  * Description : Read the opportunities associated to a user wich are
  * validated (isValidated: true)
- * Params: 
+ * Params:
  * -  ID: string (user's id)
- * Responses: 
+ * Responses:
  * -  200 + a list of the user's opportunities
  * -  401
  */
@@ -126,7 +126,7 @@ router.get(
 /**
  * Route: POST /api/<VERSION>/opportunity/join
  * Description: Create an association between a user and an opporrtunity
- * in the table opportunity_user. 
+ * in the table opportunity_user.
  * Body: {
  *          opportunityId: string,
  *          userID: string,
@@ -155,9 +155,9 @@ router.post(
 /**
  * Route: PUT /api/<VERSION>/opportunity
  * Description: Admins can update an opportunity
- * Body: 
+ * Body:
  * - <Opportunity> : object containint ID and fields to update
- * Responses: 
+ * Responses:
  * - 200 + updated opportunity
  * - 401
  */
@@ -174,7 +174,7 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
 /**
  * Route: UPDATE /api/<VERSION>/opportunity/join
  * Description: Update an association between a user and an opporrtunity
- * in the table opportunity_user. 
+ * in the table opportunity_user.
  * Body: {
  *          id: string, //the opportunity id
  *          UserId: string,
@@ -203,7 +203,7 @@ router.put('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMI
  * Description : Delete the opportunity specified in params
  * Params :
  * - ID : id of the opportunity to delete
- * Response: 
+ * Response:
  * -  200
  * -  401
  */

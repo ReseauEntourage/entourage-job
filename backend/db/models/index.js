@@ -5,7 +5,7 @@ const loadEnvironementVariables = require('../../utils/env');
 
 loadEnvironementVariables();
 
-const db = { models: {} };
+const db = {models: {}};
 const basename = path.basename(__filename);
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {

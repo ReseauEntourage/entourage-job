@@ -1,8 +1,8 @@
-const { USER_ROLES } = require("../../constants");
+const {USER_ROLES} = require("../../constants");
 
 const {
-  models: { User, User_Candidat, Share, CV },
-  Sequelize: { Op, fn, col, where },
+  models: {User, User_Candidat, Share, CV},
+  Sequelize: {Op, fn, col, where},
 } = require('../db/models');
 
 const ATTRIBUTES_USER_CANDIDAT = ['employed', 'hidden', 'note', 'url'];
@@ -61,7 +61,7 @@ const createUser = async (newUser) => {
   const infoLog = 'createUser -';
   console.log(`${infoLog} Création du User`);
 
-  const userToCreate = { ...newUser };
+  const userToCreate = {...newUser};
   userToCreate.role = newUser.role || USER_ROLES.CANDIDAT;
   userToCreate.firstName = capitalizeName(userToCreate.firstName);
   userToCreate.lastName = capitalizeName(userToCreate.lastName);
@@ -69,17 +69,17 @@ const createUser = async (newUser) => {
   return User.create(userToCreate).then(async (res) => {
     if (userToCreate.userToCoach && res.role === USER_ROLES.COACH) {
       await User_Candidat.update(
-        { candidatId: userToCreate.userToCoach, coachId: res.id },
+        {candidatId: userToCreate.userToCoach, coachId: res.id},
         {
-          where: { candidatId: userToCreate.userToCoach },
+          where: {candidatId: userToCreate.userToCoach},
         }
       );
     }
     if (userToCreate.userToCoach && res.role === USER_ROLES.CANDIDAT) {
       await User_Candidat.update(
-        { candidatId: res.id, coachId: userToCreate.userToCoach },
+        {candidatId: res.id, coachId: userToCreate.userToCoach},
         {
-          where: { candidatId: res.id },
+          where: {candidatId: res.id},
         }
       );
     }
@@ -92,7 +92,7 @@ const deleteUser = (id) => {
     const infoLog = 'deleteUser -';
     console.log(`${infoLog} Suppression d'un User à partir de son id`);
     User.destroy({
-      where: { id },
+      where: {id},
     })
       .then((result) => resolve(result))
       .catch((err) => reject(err));
@@ -124,7 +124,7 @@ const getCompleteUser = (id) => {
 
 const getUserByEmail = async (email) => {
   const user = await User.findOne({
-    where: { email: email.toLowerCase() },
+    where: {email: email.toLowerCase()},
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
     include: INCLUDE_USER_CANDIDAT,
   });
@@ -148,7 +148,7 @@ const getMembers = (limit, offset, order, role, query) => {
     limit,
     order,
     where: {
-      role: { [Op.not]: USER_ROLES.ADMIN },
+      role: {[Op.not]: USER_ROLES.ADMIN},
     },
     attributes: ATTRIBUTES_USER,
     include: INCLUDE_USER_CANDIDAT,
@@ -159,7 +159,7 @@ const getMembers = (limit, offset, order, role, query) => {
     options.where = {
       ...options.where,
       [Op.or]: [
-        { email: { [Op.like]: `%${lowerCaseQuery}%` } },
+        {email: {[Op.like]: `%${lowerCaseQuery}%`}},
         where(
           fn(
             'concat',
@@ -167,7 +167,7 @@ const getMembers = (limit, offset, order, role, query) => {
             ' ',
             fn('lower', col('User.lastName'))
           ),
-          { [Op.like]: `%${lowerCaseQuery}%` }
+          {[Op.like]: `%${lowerCaseQuery}%`}
         ),
       ],
     };
@@ -223,7 +223,7 @@ const searchUsers = (query, role) => {
     attributes: ATTRIBUTES_USER,
     where: {
       [Op.or]: [
-        { email: { [Op.like]: `%${lowerCaseQuery}%` } },
+        {email: {[Op.like]: `%${lowerCaseQuery}%`}},
         where(
           fn(
             'concat',
@@ -231,7 +231,7 @@ const searchUsers = (query, role) => {
             ' ',
             fn('lower', col('lastName'))
           ),
-          { [Op.like]: `%${lowerCaseQuery}%` }
+          {[Op.like]: `%${lowerCaseQuery}%`}
         ),
       ],
     },
@@ -244,7 +244,7 @@ const searchUsers = (query, role) => {
 
 const setUser = async (id, user) => {
   const [updateCount] = await User.update(user, {
-    where: { id },
+    where: {id},
     individualHooks: true
   });
 
@@ -255,14 +255,14 @@ const setUser = async (id, user) => {
 
 const setUserCandidat = (candidatId, candidat) => {
   return User_Candidat.update(candidat, {
-    where: { candidatId },
+    where: {candidatId},
     individualHooks: true,
   });
 };
 
 const getUserCandidat = (candidatId) => {
   return User_Candidat.findOne({
-    where: { candidatId },
+    where: {candidatId},
     attributes: ATTRIBUTES_USER_CANDIDAT,
     include: [
       {
@@ -279,7 +279,7 @@ const getUserCandidat = (candidatId) => {
   });
 };
 
-const getUserCandidatOpt = async ({ candidatId, coachId }) => {
+const getUserCandidatOpt = async ({candidatId, coachId}) => {
   // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: Error: WHERE parameter "coachId" has invalid "undefined" value
   const findWhere = {};
   if (candidatId) {

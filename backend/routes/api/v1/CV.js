@@ -2,18 +2,18 @@ const router = require('express').Router();
 const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs');
-const { auth } = require('../../../controllers/Auth');
+const {auth} = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
 const ShareController = require('../../../controllers/Share');
 const S3 = require('../../../controllers/aws');
-const { sendMail } = require('../../../controllers/mail');
-const { airtable } = require('../../../controllers/airtable');
+const {sendMail} = require('../../../controllers/mail');
+const {airtable} = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
-const { USER_ROLES, CV_STATUS } = require("../../../../constants");
-const { checkCandidatOrCoachAuthorization } = require('../../../utils');
+const {USER_ROLES, CV_STATUS} = require("../../../../constants");
+const {checkCandidatOrCoachAuthorization} = require('../../../utils');
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({dest: 'uploads/'});
 
 /**
  * Route : POST /api/<VERSION>/cv
@@ -45,11 +45,11 @@ router.post(
       }
       // uploading image and generating preview image
       if (req.file) {
-        const { path } = req.file;
+        const {path} = req.file;
         try {
           const fileBuffer = await sharp(path)
             .trim()
-            .jpeg({ quality: 75 })
+            .jpeg({quality: 75})
             .toBuffer();
           reqCV.urlImg = await S3.upload(
             fileBuffer,
@@ -65,7 +65,7 @@ router.post(
       // création de l'image publiée
       if (reqCV.status === CV_STATUS.Published.value) {
         try {
-          const { Body } = await S3.download(reqCV.urlImg);
+          const {Body} = await S3.download(reqCV.urlImg);
           reqCV.urlImg = await S3.upload(Body, 'image/jpeg', `${reqCV.UserId}.Published.jpg`);
         } catch (error) {
           console.error(error);
@@ -74,9 +74,9 @@ router.post(
       // completion asynchrone de la generation de limage de preview
       const previewPromise = reqCV.urlImg
         ? UserController.getUser(reqCV.UserId)
-          .then(({ firstName, gender }) =>
+          .then(({firstName, gender}) =>
             // Génération de la photo de preview
-            S3.download(reqCV.urlImg).then(({ Body }) => {
+            S3.download(reqCV.urlImg).then(({Body}) => {
               return createPreviewImage(
                 Body,
                 firstName,
@@ -113,7 +113,7 @@ router.post(
           console.log('USERID', req.payload.userToCoach);
 
           await UserController.getUser(req.payload.userToCoach)
-            .then(async ({ email }) => {
+            .then(async ({email}) => {
               await sendMail({
                 toEmail: email,
                 subject: mailSubject,
@@ -183,7 +183,7 @@ router.post('/count', auth(), (req, res) => {
 router.get('/shares', auth(), (req, res) => {
   ShareController.getTotalShares()
     .then((total) => {
-      res.status(200).json({ total });
+      res.status(200).json({total});
     })
     .catch((err) => {
       console.log(err);
@@ -196,7 +196,7 @@ router.get('/shares', auth(), (req, res) => {
  * Description :  Récupère le CV lié au userId passé en query
  */
 router.get('/', auth(), (req, res) => {
-  const { userId } = req.query;
+  const {userId} = req.query;
   CVController.getCVbyUserId(userId)
     .then((listeCVs) => {
       /* console.log(`${infoLog} Liste des CV trouvés`);
