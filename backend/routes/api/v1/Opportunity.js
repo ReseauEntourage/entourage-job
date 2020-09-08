@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const { auth } = require('../../../controllers/Auth');
+const {auth} = require('../../../controllers/Auth');
 const OpportunityController = require('../../../controllers/Opportunity');
 const {USER_ROLES} = require('../../../../constants');
 const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../../../utils');
@@ -44,13 +44,13 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
 router.get('/user/private/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
     OpportunityController.getPrivateUserOpportunities(req.params.id)
-    .then((listeOpportunities) => {
-      res.status(200).json(listeOpportunities);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(401).send('Une erreur est survenue');
-    });
+      .then((listeOpportunities) => {
+        res.status(200).json(listeOpportunities);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(401).send('Une erreur est survenue');
+      });
   });
 });
 
@@ -102,14 +102,14 @@ router.get('/user/all/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
 router.post('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
     OpportunityController.addUserToOpportunity(
-    req.body.opportunityId,
-    req.body.userId
-  )
-    .then((opportunity) => res.status(200).json(opportunity))
-    .catch((err) => {
-      console.error(err);
-      res.status(401).send(`Une erreur est survenue`);
-    });
+      req.body.opportunityId,
+      req.body.userId
+    )
+      .then((opportunity) => res.status(200).json(opportunity))
+      .catch((err) => {
+        console.error(err);
+        res.status(401).send(`Une erreur est survenue`);
+      });
   });
 });
 

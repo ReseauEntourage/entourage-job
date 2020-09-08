@@ -4,23 +4,23 @@ module.exports = (sequelize, DataTypes) => {
   const CV_Locations = sequelize.define('CV_Locations', {
     CVId: {
       type: DataTypes.UUID,
-        allowNull: false,
-        references: {
+      allowNull: false,
+      references: {
         model: 'CVs',
-          key: 'id',
+        key: 'id',
       },
     },
     LocationId: {
       type: DataTypes.UUID,
-        allowNull: false,
-        references: {
+      allowNull: false,
+      references: {
         model: 'Locations',
-          key: 'id',
+        key: 'id',
       },
     },
   }, {});
 
-  CV_Locations.associate = function(models) {
+  CV_Locations.associate = function (models) {
     // associations can be defined here
   };
 

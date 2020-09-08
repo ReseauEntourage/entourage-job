@@ -1,12 +1,12 @@
 const express = require('express');
 
 const router = express.Router();
-const { auth } = require('../../../controllers/Auth');
+const {auth} = require('../../../controllers/Auth');
 const mailController = require('../../../controllers/mail');
 
 router.post('/contact-us', auth(), (req, res) => {
   // todo verification de champs
-  const { firstName, lastName, phone, email, structure, message } = req.body;
+  const {firstName, lastName, phone, email, structure, message} = req.body;
   if (email && email.length > 0 && (message && message.length > 0)) {
     mailController
       .sendMail({

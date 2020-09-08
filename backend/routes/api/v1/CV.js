@@ -77,15 +77,15 @@ router.post(
           .then(({firstName, gender}) =>
             // Génération de la photo de preview
             S3.download(reqCV.urlImg).then(({Body}) => {
-                return createPreviewImage(
-                  Body,
-                  firstName,
-                  reqCV.catchphrase,
-                  reqCV.ambitions,
-                  reqCV.skills,
-                  reqCV.locations,
-                  gender
-                );
+              return createPreviewImage(
+                Body,
+                firstName,
+                reqCV.catchphrase,
+                reqCV.ambitions,
+                reqCV.skills,
+                reqCV.locations,
+                gender
+              );
             })
           )
           .then((sharpData) => sharpData.jpeg().toBuffer())
@@ -195,16 +195,16 @@ router.get('/shares', auth(), (req, res) => {
  */
 router.get('/', auth(), (req, res) => {
   const {userId} = req.query;
-    CVController.getCVbyUserId(userId)
-      .then((listeCVs) => {
-        /* console.log(`${infoLog} Liste des CV trouvés`);
-        console.log(listeCVs); */
-        res.status(200).json(listeCVs);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(401).send('Une erreur est survenue');
-      });
+  CVController.getCVbyUserId(userId)
+    .then((listeCVs) => {
+      /* console.log(`${infoLog} Liste des CV trouvés`);
+      console.log(listeCVs); */
+      res.status(200).json(listeCVs);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
 });
 
 /**

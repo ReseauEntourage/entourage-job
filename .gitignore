@@ -3,6 +3,7 @@
 node_modules
 .idea
 .vscode
+coverage
 assets/uikit
 assets/*.vpp.bak*
 _next

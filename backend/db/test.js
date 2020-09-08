@@ -2,13 +2,13 @@
 /* eslint-disable camelcase */
 
 const {
-  models: { User, User_Candidat, CV },
-  Sequelize: { Op, fn, col, where, and },
+  models: {User, User_Candidat, CV},
+  Sequelize: {Op, fn, col, where, and},
 } = require('../db/models');
 
 const getUserByEmail = async (email) => {
   const user = await User.findOne({
-    where: { email },
+    where: {email},
     attributes: [
       'id',
       'firstName',

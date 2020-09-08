@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     return bl;
   });
 
-  Location.associate = function(models) {
+  Location.associate = function (models) {
     Location.belongsToMany(models.CV, {
       through: 'CV_Location',
       as: 'CVs',
