@@ -1,16 +1,16 @@
 /* eslint-disable no-restricted-globals */
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
-const { QueryTypes } = require('sequelize');
+const {QueryTypes} = require('sequelize');
 const {
   models,
   sequelize,
   // Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 
-const { cleanCV, escapeColumn, escapeQuery } = require('../utils');
+const {cleanCV, escapeColumn, escapeQuery} = require('../utils');
 
-const { CV_STATUS } = require('../../constants');
+const {CV_STATUS} = require('../../constants');
 
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
@@ -31,49 +31,49 @@ const INCLUDE_ALL_USERS = {
 };
 const INCLUDE_NOT_HIDDEN_USERS = {
   ...INCLUDE_ALL_USERS,
-  where: { hidden: false },
+  where: {hidden: false},
 };
 const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
   {
     model: models.Contract,
     as: 'contracts',
-    through: { attributes: [] },
+    through: {attributes: []},
     attributes: ['id', 'name'],
   },
   {
     model: models.Language,
     as: 'languages',
-    through: { attributes: [] },
+    through: {attributes: []},
     attributes: ['id', 'name'],
   },
   {
     model: models.Passion,
     as: 'passions',
-    through: { attributes: [] },
+    through: {attributes: []},
     attributes: ['id', 'name'],
   },
   {
     model: models.Skill,
     as: 'skills',
-    through: { attributes: [] },
+    through: {attributes: []},
     attributes: ['id', 'name'],
   },
   {
     model: models.Ambition,
     as: 'ambitions',
-    through: { attributes: [] },
+    through: {attributes: []},
     attributes: ['id', 'name'],
   },
   {
     model: models.BusinessLine,
     as: 'businessLines',
-    through: { attributes: [] },
+    through: {attributes: []},
     attributes: ['id', 'name'],
   },
   {
     model: models.Location,
     as: 'locations',
-    through: { attributes: [] },
+    through: {attributes: []},
     attributes: ['id', 'name'],
   },
   {
@@ -84,7 +84,7 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
       {
         model: models.Skill,
         as: 'skills',
-        through: { attributes: [] },
+        through: {attributes: []},
         attributes: ['id', 'name'],
       },
     ],
@@ -145,7 +145,7 @@ const createCV = async (data) => {
       data.skills.map((name) =>
         // on trouve ou créé la donné
         models.Skill.findOrCreate({
-          where: { name },
+          where: {name},
         })
           // on recupere de model retourné
           .then((model) => model[0])
@@ -163,7 +163,7 @@ const createCV = async (data) => {
       data.languages.map((name) =>
         // on trouve ou créé la donné
         models.Language.findOrCreate({
-          where: { name },
+          where: {name},
           // on recupere de model retourné
         }).then((model) => model[0])
       )
@@ -178,7 +178,7 @@ const createCV = async (data) => {
     const contracts = await Promise.all(
       data.contracts.map((name) => {
         return models.Contract.findOrCreate({
-          where: { name },
+          where: {name},
         }).then((model) => model[0]);
       })
     );
@@ -191,7 +191,7 @@ const createCV = async (data) => {
     const passions = await Promise.all(
       data.passions.map((name) => {
         return models.Passion.findOrCreate({
-          where: { name },
+          where: {name},
         }).then((model) => model[0]);
       })
     );
@@ -204,7 +204,7 @@ const createCV = async (data) => {
     const ambitions = await Promise.all(
       data.ambitions.map((name) => {
         return models.Ambition.findOrCreate({
-          where: { name }, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
+          where: {name}, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
         }).then((model) => model[0]);
       })
     );
@@ -217,7 +217,7 @@ const createCV = async (data) => {
     const businessLines = await Promise.all(
       data.businessLines.map((name) => {
         return models.BusinessLine.findOrCreate({
-          where: { name },
+          where: {name},
         }).then((model) => model[0]);
       })
     );
@@ -230,7 +230,7 @@ const createCV = async (data) => {
     const locations = await Promise.all(
       data.locations.map((name) => {
         return models.Location.findOrCreate({
-          where: { name },
+          where: {name},
         }).then((model) => model[0]);
       })
     );
@@ -253,7 +253,7 @@ const createCV = async (data) => {
           Promise.all(
             experience.skills.map((name) => {
               return models.Skill.findOrCreate({
-                where: { name },
+                where: {name},
               }).then((model) => model[0]);
             })
           ).then((skills) => modelExperience.addSkills(skills));
@@ -288,7 +288,7 @@ const createCV = async (data) => {
 const deleteCV = (id) => {
   console.log(`deleteCV - Suppression d'un CV à partir de son id`);
   return models.CV.destroy({
-    where: { id },
+    where: {id},
   });
 };
 
@@ -445,31 +445,31 @@ const getRandomShortCVs = async (nb, query) => {
   );
 
   const modelCVs = await models.CV.findAll({
-    where: { id: cvs.map((cv) => cv.id) },
+    where: {id: cvs.map((cv) => cv.id)},
     attributes: ['id', 'catchphrase', 'urlImg'],
     include: [
       {
         model: models.Ambition,
         as: 'ambitions',
-        through: { attributes: [] },
+        through: {attributes: []},
         attributes: ['name'],
       },
       {
         model: models.Skill,
         as: 'skills',
-        through: { attributes: [] },
+        through: {attributes: []},
         attributes: ['name'],
       },
       {
         model: models.BusinessLine,
         as: 'businessLines',
-        through: { attributes: [] },
+        through: {attributes: []},
         attributes: ['name'],
       },
       {
         model: models.Location,
         as: 'locations',
-        through: { attributes: [] },
+        through: {attributes: []},
         attributes: ['name'],
       },
       INCLUDE_ALL_USERS,
@@ -487,7 +487,7 @@ const setCV = (id, cv) => {
     const infoLog = 'setCV -';
     console.log(`${infoLog} Modification du CV`);
     models.CV.update(cv, {
-      where: { id },
+      where: {id},
     })
       .then((result) => resolve(result))
       .catch((err) => reject(err));

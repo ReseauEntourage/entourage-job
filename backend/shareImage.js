@@ -17,8 +17,8 @@ const buildLines = async (lines, font, option) => {
       sharpData.metadata().then((metadata) => metadata)
     )
   );
-  const widths = metadatas.map(({ width }) => width);
-  const heights = metadatas.map(({ height }) => height);
+  const widths = metadatas.map(({width}) => width);
+  const heights = metadatas.map(({height}) => height);
   return {
     buffers,
     heights,
@@ -28,7 +28,7 @@ const buildLines = async (lines, font, option) => {
 const buildLine = async (line, font, option) => {
   const sharpData = sharp(Buffer.from(font.getSVG(line, option))).png();
   const buffer = await sharpData.toBuffer();
-  const { width, height } = await sharpData.metadata();
+  const {width, height} = await sharpData.metadata();
   return {
     buffer,
     height,
@@ -120,7 +120,7 @@ const createCandidatPreviewV2 = async (
     ];
 
     // Name
-    const { buffer: nameBuffer, height: nameHeight } = await buildLine(
+    const {buffer: nameBuffer, height: nameHeight} = await buildLine(
       ellipsisByChar(
         name.toUpperCase(),
         (line) => textToSVG.getMetrics(line, options[0]).width,
@@ -152,7 +152,7 @@ const createCandidatPreviewV2 = async (
     // Skills
     const skillMargins = 10;
     const skillSpaces = 2;
-    const { buffers: skillBuffers, heights: skillHeights } = await buildLines(
+    const {buffers: skillBuffers, heights: skillHeights} = await buildLines(
       skills
         .slice(0, 2)
         .map((text) =>
@@ -176,8 +176,8 @@ const createCandidatPreviewV2 = async (
         ambitions && ambitions.length > 0
           ? `Je souhaite \n travailler dans :`
           : `Je reste ${
-              gender === 0 ? 'ouvert' : 'ouverte'
-            } à toutes propositions.`,
+            gender === 0 ? 'ouvert' : 'ouverte'
+          } à toutes propositions.`,
         (tmp) => textToSVG.getMetrics(tmp, options[1]).width,
         cadranWidth,
         3
@@ -350,7 +350,7 @@ const createCandidatPreviewV2 = async (
               return acc;
             }, 0) -
             cadranMargin,
-          left: 0 ,
+          left: 0,
         })),
       ])
       .png()
@@ -368,7 +368,7 @@ const createCandidatPreviewV2 = async (
 
     // recuperation du logo
     const logo = sharp('./static/img/linkedout_logo_orange.png')
-      .resize({ height: logoHeight })
+      .resize({height: logoHeight})
       .png();
     const logoBuffer = await logo.toBuffer();
     const logoWidth = await logo
@@ -388,7 +388,7 @@ const createCandidatPreviewV2 = async (
         width: cardWidth,
         height: cardHeight,
         channels: 4,
-        background: { r: 0, g: 0, b: 0, alpha: 0 },
+        background: {r: 0, g: 0, b: 0, alpha: 0},
       },
     })
       .composite([

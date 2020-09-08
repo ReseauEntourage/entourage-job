@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   Passion.beforeCreate((passion, _) => {
     return (passion.id = uuid());
   });
-  Passion.associate = function(models) {
+  Passion.associate = function (models) {
     Passion.belongsToMany(models.CV, {
       through: 'CV_Passion',
       // as: 'Passions',

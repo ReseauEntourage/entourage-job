@@ -137,56 +137,52 @@ module.exports = (sequelize, DataTypes) => {
         nextData.role &&
         nextData.role !== previousData.role
       ) {
-          if(previousData.role === USER_ROLES.CANDIDAT && nextData.role !== USER_ROLES.CANDIDAT) {
+        if (previousData.role === USER_ROLES.CANDIDAT && nextData.role !== USER_ROLES.CANDIDAT) {
+          try {
+            await models.User_Candidat.destroy({
+              where: {
+                candidatId: nextData.id
+              },
+            });
+          } catch (e) {
+            console.log('Candidat inexistant');
+          }
+
+        } else if (previousData.role !== USER_ROLES.CANDIDAT && nextData.role === USER_ROLES.CANDIDAT) {
+          if (previousData.role === USER_ROLES.COACH) {
             try {
-              await models.User_Candidat.destroy({
-                where: {
-                  candidatId: nextData.id
+              await models.User_Candidat.update(
+                {
+                  coachId: null
                 },
-              });
-            }
-            catch (e) {
-              console.log('Candidat inexistant');
-            }
-
-          }
-          else if(previousData.role !== USER_ROLES.CANDIDAT && nextData.role === USER_ROLES.CANDIDAT) {
-            if(previousData.role === USER_ROLES.COACH) {
-              try {
-                await models.User_Candidat.update(
-                  {
-                    coachId: null
+                {
+                  where: {
+                    candidatId: previousData.coach.candidat.id
                   },
-                  {
-                    where: {
-                      candidatId: previousData.coach.candidat.id
-                    },
-                  });
-              }
-              catch(e) {
-                console.log('Pas de candidat associé');
-              }
-            }
-
-            try {
-              await models.User_Candidat.create({
-                candidatId: nextData.id,
-                url: `${nextData.firstName.toLowerCase()}-${nextData.id.substring(0, 8)}`,
-              });
-
-              await models.Share.findOrCreate({
-                where: {
-                  CandidatId: nextData.id
-                }
-              });
-            }
-            catch (e) {
-              console.log(e);
+                });
+            } catch (e) {
+              console.log('Pas de candidat associé');
             }
           }
 
+          try {
+            await models.User_Candidat.create({
+              candidatId: nextData.id,
+              url: `${nextData.firstName.toLowerCase()}-${nextData.id.substring(0, 8)}`,
+            });
+
+            await models.Share.findOrCreate({
+              where: {
+                CandidatId: nextData.id
+              }
+            });
+          } catch (e) {
+            console.log(e);
+          }
         }
-      })
+
+      }
+    })
   };
   return User;
 };

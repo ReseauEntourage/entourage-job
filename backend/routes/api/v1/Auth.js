@@ -10,7 +10,7 @@ const {
 } = require('../../../controllers/mail');
 const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
-const { USER_ROLES } = require('../../../../constants');
+const {USER_ROLES} = require('../../../../constants');
 const RateLimiter = require('../../../utils/RateLimiter');
 
 const authLimiter = process.env.NODE_ENV !== 'production' ? (req, res, next) => next() : RateLimiter.createLimiter(10);
@@ -20,7 +20,7 @@ const authLimiter = process.env.NODE_ENV !== 'production' ? (req, res, next) => 
  * Source : http://www.passportjs.org/docs/downloads/html/#custom-callback
  */
 router.post('/login', authLimiter, auth(), (req, res, next) => {
-  const { email, password } = req.body;
+  const {email, password} = req.body;
 
   if (!email) {
     return res.status(422).json({
@@ -40,11 +40,11 @@ router.post('/login', authLimiter, auth(), (req, res, next) => {
 
   return passport.authenticate(
     'local', {
-    session: false
-  },
+      session: false
+    },
     (err, passportUser, info) => {
       if (err) {
-        console.log('error while auth')
+        console.log('error while auth');
         return next(err);
       }
 
@@ -260,7 +260,7 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
  * GET current route (required, only authenticated users have access)
  */
 router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), async (req,
-  res /* , next */) => {
+                                                                                               res /* , next */) => {
   const {
     payload: {
       id
@@ -272,16 +272,16 @@ router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.A
   }
   UserController.setUser(
     id,
-    { lastConnection: Date.now() }
+    {lastConnection: Date.now()}
   )
     .then((updatedUser) => {
       if (!updatedUser) {
         return res.status(401).send(`Utilisateur inexistant`);
       }
-      return res.json({ user: AuthController.toAuthJSON(user) });
+      return res.json({user: AuthController.toAuthJSON(user)});
     }).catch((err) => {
-      return res.status(401).send(`Une erreur est survenue`);
-    })
+    return res.status(401).send(`Une erreur est survenue`);
+  })
 });
 
 module.exports = router;

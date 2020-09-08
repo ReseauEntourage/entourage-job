@@ -11,11 +11,11 @@ const send = mailjet.post('send');
  * Fonction permettant d'envoyer un mail
  * il est optionnel de remplir à la fois text et html
  */
-const sendMail = ({ toEmail, subject, text, html }) => new Promise((res, rej) => {
+const sendMail = ({toEmail, subject, text, html}) => new Promise((res, rej) => {
   send.request({
     FromEmail: process.env.MAILJET_FROM_EMAIL,
     FromName: process.env.MAILJET_FROM_NAME,
-    Recipients: [{ Email: toEmail }],
+    Recipients: [{Email: toEmail}],
     Subject: subject,
     'Text-part': text,
     'HTML-part': html,

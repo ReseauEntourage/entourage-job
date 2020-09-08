@@ -28,6 +28,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       .toString(36) // Convert  to base-36 : "0.4fzyo82mvyr"
       .slice(-8); // Cut off last 8 characters : "yo82mvyr"
   }
+
   const userPassword = req.body.password || fakePassword();
   const {
     hash,
@@ -147,7 +148,7 @@ router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
 router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
-  res) => {
+                                                                                          res) => {
   if (req.payload.id === req.query.coachId ||
     req.payload.id === req.query.candidatId ||
     req.payload.role === USER_ROLES.ADMIN) {
@@ -199,8 +200,8 @@ router.get(
   (req, res) => {
     checkUserAuthorization(req, res, req.params.id, () => {
       (validator.isEmail(req.params.id) ?
-        UserController.getUserByEmail(req.params.id) :
-        UserController.getUser(req.params.id)
+          UserController.getUserByEmail(req.params.id) :
+          UserController.getUser(req.params.id)
       )
         .then((user) => {
           console.log(`User trouvé`);
@@ -224,9 +225,9 @@ router.put(
   (req, res) => {
     UserController.getUserByEmail(req.payload.email)
       .then(({
-        salt: oldSalt,
-        password
-      }) => {
+               salt: oldSalt,
+               password
+             }) => {
         const validated = AuthController.validatePassword(
           req.body.oldPassword,
           password,
@@ -268,7 +269,7 @@ router.put(
  * Description : Modifie le User associé à l'<ID> fournit
  */
 router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
-  res) => {
+                                                                                              res) => {
   checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
     UserController.setUserCandidat(req.params.id, req.body)
       .then((user) => {
@@ -309,11 +310,9 @@ router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
 
     if (req.payload.role === USER_ROLES.ADMIN) {
       setUser();
-    }
-    else if (keys.some((key) => !authorizedKeys.includes(key))) {
-      res.status(401).send({ message: "Unauthorized" });
-    }
-    else {
+    } else if (keys.some((key) => !authorizedKeys.includes(key))) {
+      res.status(401).send({message: "Unauthorized"});
+    } else {
       setUser();
     }
   });

@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-underscore-dangle */
 
-const { sendMail } = require('../../controllers/mail');
+const {sendMail} = require('../../controllers/mail');
 
 module.exports = (sequelize, DataTypes) => {
   const Opportunity_User = sequelize.define('Opportunity_User', {
@@ -78,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
         nextData.status === 2
       ) {
         try {
-          const [{ firstName, userToCoach }, { title }] = await Promise.all([
+          const [{firstName, userToCoach}, {title}] = await Promise.all([
             models.User.findByPk(nextData.UserId, {
               attributes: ['firstName', 'userToCoach'],
             }),
@@ -97,7 +97,7 @@ module.exports = (sequelize, DataTypes) => {
           );
           if (userToCoach) {
             // mail coach
-            const { email } = await models.User.findByPk(userToCoach, {
+            const {email} = await models.User.findByPk(userToCoach, {
               attributes: ['email'],
             });
             await sendMailEmbauche(
