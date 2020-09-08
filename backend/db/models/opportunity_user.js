@@ -54,15 +54,16 @@ module.exports = (sequelize, DataTypes) => {
       title,
       opportunityId,
       roleMin
-    ) =>
-      sendMail({
+    ) => {
+      await sendMail({
         toEmail,
         subject: `${firstName} a retrouvé un emploi`,
         text: `
-        ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
-        Vous pouvez maintenant l'archiver en cliquant ici :
-        ${process.env.SERVER_URL}/backoffice/${roleMin}/offres?q=${opportunityId}.`,
+          ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
+          Vous pouvez maintenant l'archiver en cliquant ici :
+          ${process.env.SERVER_URL}/backoffice/${roleMin}/offres?q=${opportunityId}.`,
       });
+    };
 
     Opportunity_User.belongsTo(models.User);
 

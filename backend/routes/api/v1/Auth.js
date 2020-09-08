@@ -111,13 +111,13 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
         saltReset: salt,
       });
     })
-    .then((updatedUser) => {
+    .then(async (updatedUser) => {
       if (!updatedUser) {
         return res.status(404).send(`Utilisateur inexistant`);
       }
       console.log('sending email');
       // Envoi du mail
-      sendMail({
+      await sendMail({
         toEmail: user.email,
         subject: 'Réinitialisation mot de passe',
         text: 'Bonjour,\n\n' +
@@ -126,6 +126,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
           'Cordialement,\n\n' +
           `L'équipe LinkedOut`,
       });
+
       return res.status(200).send('Demande envoyée');
     })
     .catch((err) => {

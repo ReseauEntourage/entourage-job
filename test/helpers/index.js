@@ -28,8 +28,7 @@ const {
 const getResetLinkAndUser = require('./auth.helpers');
 
 const {
-    createTestImage,
-    deleteTestImage,
+    getTestImagePath
 } = require('./cvImage.helpers');
 
 module.exports = {
@@ -53,6 +52,5 @@ module.exports = {
 
     getResetLinkAndUser,
 
-    createTestImage,
-    deleteTestImage,
+    getTestImagePath
 }

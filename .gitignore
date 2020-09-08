@@ -1,5 +1,4 @@
 .env*
-!.env.test.enc
 .next
 node_modules
 .idea

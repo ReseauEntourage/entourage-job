@@ -19,7 +19,6 @@ const upload = multer({ dest: 'uploads/' });
  * Route : POST /api/<VERSION>/cv
  * Description : Créé le CV
  */
-debugger
 router.post(
   '/',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
@@ -114,13 +113,13 @@ router.post(
           console.log('USERID', req.payload.userToCoach);
 
           await UserController.getUser(req.payload.userToCoach)
-            .then(({ email }) =>
-              sendMail({
+            .then(async ({ email }) => {
+              await sendMail({
                 toEmail: email,
                 subject: mailSubject,
                 text: mailText,
               })
-            )
+            })
             .catch((err) => console.log('Pas de coach rattaché au candidat'));
         }
         // attente de la génération de l'image de preview
