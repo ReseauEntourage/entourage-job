@@ -65,7 +65,7 @@ const Login = () => {
             (closeModal, nextStep) => (
               <FormWithValidation
                 ref={form}
-                submitText="Se connecter"
+                submitText="Envoyer"
                 formSchema={schemaLostPwd}
                 onCancel={closeModal}
                 onSubmit={({email}, setError) => {
