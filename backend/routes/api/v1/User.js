@@ -23,14 +23,18 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
   const userPassword = req.body.password || fakePassword();
   const {hash, salt} = AuthController.encryptPassword(userPassword);
 
-  UserController.createUser({...req.body, password: hash, salt})
-    .then((users) => {
+  UserController.createUser({
+    ...req.body,
+    password: hash,
+    salt
+  })
+    .then(async (users) => {
       console.log(
         '# User créé',
         `login : ${req.body.email}`,
         `password: ${userPassword}`
       );
-      sendMail({
+      await sendMail({
         toEmail: req.body.email,
         subject: 'Bienvenue chez LinkedOut',
         text:
@@ -80,7 +84,9 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Description : Récupère tous les Users
  */
 router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
-  const order = [['firstName', 'ASC']];
+  const order = [
+    ['firstName', 'ASC']
+  ];
   UserController.getMembers(
     req.query.limit,
     req.query.offset,
@@ -130,7 +136,9 @@ router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
 router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  if (req.payload.id === req.query.coachId || req.payload.id === req.query.candidatId || req.payload.role === USER_ROLES.ADMIN) {
+  if (req.payload.id === req.query.coachId ||
+    req.payload.id === req.query.candidatId ||
+    req.payload.role === USER_ROLES.ADMIN) {
     UserController.getUserCandidatOpt(req.query)
       .then((user) => {
         res.status(200).json(user);
@@ -140,7 +148,9 @@ router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.
         res.status(401).send('Une erreur est survenue');
       });
   } else {
-    res.status(401).send({message: "Unauthorized"});
+    res.status(401).send({
+      message: "Unauthorized"
+    });
   }
 });
 
@@ -171,69 +181,77 @@ router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkUserAuthorization(req, res, req.params.id, () => {
-    (validator.isEmail(req.params.id)
-        ? UserController.getUserByEmail(req.params.id)
-        : UserController.getUser(req.params.id)
-    )
-      .then((user) => {
-        console.log(`User trouvé`);
-        res.status(200).json(user);
-      })
-      .catch((err) => {
-        console.log(`Aucun User trouvé`);
-        res.status(401).send(err);
-      });
+router.get(
+  '/:id',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    checkUserAuthorization(req, res, req.params.id, () => {
+      (validator.isEmail(req.params.id) ?
+          UserController.getUserByEmail(req.params.id) :
+          UserController.getUser(req.params.id)
+      )
+        .then((user) => {
+          console.log(`User trouvé`);
+          res.status(200).json(user);
+        })
+        .catch((err) => {
+          console.log(`Aucun User trouvé`);
+          res.status(404).send(err);
+        });
+    });
   });
-});
 
 /**
  * Route : PUT /api/<VERSION>/user/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
 // TODO check
-router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  UserController.getUserByEmail(req.payload.email)
-    .then(({salt: oldSalt, password}) => {
-      const validated = AuthController.validatePassword(
-        req.body.oldPassword,
-        password,
-        oldSalt
-      );
-      if (validated) {
-        const {hash, salt} = AuthController.encryptPassword(
-          req.body.newPassword
+router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    UserController.getUserByEmail(req.payload.email)
+      .then(({
+               salt: oldSalt,
+               password
+             }) => {
+        const validated = AuthController.validatePassword(
+          req.body.oldPassword,
+          password,
+          oldSalt
         );
-        UserController.setUser(req.payload.id, {
-          password: hash,
-          salt,
-        })
-          .then((user) => {
-            if (!user) {
-              res.status(401).send(`Utilisateur inexistant`);
-            }
-            console.log(`User modifié`);
-            res.status(200).json(user);
+        if (validated) {
+          const {hash, salt} = AuthController.encryptPassword(
+            req.body.newPassword
+          );
+          UserController.setUser(req.payload.id, {
+            password: hash,
+            salt,
           })
-          .catch((err) => {
-            console.log(err);
-            res.status(401).send(`Une erreur est survenue`);
-          });
-      } else {
-        res.status(401).send('Mot de passe invalide');
-      }
-    })
-    .catch(() => {
-      res.status(401).send('Utilisateur inaccessible');
-    });
-});
+            .then((user) => {
+              if (!user) {
+                res.status(401).send(`Utilisateur inexistant`);
+              }
+              console.log(`User modifié`);
+              res.status(200).json(user);
+            })
+            .catch((err) => {
+              console.log(err);
+              res.status(401).send(`Une erreur est survenue`);
+            });
+        } else {
+          res.status(401).send('Mot de passe invalide');
+        }
+      })
+      .catch(() => {
+        res.status(401).send('Utilisateur inaccessible');
+      });
+  });
 
 /**
- * Route : PUT /api/<VERSION>/user/<ID>
+ * Route : PUT /api/<VERSION>/user/candidat/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
-router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
+                                                                                              res) => {
   checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
     UserController.setUserCandidat(req.params.id, req.body)
       .then((user) => {
@@ -254,7 +272,6 @@ router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
  */
 router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   checkUserAuthorization(req, res, req.params.id, () => {
-
     const setUser = () => {
       UserController.setUser(req.params.id, req.body)
         .then((updatedUser) => {

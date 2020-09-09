@@ -6,7 +6,6 @@ const enforce = require('express-sslify');
 const passport = require('./config/passport');
 
 const routeCV = require('./routes/api/v1/CV');
-const routeMessage = require('./routes/api/v1/Message');
 const routeAuth = require('./routes/api/v1/Auth');
 const routeUser = require('./routes/api/v1/User');
 const routeMail = require('./routes/api/v1/Mail');
@@ -33,9 +32,7 @@ module.exports.prepare = () => {
   app.use(
     session({
       secret: uid.sync(18),
-      // secret: 'entouragejobs-passport',
       cookie: {
-        // maxAge: 60000,
         maxAge: 86400 * 1000, // 24 hours in milliseconds
       },
       resave: false,
@@ -63,7 +60,7 @@ module.exports.prepare = () => {
     }
     next();
   });
-
+  return app;
 };
 
 module.exports.get = (path, handle) => {
@@ -83,7 +80,7 @@ module.exports.start = (port) => {
   });
 };
 
-module.exports.close = () => {
+module.exports.close = async () => {
   if (!server) throw 'The express server is not started'; // eslint-disable-line no-throw-literal
-  server.close();
+  await server.close();
 };

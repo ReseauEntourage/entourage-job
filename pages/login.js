@@ -68,7 +68,7 @@ const Login = () => {
                 submitText="Se connecter"
                 formSchema={schemaLostPwd}
                 onCancel={closeModal}
-                onSubmit={(fields, setError) => {
+                onSubmit={({email}, setError) => {
                   Api.post('/api/v1/auth/forgot', {email: email.toLowerCase()})
                     .then(() => nextStep())
                     .catch(() => setError("L'adresse mail ne correspond à aucun utilisateur"));

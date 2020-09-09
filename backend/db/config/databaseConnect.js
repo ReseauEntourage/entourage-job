@@ -1,14 +1,14 @@
-const dotenv = require('dotenv');
-
-dotenv.config();
-
 const Sequelize = require('sequelize');
+const loadEvironementVariables = require('../../utils/env');
+
+loadEvironementVariables();
 
 const db = new Sequelize(process.env.DATABASE_URL, {
   logging: process.env.DEBUG_MODE ? console.log : false,
 });
 
 module.exports = db;
+
 
 db.authenticate()
   .then(() => {
