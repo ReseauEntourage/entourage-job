@@ -9,12 +9,14 @@ const SuccessModalContent = ({ text, closeModal }) => (
     <div className="uk-card uk-card-body uk-text-center">
       <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
       <p className="uk-text-lead">{text}</p>
-      <Button
-        style="primary"
-        onClick={closeModal}
-      >
-        Fermer
-      </Button>
+      <div className="uk-flex uk-flex-center">
+        <Button
+          style="primary"
+          onClick={closeModal}
+        >
+          Fermer
+        </Button>
+      </div>
     </div>
   </div>
 );
