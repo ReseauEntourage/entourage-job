@@ -1,6 +1,6 @@
 # Entourage Job
 
-##Architecture en place
+## Architecture en place
 
 - _.next_ : **Next.js**
 - _api_ : Contrôleurs côté serveur (routes API) **Express.js** et **Sequelize**
@@ -51,6 +51,11 @@ Pour lancer le projet vous avez besoin de **Docker** ainsi que de **NodeJs**.
 
 - `npx sequelize db:seed:all`
 
+- Pour debugger, vous pouvez utiliser les scripts `dev`/`dev-front`
+
+- `npm run dev`
+
+
 ## 3# Insertion des données dans la BDD
 
 Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
@@ -71,8 +76,9 @@ Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
 
 ## 6# Lancer les tests
 
-- `npm run test` pour lancer les tests avec un rapport de couverture
-
+- `npm run test` est utilisé pour l'intégration continue pour lancer les tests avec les valeurs du fichier `.env`
+- `npm run dev-test-coverage` pour lancer les tests avec un rapport de couverture
 - `npm run dev-test` pour lancer les tests en mode watch sans rapport de couverture
+
 
 ### You are all set !

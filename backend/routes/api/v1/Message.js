@@ -1,10 +1,12 @@
 const express = require('express');
 
 const router = express.Router();
-const sequelize = require('sequelize');
-const db = require('../../../db/config/databaseConnect');
 const {auth} = require('../../../controllers/Auth');
-const Message = require('../../../db/models/message')(db, sequelize.DataTypes);
+const {
+  models: {
+    Message
+  }
+} = require('../../../db/models');
 const {USER_ROLES} = require('../../../../constants');
 
 // Find all messages

@@ -1,12 +1,12 @@
 language: node_js
 node_js:
-  - '10'
+- '10'
 services:
-  - postgresql
+- postgresql
 before_script:
-  - export NODE_ENV=test
-  - sequelize db:create
-  - sequelize db:migrate
+- export NODE_ENV=test
+- sequelize db:create
+- sequelize db:migrate
 script: npm test
 deploy:
   provider: heroku

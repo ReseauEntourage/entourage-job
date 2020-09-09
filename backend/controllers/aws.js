@@ -22,6 +22,7 @@ const upload = (data, contentType, outputPath) => {
         if (err) {
           reject(err);
         } else {
+          console.log('============AWS ============', Key);
           resolve(Key);
         }
       }

@@ -1,12 +1,14 @@
 /* eslint-disable no-underscore-dangle */
 
 const uuid = require('uuid/v4');
-const {USER_ROLES} = require("../../../constants");
+const {
+  USER_ROLES
+} = require("../../../constants");
 
 module.exports = (sequelize, DataTypes) => {
+
   const User = sequelize.define(
-    'User',
-    {
+    'User', {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -83,8 +85,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-    },
-    {}
+    }, {}
   );
 
   User.associate = (models) => {
