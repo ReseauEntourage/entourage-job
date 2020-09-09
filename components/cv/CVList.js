@@ -85,7 +85,7 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
 
   if (cvs && filteredCvs) {
     if (filteredCvs.length <= 0) {
-      if(filters[FILTERS_DATA[1].key].length > 0) {
+      if(filters && filters[FILTERS_DATA[1].key] && filters[FILTERS_DATA[1].key].length > 0) {
         return (
           <p className="uk-text-center uk-text-italic">LinkedOut se déploie d’ici mars 2023 dans les régions de Paris, de Lille et de Lyon. Vous ne trouvez pas de candidats LinkedOut dans votre région ? Contactez-nous à{' '}
             <a
