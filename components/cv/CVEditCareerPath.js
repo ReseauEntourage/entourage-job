@@ -8,7 +8,7 @@ import {GridNoSSR} from '../utils';
 
 const CVEditCareerPath = ({ambitions, careerPathOpen, onChange, gender}) => {
   const ContentByGender = () => {
-    if (ambitions.length === 0) {
+    if (!ambitions || ambitions.length === 0) {
       if (!careerPathOpen) {
         return (
           <p className="uk-text-italic">
@@ -28,7 +28,7 @@ const CVEditCareerPath = ({ambitions, careerPathOpen, onChange, gender}) => {
       <p>
         J&apos;aimerais beaucoup travailler dans{' '}
         <span className="uk-text-primary">{ambitions[0]}</span>
-        {ambitions.length > 1 ? (
+        {ambitions && ambitions.length > 1 ? (
           <>
             {' '}
             ou dans <span className="uk-text-primary">{ambitions[1]}</span>
@@ -64,8 +64,8 @@ const CVEditCareerPath = ({ambitions, careerPathOpen, onChange, gender}) => {
             title="Édition - Projet professionnel"
             formSchema={schemaCareerPath}
             defaultValues={{
-              careerPath0: ambitions.length > 0 ? ambitions[0] : null,
-              careerPath1: ambitions.length > 1 ? ambitions[1] : null,
+              careerPath0: ambitions && ambitions.length > 0 ? ambitions[0] : null,
+              careerPath1: ambitions && ambitions.length > 1 ? ambitions[1] : null,
               careerPathOpen,
             }}
             onSubmit={({careerPathOpen: isOpen, careerPath0, careerPath1}, closeModal) => {
