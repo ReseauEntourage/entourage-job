@@ -1,5 +1,4 @@
 const express = require('express');
-const session = require('express-session');
 const uid = require('uid-safe');
 const enforce = require('express-sslify');
 
@@ -28,22 +27,8 @@ module.exports.prepare = () => {
 
   app.use(express.json());
 
-  // add session management to Express
-  app.use(
-    session({
-      secret: uid.sync(18),
-      cookie: {
-        maxAge: 86400 * 1000, // 24 hours in milliseconds
-      },
-      resave: false,
-      saveUninitialized: false,
-    })
-  );
-
-
   // adding Passport
   app.use(passport.initialize());
-  app.use(passport.session());
 
   // adding routes
   app.use('/api/v1/auth', apiLimiter, routeAuth);
