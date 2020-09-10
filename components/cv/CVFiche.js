@@ -299,7 +299,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </div>
           <GridNoSSR gap="large" eachWidths={['expand', '1-3@m']}>
             <GridNoSSR column>
-              {experiences.length > 0 && (
+              {experiences && experiences.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">Mes expériences et compétences</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
@@ -436,7 +436,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   )}
                 </ul>
               </div>
-              {cv.skills.length > 0 && (
+              {cv.skills && cv.skills.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">Mes atouts</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
@@ -449,7 +449,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   </ul>
                 </div>
               )}
-              {cv.passions.length > 0 && (
+              {cv.passions && cv.passions.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">Mes passions</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
