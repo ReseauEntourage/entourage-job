@@ -40,8 +40,5 @@ module.exports = {
       )
     );
     return passport.initialize();
-  },
-  session() {
-    return passport.session();
-  },
+  }
 };
