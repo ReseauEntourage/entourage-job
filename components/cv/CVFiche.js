@@ -223,47 +223,50 @@ const CVFiche = ({ cv, actionDisabled }) => {
               </div>
             )}
             {/* uk-text-emphasis uk-text-bold */}
-            <h3 className="uk-width-xxlarge uk-margin-auto" style={{fontWeight: 500}}>
-              J&apos;aimerais beaucoup travailler dans{' '}
-              <span
-                className="uk-label uk-text-lowercase"
-                style={{
-                  lineHeight: 'unset',
-                  verticalAlign: 'bottom',
-                  fontSize: 'inherit',
-                }}
-              >
+            {
+              cv.ambitions && cv.ambitions.length > 0 &&
+              <h3 className="uk-width-xxlarge uk-margin-auto" style={{fontWeight: 500}}>
+                J&apos;aimerais beaucoup travailler dans{' '}
+                <span
+                  className="uk-label uk-text-lowercase"
+                  style={{
+                    lineHeight: 'unset',
+                    verticalAlign: 'bottom',
+                    fontSize: 'inherit',
+                  }}
+                >
                 {cv.ambitions[0]}
               </span>
-              {cv.ambitions.length > 1 ? (
-                <>
-                  {' '}
-                  ou{' '}
-                  <span
-                    className="uk-label uk-text-lowercase"
-                    style={{
-                      lineHeight: 'unset',
-                      verticalAlign: 'bottom',
-                      fontSize: 'inherit',
-                    }}
-                  >
+                {cv.ambitions.length > 1 ? (
+                  <>
+                    {' '}
+                    ou{' '}
+                    <span
+                      className="uk-label uk-text-lowercase"
+                      style={{
+                        lineHeight: 'unset',
+                        verticalAlign: 'bottom',
+                        fontSize: 'inherit',
+                      }}
+                    >
                     {cv.ambitions[1]}
                   </span>
-                </>
-              ) : (
-                ''
-              )}
-              {cv.careerPathOpen ? (
-                <>
-                  {` mais reste ${
-                    cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
-                  } à toutes autres
+                  </>
+                ) : (
+                  ''
+                )}
+                {cv.careerPathOpen ? (
+                  <>
+                    {` mais reste ${
+                      cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
+                    } à toutes autres
             propositions.`}
-                </>
-              ) : (
-                '.'
-              )}
-            </h3>
+                  </>
+                ) : (
+                  '.'
+                )}
+              </h3>
+            }
             <div className="uk-position-relative uk-margin-medium-top">
               <div
                 style={{
@@ -296,7 +299,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           </div>
           <GridNoSSR gap="large" eachWidths={['expand', '1-3@m']}>
             <GridNoSSR column>
-              {experiences.length > 0 && (
+              {experiences && experiences.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">Mes expériences et compétences</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
@@ -433,7 +436,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   )}
                 </ul>
               </div>
-              {cv.skills.length > 0 && (
+              {cv.skills && cv.skills.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">Mes atouts</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
@@ -446,7 +449,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   </ul>
                 </div>
               )}
-              {cv.passions.length > 0 && (
+              {cv.passions && cv.passions.length > 0 && (
                 <div className="">
                   <h3 className="uk-margin-small-bottom">Mes passions</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
