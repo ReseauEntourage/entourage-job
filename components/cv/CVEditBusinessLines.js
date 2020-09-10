@@ -29,7 +29,7 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => (
       )}
     </GridNoSSR>
     <p>
-      {businessLines.length > 0 ? (
+      {businessLines && businessLines.length > 0 ? (
         businessLines.map((t, key) => (
           <span key={key} className="uk-label uk-margin-small-right">
             {t}

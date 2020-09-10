@@ -37,13 +37,13 @@ const InfoProfileCard = ({
     <ul className="uk-list">
       <li>
         <IconNoSSR name="file-text" style={{width: 20}}/>{' '}
-        {contracts.length > 0
+        {contracts && contracts.length > 0
           ? contracts.join(' / ')
           : 'Type de contrat recherché non renseigné'}
       </li>
       <li>
         <IconNoSSR name="location" style={{width: 20}} />{' '}
-        {locations.length > 0
+        {locations && locations.length > 0
           ? locations.join(' / ')
           : 'Localisations non renseignées'}
       </li>
@@ -55,7 +55,7 @@ const InfoProfileCard = ({
       </li>
       <li>
         <IconNoSSR name="users" style={{width: 20}} />{' '}
-        {languages.length > 0
+        {languages && languages.length > 0
           ? languages.join(' / ')
           : 'Langues apprises non renseignées'}
       </li>
