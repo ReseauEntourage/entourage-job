@@ -4,15 +4,16 @@ import '../static/css/styles.less';
 import '../static/css/Forms.less';
 import '../static/css/Toggle.less';
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
 import UserProvider from '../components/store/UserProvider';
 import SharesCountProvider from "../components/store/SharesCountProvider";
 
 import * as gtag from '../lib/gtag';
-import SplashScreen, {SplashScreenNoSSR} from "../components/SplashScreen";
+import SplashScreen, { SplashScreenNoSSR } from "../components/SplashScreen";
+import ModalProvider from '../components/store/ModalProvider';
 
-const EntourageApp = ({Component, pageProps}) => {
+const EntourageApp = ({ Component, pageProps }) => {
 
   const [loading, setLoading] = useState(true);
   const [fading, setFading] = useState(false);
@@ -43,16 +44,18 @@ const EntourageApp = ({Component, pageProps}) => {
   return (
     <SharesCountProvider>
       <UserProvider>
-        <div
-          style={{height: loading ? '100vh' : 'inherit'}}
-          className="uk-inline uk-width-expand uk-overflow-hidden">
-          <Component {...pageProps} />
+        <ModalProvider>
           <div
-            style={{height: '100vh', zIndex: 9999}}
-            className={`${loading ? 'uk-visible' : 'uk-hidden'} ${fading ? 'uk-animation-fade uk-animation-reverse' : ''} uk-position-cover uk-background-default`}>
-            <SplashScreenNoSSR fading={fading} />
+            style={{ height: loading ? '100vh' : 'inherit' }}
+            className="uk-inline uk-width-expand uk-overflow-hidden">
+            <Component {...pageProps} />
+            <div
+              style={{ height: '100vh', zIndex: 9999 }}
+              className={`${loading ? 'uk-visible' : 'uk-hidden'} ${fading ? 'uk-animation-fade uk-animation-reverse' : ''} uk-position-cover uk-background-default`}>
+              <SplashScreenNoSSR fading={fading} />
+            </div>
           </div>
-        </div>
+        </ModalProvider>
       </UserProvider>
     </SharesCountProvider>
   );

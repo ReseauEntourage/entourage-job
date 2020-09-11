@@ -9,3 +9,4 @@ _next
 backend/lib/aws_lambda/.serverless/
 
 .DS_Store
+coverage

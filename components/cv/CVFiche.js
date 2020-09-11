@@ -481,11 +481,27 @@ const CVFiche = ({ cv, actionDisabled }) => {
               </Button>
             </div>
             <div>
-              <Modal
+              <ModalEdit
                 id="modal-send-opportunity"
-              >
-                <p>some text</p>
-              </Modal>
+                title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
+                description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
+                submitText="Envoyer"
+                defaultValues={{
+                  isPublic: false,
+                  candidatId: {
+                    value: cv.UserId,
+                    label: `${cv.user.candidat.firstName}`,
+                  },
+                }}
+                formSchema={mutatedSchema}
+                onSubmit={(fields, closeModal) => {
+                  postOpportunity({
+                    ...fields,
+                    candidatId: cv.UserId,
+                    date: Date.now(),
+                  }, closeModal);
+                }}
+              />
             </div>
           </div>
 
