@@ -4,18 +4,8 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { ModalContext } from '../store/ModalProvider';
 
-const ModalGeneric = ({ children, classNameSize: className, id, param, resetForm }) => {
-  const { setId, setResetForm } = useContext(ModalContext);
-
-  if (id) {
-    console.log('my id', id);
-    setId(id);
-  }
-
-  if (resetForm) {
-    console.log('my restet form', resetForm);
-    setResetForm(resetForm);
-  }
+const ModalGeneric = ({ children, classNameSize: className, param }) => {
+  const { id } = useContext(ModalContext);
 
   return (
     <div id={id} className="uk-flex-top" data-uk-modal={param} >
@@ -30,16 +20,16 @@ const ModalGeneric = ({ children, classNameSize: className, id, param, resetForm
 
 ModalGeneric.propTypes = {
   children: PropTypes.element.isRequired,
-  id: PropTypes.string.isRequired,
+  // id: PropTypes.string.isRequired,
   param: PropTypes.string,
   classNameSize: PropTypes.string,
-  resetForm: PropTypes.func
+  // resetForm: PropTypes.func
 };
 
 ModalGeneric.defaultProps = {
   param: 'bg-close:false',
   classNameSize: 'uk-width-1-1 uk-width-2-3@l uk-width-1-2@xl',
-  resetForm: () => { }
+  // resetForm: () => { }
 };
 
 export default ModalGeneric;

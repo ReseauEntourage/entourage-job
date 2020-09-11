@@ -3,7 +3,6 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import { CloseButtonNoSSR } from '../utils';
-import { useResetForm } from "../../hooks";
 import { ModalContext } from '../store/ModalProvider';
 import FormWithValidation from '../forms/FormWithValidation';
 import ModalGeneric from './ModalGeneric';
@@ -18,11 +17,16 @@ const ModalEdit = ({
   onSubmit,
   submitText,
 }) => {
-  const [form, resetForm] = useResetForm();
-  const { setClose } = useContext(ModalContext);
+  const {
+    setClose,
+    setId,
+    form,
+    resetForm,
+  } = useContext(ModalContext);
+  setId(id);
 
   return (
-    <ModalGeneric id={id} resetForm={resetForm}>
+    <ModalGeneric >
       <>
         <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm} />
         <HeaderModal>{title}</HeaderModal>

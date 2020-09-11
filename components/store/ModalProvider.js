@@ -1,14 +1,14 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useResetForm } from '../../hooks';
 
 export const ModalContext = React.createContext();
 
 const ModalProvider = ({ children }) => {
   const [id, setId] = useState(null);
   const [close, setClose] = useState(false);
-  const [resetForm, setResetForm] = useState(undefined);
-
+  const [form, resetForm] = useResetForm();
 
   useEffect(() => {
     if (close) {
@@ -18,16 +18,17 @@ const ModalProvider = ({ children }) => {
     }
   }, [close, setClose]);
 
-  useEffect(() => {
-    console.log('id', id);
-  }, [id, setId]);
-
-  useEffect(() => {
-  }, [resetForm, setResetForm]);
-
   return (
     <ModalContext.Provider
-      value={{ close, setClose, id, setId, children, resetForm, setResetForm }}
+      value={{
+        children,
+        id,
+        setId,
+        close,
+        setClose,
+        form,
+        resetForm,
+      }}
     >
       {children}
     </ModalContext.Provider >
