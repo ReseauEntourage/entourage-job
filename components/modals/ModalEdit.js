@@ -8,6 +8,7 @@ import { ModalContext } from '../store/ModalProvider';
 import FormWithValidation from '../forms/FormWithValidation';
 import ModalGeneric from './ModalGeneric';
 import HeaderModal from './HeaderModal';
+
 const ModalEdit = ({
   id,
   title,
@@ -43,9 +44,9 @@ const ModalEdit = ({
           submitText={submitText}
           formSchema={formSchema}
           defaultValues={defaultValues}
-          onCancel={setClose}
+          onCancel={() => setClose(true)}
           onSubmit={(fields, setError) => {
-            onSubmit(fields, setClose, setError);
+            onSubmit(fields, () => setClose(true), setError);
           }}
         />
       </>

@@ -9,7 +9,6 @@ const ModalProvider = ({ children }) => {
   const [close, setClose] = useState(false);
   const [resetForm, setResetForm] = useState(undefined);
 
-  console.log(id);
 
   useEffect(() => {
     if (close) {
@@ -20,11 +19,10 @@ const ModalProvider = ({ children }) => {
   }, [close, setClose]);
 
   useEffect(() => {
-    console.log(id);
+    console.log('id', id);
   }, [id, setId]);
 
   useEffect(() => {
-    console.log(resetForm);
   }, [resetForm, setResetForm]);
 
   return (
@@ -37,17 +35,7 @@ const ModalProvider = ({ children }) => {
 }
 
 ModalProvider.propTypes = {
-  // id: PropTypes.string.isRequired,
   children: PropTypes.element.isRequired,
-  // param: PropTypes.string,
-  // classNameSize: PropTypes.string,
-  resetForm: PropTypes.func,
-};
-
-ModalProvider.defaultProps = {
-  param: 'bg-close:false',
-  classNameSize: 'uk-width-1-1 uk-width-2-3@l uk-width-1-2@xl',
-  resetForm: undefined,
 };
 
 export default ModalProvider;
