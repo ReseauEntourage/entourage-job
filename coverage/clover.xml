@@ -1,0 +1,1426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1598954849598" clover="3.2.0">
+  <project timestamp="1598954849598" name="All files">
+    <metrics statements="1258" coveredstatements="894" conditionals="322" coveredconditionals="210" methods="364" coveredmethods="216" elements="1944" coveredelements="1320" complexity="0" loc="1258" ncloc="1258" packages="6" files="48" classes="48"/>
+    <package name="backend">
+      <metrics statements="178" coveredstatements="52" conditionals="40" coveredconditionals="4" methods="48" coveredmethods="6"/>
+      <file name="server.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/server.js">
+        <metrics statements="43" coveredstatements="41" conditionals="8" coveredconditionals="4" methods="7" coveredmethods="6"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="10" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="12" count="5" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="16" count="5" type="stmt"/>
+        <line num="20" count="5" type="stmt"/>
+        <line num="22" count="5" type="stmt"/>
+        <line num="24" count="5" type="stmt"/>
+        <line num="27" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="29" count="5" type="stmt"/>
+        <line num="31" count="5" type="stmt"/>
+        <line num="34" count="5" type="stmt"/>
+        <line num="49" count="5" type="stmt"/>
+        <line num="50" count="5" type="stmt"/>
+        <line num="53" count="5" type="stmt"/>
+        <line num="54" count="5" type="stmt"/>
+        <line num="55" count="5" type="stmt"/>
+        <line num="57" count="5" type="stmt"/>
+        <line num="58" count="5" type="stmt"/>
+        <line num="60" count="5" type="stmt"/>
+        <line num="61" count="8" type="cond" truecount="1" falsecount="1"/>
+        <line num="62" count="8" type="stmt"/>
+        <line num="63" count="8" type="stmt"/>
+        <line num="65" count="0" type="stmt"/>
+        <line num="67" count="5" type="stmt"/>
+        <line num="70" count="5" type="stmt"/>
+        <line num="71" count="0" type="stmt"/>
+        <line num="74" count="5" type="stmt"/>
+        <line num="75" count="5" type="stmt"/>
+        <line num="76" count="5" type="stmt"/>
+        <line num="77" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="79" count="5" type="stmt"/>
+        <line num="80" count="5" type="stmt"/>
+        <line num="86" count="5" type="stmt"/>
+        <line num="87" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="88" count="5" type="stmt"/>
+      </file>
+      <file name="shareImage.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/shareImage.js">
+        <metrics statements="135" coveredstatements="11" conditionals="32" coveredconditionals="0" methods="41" coveredmethods="0"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="28" count="5" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="39" count="5" type="stmt"/>
+        <line num="47" count="5" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="52" count="0" type="stmt"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="55" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="56" count="0" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+        <line num="58" count="0" type="stmt"/>
+        <line num="61" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="62" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="66" count="0" type="stmt"/>
+        <line num="67" count="0" type="stmt"/>
+        <line num="68" count="0" type="stmt"/>
+        <line num="70" count="0" type="stmt"/>
+        <line num="71" count="0" type="stmt"/>
+        <line num="74" count="0" type="stmt"/>
+        <line num="78" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="79" count="0" type="stmt"/>
+        <line num="82" count="0" type="stmt"/>
+        <line num="85" count="5" type="stmt"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="87" count="0" type="stmt"/>
+        <line num="88" count="0" type="stmt"/>
+        <line num="89" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="91" count="0" type="stmt"/>
+        <line num="92" count="0" type="stmt"/>
+        <line num="94" count="0" type="stmt"/>
+        <line num="96" count="0" type="stmt"/>
+        <line num="98" count="0" type="stmt"/>
+        <line num="102" count="5" type="stmt"/>
+        <line num="111" count="0" type="stmt"/>
+        <line num="112" count="0" type="stmt"/>
+        <line num="114" count="0" type="stmt"/>
+        <line num="123" count="0" type="stmt"/>
+        <line num="126" count="0" type="stmt"/>
+        <line num="134" count="0" type="stmt"/>
+        <line num="135" count="0" type="stmt"/>
+        <line num="139" count="0" type="stmt"/>
+        <line num="144" count="0" type="stmt"/>
+        <line num="153" count="0" type="stmt"/>
+        <line num="154" count="0" type="stmt"/>
+        <line num="155" count="0" type="stmt"/>
+        <line num="159" count="0" type="stmt"/>
+        <line num="161" count="0" type="stmt"/>
+        <line num="170" count="0" type="stmt"/>
+        <line num="174" count="0" type="stmt"/>
+        <line num="181" count="0" type="stmt"/>
+        <line num="190" count="0" type="stmt"/>
+        <line num="191" count="0" type="stmt"/>
+        <line num="192" count="0" type="stmt"/>
+        <line num="197" count="0" type="stmt"/>
+        <line num="201" count="0" type="stmt"/>
+        <line num="203" count="0" type="stmt"/>
+        <line num="212" count="0" type="stmt"/>
+        <line num="213" count="0" type="stmt"/>
+        <line num="218" count="0" type="stmt"/>
+        <line num="222" count="0" type="stmt"/>
+        <line num="224" count="0" type="stmt"/>
+        <line num="233" count="0" type="stmt"/>
+        <line num="248" count="0" type="stmt"/>
+        <line num="255" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="256" count="0" type="stmt"/>
+        <line num="258" count="0" type="stmt"/>
+        <line num="262" count="0" type="stmt"/>
+        <line num="271" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="272" count="0" type="stmt"/>
+        <line num="274" count="0" type="stmt"/>
+        <line num="276" count="0" type="stmt"/>
+        <line num="281" count="0" type="stmt"/>
+        <line num="286" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="287" count="0" type="stmt"/>
+        <line num="289" count="0" type="stmt"/>
+        <line num="292" count="0" type="stmt"/>
+        <line num="297" count="0" type="stmt"/>
+        <line num="302" count="0" type="stmt"/>
+        <line num="314" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="315" count="0" type="stmt"/>
+        <line num="317" count="0" type="stmt"/>
+        <line num="321" count="0" type="stmt"/>
+        <line num="326" count="0" type="stmt"/>
+        <line num="331" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="332" count="0" type="stmt"/>
+        <line num="334" count="0" type="stmt"/>
+        <line num="337" count="0" type="stmt"/>
+        <line num="342" count="0" type="stmt"/>
+        <line num="347" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="348" count="0" type="stmt"/>
+        <line num="350" count="0" type="stmt"/>
+        <line num="360" count="0" type="stmt"/>
+        <line num="361" count="0" type="stmt"/>
+        <line num="362" count="0" type="stmt"/>
+        <line num="363" count="0" type="stmt"/>
+        <line num="364" count="0" type="stmt"/>
+        <line num="365" count="0" type="stmt"/>
+        <line num="366" count="0" type="stmt"/>
+        <line num="367" count="0" type="stmt"/>
+        <line num="370" count="0" type="stmt"/>
+        <line num="373" count="0" type="stmt"/>
+        <line num="374" count="0" type="stmt"/>
+        <line num="377" count="0" type="stmt"/>
+        <line num="379" count="0" type="stmt"/>
+        <line num="386" count="0" type="stmt"/>
+        <line num="468" count="0" type="stmt"/>
+        <line num="475" count="0" type="stmt"/>
+        <line num="476" count="0" type="stmt"/>
+        <line num="477" count="0" type="stmt"/>
+        <line num="478" count="0" type="stmt"/>
+        <line num="479" count="0" type="stmt"/>
+        <line num="484" count="0" type="stmt"/>
+        <line num="486" count="0" type="stmt"/>
+        <line num="499" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.config">
+      <metrics statements="15" coveredstatements="14" conditionals="4" coveredconditionals="4" methods="7" coveredmethods="4"/>
+      <file name="passport.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/config/passport.js">
+        <metrics statements="15" coveredstatements="14" conditionals="4" coveredconditionals="4" methods="7" coveredmethods="4"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="10" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="21" count="22" type="stmt"/>
+        <line num="23" count="22" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="2" type="stmt"/>
+        <line num="35" count="20" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="41" count="5" type="stmt"/>
+        <line num="44" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.controllers">
+      <metrics statements="355" coveredstatements="249" conditionals="108" coveredconditionals="72" methods="100" coveredmethods="55"/>
+      <file name="Auth.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/controllers/Auth.js">
+        <metrics statements="36" coveredstatements="36" conditionals="27" coveredconditionals="27" methods="7" coveredmethods="7"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="7" count="70" type="stmt"/>
+        <line num="8" count="70" type="stmt"/>
+        <line num="12" count="70" type="stmt"/>
+        <line num="19" count="28" type="stmt"/>
+        <line num="23" count="28" type="stmt"/>
+        <line num="28" count="49" type="stmt"/>
+        <line num="29" count="49" type="stmt"/>
+        <line num="30" count="49" type="stmt"/>
+        <line num="32" count="49" type="stmt"/>
+        <line num="33" count="49" type="cond" truecount="4" falsecount="0"/>
+        <line num="34" count="6" type="stmt"/>
+        <line num="37" count="49" type="stmt"/>
+        <line num="38" count="49" type="cond" truecount="4" falsecount="0"/>
+        <line num="39" count="6" type="stmt"/>
+        <line num="42" count="49" type="stmt"/>
+        <line num="60" count="21" type="stmt"/>
+        <line num="61" count="21" type="cond" truecount="4" falsecount="0"/>
+        <line num="62" count="3" type="stmt"/>
+        <line num="65" count="21" type="stmt"/>
+        <line num="66" count="21" type="cond" truecount="4" falsecount="0"/>
+        <line num="67" count="3" type="stmt"/>
+        <line num="70" count="21" type="stmt"/>
+        <line num="84" count="5" type="stmt"/>
+        <line num="89" count="134" type="stmt"/>
+        <line num="92" count="134" type="cond" truecount="4" falsecount="0"/>
+        <line num="93" count="79" type="stmt"/>
+        <line num="95" count="55" type="stmt"/>
+        <line num="98" count="5" type="cond" truecount="1" falsecount="0"/>
+        <line num="99" count="160" type="stmt"/>
+        <line num="108" count="126" type="cond" truecount="4" falsecount="0"/>
+        <line num="109" count="8" type="stmt"/>
+        <line num="113" count="118" type="stmt"/>
+        <line num="118" count="5" type="stmt"/>
+      </file>
+      <file name="CV.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/controllers/CV.js">
+        <metrics statements="109" coveredstatements="50" conditionals="35" coveredconditionals="20" methods="33" coveredmethods="8"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="36" count="5" type="stmt"/>
+        <line num="101" count="5" type="stmt"/>
+        <line num="105" count="5" type="stmt"/>
+        <line num="112" count="5" type="stmt"/>
+        <line num="131" count="5" type="stmt"/>
+        <line num="132" count="4" type="stmt"/>
+        <line num="133" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="134" count="0" type="stmt"/>
+        <line num="135" count="0" type="stmt"/>
+        <line num="138" count="4" type="stmt"/>
+        <line num="141" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="142" count="0" type="stmt"/>
+        <line num="143" count="0" type="stmt"/>
+        <line num="147" count="0" type="stmt"/>
+        <line num="151" count="0" type="stmt"/>
+        <line num="155" count="0" type="stmt"/>
+        <line num="159" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="160" count="0" type="stmt"/>
+        <line num="161" count="0" type="stmt"/>
+        <line num="165" count="0" type="stmt"/>
+        <line num="168" count="0" type="stmt"/>
+        <line num="172" count="0" type="stmt"/>
+        <line num="176" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="177" count="0" type="stmt"/>
+        <line num="178" count="0" type="stmt"/>
+        <line num="180" count="0" type="stmt"/>
+        <line num="182" count="0" type="stmt"/>
+        <line num="185" count="0" type="stmt"/>
+        <line num="189" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="190" count="0" type="stmt"/>
+        <line num="191" count="0" type="stmt"/>
+        <line num="193" count="0" type="stmt"/>
+        <line num="195" count="0" type="stmt"/>
+        <line num="198" count="0" type="stmt"/>
+        <line num="202" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="203" count="0" type="stmt"/>
+        <line num="204" count="0" type="stmt"/>
+        <line num="206" count="0" type="stmt"/>
+        <line num="208" count="0" type="stmt"/>
+        <line num="211" count="0" type="stmt"/>
+        <line num="215" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="216" count="0" type="stmt"/>
+        <line num="217" count="0" type="stmt"/>
+        <line num="219" count="0" type="stmt"/>
+        <line num="221" count="0" type="stmt"/>
+        <line num="224" count="0" type="stmt"/>
+        <line num="228" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="229" count="0" type="stmt"/>
+        <line num="230" count="0" type="stmt"/>
+        <line num="232" count="0" type="stmt"/>
+        <line num="234" count="0" type="stmt"/>
+        <line num="237" count="0" type="stmt"/>
+        <line num="241" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="242" count="0" type="stmt"/>
+        <line num="243" count="0" type="stmt"/>
+        <line num="245" count="0" type="stmt"/>
+        <line num="251" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="252" count="0" type="stmt"/>
+        <line num="253" count="0" type="stmt"/>
+        <line num="255" count="0" type="stmt"/>
+        <line num="257" count="0" type="stmt"/>
+        <line num="259" count="0" type="stmt"/>
+        <line num="261" count="0" type="stmt"/>
+        <line num="267" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="268" count="0" type="stmt"/>
+        <line num="269" count="0" type="stmt"/>
+        <line num="270" count="0" type="stmt"/>
+        <line num="280" count="4" type="stmt"/>
+        <line num="281" count="4" type="stmt"/>
+        <line num="285" count="4" type="stmt"/>
+        <line num="288" count="5" type="stmt"/>
+        <line num="289" count="1" type="stmt"/>
+        <line num="290" count="1" type="stmt"/>
+        <line num="296" count="5" type="stmt"/>
+        <line num="297" count="3" type="stmt"/>
+        <line num="298" count="3" type="stmt"/>
+        <line num="302" count="3" type="stmt"/>
+        <line num="303" count="3" type="stmt"/>
+        <line num="306" count="1" type="stmt"/>
+        <line num="310" count="5" type="stmt"/>
+        <line num="311" count="2" type="stmt"/>
+        <line num="312" count="2" type="stmt"/>
+        <line num="319" count="1" type="stmt"/>
+        <line num="322" count="5" type="stmt"/>
+        <line num="323" count="0" type="stmt"/>
+        <line num="324" count="0" type="stmt"/>
+        <line num="330" count="0" type="stmt"/>
+        <line num="334" count="5" type="stmt"/>
+        <line num="335" count="4" type="stmt"/>
+        <line num="339" count="4" type="stmt"/>
+        <line num="341" count="4" type="stmt"/>
+        <line num="447" count="4" type="stmt"/>
+        <line num="448" count="12" type="stmt"/>
+        <line num="479" count="4" type="stmt"/>
+        <line num="481" count="17" type="stmt"/>
+        <line num="485" count="5" type="stmt"/>
+        <line num="486" count="0" type="stmt"/>
+        <line num="487" count="0" type="stmt"/>
+        <line num="488" count="0" type="stmt"/>
+        <line num="489" count="0" type="stmt"/>
+        <line num="492" count="0" type="stmt"/>
+        <line num="493" count="0" type="stmt"/>
+        <line num="497" count="5" type="stmt"/>
+      </file>
+      <file name="Opportunity.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/controllers/Opportunity.js">
+        <metrics statements="77" coveredstatements="56" conditionals="14" coveredconditionals="8" methods="25" coveredmethods="15"/>
+        <line num="13" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="17" count="5" type="stmt"/>
+        <line num="45" count="5" type="stmt"/>
+        <line num="81" count="5" type="stmt"/>
+        <line num="82" count="2" type="stmt"/>
+        <line num="84" count="2" type="stmt"/>
+        <line num="85" count="2" type="stmt"/>
+        <line num="87" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="88" count="0" type="stmt"/>
+        <line num="89" count="0" type="stmt"/>
+        <line num="91" count="0" type="stmt"/>
+        <line num="93" count="0" type="stmt"/>
+        <line num="96" count="0" type="stmt"/>
+        <line num="99" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="100" count="0" type="stmt"/>
+        <line num="101" count="0" type="stmt"/>
+        <line num="107" count="1" type="stmt"/>
+        <line num="109" count="1" type="stmt"/>
+        <line num="112" count="5" type="stmt"/>
+        <line num="113" count="1" type="stmt"/>
+        <line num="116" count="1" type="stmt"/>
+        <line num="121" count="5" type="stmt"/>
+        <line num="122" count="1" type="stmt"/>
+        <line num="125" count="1" type="stmt"/>
+        <line num="128" count="5" type="stmt"/>
+        <line num="129" count="2" type="stmt"/>
+        <line num="132" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="133" count="1" type="stmt"/>
+        <line num="134" count="1" type="stmt"/>
+        <line num="151" count="2" type="stmt"/>
+        <line num="153" count="16" type="stmt"/>
+        <line num="156" count="5" type="stmt"/>
+        <line num="157" count="0" type="stmt"/>
+        <line num="165" count="0" type="stmt"/>
+        <line num="168" count="5" type="stmt"/>
+        <line num="169" count="4" type="stmt"/>
+        <line num="170" count="4" type="stmt"/>
+        <line num="175" count="3" type="stmt"/>
+        <line num="178" count="24" type="stmt"/>
+        <line num="183" count="9" type="stmt"/>
+        <line num="186" count="5" type="stmt"/>
+        <line num="188" count="4" type="stmt"/>
+        <line num="193" count="3" type="stmt"/>
+        <line num="199" count="24" type="stmt"/>
+        <line num="207" count="3" type="stmt"/>
+        <line num="208" count="36" type="stmt"/>
+        <line num="209" count="36" type="stmt"/>
+        <line num="210" count="24" type="stmt"/>
+        <line num="212" count="36" type="cond" truecount="2" falsecount="0"/>
+        <line num="213" count="12" type="stmt"/>
+        <line num="215" count="36" type="stmt"/>
+        <line num="219" count="5" type="stmt"/>
+        <line num="220" count="4" type="stmt"/>
+        <line num="225" count="5" type="stmt"/>
+        <line num="226" count="4" type="stmt"/>
+        <line num="230" count="4" type="stmt"/>
+        <line num="243" count="5" type="stmt"/>
+        <line num="244" count="1" type="stmt"/>
+        <line num="248" count="1" type="stmt"/>
+        <line num="251" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="252" count="0" type="stmt"/>
+        <line num="254" count="0" type="stmt"/>
+        <line num="256" count="0" type="stmt"/>
+        <line num="259" count="0" type="stmt"/>
+        <line num="260" count="0" type="stmt"/>
+        <line num="263" count="0" type="stmt"/>
+        <line num="269" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="270" count="1" type="stmt"/>
+        <line num="275" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="276" count="0" type="stmt"/>
+        <line num="278" count="0" type="stmt"/>
+        <line num="283" count="0" type="stmt"/>
+        <line num="287" count="0" type="stmt"/>
+        <line num="290" count="0" type="stmt"/>
+        <line num="295" count="1" type="stmt"/>
+        <line num="298" count="5" type="stmt"/>
+      </file>
+      <file name="Share.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/controllers/Share.js">
+        <metrics statements="21" coveredstatements="14" conditionals="4" coveredconditionals="1" methods="4" coveredmethods="3"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="10" count="5" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="15" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="33" count="5" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="45" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="4" type="stmt"/>
+        <line num="52" count="0" type="stmt"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="58" count="5" type="stmt"/>
+      </file>
+      <file name="User.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/controllers/User.js">
+        <metrics statements="81" coveredstatements="71" conditionals="24" coveredconditionals="15" methods="23" coveredmethods="18"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="19" count="5" type="stmt"/>
+        <line num="46" count="5" type="stmt"/>
+        <line num="47" count="7" type="stmt"/>
+        <line num="49" count="6" type="stmt"/>
+        <line num="52" count="6" type="stmt"/>
+        <line num="54" count="6" type="stmt"/>
+        <line num="57" count="6" type="stmt"/>
+        <line num="60" count="5" type="stmt"/>
+        <line num="61" count="4" type="stmt"/>
+        <line num="62" count="4" type="stmt"/>
+        <line num="64" count="4" type="stmt"/>
+        <line num="65" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="66" count="4" type="stmt"/>
+        <line num="67" count="3" type="stmt"/>
+        <line num="69" count="3" type="stmt"/>
+        <line num="70" count="2" type="cond" truecount="2" falsecount="2"/>
+        <line num="71" count="0" type="stmt"/>
+        <line num="78" count="2" type="cond" truecount="2" falsecount="2"/>
+        <line num="79" count="0" type="stmt"/>
+        <line num="86" count="2" type="stmt"/>
+        <line num="90" count="5" type="stmt"/>
+        <line num="91" count="1" type="stmt"/>
+        <line num="92" count="1" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
+        <line num="94" count="1" type="stmt"/>
+        <line num="97" count="1" type="stmt"/>
+        <line num="98" count="0" type="stmt"/>
+        <line num="104" count="5" type="stmt"/>
+        <line num="105" count="21" type="stmt"/>
+        <line num="106" count="21" type="stmt"/>
+        <line num="107" count="21" type="stmt"/>
+        <line num="113" count="5" type="stmt"/>
+        <line num="114" count="7" type="stmt"/>
+        <line num="115" count="7" type="stmt"/>
+        <line num="116" count="7" type="stmt"/>
+        <line num="117" count="7" type="stmt"/>
+        <line num="120" count="7" type="stmt"/>
+        <line num="121" count="0" type="stmt"/>
+        <line num="125" count="5" type="stmt"/>
+        <line num="126" count="29" type="stmt"/>
+        <line num="132" count="29" type="stmt"/>
+        <line num="135" count="5" type="stmt"/>
+        <line num="136" count="0" type="stmt"/>
+        <line num="137" count="0" type="stmt"/>
+        <line num="145" count="5" type="stmt"/>
+        <line num="146" count="2" type="stmt"/>
+        <line num="157" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="158" count="0" type="stmt"/>
+        <line num="159" count="0" type="stmt"/>
+        <line num="177" count="2" type="cond" truecount="3" falsecount="1"/>
+        <line num="178" count="2" type="stmt"/>
+        <line num="185" count="2" type="stmt"/>
+        <line num="217" count="2" type="stmt"/>
+        <line num="220" count="5" type="stmt"/>
+        <line num="221" count="1" type="stmt"/>
+        <line num="222" count="1" type="stmt"/>
+        <line num="239" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="240" count="1" type="stmt"/>
+        <line num="242" count="1" type="stmt"/>
+        <line num="245" count="5" type="stmt"/>
+        <line num="246" count="15" type="stmt"/>
+        <line num="251" count="15" type="cond" truecount="1" falsecount="1"/>
+        <line num="253" count="15" type="stmt"/>
+        <line num="256" count="5" type="stmt"/>
+        <line num="257" count="3" type="stmt"/>
+        <line num="263" count="5" type="stmt"/>
+        <line num="264" count="0" type="stmt"/>
+        <line num="282" count="5" type="stmt"/>
+        <line num="284" count="4" type="stmt"/>
+        <line num="285" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="286" count="2" type="stmt"/>
+        <line num="288" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="289" count="1" type="stmt"/>
+        <line num="291" count="4" type="stmt"/>
+        <line num="309" count="5" type="stmt"/>
+        <line num="310" count="0" type="stmt"/>
+        <line num="327" count="5" type="stmt"/>
+      </file>
+      <file name="airtable.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/controllers/airtable.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+      </file>
+      <file name="aws.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/controllers/aws.js">
+        <metrics statements="20" coveredstatements="11" conditionals="4" coveredconditionals="1" methods="7" coveredmethods="3"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="10" count="5" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="22" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="33" count="5" type="stmt"/>
+        <line num="34" count="3" type="stmt"/>
+        <line num="36" count="3" type="stmt"/>
+        <line num="42" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="43" count="3" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="52" count="5" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="55" count="0" type="stmt"/>
+        <line num="58" count="5" type="stmt"/>
+      </file>
+      <file name="mail.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/controllers/mail.js">
+        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="24" count="5" type="stmt"/>
+        <line num="25" count="6" type="stmt"/>
+        <line num="39" count="6" type="stmt"/>
+        <line num="42" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.db.models">
+      <metrics statements="268" coveredstatements="218" conditionals="41" coveredconditionals="22" methods="74" coveredmethods="59"/>
+      <file name="ambition.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/ambition.js">
+        <metrics statements="8" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="16" count="5" type="stmt"/>
+        <line num="23" count="5" type="stmt"/>
+      </file>
+      <file name="businessline.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/businessline.js">
+        <metrics statements="10" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="19" count="5" type="stmt"/>
+        <line num="20" count="5" type="stmt"/>
+        <line num="27" count="5" type="stmt"/>
+      </file>
+      <file name="contract.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/contract.js">
+        <metrics statements="8" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="22" count="5" type="stmt"/>
+      </file>
+      <file name="cv.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/cv.js">
+        <metrics statements="20" coveredstatements="20" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="80" count="5" type="stmt"/>
+        <line num="81" count="10" type="stmt"/>
+        <line num="82" count="10" type="stmt"/>
+        <line num="83" count="10" type="stmt"/>
+        <line num="85" count="5" type="stmt"/>
+        <line num="87" count="5" type="stmt"/>
+        <line num="91" count="5" type="stmt"/>
+        <line num="95" count="5" type="stmt"/>
+        <line num="99" count="5" type="stmt"/>
+        <line num="103" count="5" type="stmt"/>
+        <line num="107" count="5" type="stmt"/>
+        <line num="112" count="5" type="stmt"/>
+        <line num="117" count="5" type="stmt"/>
+        <line num="120" count="5" type="stmt"/>
+        <line num="124" count="5" type="stmt"/>
+        <line num="130" count="5" type="stmt"/>
+      </file>
+      <file name="cv_ambition.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/cv_ambition.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="29" count="5" type="stmt"/>
+      </file>
+      <file name="cv_businesslines.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/cv_businesslines.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="29" count="5" type="stmt"/>
+      </file>
+      <file name="cv_contract.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/cv_contract.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="26" count="5" type="stmt"/>
+        <line num="29" count="5" type="stmt"/>
+      </file>
+      <file name="cv_language.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/cv_language.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="26" count="5" type="stmt"/>
+        <line num="29" count="5" type="stmt"/>
+      </file>
+      <file name="cv_locations.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/cv_locations.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="23" count="5" type="stmt"/>
+        <line num="27" count="5" type="stmt"/>
+      </file>
+      <file name="cv_passion.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/cv_passion.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="26" count="5" type="stmt"/>
+        <line num="29" count="5" type="stmt"/>
+      </file>
+      <file name="cv_skill.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/cv_skill.js">
+        <metrics statements="9" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="27" count="5" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="35" count="5" type="stmt"/>
+      </file>
+      <file name="experience.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/experience.js">
+        <metrics statements="11" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="23" count="5" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="28" count="5" type="stmt"/>
+        <line num="29" count="5" type="stmt"/>
+        <line num="30" count="5" type="stmt"/>
+        <line num="35" count="5" type="stmt"/>
+      </file>
+      <file name="experience_skill.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/experience_skill.js">
+        <metrics statements="9" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="27" count="5" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="35" count="5" type="stmt"/>
+      </file>
+      <file name="index.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/index.js">
+        <metrics statements="18" coveredstatements="18" conditionals="7" coveredconditionals="6" methods="3" coveredmethods="3"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="17" count="130" type="stmt"/>
+        <line num="22" count="125" type="stmt"/>
+        <line num="23" count="125" type="stmt"/>
+        <line num="26" count="5" type="stmt"/>
+        <line num="27" count="125" type="cond" truecount="2" falsecount="0"/>
+        <line num="28" count="115" type="stmt"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="33" count="5" type="stmt"/>
+        <line num="35" count="5" type="stmt"/>
+      </file>
+      <file name="language.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/language.js">
+        <metrics statements="8" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="22" count="5" type="stmt"/>
+      </file>
+      <file name="location.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/location.js">
+        <metrics statements="10" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="22" count="5" type="stmt"/>
+      </file>
+      <file name="message.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/message.js">
+        <metrics statements="7" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="109" count="5" type="stmt"/>
+        <line num="110" count="0" type="stmt"/>
+        <line num="112" count="5" type="stmt"/>
+        <line num="115" count="5" type="stmt"/>
+      </file>
+      <file name="opportunity.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/opportunity.js">
+        <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="60" count="5" type="stmt"/>
+        <line num="61" count="16" type="stmt"/>
+        <line num="62" count="16" type="stmt"/>
+        <line num="63" count="16" type="stmt"/>
+        <line num="66" count="5" type="stmt"/>
+        <line num="67" count="5" type="stmt"/>
+        <line num="71" count="5" type="stmt"/>
+        <line num="75" count="5" type="stmt"/>
+        <line num="79" count="5" type="stmt"/>
+      </file>
+      <file name="opportunity_businessline.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/opportunity_businessline.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="26" count="5" type="stmt"/>
+        <line num="29" count="5" type="stmt"/>
+      </file>
+      <file name="opportunity_user.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/opportunity_user.js">
+        <metrics statements="19" coveredstatements="11" conditionals="8" coveredconditionals="4" methods="4" coveredmethods="3"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="50" count="5" type="stmt"/>
+        <line num="51" count="5" type="stmt"/>
+        <line num="58" count="0" type="stmt"/>
+        <line num="67" count="5" type="stmt"/>
+        <line num="69" count="5" type="stmt"/>
+        <line num="70" count="4" type="stmt"/>
+        <line num="71" count="4" type="stmt"/>
+        <line num="73" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="79" count="0" type="stmt"/>
+        <line num="80" count="0" type="stmt"/>
+        <line num="90" count="0" type="stmt"/>
+        <line num="97" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="99" count="0" type="stmt"/>
+        <line num="102" count="0" type="stmt"/>
+        <line num="111" count="0" type="stmt"/>
+        <line num="121" count="5" type="stmt"/>
+      </file>
+      <file name="passion.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/passion.js">
+        <metrics statements="8" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="25" count="5" type="stmt"/>
+      </file>
+      <file name="review.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/review.js">
+        <metrics statements="10" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="27" count="5" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="33" count="5" type="stmt"/>
+        <line num="35" count="5" type="stmt"/>
+      </file>
+      <file name="share.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/share.js">
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="33" count="5" type="stmt"/>
+        <line num="34" count="30" type="stmt"/>
+        <line num="35" count="30" type="stmt"/>
+        <line num="36" count="30" type="stmt"/>
+        <line num="40" count="5" type="stmt"/>
+      </file>
+      <file name="skill.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/skill.js">
+        <metrics statements="9" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="16" count="5" type="stmt"/>
+        <line num="17" count="5" type="stmt"/>
+      </file>
+      <file name="user.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/user.js">
+        <metrics statements="36" coveredstatements="26" conditionals="18" coveredconditionals="11" methods="5" coveredmethods="5"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="10" count="5" type="stmt"/>
+        <line num="91" count="5" type="stmt"/>
+        <line num="92" count="5" type="stmt"/>
+        <line num="97" count="5" type="stmt"/>
+        <line num="105" count="5" type="stmt"/>
+        <line num="111" count="5" type="stmt"/>
+        <line num="112" count="37" type="stmt"/>
+        <line num="113" count="37" type="stmt"/>
+        <line num="114" count="37" type="stmt"/>
+        <line num="115" count="37" type="stmt"/>
+        <line num="118" count="5" type="stmt"/>
+        <line num="119" count="36" type="cond" truecount="2" falsecount="0"/>
+        <line num="120" count="30" type="stmt"/>
+        <line num="124" count="30" type="stmt"/>
+        <line num="128" count="36" type="stmt"/>
+        <line num="131" count="5" type="stmt"/>
+        <line num="132" count="15" type="stmt"/>
+        <line num="133" count="15" type="stmt"/>
+        <line num="134" count="15" type="cond" truecount="2" falsecount="0"/>
+        <line num="140" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="141" count="1" type="stmt"/>
+        <line num="142" count="1" type="stmt"/>
+        <line num="149" count="0" type="stmt"/>
+        <line num="153" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="154" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="155" count="0" type="stmt"/>
+        <line num="156" count="0" type="stmt"/>
+        <line num="167" count="0" type="stmt"/>
+        <line num="171" count="0" type="stmt"/>
+        <line num="172" count="0" type="stmt"/>
+        <line num="177" count="0" type="stmt"/>
+        <line num="184" count="0" type="stmt"/>
+        <line num="191" count="5" type="stmt"/>
+      </file>
+      <file name="user_candidat.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/db/models/user_candidat.js">
+        <metrics statements="21" coveredstatements="15" conditionals="8" coveredconditionals="1" methods="5" coveredmethods="3"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="42" count="5" type="stmt"/>
+        <line num="44" count="5" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="52" count="5" type="stmt"/>
+        <line num="59" count="5" type="stmt"/>
+        <line num="64" count="5" type="stmt"/>
+        <line num="70" count="5" type="stmt"/>
+        <line num="71" count="30" type="stmt"/>
+        <line num="74" count="30" type="stmt"/>
+        <line num="75" count="30" type="stmt"/>
+        <line num="79" count="30" type="cond" truecount="1" falsecount="1"/>
+        <line num="80" count="0" type="stmt"/>
+        <line num="82" count="30" type="stmt"/>
+        <line num="85" count="5" type="stmt"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="87" count="0" type="stmt"/>
+        <line num="88" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="94" count="0" type="stmt"/>
+        <line num="98" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.routes.api.v1">
+      <metrics statements="377" coveredstatements="300" conditionals="85" coveredconditionals="74" methods="115" coveredmethods="83"/>
+      <file name="Auth.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/routes/api/v1/Auth.js">
+        <metrics statements="108" coveredstatements="96" conditionals="30" coveredconditionals="26" methods="17" coveredmethods="13"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="10" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="12" count="5" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="16" count="5" type="stmt"/>
+        <line num="22" count="5" type="stmt"/>
+        <line num="23" count="24" type="stmt"/>
+        <line num="25" count="24" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="33" count="23" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="41" count="22" type="stmt"/>
+        <line num="46" count="22" type="cond" truecount="1" falsecount="1"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="51" count="22" type="cond" truecount="2" falsecount="0"/>
+        <line num="52" count="20" type="stmt"/>
+        <line num="53" count="20" type="stmt"/>
+        <line num="55" count="20" type="stmt"/>
+        <line num="60" count="2" type="stmt"/>
+        <line num="67" count="5" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
+        <line num="71" count="1" type="stmt"/>
+        <line num="74" count="5" type="stmt"/>
+        <line num="75" count="3" type="stmt"/>
+        <line num="76" count="3" type="stmt"/>
+        <line num="79" count="3" type="stmt"/>
+        <line num="80" count="3" type="stmt"/>
+        <line num="83" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="84" count="1" type="stmt"/>
+        <line num="90" count="2" type="stmt"/>
+        <line num="92" count="2" type="stmt"/>
+        <line num="94" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="103" count="1" type="stmt"/>
+        <line num="104" count="1" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="109" count="1" type="stmt"/>
+        <line num="115" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="116" count="1" type="stmt"/>
+        <line num="118" count="1" type="stmt"/>
+        <line num="120" count="1" type="stmt"/>
+        <line num="129" count="1" type="stmt"/>
+        <line num="132" count="0" type="stmt"/>
+        <line num="133" count="0" type="stmt"/>
+        <line num="140" count="5" type="stmt"/>
+        <line num="141" count="3" type="stmt"/>
+        <line num="146" count="3" type="stmt"/>
+        <line num="147" count="3" type="stmt"/>
+        <line num="150" count="3" type="stmt"/>
+        <line num="152" count="3" type="stmt"/>
+        <line num="154" count="3" type="stmt"/>
+        <line num="156" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="157" count="1" type="stmt"/>
+        <line num="160" count="1" type="stmt"/>
+        <line num="166" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="169" count="1" type="stmt"/>
+        <line num="170" count="1" type="stmt"/>
+        <line num="174" count="1" type="stmt"/>
+        <line num="177" count="0" type="stmt"/>
+        <line num="178" count="0" type="stmt"/>
+        <line num="185" count="5" type="stmt"/>
+        <line num="186" count="4" type="stmt"/>
+        <line num="190" count="4" type="stmt"/>
+        <line num="194" count="4" type="stmt"/>
+        <line num="195" count="4" type="stmt"/>
+        <line num="198" count="4" type="stmt"/>
+        <line num="200" count="4" type="stmt"/>
+        <line num="202" count="4" type="stmt"/>
+        <line num="203" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="204" count="1" type="stmt"/>
+        <line num="207" count="1" type="stmt"/>
+        <line num="213" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="216" count="1" type="stmt"/>
+        <line num="217" count="1" type="stmt"/>
+        <line num="221" count="2" type="stmt"/>
+        <line num="222" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="223" count="1" type="stmt"/>
+        <line num="226" count="1" type="stmt"/>
+        <line num="232" count="1" type="stmt"/>
+        <line num="233" count="1" type="stmt"/>
+        <line num="237" count="1" type="stmt"/>
+        <line num="238" count="1" type="stmt"/>
+        <line num="239" count="1" type="stmt"/>
+        <line num="245" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="246" count="1" type="stmt"/>
+        <line num="247" count="1" type="stmt"/>
+        <line num="249" count="0" type="stmt"/>
+        <line num="253" count="0" type="stmt"/>
+        <line num="254" count="0" type="stmt"/>
+        <line num="261" count="5" type="stmt"/>
+        <line num="267" count="1" type="stmt"/>
+        <line num="268" count="1" type="stmt"/>
+        <line num="269" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="270" count="0" type="stmt"/>
+        <line num="272" count="1" type="stmt"/>
+        <line num="277" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="278" count="0" type="stmt"/>
+        <line num="280" count="1" type="stmt"/>
+        <line num="282" count="0" type="stmt"/>
+        <line num="286" count="5" type="stmt"/>
+      </file>
+      <file name="CV.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/routes/api/v1/CV.js">
+        <metrics statements="105" coveredstatements="69" conditionals="20" coveredconditionals="15" methods="30" coveredmethods="16"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="10" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="12" count="5" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="16" count="5" type="stmt"/>
+        <line num="22" count="5" type="stmt"/>
+        <line num="23" count="5" type="stmt"/>
+        <line num="29" count="4" type="stmt"/>
+        <line num="30" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="4" type="stmt"/>
+        <line num="32" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="39" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="40" count="2" type="stmt"/>
+        <line num="42" count="3" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="48" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="55" count="0" type="stmt"/>
+        <line num="61" count="0" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="67" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="68" count="2" type="stmt"/>
+        <line num="69" count="2" type="stmt"/>
+        <line num="70" count="0" type="stmt"/>
+        <line num="72" count="2" type="stmt"/>
+        <line num="76" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="80" count="1" type="stmt"/>
+        <line num="81" count="0" type="stmt"/>
+        <line num="92" count="0" type="stmt"/>
+        <line num="94" count="0" type="stmt"/>
+        <line num="96" count="0" type="stmt"/>
+        <line num="101" count="4" type="stmt"/>
+        <line num="102" count="4" type="stmt"/>
+        <line num="104" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="105" count="1" type="stmt"/>
+        <line num="106" count="1" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="114" count="1" type="stmt"/>
+        <line num="116" count="1" type="stmt"/>
+        <line num="118" count="0" type="stmt"/>
+        <line num="124" count="1" type="stmt"/>
+        <line num="127" count="4" type="stmt"/>
+        <line num="128" count="4" type="stmt"/>
+        <line num="130" count="0" type="stmt"/>
+        <line num="132" count="0" type="stmt"/>
+        <line num="133" count="0" type="stmt"/>
+        <line num="143" count="5" type="stmt"/>
+        <line num="144" count="0" type="stmt"/>
+        <line num="153" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="154" count="0" type="stmt"/>
+        <line num="155" count="0" type="stmt"/>
+        <line num="157" count="0" type="stmt"/>
+        <line num="158" count="0" type="stmt"/>
+        <line num="160" count="0" type="stmt"/>
+        <line num="169" count="5" type="stmt"/>
+        <line num="170" count="0" type="stmt"/>
+        <line num="172" count="0" type="stmt"/>
+        <line num="175" count="0" type="stmt"/>
+        <line num="176" count="0" type="stmt"/>
+        <line num="184" count="5" type="stmt"/>
+        <line num="185" count="1" type="stmt"/>
+        <line num="187" count="1" type="stmt"/>
+        <line num="190" count="0" type="stmt"/>
+        <line num="191" count="0" type="stmt"/>
+        <line num="199" count="5" type="stmt"/>
+        <line num="200" count="2" type="stmt"/>
+        <line num="201" count="2" type="stmt"/>
+        <line num="205" count="1" type="stmt"/>
+        <line num="208" count="1" type="stmt"/>
+        <line num="209" count="1" type="stmt"/>
+        <line num="257" count="5" type="stmt"/>
+        <line num="258" count="4" type="stmt"/>
+        <line num="260" count="4" type="stmt"/>
+        <line num="263" count="0" type="stmt"/>
+        <line num="264" count="0" type="stmt"/>
+        <line num="272" count="5" type="stmt"/>
+        <line num="273" count="3" type="stmt"/>
+        <line num="275" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="276" count="1" type="stmt"/>
+        <line num="277" count="1" type="stmt"/>
+        <line num="279" count="0" type="stmt"/>
+        <line num="280" count="0" type="stmt"/>
+        <line num="284" count="2" type="stmt"/>
+        <line num="285" count="2" type="stmt"/>
+        <line num="328" count="5" type="stmt"/>
+        <line num="329" count="1" type="stmt"/>
+        <line num="331" count="1" type="stmt"/>
+        <line num="334" count="0" type="stmt"/>
+        <line num="335" count="0" type="stmt"/>
+        <line num="339" count="5" type="stmt"/>
+      </file>
+      <file name="Mail.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/routes/api/v1/Mail.js">
+        <metrics statements="14" coveredstatements="12" conditionals="10" coveredconditionals="10" methods="3" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="9" count="3" type="stmt"/>
+        <line num="10" count="3" type="cond" truecount="6" falsecount="0"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="19" count="2" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="30" count="5" type="stmt"/>
+      </file>
+      <file name="Opportunity.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/routes/api/v1/Opportunity.js">
+        <metrics statements="52" coveredstatements="44" conditionals="0" coveredconditionals="0" methods="28" coveredmethods="24"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="16" count="5" type="stmt"/>
+        <line num="17" count="2" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="36" count="5" type="stmt"/>
+        <line num="37" count="2" type="stmt"/>
+        <line num="39" count="2" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="60" count="5" type="stmt"/>
+        <line num="64" count="6" type="stmt"/>
+        <line num="65" count="4" type="stmt"/>
+        <line num="67" count="3" type="stmt"/>
+        <line num="70" count="1" type="stmt"/>
+        <line num="71" count="1" type="stmt"/>
+        <line num="86" count="5" type="stmt"/>
+        <line num="90" count="6" type="stmt"/>
+        <line num="91" count="4" type="stmt"/>
+        <line num="93" count="3" type="stmt"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="97" count="1" type="stmt"/>
+        <line num="138" count="5" type="stmt"/>
+        <line num="142" count="6" type="stmt"/>
+        <line num="143" count="4" type="stmt"/>
+        <line num="147" count="3" type="stmt"/>
+        <line num="149" count="1" type="stmt"/>
+        <line num="150" count="1" type="stmt"/>
+        <line num="164" count="5" type="stmt"/>
+        <line num="165" count="1" type="stmt"/>
+        <line num="167" count="1" type="stmt"/>
+        <line num="170" count="0" type="stmt"/>
+        <line num="171" count="0" type="stmt"/>
+        <line num="188" count="5" type="stmt"/>
+        <line num="189" count="6" type="stmt"/>
+        <line num="190" count="4" type="stmt"/>
+        <line num="192" count="4" type="stmt"/>
+        <line num="195" count="0" type="stmt"/>
+        <line num="196" count="0" type="stmt"/>
+        <line num="210" count="5" type="stmt"/>
+        <line num="211" count="1" type="stmt"/>
+        <line num="213" count="1" type="stmt"/>
+        <line num="216" count="0" type="stmt"/>
+        <line num="217" count="0" type="stmt"/>
+        <line num="221" count="5" type="stmt"/>
+      </file>
+      <file name="User.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/routes/api/v1/User.js">
+        <metrics statements="98" coveredstatements="79" conditionals="25" coveredconditionals="23" methods="37" coveredmethods="28"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="12" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="17" count="5" type="stmt"/>
+        <line num="18" count="5" type="stmt"/>
+        <line num="19" count="5" type="stmt"/>
+        <line num="25" count="5" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="31" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="4" type="stmt"/>
+        <line num="37" count="4" type="stmt"/>
+        <line num="43" count="2" type="stmt"/>
+        <line num="48" count="2" type="stmt"/>
+        <line num="60" count="2" type="stmt"/>
+        <line num="63" count="2" type="stmt"/>
+        <line num="64" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
+        <line num="97" count="5" type="stmt"/>
+        <line num="98" count="2" type="stmt"/>
+        <line num="101" count="2" type="stmt"/>
+        <line num="109" count="2" type="stmt"/>
+        <line num="110" count="2" type="stmt"/>
+        <line num="112" count="3" type="stmt"/>
+        <line num="114" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="115" count="2" type="stmt"/>
+        <line num="116" count="0" type="stmt"/>
+        <line num="119" count="3" type="stmt"/>
+        <line num="124" count="0" type="stmt"/>
+        <line num="125" count="0" type="stmt"/>
+        <line num="133" count="5" type="stmt"/>
+        <line num="134" count="1" type="stmt"/>
+        <line num="136" count="1" type="stmt"/>
+        <line num="137" count="1" type="stmt"/>
+        <line num="140" count="0" type="stmt"/>
+        <line num="141" count="0" type="stmt"/>
+        <line num="149" count="5" type="stmt"/>
+        <line num="151" count="5" type="cond" truecount="5" falsecount="0"/>
+        <line num="154" count="4" type="stmt"/>
+        <line num="156" count="4" type="stmt"/>
+        <line num="159" count="0" type="stmt"/>
+        <line num="160" count="0" type="stmt"/>
+        <line num="163" count="1" type="stmt"/>
+        <line num="196" count="5" type="stmt"/>
+        <line num="200" count="7" type="stmt"/>
+        <line num="201" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="206" count="4" type="stmt"/>
+        <line num="207" count="4" type="stmt"/>
+        <line num="210" count="2" type="stmt"/>
+        <line num="211" count="2" type="stmt"/>
+        <line num="221" count="5" type="stmt"/>
+        <line num="225" count="2" type="stmt"/>
+        <line num="230" count="2" type="stmt"/>
+        <line num="235" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="239" count="1" type="stmt"/>
+        <line num="242" count="1" type="stmt"/>
+        <line num="247" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="248" count="0" type="stmt"/>
+        <line num="250" count="1" type="stmt"/>
+        <line num="251" count="1" type="stmt"/>
+        <line num="254" count="0" type="stmt"/>
+        <line num="255" count="0" type="stmt"/>
+        <line num="258" count="1" type="stmt"/>
+        <line num="262" count="0" type="stmt"/>
+        <line num="270" count="5" type="stmt"/>
+        <line num="272" count="5" type="stmt"/>
+        <line num="273" count="3" type="stmt"/>
+        <line num="275" count="3" type="stmt"/>
+        <line num="276" count="3" type="stmt"/>
+        <line num="279" count="0" type="stmt"/>
+        <line num="280" count="0" type="stmt"/>
+        <line num="281" count="0" type="stmt"/>
+        <line num="290" count="5" type="stmt"/>
+        <line num="291" count="7" type="stmt"/>
+        <line num="292" count="6" type="stmt"/>
+        <line num="293" count="4" type="stmt"/>
+        <line num="295" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="296" count="0" type="stmt"/>
+        <line num="298" count="4" type="stmt"/>
+        <line num="299" count="4" type="stmt"/>
+        <line num="302" count="0" type="stmt"/>
+        <line num="303" count="0" type="stmt"/>
+        <line num="307" count="6" type="stmt"/>
+        <line num="308" count="6" type="stmt"/>
+        <line num="310" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="311" count="2" type="stmt"/>
+        <line num="313" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="314" count="2" type="stmt"/>
+        <line num="317" count="2" type="stmt"/>
+        <line num="329" count="5" type="stmt"/>
+        <line num="330" count="1" type="stmt"/>
+        <line num="332" count="1" type="stmt"/>
+        <line num="335" count="0" type="stmt"/>
+        <line num="336" count="0" type="stmt"/>
+        <line num="340" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.utils">
+      <metrics statements="65" coveredstatements="61" conditionals="44" coveredconditionals="34" methods="20" coveredmethods="9"/>
+      <file name="DataFormatting.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/utils/DataFormatting.js">
+        <metrics statements="32" coveredstatements="28" conditionals="24" coveredconditionals="16" methods="13" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="18" type="cond" truecount="1" falsecount="1"/>
+        <line num="3" count="18" type="stmt"/>
+        <line num="4" count="18" type="cond" truecount="1" falsecount="1"/>
+        <line num="5" count="18" type="stmt"/>
+        <line num="7" count="18" type="cond" truecount="2" falsecount="0"/>
+        <line num="8" count="6" type="stmt"/>
+        <line num="10" count="18" type="cond" truecount="2" falsecount="0"/>
+        <line num="11" count="6" type="stmt"/>
+        <line num="13" count="18" type="cond" truecount="2" falsecount="0"/>
+        <line num="14" count="6" type="stmt"/>
+        <line num="16" count="18" type="cond" truecount="1" falsecount="1"/>
+        <line num="17" count="18" type="stmt"/>
+        <line num="19" count="18" type="cond" truecount="1" falsecount="1"/>
+        <line num="20" count="18" type="stmt"/>
+        <line num="22" count="18" type="cond" truecount="1" falsecount="1"/>
+        <line num="23" count="18" type="stmt"/>
+        <line num="25" count="18" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="6" type="stmt"/>
+        <line num="27" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="33" count="18" type="stmt"/>
+        <line num="36" count="5" type="stmt"/>
+        <line num="37" count="63" type="cond" truecount="1" falsecount="1"/>
+        <line num="38" count="63" type="stmt"/>
+        <line num="39" count="63" type="cond" truecount="2" falsecount="0"/>
+        <line num="40" count="62" type="stmt"/>
+        <line num="42" count="63" type="stmt"/>
+        <line num="45" count="5" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="48" count="5" type="stmt"/>
+      </file>
+      <file name="DatabaseQueries.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/utils/DatabaseQueries.js">
+        <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="5" type="stmt"/>
+        <line num="11" count="36" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+      </file>
+      <file name="RateLimiter.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/utils/RateLimiter.js">
+        <metrics statements="8" coveredstatements="8" conditionals="4" coveredconditionals="3" methods="2" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="7" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="12" count="10" type="stmt"/>
+        <line num="16" count="10" type="stmt"/>
+        <line num="17" count="10" type="stmt"/>
+        <line num="24" count="5" type="stmt"/>
+      </file>
+      <file name="RoleManagement.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/utils/RoleManagement.js">
+        <metrics statements="10" coveredstatements="10" conditionals="12" coveredconditionals="12" methods="2" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="14" type="cond" truecount="5" falsecount="0"/>
+        <line num="7" count="12" type="stmt"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="15" count="33" type="cond" truecount="7" falsecount="0"/>
+        <line num="18" count="23" type="stmt"/>
+        <line num="21" count="10" type="stmt"/>
+        <line num="25" count="5" type="stmt"/>
+      </file>
+      <file name="env.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/utils/env.js">
+        <metrics statements="6" coveredstatements="6" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="8" count="14" type="cond" truecount="1" falsecount="1"/>
+        <line num="9" count="14" type="stmt"/>
+        <line num="12" count="5" type="stmt"/>
+      </file>
+      <file name="index.js" path="/Users/antoninwelvart/Projets/entourage/entourage-job/backend/utils/index.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

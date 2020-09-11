@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/aria-role */
 /* global UIkit */
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {
@@ -17,8 +17,9 @@ import schema from '../forms/schema/formEditOpportunity';
 import Api from '../../Axios';
 import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
-import {formatParagraph, mutateFormSchema, sortExperiences, sortReviews} from "../../utils";
-import {SharesCountContext} from "../store/SharesCountProvider";
+import { formatParagraph, mutateFormSchema, sortExperiences, sortReviews } from "../../utils";
+import { SharesCountContext } from "../store/SharesCountProvider";
+import Modal from '../store/ModalProvider';
 
 /**
  * Le cv en public et en preview
@@ -179,7 +180,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
             />
           </WhatsappShareButton>
         </GridNoSSR>
-        </>
+      </>
     )
   };
 
@@ -223,7 +224,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
               </div>
             )}
             {/* uk-text-emphasis uk-text-bold */}
-            <h3 className="uk-width-xxlarge uk-margin-auto" style={{fontWeight: 500}}>
+            <h3 className="uk-width-xxlarge uk-margin-auto" style={{ fontWeight: 500 }}>
               J&apos;aimerais beaucoup travailler dans{' '}
               <span
                 className="uk-label uk-text-lowercase"
@@ -251,18 +252,18 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   </span>
                 </>
               ) : (
-                ''
-              )}
+                  ''
+                )}
               {cv.careerPathOpen ? (
                 <>
                   {` mais reste ${
                     cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
-                  } à toutes autres
+                    } à toutes autres
             propositions.`}
                 </>
               ) : (
-                '.'
-              )}
+                  '.'
+                )}
             </h3>
             <div className="uk-position-relative uk-margin-medium-top">
               <div
@@ -403,31 +404,31 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 <ul className="uk-list">
                   {cv.contracts && cv.contracts.length > 0 && (
                     <li className="uk-flex uk-flex-middle">
-                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="file-text" style={{width: 20}} />{' '}
+                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="file-text" style={{ width: 20 }} />{' '}
                       <span className="uk-flex-1">{cv.contracts.join(' / ')}</span>
                     </li>
                   )}
                   {cv.locations && cv.locations.length > 0 && (
                     <li className="uk-flex uk-flex-middle">
-                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="location" style={{width: 20}} />{' '}
+                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="location" style={{ width: 20 }} />{' '}
                       <span className="uk-flex-1">{cv.locations.join(' / ')}</span>
                     </li>
                   )}
                   {cv.availability && cv.availability.length > 0 && (
                     <li className="uk-flex uk-flex-middle">
-                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="calendar" style={{width: 20}}/>{' '}
+                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="calendar" style={{ width: 20 }} />{' '}
                       <span className="uk-flex-1">{cv.availability}</span>
                     </li>
                   )}
                   {cv.languages && cv.languages.length > 0 && (
                     <li className="uk-flex uk-flex-middle">
-                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="users" style={{width: 20}}/>{' '}
+                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="users" style={{ width: 20 }} />{' '}
                       <span className="uk-flex-1">{cv.languages.join(' / ')}</span>
                     </li>
                   )}
                   {cv.transport && cv.transport.length > 0 && (
                     <li className="uk-flex uk-flex-middle">
-                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="car" style={{width: 20}}/>{' '}
+                      <IconNoSSR className="uk-text-primary uk-margin-small-right" name="car" style={{ width: 20 }} />{' '}
                       <span className="uk-flex-1">{cv.transport}</span>
                     </li>
                   )}
@@ -480,27 +481,11 @@ const CVFiche = ({ cv, actionDisabled }) => {
               </Button>
             </div>
             <div>
-              <ModalEdit
+              <Modal
                 id="modal-send-opportunity"
-                title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
-                description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
-                submitText="Envoyer"
-                defaultValues={{
-                  isPublic: false,
-                  candidatId: {
-                    value: cv.UserId,
-                    label: `${cv.user.candidat.firstName}`,
-                  },
-                }}
-                formSchema={mutatedSchema}
-                onSubmit={(fields, closeModal) => {
-                  postOpportunity({
-                    ...fields,
-                    candidatId: cv.UserId,
-                    date: Date.now(),
-                  }, closeModal);
-                }}
-              />
+              >
+                <p>some text</p>
+              </Modal>
             </div>
           </div>
 
@@ -515,7 +500,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           <a
             className={`uk-link-text uk-text-primary${
               actionDisabled ? ' uk-disabled' : ''
-            }`}
+              }`}
             target='_blank'
             rel="noopener noreferrer"
             href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}

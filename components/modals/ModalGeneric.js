@@ -2,18 +2,19 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ModalContext } from '../store/ModalProvider';
 
 const ModalGeneric = ({ children, classNameSize: className, id, param, resetForm }) => (
-  <div id={id} className="uk-flex-top" data-uk-modal={param}>
-    <div className={`uk-modal-dialog uk-margin-auto-vertical ${className}`}>
-      <div className="uk-modal-body uk-padding-large">
-        {children(() => {
-          UIkit.modal(`#${id}`).hide();
-          resetForm();
-        })}
+  <ModalContext.Consumer>
+    <div id={id} className="uk-flex-top" data-uk-modal={param}>
+      <div className={`uk-modal-dialog uk-margin-auto-vertical ${className}`}>
+        <div className="uk-modal-body uk-padding-large">
+          {children}
+        </div>
       </div>
     </div>
-  </div>
+  </ModalContext.Consumer>
+
 );
 ModalGeneric.propTypes = {
   children: PropTypes.func.isRequired,
@@ -26,7 +27,7 @@ ModalGeneric.propTypes = {
 ModalGeneric.defaultProps = {
   param: 'bg-close:false',
   classNameSize: 'uk-width-1-1 uk-width-2-3@l uk-width-1-2@xl',
-  resetForm: () => {}
+  resetForm: () => { }
 };
 
 export default ModalGeneric;
