@@ -164,35 +164,36 @@ const FILTERS_DATA = [
 ];
 
 const CV_STATUS = {
+  Published: {
+    label: "Publié",
+    value: "Published",
+    style: "success"
+  },
   Pending: {
     label: "En attente",
     value: "Pending",
+    style: "danger"
+  },
+  Progress: {
+    label: "En cours",
+    value: "Progress",
     style: "muted"
   },
-  Published:
-    {
-      label: "Publié",
-      value: "Published",
-      style: "success"
-    },
-  New:
-    {
-      label: "Nouveau",
-      value: "New",
-      style: "info"
-    },
-  Draft:
-    {
-      label: "Brouillon",
-      value: "Draft",
-      style: "warning"
-    },
-  Unknown:
-    {
-      label: "Inconnu",
-      value: "Unknown",
-      style: ""
-    }
+  New: {
+    label: "Nouveau",
+    value: "New",
+    style: "muted"
+  },
+  Draft: {
+    label: "Brouillon",
+    value: "Draft",
+    style: "warning"
+  },
+  Unknown: {
+    label: "Inconnu",
+    value: "Unknown",
+    style: ""
+  }
 };
 
 const USER_ROLES = {

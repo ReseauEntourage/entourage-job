@@ -11,7 +11,7 @@ const {
 
 /**
  * Extract cv status values from CV_STATUS constant
- * 
+ *
  * @param {Obect} cvStatus : CV_STATUS conctant
  * @retrn array of status values
  */
@@ -21,7 +21,7 @@ const getCvStatusValues = (cvStatus) => {
 
 /**
  * Generate data to create a CV
- * 
+ *
  * @param {Object} props The cv data
  * @param {string} props.UserId UserId corresponding to a user_candidat
  * must be provided.
@@ -38,7 +38,7 @@ const getCvStatusValues = (cvStatus) => {
  */
 const generateCv = async (props = {}) => {
   const fakeData = {
-    urlImg: `images/${props.UserId}.Pending.jpg`,
+    urlImg: `images/${props.UserId}.Progress.jpg`,
     intro: fakerStatic.lorem.sentence(),
     story: fakerStatic.lorem.text(),
     location: fakerStatic.address.city(),
@@ -58,7 +58,7 @@ const generateCv = async (props = {}) => {
 
 /**
  * Create a cv in DB.
- * 
+ *
  * @param {Object} props The cv data
  * @param {string} props.UserId UserId corresponding to a user_candidat
  * must be provided.
