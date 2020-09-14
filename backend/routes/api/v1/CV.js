@@ -30,11 +30,11 @@ router.post(
     checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
       switch (req.payload.role) {
         case USER_ROLES.CANDIDAT:
+        case USER_ROLES.COACH:
           reqCV.status = CV_STATUS.Pending.value;
           break;
-        case USER_ROLES.COACH:
         case USER_ROLES.ADMIN:
-          // on laisse la permission au coach et à l'admin de choisir le statut à enregistrer
+          // on laisse la permission à l'admin de choisir le statut à enregistrer
           if (!reqCV.status) {
             reqCV.status = CV_STATUS.Published.value;
           }
