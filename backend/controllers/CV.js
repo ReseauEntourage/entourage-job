@@ -315,28 +315,46 @@ const getCVbyUrl = async (url) => {
 
   const results = await Promise.all(promises);
 
-  const modelCV = results.reduce((acc, curr) => {
+  return results.reduce((acc, curr) => {
     const cleanedCurr = cleanCV(curr);
     return {
       ...acc,
       ...cleanedCurr
     }
   }, {});
-
-  return modelCV;
 };
 
 // todo: revoir
 const getCVbyUserId = async (userId) => {
   console.log(`getCVByUserId ${userId}`);
-  const modelCV = await models.CV.findOne({
-    include: INCLUDES_COMPLETE_CV_WITH_ALL_USER,
-    where: {
-      UserId: userId,
-    },
-    order: [['version', 'DESC']],
-  });
-  return cleanCV(modelCV);
+
+  const promises = [];
+
+  for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
+    promises.push(new Promise((res, rej) => {
+      models.CV.findOne({
+        include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
+        where: {
+          UserId: userId,
+        },
+        order: [['version', 'DESC']],
+      }).then((modelCV) => {
+        res(modelCV);
+      }).catch((err) => {
+        rej(err);
+      });
+    }))
+  }
+
+  const results = await Promise.all(promises);
+
+  return results.reduce((acc, curr) => {
+    const cleanedCurr = cleanCV(curr);
+    return {
+      ...acc,
+      ...cleanedCurr
+    }
+  }, {});
 };
 
 const getCVs = async () => {
