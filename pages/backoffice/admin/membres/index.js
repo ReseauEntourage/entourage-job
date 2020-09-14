@@ -280,7 +280,7 @@ const MembersAdmin = ({ query: { role } }) => {
                                     member.candidat.cvs[0].status
                                   )
                                 ) : (
-                                  <span className="uk-text-italic uk-text-danger">
+                                  <span className="uk-text-italic uk-text-info">
                                     Aucun CV
                                   </span>
                                 )}
