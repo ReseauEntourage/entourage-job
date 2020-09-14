@@ -29,10 +29,13 @@ const StepsToJoin = () => {
         Quelles sont <span className="uk-text-primary">les étapes</span> du parcours LinkedOut ?
       </h2>
       <MultipleCTA data={content} showNumbers animate/>
+      <h4 className="uk-text-bold uk-text-center uk-margin-large-top">
+        La promotion LinkedOut est complète pour 2020. Nous étudierons à nouveau les candidatures pour le lancement de la prochaine promotion en avril 2021 à Paris, dans le 92, le 93 et à Lille.
+      </h4>
       <div className="uk-flex uk-flex-top uk-flex-center uk-padding-small">
         <Button
           style="secondary"
-          className="uk-margin-medium-top"
+          className="uk-margin-small-top"
           isExternal
           href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
         >Candidater{' '}<IconNoSSR name="chevron-right" /></Button>
