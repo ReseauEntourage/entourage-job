@@ -155,21 +155,21 @@ const CVPageContent = ({ candidatId }) => {
           <Button toggle="target: #preview-modal" style="default">
             Prévisualiser
           </Button>
-          {user.role === USER_ROLES.CANDIDAT && (
+          {(user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
             <ButtonPost
               style="primary"
               action={() => postCV(CV_STATUS.Pending.value)}
               text="Soumettre"
             />
           )}
-          {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
+          {(user.role === USER_ROLES.ADMIN) && (
             <ButtonPost
               style="default"
               action={() => postCV(CV_STATUS.Pending.value)}
               text="Sauvegarder"
             />
           )}
-          {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
+          {(user.role === USER_ROLES.ADMIN) && (
             <ButtonPost
               style="primary"
               action={() => postCV(CV_STATUS.Published.value)}
