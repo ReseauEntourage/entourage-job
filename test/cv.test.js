@@ -91,11 +91,10 @@ describe('CV', () => {
                 expect(response.status).toBe(200);
                 expect(response.body).toMatchObject(cvResponse);
             });
-            it('Should return 200 and CV with cv status set as published, if logged in user is coach of cv\'s owner', async () => {
+            it('Should return 200 and CV with cv status set as progress, if logged in user is coach of cv\'s owner', async () => {
                 const cv = await cvFactory(
                     {
                         UserId: loggedInCandidat.user.id,
-                        status: CV_STATUS.Published.value,
                         urlImg: null,
                     },
                     {},
@@ -108,7 +107,7 @@ describe('CV', () => {
                     .field('cv', JSON.stringify(cv))
                     .attach('profileImage', path);
                 expect(response.status).toBe(200);
-                expect(response.body.status).toMatch(CV_STATUS.Published.value);
+                expect(response.body.status).toMatch(CV_STATUS.Progress.value);
             });
             it('Should return 200 and CV with cv status set as published, if logged in admin', async () => {
                 const cv = await cvFactory(

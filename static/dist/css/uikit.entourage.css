@@ -5278,6 +5278,9 @@ ul.uk-nav-sub {
   padding: 15px 30px;
   background: #fff;
   border-top: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 /*
  * Remove margin from the last-child
@@ -12670,4 +12673,7 @@ iframe.uk-cover {
   height: 45px;
   padding: 0 25px;
   font-size: 17px;
+}
+.uk-modal-footer > .uk-button {
+  margin-left: 15px;
 }
