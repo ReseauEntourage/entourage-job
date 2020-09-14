@@ -299,11 +299,31 @@ const getCVbyUrl = async (url) => {
     type: QueryTypes.SELECT,
   });
 
-  console.log(cvs);
-  const modelCV = await models.CV.findByPk(cvs[0].id, {
-    include: [...INCLUDES_COMPLETE_CV_WITHOUT_USER, INCLUDE_ALL_USERS],
-  });
-  return cleanCV(modelCV);
+  const promises = [];
+
+  for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
+    promises.push(new Promise((res, rej) => {
+      models.CV.findByPk(cvs[0].id, {
+        include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
+      }).then((modelCV) => {
+        res(modelCV);
+      }).catch((err) => {
+        rej(err);
+      });
+    }))
+  }
+
+  const results = await Promise.all(promises);
+
+  const modelCV = results.reduce((acc, curr) => {
+    const cleanedCurr = cleanCV(curr);
+    return {
+      ...acc,
+      ...cleanedCurr
+    }
+  }, {});
+
+  return modelCV;
 };
 
 // todo: revoir
