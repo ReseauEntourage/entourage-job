@@ -70,6 +70,7 @@ const Aider = () => (
         {' '}sociale et professionnelle
       </h2>
       <MultipleCTA
+        spacing='medium'
         data={[
           {
             title: "Vous accompagnez une personne en démarche d'insertion professionnelle\xa0?",
