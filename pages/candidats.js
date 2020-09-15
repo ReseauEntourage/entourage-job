@@ -90,7 +90,7 @@ const Candidats = () => {
     <Layout title="Les candidats - LinkedOut">
       <Section style="default">
         <GridNoSSR
-          gap="large"
+          gap="medium"
           column
           middle
           center
@@ -105,7 +105,7 @@ const Candidats = () => {
               LinkedOut.
             </div>
           </div>
-          <div className="uk-flex uk-flex-column uk-flex-middle">
+          <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-medium-top">
             <div
               style={{maxWidth: 1000}}
               className="uk-width-expand ent-search-bar">
