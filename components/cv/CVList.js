@@ -13,7 +13,7 @@ import {useResetForm} from "../../hooks";
 import schema from "../forms/schema/formEditOpportunity";
 
 
-const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
+const CVList = ({ nb, search, filters, updateNumberOfResults, hideEmployed }) => {
   const [cvs, setCVs] = useState(undefined);
   const [filteredCvs, setFilteredCvs] = useState(undefined);
   const [error, setError] = useState(undefined);
@@ -104,6 +104,12 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
       }
     }
 
+    if(filteredList && filteredList.length > 0 && hideEmployed) {
+      filteredList = filteredList.filter((cv) => {
+        return !cv.user.employed
+      })
+    }
+
     return filteredList;
   };
 
@@ -113,7 +119,7 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
 
     setFilteredCvs(filterCvs(filters));
 
-  }, [filters, cvs]);
+  }, [hideEmployed, filters, cvs]);
 
   useEffect(() => {
     if(filteredCvs) {
@@ -181,7 +187,7 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
           if(filteredOtherCvs && filteredOtherCvs.length > 0) {
             return (
               <div>
-                <p className="uk-text-center uk-text-italic">Nous n’avons aucun résultat pour votre recherche. Voici d’autres candidats dans la zone géographique sélectionné qui pourraient correspondre.</p>
+                <p className="uk-text-center uk-text-italic">Nous n’avons aucun résultat pour votre recherche. Voici d’autres candidats dans la zone géographique sélectionnée qui pourraient correspondre.</p>
                 <p className="uk-text-center uk-text-italic uk-margin-medium-bottom">Vous êtes recruteur&nbsp;?{' '}
                   <a
                     style={{
@@ -275,13 +281,15 @@ CVList.propTypes = {
   nb: PropTypes.number,
   search: PropTypes.string,
   filters: PropTypes.shape(),
-  updateNumberOfResults: PropTypes.func
+  updateNumberOfResults: PropTypes.func,
+  hideEmployed: PropTypes.bool
 };
 
 CVList.defaultProps = {
   nb: undefined,
   search: undefined,
   filters: undefined,
-  updateNumberOfResults: () => {}
+  updateNumberOfResults: () => {},
+  hideEmployed: false
 };
 export default CVList;
