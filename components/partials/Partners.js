@@ -9,14 +9,14 @@ const Partners = () => {
   const logoList = (data) => {
     return (
       <Grid
-        childWidths={[`1-${data.length}@m`]}
+        childWidths={[`1-${data.length}@m`, 'auto']}
         match
         middle
         center
         items={data.map(({key, link}, index) => {
           return (
             <SimpleLink
-              className="uk-width-small"
+              className="uk-width-small uk-flex uk-flex-center"
               isExternal
               target="_blank"
               href={link}>
