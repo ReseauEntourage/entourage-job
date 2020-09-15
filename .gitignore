@@ -9,3 +9,4 @@ _next
 .DS_Store
 coverage/
 lib/
+public/*

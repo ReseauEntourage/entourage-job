@@ -18,9 +18,11 @@ const EntourageApp = ({Component, pageProps}) => {
   const [fading, setFading] = useState(false);
 
   useEffect(() => {
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
+    /*
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+    */
 
     Router.events.on('routeChangeComplete', (url) => {
       gtag.pageview(url);
