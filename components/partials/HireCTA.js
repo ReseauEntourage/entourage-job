@@ -119,12 +119,14 @@ const HireCTA = ({id}) => {
                 <p className="uk-text-lead">
                   Merci pour votre offre, nous reviendrons bientôt vers vous.
                 </p>
-                <Button
-                  style="secondary"
-                  onClick={closeModal}
-                >
-                  Fermer
-                </Button>
+                <div className="uk-flex uk-flex-center">
+                  <Button
+                    style="secondary"
+                    onClick={closeModal}
+                  >
+                    Fermer
+                  </Button>
+                </div>
               </div>
             </div>
           ),
