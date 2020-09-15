@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import { CloseButtonNoSSR } from '../utils/CloseButton';
@@ -11,16 +11,18 @@ import { ModalContext } from '../store/ModalProvider';
  * composers est un tableau de functions attendant 3 fonctions (action: close, next, previous) et retournant un composant
  * cela permet de gérer le flux/ la modale depuis ses composant internes
  */
-const StepperModal = ({ composers, title, id, resetForm }) => {
+const StepperModal = ({ components, title, id }) => {
   const {
-    close,
-    setClose,
-    next,
-    previous,
+    setId,
     index,
+    resetForm
   } = useContext(ModalContext);
+  console.log('stepper modal id');
+  console.log('id :>> ', id);
+  // setId(id);
+
   // const [index, setIndex] = useState(0);
-  const [wrappedComponents, setWrappedComponents] = useState();
+  // const [wrappedComponents, setWrappedComponents] = useState();
   // const close = () => {
   //   resetForm();
   //   UIkit.modal(`#${id}`).hide();
@@ -33,21 +35,21 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
   // const previous = () => {
   //   setIndex(index - 1);
   // };
-  useEffect(() => {
-    if (composers) {
-      setWrappedComponents(
-        composers.map((composer) => composer(() => (setClose(close)), next, previous))
-      );
-    }
-  }, [composers]);
-
+  // useEffect(() => {
+  //   if (composers) {
+  //     setWrappedComponents(
+  //       composers.map((composer) => composer(() => (setClose(close)), next, previous))
+  //     );
+  //   }
+  // }, [composers]);
+  console.log('components :>> ', components);
   return (
     <div id={id} className="uk-flex-top" data-uk-modal="bg-close:false">
       <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-2-3@m uk-width-1-2@l">
         <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm} />
         <div className="uk-modal-body uk-padding-large">
           <HeaderModal>{title}</HeaderModal>
-          {wrappedComponents && wrappedComponents[index]}
+          {components && components[index]}
         </div>
       </div>
     </div>
@@ -60,12 +62,7 @@ StepperModal.propTypes = {
     PropTypes.element,
     PropTypes.string,
   ]).isRequired,
-  composers: PropTypes.arrayOf(PropTypes.func).isRequired,
-  resetForm: PropTypes.func
-};
-
-StepperModal.defaultProps = {
-  resetForm: () => { }
+  components: PropTypes.arrayOf(PropTypes.element).isRequired,
 };
 
 export default StepperModal;

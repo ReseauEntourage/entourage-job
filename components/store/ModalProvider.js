@@ -17,14 +17,18 @@ const ModalProvider = ({ children }) => {
   const previous = () => {
     setIndex(index - 1);
   };
-
   useEffect(() => {
+    console.log('id :>> ', id);
     if (close) {
+      console.log('close modal');
+      console.log('UIkit.modal() :>> ', UIkit.modal(`#${id}`).hide());
       UIkit.modal(`#${id}`).hide();
     } else if (resetForm) {
+      console.log('reset Form');
       resetForm();
     } else if (index) {
-      setIndex(0)
+      console.log('reset index');
+      setIndex(0);
     }
   }, [close, setClose]);
 

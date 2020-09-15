@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useRef} from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import StepperModal from './StepperModal';
@@ -7,63 +7,66 @@ import FormWithValidation from '../forms/FormWithValidation';
 import schemaGetEmail from '../forms/schema/formGetEmail.json';
 import Axios from '../../Axios';
 import { Button } from '../utils';
-import {useResetForm} from "../../hooks";
-import {EXTERNAL_LINKS} from "../../constants";
+import { EXTERNAL_LINKS } from "../../constants";
+import { ModalContext } from '../store/ModalProvider';
 
 const ModalShareCV = ({ firstName, id }) => {
-  const [form, resetForm] = useResetForm();
+  const {
+    setId,
+    close,
+    setClose,
+    form,
+    resetForm,
+    next
+  } = useContext(ModalContext);
+  // setId(id);
 
   return (
     <div>
       <StepperModal
         id={id}
         title="Merci pour votre partage."
-        resetForm={resetForm}
-        composers={[
-          (close, next) => (
-            <>
-              <p>
-                Pour {firstName}, votre action peut tout changer !<br />
-                <br />
+        components={[
+          <>
+            <p>
+              Pour {firstName}, votre action peut tout changer !<br />
+              <br />
                 Vous souhaitez être informé(e) de la suite pour {firstName} ? Et du
                 projet LinkedOut ?<br />
                 Laissez-nous votre adresse mail :
               </p>
-              <FormWithValidation
-                ref={form}
-                formSchema={schemaGetEmail}
-                submitText="Envoyer"
-                onCancel={close}
-                onSubmit={({ email }) => {
-                  Axios.post('/api/v1/cv/share', { email })
-                    .then(next)
-                    .catch(() =>
-                      UIkit.notification('Une erreur est survenue', 'danger')
-                    );
-                }}
-              />
-            </>
-          ),
-          (close) => (
-            <div className="uk-flex uk-flex-column">
-              <p>
-                Saviez-vous que LinkedOut est porté par l&apos;association Entourage
-                ?
+            <FormWithValidation
+              ref={form}
+              formSchema={schemaGetEmail}
+              submitText="Envoyer"
+              onCancel={() => setClose(true)}
+              onSubmit={({ email }) => {
+                Axios.post('/api/v1/cv/share', { email })
+                  .then(next)
+                  .catch(() =>
+                    UIkit.notification('Une erreur est survenue', 'danger')
+                  );
+              }}
+            />
+          </>,
+          <div className="uk-flex uk-flex-column">
+            <p>
+              Saviez-vous que LinkedOut est porté par l&apos;association Entourage
+              ?
               </p>
-              <Button
-                isExternal
-                newTab
-                href={EXTERNAL_LINKS.ENTOURAGE}
-                style="link">
-                {EXTERNAL_LINKS.ENTOURAGE}
-              </Button>
-              <div className="uk-margin-top uk-flex uk-flex-right">
-                <Button style="default" onClick={() => close()}>
-                  Fermer
+            <Button
+              isExternal
+              newTab
+              href={EXTERNAL_LINKS.ENTOURAGE}
+              style="link">
+              {EXTERNAL_LINKS.ENTOURAGE}
+            </Button>
+            <div className="uk-margin-top uk-flex uk-flex-right">
+              <Button style="default" onClick={() => close()}>
+                Fermer
                 </Button>
-              </div>
             </div>
-          ),
+          </div>,
         ]}
       />
     </div>

@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useContext, useEffect, useRef} from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { Section } from '../components/utils';
@@ -8,15 +8,20 @@ import schemaLostPwd from '../components/forms/schema/formLostPwd.json';
 import FormWithValidation from '../components/forms/FormWithValidation';
 import { UserContext } from '../components/store/UserProvider';
 import Api from '../Axios';
-import {USER_ROLES} from "../constants";
+import { USER_ROLES } from "../constants";
 import StepperModal from "../components/modals/StepperModal";
 import SuccessModalContent from "../components/modals/SuccessModalContent";
-import {useResetForm} from "../hooks";
+import { ModalContext } from '../components/store/ModalProvider';
 
 const Login = () => {
+  const {
+    close,
+    setClose,
+    next,
+    form,
+  } = useContext(ModalContext);
   const { login, user } = useContext(UserContext);
   const router = useRouter();
-  const [form, resetForm] = useResetForm();
 
   useEffect(() => {
     if (user) {
@@ -60,27 +65,21 @@ const Login = () => {
         <StepperModal
           id="modal-lost-pwd"
           title="Mot de passe oublié ?"
-          resetForm={resetForm}
-          composers={[
-            (closeModal, nextStep) => (
-              <FormWithValidation
-                ref={form}
-                submitText="Se connecter"
-                formSchema={schemaLostPwd}
-                onCancel={closeModal}
-                onSubmit={(fields, setError) => {
-                  Api.post('/api/v1/auth/forgot', {email: email.toLowerCase()})
-                    .then(() => nextStep())
-                    .catch(() => setError("L'adresse mail ne correspond à aucun utilisateur"));
-                }}
-              />
-            ),
-            (closeModal) => (
-              <SuccessModalContent
-                closeModal={closeModal}
-                text="Un e-mail vient d'être envoyé à l'adresse indiquée."
-              />
-            ),
+          components={[
+            <FormWithValidation
+              ref={form}
+              submitText="Se connecter"
+              formSchema={schemaLostPwd}
+              onCancel={() => setClose(true)}
+              onSubmit={(fields, setError) => {
+                Api.post('/api/v1/auth/forgot', { email: email.toLowerCase() })
+                  .then(() => next)
+                  .catch(() => setError("L'adresse mail ne correspond à aucun utilisateur"));
+              }}
+            />,
+            <SuccessModalContent
+              text="Un e-mail vient d'être envoyé à l'adresse indiquée."
+            />,
           ]}
         />
       </div>

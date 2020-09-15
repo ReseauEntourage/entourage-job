@@ -1,40 +1,39 @@
-import React, { useRef } from 'react';
+import React, { useContext } from 'react';
 import SuccessModalContent from './SuccessModalContent';
 import StepperModal from "./StepperModal";
 import FormWithValidation from "../forms/FormWithValidation";
 import interestLinkedOutSchema from "../forms/schema/formInterestLinkedOut.json";
 import Api from "../../Axios";
-import { useResetForm } from "../../hooks";
+import { ModalContext } from '../store/ModalProvider';
 
 const ModalInterestLinkedOut = () => {
-  const [form, resetForm] = useResetForm();
+  const {
+    close,
+    setClose,
+    form,
+    next,
+  } = useContext(ModalContext);
 
   return (
     <div>
       <StepperModal
         id="modal-interest-linkedOut"
         title="Vous êtes intéressés par LinkedOut ?"
-        resetForm={resetForm}
-        composers={[
-          (closeModal, nextStep) => (
-            <FormWithValidation
-              ref={form}
-              submitText="Envoyer"
-              formSchema={interestLinkedOutSchema}
-              onCancel={closeModal}
-              onSubmit={(fields, setError) => {
-                Api.post('/api/v1/mail/contact-us', fields)
-                  .then(() => nextStep())
-                  .catch(() => setError("Une erreur s'est produite"));
-              }}
-            />
-          ),
-          (closeModal) => (
-            <SuccessModalContent
-              closeModal={closeModal}
-              text="Merci pour votre message."
-            />
-          ),
+        components={[
+          <FormWithValidation
+            ref={form}
+            submitText="Envoyer"
+            formSchema={interestLinkedOutSchema}
+            onCancel={() => setClose(true)}
+            onSubmit={(fields, setError) => {
+              Api.post('/api/v1/mail/contact-us', fields)
+                .then(() => next())
+                .catch(() => setError("Une erreur s'est produite"));
+            }}
+          />,
+          <SuccessModalContent
+            text="Merci pour votre message."
+          />,
         ]}
       />
     </div>
