@@ -18,6 +18,7 @@ const initializeFilters = () => {
 
 const Candidats = () => {
   const [search, setSearch] = useState();
+  const [hideEmployed, setHideEmployed] = useState(true);
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
   const [filters, setFilters] = useState(initializeFilters());
   const [numberOfResults, setNumberOfResults] = useState(0);
@@ -206,6 +207,17 @@ const Candidats = () => {
                     )
                   })
                 }
+                <div>
+                  <label htmlFor="show-employed" className="uk-text-bold">Afficher les candidats ayant retrouvé un emploi
+                    <input
+                      id="show-employed"
+                      type="checkbox"
+                      className="uk-checkbox uk-margin-small-left"
+                      checked={!hideEmployed}
+                      onChange={(e) => setHideEmployed(!e.target.checked)}
+                    />
+                  </label>
+                </div>
                 <div className="uk-flex uk-flex-center uk-margin-medium-top">
                   <Button
                     style="text"
@@ -223,7 +235,8 @@ const Candidats = () => {
           <CVList
             search={search}
             filters={filters}
-            updateNumberOfResults={setNumberOfResults} />
+            updateNumberOfResults={setNumberOfResults}
+            hideEmployed={hideEmployed} />
         </GridNoSSR>
       </Section>
     </Layout>
