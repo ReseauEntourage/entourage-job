@@ -9,12 +9,22 @@ const ModalProvider = ({ children }) => {
   const [id, setId] = useState(null);
   const [close, setClose] = useState(false);
   const [form, resetForm] = useResetForm();
+  const [index, setIndex] = useState(0);
+
+  const next = () => {
+    setIndex(index + 1);
+  };
+  const previous = () => {
+    setIndex(index - 1);
+  };
 
   useEffect(() => {
     if (close) {
       UIkit.modal(`#${id}`).hide();
     } else if (resetForm) {
       resetForm();
+    } else if (index) {
+      setIndex(0)
     }
   }, [close, setClose]);
 
@@ -28,6 +38,9 @@ const ModalProvider = ({ children }) => {
         setClose,
         form,
         resetForm,
+        index,
+        next,
+        previous,
       }}
     >
       {children}
