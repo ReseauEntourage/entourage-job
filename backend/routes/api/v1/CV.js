@@ -15,6 +15,10 @@ const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../
 
 const upload = multer({dest: 'uploads/'});
 
+const isEmpty = (obj) => {
+  return Object.keys(obj).length === 0 && obj.constructor === Object
+};
+
 /**
  * Route : POST /api/<VERSION>/cv
  * Description : Créé le CV
@@ -195,16 +199,20 @@ router.get('/shares', auth(), (req, res) => {
  */
 router.get('/', auth(), (req, res) => {
   const {userId} = req.query;
-    CVController.getCVbyUserId(userId)
-      .then((listeCVs) => {
-        /* console.log(`${infoLog} Liste des CV trouvés`);
-        console.log(listeCVs); */
-        res.status(200).json(listeCVs);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(401).send('Une erreur est survenue');
-      });
+  CVController.getCVbyUserId(userId)
+    .then((cv) => {
+      if (cv && !isEmpty(cv)) {
+        console.log(`CV trouvé`);
+        res.status(200).json(cv);
+      } else {
+        console.log(`Aucun CV trouvé`);
+        res.status(204).send(null);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
 });
 
 /**
@@ -269,7 +277,7 @@ router.get('/cards/random', auth(), (req, res) => {
 router.get('/:url', auth(), (req, res) => {
   CVController.getCVbyUrl(req.params.url)
     .then((cv) => {
-      if (cv) {
+      if (cv && !isEmpty(cv)) {
         console.log(`CV trouvé`);
         res.status(200).json(cv);
       } else {
@@ -279,7 +287,7 @@ router.get('/:url', auth(), (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(401).send(err);
+      res.status(401).send('Une erreur est survenue');
     });
 });
 

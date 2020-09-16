@@ -27,16 +27,18 @@ const NoCV = ({ candidatId, user, setCV }) => (
             <span className="uk-text-primary">Aucun CV</span> n&apos;est
                                                               rattaché à ce compte.
           </h2>
-          <Button
-            style="primary"
-            onClick={() =>
-              Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
-                cv: { UserId: candidatId, status: CV_STATUS.New.value },
-              }).then(({ data }) => setCV(data))
-            }
-          >
-            Créer le CV
-          </Button>
+          <div className="uk-flex uk-flex-center">
+            <Button
+              style="primary"
+              onClick={() =>
+                Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                  cv: { UserId: candidatId, status: CV_STATUS.New.value },
+                }).then(({ data }) => setCV(data))
+              }
+            >
+              Créer le CV
+            </Button>
+          </div>
         </>
       )}
     </div>
