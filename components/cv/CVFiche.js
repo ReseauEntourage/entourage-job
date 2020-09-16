@@ -19,6 +19,8 @@ import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
 import {formatParagraph, mutateFormSchema, sortExperiences, sortReviews} from "../../utils";
 import {SharesCountContext} from "../store/SharesCountProvider";
+import {event} from "../../lib/gtag";
+import TAGS from "../../constants/tags";
 
 /**
  * Le cv en public et en preview
@@ -89,19 +91,14 @@ const CVFiche = ({ cv, actionDisabled }) => {
           <LinkedinShareButton
             disabled={actionDisabled}
             onShareWindowClose={() => {
+              event(TAGS.PAGE_CV_PARTAGE_CV_LINKEDIN_CLIC);
               updateShareCount(cv.UserId, 'linkedin');
               openNewsletterModal();
             }}
             url={link}
             title={title}
             description={sharedDescription}
-            style={{
-              cursor: !actionDisabled && 'pointer',
-              color: actionDisabled ? '#999' : 'white',
-              backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
-              opacity: 1,
-            }}
-            className="uk-icon-link uk-icon-button uk-background-primary"
+            className="uk-icon-button"
           >
             <IconNoSSR
               className={!actionDisabled ? 'ent-text-white' : undefined}
@@ -112,19 +109,14 @@ const CVFiche = ({ cv, actionDisabled }) => {
           <FacebookShareButton
             disabled={actionDisabled}
             onShareWindowClose={() => {
+              event(TAGS.PAGE_CV_PARTAGE_CV_FACEBOOK_CLIC);
               updateShareCount(cv.UserId, 'facebook');
               openNewsletterModal();
             }}
             url={link}
             quote={sharedDescription}
             hashtags={hashtags}
-            style={{
-              cursor: !actionDisabled && 'pointer',
-              color: actionDisabled ? '#999' : 'white',
-              backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
-              opacity: 1,
-            }}
-            className="uk-icon-link uk-icon-button uk-background-primary"
+            className="uk-icon-button"
           >
             <IconNoSSR
               className={!actionDisabled ? 'ent-text-white' : undefined}
@@ -135,6 +127,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           <TwitterShareButton
             disabled={actionDisabled}
             onShareWindowClose={() => {
+              event(TAGS.PAGE_CV_PARTAGE_CV_TWITTER_CLIC);
               updateShareCount(cv.UserId, 'twitter');
               openNewsletterModal();
             }}
@@ -142,13 +135,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
             title={sharedDescription}
             hashtags={hashtags}
             via="R_Entourage"
-            style={{
-              cursor: !actionDisabled && 'pointer',
-              color: actionDisabled ? '#999' : 'white',
-              backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
-              opacity: 1,
-            }}
-            className="uk-icon-link uk-icon-button uk-background-primary"
+            className="uk-icon-button"
           >
             <IconNoSSR
               className={!actionDisabled ? 'ent-text-white' : undefined}
@@ -159,18 +146,13 @@ const CVFiche = ({ cv, actionDisabled }) => {
           <WhatsappShareButton
             disabled={actionDisabled}
             onShareWindowClose={() => {
+              event(TAGS.PAGE_CV_PARTAGE_CV_WHATSAPP_CLIC);
               updateShareCount(cv.UserId, 'whatsapp');
               openNewsletterModal();
             }}
             url={link}
             title={sharedDescription}
-            style={{
-              cursor: !actionDisabled && 'pointer',
-              color: actionDisabled ? '#999' : 'white',
-              backgroundColor: actionDisabled ? '#e5e5e5' : '#F55F24',
-              opacity: 1,
-            }}
-            className="uk-icon-link uk-icon-button uk-background-primary"
+            className="uk-icon-button"
           >
             <IconNoSSR
               className={!actionDisabled && 'ent-text-white'}
@@ -257,10 +239,10 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 )}
                 {cv.careerPathOpen ? (
                   <>
-                    {` mais reste ${
-                      cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
-                    } à toutes autres
-            propositions.`}
+                    {
+                      ` mais reste ${
+                          cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
+                        } à toutes autres propositions.`}
                   </>
                 ) : (
                   '.'
@@ -478,6 +460,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
               <Button
                 disabled={actionDisabled}
                 style='secondary'
+                onClick={() => event(TAGS.PAGE_CV_ENVOYER_OFFRE_CLIC)}
                 toggle="target: #modal-send-opportunity">
                 Contactez-moi{' '}<IconNoSSR name="chevron-right" />
               </Button>
