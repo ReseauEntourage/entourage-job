@@ -23,7 +23,7 @@ const ModalEdit = ({
     form,
     resetForm,
   } = useContext(ModalContext);
-  setId(id);
+  // setId(id);
 
   return (
     <ModalGeneric >

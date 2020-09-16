@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { CloseButtonNoSSR } from '../utils/CloseButton';
@@ -17,9 +17,8 @@ const StepperModal = ({ components, title, id }) => {
     index,
     resetForm
   } = useContext(ModalContext);
-  console.log('stepper modal id');
-  console.log('id :>> ', id);
-  // setId(id);
+  console.log('stepper modal id', 'id :>> ', id);
+  // useEffect(() => setId(id), []);
 
   // const [index, setIndex] = useState(0);
   // const [wrappedComponents, setWrappedComponents] = useState();

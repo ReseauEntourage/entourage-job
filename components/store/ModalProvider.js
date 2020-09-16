@@ -17,6 +17,7 @@ const ModalProvider = ({ children }) => {
   const previous = () => {
     setIndex(index - 1);
   };
+  useEffect(() => console.log('id provider', id), [id, setId])
   useEffect(() => {
     console.log('id :>> ', id);
     if (close) {

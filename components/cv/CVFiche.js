@@ -160,6 +160,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           <WhatsappShareButton
             disabled={actionDisabled}
             onShareWindowClose={() => {
+              console.log('whatapp button :>> ');
               updateShareCount(cv.UserId, 'whatsapp');
               openNewsletterModal();
             }}
