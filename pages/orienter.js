@@ -93,7 +93,7 @@ const Orienter = () => {
               }
             },
             {
-              title: "Vous êtes intéressé(e) par l’approche de LinkedOut et souhaitez coopérer avec nous\xa0?",
+              title: "Vous souhaitez coopérer avec LinkedOut\xa0?",
               button: {
                 label: "Nous écrire",
                 modal: "target: #modal-interest-linkedOut"
