@@ -36,7 +36,7 @@ const ModalShareCV = ({ firstName, id }) => {
               ref={form}
               formSchema={schemaGetEmail}
               submitText="Envoyer"
-              onCancel={() => setClose(true)}
+              onCancel={() => { setClose(true); console.log('Btn Annuler', close) }}
               onSubmit={({ email }) => {
                 Axios.post('/api/v1/cv/share', { email })
                   .then(next)

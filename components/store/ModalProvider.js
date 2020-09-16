@@ -32,6 +32,7 @@ const ModalProvider = ({ children }) => {
       console.log('close modal');
       UIkit.modal(id).hide();
       setShow(false);
+      setClose(false);
     } else if (resetForm) {
       console.log('reset Form');
       resetForm();
