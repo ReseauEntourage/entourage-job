@@ -7,6 +7,7 @@ assets/uikit
 assets/*.vpp.bak*
 _next
 backend/lib/aws_lambda/.serverless/
+coverage/
 static/img/illustrations/aide dans les démarches (1).png
 static/img/illustrations/aide dans les démarches.png
 static/img/illustrations/amitié sdf riverain (face à face).png
