@@ -159,7 +159,7 @@ const CVPageContent = ({ candidatId }) => {
             <ButtonPost
               style="primary"
               action={() => postCV(CV_STATUS.Pending.value)}
-              text="Soumettre"
+              text="Sauvegarder et soumettre"
             />
           )}
           {(user.role === USER_ROLES.ADMIN) && (
