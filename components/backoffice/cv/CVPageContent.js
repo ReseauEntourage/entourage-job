@@ -141,13 +141,13 @@ const CVPageContent = ({ candidatId }) => {
       <GridNoSSR between middle>
         <GridNoSSR column gap="collapse">
           <div>
-            Statut :{' '}
+            Statut&nbsp;:{' '}
             <span className={`uk-text-${cvStatus.style}`}>
               {cvStatus.label}
             </span>
           </div>
           {(user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.COACH) && (
-            <div>Version : {cv.version}</div>
+            <div>Version&nbsp;: {cv.version}</div>
           )}
         </GridNoSSR>
 

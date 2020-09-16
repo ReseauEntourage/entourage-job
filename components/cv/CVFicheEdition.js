@@ -120,7 +120,6 @@ CVFicheEdition.propTypes = {
     locations: PropTypes.array,
     availability: PropTypes.string,
     urlImg: PropTypes.string,
-    gender: PropTypes.number,
     careerPathOpen: PropTypes.bool,
     contracts: PropTypes.array,
     ambitions: PropTypes.array,
