@@ -31,7 +31,8 @@ const SimpleSection = ({id, style, container, title, text, button, children, fon
             style='secondary'
             isExternal={button.external}
             newTab={button.external}
-            toggle={button.modal}>
+            toggle={button.modal}
+            onClick={button.onClick}>
             {button.label}{' '}<IconNoSSR name="chevron-right" />
           </Button>
         }
@@ -50,7 +51,8 @@ SimpleSection.propTypes = {
     label: PropTypes.string.isRequired,
     href: PropTypes.string,
     external: PropTypes.bool,
-    modal: PropTypes.string
+    modal: PropTypes.string,
+    onClick: PropTypes.func
   }),
   text: PropTypes.string.isRequired,
   children: PropTypes.element,

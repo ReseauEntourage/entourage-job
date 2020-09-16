@@ -1,3 +1,5 @@
+import TAGS from "./tags";
+
 const OFFER_STATUS = [
   {value: -1, label: "Offre à traiter"},
   {value: 0, label: "Contacté"},
@@ -154,12 +156,14 @@ const FILTERS_DATA = [
   {
     key: 'businessLines',
     constants: BUSINESS_LINES,
-    title: "Secteurs d'activité"
+    title: "Secteurs d'activité",
+    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC
   },
   {
     key: 'locations',
     constants: LOCATIONS,
-    title: "Secteurs géographiques"
+    title: "Secteurs géographiques",
+    tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC
   }
 ];
 

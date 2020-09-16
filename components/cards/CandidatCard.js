@@ -7,12 +7,17 @@ import {
   TwitterShareButton,
   FacebookShareButton,
 } from 'react-share';
+import { useRouter } from 'next/router';
+
 import { SimpleLink, GridNoSSR, IconNoSSR, ImgNoSSR } from '../utils';
 import ModalShareCV from '../modals/ModalShareCV';
 import Api from '../../Axios';
 import {SharesCountContext} from "../store/SharesCountProvider";
 import {hasAsChild} from "../../utils";
 import {LOCATIONS} from '../../constants';
+import {event} from "../../lib/gtag";
+import TAGS from "../../constants/tags";
+
 
 const CandidatCard = ({
   url,
@@ -28,6 +33,11 @@ const CandidatCard = ({
   employed,
   id
 }) => {
+
+  const router = useRouter();
+
+  const isCandidatsPage = router.asPath.includes('/candidats');
+
   // petit systeme pour ne pas avoir a afficher la modal a chaque carte
   // optimisation possible
   const [showModal, setShowModal] = useState(false);
@@ -220,7 +230,7 @@ const CandidatCard = ({
         </div>
       </SimpleLink>
       {/* Bas de carte */}
-      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+      <GridNoSSR gap="small" between middle eachWidths={['expand', 'auto']}>
         <SimpleLink as={`/cv/${url}`} href="/cv/[url]" className="uk-link-toggle">
           <u className="uk-text-link uk-text-primary">Voir le CV</u>
         </SimpleLink>
@@ -230,6 +240,7 @@ const CandidatCard = ({
             <li>
               <LinkedinShareButton
                 onShareWindowClose={() => {
+                  event(isCandidatsPage ? TAGS.PAGE_GALERIE_PARTAGE_CV_LINKEDIN_CLIC : TAGS.HOME_PARTAGE_CV_LINKEDIN_CLIC);
                   updateShareCount(id, 'linkedin');
                   openNewsletterModal();
                 }}
@@ -240,7 +251,7 @@ const CandidatCard = ({
                   "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
                 }
                 style={{ cursor: 'pointer' }}
-                className="uk-icon-link uk-text-primary"
+                className="uk-icon-button light-icon-button"
               >
                 <IconNoSSR
                   name="linkedin"
@@ -252,6 +263,7 @@ const CandidatCard = ({
             <li>
               <FacebookShareButton
                 onShareWindowClose={() => {
+                  event(isCandidatsPage ? TAGS.PAGE_GALERIE_PARTAGE_CV_FACEBOOK_CLIC : TAGS.HOME_PARTAGE_CV_FACEBOOK_CLIC);
                   updateShareCount(id, 'facebook');
                   openNewsletterModal();
                 }}
@@ -261,7 +273,7 @@ const CandidatCard = ({
                 }
                 hashtags={['LinkedOut']}
                 style={{ cursor: 'pointer' }}
-                className="uk-icon-link uk-text-primary"
+                className="uk-icon-button light-icon-button"
               >
                 <IconNoSSR
                   name="facebook"
@@ -273,6 +285,7 @@ const CandidatCard = ({
             <li>
               <TwitterShareButton
                 onShareWindowClose={() => {
+                  event(isCandidatsPage ? TAGS.PAGE_GALERIE_PARTAGE_CV_TWITTER_CLIC : TAGS.HOME_PARTAGE_CV_TWITTER_CLIC);
                   updateShareCount(id, 'twitter');
                   openNewsletterModal();
                 }}
@@ -283,7 +296,7 @@ const CandidatCard = ({
                 hashtags={['LinkedOut']}
                 via="R_Entourage"
                 style={{ cursor: 'pointer' }}
-                className="uk-icon-link uk-text-primary"
+                className="uk-icon-button light-icon-button"
               >
                 <IconNoSSR
                   name="twitter"

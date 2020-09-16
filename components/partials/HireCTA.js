@@ -10,6 +10,9 @@ import Api from "../../Axios";
 import {useResetForm} from "../../hooks";
 import {mutateFormSchema} from "../../utils";
 
+import {event} from "../../lib/gtag";
+import TAGS from "../../constants/tags";
+
 const HireCTA = ({id}) => {
 
   const [form, resetForm] = useResetForm();
@@ -72,7 +75,8 @@ const HireCTA = ({id}) => {
             textDecoration: 'underline'
           }}
           className="uk-link-text"
-          data-uk-toggle={`#modal-offer-add-${id}`}>
+          data-uk-toggle={`#modal-offer-add-${id}`}
+          onClick={() => event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC)}>
           Publiez votre offre ici&nbsp;!
         </a>
       </div>

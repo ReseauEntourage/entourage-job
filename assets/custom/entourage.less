@@ -18,6 +18,20 @@
 @dotnav-item-border: fade(#F55F24, 100%);
 @grid-divider-border: #F55F24;
 
+@icon-button-background: @global-primary-background;
+@icon-button-color: white;
+@icon-button-hover-background: darken(@icon-button-background, 5%);
+@icon-button-hover-color: @icon-button-color;
+@icon-button-active-background: darken(@icon-button-background, 10%);
+@icon-button-active-color: @icon-button-color;
+
+@inverse-icon-button-background: white;
+@inverse-icon-button-color: @global-primary-background;
+@inverse-icon-button-hover-background: darken(@inverse-icon-button-background, 5%);
+@inverse-icon-button-hover-color: @inverse-icon-button-color;
+@inverse-icon-button-active-background: darken(@inverse-icon-button-background, 10%);
+@inverse-icon-button-active-color: @inverse-icon-button-color;
+
 @base-body-font-family: Roboto, sans-serif;
 @base-body-font-weight: normal;
 @base-body-color: black;
@@ -353,7 +367,31 @@
   margin-left: 15px;
 }
 
-
 .uk-tab > .uk-active > a > h4 {
   color: @global-primary-background
+}
+
+.uk-offcanvas-bar .uk-button-primary {
+  background-color: @button-primary-background;
+  color: @button-primary-color;
+}
+
+.uk-offcanvas-bar .uk-button-primary:hover {
+  background-color: @button-primary-hover-background;
+  color: @button-primary-hover-color;
+}
+
+.uk-offcanvas-bar .uk-button-primary:active {
+  background-color: @button-primary-active-background;
+  color: @button-primary-active-color;
+}
+
+.hook-icon-button() {
+  cursor: pointer;
+}
+
+.light-icon-button {
+  color: @global-primary-background;
+  background-color: white;
+  border: 1px solid @global-primary-background;
 }

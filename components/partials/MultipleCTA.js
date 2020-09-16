@@ -47,7 +47,8 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                         style='secondary'
                         isExternal={item.button.external}
                         newTab={item.button.external}
-                        toggle={item.button.modal}>
+                        toggle={item.button.modal}
+                        onClick={item.button.onClick}>
                         {item.button.label}{' '}<IconNoSSR name="chevron-right" />
                       </Button>
                     </div>
@@ -75,7 +76,8 @@ MultipleCTA.propTypes = {
       label: PropTypes.string,
       href: PropTypes.string,
       external: PropTypes.bool,
-      modal: PropTypes.string
+      modal: PropTypes.string,
+      onClick: PropTypes.func
     }),
   })).isRequired,
   animate: PropTypes.bool

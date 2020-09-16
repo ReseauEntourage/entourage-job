@@ -65,7 +65,7 @@ const Header = ({ isHome }) => {
                 <Button
                   href="/candidats"
                   style='primary'>
-                  Partager un CV{' '}<IconNoSSR name="chevron-right" />
+                  Découvrir les CV{' '}<IconNoSSR name="chevron-right" />
                 </Button>
               </div>,
               <HamburgerNoSSR targetId="offcanvas-guest" hidden="m" />,
@@ -105,6 +105,14 @@ const Header = ({ isHome }) => {
               )
             ),
           ]}
+          <li className="uk-margin-small-top">
+            <Button
+              href="/candidats"
+              onClick={() => UIkit.offcanvas('#offcanvas-guest').hide()}
+              style='primary'>
+              Découvrir les CV{' '}<IconNoSSR name="chevron-right" />
+            </Button>
+          </li>
         </ul>
       </OffcanvasNoSSR>
     </header>
