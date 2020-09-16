@@ -208,13 +208,13 @@ const Candidats = () => {
                   })
                 }
                 <div>
-                  <label htmlFor="show-employed" className="uk-text-bold">Afficher les candidats ayant retrouvé un emploi
+                  <label htmlFor="hide-employed" className="uk-text-bold">Masquer les candidats ayant retrouvé un emploi
                     <input
-                      id="show-employed"
+                      id="hide-employed"
                       type="checkbox"
                       className="uk-checkbox uk-margin-small-left"
-                      checked={!hideEmployed}
-                      onChange={(e) => setHideEmployed(!e.target.checked)}
+                      checked={hideEmployed}
+                      onChange={(e) => setHideEmployed(e.target.checked)}
                     />
                   </label>
                 </div>

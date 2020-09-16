@@ -13,7 +13,7 @@ const updateShareCount = async (candidatId, type) => {
       where: {CandidatId: candidatId},
     });
     if (candidatShares) {
-      await candidatShares.increment(type, {by: 1 /* + Math.random() * Math.floor(6) */})
+      await candidatShares.increment(type, {by: 1})
     } else {
       await Share.create(
         {
@@ -37,6 +37,7 @@ const getTotalShares = async () => {
         [sequelize.fn('sum', sequelize.col('linkedin')), 'linkedin'],
         [sequelize.fn('sum', sequelize.col('twitter')), 'twitter'],
         [sequelize.fn('sum', sequelize.col('whatsapp')), 'whatsapp'],
+        [sequelize.fn('sum', sequelize.col('other')), 'other'],
       ],
     });
     const shareCounts = Object.values(shares[0].dataValues);
