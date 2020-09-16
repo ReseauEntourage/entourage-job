@@ -7,6 +7,7 @@ export const ModalContext = React.createContext();
 
 const ModalProvider = ({ children }) => {
   const [id, setId] = useState(null);
+  const [show, setShow] = useState(false);
   const [close, setClose] = useState(false);
   const [form, resetForm] = useResetForm();
   const [index, setIndex] = useState(0);
@@ -14,16 +15,23 @@ const ModalProvider = ({ children }) => {
   const next = () => {
     setIndex(index + 1);
   };
+
   const previous = () => {
     setIndex(index - 1);
   };
-  useEffect(() => console.log('id provider', id), [id, setId])
+
   useEffect(() => {
-    console.log('id :>> ', id);
+    console.log('set id in provider ---------------------', id);
+  }, [id, setId]);
+
+
+  useEffect(() => {
+    console.log('id -------- close use effect ', id);
+    console.log(close, resetForm, index);
     if (close) {
       console.log('close modal');
-      console.log('UIkit.modal() :>> ', UIkit.modal(`#${id}`).hide());
-      UIkit.modal(`#${id}`).hide();
+      UIkit.modal(id).hide();
+      setShow(false);
     } else if (resetForm) {
       console.log('reset Form');
       resetForm();
@@ -32,6 +40,15 @@ const ModalProvider = ({ children }) => {
       setIndex(0);
     }
   }, [close, setClose]);
+
+  useEffect(() => {
+    console.log(`id -------- show use effect [${id}]`);
+
+    if (show) {
+      console.log('show modal');
+      UIkit.modal(id).show();
+    }
+  }, [show, setShow]);
 
   return (
     <ModalContext.Provider
@@ -46,6 +63,8 @@ const ModalProvider = ({ children }) => {
         index,
         next,
         previous,
+        show,
+        setShow
       }}
     >
       {children}

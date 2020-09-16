@@ -13,12 +13,9 @@ import { ModalContext } from '../store/ModalProvider';
  */
 const StepperModal = ({ components, title, id }) => {
   const {
-    setId,
     index,
-    resetForm
+    resetForm,
   } = useContext(ModalContext);
-  console.log('stepper modal id', 'id :>> ', id);
-  // useEffect(() => setId(id), []);
 
   // const [index, setIndex] = useState(0);
   // const [wrappedComponents, setWrappedComponents] = useState();
@@ -41,7 +38,8 @@ const StepperModal = ({ components, title, id }) => {
   //     );
   //   }
   // }, [composers]);
-  console.log('components :>> ', components);
+
+
   return (
     <div id={id} className="uk-flex-top" data-uk-modal="bg-close:false">
       <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-2-3@m uk-width-1-2@l">

@@ -9,24 +9,22 @@ import ModalGeneric from './ModalGeneric';
 import HeaderModal from './HeaderModal';
 
 const ModalEdit = ({
-  id,
   title,
   description,
   formSchema,
   defaultValues,
   onSubmit,
   submitText,
+  id
 }) => {
   const {
     setClose,
-    setId,
     form,
-    resetForm,
+    resetForm
   } = useContext(ModalContext);
-  // setId(id);
 
   return (
-    <ModalGeneric >
+    <ModalGeneric id={id}>
       <>
         <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm} />
         <HeaderModal>{title}</HeaderModal>

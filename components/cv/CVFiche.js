@@ -19,13 +19,15 @@ import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
 import { formatParagraph, mutateFormSchema, sortExperiences, sortReviews } from "../../utils";
 import { SharesCountContext } from "../store/SharesCountProvider";
-import Modal from '../store/ModalProvider';
+import Modal, { ModalContext } from '../store/ModalProvider';
 
 /**
  * Le cv en public et en preview
  */
 const CVFiche = ({ cv, actionDisabled }) => {
   const { incrementSharesCount } = useContext(SharesCountContext);
+  const { setId, setShow } = useContext(ModalContext);
+
 
   const router = useRouter();
   const hostname = process.env.SERVER_URL;
@@ -65,8 +67,11 @@ const CVFiche = ({ cv, actionDisabled }) => {
     }
   };
 
-  const openNewsletterModal = () =>
-    UIkit.modal(`#info-share-${cv.user.candidat.firstName}`).show();
+  const openNewsletterModal = () => {
+    console.log('openNewsletterModal clicked');
+    setId(`#info-share-${cv.user.candidat.firstName}`);
+    setShow(true);
+  }
 
   const updateShareCount = (candidatId, type) => {
     Api.post('api/v1/cv/count', {
@@ -257,8 +262,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 )}
               {cv.careerPathOpen ? (
                 <>
-                  {` mais reste ${
-                    cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
+                  {` mais reste ${cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
                     } à toutes autres
             propositions.`}
                 </>
@@ -477,11 +481,16 @@ const CVFiche = ({ cv, actionDisabled }) => {
               <Button
                 disabled={actionDisabled}
                 style='secondary'
-                toggle="target: #modal-send-opportunity">
+                onClick={() => {
+                  console.log('contact me clicked');
+                  setId('#modal-send-opportunity');
+                  setShow(true);
+                }}
+              >
                 Contactez-moi{' '}<IconNoSSR name="chevron-right" />
               </Button>
             </div>
-            <div>
+            <div >
               <ModalEdit
                 id="modal-send-opportunity"
                 title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
@@ -515,8 +524,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           d&apos;information, contactez:
           <br />
           <a
-            className={`uk-link-text uk-text-primary${
-              actionDisabled ? ' uk-disabled' : ''
+            className={`uk-link-text uk-text-primary${actionDisabled ? ' uk-disabled' : ''
               }`}
             target='_blank'
             rel="noopener noreferrer"

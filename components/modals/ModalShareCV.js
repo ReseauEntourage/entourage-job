@@ -12,14 +12,11 @@ import { ModalContext } from '../store/ModalProvider';
 
 const ModalShareCV = ({ firstName, id }) => {
   const {
-    setId,
     close,
     setClose,
     form,
-    resetForm,
     next
   } = useContext(ModalContext);
-  // setId(id);
 
   return (
     <div>

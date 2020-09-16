@@ -2,10 +2,10 @@
 /* eslint-disable no-undef */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { ModalContext } from '../store/ModalProvider';
+// import { ModalContext } from '../store/ModalProvider';
 
-const ModalGeneric = ({ children, classNameSize: className, param }) => {
-  const { id } = useContext(ModalContext);
+const ModalGeneric = ({ children, classNameSize: className, param, id }) => {
+  // const { id } = useContext(ModalContext);
 
   return (
     <div id={id} className="uk-flex-top" data-uk-modal={param} >
