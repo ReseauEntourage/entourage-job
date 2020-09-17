@@ -278,11 +278,31 @@ const createCV = async (data) => {
 
   // renvoie du cv complet
   console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
-  const completeCV = await models.CV.findByPk(modelCV.id, {
-    exclude: ['UserId'],
-    include: INCLUDES_COMPLETE_CV_WITH_ALL_USER,
-  });
-  return cleanCV(completeCV);
+
+  const promises = [];
+
+  for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
+    promises.push(new Promise((res, rej) => {
+      models.CV.findByPk(modelCV.id, {
+        exclude: ['UserId'],
+        include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
+      }).then((partCV) => {
+        res(partCV);
+      }).catch((err) => {
+        rej(err);
+      });
+    }))
+  }
+
+  const results = await Promise.all(promises);
+
+  return results.reduce((acc, curr) => {
+    const cleanedCurr = cleanCV(curr);
+    return {
+      ...acc,
+      ...cleanedCurr
+    }
+  }, {});
 };
 
 const deleteCV = (id) => {
@@ -306,8 +326,8 @@ const getCVbyUrl = async (url) => {
       promises.push(new Promise((res, rej) => {
         models.CV.findByPk(cvs[0].id, {
           include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
-        }).then((modelCV) => {
-          res(modelCV);
+        }).then((partCV) => {
+          res(partCV);
         }).catch((err) => {
           rej(err);
         });
@@ -345,8 +365,8 @@ const getCVbyUserId = async (userId) => {
             UserId: userId,
           },
           order: [['version', 'DESC']],
-        }).then((modelCV) => {
-          res(modelCV);
+        }).then((partCV) => {
+          res(partCV);
         }).catch((err) => {
           rej(err);
         });
@@ -369,6 +389,7 @@ const getCVbyUserId = async (userId) => {
 
 const getCVs = async () => {
   console.log(`getCVs - Récupérer les CVs`);
+  // TODO change for better performance if you ever need to use it
   const modelCVs = await models.CV.findAll({
     where: {
       status: CV_STATUS.Published.value,
