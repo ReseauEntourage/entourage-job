@@ -1,15 +1,18 @@
 /* eslint-disable jsx-a11y/aria-role */
 /* global UIkit */
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR, GridNoSSR } from '../utils';
 import ModalEdit from '../modals/ModalEdit';
 import schemaTestimonial from '../forms/schema/formEditTestimonial';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalConfirm from '../modals/ModalConfirm';
-import {formatParagraph, sortReviews} from "../../utils";
+import { formatParagraph, sortReviews } from "../../utils";
+import { ModalContext } from '../store/ModalProvider';
 
 const CVEditReviews = ({ reviews, onChange }) => {
+  const { triggerModal } = useContext(ModalContext);
+
   const MAX_REVIEWS = 3;
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentDefaultValue, setCurrentDefaultValue] = useState({});
@@ -25,7 +28,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
         {sortedReviews.length < MAX_REVIEWS && (
           <ButtonIcon
             onClick={() => {
-              UIkit.modal(`#modal-testimonial-add`).show();
+              triggerModal(`#modal-testimonial-add`);
             }}
             name="plus"
           />
@@ -57,14 +60,14 @@ const CVEditReviews = ({ reviews, onChange }) => {
                       onClick={() => {
                         setCurrentIndex(i);
                         setCurrentDefaultValue(review);
-                        UIkit.modal(`#modal-testimonial-edit`).show();
+                        triggerModal(`#modal-testimonial-edit`);
                       }}
                     />
                     <ButtonIcon
                       name="trash"
                       onClick={() => {
                         setCurrentIndex(i);
-                        UIkit.modal(`#modal-testimonial-remove`).show();
+                        triggerModal(`#modal-testimonial-remove`);
                       }}
                     />
                   </div>
@@ -73,10 +76,10 @@ const CVEditReviews = ({ reviews, onChange }) => {
             </li>
           ))
         ) : (
-          <li className="uk-text-italic">
-            Aucune recommandation n&apos;a encore été ajoutée
-          </li>
-        )}
+            <li className="uk-text-italic">
+              Aucune recommandation n&apos;a encore été ajoutée
+            </li>
+          )}
       </ul>
       <ModalEdit
         id="modal-testimonial-add"

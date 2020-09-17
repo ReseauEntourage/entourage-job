@@ -1,13 +1,15 @@
 /* global UIkit */
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
 import schemaformEditSkills from '../forms/schema/formEditSkills';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
+import { ModalContext } from '../store/ModalProvider';
 
 const SkillCard = ({ list, onChange }) => {
+  const { triggerModal } = useContext(ModalContext);
   return (
     <div className="uk-card uk-card-secondary uk-card-body">
       <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
@@ -23,7 +25,7 @@ const SkillCard = ({ list, onChange }) => {
           <ButtonIcon
             name="pencil"
             onClick={() => {
-              UIkit.modal(`#modal-skills`).show();
+              triggerModal(`#modal-skills`);
             }}
           />
         )}
@@ -36,8 +38,8 @@ const SkillCard = ({ list, onChange }) => {
             </li>
           ))
         ) : (
-          <li>Aucun atout renseigné</li>
-        )}
+            <li>Aucun atout renseigné</li>
+          )}
       </ul>
       {onChange && (
         <ModalEdit

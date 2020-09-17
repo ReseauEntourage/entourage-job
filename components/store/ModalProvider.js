@@ -20,6 +20,10 @@ const ModalProvider = ({ children }) => {
     setIndex(index - 1);
   };
 
+  const triggerModal = (modalId) => {
+    setId(modalId);
+    setShow(true);
+  }
   useEffect(() => {
     console.log('set id in provider ---------------------', id);
   }, [id, setId]);
@@ -65,7 +69,8 @@ const ModalProvider = ({ children }) => {
         next,
         previous,
         show,
-        setShow
+        setShow,
+        triggerModal,
       }}
     >
       {children}

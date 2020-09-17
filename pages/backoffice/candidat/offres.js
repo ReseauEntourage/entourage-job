@@ -9,7 +9,8 @@ import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOffer from '../../../components/modals/ModalOffer';
 import axios from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
-import {USER_ROLES} from "../../../constants";
+import { USER_ROLES } from "../../../constants";
+import { ModalContext } from '../../../components/store/ModalProvider';
 
 const getTag = (offer) => {
   if (offer.userOpportunity && offer.userOpportunity.archived) {
@@ -20,6 +21,7 @@ const getTag = (offer) => {
 
 const Opportunites = () => {
   const { user } = useContext(UserContext);
+  const { triggerModal } = useContext(ModalContext);
   const {
     query: { q: opportunityId },
   } = useRouter();
@@ -97,7 +99,7 @@ const Opportunites = () => {
       fetchData(candidatId);
     }
     setCurrentOffer(opportunity);
-    UIkit.modal('#modal-offer').show();
+    triggerModal('#modal-offer');
   };
 
   useEffect(() => {
@@ -109,7 +111,7 @@ const Opportunites = () => {
           if (offer) {
             console.log(offer);
             setCurrentOffer(offer);
-            UIkit.modal('#modal-offer-admin').show();
+            triggerModal('#modal-offer-admin');
           }
         }
       });
@@ -165,63 +167,63 @@ const Opportunites = () => {
             </div>
           </Section>
         ) : (
-          <>
-            <Filter
-              id="opportunitees"
-              loading={loading}
-              filters={[
-                { tag: 'private', title: user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat'},
-                { tag: 'public', title: 'Offres générales' },
-                { tag: 'archive', title: 'Offres archivées' },
-              ]}
-            >
-              {offers &&
-                offers.map((offer, i) => {
-                  return (
-                    <li key={i} className={getTag(offer)}>
-                      <a
-                        aria-hidden
-                        role="button"
-                        className="uk-link-reset"
-                        onClick={() => onClickOpportunityCard(offer)}
-                      >
-                        <OfferCard
-                          title={offer.title}
-                          from={offer.recruiterName}
-                          shortDescription={offer.company}
-                          archived={
-                            offer.userOpportunity &&
-                            offer.userOpportunity.archived
-                          }
-                          isNew={
-                            !offer.userOpportunity ||
-                            !offer.userOpportunity.seen
-                          }
-                          isStared={
-                            offer.userOpportunity &&
-                            offer.userOpportunity.bookmarked
-                          }
-                          status={
-                            offer.userOpportunity &&
-                            offer.userOpportunity.status
-                          }
-                        />
-                      </a>
-                    </li>
-                  );
-                })}
-            </Filter>
-            <div>
-              <ModalOffer
-                currentOffer={currentOffer}
-                setCurrentOffer={(offer) => {
-                  setCurrentOffer(offer);
-                  fetchData(candidatId);
-                }}
-              />
-            </div>
-          </>
-        )}
+            <>
+              <Filter
+                id="opportunitees"
+                loading={loading}
+                filters={[
+                  { tag: 'private', title: user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat' },
+                  { tag: 'public', title: 'Offres générales' },
+                  { tag: 'archive', title: 'Offres archivées' },
+                ]}
+              >
+                {offers &&
+                  offers.map((offer, i) => {
+                    return (
+                      <li key={i} className={getTag(offer)}>
+                        <a
+                          aria-hidden
+                          role="button"
+                          className="uk-link-reset"
+                          onClick={() => onClickOpportunityCard(offer)}
+                        >
+                          <OfferCard
+                            title={offer.title}
+                            from={offer.recruiterName}
+                            shortDescription={offer.company}
+                            archived={
+                              offer.userOpportunity &&
+                              offer.userOpportunity.archived
+                            }
+                            isNew={
+                              !offer.userOpportunity ||
+                              !offer.userOpportunity.seen
+                            }
+                            isStared={
+                              offer.userOpportunity &&
+                              offer.userOpportunity.bookmarked
+                            }
+                            status={
+                              offer.userOpportunity &&
+                              offer.userOpportunity.status
+                            }
+                          />
+                        </a>
+                      </li>
+                    );
+                  })}
+              </Filter>
+              <div>
+                <ModalOffer
+                  currentOffer={currentOffer}
+                  setCurrentOffer={(offer) => {
+                    setCurrentOffer(offer);
+                    fetchData(candidatId);
+                  }}
+                />
+              </div>
+            </>
+          )}
       </Section>
     </LayoutBackOffice>
   );

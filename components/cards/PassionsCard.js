@@ -1,13 +1,15 @@
 /* global UIkit */
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
 import schemaformEditPassions from '../forms/schema/formEditPassions';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
+import { ModalContext } from '../store/ModalProvider';
 
 const PassionsCard = ({ list, onChange }) => {
+  const { triggerModal } = useContext(ModalContext);
   return (
     <div className="uk-card uk-card-default uk-card-body">
       <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
@@ -23,7 +25,7 @@ const PassionsCard = ({ list, onChange }) => {
           <ButtonIcon
             name="pencil"
             onClick={() => {
-              UIkit.modal(`#modal-passions`).show();
+              triggerModal(`#modal-passions`);
             }}
           />
         )}
@@ -36,8 +38,8 @@ const PassionsCard = ({ list, onChange }) => {
             </li>
           ))
         ) : (
-          <li>Aucune passion renseignée</li>
-        )}
+            <li>Aucune passion renseignée</li>
+          )}
       </ul>
       {onChange && (
         <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand uk-margin-remove">

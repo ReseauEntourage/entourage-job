@@ -1,14 +1,16 @@
 /* global UIkit */
-import React, {useContext, useEffect, useState} from 'react';
-import {GridNoSSR, Section} from '../utils';
-import OfferCard from "../cards/OfferCard";
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { GridNoSSR, Section } from '../utils';
+import OfferCard from "../cards/OfferCard";
 import Axios from '../../Axios';
-import {UserContext} from '../store/UserProvider';
+import { UserContext } from '../store/UserProvider';
 import ModalOfferAdmin from "../modals/ModalOfferAdmin";
+import { ModalContext } from '../store/ModalProvider';
 
-const OpportunitiesList = ({candidatId}) => {
-  const {user} = useContext(UserContext);
+const OpportunitiesList = ({ candidatId }) => {
+  const { user } = useContext(UserContext);
+  const { triggerModal } = useContext(ModalContext);
 
   const [currentOffer, setCurrentOffer] = useState(null);
   const [offers, setOffers] = useState(undefined);
@@ -19,7 +21,7 @@ const OpportunitiesList = ({candidatId}) => {
     if (user) {
       try {
         setLoading(true);
-        const {data} = await Axios.get(
+        const { data } = await Axios.get(
           `${process.env.SERVER_URL}/api/v1/opportunity/user/private/${id}`
         );
         setOffers(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
@@ -59,7 +61,7 @@ const OpportunitiesList = ({candidatId}) => {
                     <p>
                       Contacte{' '}
                       <span className="uk-text-primary">
-                      l&apos;équipe LinkedOut
+                        l&apos;équipe LinkedOut
                     </span>{' '}
                       pour en savoir plus.
                     </p>
@@ -84,7 +86,7 @@ const OpportunitiesList = ({candidatId}) => {
                               className="uk-link-reset"
                               onClick={() => {
                                 setCurrentOffer(offer);
-                                UIkit.modal('#modal-offer-admin').show();
+                                triggerModal('#modal-offer-admin');
                               }}
                             >
                               <OfferCard

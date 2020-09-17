@@ -1,10 +1,11 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR, CloseButtonNoSSR, Button } from '../utils';
 import ModalGeneric from '../modals/ModalGeneric';
 import HeaderModal from '../modals/HeaderModal';
 import '../../static/css/Toggle.less';
+import { ModalContext } from '../store/ModalProvider';
 
 const ToggleWithConfirmationModal = ({
   id,
@@ -15,6 +16,9 @@ const ToggleWithConfirmationModal = ({
   defaultValue,
   onToggle,
 }) => {
+  const {
+    triggerModal,
+  } = useContext(ModalContext);
   const [toggle, setToggle] = useState();
   useEffect(() => {
     setToggle(defaultValue);
@@ -32,7 +36,7 @@ const ToggleWithConfirmationModal = ({
                 if (toggle) {
                   onToggle(false).then(() => setToggle(false));
                 } else {
-                  UIkit.modal(`#modal-confirm-${id}`).show();
+                  triggerModal(`#modal-confirm-${id}`);
                 }
               }}
             />

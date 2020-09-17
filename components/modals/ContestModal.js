@@ -1,15 +1,18 @@
 /* global UIkit */
 
-import React, {useState, useEffect} from 'react';
-import {Button, CloseButtonNoSSR, IconNoSSR} from "../utils";
-import {EXTERNAL_LINKS} from '../../constants';
+import React, { useState, useEffect, useContext } from 'react';
+import { Button, CloseButtonNoSSR, IconNoSSR } from "../utils";
+import { EXTERNAL_LINKS } from '../../constants';
+import { ModalContext } from '../store/ModalProvider';
 
 const ContestModal = () => {
+  const { triggerModal } = useContext(ModalContext);
+
   const [countdown, setCountdown] = useState('');
 
   useEffect(() => {
     // Set the date we're counting down to
-    const countDownDate = new Date(2020, 6, 4, 15, 30, 0).getTime() ;
+    const countDownDate = new Date(2020, 6, 4, 15, 30, 0).getTime();
 
     // Update the count down every 1 second
     const updateInterval = setInterval(() => {
@@ -27,8 +30,8 @@ const ContestModal = () => {
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
       // Display the result in the element with id="demo"
-      setCountdown(days + "j\xa0" + hours + "h\xa0"
-        + minutes + "m\xa0" + seconds + "s");
+      setCountdown(`${days}j\xa0${hours}h\xa0${
+        minutes}m\xa0${seconds}s`);
 
       // If the count down is finished, write some text
       if (distance < 0) {
@@ -38,9 +41,9 @@ const ContestModal = () => {
     }, 1000);
 
     const modalInterval = setInterval(() => {
-      if(UIkit) {
+      if (UIkit) {
         clearInterval(modalInterval);
-        UIkit.modal(`#modal-contest`).show();
+        triggerModal(`#modal-contest`);
       }
     }, 1000);
 
@@ -55,8 +58,8 @@ const ContestModal = () => {
     return (
       <>
         <div className="uk-light uk-flex uk-flex-column uk-flex-middle">
-          <h2 className="uk-text-center">Défie Thomas sur <span className="uk-text-bold" style={{color: '#FF5101'}}>Virtual Regatta</span> et <span className="uk-text-bold" style={{color: '#00B9EF'}}>gagne une navigation</span> sur le bateau LinkedOut&nbsp;!</h2>
-          <h3 className="uk-text-center">Top&nbsp;départ&nbsp;: <span className="uk-text-bold" style={{color: '#00B9EF'}}>{countdown}</span></h3>
+          <h2 className="uk-text-center">Défie Thomas sur <span className="uk-text-bold" style={{ color: '#FF5101' }}>Virtual Regatta</span> et <span className="uk-text-bold" style={{ color: '#00B9EF' }}>gagne une navigation</span> sur le bateau LinkedOut&nbsp;!</h2>
+          <h3 className="uk-text-center">Top&nbsp;départ&nbsp;: <span className="uk-text-bold" style={{ color: '#00B9EF' }}>{countdown}</span></h3>
         </div>
         <Button
           href={EXTERNAL_LINKS.LKO_VG_CONTEST}
@@ -70,7 +73,7 @@ const ContestModal = () => {
     )
   };
 
-  return(
+  return (
     <div>
       <div id="modal-contest" data-uk-modal>
         <div className="uk-modal-dialog uk-modal-body uk-margin-auto-vertical uk-background-primary">
@@ -78,19 +81,19 @@ const ContestModal = () => {
             className="uk-modal-close-default"
             type="button"
             data-uk-close
-            style={{color: 'white'}}
+            style={{ color: 'white' }}
             aria-label="close"
           />
           <div className="uk-inline uk-visible@m">
             <img src="../../static/img/thomas.jpg" alt="Thomas Ruyant" />
-            <div style={{backgroundColor: 'rgba(0,0,0,0.5)'}} className="uk-position-cover" />
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} className="uk-position-cover" />
             <div className="uk-overlay uk-position-center uk-flex uk-flex-column uk-flex-middle">
               {modalContent()}
             </div>
           </div>
           <div
             className="uk-hidden@m uk-flex uk-flex-column uk-flex-middle uk-padding-small uk-background-center-center uk-background-cover uk-background-blend-overlay"
-            style={{backgroundImage: 'url(../../static/img/thomas.jpg)', backgroundColor: '#444'}}>
+            style={{ backgroundImage: 'url(../../static/img/thomas.jpg)', backgroundColor: '#444' }}>
             {modalContent()}
           </div>
         </div>

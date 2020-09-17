@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
-import {Button, Section} from '../../../components/utils';
+import { Button, Section } from '../../../components/utils';
 import OfferCard from '../../../components/cards/OfferCard';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOfferAdmin from '../../../components/modals/ModalOfferAdmin';
@@ -11,10 +11,12 @@ import Axios from '../../../Axios';
 import schema from '../../../components/forms/schema/formEditOpportunity';
 import { UserContext } from '../../../components/store/UserProvider';
 import ModalEdit from '../../../components/modals/ModalEdit';
-import {mutateFormSchema} from "../../../utils";
+import { mutateFormSchema } from "../../../utils";
+import { ModalContext } from '../../../components/store/ModalProvider';
 
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
+  const { triggerModal } = useContext(ModalContext);
   const {
     query: { q: opportunityId },
   } = useRouter();
@@ -97,7 +99,7 @@ const LesOpportunites = () => {
         const offer = data.find((o) => o.id === opportunityId);
         if (offer) {
           setCurrentOffer(offer);
-          UIkit.modal('#modal-offer-admin').show();
+          triggerModal('#modal-offer-admin');
         }
       }
     });
@@ -155,78 +157,78 @@ const LesOpportunites = () => {
             </div>
           </Section>
         ) : (
-          <>
-            <Filter
-              id="opportunitees"
-              loading={loading}
-              filters={filters}
-              search={({ target: { value } }) => {
-                fetchData(value);
-              }}
-            >
-              {offers &&
-                offers.map((offer, i) => {
-                  return (
-                    <li key={i} className={getTag(offer)}>
-                      <a
-                        aria-hidden
-                        role="button"
-                        className="uk-link-reset"
-                        onClick={() => {
-                          setCurrentOffer(offer);
-                          UIkit.modal('#modal-offer-admin').show();
-                        }}
-                      >
-                        <OfferCard
-                          title={offer.title}
-                          from={offer.recruiterName}
-                          shortDescription={offer.company}
-                          date={offer.date}
-                          archived={offer.isArchived}
-                          isPublic={offer.isPublic}
-                          specifiedOffer={
-                            !offer.isPublic &&
-                            offer.userOpportunity &&
-                            offer.userOpportunity[0] &&
-                            offer.userOpportunity[0].User &&
-                            offer.userOpportunity[0].User.firstName
-                          }
-                          customBadge={(() => {
-                            let className = ' uk-label-warning';
-                            let content = 'En attente';
-                            if (offer.isValidated) {
-                              content = 'Validé';
-                              className = ' uk-label-success';
-                            }
-                            if (offer.isArchived) {
-                              content = 'Archivé';
-                              className = ' uk-label-danger';
-                            }
-                            return (
-                              <div
-                                className={`uk-card-badge uk-label${className}`}
-                              >
-                                {content}
-                              </div>
-                            );
-                          })()}
-                        />
-                      </a>
-                    </li>
-                  );
-                })}
-            </Filter>
-            <div>
-              <ModalOfferAdmin
-                currentOffer={currentOffer}
-                setCurrentOffer={(offer) => {
-                  setCurrentOffer(offer);
-                  fetchData();
+            <>
+              <Filter
+                id="opportunitees"
+                loading={loading}
+                filters={filters}
+                search={({ target: { value } }) => {
+                  fetchData(value);
                 }}
-              />
-            </div>
-          </>
-        )}
+              >
+                {offers &&
+                  offers.map((offer, i) => {
+                    return (
+                      <li key={i} className={getTag(offer)}>
+                        <a
+                          aria-hidden
+                          role="button"
+                          className="uk-link-reset"
+                          onClick={() => {
+                            setCurrentOffer(offer);
+                            triggerModal('#modal-offer-admin');
+                          }}
+                        >
+                          <OfferCard
+                            title={offer.title}
+                            from={offer.recruiterName}
+                            shortDescription={offer.company}
+                            date={offer.date}
+                            archived={offer.isArchived}
+                            isPublic={offer.isPublic}
+                            specifiedOffer={
+                              !offer.isPublic &&
+                              offer.userOpportunity &&
+                              offer.userOpportunity[0] &&
+                              offer.userOpportunity[0].User &&
+                              offer.userOpportunity[0].User.firstName
+                            }
+                            customBadge={(() => {
+                              let className = ' uk-label-warning';
+                              let content = 'En attente';
+                              if (offer.isValidated) {
+                                content = 'Validé';
+                                className = ' uk-label-success';
+                              }
+                              if (offer.isArchived) {
+                                content = 'Archivé';
+                                className = ' uk-label-danger';
+                              }
+                              return (
+                                <div
+                                  className={`uk-card-badge uk-label${className}`}
+                                >
+                                  {content}
+                                </div>
+                              );
+                            })()}
+                          />
+                        </a>
+                      </li>
+                    );
+                  })}
+              </Filter>
+              <div>
+                <ModalOfferAdmin
+                  currentOffer={currentOffer}
+                  setCurrentOffer={(offer) => {
+                    setCurrentOffer(offer);
+                    fetchData();
+                  }}
+                />
+              </div>
+            </>
+          )}
       </Section>
     </LayoutBackOffice>
   );

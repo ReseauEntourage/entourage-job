@@ -1,12 +1,15 @@
 /* global UIkit */
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import ModalEdit from '../modals/ModalEdit';
 import schemaCareerPath from '../forms/schema/formEditCareerPath.json';
 import ButtonIcon from '../utils/ButtonIcon';
-import {GridNoSSR} from '../utils';
+import { GridNoSSR } from '../utils';
+import { ModalContext } from '../store/ModalProvider';
 
-const CVEditCareerPath = ({ambitions, careerPathOpen, onChange, gender}) => {
+const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
+  const { triggerModal } = useContext(ModalContext);
+
   const ContentByGender = () => {
     if (ambitions.length === 0) {
       if (!careerPathOpen) {
@@ -34,8 +37,8 @@ const CVEditCareerPath = ({ambitions, careerPathOpen, onChange, gender}) => {
             ou dans <span className="uk-text-primary">{ambitions[1]}</span>
           </>
         ) : (
-          ''
-        )}
+            ''
+          )}
         {careerPathOpen
           ? ` mais reste ${gender === 1 ? 'ouverte' : 'ouvert'} à toutes autres
             propositions.`
@@ -52,7 +55,7 @@ const CVEditCareerPath = ({ambitions, careerPathOpen, onChange, gender}) => {
         {onChange && (
           <ButtonIcon
             name="pencil"
-            onClick={() => UIkit.modal(`#modal-career-path`).show()}
+            onClick={() => triggerModal(`#modal-career-path`)}
           />
         )}
       </GridNoSSR>
@@ -68,7 +71,7 @@ const CVEditCareerPath = ({ambitions, careerPathOpen, onChange, gender}) => {
               careerPath1: ambitions.length > 1 ? ambitions[1] : null,
               careerPathOpen,
             }}
-            onSubmit={({careerPathOpen: isOpen, careerPath0, careerPath1}, closeModal) => {
+            onSubmit={({ careerPathOpen: isOpen, careerPath0, careerPath1 }, closeModal) => {
               closeModal();
               onChange({
                 ambitions: [careerPath0, careerPath1].filter((a) => a || null),

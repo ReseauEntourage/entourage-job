@@ -1,16 +1,18 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { PropTypes } from 'prop-types';
 import { GridNoSSR, IconNoSSR, SimpleLink, Card } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalEdit from '../modals/ModalEdit';
 import schema from '../forms/schema/formEditLinkedUser';
 import Api from '../../Axios';
-import {USER_ROLES} from "../../constants";
+import { USER_ROLES } from "../../constants";
 import ToggleWithConfirmationModal from "../backoffice/ToggleWithConfirmationModal";
+import { ModalContext } from '../store/ModalProvider';
 
 // userId du candidat ou coach lié
 const UserInformationCard = ({ isAdmin, user, onChange }) => {
+  const { trigerModal } = useContext(ModalContext);
   // données du candidat ou coach lié
   const [linkedUser, setLinkedUser] = useState();
   const [userCandidat, setUserCandidat] = useState();
@@ -77,13 +79,13 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
           </GridNoSSR>
         </SimpleLink>
       ) : (
-        <GridNoSSR row gap="small">
-          <IconNoSSR name="phone" />
-          <span className="uk-text-italic">
-            Numéro de téléphone non renseigné
+          <GridNoSSR row gap="small">
+            <IconNoSSR name="phone" />
+            <span className="uk-text-italic">
+              Numéro de téléphone non renseigné
           </span>
-        </GridNoSSR>
-      )}
+          </GridNoSSR>
+        )}
       {user.role === USER_ROLES.COACH && userCandidat && (
         <SimpleLink
           className="uk-link-muted"
@@ -116,8 +118,8 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
       )}
     </GridNoSSR>
   ) : (
-    <span className="uk-text-italic">Aucun membre lié</span>
-  );
+      <span className="uk-text-italic">Aucun membre lié</span>
+    );
 
   return (
     <GridNoSSR gap={user.role === USER_ROLES.COACH ? 'medium' : 'collapse'} childWidths={['1-1']}>
@@ -156,12 +158,12 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
                 hidden,
               })
                 .then(() => {
-                    UIkit.notification(
-                      hidden
-                        ? 'Le CV est désormais masqué'
-                        : 'Le CV est désormais visible',
-                      'success'
-                    );
+                  UIkit.notification(
+                    hidden
+                      ? 'Le CV est désormais masqué'
+                      : 'Le CV est désormais visible',
+                    'success'
+                  );
                 })
                 .catch(() =>
                   UIkit.notification(
@@ -177,16 +179,16 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
         style="secondary"
         title={`Information du${
           user.role === USER_ROLES.COACH ? ' candidat' : ' coach'
-        }`}
+          }`}
         badge={(() => {
-          if(isAdmin) {
-            if(loading) {
+          if (isAdmin) {
+            if (loading) {
               return (<div data-uk-spinner="ratio: .8" />)
             }
             return (
               <ButtonIcon
-              name="pencil"
-              onClick={() => UIkit.modal(`#modal-edit-linked-user`).show()} />
+                name="pencil"
+                onClick={() => triggerModal(`#modal-edit-linked-user`)} />
             );
           }
           return null;
@@ -202,9 +204,9 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
           role: user.role === USER_ROLES.COACH ? USER_ROLES.CANDIDAT : USER_ROLES.COACH,
           linkedUser: linkedUser
             ? {
-                value: linkedUser.id,
-                label: `${linkedUser.firstName} ${linkedUser.lastName}`,
-              }
+              value: linkedUser.id,
+              label: `${linkedUser.firstName} ${linkedUser.lastName}`,
+            }
             : undefined,
         }}
         formSchema={schema}
@@ -261,7 +263,7 @@ UserInformationCard.propTypes = {
 
 UserInformationCard.defaultProps = {
   isAdmin: false,
-  onChange: () => {},
+  onChange: () => { },
 };
 
 export default UserInformationCard;

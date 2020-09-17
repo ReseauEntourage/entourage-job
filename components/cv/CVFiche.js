@@ -26,7 +26,7 @@ import Modal, { ModalContext } from '../store/ModalProvider';
  */
 const CVFiche = ({ cv, actionDisabled }) => {
   const { incrementSharesCount } = useContext(SharesCountContext);
-  const { setId, setShow } = useContext(ModalContext);
+  const { setId, setShow, triggerModal } = useContext(ModalContext);
 
 
   const router = useRouter();
@@ -69,8 +69,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
 
   const openNewsletterModal = () => {
     console.log('openNewsletterModal clicked');
-    setId(`#info-share-${cv.user.candidat.firstName}`);
-    setShow(true);
+    triggerModal(`#info-share-${cv.user.candidat.firstName}`);
   }
 
   const updateShareCount = (candidatId, type) => {
@@ -483,8 +482,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 style='secondary'
                 onClick={() => {
                   console.log('contact me clicked');
-                  setId('#modal-send-opportunity');
-                  setShow(true);
+                  triggerModal('#modal-send-opportunity');
                 }}
               >
                 Contactez-moi{' '}<IconNoSSR name="chevron-right" />

@@ -10,9 +10,10 @@ import {
 import { SimpleLink, GridNoSSR, IconNoSSR, ImgNoSSR } from '../utils';
 import ModalShareCV from '../modals/ModalShareCV';
 import Api from '../../Axios';
-import {SharesCountContext} from "../store/SharesCountProvider";
-import {hasAsChild} from "../../utils";
-import {LOCATIONS} from '../../constants';
+import { SharesCountContext } from "../store/SharesCountProvider";
+import { hasAsChild } from "../../utils";
+import { LOCATIONS } from '../../constants';
+import { ModalContext } from '../store/ModalProvider';
 
 const CandidatCard = ({
   url,
@@ -30,13 +31,14 @@ const CandidatCard = ({
 }) => {
   // petit systeme pour ne pas avoir a afficher la modal a chaque carte
   // optimisation possible
+  const { triggerModal } = useContext(ModalContext);
   const [showModal, setShowModal] = useState(false);
 
   const { incrementSharesCount } = useContext(SharesCountContext);
 
   const openNewsletterModal = () => {
     setShowModal(true);
-    UIkit.modal(`#info-share-${firstName}`).show();
+    triggerModal(`#info-share-${firstName}`);
   };
 
   const updateShareCount = (candidatId, type) => {
@@ -50,21 +52,21 @@ const CandidatCard = ({
   };
 
   const getReducedLocations = () => {
-    if(locations && locations.length > 0)  {
+    if (locations && locations.length > 0) {
       let indexesToRemove = [];
       const reducedLocations = locations;
-      for(let i = 0; i < locations.length; i += 1) {
-        for(let j = 0; j < locations.length; j += 1) {
-           if(hasAsChild(LOCATIONS, locations[i], locations[j])) {
-             indexesToRemove.push(j);
-           }
+      for (let i = 0; i < locations.length; i += 1) {
+        for (let j = 0; j < locations.length; j += 1) {
+          if (hasAsChild(LOCATIONS, locations[i], locations[j])) {
+            indexesToRemove.push(j);
+          }
         }
       }
 
       indexesToRemove = indexesToRemove.filter((index, idx) => indexesToRemove.indexOf(index) === idx);
-      indexesToRemove.sort((a,b) => b - a);
+      indexesToRemove.sort((a, b) => b - a);
 
-      for(let i = indexesToRemove.length -1; i >= 0; i -= 1) {
+      for (let i = indexesToRemove.length - 1; i >= 0; i -= 1) {
         reducedLocations.splice(indexesToRemove[i], 1);
       }
       return reducedLocations;
@@ -154,12 +156,12 @@ const CandidatCard = ({
                   className="uk-text-lowercase uk-text-bold uk-text-primary "
                   items={skills.slice(0, 2).map((a, index) => (
                     <span key={index} className="ent-line-clamp-1">
-                        {a}
-                      </span>
+                      {a}
+                    </span>
                   ))}
                 />
               )}
-             {/* {ambitions && ambitions.length > 0 && (
+              {/* {ambitions && ambitions.length > 0 && (
                 <>
                   <p
                     style={{ fontSize: '0.775rem' }}
@@ -204,7 +206,7 @@ const CandidatCard = ({
                 </div>
               )}
               {reducedLocations && reducedLocations.length > 0 && (
-                <GridNoSSR column gap="collapse" childWidths={['1-1']} style={{marginTop: 10}}>
+                <GridNoSSR column gap="collapse" childWidths={['1-1']} style={{ marginTop: 10 }}>
                   {reducedLocations.slice(0, 2).map((text, index) => (
                     <div key={text + index} className="uk-flex uk-flex-middle">
                       <IconNoSSR name='location' ratio={0.6} />&nbsp;
@@ -235,7 +237,7 @@ const CandidatCard = ({
                 }}
                 url={`${process.env.SERVER_URL}/cv/${url}`}
                 title={`${firstName.charAt(0).toUpperCase() +
-                firstName.slice(1).toLowerCase()} - LinkedOut`}
+                  firstName.slice(1).toLowerCase()} - LinkedOut`}
                 description={
                   "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
                 }

@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../../Axios';
@@ -16,13 +16,15 @@ import CandidatHeader from '../../../../components/backoffice/cv/CandidatHeader'
 import UserInformationCard from '../../../../components/cards/UserInformationCard';
 import ButtonIcon from '../../../../components/utils/ButtonIcon';
 import ModalEdit from '../../../../components/modals/ModalEdit';
-import {USER_ROLES} from "../../../../constants";
+import { USER_ROLES } from "../../../../constants";
 import ToggleWithConfirmationModal
   from "../../../../components/backoffice/ToggleWithConfirmationModal";
-import {mutateFormSchema} from "../../../../utils";
+import { mutateFormSchema } from "../../../../utils";
 import OpportunitiesList from "../../../../components/opportunities/OpportunitiesList";
+import { ModalContext } from '../../../../components/store/ModalProvider';
 
 const CVPage = () => {
+  const { triggerModal } = useContext(ModalContext);
   const [onglet, setOnglet] = useState('cv');
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -169,17 +171,17 @@ const CVPage = () => {
                 (user.coach ? (
                   <CVPageContent candidatId={user.coach.candidat.id} />
                 ) : (
-                  <>
-                    <h2 className="uk-text-bold">
-                      <span className="uk-text-primary">Aucun candidat</span>{' '}
+                    <>
+                      <h2 className="uk-text-bold">
+                        <span className="uk-text-primary">Aucun candidat</span>{' '}
                       n&apos;est rattaché à ce compte coach.
                     </h2>
-                    <p>
-                      Il peut y avoir plusieurs raisons à ce sujet. Contacte
-                      l&apos;équipe LinkedOut pour en savoir plus.
+                      <p>
+                        Il peut y avoir plusieurs raisons à ce sujet. Contacte
+                        l&apos;équipe LinkedOut pour en savoir plus.
                     </p>
-                  </>
-                ))}
+                    </>
+                  ))}
               {user.role === USER_ROLES.CANDIDAT && (
                 <CVPageContent candidatId={user.id} />
               )}
@@ -256,33 +258,33 @@ const CVPage = () => {
                       <ButtonIcon
                         name="pencil"
                         onClick={() =>
-                          UIkit.modal(`#edit-user`).show()
+                          triggerModal(`#edit-user`)
                         }
                       />
                     </GridNoSSR>
                     {user ? (
                       <GridNoSSR column gap="small">
                         <GridNoSSR row gap="small">
-                          <IconNoSSR name="user" style={{width: 20}} />
+                          <IconNoSSR name="user" style={{ width: 20 }} />
                           <span>{`${user.firstName} ${user.lastName}`}</span>
                         </GridNoSSR>
                         <GridNoSSR row gap="small">
-                          <IconNoSSR name="gender" style={{width: 20}} />
+                          <IconNoSSR name="gender" style={{ width: 20 }} />
                           <span>{`${user.gender === 0 ? 'Homme' : 'Femme'}`}</span>
                         </GridNoSSR>
                         <GridNoSSR row gap="small">
-                          <IconNoSSR name="mail" style={{width: 20}} />
+                          <IconNoSSR name="mail" style={{ width: 20 }} />
                           <span>{user.email}</span>
                         </GridNoSSR>
                         <GridNoSSR row gap="small">
-                          <IconNoSSR name="phone" style={{width: 20}} />
+                          <IconNoSSR name="phone" style={{ width: 20 }} />
                           {user.phone ? (
                             <span>{user.phone}</span>
                           ) : (
-                            <span className="uk-text-italic">
-                              Numéro de téléphone non renseigné
-                            </span>
-                          )}
+                              <span className="uk-text-italic">
+                                Numéro de téléphone non renseigné
+                              </span>
+                            )}
                         </GridNoSSR>
                       </GridNoSSR>
                     ) : undefined}
@@ -301,7 +303,7 @@ const CVPage = () => {
                       onSubmit={async (fields, closeModal) => {
                         const updateUser = async (onError) => {
                           try {
-                            const {data} = await Api.put(`api/v1/user/${user.id}`, {
+                            const { data } = await Api.put(`api/v1/user/${user.id}`, {
                               ...fields,
                               email: fields.email.toLowerCase()
                             });
@@ -314,7 +316,7 @@ const CVPage = () => {
                             }
                           } catch (error) {
                             console.error(error);
-                            if(onError) onError();
+                            if (onError) onError();
                             if (error.response.status === 409) {
                               UIkit.notification(
                                 "Cette adresse email est déjà utilisée",
@@ -329,7 +331,7 @@ const CVPage = () => {
                           }
                         };
 
-                        if(fields.role !== user.role) {
+                        if (fields.role !== user.role) {
                           UIkit.modal.confirm("Attention, si vous modifiez le rôle d'un candidat, tout son suivi sera perdu et son CV sera dépublié. Êtes-vous sûr de vouloir continuer ?",
                             {
                               labels: {
@@ -338,9 +340,9 @@ const CVPage = () => {
                               }
                             })
                             .then(async () => {
-                              await updateUser(() => UIkit.modal(`#edit-user`).show());
+                              await updateUser(() => triggerModal(`#edit-user`));
                             }, () => {
-                              UIkit.modal(`#edit-user`).show()
+                              triggerModal(`#edit-user`)
                             });
                         }
                         else {
@@ -353,14 +355,14 @@ const CVPage = () => {
               )}
               {
                 (user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
-                <UserInformationCard
-                  isAdmin
-                  user={user}
-                  onChange={(data) => {
-                    setUser(data);
-                  }}
-                />
-              )}
+                  <UserInformationCard
+                    isAdmin
+                    user={user}
+                    onChange={(data) => {
+                      setUser(data);
+                    }}
+                  />
+                )}
             </GridNoSSR>
           )}
         </GridNoSSR>

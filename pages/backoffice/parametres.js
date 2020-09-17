@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useContext, useState, useEffect, useRef} from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
@@ -18,13 +18,15 @@ import FormWithValidation from '../../components/forms/FormWithValidation';
 import schemaPersonalData from '../../components/forms/schema/formPersonalData.json';
 import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
-import {USER_ROLES} from "../../constants";
-import {useResetForm} from "../../hooks";
+import { USER_ROLES } from "../../constants";
+import { useResetForm } from "../../hooks";
 import UserInformationCard from "../../components/cards/UserInformationCard";
-import {mutateFormSchema} from "../../utils";
+import { mutateFormSchema } from "../../utils";
+import { ModalContext } from '../../components/store/ModalProvider';
 
 const Parametres = () => {
   const { user } = useContext(UserContext);
+  const { triggerModal } = useContext(ModalContext);
   const [userData, setUserData] = useState(false);
   const [loadingPersonal, setLoadingPersonal] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
@@ -43,7 +45,7 @@ const Parametres = () => {
 
   let mutatedSchema = schemaPersonalData;
 
-  if(userData && userData.role !== USER_ROLES.ADMIN) {
+  if (userData && userData.role !== USER_ROLES.ADMIN) {
     mutatedSchema = mutateFormSchema(schemaPersonalData, [
       {
         fieldId: 'firstName',
@@ -165,40 +167,40 @@ const Parametres = () => {
                 {loadingPersonal ? (
                   <div data-uk-spinner="ratio: .8" />
                 ) : (
-                  <ButtonIcon
-                    name="pencil"
-                    onClick={() => UIkit.modal(`#modal-personal-data`).show()}
-                  />
-                )}
+                    <ButtonIcon
+                      name="pencil"
+                      onClick={() => triggerModal(`#modal-personal-data`)}
+                    />
+                  )}
               </GridNoSSR>
               {userData ? (
                 <GridNoSSR column gap="small">
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="user" style={{width: 20}} />
+                    <IconNoSSR name="user" style={{ width: 20 }} />
                     <span>{`${userData.firstName} ${userData.lastName}`}</span>
                   </GridNoSSR>
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="gender" style={{width: 20}} />
+                    <IconNoSSR name="gender" style={{ width: 20 }} />
                     <span>{`${userData.gender === 0 ? 'Homme' : 'Femme'}`}</span>
                   </GridNoSSR>
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="mail" style={{width: 20}} />
+                    <IconNoSSR name="mail" style={{ width: 20 }} />
                     <span>{userData.email}</span>
                   </GridNoSSR>
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="phone" style={{width: 20}} />
+                    <IconNoSSR name="phone" style={{ width: 20 }} />
                     {userData.phone ? (
                       <span>{userData.phone}</span>
                     ) : (
-                      <span className="uk-text-italic">
-                        Numéro de téléphone non renseigné
-                      </span>
-                    )}
+                        <span className="uk-text-italic">
+                          Numéro de téléphone non renseigné
+                        </span>
+                      )}
                   </GridNoSSR>
                 </GridNoSSR>
               ) : (
-                undefined
-              )}
+                  undefined
+                )}
             </div>
             {(userData.role === USER_ROLES.CANDIDAT || userData.role === USER_ROLES.COACH) && (
               <UserInformationCard
@@ -290,8 +292,8 @@ const Parametres = () => {
               };
 
               let newUserData = {};
-              if(userData.role === USER_ROLES.ADMIN) {
-                newUserData = {firstName, lastName, gender};
+              if (userData.role === USER_ROLES.ADMIN) {
+                newUserData = { firstName, lastName, gender };
                 if (phone !== userData.phone) {
                   newUserData.phone = phone;
                 }
@@ -304,11 +306,11 @@ const Parametres = () => {
                 if (phone !== userData.phone) {
                   newUserData.phone = phone;
                 }
-                if(oldEmail || newEmail0 || newEmail1) {
+                if (oldEmail || newEmail0 || newEmail1) {
                   if (userData.email !== oldEmail.toLowerCase()) {
                     setError("L'ancienne adresse email n'est pas valide");
                   }
-                  else if(newEmail0.length === 0 || newEmail0 !== newEmail1) {
+                  else if (newEmail0.length === 0 || newEmail0 !== newEmail1) {
                     setError("Les deux adresses email ne sont pas indentiques");
                   }
                   else {

@@ -1,7 +1,7 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 
 import ModalEdit from '../modals/ModalEdit';
@@ -9,11 +9,13 @@ import schemaformEditExperience from '../forms/schema/formEditExperience';
 import { GridNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalConfirm from '../modals/ModalConfirm';
-import {formatParagraph, sortExperiences} from "../../utils";
+import { formatParagraph, sortExperiences } from "../../utils";
+import { ModalContext } from '../store/ModalProvider';
 
-const Experience = SortableElement(({value, sortIndex, onChange, setCurrentIndex, setCurrentDefaultValue}) => {
+const Experience = SortableElement(({ value, sortIndex, onChange, setCurrentIndex, setCurrentDefaultValue }) => {
+  const { triggerModal } = useContext(ModalContext);
   return (
-    <li style={{cursor: 'move', listStyleType: 'none'}}>
+    <li style={{ cursor: 'move', listStyleType: 'none' }}>
       <GridNoSSR
         eachWidths={['expand', 'auto']}
         className="uk-margin-medium-bottom"
@@ -45,14 +47,14 @@ const Experience = SortableElement(({value, sortIndex, onChange, setCurrentIndex
               onClick={() => {
                 setCurrentIndex(sortIndex);
                 setCurrentDefaultValue(value);
-                UIkit.modal(`#modal-experience-edit`).show();
+                triggerModal(`#modal-experience-edit`);
               }}
             />
             <ButtonIcon
               name="trash"
               onClick={() => {
                 setCurrentIndex(sortIndex);
-                UIkit.modal(`#modal-experience-remove`).show();
+                triggerModal(`#modal-experience-remove`);
               }}
             />
           </div>
@@ -62,7 +64,7 @@ const Experience = SortableElement(({value, sortIndex, onChange, setCurrentIndex
   );
 });
 
-const ExperienceList = SortableContainer(({items, onChange, setCurrentIndex, setCurrentDefaultValue}) => {
+const ExperienceList = SortableContainer(({ items, onChange, setCurrentIndex, setCurrentDefaultValue }) => {
   return (
     <ul
       id="experiences"
@@ -72,7 +74,7 @@ const ExperienceList = SortableContainer(({items, onChange, setCurrentIndex, set
           <li className="uk-text-italic">
             Aucune expérience n&apos;a encore été ajoutée
           </li>
-          ) :
+        ) :
           items.map((value, index) => (
             <Experience
               key={`item-${index}`}
@@ -81,7 +83,7 @@ const ExperienceList = SortableContainer(({items, onChange, setCurrentIndex, set
               value={value}
               onChange={onChange}
               setCurrentIndex={setCurrentIndex}
-              setCurrentDefaultValue={setCurrentDefaultValue}/>
+              setCurrentDefaultValue={setCurrentDefaultValue} />
           ))
       }
     </ul>
@@ -96,7 +98,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
 
   const updateExperiencesOrder = (reorderedExperiences) => {
     const newExperiencesList = [];
-    for(let i = 0; i < reorderedExperiences.length; i += 1) {
+    for (let i = 0; i < reorderedExperiences.length; i += 1) {
       newExperiencesList.push({
         ...reorderedExperiences[i],
         order: i
@@ -108,10 +110,12 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
     })
   };
 
-  const onSortEnd = ({oldIndex, newIndex}) => {
+  const onSortEnd = ({ oldIndex, newIndex }) => {
     const reorderedExperiences = arrayMove(sortedExperiences, oldIndex, newIndex);
     updateExperiencesOrder(reorderedExperiences);
   };
+
+  const { triggerModal } = useContext(ModalContext);
 
   return (
     <>
@@ -122,7 +126,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           </h3>
           {onChange && (
             <ButtonIcon
-              onClick={() => UIkit.modal(`#modal-experience-add`).show()}
+              onClick={() => triggerModal(`#modal-experience-add`)}
               name="plus"
             />
           )}
@@ -133,7 +137,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           onSortEnd={onSortEnd}
           onChange={onChange}
           setCurrentIndex={setCurrentIndex}
-          setCurrentDefaultValue={setCurrentDefaultValue}/>
+          setCurrentDefaultValue={setCurrentDefaultValue} />
       </div>
       {onChange && (
         <div>
@@ -148,7 +152,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
                   experiences: [...sortedExperiences, {
                     ...fields,
                     order: experiences.reduce((acc, val) => {
-                      return ( acc === undefined || val.order > acc ) ? val.order : acc;
+                      return (acc === undefined || val.order > acc) ? val.order : acc;
                     }, []) + 1
                   }]
                 })
