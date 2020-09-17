@@ -1,4 +1,4 @@
-export default {
+const TAGS =  {
   HOME_PARTAGE_CV_LINKEDIN_CLIC: {
     action: "Home_Partage_CV_LinkedIn_Clic"
   },
@@ -125,4 +125,6 @@ export default {
   PAGE_PARTENAIRES_NOUS_ECRIRE_CLIC: {
     action: "Page_Partenaires_Nous_ecrire_Clic"
   },
-}
+};
+
+module.exports = TAGS;
