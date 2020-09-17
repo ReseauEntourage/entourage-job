@@ -66,7 +66,7 @@ const CVPage = ({ cv, router }) => {
     >
       <div className="uk-background-muted">
         {cv.urlImg && (
-          <CVBackground url={process.env.AWSS3_URL + cv.urlImg || undefined} />
+          <CVBackground employed={cv.user ? cv.user.employed : false} url={process.env.AWSS3_URL + cv.urlImg || undefined} />
         )}
         <CVFiche cv={cv} />
         <ActionPartial style="muted" />

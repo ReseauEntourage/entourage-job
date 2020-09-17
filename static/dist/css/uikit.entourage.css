@@ -12601,6 +12601,8 @@ iframe.uk-cover {
 }
 .ent-offer {
   overflow: hidden;
+  border: 1px solid #F2F2F0;
+  border-radius: 2px;
 }
 .ent-offer-badge {
   position: absolute;
@@ -12610,6 +12612,29 @@ iframe.uk-cover {
   height: 10px;
   background-color: #f55f24;
   transform: rotate(45deg);
+}
+.ent-employed-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.ent-employed-badge {
+  width: 500px;
+  height: 100px;
+  background-color: #f55f24;
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 92px;
+  left: -108px;
+}
+.ent-employed-badge-small {
+  width: 500px;
+  height: 50px;
+  background-color: #f55f24;
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 78px;
+  left: -146px;
 }
 .ent-divier-backoffice {
   border-top: 1px solid black;
@@ -12694,9 +12719,6 @@ iframe.uk-cover {
   color: #fff;
 }
 .light-icon-button {
-  transition: 0.1s ease-in-out;
-  transition-property: color, background-color;
-  cursor: pointer;
   color: #f55f24;
   background-color: white;
   border: 1px solid #f55f24;
