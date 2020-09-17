@@ -41,10 +41,10 @@ const StepsToJoin = () => {
           isExternal
           onClick={() => event(TAGS.PAGE_TRAVAILLER_DEPOSER_CANDIDATURE_CLIC)}
           href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}>
-          Candidater{' '}<IconNoSSR name="chevron-right" />
+          Rejoindre le programme{' '}<IconNoSSR name="chevron-right" />
         </Button>
       </div>
-      <h4 className="uk-text-center">
+      <p className="uk-text-center">
         Si vous avez des questions, écrivez-nous à{' '}
         <br />
         <a
@@ -55,7 +55,16 @@ const StepsToJoin = () => {
         >
           {process.env.MAILJET_CONTACT_EMAIL}
         </a>
-      </h4>
+        {' '}ou appelez nous au{' '}
+        <a
+          className="uk-link-text uk-text-primary"
+          target='_blank'
+          rel="noopener noreferrer"
+          href={`tel:${'0176420535'}`}
+        >
+          01&nbsp;76&nbsp;42&nbsp;05&nbsp;35
+        </a>
+      </p>
     </Section>
   );
 };
