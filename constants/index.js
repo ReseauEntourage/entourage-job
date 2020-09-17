@@ -1,4 +1,4 @@
-import TAGS from "./tags";
+const TAGS = require('./tags');
 
 const OFFER_STATUS = [
   {value: -1, label: "Offre à traiter"},
