@@ -8,7 +8,6 @@ const ImageTitle = ({id, title, text, img}) => {
       className="uk-modal-body uk-background-muted uk-margin-remove uk-padding-remove"
     >
       <div
-        data-uk-parallax="y: 0, -130"
         style={{
           position: 'relative',
           minHeight: '220px',
