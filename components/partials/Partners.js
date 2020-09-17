@@ -3,6 +3,8 @@ import {Background, IconNoSSR, Section} from '../utils';
 import Grid from "../utils/Grid";
 import PARTNERS from '../../constants/partners';
 import SimpleLink from "../utils/SimpleLink";
+import {event} from "../../lib/gtag";
+import TAGS from "../../constants/tags";
 
 const Partners = () => {
 
@@ -19,6 +21,7 @@ const Partners = () => {
               className="uk-width-small uk-flex uk-flex-center"
               isExternal
               target="_blank"
+              onClick={() => event(TAGS.FOOTER_PARTENAIRE_CLIC)}
               href={link}>
               <img src={`/static/img/partners/${key}/logo.png`} style={{maxHeight: 100}} width="" height="" alt="" />
             </SimpleLink>

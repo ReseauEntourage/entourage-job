@@ -5,6 +5,8 @@ import {EXTERNAL_LINKS} from '../../constants';
 import Button from "../utils/Button";
 import Grid from "../utils/Grid";
 import MultipleCTA from "../partials/MultipleCTA";
+import {event} from "../../lib/gtag";
+import TAGS from "../../constants/tags";
 
 const StepsToJoin = () => {
   const content = [
@@ -37,8 +39,10 @@ const StepsToJoin = () => {
           style="secondary"
           className="uk-margin-small-top"
           isExternal
-          href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
-        >Candidater{' '}<IconNoSSR name="chevron-right" /></Button>
+          onClick={() => event(TAGS.PAGE_TRAVAILLER_DEPOSER_CANDIDATURE_CLIC)}
+          href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}>
+          Candidater{' '}<IconNoSSR name="chevron-right" />
+        </Button>
       </div>
       <h4 className="uk-text-center">
         Si vous avez des questions, écrivez-nous à{' '}

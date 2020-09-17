@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import {
@@ -10,8 +10,28 @@ import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
 import {GridNoSSR, Section} from '../../components/utils';
+import {SharesCountContext} from "../../components/store/SharesCountProvider";
 
 const CVPage = ({ cv, router }) => {
+
+  const { incrementSharesCount } = useContext(SharesCountContext);
+
+  const updateShareCount = (candidatId, type) => {
+    Api.post('api/v1/cv/count', {
+      candidatId, type
+    }).then(() => {
+      incrementSharesCount();
+    }).catch((e) => {
+      console.log(e);
+    })
+  };
+
+  useEffect(() => {
+    if(!document.referrer || !document.referrer.includes(window.location.origin)) {
+      updateShareCount(cv.UserId, 'other');
+    }
+  }, []);
+
   if (!cv) {
     return (
       <Layout title="Page introuvable - LinkedOut">

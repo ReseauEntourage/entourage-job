@@ -299,62 +299,72 @@ const getCVbyUrl = async (url) => {
     type: QueryTypes.SELECT,
   });
 
-  const promises = [];
+  if(cvs && cvs.length > 0) {
+    const promises = [];
 
-  for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
-    promises.push(new Promise((res, rej) => {
-      models.CV.findByPk(cvs[0].id, {
-        include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
-      }).then((modelCV) => {
-        res(modelCV);
-      }).catch((err) => {
-        rej(err);
-      });
-    }))
+    for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
+      promises.push(new Promise((res, rej) => {
+        models.CV.findByPk(cvs[0].id, {
+          include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
+        }).then((modelCV) => {
+          res(modelCV);
+        }).catch((err) => {
+          rej(err);
+        });
+      }))
+    }
+
+    const results = await Promise.all(promises);
+
+    return results.reduce((acc, curr) => {
+      const cleanedCurr = cleanCV(curr);
+      return {
+        ...acc,
+        ...cleanedCurr
+      }
+    }, {});
   }
 
-  const results = await Promise.all(promises);
-
-  return results.reduce((acc, curr) => {
-    const cleanedCurr = cleanCV(curr);
-    return {
-      ...acc,
-      ...cleanedCurr
-    }
-  }, {});
+  return null;
 };
 
 // todo: revoir
 const getCVbyUserId = async (userId) => {
   console.log(`getCVByUserId ${userId}`);
 
-  const promises = [];
+  const user = await models.User.findByPk(userId);
 
-  for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
-    promises.push(new Promise((res, rej) => {
-      models.CV.findOne({
-        include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
-        where: {
-          UserId: userId,
-        },
-        order: [['version', 'DESC']],
-      }).then((modelCV) => {
-        res(modelCV);
-      }).catch((err) => {
-        rej(err);
-      });
-    }))
+  if(user) {
+    const promises = [];
+
+    for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
+      promises.push(new Promise((res, rej) => {
+        models.CV.findOne({
+          include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
+          where: {
+            UserId: userId,
+          },
+          order: [['version', 'DESC']],
+        }).then((modelCV) => {
+          res(modelCV);
+        }).catch((err) => {
+          rej(err);
+        });
+      }))
+    }
+
+    const results = await Promise.all(promises);
+
+    return results.reduce((acc, curr) => {
+      const cleanedCurr = cleanCV(curr);
+      return {
+        ...acc,
+        ...cleanedCurr
+      }
+    }, {});
   }
 
-  const results = await Promise.all(promises);
-
-  return results.reduce((acc, curr) => {
-    const cleanedCurr = cleanCV(curr);
-    return {
-      ...acc,
-      ...cleanedCurr
-    }
-  }, {});
+  return null;
 };
 
 const getCVs = async () => {

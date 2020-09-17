@@ -1,7 +1,9 @@
 import React from 'react';
-import {GridNoSSR, ImgNoSSR, Background, Section, IconNoSSR} from '../utils';
+import {GridNoSSR, ImgNoSSR, Background, Section, IconNoSSR, SimpleLink} from '../utils';
 import Button from "../utils/Button";
 import {EXTERNAL_LINKS} from "../../constants";
+import {event} from "../../lib/gtag";
+import TAGS from "../../constants/tags";
 
 const AssociationEntourage = () => (
   <Background blend={{ colorHex: '#484848' }}>
@@ -33,6 +35,7 @@ const AssociationEntourage = () => (
                 href={EXTERNAL_LINKS.ENTOURAGE}
                 style="default"
                 isExternal
+                onClick={() => event(TAGS.FOOTER_SITE_ENTOURAGE_CLIC)}
                 newTab>
                 Voir le site{' '}<IconNoSSR name="chevron-right" />
               </Button>

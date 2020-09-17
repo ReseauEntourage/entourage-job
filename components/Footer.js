@@ -10,6 +10,8 @@ import AssociationEntourage from './partials/AssociationEntourage';
 import Partners from './partials/Partners';
 import Button from "./utils/Button";
 import {EXTERNAL_LINKS} from '../constants';
+import {event} from "../lib/gtag";
+import TAGS from "../constants/tags";
 
 const sharedTitle = 'LinkedOut';
 const sharedDescription =
@@ -125,6 +127,7 @@ const Footer = () => {
                 href={EXTERNAL_LINKS.DONATION}
                 isExternal
                 newTab
+                onClick={() => event(TAGS.FOOTER_DON_CLIC)}
                 style='primary'>
                 Soutenir LinkedOut{' '}<IconNoSSR name="chevron-right" />
               </Button>
@@ -146,6 +149,7 @@ const Footer = () => {
                 <SimpleLink
                   href={EXTERNAL_LINKS.ENTOURAGE}
                   isExternal
+                  onClick={() => event(TAGS.FOOTER_SITE_ENTOURAGE_CLIC)}
                   target="_blank">
                   Association Entourage
                 </SimpleLink>
@@ -157,6 +161,7 @@ const Footer = () => {
                 <SimpleLink
                   href={EXTERNAL_LINKS.LKO_BLOG}
                   isExternal
+                  onClick={() => event(TAGS.FOOTER_BLOG_LINKEDOUT_CLIC)}
                   target="_blank">
                   Actualités
                 </SimpleLink>
