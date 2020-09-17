@@ -9,6 +9,8 @@ import Carousel from "../components/utils/Carousel";
 import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
 import SimpleSection from "../components/sections/SimpleSection";
 import SimpleLink from "../components/utils/SimpleLink";
+import {event} from "../lib/gtag";
+import TAGS from "../constants/tags";
 
 
 const Partenaires = () => {
@@ -205,7 +207,8 @@ const Partenaires = () => {
         style="muted"
         button={{
           label: "Nous écrire",
-          modal: "target: #modal-interest-linkedOut"
+          modal: "target: #modal-interest-linkedOut",
+          onClick: () => event(TAGS.PAGE_PARTENAIRES_NOUS_ECRIRE_CLIC)
         }} />
       <ModalInterestLinkedOut />
     </Layout>

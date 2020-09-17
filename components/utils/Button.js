@@ -83,7 +83,7 @@ Button.defaultProps = {
   isExternal: false,
   newTab: false,
   className: undefined,
-  onClick: undefined,
+  onClick: () => {},
   toggle: undefined,
 };
 

@@ -8,6 +8,8 @@ import SimpleSection from "../components/sections/SimpleSection";
 import MultipleCTA from "../components/partials/MultipleCTA";
 import ImageTitle from "../components/sections/ImageTitle";
 import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
+import {event} from "../lib/gtag";
+import TAGS from "../constants/tags";
 
 
 const Aider = () => (
@@ -44,7 +46,8 @@ const Aider = () => (
                   button: {
                     label: "Devenir bénévole-coach",
                     href: process.env.AIRTABLE_LINK_BECOME_COACH,
-                    external: true
+                    external: true,
+                    onClick: () => event(TAGS.PAGE_AIDER_INSCRIPTION_COACH_CLIC)
                   }
                 }
               ]}
@@ -66,14 +69,16 @@ const Aider = () => (
                   button: {
                     label: "Nous l'orienter",
                     href: process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION,
-                    external: true
+                    external: true,
+                    onClick: () => event(TAGS.PAGE_AIDER_ORIENTER_CANDIDAT_CLIC)
                   }
                 },
                 {
                   title: "Vous souhaitez coopérer avec LinkedOut\xa0?",
                   button: {
                     label: "Nous écrire",
-                    modal: "target: #modal-interest-linkedOut"
+                    modal: "target: #modal-interest-linkedOut",
+                    onClick: () => event(TAGS.PAGE_AIDER_CONTACT_TS_CLIC)
                   }
                 }
               ]}
@@ -92,7 +97,8 @@ const Aider = () => (
             id="entreprise"
             button={{
               label: "Nous écrire",
-              modal: "target: #modal-interest-linkedOut"
+              modal: "target: #modal-interest-linkedOut",
+              onClick: () => event(TAGS.PAGE_AIDER_CONTACT_RECRUTEUR_CLIC)
             }} />
         </li>
         <li className="uk-flex">
@@ -108,7 +114,8 @@ const Aider = () => (
             button={{
               label: "Faire un don",
               href: EXTERNAL_LINKS.DONATION,
-              external: true
+              external: true,
+              onClick: () => event(TAGS.PAGE_AIDER_DON_CLIC)
             }} />
         </li>
 
