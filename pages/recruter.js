@@ -30,34 +30,27 @@ const Recruter = () => {
       </Section>
       <SimpleSection
         style="default"
-        container="large"
+        container="small"
+        fontSize="small"
         title={<>Les candidats LinkedOut sont coachés sur la durée pour une <span className="uk-text-primary">intégration en emploi réussie&nbsp;!</span></>}
         text={
-          <>
-            <Img src='../static/img/candidats.jpg' alt='' className="uk-padding-large uk-padding-remove-vertical"/>
-          </>
+          <ul
+            uk-scrollspy="cls:uk-animation-slide-bottom; target: > li, hr; delay: 200;"
+            className="uk-list uk-list-primary uk-margin-remove">
+            <li>
+              LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la <span className="uk-text-bold uk-text-primary">capacité</span> et la <span className="uk-text-bold uk-text-primary">motivation pour travailler</span>
+            </li>
+            <hr className="uk-divider-small"/>
+            <li >
+              Ils sont <span className="uk-text-bold uk-text-primary">soutenus</span> individuellement par des <span className="uk-text-bold uk-text-primary">bénévoles-coach</span> dans leur recherche d’emploi et après la reprise d’un emploi.
+            </li>
+            <hr className="uk-divider-small"/>
+            <li>
+              Tous candidats ont un <span className="uk-text-bold uk-text-primary">logement stable</span> ou <span className="uk-text-bold uk-text-primary">temporaire</span>, bénéficient d’un <span className="uk-text-bold uk-text-primary">accompagnement social</span> et ont les <span className="uk-text-bold uk-text-primary">papiers nécessaires</span> à la réalisation d’un contrat de travail en France.
+            </li>
+          </ul>
         }
-        id="common">
-        <div className="uk-container-small">
-          <h4 className="uk-margin-remove uk-align-center uk-text-center">
-            <ul
-              uk-scrollspy="cls:uk-animation-slide-bottom; target: > li, hr; delay: 200;"
-              className="uk-list uk-list-primary uk-margin-remove">
-              <li>
-                LinkedOut s&apos;adresse à des profils diversifiés ayant comme points communs la <span className="uk-text-bold uk-text-primary">capacité</span> et la <span className="uk-text-bold uk-text-primary">motivation pour travailler</span>
-              </li>
-              <hr className="uk-divider-small"/>
-              <li >
-                Ils sont <span className="uk-text-bold uk-text-primary">soutenus</span> individuellement par des <span className="uk-text-bold uk-text-primary">bénévoles-coach</span> dans leur recherche d’emploi et après la reprise d’un emploi.
-              </li>
-              <hr className="uk-divider-small"/>
-              <li>
-                Tous candidats ont un <span className="uk-text-bold uk-text-primary">logement stable</span> ou <span className="uk-text-bold uk-text-primary">temporaire</span>, bénéficient d’un <span className="uk-text-bold uk-text-primary">accompagnement social</span> et ont les <span className="uk-text-bold uk-text-primary">papiers nécessaires</span> à la réalisation d’un contrat de travail en France.
-              </li>
-            </ul>
-          </h4>
-        </div>
-      </SimpleSection>
+        id="common" />
       <WaysToJoin />
       <HireSteps />
       <Section style="muted">
