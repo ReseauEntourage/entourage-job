@@ -6,6 +6,9 @@ import {
 } from 'react-share';
 import { GridNoSSR, IconNoSSR, Section, Background, ImgNoSSR } from '../utils';
 
+import {event} from '../../lib/gtag';
+import TAGS from '../../constants/tags';
+
 // Home page partials
 const LandingPagePartial = () => {
   const sharedTitle = 'LinkedOut';
@@ -41,33 +44,30 @@ const LandingPagePartial = () => {
               <span> avec ceux qui n&apos;en ont plus</span>
             </h1>
 
-            <div className="uk-flex uk-flex-row uk-flex-center uk-flex-left@s">
+            <div className="uk-flex uk-flex-row uk-flex-center uk-flex-left@s uk-light">
               <FacebookShareButton
-                className="uk-icon-button uk-icon-link uk-text-primary uk-margin-right"
+                onShareWindowClose={() => event(TAGS.HOME_PARTAGE_LKO_FACEBOOK_CLIC)}
+                className="uk-icon-button uk-margin-right"
                 url={sharedURL}
                 quote={sharedDescription}
-                hashtags={hashtags}
-                style={{ cursor: 'pointer' }}
-              >
+                hashtags={hashtags}>
                 <IconNoSSR name="facebook" />
               </FacebookShareButton>
               <TwitterShareButton
+                onShareWindowClose={() => event(TAGS.HOME_PARTAGE_LKO_TWITTER_CLIC)}
                 url={sharedURL}
                 title={sharedDescription}
                 hashtags={hashtags}
                 via={viaTwitter}
-                style={{ cursor: 'pointer' }}
-                className="uk-icon-button uk-icon-link uk-text-primary uk-margin-right"
-              >
+                className="uk-icon-button">
                 <IconNoSSR name="twitter" />
               </TwitterShareButton>
               <LinkedinShareButton
-                className="uk-icon-button uk-icon-link uk-text-primary"
+                onShareWindowClose={() => event(TAGS.HOME_PARTAGE_LKO_LINKEDIN_CLIC)}
+                className="uk-icon-button uk-margin-left"
                 url={sharedURL}
                 title={sharedTitle}
-                description={sharedDescription}
-                style={{ cursor: 'pointer' }}
-              >
+                description={sharedDescription}>
                 <IconNoSSR name="linkedin" />
               </LinkedinShareButton>
             </div>

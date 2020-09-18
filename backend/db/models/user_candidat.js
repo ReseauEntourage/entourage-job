@@ -43,9 +43,9 @@ module.exports = (sequelize, DataTypes) => {
     // lie un coach un utilisateur à son nouveau coach et délie un coach à son ancien user
     const clearCoachBindings = (coachId) =>
       UserCandidat.update(
-        { coachId: null },
+        {coachId: null},
         {
-          where: { coachId },
+          where: {coachId},
         }
       );
 

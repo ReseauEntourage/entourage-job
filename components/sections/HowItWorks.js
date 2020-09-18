@@ -9,7 +9,7 @@ const HowItWorks = ({style}) => {
   const content = [
     {
       img: '/static/img/illustrations/how1.png',
-      text: <div>La plateforme <span className="uk-text-primary">LinkedOut</span> permet de <span className="uk-text-bold">viraliser les CV des candidats</span> sur les réseaux sociaux pour les rendre visibles auprès de recruteurs et générer des opportunités d’emploi</div>,
+      text: <div>La plateforme <span className="uk-text-primary">LinkedOut</span> permet de <span className="uk-text-bold">viraliser les CV des candidats</span> sur les réseaux sociaux pour générer des opportunités d’emploi</div>,
     },
     {
       img: '/static/img/illustrations/how2.png',
@@ -17,11 +17,11 @@ const HowItWorks = ({style}) => {
     },
     {
       img: '/static/img/illustrations/how3.png',
-      text: <div><span className="uk-text-bold">Un parcours de courtes formations</span> permet aux candidats qui le souhaitent d’acquérir les compétences manquantes et de reprendre confiance</div>,
+      text: <div><span className="uk-text-bold">Des formations courtes</span> permettent aux candidats qui le souhaitent d’acquérir les compétences manquantes et de reprendre confiance</div>,
     },
     {
       img: '/static/img/illustrations/how4.png',
-      text: <div>Tout au long de leur parcours vers l’emploi, la <span className="uk-text-bold">communauté Entourage</span> soutient les candidats, leur permet de se ressourcer et de faire de nouvelles rencontres</div>,
+      text: <div>La <span className="uk-text-bold">communauté Entourage</span> permet aux candidats de se ressourcer et de faire de nouvelles rencontres</div>,
     },
   ];
 

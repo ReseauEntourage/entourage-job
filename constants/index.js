@@ -1,3 +1,5 @@
+const TAGS = require('./tags');
+
 const OFFER_STATUS = [
   {value: -1, label: "Offre à traiter"},
   {value: 0, label: "Contacté"},
@@ -154,45 +156,48 @@ const FILTERS_DATA = [
   {
     key: 'businessLines',
     constants: BUSINESS_LINES,
-    title: "Secteurs d'activité"
+    title: "Secteurs d'activité",
+    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC
   },
   {
     key: 'locations',
     constants: LOCATIONS,
-    title: "Secteurs géographiques"
+    title: "Secteurs géographiques",
+    tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC
   }
 ];
 
 const CV_STATUS = {
+  Published: {
+    label: "Publié",
+    value: "Published",
+    style: "success"
+  },
   Pending: {
     label: "En attente",
     value: "Pending",
+    style: "danger"
+  },
+  Progress: {
+    label: "En cours",
+    value: "Progress",
     style: "muted"
   },
-  Published:
-    {
-      label: "Publié",
-      value: "Published",
-      style: "success"
-    },
-  New:
-    {
-      label: "Nouveau",
-      value: "New",
-      style: "info"
-    },
-  Draft:
-    {
-      label: "Brouillon",
-      value: "Draft",
-      style: "warning"
-    },
-  Unknown:
-    {
-      label: "Inconnu",
-      value: "Unknown",
-      style: ""
-    }
+  New: {
+    label: "Nouveau",
+    value: "New",
+    style: "muted"
+  },
+  Draft: {
+    label: "Brouillon",
+    value: "Draft",
+    style: "warning"
+  },
+  Unknown: {
+    label: "Inconnu",
+    value: "Unknown",
+    style: ""
+  }
 };
 
 const USER_ROLES = {

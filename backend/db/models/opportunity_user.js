@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-underscore-dangle */
 
-const { sendMail } = require('../../controllers/mail');
+const {sendMail} = require('../../controllers/mail');
 
 module.exports = (sequelize, DataTypes) => {
   const Opportunity_User = sequelize.define('Opportunity_User', {
@@ -54,15 +54,16 @@ module.exports = (sequelize, DataTypes) => {
       title,
       opportunityId,
       roleMin
-    ) =>
-      sendMail({
+    ) => {
+      await sendMail({
         toEmail,
         subject: `${firstName} a retrouvé un emploi`,
         text: `
-        ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
-        Vous pouvez maintenant l'archiver en cliquant ici :
-        ${process.env.SERVER_URL}/backoffice/${roleMin}/offres?q=${opportunityId}.`,
+          ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
+          Vous pouvez maintenant l'archiver en cliquant ici :
+          ${process.env.SERVER_URL}/backoffice/${roleMin}/offres?q=${opportunityId}.`,
       });
+    };
 
     Opportunity_User.belongsTo(models.User);
 
@@ -77,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
         nextData.status === 2
       ) {
         try {
-          const [{ firstName, userToCoach }, { title }] = await Promise.all([
+          const [{firstName, userToCoach}, {title}] = await Promise.all([
             models.User.findByPk(nextData.UserId, {
               attributes: ['firstName', 'userToCoach'],
             }),
@@ -87,7 +88,7 @@ module.exports = (sequelize, DataTypes) => {
           ]);
 
           // mail admin
-          sendMailEmbauche(
+          await sendMailEmbauche(
             process.env.MAILJET_TO_EMAIL,
             firstName,
             title,
@@ -96,10 +97,10 @@ module.exports = (sequelize, DataTypes) => {
           );
           if (userToCoach) {
             // mail coach
-            const { email } = await models.User.findByPk(userToCoach, {
+            const {email} = await models.User.findByPk(userToCoach, {
               attributes: ['email'],
             });
-            sendMailEmbauche(
+            await sendMailEmbauche(
               email,
               firstName,
               title,

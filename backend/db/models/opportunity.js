@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
     return opportunityToCreate;
   });
 
-  Opportunity.associate = function(models) {
+  Opportunity.associate = function (models) {
     Opportunity.belongsToMany(models.BusinessLine, {
       through: 'Opportunity_BusinessLines',
       as: 'businessLines',

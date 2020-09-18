@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     s.id = uuid();
     return s;
   });
-  Skill.associate = function(models) {};
+  Skill.associate = function (models) {
+  };
   return Skill;
 };

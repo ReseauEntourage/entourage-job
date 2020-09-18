@@ -12,6 +12,7 @@ const SimpleLink = ({
   target,
   scroll,
   isExternal,
+  onClick
 }) => {
   let classBuffer = '';
   if (visible) classBuffer += ` uk-visible@${visible}`;
@@ -19,6 +20,7 @@ const SimpleLink = ({
 
   return isExternal ? (
     <a
+      onClick={onClick}
       href={href}
       target={target ? '_blank' : ''}
       className={classBuffer}
@@ -29,6 +31,7 @@ const SimpleLink = ({
   ) : (
     <Link scroll={scroll} href={href} as={as}>
       <a
+        onClick={onClick}
         target={target}
         className={classBuffer}
         rel={target ? 'noopener noreferrer' : ''}
@@ -50,6 +53,7 @@ SimpleLink.propTypes = {
   target: PropTypes.string,
   isExternal: PropTypes.bool,
   scroll: PropTypes.bool,
+  onClick: PropTypes.func
 };
 SimpleLink.defaultProps = {
   as: undefined,
@@ -58,5 +62,6 @@ SimpleLink.defaultProps = {
   target: undefined,
   isExternal: false,
   scroll: undefined,
+  onClick: () => {}
 };
 export default SimpleLink;

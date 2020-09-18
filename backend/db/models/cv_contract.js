@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  CV_Contract.associate = function(models) {
+  CV_Contract.associate = function (models) {
     // associations can be defined here
   };
   return CV_Contract;

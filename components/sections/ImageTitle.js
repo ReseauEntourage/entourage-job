@@ -8,7 +8,6 @@ const ImageTitle = ({id, title, text, img}) => {
       className="uk-modal-body uk-background-muted uk-margin-remove uk-padding-remove"
     >
       <div
-        data-uk-parallax="y: 0, -130"
         style={{
           position: 'relative',
           minHeight: '220px',
@@ -35,12 +34,14 @@ const ImageTitle = ({id, title, text, img}) => {
       </div>
       <div
         className="uk-flex uk-flex-column uk-flex-center uk-position-relative uk-width-1-2@m uk-align-center uk-background-default uk-padding uk-box-shadow-medium" style={{minHeight: 250}}>
-        <h1 className="uk-text-center uk-align-center uk-text-bold">
+        <h1 className="uk-text-center uk-align-center uk-text-bold uk-margin-remove-vertical">
           {title}
         </h1>
-        <h3 className="uk-text-center uk-align-center uk-margin-remove-vertical">
-          {text}
-        </h3>
+        {
+          text &&  <h3 className="uk-text-center uk-align-center uk-margin-remove-bottom">
+            {text}
+          </h3>
+        }
       </div>
     </div>
   );
@@ -49,11 +50,12 @@ const ImageTitle = ({id, title, text, img}) => {
 ImageTitle.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.element.isRequired,
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string,
   img: PropTypes.string.isRequired
 };
 
 ImageTitle.defaultProps = {
+  text: undefined
 };
 
 export default ImageTitle;

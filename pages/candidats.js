@@ -6,6 +6,8 @@ import ButtonIcon from '../components/utils/ButtonIcon';
 import {FILTERS_DATA} from "../constants";
 import {getChildrenFilters} from "../utils";
 import Icon from "../components/utils/Icon";
+import {event} from "../lib/gtag";
+import TAGS from "../constants/tags";
 
 let debounceTimeoutId;
 
@@ -18,6 +20,7 @@ const initializeFilters = () => {
 
 const Candidats = () => {
   const [search, setSearch] = useState();
+  const [hideEmployed, setHideEmployed] = useState(true);
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
   const [filters, setFilters] = useState(initializeFilters());
   const [numberOfResults, setNumberOfResults] = useState(0);
@@ -27,7 +30,7 @@ const Candidats = () => {
     setFilters(initializeFilters());
   };
 
-  const renderFilters = (filterConstants, key) => {
+  const renderFilters = (filterConstants, key, tag) => {
     const reducedFilters = getChildrenFilters(filterConstants);
 
     return reducedFilters.map((filterConst, idx) => {
@@ -39,6 +42,7 @@ const Candidats = () => {
       const onFilterClick = () => {
         const updatedFilters = {...filters};
         if (index < 0) {
+          event(tag);
           updatedFilters[key].push(filterConst);
         } else {
           updatedFilters[key].splice(index, 1);
@@ -78,9 +82,10 @@ const Candidats = () => {
     }
   }, [numberOfResults]);
 
-  const startSearch = (event) => {
-    if (event.target.value) {
-      setSearch(event.target.value);
+  const startSearch = (ev) => {
+    if (ev.target.value) {
+      event(TAGS.PAGE_GALERIE_RECHERCHE);
+      setSearch(ev.target.value);
     } else {
       setSearch(null);
     }
@@ -90,7 +95,7 @@ const Candidats = () => {
     <Layout title="Les candidats - LinkedOut">
       <Section style="default">
         <GridNoSSR
-          gap="large"
+          gap="medium"
           column
           middle
           center
@@ -105,7 +110,7 @@ const Candidats = () => {
               LinkedOut.
             </div>
           </div>
-          <div className="uk-flex uk-flex-column uk-flex-middle">
+          <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-medium-top">
             <div
               style={{maxWidth: 1000}}
               className="uk-width-expand ent-search-bar">
@@ -113,16 +118,16 @@ const Candidats = () => {
                 <input
                   className="uk-search-input"
                   type="search"
-                  placeholder="Taper un mot-clé ou un terme pour affiner votre recherche..."
+                  placeholder="Chercher un secteur d’activité, une compétence, un profil..."
                   onKeyDown={(ev) => {
                     if (ev.key === "Enter") {
                       ev.preventDefault();
                     }
                   }}
-                  onChange={(event) => {
+                  onChange={(ev) => {
                     clearTimeout(debounceTimeoutId);
-                    event.persist();
-                    debounceTimeoutId = setTimeout(() => startSearch(event), 500);
+                    ev.persist();
+                    debounceTimeoutId = setTimeout(() => startSearch(ev), 500);
                   }}
                 />
               </form>
@@ -148,6 +153,9 @@ const Candidats = () => {
                     style="text"
                     toggle="target: #toggle-animation; animation: uk-animation-fade"
                     onClick={() => {
+                      if(!filterMenuOpened) {
+                        event(TAGS.PAGE_GALERIE_AFFICHER_FILTRES_CLIC);
+                      }
                       setFilterMenuOpened(!filterMenuOpened);
                     }}>
                     Filtrer par{' '}&nbsp;<IconNoSSR
@@ -195,17 +203,28 @@ const Candidats = () => {
 
               <div id="toggle-animation" hidden className="uk-margin-medium-top">
                 {
-                  FILTERS_DATA.map(({title, constants, key}) => {
+                  FILTERS_DATA.map(({title, constants, key, tag}) => {
                     return (
                       <div key={key}>
                         <span className="uk-text-bold">{title}</span>
                         <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom">
-                          {renderFilters(constants, key)}
+                          {renderFilters(constants, key, tag)}
                         </div>
                       </div>
                     )
                   })
                 }
+                <div>
+                  <label htmlFor="hide-employed" className="uk-text-bold">Masquer les candidats ayant retrouvé un emploi
+                    <input
+                      id="hide-employed"
+                      type="checkbox"
+                      className="uk-checkbox uk-margin-small-left"
+                      checked={hideEmployed}
+                      onChange={(e) => setHideEmployed(e.target.checked)}
+                    />
+                  </label>
+                </div>
                 <div className="uk-flex uk-flex-center uk-margin-medium-top">
                   <Button
                     style="text"
@@ -223,7 +242,8 @@ const Candidats = () => {
           <CVList
             search={search}
             filters={filters}
-            updateNumberOfResults={setNumberOfResults} />
+            updateNumberOfResults={setNumberOfResults}
+            hideEmployed={hideEmployed} />
         </GridNoSSR>
       </Section>
     </Layout>

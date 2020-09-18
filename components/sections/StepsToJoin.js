@@ -5,6 +5,8 @@ import {EXTERNAL_LINKS} from '../../constants';
 import Button from "../utils/Button";
 import Grid from "../utils/Grid";
 import MultipleCTA from "../partials/MultipleCTA";
+import {event} from "../../lib/gtag";
+import TAGS from "../../constants/tags";
 
 const StepsToJoin = () => {
   const content = [
@@ -37,10 +39,12 @@ const StepsToJoin = () => {
           style="secondary"
           className="uk-margin-small-top"
           isExternal
-          href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
-        >Candidater{' '}<IconNoSSR name="chevron-right" /></Button>
+          onClick={() => event(TAGS.PAGE_TRAVAILLER_DEPOSER_CANDIDATURE_CLIC)}
+          href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}>
+          Rejoindre LinkedOut{' '}<IconNoSSR name="chevron-right" />
+        </Button>
       </div>
-      <h4 className="uk-text-center">
+      <p className="uk-text-center">
         Si vous avez des questions, écrivez-nous à{' '}
         <br />
         <a
@@ -51,7 +55,16 @@ const StepsToJoin = () => {
         >
           {process.env.MAILJET_CONTACT_EMAIL}
         </a>
-      </h4>
+        {' '}ou appelez nous au{' '}
+        <a
+          className="uk-link-text uk-text-primary"
+          target='_blank'
+          rel="noopener noreferrer"
+          href={`tel:${'0176420535'}`}
+        >
+          01&nbsp;76&nbsp;42&nbsp;05&nbsp;35
+        </a>
+      </p>
     </Section>
   );
 };

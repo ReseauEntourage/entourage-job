@@ -13,6 +13,7 @@ import Axios from "../Axios";
 import ImageTitle from "../components/sections/ImageTitle";
 import Carousel from "../components/utils/Carousel";
 import PARTNERS from "../constants/partners";
+import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
 
 const Orienter = () => {
 
@@ -21,8 +22,7 @@ const Orienter = () => {
       <ImageTitle
         img='static/img/header_pic_guide.jpg'
         id="guide-title"
-        title={<>Vous souhaitez nous <span className="uk-text-primary">orienter des candidats&nbsp;?</span></>}
-        text={"On a tous un rôle à jouer dans la réinsertion des personnes exclues\xa0!"} />
+        title={<>Vous souhaitez nous <span className="uk-text-primary">orienter des candidats&nbsp;?</span></>} />
       <SimpleSection
         title={<>LinkedOut, un programme de <span className="uk-text-primary">l&apos;association Entourage</span></>}
         text="Avec l’association Entourage, chaque citoyen est appelé à changer son regard et son comportement envers les personnes isolées et en précarité, pour leur redonner estime de soi et chaleur humaine. Et ce, en complémentarité du travail de l’action sociale. LinkedOut est né dans cette même veine, pour favoriser l’inclusion professionnelle des “exclus” par la mobilisation de tout un chacun."
@@ -79,7 +79,29 @@ const Orienter = () => {
           newTab: true
         }}
         id="howItWorks"
-        fontSize="small"/>
+        fontSize="small">
+        <MultipleCTA
+          className="uk-margin-large-top"
+          spacing='medium'
+          data={[
+            {
+              title: "Vous accompagnez une personne en démarche d'insertion professionnelle\xa0?",
+              button: {
+                label: "Nous l'orienter",
+                href: process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION,
+                external: true
+              }
+            },
+            {
+              title: "Vous souhaitez coopérer avec LinkedOut\xa0?",
+              button: {
+                label: "Nous écrire",
+                modal: "target: #modal-interest-linkedOut"
+              }
+            }
+          ]}
+          showVerticalDividers/>
+      </SimpleSection>
       <Section style="default" container="small">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
           <span className="uk-text-primary">LinkedOut</span>, c&apos;est aussi&nbsp;:
@@ -154,6 +176,7 @@ const Orienter = () => {
           submitText="S'abonner"
           id='modal-get-info' />
       </div>
+      <ModalInterestLinkedOut />
     </Layout>
   )
 };
