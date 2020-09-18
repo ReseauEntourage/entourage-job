@@ -3,19 +3,18 @@ const sequelize = require('sequelize');
 const {VALUES} = require("../../constants");
 
 const {
-  models: { Share },
-  Sequelize: { Op, fn, col, where },
+  models: {Share},
+  Sequelize: {Op, fn, col, where},
 } = require('../db/models');
 
 const updateShareCount = async (candidatId, type) => {
   try {
     const candidatShares = await Share.findOne({
-      where: { CandidatId: candidatId },
+      where: {CandidatId: candidatId},
     });
-    if(candidatShares) {
-      await candidatShares.increment(type, { by: 1 /* + Math.random() * Math.floor(6) */})
-    }
-    else {
+    if (candidatShares) {
+      await candidatShares.increment(type, {by: 1})
+    } else {
       await Share.create(
         {
           CandidatId: candidatId,
@@ -23,8 +22,7 @@ const updateShareCount = async (candidatId, type) => {
         }
       );
     }
-  }
-  catch (e) {
+  } catch (e) {
     console.log(e);
   }
 };
@@ -39,16 +37,16 @@ const getTotalShares = async () => {
         [sequelize.fn('sum', sequelize.col('linkedin')), 'linkedin'],
         [sequelize.fn('sum', sequelize.col('twitter')), 'twitter'],
         [sequelize.fn('sum', sequelize.col('whatsapp')), 'whatsapp'],
+        [sequelize.fn('sum', sequelize.col('other')), 'other'],
       ],
     });
     const shareCounts = Object.values(shares[0].dataValues);
-    if(shareCounts.every((shareCount) => !!shareCount)) {
+    if (shareCounts.every((shareCount) => !!shareCount)) {
       totalShares += Object.keys(shares[0].dataValues).reduce((previous, key) => {
         return previous + parseInt(shares[0].dataValues[key], 10);
       }, 0);
     }
-  }
-  catch (e) {
+  } catch (e) {
     console.log(e);
   }
 

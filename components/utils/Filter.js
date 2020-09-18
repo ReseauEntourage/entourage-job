@@ -32,6 +32,11 @@ const Filter = ({ id, loading, filters, children, search }) => {
               className="uk-search-input"
               type="search"
               placeholder="Rechercher..."
+              onKeyDown={(ev) => {
+                if (ev.key === "Enter") {
+                  ev.preventDefault();
+                }
+              }}
               onChange={(event) => {
                 clearTimeout(debounceTimeoutId);
                 event.persist();

@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const dotenv = require('dotenv');
+const loadEnvironementVariables = require('../../utils/env');
 
-dotenv.config();
-const db = { models: {} };
+loadEnvironementVariables();
+
+const db = {models: {}};
 const basename = path.basename(__filename);
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
@@ -22,13 +23,13 @@ fs.readdirSync(__dirname)
     db.models[model.name] = model;
   });
 
-Object.keys(db.models).forEach((modelName) => {
+Object.keys(db.models).forEach(async (modelName) => {
   if (db.models[modelName].associate) {
-    db.models[modelName].associate(db.models);
+    await db.models[modelName].associate(db.models);
   }
 });
 
-db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
 module.exports = db;

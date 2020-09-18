@@ -8,13 +8,18 @@ function encryptPassword(password) {
   const hash = crypto
     .pbkdf2Sync(password, salt, 10000, 512, 'sha512')
     .toString('hex');
-  return { salt, hash };
+
+  return {
+    salt,
+    hash
+  };
 }
 
 function validatePassword(password, hash, salt) {
   const passwordHash = crypto
     .pbkdf2Sync(password, salt, 10000, 512, 'sha512')
     .toString('hex');
+
   return passwordHash === hash;
 }
 
@@ -25,12 +30,12 @@ function generateJWT(user, expiration) {
   expirationDate.setDate(today.getDate() + 60);
 
   let candidatId = null;
-  if(user.coach && user.coach.candidat) {
+  if (user.coach && user.coach.candidat) {
     candidatId = user.coach.candidat.id;
   }
 
   let coachId = null;
-  if(user.candidat && user.candidat.coach) {
+  if (user.candidat && user.candidat.coach) {
     coachId = user.candidat.coach.id;
   }
 
@@ -53,12 +58,12 @@ function generateJWT(user, expiration) {
 
 function toAuthJSON(user) {
   let candidat = null;
-  if(user.coach && user.coach.candidat) {
+  if (user.coach && user.coach.candidat) {
     candidat = user.coach.candidat;
   }
 
   let coach = null;
-  if(user.candidat && user.candidat.coach) {
+  if (user.candidat && user.candidat.coach) {
     coach = user.candidat.coach;
   }
 
@@ -78,9 +83,11 @@ function toAuthJSON(user) {
 
 const getTokenFromHeaders = (req) => {
   const {
-    headers: { authorization },
+    headers: {
+      authorization
+    },
   } = req;
-  console.log('auth :', authorization);
+  // console.log('auth :', authorization);
 
   if (authorization && authorization.split(' ')[0] === 'Token') {
     return authorization.split(' ')[1];
@@ -88,8 +95,7 @@ const getTokenFromHeaders = (req) => {
   return null;
 };
 
-const auth = (roles= []) => {
-
+const auth = (roles = []) => {
   return [
     expressJwt({
       secret: process.env.JWT_SECRET,
@@ -100,9 +106,11 @@ const auth = (roles= []) => {
     }),
     (req, res, next) => {
       if (roles.length > 0 && !roles.includes(req.payload.role)) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({
+          message: 'Unauthorized'
+        });
       }
-      next();
+      return next();
     }
   ];
 };

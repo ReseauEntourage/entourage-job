@@ -1,10 +1,12 @@
 const express = require('express');
 
 const router = express.Router();
-const sequelize = require('sequelize');
-const db = require('../../../db/config/databaseConnect');
-const { auth } = require('../../../controllers/Auth');
-const Message = require('../../../db/models/message')(db, sequelize.DataTypes);
+const {auth} = require('../../../controllers/Auth');
+const {
+  models: {
+    Message
+  }
+} = require('../../../db/models');
 const {USER_ROLES} = require('../../../../constants');
 
 // Find all messages
@@ -51,7 +53,7 @@ router.post('/', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN])
 // Find 1 message req.params.id
 router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   Message.findAll({
-    where: { id: req.params.id },
+    where: {id: req.params.id},
   })
     .then((message) => {
       console.log('Message found : ', JSON.stringify(message, null, 4));
@@ -66,7 +68,7 @@ router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
 // Delete a message
 router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
   Message.destroy({
-    where: { id: req.params.id },
+    where: {id: req.params.id},
   })
     .then(() => {
       console.log('Message destroy');

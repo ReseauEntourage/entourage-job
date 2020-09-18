@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     r.id = uuid();
     return r;
   });
-  Review.associate = function(models) {
+  Review.associate = function (models) {
     Review.belongsTo(models.CV);
   };
   return Review;

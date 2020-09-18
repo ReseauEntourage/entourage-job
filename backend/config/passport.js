@@ -13,8 +13,7 @@ passport.deserializeUser((user, done) => done(null, user));
 module.exports = {
   initialize() {
     passport.use(
-      new LocalStrategy(
-        {
+      new LocalStrategy({
           usernameField: 'email',
           passwordField: 'password',
         },
@@ -35,7 +34,10 @@ module.exports = {
               }
               return done(null, user);
             })
-            .catch(done);
+            .catch((err) => {
+              console.log('ERR', err);
+              done(err)
+            });
         }
       )
     );

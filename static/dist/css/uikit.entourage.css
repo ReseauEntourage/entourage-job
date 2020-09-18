@@ -1184,8 +1184,8 @@ button.uk-icon:not(:disabled) {
   width: 36px;
   height: 36px;
   border-radius: 500px;
-  background: #F2F2F0;
-  color: #999;
+  background: #f55f24;
+  color: white;
   vertical-align: middle;
   /* 1 */
   display: inline-flex;
@@ -1193,19 +1193,20 @@ button.uk-icon:not(:disabled) {
   align-items: center;
   transition: 0.1s ease-in-out;
   transition-property: color, background-color;
+  cursor: pointer;
 }
 /* Hover + Focus */
 .uk-icon-button:hover,
 .uk-icon-button:focus {
-  background-color: #e6e6e2;
-  color: black;
+  background-color: #f44d0c;
+  color: white;
   outline: none;
 }
 /* OnClick + Active */
 .uk-icon-button:active,
 .uk-active > .uk-icon-button {
-  background-color: #dadad5;
-  color: black;
+  background-color: #dc450a;
+  color: white;
 }
 /* ========================================================================
    Component: Form Range
@@ -5278,6 +5279,9 @@ ul.uk-nav-sub {
   padding: 15px 30px;
   background: #fff;
   border-top: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 /*
  * Remove margin from the last-child
@@ -10242,8 +10246,8 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-icon-button,
 .uk-overlay-primary .uk-icon-button,
 .uk-offcanvas-bar .uk-icon-button {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.5);
+  background-color: white;
+  color: #f55f24;
 }
 .uk-light .uk-icon-button:hover,
 .uk-light .uk-icon-button:focus,
@@ -10267,8 +10271,8 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-icon-button:focus,
 .uk-offcanvas-bar .uk-icon-button:hover,
 .uk-offcanvas-bar .uk-icon-button:focus {
-  background-color: rgba(242, 242, 242, 0.1);
-  color: rgba(255, 255, 255, 0.7);
+  background-color: #f2f2f2;
+  color: #f55f24;
 }
 .uk-light .uk-icon-button:active,
 .uk-section-primary:not(.uk-preserve-color) .uk-icon-button:active,
@@ -10281,8 +10285,8 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-icon-button:active,
 .uk-overlay-primary .uk-icon-button:active,
 .uk-offcanvas-bar .uk-icon-button:active {
-  background-color: rgba(230, 230, 230, 0.1);
-  color: rgba(255, 255, 255, 0.7);
+  background-color: #e6e6e6;
+  color: #f55f24;
 }
 .uk-light .uk-input,
 .uk-light .uk-select,
@@ -12597,6 +12601,8 @@ iframe.uk-cover {
 }
 .ent-offer {
   overflow: hidden;
+  border: 1px solid #F2F2F0;
+  border-radius: 2px;
 }
 .ent-offer-badge {
   position: absolute;
@@ -12606,6 +12612,29 @@ iframe.uk-cover {
   height: 10px;
   background-color: #f55f24;
   transform: rotate(45deg);
+}
+.ent-employed-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.ent-employed-badge {
+  width: 500px;
+  height: 100px;
+  background-color: #f55f24;
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 92px;
+  left: -108px;
+}
+.ent-employed-badge-small {
+  width: 500px;
+  height: 50px;
+  background-color: #f55f24;
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 78px;
+  left: -146px;
 }
 .ent-divier-backoffice {
   border-top: 1px solid black;
@@ -12670,4 +12699,27 @@ iframe.uk-cover {
   height: 45px;
   padding: 0 25px;
   font-size: 17px;
+}
+.uk-modal-footer > .uk-button {
+  margin-left: 15px;
+}
+.uk-tab > .uk-active > a > h4 {
+  color: #f55f24;
+}
+.uk-offcanvas-bar .uk-button-primary {
+  background-color: #f55f24;
+  color: #fff;
+}
+.uk-offcanvas-bar .uk-button-primary:hover {
+  background-color: #f44d0c;
+  color: #fff;
+}
+.uk-offcanvas-bar .uk-button-primary:active {
+  background-color: #dc450a;
+  color: #fff;
+}
+.light-icon-button {
+  color: #f55f24;
+  background-color: white;
+  border: 1px solid #f55f24;
 }

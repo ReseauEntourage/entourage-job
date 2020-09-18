@@ -2,8 +2,8 @@ const validator = require('validator');
 const express = require('express');
 const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../../../utils');
 const {USER_ROLES} = require("../../../../constants");
-const { auth } = require('../../../controllers/Auth');
-const { sendMail } = require('../../../controllers/mail');
+const {auth} = require('../../../controllers/Auth');
+const {sendMail} = require('../../../controllers/mail');
 
 const router = express.Router();
 const UserController = require('../../../controllers/User');
@@ -19,17 +19,22 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       .toString(36) // Convert  to base-36 : "0.4fzyo82mvyr"
       .slice(-8); // Cut off last 8 characters : "yo82mvyr"
   }
-  const userPassword = req.body.password || fakePassword();
-  const { hash, salt } = AuthController.encryptPassword(userPassword);
 
-  UserController.createUser({ ...req.body, password: hash, salt })
-    .then((users) => {
+  const userPassword = req.body.password || fakePassword();
+  const {hash, salt} = AuthController.encryptPassword(userPassword);
+
+  UserController.createUser({
+    ...req.body,
+    password: hash,
+    salt
+  })
+    .then(async (users) => {
       console.log(
         '# User créé',
         `login : ${req.body.email}`,
         `password: ${userPassword}`
       );
-      sendMail({
+      await sendMail({
         toEmail: req.body.email,
         subject: 'Bienvenue chez LinkedOut',
         text:
@@ -45,10 +50,9 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      if(err.name === "SequelizeUniqueConstraintError") {
+      if (err.name === "SequelizeUniqueConstraintError") {
         res.status(409).send('Adresse email déjà existante');
-      }
-      else {
+      } else {
         res.status(401).send('Une erreur est survenue');
       }
     });
@@ -80,7 +84,9 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Description : Récupère tous les Users
  */
 router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
-  const order = [['firstName', 'ASC']];
+  const order = [
+    ['firstName', 'ASC']
+  ];
   UserController.getMembers(
     req.query.limit,
     req.query.offset,
@@ -130,7 +136,9 @@ router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
 router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  if(req.payload.id === req.query.coachId || req.payload.id === req.query.candidatId || req.payload.role === USER_ROLES.ADMIN) {
+  if (req.payload.id === req.query.coachId ||
+    req.payload.id === req.query.candidatId ||
+    req.payload.role === USER_ROLES.ADMIN) {
     UserController.getUserCandidatOpt(req.query)
       .then((user) => {
         res.status(200).json(user);
@@ -139,9 +147,10 @@ router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.
         console.error(err);
         res.status(401).send('Une erreur est survenue');
       });
-  }
-  else {
-    res.status(401).send({message: "Unauthorized"});
+  } else {
+    res.status(401).send({
+      message: "Unauthorized"
+    });
   }
 });
 
@@ -172,69 +181,77 @@ router.get('/candidat', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.
  * Route : GET /api/<VERSION>/user/<ID ou EMAIL>
  * Description : Récupère le User associé à l'<ID ou EMAIL> fournit
  */
-router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkUserAuthorization(req, res, req.params.id, () => {
-    (validator.isEmail(req.params.id)
-        ? UserController.getUserByEmail(req.params.id)
-        : UserController.getUser(req.params.id)
-    )
-      .then((user) => {
-        console.log(`User trouvé`);
-        res.status(200).json(user);
-      })
-      .catch((err) => {
-        console.log(`Aucun User trouvé`);
-        res.status(401).send(err);
-      });
+router.get(
+  '/:id',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    checkUserAuthorization(req, res, req.params.id, () => {
+      (validator.isEmail(req.params.id) ?
+          UserController.getUserByEmail(req.params.id) :
+          UserController.getUser(req.params.id)
+      )
+        .then((user) => {
+          console.log(`User trouvé`);
+          res.status(200).json(user);
+        })
+        .catch((err) => {
+          console.log(`Aucun User trouvé`);
+          res.status(404).send(err);
+        });
+    });
   });
-});
 
 /**
  * Route : PUT /api/<VERSION>/user/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
 // TODO check
-router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  UserController.getUserByEmail(req.payload.email)
-    .then(({ salt: oldSalt, password }) => {
-      const validated = AuthController.validatePassword(
-        req.body.oldPassword,
-        password,
-        oldSalt
-      );
-      if (validated) {
-        const { hash, salt } = AuthController.encryptPassword(
-          req.body.newPassword
+router.put('/change-pwd', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    UserController.getUserByEmail(req.payload.email)
+      .then(({
+               salt: oldSalt,
+               password
+             }) => {
+        const validated = AuthController.validatePassword(
+          req.body.oldPassword,
+          password,
+          oldSalt
         );
-        UserController.setUser(req.payload.id, {
-          password: hash,
-          salt,
-        })
-          .then((user) => {
-            if(!user) {
-              res.status(401).send(`Utilisateur inexistant`);
-            }
-            console.log(`User modifié`);
-            res.status(200).json(user);
+        if (validated) {
+          const {hash, salt} = AuthController.encryptPassword(
+            req.body.newPassword
+          );
+          UserController.setUser(req.payload.id, {
+            password: hash,
+            salt,
           })
-          .catch((err) => {
-            console.log(err);
-            res.status(401).send(`Une erreur est survenue`);
-          });
-      } else {
-        res.status(401).send('Mot de passe invalide');
-      }
-    })
-    .catch(() => {
-      res.status(401).send('Utilisateur inaccessible');
-    });
-});
+            .then((user) => {
+              if (!user) {
+                res.status(401).send(`Utilisateur inexistant`);
+              }
+              console.log(`User modifié`);
+              res.status(200).json(user);
+            })
+            .catch((err) => {
+              console.log(err);
+              res.status(401).send(`Une erreur est survenue`);
+            });
+        } else {
+          res.status(401).send('Mot de passe invalide');
+        }
+      })
+      .catch(() => {
+        res.status(401).send('Utilisateur inaccessible');
+      });
+  });
 
 /**
- * Route : PUT /api/<VERSION>/user/<ID>
+ * Route : PUT /api/<VERSION>/user/candidat/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
-router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
+router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req,
+                                                                                              res) => {
   checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
     UserController.setUserCandidat(req.params.id, req.body)
       .then((user) => {
@@ -255,11 +272,10 @@ router.put('/candidat/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_RO
  */
 router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
   checkUserAuthorization(req, res, req.params.id, () => {
-
     const setUser = () => {
       UserController.setUser(req.params.id, req.body)
         .then((updatedUser) => {
-          if(!updatedUser) {
+          if (!updatedUser) {
             res.status(401).send(`Utilisateur inexistant`);
           }
           console.log(`User modifié`);
@@ -274,13 +290,11 @@ router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
     const keys = Object.keys(req.body);
     const authorizedKeys = ['email', 'phone'];
 
-    if(req.payload.role === USER_ROLES.ADMIN) {
+    if (req.payload.role === USER_ROLES.ADMIN) {
       setUser();
-    }
-    else if(keys.some((key) => !authorizedKeys.includes(key))) {
+    } else if (keys.some((key) => !authorizedKeys.includes(key))) {
       res.status(401).send({message: "Unauthorized"});
-    }
-    else {
+    } else {
       setUser();
     }
   });

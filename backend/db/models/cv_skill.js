@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     data.id = uuid();
     return data;
   });
-  CV_Skill.associate = function(models) {
+  CV_Skill.associate = function (models) {
     // associations can be defined here
   };
   return CV_Skill;

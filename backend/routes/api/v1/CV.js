@@ -11,7 +11,7 @@ const {sendMail} = require('../../../controllers/mail');
 const {airtable} = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
 const {USER_ROLES, CV_STATUS} = require("../../../../constants");
-const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../../../utils');
+const {checkCandidatOrCoachAuthorization} = require('../../../utils');
 
 const upload = multer({dest: 'uploads/'});
 
@@ -27,15 +27,19 @@ router.post(
   '/',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   upload.single('profileImage'),
-  async (req, res) => {
+  (req, res) => {
     // si le cv est une string json le parser, sinon prendre l'objet
+    console.log('req.file :>> ', req);
     const reqCV = typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
-
     checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
       switch (req.payload.role) {
         case USER_ROLES.CANDIDAT:
+          reqCV.status = CV_STATUS.Progress.value;
+          break;
         case USER_ROLES.COACH:
-          reqCV.status = CV_STATUS.Pending.value;
+          if(reqCV.status !== CV_STATUS.Progress.value && reqCV.status !== CV_STATUS.Pending.value) {
+            reqCV.status = CV_STATUS.Progress.value;
+          }
           break;
         case USER_ROLES.ADMIN:
           // on laisse la permission à l'admin de choisir le statut à enregistrer
@@ -81,15 +85,15 @@ router.post(
           .then(({firstName, gender}) =>
             // Génération de la photo de preview
             S3.download(reqCV.urlImg).then(({Body}) => {
-                return createPreviewImage(
-                  Body,
-                  firstName,
-                  reqCV.catchphrase,
-                  reqCV.ambitions,
-                  reqCV.skills,
-                  reqCV.locations,
-                  gender
-                );
+              return createPreviewImage(
+                Body,
+                firstName,
+                reqCV.catchphrase,
+                reqCV.ambitions,
+                reqCV.skills,
+                reqCV.locations,
+                gender
+              );
             })
           )
           .then((sharpData) => sharpData.jpeg().toBuffer())
@@ -108,20 +112,22 @@ router.post(
           const mailSubject = 'Soumission CV';
           const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre son CV.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
           // notification de l'admin
-          sendMail({
+          await sendMail({
             toEmail: process.env.MAILJET_TO_EMAIL,
             subject: mailSubject,
             text: mailText,
           });
           // Récupération de l'email du coach pour l'envoie du mail
-          UserController.getUser(req.payload.userToCoach)
-            .then(({email}) =>
-              sendMail({
+          console.log('USERID', req.payload.userToCoach);
+
+          await UserController.getUser(req.payload.userToCoach)
+            .then(async ({email}) => {
+              await sendMail({
                 toEmail: email,
                 subject: mailSubject,
                 text: mailText,
               })
-            )
+            })
             .catch((err) => console.log('Pas de coach rattaché au candidat'));
         }
         // attente de la génération de l'image de preview

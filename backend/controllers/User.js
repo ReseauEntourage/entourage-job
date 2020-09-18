@@ -57,7 +57,7 @@ const capitalizeName = (name) => {
   return capitalizedName;
 };
 
-const createUser = (newUser) => {
+const createUser = async (newUser) => {
   const infoLog = 'createUser -';
   console.log(`${infoLog} Création du User`);
 
@@ -101,16 +101,12 @@ const deleteUser = (id) => {
 
 // avec mot de passe
 // Je narrive pas a recuperer candidat depuis l'id dun utilisateur coach
-const getUser = (id) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'getUser -';
-    console.log(`${infoLog} Récupérer un User à partir de son id : ${id}`);
-    User.findByPk(id, {
-      attributes: ATTRIBUTES_USER,
-      include: INCLUDE_USER_CANDIDAT,
-    })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+const getUser = async (id) => {
+  const infoLog = 'getUser -';
+  console.log(`${infoLog} Récupérer un User à partir de son id : ${id}`);
+  return User.findByPk(id, {
+    attributes: ATTRIBUTES_USER,
+    include: INCLUDE_USER_CANDIDAT,
   });
 };
 
@@ -132,6 +128,7 @@ const getUserByEmail = async (email) => {
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
     include: INCLUDE_USER_CANDIDAT,
   });
+
   return user;
 };
 
@@ -256,14 +253,14 @@ const setUser = async (id, user) => {
   return getUser(id);
 };
 
-const setUserCandidat = async (candidatId, candidat) => {
+const setUserCandidat = (candidatId, candidat) => {
   return User_Candidat.update(candidat, {
     where: {candidatId},
     individualHooks: true,
   });
 };
 
-const getUserCandidat = async (candidatId) => {
+const getUserCandidat = (candidatId) => {
   return User_Candidat.findOne({
     where: {candidatId},
     attributes: ATTRIBUTES_USER_CANDIDAT,
@@ -309,7 +306,7 @@ const getUserCandidatOpt = async ({candidatId, coachId}) => {
   });
 };
 
-const getUserCandidats = async () => {
+const getUserCandidats = () => {
   return User_Candidat.findAll({
     attributes: ATTRIBUTES_USER_CANDIDAT,
     include: [

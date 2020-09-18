@@ -18,6 +18,20 @@
 @dotnav-item-border: fade(#F55F24, 100%);
 @grid-divider-border: #F55F24;
 
+@icon-button-background: @global-primary-background;
+@icon-button-color: white;
+@icon-button-hover-background: darken(@icon-button-background, 5%);
+@icon-button-hover-color: @icon-button-color;
+@icon-button-active-background: darken(@icon-button-background, 10%);
+@icon-button-active-color: @icon-button-color;
+
+@inverse-icon-button-background: white;
+@inverse-icon-button-color: @global-primary-background;
+@inverse-icon-button-hover-background: darken(@inverse-icon-button-background, 5%);
+@inverse-icon-button-hover-color: @inverse-icon-button-color;
+@inverse-icon-button-active-background: darken(@inverse-icon-button-background, 10%);
+@inverse-icon-button-active-color: @inverse-icon-button-color;
+
 @base-body-font-family: Roboto, sans-serif;
 @base-body-font-weight: normal;
 @base-body-color: black;
@@ -241,6 +255,8 @@
 
 .ent-offer {
   overflow: hidden;
+  border: 1px solid @global-muted-background;
+  border-radius: 2px;
 }
 
 .ent-offer-badge {
@@ -253,6 +269,32 @@
 
   background-color: #f55f24;
   transform: rotate(45deg);
+}
+
+.ent-employed-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ent-employed-badge {
+  width: 500px;
+  height: 100px;
+  background-color: #f55f24;
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 92px;
+  left: -108px;
+}
+
+.ent-employed-badge-small {
+  width: 500px;
+  height: 50px;
+  background-color: #f55f24;
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 78px;
+  left: -146px;
 }
 
 .ent-divier-backoffice {
@@ -341,4 +383,43 @@
   height: 45px;
   padding: 0 25px;
   font-size: @global-font-size;
+}
+
+.hook-modal-footer() {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.uk-modal-footer > .uk-button {
+  margin-left: 15px;
+}
+
+.uk-tab > .uk-active > a > h4 {
+  color: @global-primary-background
+}
+
+.uk-offcanvas-bar .uk-button-primary {
+  background-color: @button-primary-background;
+  color: @button-primary-color;
+}
+
+.uk-offcanvas-bar .uk-button-primary:hover {
+  background-color: @button-primary-hover-background;
+  color: @button-primary-hover-color;
+}
+
+.uk-offcanvas-bar .uk-button-primary:active {
+  background-color: @button-primary-active-background;
+  color: @button-primary-active-color;
+}
+
+.hook-icon-button() {
+  cursor: pointer;
+}
+
+.light-icon-button {
+  color: @global-primary-background;
+  background-color: white;
+  border: 1px solid @global-primary-background;
 }

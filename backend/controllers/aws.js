@@ -18,10 +18,11 @@ const upload = (data, contentType, outputPath) => {
         ACL: 'public-read', // allow public reading access to the file
         ContentType: contentType
       },
-      (err, { Key }) => {
+      (err, {Key}) => {
         if (err) {
           reject(err);
         } else {
+          console.log('============AWS ============', Key);
           resolve(Key);
         }
       }
@@ -54,4 +55,4 @@ const uploadFile = (path, outputPath) => {
   return upload(fileContent, outputPath);
 };
 
-module.exports = { upload, uploadFile, download };
+module.exports = {upload, uploadFile, download};

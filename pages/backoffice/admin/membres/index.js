@@ -28,6 +28,7 @@ function translateStatusCV(status) {
 
 const MembersAdmin = ({ query: { role } }) => {
   const [members, setMembers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [allLoaded, setAllLoaded] = useState(false);
@@ -71,7 +72,11 @@ const MembersAdmin = ({ query: { role } }) => {
   };
 
   useEffect(() => {
-    fetchData(true);
+    fetchData(true, searchQuery);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    fetchData(true, searchQuery);
   }, [role]);
 
   return (
@@ -199,10 +204,15 @@ const MembersAdmin = ({ query: { role } }) => {
                     className="uk-search-input"
                     type="search"
                     placeholder="Rechercher..."
+                    onKeyDown={(ev) => {
+                      if (ev.key === "Enter") {
+                        ev.preventDefault();
+                      }
+                    }}
                     onChange={(event) => {
                       clearTimeout(debounceTimeoutId);
                       event.persist();
-                      debounceTimeoutId = setTimeout(() => fetchData(true, event.target.value), 500);
+                      debounceTimeoutId = setTimeout(() => setSearchQuery(event.target.value), 500);
                     }}
                   />
                 </form>
@@ -280,7 +290,7 @@ const MembersAdmin = ({ query: { role } }) => {
                                     member.candidat.cvs[0].status
                                   )
                                 ) : (
-                                  <span className="uk-text-italic uk-text-danger">
+                                  <span className="uk-text-italic uk-text-info">
                                     Aucun CV
                                   </span>
                                 )}

@@ -5,7 +5,6 @@ const enforce = require('express-sslify');
 const passport = require('./config/passport');
 
 const routeCV = require('./routes/api/v1/CV');
-const routeMessage = require('./routes/api/v1/Message');
 const routeAuth = require('./routes/api/v1/Auth');
 const routeUser = require('./routes/api/v1/User');
 const routeMail = require('./routes/api/v1/Mail');
@@ -14,17 +13,15 @@ const routeOpportunity = require('./routes/api/v1/Opportunity');
 const RateLimiter = require('./utils/RateLimiter');
 
 const app = express();
+const dev = process.env.NODE_ENV !== 'production';
 
 let server;
 
-const apiLimiter = RateLimiter.createLimiter(100);
+const apiLimiter = dev ? (req, res, next) => next() : RateLimiter.createLimiter(100);
 
 module.exports.prepare = () => {
-
-  const dev = process.env.NODE_ENV !== 'production';
-
   // enable ssl redirect
-  if(!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  if (!dev) app.use(enforce.HTTPS({trustProtoHeader: true}));
 
   app.set('trust proxy', 1);
 
@@ -48,7 +45,7 @@ module.exports.prepare = () => {
     }
     next();
   });
-
+  return app;
 };
 
 module.exports.get = (path, handle) => {
@@ -58,8 +55,9 @@ module.exports.get = (path, handle) => {
 module.exports.start = (port) => {
   return new Promise((resolve, reject) => {
     server = app.listen(port, (err) => {
-      if (err) reject(err);
-      else {
+      if (err) {
+        reject(err);
+      } else {
         console.log(`> Site disponible sur http://localhost:${port}`);
         resolve();
       }
@@ -67,7 +65,7 @@ module.exports.start = (port) => {
   });
 };
 
-module.exports.close = () => {
+module.exports.close = async () => {
   if (!server) throw 'The express server is not started'; // eslint-disable-line no-throw-literal
-  server.close();
+  await server.close();
 };
