@@ -31,7 +31,7 @@ const EntourageApp = ({Component, pageProps}) => {
 
     setTimeout(() => {
       setFading(true);
-    }, 4000);
+    }, 2000);
   }, []);
 
   useEffect(() => {
