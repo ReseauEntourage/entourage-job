@@ -41,7 +41,7 @@ const StepsToJoin = () => {
           isExternal
           onClick={() => event(TAGS.PAGE_TRAVAILLER_DEPOSER_CANDIDATURE_CLIC)}
           href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}>
-          Rejoindre le programme{' '}<IconNoSSR name="chevron-right" />
+          Rejoindre LinkedOut{' '}<IconNoSSR name="chevron-right" />
         </Button>
       </div>
       <p className="uk-text-center">
