@@ -29,6 +29,8 @@ const Login = () => {
     }
   }, [user]);
 
+  const rateLimitErrorMessage = 'Trop de tentatives infructueuses.\nVeuillez ressayer dans 1 minute.';
+
   return (
     <Layout title="Connexion - LinkedOut">
       <Section size="large" style="muted">
@@ -39,10 +41,9 @@ const Login = () => {
               formSchema={schemaLogin}
               submitText="Se connecter"
               onSubmit={({ email, password }, setError) => {
-                login(email, password).catch(() => {
-                  setError(
-                    'Erreur de connexion. Identifiant ou mot de passe invalide.'
-                  );
+                login(email, password).catch((err) => {
+                  const errorMessage = err.response.status === 429 ? rateLimitErrorMessage :  'Erreur de connexion. Identifiant ou mot de passe invalide.';
+                  setError(errorMessage);
                 });
               }}
             />
@@ -71,7 +72,10 @@ const Login = () => {
                 onSubmit={({email}, setError) => {
                   Api.post('/api/v1/auth/forgot', {email: email.toLowerCase()})
                     .then(() => nextStep())
-                    .catch(() => setError("L'adresse mail ne correspond à aucun utilisateur"));
+                    .catch((err) => {
+                      const errorMessage = err.response.status === 429 ? rateLimitErrorMessage : "L'adresse mail ne correspond à aucun utilisateur";
+                      setError(errorMessage)
+                    });
                 }}
               />
             ),
