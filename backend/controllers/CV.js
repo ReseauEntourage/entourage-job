@@ -107,7 +107,30 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER = [
   INCLUDE_ALL_USERS,
 ];
 
-// todo: revoir !!!
+const dividedCompleteCVQuery = async (query) => {
+  const promises = [];
+
+  for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
+    promises.push(new Promise((res, rej) => {
+      query(INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]).then((partCV) => {
+        res(partCV);
+      }).catch((err) => {
+        rej(err);
+      });
+    }));
+  }
+
+  const results = await Promise.all(promises);
+
+  return results.reduce((acc, curr) => {
+    const cleanedCurr = cleanCV(curr);
+    return {
+      ...acc,
+      ...cleanedCurr
+    }
+  }, {});
+};
+
 // permet de recuperer les id de cv recherchés pour ensuite fetch ses données
 const queryConditionCV = (attribute, value, allowHidden) => `
   SELECT cv.id
@@ -279,30 +302,12 @@ const createCV = async (data) => {
   // renvoie du cv complet
   console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
 
-  const promises = [];
-
-  for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
-    promises.push(new Promise((res, rej) => {
-      models.CV.findByPk(modelCV.id, {
-        exclude: ['UserId'],
-        include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
-      }).then((partCV) => {
-        res(partCV);
-      }).catch((err) => {
-        rej(err);
-      });
-    }))
-  }
-
-  const results = await Promise.all(promises);
-
-  return results.reduce((acc, curr) => {
-    const cleanedCurr = cleanCV(curr);
-    return {
-      ...acc,
-      ...cleanedCurr
-    }
-  }, {});
+  return dividedCompleteCVQuery((include) => (
+    models.CV.findByPk(modelCV.id, {
+      exclude: ['UserId'],
+      include: [include],
+    })
+  ));
 };
 
 const deleteCV = (id) => {
@@ -312,7 +317,6 @@ const deleteCV = (id) => {
   });
 };
 
-// todo: revoir
 const getCVbyUrl = async (url) => {
   console.log(`getCVbyUrl - Récupérer un CV ${url}`);
   const cvs = await sequelize.query(queryConditionCV('url', url), {
@@ -320,29 +324,11 @@ const getCVbyUrl = async (url) => {
   });
 
   if(cvs && cvs.length > 0) {
-    const promises = [];
-
-    for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
-      promises.push(new Promise((res, rej) => {
-        models.CV.findByPk(cvs[0].id, {
-          include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
-        }).then((partCV) => {
-          res(partCV);
-        }).catch((err) => {
-          rej(err);
-        });
-      }))
-    }
-
-    const results = await Promise.all(promises);
-
-    return results.reduce((acc, curr) => {
-      const cleanedCurr = cleanCV(curr);
-      return {
-        ...acc,
-        ...cleanedCurr
-      }
-    }, {});
+    return dividedCompleteCVQuery((include) => (
+      models.CV.findByPk(cvs[0].id, {
+        include: [include]
+      })
+    ));
   }
 
   return null;
@@ -355,33 +341,15 @@ const getCVbyUserId = async (userId) => {
   const user = await models.User.findByPk(userId);
 
   if(user) {
-    const promises = [];
-
-    for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
-      promises.push(new Promise((res, rej) => {
-        models.CV.findOne({
-          include: [INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]],
-          where: {
-            UserId: userId,
-          },
-          order: [['version', 'DESC']],
-        }).then((partCV) => {
-          res(partCV);
-        }).catch((err) => {
-          rej(err);
-        });
-      }))
-    }
-
-    const results = await Promise.all(promises);
-
-    return results.reduce((acc, curr) => {
-      const cleanedCurr = cleanCV(curr);
-      return {
-        ...acc,
-        ...cleanedCurr
-      }
-    }, {});
+    return dividedCompleteCVQuery((include) => (
+      models.CV.findOne({
+        include: [include],
+        where: {
+          UserId: userId,
+        },
+        order: [['version', 'DESC']],
+      })
+    ));
   }
 
   return null;

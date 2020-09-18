@@ -503,7 +503,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
               actionDisabled ? ' uk-disabled' : ''
             }`}
             target='_blank'
-            rel="noopener noreferrer"
+            rel="noopener"
             href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
           >
             {process.env.MAILJET_CONTACT_EMAIL}

@@ -4,20 +4,23 @@ import '../static/css/styles.less';
 import '../static/css/Forms.less';
 import '../static/css/Toggle.less';
 
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Router from 'next/router';
 import UserProvider from '../components/store/UserProvider';
+import SessionProvider, {SessionContext} from "../components/store/SessionProvider";
 import SharesCountProvider from "../components/store/SharesCountProvider";
 
 import * as gtag from '../lib/gtag';
 import SplashScreen, {SplashScreenNoSSR} from "../components/SplashScreen";
 
-const EntourageApp = ({Component, pageProps}) => {
-
+const Container = ({Component, pageProps}) => {
   const [loading, setLoading] = useState(true);
   const [fading, setFading] = useState(false);
 
+  const {isFirstLoad, setIsFirstLoad} = useContext(SessionContext);
+
   useEffect(() => {
+
     /*
       if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
@@ -25,10 +28,12 @@ const EntourageApp = ({Component, pageProps}) => {
     */
 
     Router.events.on('routeChangeComplete', (url) => {
+      if(isFirstLoad) {
+        setIsFirstLoad(false);
+      }
       gtag.pageview(url);
       window.scrollTo(0, 0);
     });
-
     setTimeout(() => {
       setFading(true);
     }, 2000);
@@ -43,20 +48,30 @@ const EntourageApp = ({Component, pageProps}) => {
   }, [fading]);
 
   return (
-    <SharesCountProvider>
-      <UserProvider>
-        <div
-          style={{height: loading ? '100vh' : 'inherit'}}
-          className="uk-inline uk-width-expand uk-overflow-hidden">
-          <Component {...pageProps} />
-          <div
-            style={{height: '100vh', zIndex: 9999}}
-            className={`${loading ? 'uk-visible' : 'uk-hidden'} ${fading ? 'uk-animation-fade uk-animation-reverse' : ''} uk-position-cover uk-background-default`}>
-            <SplashScreenNoSSR fading={fading} />
-          </div>
-        </div>
-      </UserProvider>
-    </SharesCountProvider>
+    <div
+      style={{height: loading ? '100vh' : 'inherit'}}
+      className="uk-inline uk-width-expand uk-overflow-hidden">
+      <Component {...pageProps} />
+      <div
+        style={{height: '100vh', zIndex: 9999}}
+        className={`${loading ? 'uk-visible' : 'uk-hidden'} ${fading ? 'uk-animation-fade uk-animation-reverse' : ''} uk-position-cover uk-background-default`}>
+        <SplashScreenNoSSR fading={fading} />
+      </div>
+    </div>
+  );
+
+};
+
+const EntourageApp = ({Component, pageProps}) => {
+
+  return (
+    <SessionProvider>
+      <SharesCountProvider>
+        <UserProvider>
+          <Container Component={Component} pageProps={pageProps} />
+        </UserProvider>
+      </SharesCountProvider>
+    </SessionProvider>
   );
 };
 
