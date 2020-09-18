@@ -40,7 +40,7 @@ const Footer = () => {
                 className="ent-logo-hover"
                 href="https://www.linkedin.com/"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
               >
                 <span
                   style={{
