@@ -11,10 +11,12 @@ import Layout from '../../components/Layout';
 import Api from '../../Axios';
 import {GridNoSSR, Section} from '../../components/utils';
 import {SharesCountContext} from "../../components/store/SharesCountProvider";
+import {SessionContext} from "../../components/store/SessionProvider";
 
 const CVPage = ({ cv, router }) => {
 
   const { incrementSharesCount } = useContext(SharesCountContext);
+  const {isFirstLoad} = useContext(SessionContext);
 
   const updateShareCount = (candidatId, type) => {
     Api.post('api/v1/cv/count', {
@@ -27,7 +29,7 @@ const CVPage = ({ cv, router }) => {
   };
 
   useEffect(() => {
-    if(!document.referrer || !document.referrer.includes(window.location.origin)) {
+    if(isFirstLoad && ((document.referrer && !document.referrer.includes(window.location.origin)) || !document.referrer)) {
       updateShareCount(cv.UserId, 'other');
     }
   }, []);

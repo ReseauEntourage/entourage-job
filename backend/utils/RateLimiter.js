@@ -15,7 +15,7 @@ class RateLimiter {
   createLimiter(max) {
     const dev = process.env.NODE_ENV !== 'production';
     return new RateLimit({
-      store: this.getStore(),
+      // store: this.getStore(),
       max: dev ? 0 : max
     });
   }

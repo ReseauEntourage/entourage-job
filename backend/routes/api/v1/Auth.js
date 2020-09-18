@@ -244,8 +244,7 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
 /**
  * GET current route (required, only authenticated users have access)
  */
-router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), async (req,
-                                                                                               res /* , next */) => {
+router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), async (req, res /* , next */) => {
   const {
     payload: {
       id

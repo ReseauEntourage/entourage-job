@@ -34,13 +34,13 @@ const CandidatListPartial = ({nbShares}) => (
                    formattingFn={(number) => {
                      let stringNumber = number.toString();
                      if(stringNumber.length > 4) {
-                       stringNumber = `${stringNumber.slice(0, -3)} ${stringNumber.slice(-3)}`;
+                       stringNumber = `${stringNumber.slice(0, -3)}\xa0${stringNumber.slice(-3)}`;
                      }
                      if(stringNumber.length > 7) {
-                       stringNumber = `${stringNumber.slice(0, -7)} ${stringNumber.slice(-7)}`;
+                       stringNumber = `${stringNumber.slice(0, -7)}\xa0${stringNumber.slice(-7)}`;
                      }
                      if(stringNumber.length > 10) {
-                       stringNumber = `${stringNumber.slice(0, -11)} ${stringNumber.slice(-11)}`;
+                       stringNumber = `${stringNumber.slice(0, -11)}\xa0${stringNumber.slice(-11)}`;
                      }
                      return stringNumber;
                    }}

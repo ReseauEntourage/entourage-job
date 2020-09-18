@@ -50,7 +50,7 @@ const StepsToJoin = () => {
         <a
           className="uk-link-text uk-text-primary"
           target='_blank'
-          rel="noopener noreferrer"
+          rel="noopener"
           href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
         >
           {process.env.MAILJET_CONTACT_EMAIL}
@@ -59,7 +59,7 @@ const StepsToJoin = () => {
         <a
           className="uk-link-text uk-text-primary"
           target='_blank'
-          rel="noopener noreferrer"
+          rel="noopener"
           href={`tel:${'0176420535'}`}
         >
           01&nbsp;76&nbsp;42&nbsp;05&nbsp;35

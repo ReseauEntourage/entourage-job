@@ -24,7 +24,7 @@ const SimpleLink = ({
       href={href}
       target={target ? '_blank' : ''}
       className={classBuffer}
-      rel={target ? 'noopener noreferrer' : ''}
+      rel={target ? 'noopener' : ''}
     >
       {children}
     </a>
@@ -34,7 +34,7 @@ const SimpleLink = ({
         onClick={onClick}
         target={target}
         className={classBuffer}
-        rel={target ? 'noopener noreferrer' : ''}
+        rel={target ? 'noopener' : ''}
       >
         {children}
       </a>

@@ -46,7 +46,7 @@ const Button = ({
       <a
         href={href}
         target={newTab ? '_blank' : ''}
-        rel={newTab ? 'noopener noreferrer' : ''}
+        rel={newTab ? 'noopener' : ''}
       >
         {buttonComponent}
       </a>
