@@ -18,6 +18,7 @@ const ToggleWithConfirmationModal = ({
 }) => {
   const {
     triggerModal,
+    setClose,
   } = useContext(ModalContext);
   const [toggle, setToggle] = useState();
   useEffect(() => {
@@ -64,14 +65,14 @@ const ToggleWithConfirmationModal = ({
                 </p>
               )}
               <GridNoSSR className="uk-grid-small uk-flex-center uk-margin-large-top">
-                <Button style="default" onClick={closeModal}>
+                <Button style="default" onClick={() => setClose(true)}>
                   Annuler
                 </Button>
                 <Button
                   style="primary"
                   onClick={() => {
                     onToggle(true).then(() => setToggle(true));
-                    closeModal();
+                    setClose(true);
                   }}
                 >
                   {modalConfirmation}

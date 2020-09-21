@@ -20,13 +20,12 @@ const ModalEdit = ({
   const {
     setClose,
     form,
-    resetForm
   } = useContext(ModalContext);
 
   return (
     <ModalGeneric id={id}>
       <>
-        <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm} />
+        <CloseButtonNoSSR className="uk-modal-close-default" onClick={() => setClose(true)} />
         <HeaderModal>{title}</HeaderModal>
         {description ? (
           <p

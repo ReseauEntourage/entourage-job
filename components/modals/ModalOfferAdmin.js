@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import PropsType from 'prop-types';
 import moment from 'moment';
 import Api from '../../Axios';
@@ -9,12 +9,14 @@ import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
-import {useResetForm} from "../../hooks";
+import { useResetForm } from "../../hooks";
+import { ModalContext } from '../store/ModalProvider';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
     currentOffer = { userOpportunity: [], businessLines: [] };
   }
+  const { setClose } = useContext(ModalContext);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -69,14 +71,14 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               ...currentOffer,
               candidatId:
                 !currentOffer.isPublic &&
-                currentOffer.userOpportunity &&
-                currentOffer.userOpportunity[0] &&
-                currentOffer.userOpportunity[0].User &&
-                currentOffer.userOpportunity[0].User.firstName
+                  currentOffer.userOpportunity &&
+                  currentOffer.userOpportunity[0] &&
+                  currentOffer.userOpportunity[0].User &&
+                  currentOffer.userOpportunity[0].User.firstName
                   ? {
-                      value: currentOffer.userOpportunity[0].User.id,
-                      label: `${currentOffer.userOpportunity[0].User.firstName} ${currentOffer.userOpportunity[0].User.lastName}`,
-                    }
+                    value: currentOffer.userOpportunity[0].User.id,
+                    label: `${currentOffer.userOpportunity[0].User.firstName} ${currentOffer.userOpportunity[0].User.lastName}`,
+                  }
                   : undefined,
             }}
             onCancel={() => setIsEditing(false)}
@@ -214,19 +216,19 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               Refuser l&apos;offre
             </Button>
           ) : (
-            <Button
-              style="default"
-              onClick={() =>
-                updateOpportunity({
-                  ...currentOffer,
-                  isValidated: false,
-                  isArchived: false,
-                })
-              }
-            >
-              Retirer l&apos;offre des archives
-            </Button>
-          )}
+              <Button
+                style="default"
+                onClick={() =>
+                  updateOpportunity({
+                    ...currentOffer,
+                    isValidated: false,
+                    isArchived: false,
+                  })
+                }
+              >
+                Retirer l&apos;offre des archives
+              </Button>
+            )}
           {!currentOffer.isValidated && (
             <Button
               style="primary"
@@ -253,7 +255,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
           'uk-light uk-background-secondary'}`}
       >
         <CloseButtonNoSSR className="uk-modal-close-default" onClick={() => {
-          if(isEditing) {
+          if (isEditing) {
             setIsEditing(false);
           }
           resetForm();

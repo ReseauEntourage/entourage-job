@@ -14,7 +14,7 @@ import { ModalContext } from '../store/ModalProvider';
 const StepperModal = ({ components, title, id }) => {
   const {
     index,
-    resetForm,
+    setClose,
   } = useContext(ModalContext);
 
   // const [index, setIndex] = useState(0);
@@ -43,7 +43,7 @@ const StepperModal = ({ components, title, id }) => {
   return (
     <div id={id} className="uk-flex-top" data-uk-modal="bg-close:false">
       <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-2-3@m uk-width-1-2@l">
-        <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm} />
+        <CloseButtonNoSSR className="uk-modal-close-default" onClick={() => setClose(true)} />
         <div className="uk-modal-body uk-padding-large">
           <HeaderModal>{title}</HeaderModal>
           {components && components[index]}

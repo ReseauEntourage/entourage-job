@@ -21,6 +21,7 @@ const ModalProvider = ({ children }) => {
   };
 
   const triggerModal = (modalId) => {
+    console.log('trigger modal -> modalId :>> ', modalId);
     setId(modalId);
     setShow(true);
   }

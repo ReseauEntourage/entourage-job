@@ -68,7 +68,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
   };
 
   const openNewsletterModal = () => {
-    console.log('openNewsletterModal clicked');
     triggerModal(`#info-share-${cv.user.candidat.firstName}`);
   }
 

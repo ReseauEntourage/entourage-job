@@ -16,7 +16,7 @@ import { ModalContext } from '../../../components/store/ModalProvider';
 
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
-  const { triggerModal } = useContext(ModalContext);
+  const { triggerModal, setClose, close } = useContext(ModalContext);
   const {
     query: { q: opportunityId },
   } = useRouter();
@@ -83,6 +83,7 @@ const LesOpportunites = () => {
   };
 
   const postOpportunity = async (opportunity, closeModal) => {
+    console.log('post opportunity', closeModal);
     try {
       await Axios.post(`/api/v1/opportunity/`, opportunity);
       closeModal();
@@ -131,11 +132,11 @@ const LesOpportunites = () => {
             defaultValues={{
               isPublic: true
             }}
-            onSubmit={(fields, closeModal) => {
+            onSubmit={(fields) => {
               postOpportunity({
                 ...fields,
                 date: Date.now(),
-              }, closeModal)
+              }, () => setClose(true))
             }}
           />
         </HeaderBackoffice>
@@ -175,6 +176,7 @@ const LesOpportunites = () => {
                           role="button"
                           className="uk-link-reset"
                           onClick={() => {
+                            console.log('Clicked on offer', close);
                             setCurrentOffer(offer);
                             triggerModal('#modal-offer-admin');
                           }}

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* global UIkit */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
