@@ -12,16 +12,16 @@ import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
 import { useResetForm } from "../../hooks";
 import { ModalContext } from '../store/ModalProvider';
 
-const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
+const ModalOfferAdmin = ({ currentOffer, setCurrentOffer, id }) => {
   if (!currentOffer) {
     currentOffer = { userOpportunity: [], businessLines: [] };
   }
-  const { setClose } = useContext(ModalContext);
+  const { setClose, form, close } = useContext(ModalContext);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const [form, resetForm] = useResetForm();
+  // const [form, resetForm] = useResetForm();
 
   const updateOpportunity = async (opportunity) => {
     setError(false);
@@ -249,7 +249,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   };
   // Modal
   return (
-    <div id="modal-offer-admin" data-uk-modal="bg-close:false">
+    <div id={id} className="uk-modal" data-uk-modal="bg-close:false">
       <div
         className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${currentOffer.isArchived &&
           'uk-light uk-background-secondary'}`}
@@ -258,7 +258,9 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
           if (isEditing) {
             setIsEditing(false);
           }
-          resetForm();
+          setClose(true);
+          console.log('X clicked on close Btn', 'close : >>', close);
+          // resetForm();
         }} />
         <div className="uk-modal-body">{contentBuilder()}</div>
       </div>
@@ -266,6 +268,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   );
 };
 ModalOfferAdmin.propTypes = {
+  id: PropsType.string.isRequired,
   currentOffer: PropsType.shape({
     title: PropsType.string,
     company: PropsType.string,

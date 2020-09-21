@@ -25,16 +25,16 @@ const ModalProvider = ({ children }) => {
     setId(modalId);
     setShow(true);
   }
+
   useEffect(() => {
     console.log('set id in provider ---------------------', id);
   }, [id, setId]);
 
-
   useEffect(() => {
     console.log('id -------- close use effect ', id);
-    console.log(close, resetForm, index);
+    // console.log(close, resetForm, index);
     if (close) {
-      console.log('close modal');
+      console.log('close modal with id :>>', id);
       UIkit.modal(id).hide();
       setShow(false);
       setClose(false);

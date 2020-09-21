@@ -16,7 +16,7 @@ import { ModalContext } from '../../../components/store/ModalProvider';
 
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
-  const { triggerModal, setClose, close } = useContext(ModalContext);
+  const { triggerModal, setClose, close, id } = useContext(ModalContext);
   const {
     query: { q: opportunityId },
   } = useRouter();
@@ -176,7 +176,7 @@ const LesOpportunites = () => {
                           role="button"
                           className="uk-link-reset"
                           onClick={() => {
-                            console.log('Clicked on offer', close);
+                            console.log('Clicked on offer', 'close :>>', close, 'id :>>', id);
                             setCurrentOffer(offer);
                             triggerModal('#modal-offer-admin');
                           }}
@@ -222,6 +222,7 @@ const LesOpportunites = () => {
               </Filter>
               <div>
                 <ModalOfferAdmin
+                  id="modal-offer-admin"
                   currentOffer={currentOffer}
                   setCurrentOffer={(offer) => {
                     setCurrentOffer(offer);
