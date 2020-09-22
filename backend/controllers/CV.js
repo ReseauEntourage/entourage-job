@@ -108,19 +108,9 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER = [
 ];
 
 const dividedCompleteCVQuery = async (query) => {
-  const promises = [];
-
-  for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
-    promises.push(new Promise((res, rej) => {
-      return query(INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]).then((partCV) => {
-        res(partCV);
-      }).catch((err) => {
-        rej(err);
-      });
-    }));
-  }
-
-  const results = await Promise.all(promises);
+  const results = await Promise.all(
+    INCLUDES_COMPLETE_CV_WITH_ALL_USER.map((include) => query(include))
+  );
 
   return results.reduce((acc, curr) => {
     const cleanedCurr = cleanCV(curr);
@@ -165,14 +155,14 @@ const createCV = async (data) => {
     console.log(`createCV - Skills`);
     const skills = await Promise.all(
       // pour chaque competence
-      data.skills.map((name) =>
+      data.skills.map((name) => {
         // on trouve ou créé la donné
-        models.Skill.findOrCreate({
+        return models.Skill.findOrCreate({
           where: {name},
         })
           // on recupere de model retourné
           .then((model) => model[0])
-      )
+      })
     );
     // on ajoute toutes les competences
     modelCV.addSkills(skills);
@@ -183,13 +173,13 @@ const createCV = async (data) => {
     console.log(`createCV - Langues`);
     const languages = await Promise.all(
       // pour chaque competence
-      data.languages.map((name) =>
+      data.languages.map((name) => {
         // on trouve ou créé la donné
-        models.Language.findOrCreate({
+        return models.Language.findOrCreate({
           where: {name},
           // on recupere de model retourné
         }).then((model) => model[0])
-      )
+      })
     );
     // on ajoute toutes les competences
     modelCV.addLanguages(languages);
@@ -263,7 +253,7 @@ const createCV = async (data) => {
   // Experiences
   if (data.experiences) {
     console.log(`createCV - Expériences`);
-    const modelExperiences = await Promise.all(
+    const experiences = await Promise.all(
       data.experiences.map(async (experience) => {
         const modelExperience = await models.Experience.create({
           CVId: modelCV.id,
@@ -272,14 +262,15 @@ const createCV = async (data) => {
         });
         // Skills
         if (experience.skills) {
-          console.log(`createCV - BusinessLines`);
-          Promise.all(
+          console.log(`createCV - Experience Skills`);
+          const skills = await Promise.all(
             experience.skills.map((name) => {
               return models.Skill.findOrCreate({
                 where: {name},
               }).then((model) => model[0]);
             })
-          ).then((skills) => modelExperience.addSkills(skills));
+          );
+          modelExperience.addSkills(skills);
         }
         return modelExperience;
       })
@@ -289,12 +280,14 @@ const createCV = async (data) => {
   // Reviews
   if (data.reviews) {
     console.log(`createCV - Reviews`);
-    data.reviews.forEach((review) =>
-      models.Review.create({
-        CVId: modelCV.id,
-        text: review.text,
-        status: review.status,
-        name: review.name,
+    const reviews = await Promise.all(
+      data.reviews.map((review) => {
+        return models.Review.create({
+          CVId: modelCV.id,
+          text: review.text,
+          status: review.status,
+          name: review.name,
+        });
       })
     );
   }
@@ -302,7 +295,7 @@ const createCV = async (data) => {
   // renvoie du cv complet
   console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
 
-  return dividedCompleteCVQuery((include) => (
+  return dividedCompleteCVQuery(async (include) => (
     models.CV.findByPk(modelCV.id, {
       exclude: ['UserId'],
       include: [include],
@@ -324,7 +317,7 @@ const getCVbyUrl = async (url) => {
   });
 
   if(cvs && cvs.length > 0) {
-    return dividedCompleteCVQuery((include) => (
+    return dividedCompleteCVQuery(async (include) => (
       models.CV.findByPk(cvs[0].id, {
         include: [include]
       })
@@ -341,7 +334,7 @@ const getCVbyUserId = async (userId) => {
   const user = await models.User.findByPk(userId);
 
   if(user) {
-    return dividedCompleteCVQuery((include) => (
+    return dividedCompleteCVQuery(async (include) => (
       models.CV.findOne({
         include: [include],
         where: {

@@ -1,6 +1,8 @@
 const sharp = require('sharp');
 const TextToSVG = require('text-to-svg');
 
+// sharp.cache(false);
+
 const textToSVG = TextToSVG.loadSync('./static/fonts/Roboto-Regular.ttf');
 const textToSVGBold = TextToSVG.loadSync('./static/fonts/Roboto-Black.ttf');
 
