@@ -117,7 +117,7 @@ const LesOpportunites = () => {
         >
           <Button
             style="primary"
-            toggle="target: #add-opportunity">
+            onClick={() => triggerModal("#add-opportunity")}>
             <span
               uk-icon="icon: plus; ratio:0.8"
               className="uk-margin-small-right"
