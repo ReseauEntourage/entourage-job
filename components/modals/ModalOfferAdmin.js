@@ -207,8 +207,6 @@ const ModalOfferAdmin = ({
         if (isEditing) {
           setIsEditing(false);
         }
-
-        console.log('X clicked on close Btn', 'close : >>', close);
         setClose(true);
       }} />
       <div className="uk-modal-body">{contentBuilder()}</div>

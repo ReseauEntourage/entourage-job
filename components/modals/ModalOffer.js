@@ -188,7 +188,6 @@ const ModalOffer = ({
             Enregistré
                 </Button> : <Button style="default" onClick={async () => {
               setLoading(true);
-              console.log('update offer note', noteBuffer);
               const {
                 userOpportunity
               } = currentOffer;

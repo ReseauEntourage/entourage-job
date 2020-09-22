@@ -21,37 +21,24 @@ const ModalProvider = ({ children }) => {
   };
 
   const triggerModal = (modalId) => {
-    console.log('trigger modal -> modalId :>> ', modalId);
     setId(modalId);
     setShow(true);
   }
 
   useEffect(() => {
-    console.log('set id in provider -----------------', id);
-  }, [id, setId]);
-
-  useEffect(() => {
-    console.log('id -------- close useEffect ', id);
-    // console.log(close, resetForm, index);
     if (close) {
-      console.log('close modal with id :>>', id);
       UIkit.modal(id).hide();
       setShow(false);
       setClose(false);
     } else if (resetForm) {
-      console.log('reset Form');
       resetForm();
     } else if (index) {
-      console.log('reset index');
       setIndex(0);
     }
   }, [close, setClose]);
 
   useEffect(() => {
-    console.log(`id -------- show useEffect: >>`, id);
-
     if (show) {
-      console.log('show modal');
       UIkit.modal(id).show();
     }
   }, [show, setShow]);
