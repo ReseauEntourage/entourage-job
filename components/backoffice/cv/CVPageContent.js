@@ -4,21 +4,23 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Api from '../../../Axios';
-import { GridNoSSR, Button, IconNoSSR } from '../../utils';
+import { GridNoSSR, Button, CloseButtonNoSSR } from '../../utils';
 import { CVFicheEdition, CVBackground, CVFiche } from '../../cv';
 import { UserContext } from '../../store/UserProvider';
 import ButtonPost from './ButtonPost';
 import ErrorMessage from './ErrorMessage';
 import LoadingScreen from './LoadingScreen';
 
-import {CV_STATUS, USER_ROLES} from "../../../constants";
+import { CV_STATUS, USER_ROLES } from "../../../constants";
 import NoCV from "./NoCV";
+import { ModalContext } from '../../store/ModalProvider';
 
 const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { user } = useContext(UserContext);
+  const { setClose, triggerModal } = useContext(ModalContext);
 
   useEffect(() => {
     // fetch CV
@@ -152,7 +154,7 @@ const CVPageContent = ({ candidatId }) => {
         </GridNoSSR>
 
         <GridNoSSR row gap="small">
-          <Button toggle="target: #preview-modal" style="default">
+          <Button style="default" onClick={() => triggerModal("#preview-modal")}>
             Prévisualiser
           </Button>
           {user.role === USER_ROLES.CANDIDAT && (
@@ -188,11 +190,8 @@ const CVPageContent = ({ candidatId }) => {
       {/* preview modal */}
       <div id="preview-modal" className="uk-modal-container" data-uk-modal>
         <div className="uk-modal-dialog">
-          <button
-            className="uk-modal-close-default"
-            type="button"
-            data-uk-close
-            aria-label="close"
+          <CloseButtonNoSSR
+            onClick={() => setClose(true)}
           />
           <div className="uk-modal-header">
             <h2 className="uk-modal-title">Prévisualisation du CV</h2>
@@ -213,7 +212,7 @@ const CVPageContent = ({ candidatId }) => {
             <CVFiche cv={cv} actionDisabled />
           </div>
           <div className="uk-modal-footer uk-text-right">
-            <Button className="uk-modal-close" style="default">
+            <Button style="default" onClick={() => setClose(true)}>
               Fermer
             </Button>
           </div>

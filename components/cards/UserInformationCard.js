@@ -12,7 +12,7 @@ import { ModalContext } from '../store/ModalProvider';
 
 // userId du candidat ou coach lié
 const UserInformationCard = ({ isAdmin, user, onChange }) => {
-  const { trigerModal } = useContext(ModalContext);
+  const { triggerModal } = useContext(ModalContext);
   // données du candidat ou coach lié
   const [linkedUser, setLinkedUser] = useState();
   const [userCandidat, setUserCandidat] = useState();

@@ -6,7 +6,7 @@ import { EXTERNAL_LINKS } from '../../constants';
 import { ModalContext } from '../store/ModalProvider';
 
 const ContestModal = () => {
-  const { triggerModal } = useContext(ModalContext);
+  const { triggerModal, setClose } = useContext(ModalContext);
 
   const [countdown, setCountdown] = useState('');
 
@@ -77,12 +77,8 @@ const ContestModal = () => {
     <div>
       <div id="modal-contest" data-uk-modal>
         <div className="uk-modal-dialog uk-modal-body uk-margin-auto-vertical uk-background-primary">
-          <button
-            className="uk-modal-close-default"
-            type="button"
-            data-uk-close
-            style={{ color: 'white' }}
-            aria-label="close"
+          <CloseButtonNoSSR
+            onClick={() => setClose(true)}
           />
           <div className="uk-inline uk-visible@m">
             <img src="../../static/img/thomas.jpg" alt="Thomas Ruyant" />
