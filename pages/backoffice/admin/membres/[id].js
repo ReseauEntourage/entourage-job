@@ -71,7 +71,7 @@ const CVPage = () => {
 
   if (loading) {
     return (
-      <LayoutBackOffice title="Chargement - Gestion des menmbres">
+      <LayoutBackOffice title="Chargement - Gestion des membres">
         <Section>
           <GridNoSSR column gap="large">
             <SimpleLink
@@ -93,7 +93,7 @@ const CVPage = () => {
 
   if (!user) {
     return (
-      <LayoutBackOffice title="Page introuvable - Gestion des menmbres">
+      <LayoutBackOffice title="Page introuvable - Gestion des membres">
         <Section className="uk-text-center" size="large">
           <GridNoSSR column gap="large">
             <SimpleLink
@@ -117,7 +117,7 @@ const CVPage = () => {
     );
   }
   return (
-    <LayoutBackOffice title={`${user.firstName} - Gestion des menmbres`}>
+    <LayoutBackOffice title={`${user.firstName} - Gestion des membres`}>
       <Section>
         <GridNoSSR column gap="large">
           <SimpleLink
