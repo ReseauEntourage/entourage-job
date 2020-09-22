@@ -112,7 +112,7 @@ const dividedCompleteCVQuery = async (query) => {
 
   for(let i = 0; i < INCLUDES_COMPLETE_CV_WITH_ALL_USER.length; i += 1) {
     promises.push(new Promise((res, rej) => {
-      query(INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]).then((partCV) => {
+      return query(INCLUDES_COMPLETE_CV_WITH_ALL_USER[i]).then((partCV) => {
         res(partCV);
       }).catch((err) => {
         rej(err);
