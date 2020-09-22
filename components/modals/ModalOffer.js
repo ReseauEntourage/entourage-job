@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import PropsType, { func } from 'prop-types';
 import moment from 'moment';
 import { GridNoSSR, Button, IconNoSSR, SimpleLink } from '../utils';
@@ -8,7 +8,8 @@ import Select from '../forms/fields/Select';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import axios from '../../Axios';
-import {OFFER_STATUS} from "../../constants";
+import { OFFER_STATUS } from "../../constants";
+import { ModalContext } from '../store/ModalProvider';
 
 export const List = ({ className, children }) => (
   <ul className={`uk-nav ${className}`}>
@@ -63,6 +64,9 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
     currentOffer = { userOpportunity: {}, businessLines: [] };
   }
+
+  const { setClose } = useContext(ModalContext);
+
   const { status, bookmarked, note, archived } = currentOffer.userOpportunity;
 
   const [loadingIcon, setLoadingIcon] = useState(false);
@@ -93,7 +97,11 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
         className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${archived &&
           'uk-light uk-background-secondary'}`}
       >
-        <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetNoteBuffer} />
+        <CloseButtonNoSSR onClick={() => {
+          resetNoteBuffer();
+          setClose(true);
+        }}
+        />
         {!currentOffer ? null : (
           <div className="uk-modal-body">
             <GridNoSSR gap="small" between middle>
@@ -215,26 +223,26 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                   Enregistré
                 </Button>
               ) : (
-                <Button
-                  style="default"
-                  onClick={async () => {
-                    setLoading(true);
-                    console.log('update offer note', noteBuffer);
-                    const { userOpportunity } = currentOffer;
-                    userOpportunity.note = noteBuffer;
-                    await updateOpportunityUser(userOpportunity);
-                    setLoading(false);
-                  }}
-                >
-                  Enregistrer
-                  {loading ? (
-                    <div
-                      data-uk-spinner="ratio: 0.5"
-                      className="uk-margin-small-left"
-                    />
-                  ) : null}
-                </Button>
-              )}
+                  <Button
+                    style="default"
+                    onClick={async () => {
+                      setLoading(true);
+                      console.log('update offer note', noteBuffer);
+                      const { userOpportunity } = currentOffer;
+                      userOpportunity.note = noteBuffer;
+                      await updateOpportunityUser(userOpportunity);
+                      setLoading(false);
+                    }}
+                  >
+                    Enregistrer
+                    {loading ? (
+                      <div
+                        data-uk-spinner="ratio: 0.5"
+                        className="uk-margin-small-left"
+                      />
+                    ) : null}
+                  </Button>
+                )}
             </div>
           </div>
         )}

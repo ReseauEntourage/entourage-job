@@ -27,11 +27,11 @@ const ModalProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    console.log('set id in provider ---------------------', id);
+    console.log('set id in provider -----------------', id);
   }, [id, setId]);
 
   useEffect(() => {
-    console.log('id -------- close use effect ', id);
+    console.log('id -------- close useEffect ', id);
     // console.log(close, resetForm, index);
     if (close) {
       console.log('close modal with id :>>', id);
@@ -48,7 +48,7 @@ const ModalProvider = ({ children }) => {
   }, [close, setClose]);
 
   useEffect(() => {
-    console.log(`id -------- show use effect [${id}]`);
+    console.log(`id -------- show useEffect: >>`, id);
 
     if (show) {
       console.log('show modal');
