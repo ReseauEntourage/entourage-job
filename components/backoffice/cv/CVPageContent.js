@@ -94,18 +94,11 @@ const CVPageContent = ({ candidatId }) => {
         'Content-Type': 'multipart/form-data',
       },
     })
-      .then(() =>
-        Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
-          params: {
-            userId: candidatId,
-          },
-        })
-      )
       .then(({ data }) => {
         setCV(data);
         UIkit.notification(
           user.role === USER_ROLES.CANDIDAT
-            ? 'Votre demande de modification a bien été envoyée'
+            ? 'Votre CV a bien été sauvegardé'
             : 'Le profil a été mis à jour',
           'success'
         );
