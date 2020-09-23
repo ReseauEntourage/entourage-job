@@ -13,6 +13,7 @@ app
     server.prepare();
     server.get('*', handle);
     server.start(PORT);
+    server.setTimeout(process.env.SERVER_TIMEOUT || 30000)
   })
   .catch((ex) => {
     server.close();
