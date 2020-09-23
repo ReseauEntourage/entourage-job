@@ -56,6 +56,7 @@ const CVPageContent = ({ candidatId }) => {
       if (Router.asPath !== url && unsavedChanges && !window.confirm(message)) {
         Router.events.emit('routeChangeError');
         Router.replace(Router, Router.asPath);
+        throw 'Abort route change. Please ignore this error.';
       }
     };
 
@@ -149,7 +150,7 @@ const CVPageContent = ({ candidatId }) => {
             Prévisualiser
           </Button>
           <ButtonPost
-            style={user.role === USER_ROLES.CANDIDAT ? "primary" : "default"}
+            style="primary"
             action={() => postCV(CV_STATUS.Progress.value)}
             text="Sauvegarder"
           />
