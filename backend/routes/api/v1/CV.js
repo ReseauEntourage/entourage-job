@@ -164,8 +164,8 @@ router.post(
 
       const createCVAndSendMail = async () => {
 
-        if(reqCV.urlImg) {
-          req.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
+        if(reqCV.urlImg || req.file) {
+          reqCV.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
         }
 
         // création du corps du CV
