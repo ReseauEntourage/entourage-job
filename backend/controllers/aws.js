@@ -22,7 +22,29 @@ const upload = (data, contentType, outputPath) => {
         if (err) {
           reject(err);
         } else {
-          console.log('============AWS ============', Key);
+          console.log('============ AWS ============', Key);
+          resolve(Key);
+        }
+      }
+    );
+  });
+};
+
+const copy = (originalPath, outputPath) => {
+  return new Promise((resolve, reject) => {
+    // TODO doesn't work makes server crash
+    // Copying files in the bucket
+    s3.copyObject(
+      {
+        Bucket: process.env.AWSS3_BUCKET_NAME,
+        CopySource: `${process.env.AWSS3_DIRECTORY}${originalPath}`,
+        Key: `${process.env.AWSS3_DIRECTORY}${outputPath}`,
+      },
+      (err, {Key}) => {
+        if (err) {
+          reject(err);
+        } else {
+          console.log('============ AWS ============', Key);
           resolve(Key);
         }
       }
@@ -55,4 +77,4 @@ const uploadFile = (path, outputPath) => {
   return upload(fileContent, outputPath);
 };
 
-module.exports = {upload, uploadFile, download};
+module.exports = {upload, uploadFile, download, copy};
