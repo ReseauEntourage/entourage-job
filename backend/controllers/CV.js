@@ -109,7 +109,7 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER = [
 
 const dividedCompleteCVQuery = async (query) => {
   const results = await Promise.all(
-    INCLUDES_COMPLETE_CV_WITH_ALL_USER.map((include) => query(include))
+    INCLUDES_COMPLETE_CV_WITH_ALL_USER.map(async (include) => query(include))
   );
 
   return results.reduce((acc, curr) => {
@@ -150,147 +150,171 @@ const createCV = async (data) => {
 
   const modelCV = await models.CV.create(data); // TODO VERIFIER LES ENTREES
 
+  // TODO make parallel
+
+  const promises = [];
+
   // Skills
   if (data.skills) {
-    console.log(`createCV - Skills`);
-    const skills = await Promise.all(
-      // pour chaque competence
-      data.skills.map((name) => {
-        // on trouve ou créé la donné
-        return models.Skill.findOrCreate({
-          where: {name},
+    promises.push(async () => {
+      console.log(`createCV - Skills`);
+      const skills = await Promise.all(
+        // pour chaque competence
+        data.skills.map((name) => {
+          // on trouve ou créé la donné
+          return models.Skill.findOrCreate({
+            where: {name},
+          })
+            // on recupere de model retourné
+            .then((model) => model[0])
         })
-          // on recupere de model retourné
-          .then((model) => model[0])
-      })
-    );
-    // on ajoute toutes les competences
-    modelCV.addSkills(skills);
+      );
+      // on ajoute toutes les competences
+      await modelCV.addSkills(skills);
+    });
   }
 
   // languages
   if (data.languages) {
-    console.log(`createCV - Langues`);
-    const languages = await Promise.all(
-      // pour chaque competence
-      data.languages.map((name) => {
-        // on trouve ou créé la donné
-        return models.Language.findOrCreate({
-          where: {name},
-          // on recupere de model retourné
-        }).then((model) => model[0])
-      })
-    );
-    // on ajoute toutes les competences
-    modelCV.addLanguages(languages);
+    promises.push(async () => {
+      console.log(`createCV - Langues`);
+      const languages = await Promise.all(
+        // pour chaque competence
+        data.languages.map((name) => {
+          // on trouve ou créé la donné
+          return models.Language.findOrCreate({
+            where: {name},
+            // on recupere de model retourné
+          }).then((model) => model[0])
+        })
+      );
+      // on ajoute toutes les competences
+      await modelCV.addLanguages(languages);
+    });
   }
 
   // Contracts
   if (data.contracts) {
-    console.log(`createCV - Contrats`);
-    const contracts = await Promise.all(
-      data.contracts.map((name) => {
-        return models.Contract.findOrCreate({
-          where: {name},
-        }).then((model) => model[0]);
-      })
-    );
-    modelCV.addContracts(contracts);
+    promises.push(async () => {
+      console.log(`createCV - Contrats`);
+      const contracts = await Promise.all(
+        data.contracts.map((name) => {
+          return models.Contract.findOrCreate({
+            where: {name},
+          }).then((model) => model[0]);
+        })
+      );
+      await modelCV.addContracts(contracts);
+    });
   }
 
   // Passions
   if (data.passions) {
-    console.log(`createCV - Passions`);
-    const passions = await Promise.all(
-      data.passions.map((name) => {
-        return models.Passion.findOrCreate({
-          where: {name},
-        }).then((model) => model[0]);
-      })
-    );
-    modelCV.addPassions(passions);
+    promises.push(async () => {
+      console.log(`createCV - Passions`);
+      const passions = await Promise.all(
+        data.passions.map((name) => {
+          return models.Passion.findOrCreate({
+            where: {name},
+          }).then((model) => model[0]);
+        })
+      );
+      await modelCV.addPassions(passions);
+    });
   }
 
   // Ambitions
   if (data.ambitions) {
-    console.log(`createCV - Ambitions`);
-    const ambitions = await Promise.all(
-      data.ambitions.map((name) => {
-        return models.Ambition.findOrCreate({
-          where: {name}, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
-        }).then((model) => model[0]);
-      })
-    );
-    modelCV.addAmbitions(ambitions);
+    promises.push(async () => {
+      console.log(`createCV - Ambitions`);
+      const ambitions = await Promise.all(
+        data.ambitions.map((name) => {
+          return models.Ambition.findOrCreate({
+            where: {name}, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
+          }).then((model) => model[0]);
+        })
+      );
+      await modelCV.addAmbitions(ambitions);
+    });
   }
 
   // BusinessLines
   if (data.businessLines) {
-    console.log(`createCV - BusinessLines`);
-    const businessLines = await Promise.all(
-      data.businessLines.map((name) => {
-        return models.BusinessLine.findOrCreate({
-          where: {name},
-        }).then((model) => model[0]);
-      })
-    );
-    modelCV.addBusinessLines(businessLines);
+    promises.push(async () => {
+      console.log(`createCV - BusinessLines`);
+      const businessLines = await Promise.all(
+        data.businessLines.map((name) => {
+          return models.BusinessLine.findOrCreate({
+            where: {name},
+          }).then((model) => model[0]);
+        })
+      );
+      await modelCV.addBusinessLines(businessLines);
+    });
   }
 
   // Locations
   if (data.locations) {
-    console.log(`createCV - Locations`);
-    const locations = await Promise.all(
-      data.locations.map((name) => {
-        return models.Location.findOrCreate({
-          where: {name},
-        }).then((model) => model[0]);
-      })
-    );
-    modelCV.addLocations(locations);
+    promises.push(async () => {
+      console.log(`createCV - Locations`);
+      const locations = await Promise.all(
+        data.locations.map((name) => {
+          return models.Location.findOrCreate({
+            where: {name},
+          }).then((model) => model[0]);
+        })
+      );
+      await modelCV.addLocations(locations);
+    });
   }
 
   // Experiences
   if (data.experiences) {
-    console.log(`createCV - Expériences`);
-    const experiences = await Promise.all(
-      data.experiences.map(async (experience) => {
-        const modelExperience = await models.Experience.create({
-          CVId: modelCV.id,
-          description: experience.description,
-          order: experience.order
-        });
-        // Skills
-        if (experience.skills) {
-          console.log(`createCV - Experience Skills`);
-          const skills = await Promise.all(
-            experience.skills.map((name) => {
-              return models.Skill.findOrCreate({
-                where: {name},
-              }).then((model) => model[0]);
-            })
-          );
-          modelExperience.addSkills(skills);
-        }
-        return modelExperience;
-      })
-    );
+    promises.push(async () => {
+      console.log(`createCV - Expériences`);
+      const experiences = await Promise.all(
+        data.experiences.map(async (experience) => {
+          const modelExperience = await models.Experience.create({
+            CVId: modelCV.id,
+            description: experience.description,
+            order: experience.order
+          });
+          // Skills
+          if (experience.skills) {
+            console.log(`createCV - Experience Skills`);
+            const skills = await Promise.all(
+              experience.skills.map((name) => {
+                return models.Skill.findOrCreate({
+                  where: {name},
+                }).then((model) => model[0]);
+              })
+            );
+            await modelExperience.addSkills(skills);
+          }
+          return modelExperience;
+        })
+      );
+    });
   }
 
   // Reviews
   if (data.reviews) {
-    console.log(`createCV - Reviews`);
-    const reviews = await Promise.all(
-      data.reviews.map((review) => {
-        return models.Review.create({
-          CVId: modelCV.id,
-          text: review.text,
-          status: review.status,
-          name: review.name,
-        });
-      })
-    );
+    promises.push(async () => {
+      console.log(`createCV - Reviews`);
+      const reviews = await Promise.all(
+        data.reviews.map(async (review) =>
+          models.Review.create({
+            CVId: modelCV.id,
+            text: review.text,
+            status: review.status,
+            name: review.name,
+          })
+        )
+      );
+    });
   }
+
+  await Promise.all(promises.map(async (promise) => promise()));
 
   // renvoie du cv complet
   console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
