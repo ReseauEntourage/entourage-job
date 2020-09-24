@@ -164,7 +164,9 @@ router.post(
 
       const createCVAndSendMail = async () => {
 
-        reqCV.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
+        if(reqCV.urlImg) {
+          req.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
+        }
 
         // création du corps du CV
         const cv = await CVController.createCV(reqCV);
