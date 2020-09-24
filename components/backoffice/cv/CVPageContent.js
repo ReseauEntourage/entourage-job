@@ -16,6 +16,8 @@ import NoCV from "./NoCV";
 
 const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
+  const [imageUrl, setImageUrl] = useState(undefined);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { user } = useContext(UserContext);
@@ -32,6 +34,7 @@ const CVPageContent = ({ candidatId }) => {
         .then(({ data }) => {
           if (data) {
             setCV(data);
+            setImageUrl(`${process.env.AWSS3_URL}${data.urlImg}`)
           } else {
             setCV(null);
             console.log('pas de cv');
@@ -97,6 +100,13 @@ const CVPageContent = ({ candidatId }) => {
     })
       .then(({ data }) => {
         setCV(data);
+
+        // Use hash to reload image if an update is done
+        const previewHash = Date.now();
+        setImageUrl(
+          `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${data.UserId}.${data.status}.jpg?${previewHash}`
+        );
+
         UIkit.notification(
           user.role === USER_ROLES.CANDIDAT
             ? 'Votre CV a bien été sauvegardé'
@@ -198,7 +208,7 @@ const CVPageContent = ({ candidatId }) => {
                 url={
                   cv.profileImageObjectUrl
                     ? cv.profileImageObjectUrl
-                    : process.env.AWSS3_URL + cv.urlImg
+                    : imageUrl
                 }
               />
             )}
