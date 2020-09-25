@@ -18,18 +18,18 @@ const Partners = () => {
         items={data.map(({key, link}, index) => {
           return (
             <SimpleLink
-              className="uk-width-small uk-flex uk-flex-center"
+              className="uk-flex uk-flex-center"
               isExternal
               target="_blank"
               onClick={() => event(TAGS.FOOTER_PARTENAIRE_CLIC)}
               href={link}>
-              <img src={`/static/img/partners/${key}/logo.png`} style={{maxHeight: 100}} width="" height="" alt="" />
+              <div className="uk-background-center-center uk-background-contain uk-width-small uk-height-small" style={{maxHeight: 100, backgroundImage: `url(/static/img/partners/${key}/logo.png)`}} />
             </SimpleLink>
           );
         })}
       />
     );
-  }
+  };
 
   return (
     <Background blend={{colorHex: '#484848'}}>

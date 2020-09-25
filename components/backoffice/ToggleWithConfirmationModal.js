@@ -15,7 +15,7 @@ const ToggleWithConfirmationModal = ({
   defaultValue,
   onToggle,
 }) => {
-  const [toggle, setToggle] = useState();
+  const [toggle, setToggle] = useState(defaultValue);
   useEffect(() => {
     setToggle(defaultValue);
   }, [defaultValue]);

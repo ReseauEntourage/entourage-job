@@ -1,6 +1,8 @@
 const sharp = require('sharp');
 const TextToSVG = require('text-to-svg');
 
+// sharp.cache(false);
+
 const textToSVG = TextToSVG.loadSync('./static/fonts/Roboto-Regular.ttf');
 const textToSVGBold = TextToSVG.loadSync('./static/fonts/Roboto-Black.ttf');
 
@@ -100,6 +102,8 @@ const ellipsisByChar = (text, getWidth, maxWidth) => {
 
 // permet de générer une carte entourage pour le partage. output: sortie de l'image selon le format voulue
 const createCandidatPreviewV2 = async (
+  imageWidth,
+  imageHeight,
   image,
   name,
   description,
@@ -471,10 +475,8 @@ const createCandidatPreviewV2 = async (
       width: cardWidth,
     };
   };
+
   // todo: variables a mettre en options
-  const ratio = 2.1;
-  const imageWidth = Math.trunc(520 * ratio);
-  const imageHeight = Math.trunc(272 * ratio);
   const cardPadding = 20;
   const cardCote = 450;
   const {

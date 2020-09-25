@@ -32,6 +32,15 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
       );
     }
   }, [composers]);
+
+  // Fix because of bug where multiple modals with the same id are created
+  useEffect(() => {
+    const modals = document.querySelectorAll(`#${id}`);
+    if(modals.length > 1) {
+      modals[1].remove();
+    }
+  }, []);
+
   return (
     <div id={id} className="uk-flex-top" data-uk-modal="bg-close:false">
       <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-2-3@m uk-width-1-2@l">

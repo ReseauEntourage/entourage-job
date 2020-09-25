@@ -15,12 +15,14 @@ const ResetSuccessPage = () => {
             <p className="uk-text-lead">
               Votre mot de passe a bien été réinitialisé.
             </p>
-            <Button
-              style='primary'
-              onClick={() => router.push('/login')}
-            >
-              Se connecter
-            </Button>
+            <div className="uk-flex uk-flex-center">
+              <Button
+                style='primary'
+                onClick={() => router.push('/login')}
+              >
+                Se connecter
+              </Button>
+            </div>
           </div>
         </div>
       </Section>
