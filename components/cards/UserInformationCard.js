@@ -134,12 +134,16 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
               Api.put(`/api/v1/user/candidat/${linkedUser.id}`, {
                 employed,
               })
-                .then(() =>
+                .then(() => {
+                  setUserCandidat({
+                    ...userCandidat,
+                    employed
+                  });
                   UIkit.notification(
                     'Le profil du candidat a été mis à jour !',
                     'success'
                   )
-                )
+                })
                 .catch(() =>
                   UIkit.notification('Une erreur est survenue', 'danger')
                 )
@@ -156,12 +160,16 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
                 hidden,
               })
                 .then(() => {
-                    UIkit.notification(
-                      hidden
-                        ? 'Le CV est désormais masqué'
-                        : 'Le CV est désormais visible',
-                      'success'
-                    );
+                  setUserCandidat({
+                    ...userCandidat,
+                    hidden
+                  });
+                  UIkit.notification(
+                    hidden
+                      ? 'Le CV est désormais masqué'
+                      : 'Le CV est désormais visible',
+                    'success'
+                  );
                 })
                 .catch(() =>
                   UIkit.notification(
