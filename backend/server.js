@@ -1,5 +1,4 @@
 const express = require('express');
-const uid = require('uid-safe');
 const enforce = require('express-sslify');
 
 const passport = require('./config/passport');
@@ -20,6 +19,7 @@ let server;
 const apiLimiter = dev ? (req, res, next) => next() : RateLimiter.createLimiter(100);
 
 module.exports.prepare = () => {
+
   // enable ssl redirect
   if (!dev) app.use(enforce.HTTPS({trustProtoHeader: true}));
 
@@ -63,6 +63,10 @@ module.exports.start = (port) => {
       }
     });
   });
+};
+
+module.exports.setTimeout = (timeout) => {
+  server.setTimeout(timeout);
 };
 
 module.exports.close = async () => {

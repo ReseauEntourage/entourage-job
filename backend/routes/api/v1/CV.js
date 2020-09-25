@@ -15,6 +15,8 @@ const {checkCandidatOrCoachAuthorization} = require('../../../utils');
 
 const upload = multer({dest: 'uploads/'});
 
+// sharp.cache(false);
+
 const isEmpty = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object
 };
@@ -29,15 +31,15 @@ router.post(
   upload.single('profileImage'),
   (req, res) => {
     // si le cv est une string json le parser, sinon prendre l'objet
-    // console.log('req.file :>> ', req);
     const reqCV = typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
+    const autoSave = req.body && req.body.autoSave;
     checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
       switch (req.payload.role) {
         case USER_ROLES.CANDIDAT:
           reqCV.status = CV_STATUS.Progress.value;
           break;
         case USER_ROLES.COACH:
-          if(reqCV.status !== CV_STATUS.Progress.value && reqCV.status !== CV_STATUS.Pending.value) {
+          if (reqCV.status !== CV_STATUS.Progress.value && reqCV.status !== CV_STATUS.Pending.value) {
             reqCV.status = CV_STATUS.Progress.value;
           }
           break;
@@ -51,107 +53,159 @@ router.post(
           reqCV.status = CV_STATUS.Unknown.value;
           break;
       }
-      // uploading image and generating preview image
-      if (req.file) {
-        const {path} = req.file;
-        try {
-          const fileBuffer = await sharp(path)
-            .trim()
-            .jpeg({quality: 75})
-            .toBuffer();
-          reqCV.urlImg = await S3.upload(
-            fileBuffer,
-            'image/jpeg',
-            `${reqCV.UserId}.${reqCV.status}.jpg`
-          );
-        } catch (error) {
-          console.error(error);
-        } finally {
-          fs.unlinkSync(path); // remove image localy after upload to S3
+
+      const processImage = async () => {
+
+        if(autoSave) {
+          return;
         }
-      }
-      // création de l'image publiée
-      if (reqCV.status === CV_STATUS.Published.value) {
-        try {
-          const {Body} = await S3.download(reqCV.urlImg);
-          reqCV.urlImg = await S3.upload(Body, 'image/jpeg', `${reqCV.UserId}.Published.jpg`);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-      // completion asynchrone de la generation de limage de preview
-      const previewPromise = reqCV.urlImg
-        ? new Promise((resolve, reject) => {
-            return UserController.getUser(reqCV.UserId)
-              .then(({firstName, gender}) =>
+
+        const ratio = 2.1;
+        const imageWidth = Math.trunc(520 * ratio);
+        const imageHeight = Math.trunc(272 * ratio);
+
+        const generatePreviewImage = (url) => {
+          return new Promise((resolve, reject) => {
+            UserController.getUser(reqCV.UserId)
+              .then(({firstName, gender}) => (
                 // Génération de la photo de preview
-                S3.download(reqCV.urlImg).then(async ({Body}) => {
-                  const previewImage = await createPreviewImage(
-                    Body,
-                    firstName,
-                    reqCV.catchphrase,
-                    reqCV.ambitions,
-                    reqCV.skills,
-                    reqCV.locations,
-                    gender
-                  );
-                  return previewImage;
-                })
-              )
-              .then((sharpData) => sharpData.jpeg().toBuffer())
-              .then((buffer) =>
-                S3.upload(buffer, 'image/jpeg', `${reqCV.UserId}.${reqCV.status}.preview.jpg`)
-              )
-              .then((previewUrl) => {
-                console.log('preview uploaded: ', previewUrl);
-                resolve();
-              })
+                S3.download(url)
+                  .then(async ({Body}) => (
+                    createPreviewImage(
+                      imageWidth,
+                      imageHeight,
+                      Body,
+                      firstName,
+                      reqCV.catchphrase,
+                      reqCV.ambitions,
+                      reqCV.skills,
+                      reqCV.locations,
+                      gender
+                    )
+                  ))
+                  .then((sharpData) => sharpData.jpeg({quality: 75}).toBuffer())
+                  .then((buffer) => S3.upload(buffer, 'image/jpeg', `${reqCV.UserId}.${reqCV.status}.preview.jpg`))
+                  .then((previewUrl) => {
+                    console.log('preview uploaded: ', previewUrl);
+                    resolve(previewUrl);
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    reject(err);
+                  })
+              ))
               .catch((err) => {
                 console.error(err);
-                reject();
+                reject(err);
               })
           })
-        : null;
+        };
 
-      // création du corps du CV
-      const cv = await CVController.createCV(reqCV);
-      try {
-        // notification mail to coach and admin
-        if (req.payload.role === USER_ROLES.COACH && reqCV.status === CV_STATUS.Pending.value) {
-          const mailSubject = 'Soumission CV';
-          const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
-          // notification de l'admin
-          await sendMail({
-            toEmail: process.env.MAILJET_TO_EMAIL,
-            subject: mailSubject,
-            text: mailText,
-          });
+        // uploading image and generating preview image
+        if (req.file) {
+          const {path} = req.file;
+          try {
+            const fileBuffer = await sharp(path)
+              .trim()
+              .jpeg({quality: 75})
+              .toBuffer();
+            reqCV.urlImg = await S3.upload(
+              fileBuffer,
+              'image/jpeg',
+              `${reqCV.UserId}.${reqCV.status}.jpg`
+            );
 
-         /* // Récupération de l'email du coach pour l'envoie du mail
-          console.log('USERID', req.payload.userToCoach);
+           /*
+             TO KEEP If ever we want to pre-resize the preview background image
 
-          await UserController.getUser(req.payload.userToCoach)
-            .then(async ({email}) => {
-              await sendMail({
-                toEmail: email,
-                subject: mailSubject,
-                text: mailText,
-              })
-            })
-            .catch((err) => console.log('Pas de coach rattaché au candidat')); */
+             const previewBuffer = await sharp(fileBuffer)
+                .trim()
+                .resize(imageWidth, imageHeight, {
+                  fit: 'cover',
+                })
+                .jpeg({quality: 75})
+                .toBuffer();
+
+              await S3.upload(
+                previewBuffer,
+                'image/jpeg',
+                `${reqCV.UserId}.${reqCV.status}.small.jpg`
+              );
+          */
+          } catch (error) {
+            console.error(error);
+          } finally {
+            fs.unlinkSync(path); // remove image localy after upload to S3
+          }
         }
-        // attente de la génération de l'image de preview
-        // TODO check if error doesn't come from here
-        if(previewPromise) await previewPromise;
-        const used = process.memoryUsage().heapUsed / 1024 / 1024;
-        console.log(`The script uses approximately ${used} MB`);
-        return res.status(200).json(cv);
-      } catch (err) {
-        console.log(err);
-        // attente de la génération de l'image de preview
-        if(previewPromise) await previewPromise;
+        else if(reqCV.urlImg) {
+          try {
+            const {Body} = await S3.download(reqCV.urlImg);
+            reqCV.urlImg = await S3.upload(Body, 'image/jpeg', `${reqCV.UserId}.${reqCV.status}.jpg`);
+
+            /*
+              TO KEEP If ever we want to pre-resize the preview background image
+
+              const {Body} = await S3.download(reqCV.urlImg);
+              await S3.upload(s3image.Body, 'image/jpeg', `${reqCV.UserId}.${reqCV.status}.small.jpg`);
+            */
+
+            // TODO use when we make it work
+            // reqCV.urlImg = await S3.copy(reqCV.urlImg, `${reqCV.UserId}.${reqCV.status}.jpg`);
+
+          } catch (error) {
+            console.error(error);
+          }
+        }
+        if(reqCV.urlImg) {
+          try {
+            await generatePreviewImage(reqCV.urlImg /* .replace('.jpg', '.small.jpg') */);
+          }
+          catch(error) {
+            console.log(error);
+          }
+        }
+      };
+
+      const createCVAndSendMail = async () => {
+
+        if(!autoSave && (reqCV.urlImg || req.file)) {
+          reqCV.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
+        }
+
+        // création du corps du CV
+        const cv = await CVController.createCV(reqCV);
+
+        try {
+          // notification mail to coach and admin
+          if (req.payload.role === USER_ROLES.COACH && reqCV.status === CV_STATUS.Pending.value) {
+            const mailSubject = 'Soumission CV';
+            const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
+            // notification de l'admin
+            await sendMail({
+              toEmail: process.env.MAILJET_TO_EMAIL,
+              subject: mailSubject,
+              text: mailText,
+            });
+
+          }
+        } catch (e) {
+          console.log(e);
+        }
+        return cv;
+      };
+
+      const promises = [
+        processImage,
+        createCVAndSendMail
+      ];
+
+      Promise.all(promises.map(async (promise) => promise())).then((results) => {
+        return res.status(200).json(results[1]);
+      }).catch((e) => {
+        console.log(e);
         return res.status(401).send(`Une erreur est survenue`);
-      }
+      });
     });
   }
 );

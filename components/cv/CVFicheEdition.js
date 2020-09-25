@@ -17,12 +17,16 @@ import {CV_STATUS} from '../../constants';
 
 const CVFicheEdition = ({cv, gender, onChange, disablePicture}) => {
   const [previewUrl, setPreviewUrl] = useState(undefined);
+  const [imageUrl, setImageUrl] = useState(undefined);
   useEffect(() => {
     if (cv.status !== CV_STATUS.Draft.value) {
       // Use hash to reload image if an update is done
       const previewHash = Date.now();
       setPreviewUrl(
         `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${cv.UserId}.${cv.status}.preview.jpg?${previewHash}`
+      );
+      setImageUrl(
+        `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${cv.UserId}.${cv.status}.jpg?${previewHash}`
       );
     }
   }, [cv]);
@@ -45,7 +49,7 @@ const CVFicheEdition = ({cv, gender, onChange, disablePicture}) => {
         </GridNoSSR>
         <GridNoSSR childWidths={['1-1']} match>
           <CVEditPicture
-            urlImg={process.env.AWSS3_URL + cv.urlImg || undefined}
+            urlImg={`${imageUrl}` || undefined}
             onChange={onChange}
             disablePicture={disablePicture}
           />
