@@ -191,6 +191,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
           </label>
         )}
         <AsyncSelect
+          id={`${formId}-${data.id}`}
           cacheOptions={
             data.cacheOptions === undefined ? true : data.cacheOptions
           }
@@ -221,6 +222,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
           </label>
         )}
         <ReactSelect
+          id={`${formId}-${data.id}`}
           isMulti={data.isMulti}
           name={data.name}
           value={parseValueToUseSelect()}
@@ -259,6 +261,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
           </label>
         )}
         <CreatableSelect
+          id={`${formId}-${data.id}`}
           components={customComponents}
           formatCreateLabel={userInput => `Créer "${userInput}"`}
           isMulti={data.isMulti}

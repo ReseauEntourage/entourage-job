@@ -32,6 +32,7 @@ router.post(
   (req, res) => {
     // si le cv est une string json le parser, sinon prendre l'objet
     const reqCV = typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
+    const autoSave = req.body && req.body.autoSave;
     checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
       switch (req.payload.role) {
         case USER_ROLES.CANDIDAT:
@@ -54,6 +55,10 @@ router.post(
       }
 
       const processImage = async () => {
+
+        if(autoSave) {
+          return;
+        }
 
         const ratio = 2.1;
         const imageWidth = Math.trunc(520 * ratio);
@@ -164,7 +169,7 @@ router.post(
 
       const createCVAndSendMail = async () => {
 
-        if(reqCV.urlImg || req.file) {
+        if(!autoSave && (reqCV.urlImg || req.file)) {
           reqCV.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
         }
 
