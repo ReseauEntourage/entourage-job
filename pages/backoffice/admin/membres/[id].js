@@ -204,12 +204,19 @@ const CVPage = () => {
                             Api.put(`/api/v1/user/candidat/${user.id}`, {
                               employed,
                             })
-                              .then(() =>
+                              .then(() => {
+                                setUser({
+                                  ...user,
+                                  candidat: {
+                                    ...user.candidat,
+                                    employed
+                                  }
+                                });
                                 UIkit.notification(
                                   'Le profil du candidat a été mis à jour !',
                                   'success'
                                 )
-                              )
+                              })
                               .catch(() =>
                                 UIkit.notification('Une erreur est survenue', 'danger')
                               )
@@ -225,13 +232,21 @@ const CVPage = () => {
                             Api.put(`/api/v1/user/candidat/${user.id}`, {
                               hidden,
                             })
-                              .then(() =>
+                              .then(() => {
+                                setUser({
+                                  ...user,
+                                  candidat: {
+                                    ...user.candidat,
+                                    hidden
+                                  }
+                                });
                                 UIkit.notification(
                                   hidden
                                     ? 'Le CV est désormais masqué'
                                     : 'Le CV est désormais visible',
                                   'success'
                                 )
+                              }
                               )
                               .catch(() =>
                                 UIkit.notification(

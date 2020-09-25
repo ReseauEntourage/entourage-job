@@ -111,12 +111,19 @@ const Parametres = () => {
                     Api.put(`/api/v1/user/candidat/${userData.id}`, {
                       employed,
                     })
-                      .then(() =>
+                      .then(() => {
+                        setUserData({
+                          ...userData,
+                          candidat: {
+                            ...userData.candidat,
+                            employed
+                          }
+                        });
                         UIkit.notification(
                           'Votre profil a été mis à jour !',
                           'success'
                         )
-                      )
+                      })
                       .catch(() =>
                         UIkit.notification('Une erreur est survenue', 'danger')
                       )
@@ -140,14 +147,21 @@ const Parametres = () => {
                     Api.put(`/api/v1/user/candidat/${userData.id}`, {
                       hidden,
                     })
-                      .then(() =>
+                      .then(() => {
+                        setUserData({
+                          ...userData,
+                          candidat: {
+                            ...userData.candidat,
+                            hidden
+                          }
+                        });
                         UIkit.notification(
                           hidden
                             ? 'Votre CV est désormais masqué'
                             : 'Votre CV est désormais visible',
                           'success'
                         )
-                      )
+                      })
                       .catch(() =>
                         UIkit.notification(
                           'Une erreur est survenue lors du masquage de votre profil',
