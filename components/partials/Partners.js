@@ -23,14 +23,13 @@ const Partners = () => {
               target="_blank"
               onClick={() => event(TAGS.FOOTER_PARTENAIRE_CLIC)}
               href={link}>
-              <div className="uk-background-center-center uk-background-contain uk-width-small uk-height-small" style={{maxHeight: 100, backgroundImage: `url(/static/img/partners/${key}/logo.png)`}}>
-              </div>
+              <div className="uk-background-center-center uk-background-contain uk-width-small uk-height-small" style={{maxHeight: 100, backgroundImage: `url(/static/img/partners/${key}/logo.png)`}} />
             </SimpleLink>
           );
         })}
       />
     );
-  }
+  };
 
   return (
     <Background blend={{colorHex: '#484848'}}>
