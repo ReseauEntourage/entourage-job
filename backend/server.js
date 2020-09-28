@@ -30,6 +30,25 @@ module.exports.prepare = () => {
   // adding Passport
   app.use(passport.initialize());
 
+
+  const apiTimeout = process.env.SERVER_TIMEOUT ? parseInt(process.env.SERVER_TIMEOUT, 10) : 30000;
+
+  app.use((req, res, next) => {
+    // Set the timeout for all HTTP requests
+    req.setTimeout(apiTimeout, () => {
+      const err = new Error('Request Timeout');
+      err.status = 408;
+      next(err);
+    });
+    // Set the server response timeout for all HTTP requests
+    res.setTimeout(apiTimeout, () => {
+      const err = new Error('Service Unavailable');
+      err.status = 503;
+      next(err);
+    });
+    next();
+  });
+
   // adding routes
   app.use('/api/v1/auth', apiLimiter, routeAuth);
   app.use('/api/v1/cv', apiLimiter, routeCV);
@@ -39,12 +58,12 @@ module.exports.prepare = () => {
   app.use('/api/v1/user', apiLimiter, routeUser);
 
   app.use((err, req, res, next) => {
-    if (err.name === 'UnauthorizedError') {
-      res.status(err.status).send({message: err.message});
-      return;
+    if (err) {
+      return res.status(err.status).send({message: err.message});
     }
     next();
   });
+
   return app;
 };
 
@@ -63,10 +82,6 @@ module.exports.start = (port) => {
       }
     });
   });
-};
-
-module.exports.setTimeout = (timeout) => {
-  server.setTimeout(timeout);
 };
 
 module.exports.close = async () => {
