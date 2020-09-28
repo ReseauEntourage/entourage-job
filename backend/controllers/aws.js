@@ -22,7 +22,7 @@ const upload = (data, contentType, outputPath) => {
         if (err) {
           reject(err);
         } else {
-          console.log('============ AWS ============', Key);
+          console.log('============ AWS Upload ============', Key);
           resolve(Key);
         }
       }
@@ -44,7 +44,7 @@ const copy = (originalPath, outputPath) => {
         if (err) {
           reject(err);
         } else {
-          console.log('============ AWS ============', Key);
+          console.log('============ AWS Copy ============', Key);
           resolve(Key);
         }
       }
@@ -64,6 +64,7 @@ const download = (key) => {
         if (err) {
           reject(err);
         } else {
+          console.log('============ AWS Download ============', key);
           resolve(data);
         }
       }

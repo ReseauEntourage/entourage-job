@@ -8,8 +8,8 @@ const textToSVGBold = TextToSVG.loadSync('./static/fonts/Roboto-Black.ttf');
 
 // TOOLS
 const buildLines = async (lines, font, option) => {
-  const sharpDatas = lines.map((line) =>
-    sharp(Buffer.from(font.getSVG(line, option)))
+  const sharpDatas = await Promise.all(
+    lines.map((line) => sharp(Buffer.from(font.getSVG(line, option))))
   );
   const buffers = await Promise.all(
     sharpDatas.map((sharpData) => sharpData.toBuffer())
@@ -85,19 +85,19 @@ const ellipsisByWord = (text, getWidth, maxWidth, maxLine) => {
 };
 
 const ellipsisByChar = (text, getWidth, maxWidth) => {
-  let line = '';
+  let line = [];
   for (let i = 0; i < text.length; i += 1) {
     const char = text[i];
-    if (getWidth(line + char) >= maxWidth) {
+    if (getWidth([...line, char].join('')) >= maxWidth) {
       // on enleve un charatere tant que ça ne passe pas en largeur
       do {
-        line = `${line.slice(0, line.length - 2)}...`;
-      } while (getWidth(line) >= maxWidth);
-      return line;
+        line = [...line.slice(0, line.length - 2), `...`];
+      } while (getWidth(line.join('')) >= maxWidth);
+      return line.join('');
     }
-    line += char;
+    line.push(char);
   }
-  return line;
+  return line.join('');
 };
 
 // permet de générer une carte entourage pour le partage. output: sortie de l'image selon le format voulue

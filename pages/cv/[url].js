@@ -30,7 +30,7 @@ const CVPage = ({ cv, router }) => {
 
   useEffect(() => {
     if(isFirstLoad && ((document.referrer && !document.referrer.includes(window.location.origin)) || !document.referrer)) {
-      updateShareCount(cv.UserId, 'other');
+      // updateShareCount(cv.UserId, 'other');
     }
   }, []);
 
