@@ -9,6 +9,7 @@
     "dev-front": "node -r dotenv/config ./backend/serveur-next.js",
     "dev-debug": "nodemon --inspect --watch ./backend/* -r dotenv/config ./backend/serveur-next.js",
     "test": "NODE_ENV=test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
+    "lint": "eslint .",
     "dev-test-coverage": "NODE_ENV=dev-test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
     "dev-test": "NODE_ENV=dev-test npx jest --watch --config=jest.config.js --runInBand",
     "build": "next build",

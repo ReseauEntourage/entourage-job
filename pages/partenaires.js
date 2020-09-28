@@ -4,7 +4,6 @@ import PARTNERS from '../constants/partners';
 import Grid from "../components/utils/Grid";
 import {ImgNoSSR, Section} from "../components/utils";
 import {formatParagraph} from "../utils";
-import CarouselItem from "../components/partials/CarouselItem";
 import Carousel from "../components/utils/Carousel";
 import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
 import SimpleSection from "../components/sections/SimpleSection";

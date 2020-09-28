@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import PropsType from 'prop-types';
 import moment from 'moment';
 import Api from '../../Axios';

@@ -15,7 +15,7 @@ const Partners = () => {
         match
         middle
         center
-        items={data.map(({key, link}, index) => {
+        items={data.map(({key, link}) => {
           return (
             <SimpleLink
               className="uk-flex uk-flex-center"
