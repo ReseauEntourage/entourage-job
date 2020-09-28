@@ -1,13 +1,11 @@
 /* global UIkit */
-import React, {useContext, useState, useEffect, useRef} from 'react';
-import { PropTypes } from 'prop-types';
+import React, {useContext, useState, useEffect} from 'react';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
 import {
   Section,
   GridNoSSR,
   IconNoSSR,
-  SimpleLink,
   Card,
 } from '../../components/utils';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';

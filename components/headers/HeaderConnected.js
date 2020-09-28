@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -15,7 +15,6 @@ import './Header.less';
 import { UserContext } from '../store/UserProvider';
 import ImgProfile from './ImgProfile';
 import Dropdown from '../utils/Dropdown';
-import {USER_ROLES} from "../../constants";
 
 const HeaderConnected = ({ isHome }) => {
   const { user, logout } = useContext(UserContext);

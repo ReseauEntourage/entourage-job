@@ -1,8 +1,6 @@
 import React from 'react';
-import {IconNoSSR, Section} from '../utils';
-import Layout from "../Layout";
+import {Section} from '../utils';
 import Carousel from "../utils/Carousel";
-import Grid from "../utils/Grid";
 import CarouselItem from "../partials/CarouselItem";
 
 const Highlights = () => {
