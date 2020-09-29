@@ -12,7 +12,7 @@ const VendeeGlobePartial = () => {
       <>
         <div className="uk-light uk-flex uk-flex-column uk-flex-middle">
           <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-            Rejoignez la <span style={{color: '#00B9EF'}}>Course au Changement</span> avec le bateau LinkedOut&nbsp;!
+            Rejoignez la <span style={{color: '#00B9EF'}}>Course Au Changement</span> avec le bateau LinkedOut&nbsp;!
           </h2>
           <h4 className="uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
             Tous ensemble, faisons du prochain Vendée Globe un événement sportif utile et solidaire avec les personnes en grande précarité&nbsp;!
