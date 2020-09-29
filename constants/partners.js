@@ -5,7 +5,7 @@ export default {
       title: 'Advens',
       desc: 'Advens est le 1er pure player français de la cybersécurité et accompagne les entreprises, territoires et établissements publics pour les aider à prendre de l’avance et faire de la sécurité un actif différenciateur\xa0!',
       question: 'Comment décrire le partenariat, la collaboration entre votre structure et LinkedOut\xa0?',
-      answer: 'Avec La course au changement, nous avons tissé des liens très forts et étroits entre nos organisations et nos équipes.\n\n' +
+      answer: 'Avec la Course Au Changement, nous avons tissé des liens très forts et étroits entre nos organisations et nos équipes.\n\n' +
         'Nous sommes très heureux de contribuer au développement de LinkedOut, à la lutte contre la grande exclusion en France et, nous le souhaitons, au retour à l’emploi de milliers de personnes qui le méritent tant.',
       link: 'https://www.advens.fr/fr/'
     },

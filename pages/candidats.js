@@ -60,7 +60,7 @@ const Candidats = () => {
       return (
         <div
           key={key + idx}
-          className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
+          style={{paddingLeft: 10, paddingTop: 10}}>
           <div
             role="button"
             tabIndex={0}

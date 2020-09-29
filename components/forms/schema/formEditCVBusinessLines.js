@@ -8,7 +8,7 @@ export default {
       "name": "businessLines",
       "type": "text",
       "title": "Secteurs d'activité",
-      "component": "select-request-creatable",
+      "component": "select-request",
       "options": BUSINESS_LINES,
       "isMulti": true
     }
