@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useRef} from 'react';
+import React from 'react';
 import Layout from '../components/Layout';
 import interestLinkedOutSchema from "../components/forms/schema/formInterestLinkedOut.json";
 import {Section} from "../components/utils";

@@ -23,9 +23,7 @@ const CandidatCard = ({
   url,
   imgSrc,
   imgAlt,
-  gender,
   firstName,
-  ambitions,
   businessLines,
   locations,
   skills,
@@ -317,7 +315,6 @@ const CandidatCard = ({
 CandidatCard.propTypes = {
   url: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
-  ambitions: PropTypes.arrayOf(PropTypes.string).isRequired,
   businessLines: PropTypes.arrayOf(PropTypes.string).isRequired,
   locations: PropTypes.arrayOf(PropTypes.string).isRequired,
   imgSrc: PropTypes.string,
@@ -325,7 +322,6 @@ CandidatCard.propTypes = {
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
   catchphrase: PropTypes.string,
   employed: PropTypes.bool,
-  gender: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired
 };
 
