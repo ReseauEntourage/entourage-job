@@ -209,6 +209,7 @@ const EXTERNAL_LINKS = {
   LKO_BLOG: "https://blog.linkedout.fr",
   ENTOURAGE: "https://www.entourage.social",
   LEGAL_MENTIONS: "https://docs.google.com/document/d/1a1IU9Y6qVDr4pvWJRE5XMVZ2fNhg0rhXMTL_lqY_f1M/pub",
+  ARTICLE_BC: "https://blog.linkedout.fr/2020/07/03/benevole-coach-linkedout/",
 };
 
 const VALUES = {
