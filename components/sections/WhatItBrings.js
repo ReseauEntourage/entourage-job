@@ -1,7 +1,5 @@
 import React from 'react';
-import { Section } from '../utils';
 import MultipleCTA from "../partials/MultipleCTA";
-import HireCTA from "../partials/HireCTA";
 
 const WhatItBrings = () => {
   const whatItBrings = [

@@ -1,8 +1,8 @@
 /* global UIkit */
 import React, {useContext, useEffect, useState} from 'react';
+import PropTypes from 'prop-types';
 import {GridNoSSR, Section} from '../utils';
 import OfferCard from "../cards/OfferCard";
-import PropTypes from 'prop-types';
 import Axios from '../../Axios';
 import {UserContext} from '../store/UserProvider';
 import ModalOfferAdmin from "../modals/ModalOfferAdmin";

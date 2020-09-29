@@ -1,9 +1,6 @@
 import React from 'react';
-import Link from "next/link";
 import {IconNoSSR, Section} from '../utils';
-import {EXTERNAL_LINKS} from '../../constants';
 import Button from "../utils/Button";
-import Grid from "../utils/Grid";
 import MultipleCTA from "../partials/MultipleCTA";
 import {event} from "../../lib/gtag";
 import TAGS from "../../constants/tags";

@@ -11,7 +11,7 @@ import SessionProvider, {SessionContext} from "../components/store/SessionProvid
 import SharesCountProvider from "../components/store/SharesCountProvider";
 
 import * as gtag from '../lib/gtag';
-import SplashScreen, {SplashScreenNoSSR} from "../components/SplashScreen";
+import {SplashScreenNoSSR} from "../components/SplashScreen";
 
 const Container = ({Component, pageProps}) => {
   const [loading, setLoading] = useState(true);

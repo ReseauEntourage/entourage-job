@@ -1,10 +1,8 @@
 import React from 'react';
-import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { Section, GridNoSSR, IconNoSSR } from '../utils';
+import { Section, GridNoSSR } from '../utils';
 import {SharePartial} from "./index";
 import ContactPartial from "./ContactPartial";
-import Button from "../utils/Button";
 import MultipleCTA from "./MultipleCTA";
 
 const datas = [

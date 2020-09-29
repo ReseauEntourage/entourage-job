@@ -58,7 +58,7 @@ export default class DatePicker extends Component {
     return '';
   }
 
-  setLabelClass(value) {
+  setLabelClass() {
     this.setState({
       labelClass: ' stay-small',
       // labelClass: value.length > 0 ? ' stay-small' : '',
@@ -75,16 +75,11 @@ export default class DatePicker extends Component {
   render() {
     const {
       id,
-      name,
-      placeholder,
       title,
       valid,
-      value,
       min,
       max,
-      pattern,
     } = this.props;
-    const { labelClass } = this.state;
 
     return (
       <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">

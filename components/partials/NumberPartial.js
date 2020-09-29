@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import {GridNoSSR, Section} from '../utils';
 import {NumberCard} from '../cards';
 import {VALUES} from '../../constants';
-import CVFiche from "../cv/CVFiche";
 
 const staticNumbers = [
   {value: '73%', description: 'Des candidats ont retrouvé un job'},
@@ -11,6 +10,7 @@ const staticNumbers = [
   {value: '300', description: 'Entreprises solidaires'},
 ];
 
+/*
 const data = [
   {
     imgSrc: '/static/img/arthur.png',
@@ -55,6 +55,7 @@ const data = [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
 ];
+*/
 
 
 const NumberPartial = ({nbShares}) => {

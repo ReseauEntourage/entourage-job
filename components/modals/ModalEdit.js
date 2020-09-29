@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, {useRef} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ModalGeneric from './ModalGeneric';
 import HeaderModal from './HeaderModal';

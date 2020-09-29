@@ -4,7 +4,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Api from '../../../Axios';
-import { GridNoSSR, Button, IconNoSSR } from '../../utils';
+import { GridNoSSR, Button } from '../../utils';
 import { CVFicheEdition, CVBackground, CVFiche } from '../../cv';
 import { UserContext } from '../../store/UserProvider';
 import ButtonPost from './ButtonPost';
@@ -142,10 +142,10 @@ const CVPageContent = ({ candidatId }) => {
         'Content-Type': 'multipart/form-data',
       },
     })
-      .then(({ data }) => {
+      .then(() => {
         currentVersion += 1;
       })
-      .catch((err) => {
+      .catch(() => {
         console.log('Auto-save failed.');
       });
   };
