@@ -10,6 +10,7 @@ import {
 
 import Header from '../components/headers/Header';
 import {SharesCountContext} from '../components/store/SharesCountProvider';
+import VendeeGlobePartial from "../components/partials/VendeeGlobePartial";
 
 const Index = () => {
 
@@ -20,6 +21,7 @@ const Index = () => {
       <LandingPagePartial />
       <Header isHome />
       <CandidatListPartial nbShares={totalShares} />
+      <VendeeGlobePartial/>
       <EmphasePartial />
       <NumberPartial nbShares={totalShares} />
       <ActionPartial style="default" />
