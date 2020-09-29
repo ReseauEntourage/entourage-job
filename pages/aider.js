@@ -45,7 +45,7 @@ const Aider = () => (
                   text: <div>Vous souhaitez donner de votre temps pour tisser une relation de proximité avec un candidat et le coacher dans son retour à l’emploi&nbsp;? Entourage vous forme à la mission de bénévole-coach et vous donne les outils.</div>,
                   button: {
                     label: "Devenir bénévole-coach",
-                    href: process.env.AIRTABLE_LINK_BECOME_COACH,
+                    href: EXTERNAL_LINKS.ARTICLE_BC,
                     external: true,
                     onClick: () => event(TAGS.PAGE_AIDER_INSCRIPTION_COACH_CLIC)
                   }
