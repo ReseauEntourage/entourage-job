@@ -24,6 +24,7 @@ const CandidatCard = ({
   imgSrc,
   imgAlt,
   firstName,
+  ambitions,
   businessLines,
   locations,
   skills,
@@ -147,10 +148,10 @@ const CandidatCard = ({
                   }}
                   className="uk-text-small ent-line-clamp-3 uk-margin-remove"
                 >
-                  {catchphrase || "cherche un job pour s'en sortir"}
+                  {catchphrase || "Cherche un job pour s'en sortir"}
                 </p>
               </div>
-              {skills && (
+              {skills && skills.length > 0 && (
                 <GridNoSSR
                   column
                   style={{
@@ -167,7 +168,7 @@ const CandidatCard = ({
                   ))}
                 />
               )}
-             {/* {ambitions && ambitions.length > 0 && (
+              {ambitions && ambitions.length > 0 && (
                 <>
                   <p
                     style={{ fontSize: '0.775rem' }}
@@ -187,8 +188,8 @@ const CandidatCard = ({
                     ))}
                   </GridNoSSR>
                 </>
-              )} */}
-              {businessLines && businessLines.length > 0 && (
+              )}
+             {/* {businessLines && businessLines.length > 0 && (
                 <div style={{
                   marginTop: 5,
                   marginBottom: 5
@@ -210,7 +211,7 @@ const CandidatCard = ({
                     ))}
                   </GridNoSSR>
                 </div>
-              )}
+              )} */}
               {reducedLocations && reducedLocations.length > 0 && (
                 <GridNoSSR column gap="collapse" childWidths={['1-1']} style={{marginTop: 10}}>
                   {reducedLocations.slice(0, 2).map((text, index) => (
@@ -316,6 +317,7 @@ CandidatCard.propTypes = {
   url: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
   businessLines: PropTypes.arrayOf(PropTypes.string).isRequired,
+  ambitions: PropTypes.arrayOf(PropTypes.string).isRequired,
   locations: PropTypes.arrayOf(PropTypes.string).isRequired,
   imgSrc: PropTypes.string,
   imgAlt: PropTypes.string.isRequired,
