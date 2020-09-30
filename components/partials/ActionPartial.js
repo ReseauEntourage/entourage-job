@@ -11,7 +11,7 @@ const datas = [
       href: '/aider',
       label: 'Aider les candidats',
     },
-    title: 'Je suis un particulier',
+    title: 'Vous êtes un particulier',
   },
   {
     button: {
@@ -25,14 +25,14 @@ const datas = [
       href: '/orienter',
       label: 'Orienter des candidats'
     },
-    title: 'Je suis un acteur de l’insertion sociale ou professionnelle',
+    title: 'Vous êtes un acteur de l’insertion sociale ou professionnelle',
   },
   {
     button: {
       href: '/travailler',
       label: 'Rejoindre LinkedOut',
     },
-    title: 'Je cherche du travail',
+    title: 'Vous cherchez du travail',
   },
 ];
 const ActionPartial = ({ style }) => (
@@ -40,7 +40,7 @@ const ActionPartial = ({ style }) => (
     <GridNoSSR gap="large" column>
       <div className="uk-text-center">
         <h2 className="uk-text-bold">
-          <span className="uk-text-primary">J&apos;agis</span> avec LinkedOut
+          <span className="uk-text-primary">Agissez</span> avec LinkedOut
         </h2>
         <p>
           Depuis son lancement en juin 2019, de belles rencontres ont emergé
