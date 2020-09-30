@@ -46,7 +46,7 @@ const CandidatCard = ({
 
   const openNewsletterModal = () => {
     setShowModal(true);
-    UIkit.modal(`#info-share-${firstName}`).show();
+    UIkit.modal(`#info-share-${id}`).show();
   };
 
   const updateShareCount = (candidatId, type) => {
@@ -309,7 +309,7 @@ const CandidatCard = ({
         </GridNoSSR>
       </GridNoSSR>
       {showModal && (
-        <ModalShareCV id={`info-share-${firstName}`} firstName={firstName} />
+        <ModalShareCV id={`info-share-${id}`} firstName={firstName} />
       )}
     </div>
   );
