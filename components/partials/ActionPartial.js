@@ -11,28 +11,28 @@ const datas = [
       href: '/aider',
       label: 'Aider les candidats',
     },
-    title: 'Vous êtes un particulier',
-  },
-  {
-    button: {
-      href: '/orienter',
-      label: 'Orienter des candidats'
-    },
-    title: 'Vous êtes un acteur de l’insertion sociale ou professionnelle',
+    title: 'Je suis un particulier',
   },
   {
     button: {
       href: '/recruter',
       label: 'Recruter des candidats'
     },
-    title: 'Vous êtes une entreprise',
+    title: 'S\'engager dans l\'inclusion',
+  },
+  {
+    button: {
+      href: '/orienter',
+      label: 'Orienter des candidats'
+    },
+    title: 'Je suis un acteur de l’insertion sociale ou professionnelle',
   },
   {
     button: {
       href: '/travailler',
       label: 'Rejoindre LinkedOut',
     },
-    title: 'Vous cherchez du travail',
+    title: 'Je cherche du travail',
   },
 ];
 const ActionPartial = ({ style }) => (
