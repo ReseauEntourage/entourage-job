@@ -1,130 +1,96 @@
 import React from 'react';
-import {GridNoSSR, Section} from '../components/utils';
-import {ContactPartial, SharePartial} from '../components/partials';
-import {EXTERNAL_LINKS} from '../constants';
+import { Button, GridNoSSR, IconNoSSR, Section } from '../components/utils';
+import { ContactPartial, SharePartial } from '../components/partials';
+import { EXTERNAL_LINKS } from '../constants';
 import Layout from '../components/Layout';
 import HowItWorks from '../components/sections/HowItWorks';
-import SimpleSection from "../components/sections/SimpleSection";
-import MultipleCTA from "../components/partials/MultipleCTA";
-import ImageTitle from "../components/sections/ImageTitle";
-import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
-import {event} from "../lib/gtag";
-import TAGS from "../constants/tags";
-
+import MultipleCTA from '../components/partials/MultipleCTA';
+import ImageTitle from '../components/sections/ImageTitle';
+import ModalInterestLinkedOut from '../components/modals/ModalInterestLinkedOut';
+import { event } from '../lib/gtag';
+import TAGS from '../constants/tags';
 
 const Aider = () => (
   <Layout title="Aider - LinkedOut">
-    <ImageTitle img='static/img/header_pic_help.jpg' id="help-title" title={<>Vous souhaitez <span className="uk-text-primary">aider&nbsp;?</span></>} text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"} />
-    <Section style='muted' className="uk-padding-remove-bottom">
-      <ul className="uk-flex-nowrap uk-overflow-auto" data-uk-tab=".uk-switcher">
-        <li className="uk-flex uk-flex-middle uk-flex-center"><a href="#"><h4 className="uk-text-bold">Vous êtes un particulier</h4></a></li>
-        <li className="uk-flex uk-flex-middle uk-flex-center"><a href="#"><h4 className="uk-text-bold">Vous êtes un acteur social ou associatif</h4></a></li>
-        <li className="uk-flex uk-flex-middle uk-flex-center"><a href="#"><h4 className="uk-text-bold">Vous êtes une entreprise</h4></a></li>
-        <li className="uk-flex uk-flex-middle uk-flex-center"><a href="#"><h4 className="uk-text-bold">Devenez mécène</h4></a></li>
-      </ul>
+    <ImageTitle
+      img="static/img/header_pic_help.jpg"
+      alt="vous souhaitez aider"
+      id="help-title"
+      title={
+        <>
+          Vous souhaitez <span className="uk-text-primary">aider&nbsp;?</span>
+        </>
+      }
+      text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"}
+    />
+    <Section style="muted">
+      <h2 className="uk-text-bold uk-text-center uk-margin-large-bottom">
+        Vous êtes un <span className="uk-text-primary">particulier</span>
+      </h2>
+      <div className="uk-flex uk-flex-column uk-flex-middle uk-width-1-2@m uk-margin-auto">
+        <h3 className="uk-text-bold uk-text-center">
+          Partagez votre réseau avec ceux qui n’en n’ont plus&nbsp;!
+        </h3>
+        <hr className="uk-divider-small uk-margin-remove-vertical" />
+        <div
+          className="uk-text-center uk-flex-1 uk-margin-top uk-margin-bottom"
+          style={{ padding: '0 30px' }}
+        >
+          Partager un CV sur vos réseaux donne une visibilité inédite à un
+          candidat auprès de potentiels recruteurs et permet de générer des
+          opportunités d’emploi. Votre partage peut tout changer&nbsp;!
+        </div>
+        <div className="uk-flex-center uk-flex uk-flex-middle">
+          <Button href="/candidats" style="secondary">
+            Partager un CV <IconNoSSR name="chevron-right" />
+          </Button>
+        </div>
+      </div>
     </Section>
-    <ul className="uk-switcher uk-flex uk-flex-center uk-background-muted">
-        <li className="uk-flex">
-          <Section style="muted" container='small'>
-            <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-              Vous êtes un{' '}
-              <span className="uk-text-primary">particulier</span>
-            </h2>
-            <MultipleCTA
-              data={[
-                {
-                  title: "Partagez votre réseau avec ceux qui n’en n’ont plus\xa0!",
-                  text: <div>Partager un CV sur vos réseaux donne une visibilité inédite à un candidat auprès de potentiels recruteurs et permet de générer des opportunités d’emploi. Votre partage peut tout changer&nbsp;!</div>,
-                  button: {
-                    label: "Partager un CV",
-                    href: "/candidats"
-                  }
-                },
-                {
-                  title: "Coachez une personne exclue vers l’emploi\xa0!",
-                  text: <div>Vous souhaitez donner de votre temps pour tisser une relation de proximité avec un candidat et le coacher dans son retour à l’emploi&nbsp;? Entourage vous forme à la mission de bénévole-coach et vous donne les outils.</div>,
-                  button: {
-                    label: "Devenir bénévole-coach",
-                    href: EXTERNAL_LINKS.ARTICLE_BC,
-                    external: true,
-                    onClick: () => event(TAGS.PAGE_AIDER_INSCRIPTION_COACH_CLIC)
-                  }
-                }
-              ]}
-              showHorizontalDividers
-            />
-          </Section>
-        </li>
-        <li className="uk-flex">
-          <Section style="muted" container='small'>
-            <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-              Vous êtes un{' '}<span className="uk-text-primary">acteur de l&apos;insertion</span>
-              {' '}sociale et professionnelle
-            </h2>
-            <MultipleCTA
-              spacing='medium'
-              data={[
-                {
-                  title: "Vous accompagnez une personne en démarche d'insertion professionnelle\xa0?",
-                  button: {
-                    label: "Nous l'orienter",
-                    href: process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION,
-                    external: true,
-                    onClick: () => event(TAGS.PAGE_AIDER_ORIENTER_CANDIDAT_CLIC)
-                  }
-                },
-                {
-                  title: "Vous souhaitez coopérer avec LinkedOut\xa0?",
-                  button: {
-                    label: "Nous écrire",
-                    modal: "target: #modal-interest-linkedOut",
-                    onClick: () => event(TAGS.PAGE_AIDER_CONTACT_TS_CLIC)
-                  }
-                }
-              ]}
-              showVerticalDividers/>
-          </Section>
-        </li>
-        <li className="uk-flex">
-          <SimpleSection
-            style="muted"
-            title={
-              <>
-                Vous êtes une{' '}<span className="uk-text-primary">entreprise</span>
-              </>
-            }
-            text="Votre entreprise peut aussi jouer un rôle ! Que vous soyez une TPE, une grande entreprise ou une start-up, nous vous proposons différents moyens de vous engager"
-            id="entreprise"
-            button={{
-              label: "Nous écrire",
-              modal: "target: #modal-interest-linkedOut",
-              onClick: () => event(TAGS.PAGE_AIDER_CONTACT_RECRUTEUR_CLIC)
-            }} />
-        </li>
-        <li className="uk-flex">
-          <SimpleSection
-            title={
-              <>
-                Devenez{' '}<span className="uk-text-primary">mécène</span>
-              </>
-            }
-            text="Vous souhaitez soutenir financièrement le projet LinkedOut et participer à la construction d’une société plus inclusive"
-            id="mécène"
-            style="muted"
-            button={{
-              label: "Faire un don",
+    <Section container="small">
+      <MultipleCTA
+        data={[
+          {
+            title: 'Coachez une personne exclue vers l’emploi\xa0!',
+            text: (
+              <div>
+                Vous souhaitez donner de votre temps pour tisser une relation de
+                proximité avec un candidat et le coacher dans son retour à
+                l’emploi&nbsp;? Entourage vous forme à la mission de
+                bénévole-coach et vous donne les outils.
+              </div>
+            ),
+            button: {
+              label: 'Devenir bénévole-coach',
+              href: EXTERNAL_LINKS.ARTICLE_BC,
+              external: true,
+              onClick: () => event(TAGS.PAGE_AIDER_INSCRIPTION_COACH_CLIC),
+            },
+          },
+          {
+            title: 'Faire un don',
+            text: (
+              <div>
+                Vous souhaitez soutenir financièrement le projet LinkedOut et
+                participer à la construction d’une société plus inclusive
+              </div>
+            ),
+            button: {
+              label: 'Faire un don',
               href: EXTERNAL_LINKS.DONATION,
               external: true,
-              onClick: () => event(TAGS.PAGE_AIDER_DON_CLIC)
-            }} />
-        </li>
-
-      </ul>
-    <HowItWorks style='default' />
-    <Section style='muted'>
+              onClick: () => event(TAGS.PAGE_AIDER_DON_CLIC),
+            },
+          },
+        ]}
+        showHorizontalDividers
+      />
+    </Section>
+    <HowItWorks style="default" />
+    <Section style="muted">
       <GridNoSSR gap="large" column>
         <ContactPartial padding={false} />
-        <SharePartial/>
+        <SharePartial />
       </GridNoSSR>
     </Section>
     <ModalInterestLinkedOut />
