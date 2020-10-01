@@ -67,7 +67,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
   };
 
   const openNewsletterModal = () =>
-    UIkit.modal(`#info-share-${cv.user.candidat.firstName}`).show();
+    UIkit.modal(`#info-share-${cv.UserId}`).show();
 
   const updateShareCount = (candidatId, type) => {
     Api.post('api/v1/cv/count', {
@@ -274,7 +274,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
               </div>
               {shareSection()}
               <ModalShareCV
-                id={`info-share-${cv.user.candidat.firstName}`}
+                id={`info-share-${cv.UserId}`}
                 firstName={cv.user.candidat.firstName}
               />
             </div>
