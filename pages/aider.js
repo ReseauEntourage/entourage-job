@@ -33,8 +33,7 @@ const Aider = () => (
         </h3>
         <hr className="uk-divider-small uk-margin-remove-vertical" />
         <div
-          className="uk-text-center uk-flex-1 uk-margin-top uk-margin-bottom"
-          style={{ padding: '0 30px' }}
+          className="uk-text-center uk-flex-1 uk-margin-top uk-margin-bottom uk-padding-small uk-padding-remove-top uk-padding-remove-bottom"
         >
           Partager un CV sur vos réseaux donne une visibilité inédite à un
           candidat auprès de potentiels recruteurs et permet de générer des
