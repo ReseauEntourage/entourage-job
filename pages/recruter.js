@@ -19,7 +19,7 @@ const Recruter = () => {
           <>
             Vous souhaitez{' '}
             <span className="uk-text-primary">
-              recruter un candidat LinkedOut ?
+              recruter un candidat LinkedOut&nbsp;?
             </span>
           </>
         }
