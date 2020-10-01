@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout';
 import ImageTitle from '../components/sections/ImageTitle';
 import HireSteps from '../components/sections/HireSteps';
-import DiscoverCandidates from '../components/sections/DiscoverCandidates';
+import DiscoverCandidates from '../components/partials/SearchCandidates';
 
 const Entreprises = () => (
   <Layout title="Entreprises - LinkedOut">
