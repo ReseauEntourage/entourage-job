@@ -12418,6 +12418,9 @@ iframe.uk-cover {
 * {
   -webkit-print-color-adjust: exact !important;
 }
+.page-break {
+  page-break-after: always;
+}
 .uk-background-default {
   background-color: white !important;
 }

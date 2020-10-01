@@ -2,7 +2,9 @@ const router = require('express').Router();
 const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs');
-const puppeteer = require('puppeteer')
+const puppeteer = require('puppeteer');
+const PDFMerger = require('pdf-merger-js');
+
 const {auth} = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
@@ -371,23 +373,43 @@ router.get('/:url', auth(), (req, res) => {
  * Description : Récupère le CV en PDF associé à l'<URL> fournit
  */
 router.get('/pdf/:url', auth(), async (req, res) => {
+  const paths = [`${req.params.url}-page1.pdf`, `${req.params.url}-page2.pdf`, `${req.params.url}.pdf`];
+
   try {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
-    await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}`, {waitUntil: 'networkidle2'});
-    await page.addStyleTag({ content: '@page { size: A4 portrait; margin: 0; } html { height: auto; } body { height: auto; }' });
-    const pdf = await page.pdf({ preferCSSPageSize: true });
+    const merger = new PDFMerger();
+
+    // Fix because can't create page break
+
+    await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=0`, {waitUntil: 'networkidle2'});
+    await page.addStyleTag({ content: '@page { size: A4 portrait; margin: 0; }' });
+    await page.pdf({ path: paths[0], preferCSSPageSize: true, printBackground: true });
+    merger.add(paths[0]);
+
+    await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=1`, {waitUntil: 'networkidle2'});
+    await page.addStyleTag({ content: '@page { size: A4 portrait; margin: 0; }' });
+    await page.pdf({ path: paths[1], preferCSSPageSize: true, printBackground: true });
+    merger.add(paths[1]);
 
     await browser.close();
 
-    res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length });
-    res.status(200).send(pdf);
+    await merger.save(paths[2]);
+
+    const pdfBuffer = fs.readFileSync(paths[2]);
+
+    res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdfBuffer.length });
+    res.status(200).send(pdfBuffer);
   }
   catch(err) {
     console.log(err);
     res.status(401).send('Une erreur est survenue');
   }
-
+  finally {
+    fs.unlinkSync(paths[0]);
+    fs.unlinkSync(paths[1]);
+    fs.unlinkSync(paths[2]);
+  }
 });
 
 /**
