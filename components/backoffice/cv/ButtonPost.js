@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { Button } from '../../utils';
 import Icon from "../../utils/Icon";
 
-const ButtonPost = ({ text, icon, action, style }) => {
+const ButtonPost = ({ text, icon, action, style, disabled }) => {
   const [loading, setLoading] = useState(false);
   return (
     <Button
+      disabled={disabled}
       style={style}
       onClick={() => {
         if (!loading) {
@@ -32,11 +33,13 @@ ButtonPost.propTypes = {
   text: PropTypes.string.isRequired,
   action: PropTypes.func,
   style: PropTypes.string,
-  icon: PropTypes.string
+  icon: PropTypes.string,
+  disabled: PropTypes.bool
 };
 ButtonPost.defaultProps = {
   action: undefined,
   style: undefined,
-  icon: undefined
+  icon: undefined,
+  disabled: false
 };
 export default ButtonPost;

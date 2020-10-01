@@ -6,7 +6,7 @@ import Api from '../../../Axios';
 import {Section} from '../../../components/utils';
 import CVPDF from "../../../components/cv/CVPDF";
 
-const CVPDFPage = ({ cv, router }) => {
+const CVPDFPage = ({ cv, page, router }) => {
   if (!cv) {
     return (
       <Layout title="Page introuvable - LinkedOut">
@@ -38,16 +38,16 @@ const CVPDFPage = ({ cv, router }) => {
       metaType="profile"
     >
       <div className="uk-background-muted">
-        <CVPDF cv={cv}/>
+        <CVPDF cv={cv} page={page}/>
       </div>
     </Layout>
   );
 };
 
-CVPDFPage.getInitialProps = async ({ query }) => {
+CVPDFPage.getInitialProps = async ({query}) => {
   return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
     .then(({ data }) => {
-      return { cv: data };
+      return { cv: data, page: query.page };
     })
     .catch((err) => {
       console.log(err);
@@ -56,10 +56,12 @@ CVPDFPage.getInitialProps = async ({ query }) => {
 };
 CVPDFPage.propTypes = {
   cv: PropTypes.shape(),
+  page: PropTypes.number,
   router: PropTypes.shape(),
 };
 CVPDFPage.defaultProps = {
   cv: null,
+  page: null,
   router: {
     asPath: '',
   },

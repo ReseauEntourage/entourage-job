@@ -9,7 +9,7 @@ import {
   WhatsappShareButton,
 } from 'react-share';
 
-import { ImgNoSSR } from '../utils';
+import {ImgNoSSR, SimpleLink} from '../utils';
 import { GridNoSSR } from '../utils/Grid';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
@@ -451,6 +451,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
           {shareSection()}
           <div className="uk-flex uk-flex-center">
             <ButtonPost
+              disabled={actionDisabled}
+              style="default"
               text="Télécharger le CV"
               icon="download"
               action={() => {
@@ -522,16 +524,16 @@ const CVFiche = ({ cv, actionDisabled }) => {
           intégration en entreprise par le projet LinkedOut. Pour plus
           d&apos;information, contactez:
           <br />
-          <a
+          <SimpleLink
             className={`uk-link-text uk-text-primary${
               actionDisabled ? ' uk-disabled' : ''
             }`}
-            target='_blank'
-            rel="noopener"
+            isExternal
+            newTab
             href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
           >
             {process.env.MAILJET_CONTACT_EMAIL}
-          </a>
+          </SimpleLink>
         </p>
         <ImgNoSSR
           alt="logo linkedout"
