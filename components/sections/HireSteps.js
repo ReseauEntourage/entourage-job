@@ -23,22 +23,10 @@ const HireSteps = () => {
 
 
   return (
-    <Section id="hireSteps" style="default">
-      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-        Concrètement,{' '}
-        <span className="uk-text-primary">comment recruter</span>
-        {' '}un candidat LinkedOut&nbsp;?
-      </h2>
+    <Section id="hireSteps" style="muted">
       <MultipleCTA data={content} showNumbers showHorizontalDividers animate />
     </Section>
   );
-};
-
-HireSteps.propTypes = {
-
-};
-
-HireSteps.defaultProps = {
 };
 
 export default HireSteps;
