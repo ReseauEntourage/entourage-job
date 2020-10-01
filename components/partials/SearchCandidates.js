@@ -1,6 +1,7 @@
 /* global UIkit */
 
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import CVList from '../cv/CVList';
 import {
   Button,
@@ -25,13 +26,116 @@ const initializeFilters = () => {
   }, {});
 };
 
-const DiscoverCandidates = () => {
+const CVFiltersSideBar = ({
+  filters,
+  setFilters,
+  hideEmployed,
+  setHideEmployed,
+}) => {
+  const renderFilters = (filterConstants, key, tag) => {
+    const reducedFilters = getChildrenFilters(filterConstants);
+
+    return reducedFilters.map((filterConst, index) => {
+      const indexInSelectedFilters = filters[key].findIndex((filter) => {
+        return filter.value === filterConst.value;
+      });
+      const isFilterSelected = indexInSelectedFilters > -1;
+
+      const onFilterClick = () => {
+        const updatedFilters = { ...filters };
+        if (isFilterSelected) {
+          // remove filter
+          updatedFilters[key].splice(index, 1);
+        } else {
+          // add filter
+          updatedFilters[key].push(filterConst);
+          event(tag);
+        }
+
+        setFilters(updatedFilters);
+      };
+
+      const handleKeyDown = (ev) => {
+        if (ev.key === 'Enter') {
+          onFilterClick();
+        }
+      };
+
+      return (
+        <div key={key + index} style={{ paddingLeft: 10, paddingTop: 10 }}>
+          <div
+            role="button"
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
+            className={`ent-filter${isFilterSelected ? '-activated' : ''}`}
+            onClick={onFilterClick}
+          >
+            {filterConst.label}
+          </div>
+        </div>
+      );
+    });
+  };
+
+  return (
+    <OffcanvasNoSSR
+      id="toggle-filter-menu"
+      className="ent-filter-menu uk-padding-medium-top"
+      flip={false}
+    >
+      <div className="uk-margin-small-top">
+        {FILTERS_DATA.map(({ title, constants, key, tag }) => {
+          return (
+            <div key={key}>
+              <span className="uk-text-bold">{title}</span>
+              <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom uk-margin-small-top">
+                {renderFilters(constants, key, tag)}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div>
+        <label
+          htmlFor="hide-employed"
+          className="uk-text-bold uk-flex uk-flex-middle"
+        >
+          <div className="uk-flex-1">
+            Masquer les candidats ayant retrouvé un emploi
+          </div>
+          <input
+            id="hide-employed"
+            type="checkbox"
+            className="uk-checkbox uk-margin-small-left"
+            checked={hideEmployed}
+            onChange={(e) => setHideEmployed(e.target.checked)}
+          />
+        </label>
+      </div>
+      <div className="uk-flex uk-flex-center uk-margin-medium-top">
+        <Button style="text" toggle="target: #toggle-filter-menu;">
+          Fermer la liste &nbsp;
+          <IconNoSSR ratio={1} name="close" />
+        </Button>
+      </div>
+    </OffcanvasNoSSR>
+  );
+};
+
+CVFiltersSideBar.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  filters: PropTypes.object.isRequired,
+  setFilters: PropTypes.func.isRequired,
+  hideEmployed: PropTypes.bool.isRequired,
+  setHideEmployed: PropTypes.func.isRequired,
+};
+
+const SearchCandidates = () => {
   const [search, setSearch] = useState();
   const [hideEmployed, setHideEmployed] = useState(true);
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
   const [filters, setFilters] = useState(initializeFilters());
   const [numberOfResults, setNumberOfResults] = useState(0);
-  const [showNumberOfResults, setShowNumberOfResults] = useState(false);
 
   useEffect(() => {
     UIkit.util.on(document, 'show', '#toggle-filter-menu', () => {
@@ -47,60 +151,10 @@ const DiscoverCandidates = () => {
     setFilters(initializeFilters());
   };
 
-  const renderFilters = (filterConstants, key, tag) => {
-    const reducedFilters = getChildrenFilters(filterConstants);
-
-    return reducedFilters.map((filterConst, idx) => {
-      const index = filters[key].findIndex((filter) => {
-        return filter.value === filterConst.value;
-      });
-
-      const onFilterClick = () => {
-        const updatedFilters = { ...filters };
-        if (index < 0) {
-          event(tag);
-          updatedFilters[key].push(filterConst);
-        } else {
-          updatedFilters[key].splice(index, 1);
-        }
-
-        setFilters(updatedFilters);
-      };
-
-      const handleKeyDown = (ev) => {
-        if (ev.key === 'Enter') {
-          onFilterClick();
-        }
-      };
-
-      return (
-        <div key={key + idx} style={{ paddingLeft: 10, paddingTop: 10 }}>
-          <div
-            role="button"
-            tabIndex={0}
-            onKeyDown={handleKeyDown}
-            className={`ent-filter${index < 0 ? '' : '-activated'}`}
-            onClick={onFilterClick}
-          >
-            {filterConst.label}
-          </div>
-        </div>
-      );
-    });
-  };
-
   const numberOfFilters = Object.values(filters).reduce(
     (acc, curr) => acc + curr.length,
     0
   );
-
-  useEffect(() => {
-    if (numberOfFilters > 0) {
-      setShowNumberOfResults(true);
-    } else {
-      setShowNumberOfResults(false);
-    }
-  }, [numberOfResults]);
 
   const startSearch = (ev) => {
     if (ev.target.value) {
@@ -179,7 +233,7 @@ const DiscoverCandidates = () => {
                     name={`filter${filterMenuOpened ? '' : '-empty'}`}
                   />
                 </Button>
-                {showNumberOfResults && numberOfFilters > 0 && (
+                {numberOfFilters > 0 && (
                   <div className="uk-text-meta uk-margin-small-left uk-text-italic">
                     {numberOfResults} résultat{numberOfResults !== 1 ? 's' : ''}
                   </div>
@@ -218,47 +272,12 @@ const DiscoverCandidates = () => {
                 </div>
               )}
             </GridNoSSR>
-            <OffcanvasNoSSR
-              id="toggle-filter-menu"
-              className="ent-filter-menu uk-padding-medium-top"
-              flip={false}
-            >
-              <div className="uk-margin-small-top">
-                {FILTERS_DATA.map(({ title, constants, key, tag }) => {
-                  return (
-                    <div key={key}>
-                      <span className="uk-text-bold">{title}</span>
-                      <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom uk-margin-small-top">
-                        {renderFilters(constants, key, tag)}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div>
-                <label
-                  htmlFor="hide-employed"
-                  className="uk-text-bold uk-flex uk-flex-middle"
-                >
-                  <div className="uk-flex-1">
-                    Masquer les candidats ayant retrouvé un emploi
-                  </div>
-                  <input
-                    id="hide-employed"
-                    type="checkbox"
-                    className="uk-checkbox uk-margin-small-left"
-                    checked={hideEmployed}
-                    onChange={(e) => setHideEmployed(e.target.checked)}
-                  />
-                </label>
-              </div>
-              <div className="uk-flex uk-flex-center uk-margin-medium-top">
-                <Button style="text" toggle="target: #toggle-filter-menu;">
-                  Fermer la liste &nbsp;
-                  <IconNoSSR ratio={1} name="close" />
-                </Button>
-              </div>
-            </OffcanvasNoSSR>
+            <CVFiltersSideBar
+              filters={filters}
+              setFilters={setFilters}
+              hideEmployed={hideEmployed}
+              setHideEmployed={setHideEmployed}
+            />
           </div>
         </div>
         <CVList
@@ -271,4 +290,4 @@ const DiscoverCandidates = () => {
     </Section>
   );
 };
-export default DiscoverCandidates;
+export default SearchCandidates;
