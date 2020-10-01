@@ -4,14 +4,14 @@ import dynamic from 'next/dynamic';
 
 import { CloseButtonNoSSR } from './CloseButton';
 
-const Offcanvas = ({ id, children, container }) => (
+const Offcanvas = ({ id, children, container, flip, className }) => (
   <div
-    data-uk-offcanvas={`overlay: true; flip: true; ${
+    data-uk-offcanvas={`overlay: true; flip: ${flip}; ${
       container ? 'container: true' : ''
     }`}
     id={id}
   >
-    <div className="uk-offcanvas-bar">
+    <div className={`uk-offcanvas-bar ${className}`}>
       <CloseButtonNoSSR />
       {children}
     </div>
@@ -24,9 +24,13 @@ Offcanvas.propTypes = {
     PropTypes.node,
   ]).isRequired,
   container: PropTypes.bool,
+  flip: PropTypes.bool,
+  className: PropTypes.string
 };
 Offcanvas.defaultProps = {
   container: undefined,
+  flip: true,
+  className: ''
 };
 
 export const OffcanvasNoSSR = dynamic(() => import('./Offcanvas'), {

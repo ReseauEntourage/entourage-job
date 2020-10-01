@@ -12727,3 +12727,49 @@ iframe.uk-cover {
   background-color: white;
   border: 1px solid #f55f24;
 }
+.ent-filter-menu {
+  background-color: white;
+  border-right: 1px solid #F2F2F0;
+  color: black;
+}
+.ent-filter-menu .uk-checkbox {
+  border: 1px solid #cccccc;
+  background-color: transparent;
+}
+.ent-filter-menu .uk-checkbox:focus {
+  border: 1px solid #f55f24;
+  background-color: transparent;
+}
+.ent-filter-menu .uk-checkbox:checked {
+  color: white;
+  border-color: transparent;
+  background-color: #f55f24;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2211%22%20viewBox%3D%220%200%2014%2011%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23fff%22%20points%3D%2212%201%205%207.5%202%205%201%205.5%205%2010%2013%201.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
+}
+.ent-filter-menu .uk-checkbox:checked:focus {
+  color: white;
+  border-color: transparent;
+  background-color: #f55f24;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2211%22%20viewBox%3D%220%200%2014%2011%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23fff%22%20points%3D%2212%201%205%207.5%202%205%201%205.5%205%2010%2013%201.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
+}
+.ent-filter-menu .uk-button-text {
+  color: #333;
+}
+.ent-filter-menu .uk-button-text:hover {
+  color: #333;
+}
+.ent-filter-menu .uk-button-text:focus {
+  color: #333;
+}
+.ent-filter-menu .uk-button-text::before {
+  border-bottom-color: #333;
+}
+.ent-filter-menu .uk-offcanvas-close {
+  color: #999;
+}
+.ent-filter-menu .uk-offcanvas-close:hover {
+  color: black !important;
+}
+.ent-filter-menu .uk-offcanvas-close:active {
+  color: black !important;
+}

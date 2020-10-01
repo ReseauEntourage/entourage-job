@@ -425,3 +425,66 @@
   background-color: white;
   border: 1px solid @global-primary-background;
 }
+
+.ent-filter-menu {
+  background-color: white;
+  border-right: 1px solid @global-muted-background;
+  color: @global-color;
+}
+
+.ent-filter-menu .uk-checkbox {
+  border: 1px solid #cccccc;
+  background-color: transparent;
+}
+
+.ent-filter-menu .uk-checkbox:focus {
+  border: 1px solid @global-primary-background;
+  background-color: transparent;
+}
+
+.ent-filter-menu .uk-checkbox:checked {
+  color: white;
+  border-color: transparent;
+  background-color: @global-primary-background;
+  .svg-fill(@internal-form-checkbox-image, "#000", @form-radio-checked-icon-color);
+}
+
+
+.ent-filter-menu .uk-checkbox:checked:focus {
+  color: white;
+  border-color: transparent;
+  background-color: @global-primary-background;
+  .svg-fill(@internal-form-checkbox-image, "#000", @form-radio-checked-icon-color);
+}
+
+
+.ent-filter-menu .uk-button-text {
+  color: @button-text-color;
+}
+
+.ent-filter-menu .uk-button-text:hover {
+  color: @button-text-hover-color;
+}
+
+.ent-filter-menu .uk-button-text:focus {
+  color: @button-text-hover-color;
+}
+
+.ent-filter-menu .uk-button-text::before {
+  border-bottom-color: @button-text-hover-color;
+}
+
+.ent-filter-menu .uk-offcanvas-close {
+  color: @close-color
+}
+
+.ent-filter-menu .uk-offcanvas-close:hover {
+  color: @close-hover-color !important;
+}
+
+.ent-filter-menu .uk-offcanvas-close:active {
+  color: @close-hover-color !important;
+}
+
+
+

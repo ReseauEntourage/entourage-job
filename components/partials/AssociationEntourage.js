@@ -42,6 +42,7 @@ const AssociationEntourage = () => (
             <ImgNoSSR
               className="uk-cover uk-position-center"
               src="/static/img/association_pic.jpg"
+              alt="association entourage"
             />
           </div>
         </GridNoSSR>
