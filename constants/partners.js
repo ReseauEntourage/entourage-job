@@ -10,6 +10,15 @@ export default {
       link: 'https://www.advens.fr/fr/'
     },
     {
+      key: 'tbwa',
+      title: 'TBWA',
+      desc: 'TBWA\\, The Disruption® Company, fait partie du réseau international TBWA\\ Worldwide implanté dans 95 pays avec 275 agences.\n\n' +
+        'En France, TBWA\\, 1100 collaborateurs, est le 3ème groupe de communication globale et est la seule agence élue 4 fois de suite Agence de l\'Année aux Cannes Lions.',
+      question: 'Quel est, pour vous, la force de LinkedOut\xa0?',
+      answer: 'Permettre en 1 clic de partager son réseau professionnel et personnel à ceux qui n’en ont pas et qui en ont cruellement besoin.',
+      link: 'https://www.tbwa-paris.com/fr'
+    },
+    {
       key: 'shareit',
       title: 'Share it',
       desc: 'Share it est un accélérateur Tech for Good créé par Ashoka et des entrepreneurs convaincus que la technologie peut aider certaines organisations sociales à démultiplier leur impact. Nous codons gratuitement des solutions digitales complexes pour des associations et entreprises sociales.',
@@ -18,13 +27,10 @@ export default {
       link: 'https://share-it.io/'
     },
     {
-      key: 'tbwa',
-      title: 'TBWA',
-      desc: 'TBWA\\, The Disruption® Company, fait partie du réseau international TBWA\\ Worldwide implanté dans 95 pays avec 275 agences.\n\n' +
-        'En France, TBWA\\, 1100 collaborateurs, est le 3ème groupe de communication globale et est la seule agence élue 4 fois de suite Agence de l\'Année aux Cannes Lions.',
-      question: 'Quel est, pour vous, la force de LinkedOut\xa0?',
-      answer: 'Permettre en 1 clic de partager son réseau professionnel et personnel à ceux qui n’en ont pas et qui en ont cruellement besoin.',
-      link: 'https://www.tbwa-paris.com/fr'
+      key: 'neoxia',
+      title: 'Neoxia',
+      desc: 'Ensemble, créons l\'Internet of People, not Things... où la complexité des technologies s\'efface devant la simplicité de l\'expérience\xa0!\nPur player du Numérique, NEOXIA vous accompagne pour imaginer, construire et opérer la version digitale de votre coeur de métier.',
+      link: 'https://neoxia.com/'
     },
     {
       key: 'ares',
@@ -104,5 +110,47 @@ export default {
         'Les candidats LinkedOut qui le souhaitent seront préparés par La Cravate Solidaire aux entretiens d\'embauche et recevront une tenue d’entretien, la chance\xa0!',
       link: 'http://lacravatesolidaire.org/'
     },
+  ],
+  orientation: [
+    {
+      key: 'ares',
+      link: 'http://www.groupeares.fr/'
+    },
+    {
+      key: 'vitaminet',
+      link: 'http://www.groupevitaminet.com/'
+    },
+    {
+      key: 'fads',
+      link: 'https://www.armeedusalut.fr/'
+    },
+    {
+      key: 'rejoue',
+      link: 'https://rejoue.asso.fr/'
+    },
+    {
+      key: 'logos',
+      link: 'https://logos-solidarite.fr/'
+    },
+    {
+      key: 'apa',
+      link: 'https://associationpourlamitie.com/'
+    },
+    {
+      key: 'coallia',
+      link: 'https://coallia.org/'
+    },
+    {
+      key: 'captifs',
+      link: 'https://www.captifs.fr/'
+    },
+    {
+      key: 'emmaus',
+      link: 'https://www.emmaus-solidarite.org/'
+    },
+    {
+      key: 'jrs',
+      link: 'https://www.jrsfrance.org/'
+    }
   ]
 };

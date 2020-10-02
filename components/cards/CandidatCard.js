@@ -25,7 +25,6 @@ const CandidatCard = ({
   imgAlt,
   firstName,
   ambitions,
-  businessLines,
   locations,
   skills,
   catchphrase,
@@ -319,7 +318,6 @@ const CandidatCard = ({
 CandidatCard.propTypes = {
   url: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
-  businessLines: PropTypes.arrayOf(PropTypes.string).isRequired,
   ambitions: PropTypes.arrayOf(PropTypes.string).isRequired,
   locations: PropTypes.arrayOf(PropTypes.string).isRequired,
   imgSrc: PropTypes.string,

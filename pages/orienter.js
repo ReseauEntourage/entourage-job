@@ -139,23 +139,25 @@ const Orienter = () => {
           <span className="uk-text-primary">Ils nous ont orienté</span> des candidats
         </h2>
         <div className="uk-width-expand">
-          <div className="uk-container-small">
-            <Carousel containerClasses="uk-child-width-1-1">
-              {PARTNERS.associations.map(({key, link}, index) => {
-                return (
-                  <SimpleLink
-                    isExternal
-                    target="_blank"
-                    href={link}
-                    key={index}
-                    className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
-                    <div className="uk-width-large uk-flex uk-flex-center uk-flex-middle">
-                      <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
-                    </div>
-                  </SimpleLink>
-                )
-              })}
-            </Carousel>
+          <div className="uk-container-small uk-flex uk-flex-center">
+            <div className="uk-width-large">
+              <Carousel containerClasses="uk-child-width-1-1">
+                {PARTNERS.orientation.map(({key, link}, index) => {
+                  return (
+                    <SimpleLink
+                      isExternal
+                      target="_blank"
+                      href={link}
+                      key={index}
+                      className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
+                      <div className="uk-width-large uk-flex uk-flex-center uk-flex-middle">
+                        <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
+                      </div>
+                    </SimpleLink>
+                  )
+                })}
+              </Carousel>
+            </div>
           </div>
         </div>
       </Section>
