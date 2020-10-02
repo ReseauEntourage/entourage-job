@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/aria-role */
 /* global UIkit */
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
@@ -9,7 +8,8 @@ import {
   TwitterShareButton,
   WhatsappShareButton,
 } from 'react-share';
-import { Section, ImgNoSSR } from '../utils';
+
+import {ImgNoSSR, SimpleLink} from '../utils';
 import { GridNoSSR } from '../utils/Grid';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
@@ -21,6 +21,7 @@ import {formatParagraph, mutateFormSchema, sortExperiences, sortReviews} from ".
 import {SharesCountContext} from "../store/SharesCountProvider";
 import {event} from "../../lib/gtag";
 import TAGS from "../../constants/tags";
+import ButtonDownload from "../backoffice/cv/ButtonDownload";
 
 /**
  * Le cv en public et en preview
@@ -83,11 +84,11 @@ const CVFiche = ({ cv, actionDisabled }) => {
 
   const shareSection = () => {
     return (
-      <>
+      <div className="uk-flex uk-flex-column uk-flex-middle">
         <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom uk-text-center uk-text-muted">
           Partager mon CV
         </p>
-        <GridNoSSR row gap="small" center>
+        <GridNoSSR row gap="small" center middle className="uk-margin-medium-bottom">
           <LinkedinShareButton
             disabled={actionDisabled}
             onShareWindowClose={() => {
@@ -161,7 +162,13 @@ const CVFiche = ({ cv, actionDisabled }) => {
             />
           </WhatsappShareButton>
         </GridNoSSR>
-        </>
+        <ButtonDownload
+          cvUrl={cv.user.url}
+          firstName={cv.user.candidat.firstName}
+          lastName={cv.user.candidat.lastName}
+          disabled={actionDisabled}
+          tag={TAGS.PAGE_CV_TELECHARGEMENT_CV_CLIC}/>
+      </div>
     )
   };
 
@@ -241,8 +248,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   <>
                     {
                       ` mais reste ${
-                          cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
-                        } à toutes autres propositions.`}
+                        cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
+                      } à toutes autres propositions.`}
                   </>
                 ) : (
                   '.'
@@ -447,7 +454,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
             </GridNoSSR>
           </GridNoSSR>
           {shareSection()}
-
           <hr />
           <div className="uk-text-center">
             <h2 className="uk-text-bold">
@@ -498,16 +504,16 @@ const CVFiche = ({ cv, actionDisabled }) => {
           intégration en entreprise par le projet LinkedOut. Pour plus
           d&apos;information, contactez:
           <br />
-          <a
+          <SimpleLink
             className={`uk-link-text uk-text-primary${
               actionDisabled ? ' uk-disabled' : ''
             }`}
-            target='_blank'
-            rel="noopener"
+            isExternal
+            newTab
             href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
           >
             {process.env.MAILJET_CONTACT_EMAIL}
-          </a>
+          </SimpleLink>
         </p>
         <ImgNoSSR
           alt="logo linkedout"

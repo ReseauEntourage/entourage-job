@@ -136,7 +136,7 @@ const CandidatCard = ({
               className="uk-height-1-1"
             >
               <div style={{
-                marginBottom: 5
+                marginBottom: 0
               }}>
                 <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold ent-line-clamp-1">
                   {firstName}
@@ -169,13 +169,16 @@ const CandidatCard = ({
                 />
               )}
               {ambitions && ambitions.length > 0 && (
-                <>
+                <div style={{
+                  marginTop: 5,
+                  marginBottom: 5
+                }}>
                   <p
                     style={{ fontSize: '0.775rem' }}
                     className="uk-margin-remove uk-margin-small-top"
                   >
                     Je souhaite
-                    <br /> travailler dans :
+                    <br />travailler dans&nbsp;:
                   </p>
                   <GridNoSSR column gap="collapse" childWidths={['1-1']}>
                     {ambitions.slice(0, 2).map((text, index) => (
@@ -187,7 +190,7 @@ const CandidatCard = ({
                       </span>
                     ))}
                   </GridNoSSR>
-                </>
+                </div>
               )}
              {/* {businessLines && businessLines.length > 0 && (
                 <div style={{
