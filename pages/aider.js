@@ -24,9 +24,6 @@ const Aider = () => (
       text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"}
     />
     <Section style="muted">
-      <h2 className="uk-text-bold uk-text-center uk-margin-large-bottom">
-        Vous êtes un <span className="uk-text-primary">particulier</span>
-      </h2>
       <div className="uk-flex uk-flex-column uk-flex-middle uk-width-1-2@m uk-margin-auto">
         <h3 className="uk-text-bold uk-text-center">
           Partagez votre réseau avec ceux qui n’en n’ont plus&nbsp;!
