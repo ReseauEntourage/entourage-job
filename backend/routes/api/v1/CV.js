@@ -395,7 +395,7 @@ router.get('/pdf/:url', auth(), async (req, res) => {
 
   try {
     if(!pdfBuffer) {
-      const browser = await puppeteer.launch({ headless: true });
+      const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
       const page = await browser.newPage();
       const merger = new PDFMerger();
 
