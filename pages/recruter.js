@@ -94,7 +94,7 @@ const Recruter = () => {
       <WaysToJoin />
       <HireSteps />
       <Section style="muted">
-        <HireCTA id="hirePage" />
+        <HireCTA />
       </Section>
       {/*
         TODO Unhide when we'll have real testimonies
