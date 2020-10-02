@@ -12419,7 +12419,7 @@ iframe.uk-cover {
   -webkit-print-color-adjust: exact !important;
 }
 .page-break {
-  page-break-after: always;
+  page-break-after: always !important;
 }
 .uk-background-default {
   background-color: white !important;
@@ -12443,4 +12443,8 @@ iframe.uk-cover {
 }
 .uk-text-meta {
   color: #999 !important;
+}
+a,
+a:visited {
+  text-decoration: none !important;
 }
