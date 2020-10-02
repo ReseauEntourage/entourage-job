@@ -71,7 +71,7 @@ const Recruter = () => {
             </li>
             <hr className="uk-divider-small" />
             <li>
-              Tous candidats ont un{' '}
+              Tous les candidats ont un{' '}
               <span className="uk-text-bold uk-text-primary">
                 logement stable
               </span>{' '}

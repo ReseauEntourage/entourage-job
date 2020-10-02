@@ -5,16 +5,18 @@ import PARTNERS from '../../constants/partners';
 import SimpleLink from "../utils/SimpleLink";
 import {event} from "../../lib/gtag";
 import TAGS from "../../constants/tags";
+import Button from "../utils/Button";
 
 const Partners = () => {
 
   const logoList = (data) => {
     return (
       <Grid
-        childWidths={[`1-${data.length}@m`, 'auto']}
+        childWidths={[`1-4@m`, 'auto']}
         match
         middle
         center
+        gap='small'
         items={data.map(({key, link}) => {
           return (
             <SimpleLink
@@ -52,9 +54,9 @@ const Partners = () => {
             </h4>
             {logoList(PARTNERS.finance)}
             <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-large-top">
-              <SimpleLink href="/partenaires">
-                En savoir plus{' '}<IconNoSSR name="arrow-right" />
-              </SimpleLink>
+              <Button style="primary" href="/partenaires">
+                En savoir plus{' '}&nbsp;<IconNoSSR name="arrow-right" />
+              </Button>
             </div>
 
           </div>
