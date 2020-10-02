@@ -1,6 +1,5 @@
 const express = require('express');
 const enforce = require('express-sslify');
-const cors = require('cors');
 
 const passport = require('./config/passport');
 
@@ -27,8 +26,6 @@ module.exports.prepare = () => {
   app.set('trust proxy', 1);
 
   app.use(express.json());
-  app.use(cors());
-
 
   // adding Passport
   app.use(passport.initialize());
