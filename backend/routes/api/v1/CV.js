@@ -138,7 +138,7 @@ router.post(
           } catch (error) {
             console.error(error);
           } finally {
-            fs.unlinkSync(path); // remove image localy after upload to S3
+            if(fs.existsSync(path)) fs.unlinkSync(path); // remove image localy after upload to S3
           }
         }
         else if(reqCV.urlImg) {
@@ -203,7 +203,15 @@ router.post(
         createCVAndSendMail
       ];
 
-      Promise.all(promises.map(async (promise) => promise())).then((results) => {
+      Promise.all(promises.map(async (promise) => promise())).then(async (results) => {
+        if(reqCV.status === CV_STATUS.Published.value) {
+          try {
+            await S3.deleteFile(`${process.env.AWSS3_FILE_DIRECTORY}${results[1].user.url}.pdf`);
+          }
+          catch (err) {
+            console.log(err);
+          }
+        }
         return res.status(200).json(results[1]);
       }).catch((e) => {
         console.log(e);
@@ -375,28 +383,43 @@ router.get('/:url', auth(), (req, res) => {
 router.get('/pdf/:url', auth(), async (req, res) => {
   const paths = [`${req.params.url}-page1.pdf`, `${req.params.url}-page2.pdf`, `${req.params.url}.pdf`];
 
+  let pdfBuffer = null;
+
   try {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    const merger = new PDFMerger();
+    const file = await S3.download(`${process.env.AWSS3_FILE_DIRECTORY}${paths[2]}`);
+    pdfBuffer = file.Body;
+  }
+  catch (e) {
+    console.log("PDF version doesn't exist.")
+  }
 
-    // Fix because can't create page break
+  try {
+    if(!pdfBuffer) {
+      const browser = await puppeteer.launch({ headless: true });
+      const page = await browser.newPage();
+      const merger = new PDFMerger();
 
-    await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=0`, {waitUntil: 'networkidle2'});
-    await page.addStyleTag({ content: '@page { size: A4 portrait; margin: 0; }' });
-    await page.pdf({ path: paths[0], preferCSSPageSize: true, printBackground: true });
-    merger.add(paths[0]);
+      const options = { content: '@page { size: A4 portrait; margin: 0; }' };
 
-    await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=1`, {waitUntil: 'networkidle2'});
-    await page.addStyleTag({ content: '@page { size: A4 portrait; margin: 0; }' });
-    await page.pdf({ path: paths[1], preferCSSPageSize: true, printBackground: true });
-    merger.add(paths[1]);
+      // Fix because can't create page break
+      await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=0`, {waitUntil: 'networkidle2'});
+      await page.addStyleTag(options);
+      await page.pdf({ path: paths[0], preferCSSPageSize: true, printBackground: true });
+      merger.add(paths[0]);
 
-    await browser.close();
+      await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=1`, {waitUntil: 'networkidle2'});
+      await page.addStyleTag(options);
+      await page.pdf({ path: paths[1], preferCSSPageSize: true, printBackground: true });
+      merger.add(paths[1]);
 
-    await merger.save(paths[2]);
+      await browser.close();
 
-    const pdfBuffer = fs.readFileSync(paths[2]);
+      await merger.save(paths[2]);
+
+      pdfBuffer = fs.readFileSync(paths[2]);
+
+      await S3.upload(pdfBuffer, 'application/pdf', `${paths[2]}`);
+    }
 
     res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdfBuffer.length });
     res.status(200).send(pdfBuffer);
@@ -406,9 +429,9 @@ router.get('/pdf/:url', auth(), async (req, res) => {
     res.status(401).send('Une erreur est survenue');
   }
   finally {
-    fs.unlinkSync(paths[0]);
-    fs.unlinkSync(paths[1]);
-    fs.unlinkSync(paths[2]);
+    if(fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
+    if(fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
+    if(fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
   }
 });
 

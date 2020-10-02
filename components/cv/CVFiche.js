@@ -18,11 +18,10 @@ import Api from '../../Axios';
 import ModalShareCV from '../modals/ModalShareCV';
 import Button from "../utils/Button";
 import {formatParagraph, mutateFormSchema, sortExperiences, sortReviews} from "../../utils";
-import ButtonIcon from "../utils/ButtonIcon";
 import {SharesCountContext} from "../store/SharesCountProvider";
 import {event} from "../../lib/gtag";
 import TAGS from "../../constants/tags";
-import ButtonPost from "../backoffice/cv/ButtonPost";
+import ButtonDownload from "../backoffice/cv/ButtonDownload";
 
 /**
  * Le cv en public et en preview
@@ -89,7 +88,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
         <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom uk-text-center uk-text-muted">
           Partager mon CV
         </p>
-        <GridNoSSR row gap="small" center middle>
+        <GridNoSSR row gap="small" center middle className="uk-margin-medium-bottom">
           <LinkedinShareButton
             disabled={actionDisabled}
             onShareWindowClose={() => {
@@ -163,6 +162,12 @@ const CVFiche = ({ cv, actionDisabled }) => {
             />
           </WhatsappShareButton>
         </GridNoSSR>
+        <ButtonDownload
+          cvUrl={cv.user.url}
+          firstName={cv.user.candidat.firstName}
+          lastName={cv.user.candidat.lastName}
+          disabled={actionDisabled}
+          tag={TAGS.PAGE_CV_TELECHARGEMENT_CV_CLIC}/>
       </div>
     )
   };
@@ -449,31 +454,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
             </GridNoSSR>
           </GridNoSSR>
           {shareSection()}
-          <div className="uk-flex uk-flex-center">
-            <ButtonPost
-              disabled={actionDisabled}
-              style="default"
-              text="Télécharger le CV"
-              icon="download"
-              action={() => {
-                return Api.get(`${process.env.SERVER_URL}/api/v1/cv/pdf/${cv.user.url}`, {
-                  responseType: 'arraybuffer',
-                  headers: {
-                    'Accept': 'application/pdf'
-                  }
-                })
-                  .then(({data}) => {
-                    const blob = new Blob([data], {type: 'application/pdf'});
-                    const pdfLink = document.createElement('a');
-                    pdfLink.href = window.URL.createObjectURL(blob);
-                    pdfLink.download = `CV_${cv.user.candidat.firstName}_${cv.user.candidat.lastName}.pdf`;
-                    pdfLink.click()
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
-              }}/>
-          </div>
           <hr />
           <div className="uk-text-center">
             <h2 className="uk-text-bold">

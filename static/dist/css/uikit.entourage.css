@@ -12553,8 +12553,9 @@ iframe.uk-cover {
     -webkit-print-color-adjust: exact !important;
     color: inherit !important;
   }
-  .page-break {
-    page-break-after: always;
+  a,
+  a:visited {
+    text-decoration: none !important;
   }
 }
 .ent-link-muted {

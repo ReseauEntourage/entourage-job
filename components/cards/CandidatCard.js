@@ -136,7 +136,7 @@ const CandidatCard = ({
               className="uk-height-1-1"
             >
               <div style={{
-                marginBottom: 5
+                marginBottom: 0
               }}>
                 <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold ent-line-clamp-1">
                   {firstName}

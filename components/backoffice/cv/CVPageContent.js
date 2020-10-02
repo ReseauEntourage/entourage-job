@@ -13,6 +13,7 @@ import LoadingScreen from './LoadingScreen';
 
 import {CV_STATUS, USER_ROLES} from "../../../constants";
 import NoCV from "./NoCV";
+import ButtonDownload from "./ButtonDownload";
 
 let currentVersion = 0;
 let originalStatus = CV_STATUS.Progress.value;
@@ -112,7 +113,7 @@ const CVPageContent = ({ candidatId }) => {
         // Use hash to reload image if an update is done
         const previewHash = Date.now();
         setImageUrl(
-          `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${data.UserId}.${data.status}.jpg?${previewHash}`
+          `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${data.UserId}.${data.status}.jpg?${previewHash}`
         );
 
         UIkit.notification(
@@ -190,6 +191,10 @@ const CVPageContent = ({ candidatId }) => {
         </GridNoSSR>
 
         <GridNoSSR row gap="small">
+          <ButtonDownload
+            cvUrl={cv.user.url}
+            firstName={cv.user.candidat.firstName}
+            lastName={cv.user.candidat.lastName} />
           <Button toggle="target: #preview-modal" style="default">
             Prévisualiser
           </Button>
