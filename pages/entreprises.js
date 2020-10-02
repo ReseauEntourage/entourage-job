@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import ImageTitle from '../components/sections/ImageTitle';
 import HireSteps from '../components/sections/HireSteps';
 import DiscoverCandidates from '../components/partials/SearchCandidates';
+import CorporateContact from '../components/partials/CorporateContactPartial';
 
 const Entreprises = () => (
   <Layout title="Entreprises - LinkedOut">
@@ -20,6 +21,7 @@ const Entreprises = () => (
     />
     <HireSteps />
     <DiscoverCandidates />
+    <CorporateContact />
   </Layout>
 );
 
