@@ -83,9 +83,9 @@ const Partenaires = () => {
                   uk-scrollspy-class={`uk-animation-slide-${secondDirection}`}>
                   {
                     desc.length > 300 ?
-                      <h4 className={`uk-margin-medium-bottom uk-text-${secondDirection}`}>{formatParagraph(desc)}</h4>
+                      <h4 className={`${answer ? 'uk-margin-medium-bottom' : ''} uk-text-${secondDirection}`}>{formatParagraph(desc)}</h4>
                       :
-                      <h3 className={`uk-margin-medium-bottom uk-text-${secondDirection}`}>{formatParagraph(desc)}</h3>
+                      <h3 className={`${answer ? 'uk-margin-medium-bottom' : ''} uk-text-${secondDirection}`}>{formatParagraph(desc)}</h3>
                   }
                 </div>
                 {answer && <hr className="uk-divider-small" />}
