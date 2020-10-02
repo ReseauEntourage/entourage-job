@@ -3,6 +3,17 @@
 
 // Your custom code goes here, e.g. mixins, variables.
 // See "how to create a theme" below for more info.
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color: inherit !important;
+  }
+
+  a, a:visited {
+    text-decoration: none !important;
+  }
+
+}
 
 //Font families
 @global-font-family: Roboto, sans-serif;
@@ -49,7 +60,6 @@
 //Link
 @global-link-color: #f55f24;
 @global-link-hover-color: #d53f00;
-
 
 //Button
 .hook-button() {
@@ -482,9 +492,8 @@
   color: @close-hover-color !important;
 }
 
-.ent-filter-menu .uk-offcanvas-close:active {
+.ent-filter-menu .uk-offcanvas-close:focus {
   color: @close-hover-color !important;
 }
-
 
 

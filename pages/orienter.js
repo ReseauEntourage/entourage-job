@@ -74,7 +74,7 @@ const Orienter = () => {
         }
         button={{
           label: "Télécharger le kit du dispositif",
-          href: `${process.env.AWSS3_URL}${process.env.KIT_FILE}`,
+          href: `${process.env.AWSS3_URL}${process.env.AWSS3_FILE_DIRECTORY}${process.env.KIT_FILE}`,
           external: true,
           newTab: true
         }}

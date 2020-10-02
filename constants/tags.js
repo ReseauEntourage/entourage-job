@@ -47,6 +47,9 @@ const TAGS =  {
   PAGE_CV_PARTAGE_CV_WHATSAPP_CLIC: {
     action: "Page_CV_Partage_CV_WhatsApp_Clic"
   },
+  PAGE_CV_TELECHARGEMENT_CV_CLIC: {
+    action: "Page_CV_Téléchargement_CV_Clic"
+  },
   PAGE_CV_ENVOYER_OFFRE_CLIC: {
     action: "Page_CV_Envoyer_Offre_Clic"
   },
