@@ -48,7 +48,9 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
                         isExternal={item.button.external}
                         newTab={item.button.external}
                         toggle={item.button.modal}
-                        onClick={item.button.onClick}>
+                        onClick={item.button.onClick}
+                        size={item.button.size}
+                        >
                         {item.button.label}{' '}<IconNoSSR name="chevron-right" />
                       </Button>
                     </div>
