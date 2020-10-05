@@ -5,17 +5,19 @@ import PARTNERS from '../../constants/partners';
 import SimpleLink from "../utils/SimpleLink";
 import {event} from "../../lib/gtag";
 import TAGS from "../../constants/tags";
+import Button from "../utils/Button";
 
 const Partners = () => {
 
   const logoList = (data) => {
     return (
       <Grid
-        childWidths={[`1-${data.length}@m`, 'auto']}
+        childWidths={[`1-4@m`, 'auto']}
         match
         middle
         center
-        items={data.map(({key, link}, index) => {
+        gap='small'
+        items={data.map(({key, link}) => {
           return (
             <SimpleLink
               className="uk-flex uk-flex-center"
@@ -40,7 +42,7 @@ const Partners = () => {
             className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
             <span className="uk-text-primary">Les partenaires</span> du projet LinkedOut
           </h2>
-          <div className="uk-background-default uk-padding-large">
+          <div className="uk-background-muted uk-padding-large">
             <h4
               className="uk-text-primary uk-text-bold">
               Ce projet est développé en partenariat avec
@@ -52,9 +54,9 @@ const Partners = () => {
             </h4>
             {logoList(PARTNERS.finance)}
             <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-large-top">
-              <SimpleLink href="/partenaires">
-                En savoir plus{' '}<IconNoSSR name="arrow-right" />
-              </SimpleLink>
+              <Button style="primary" href="/partenaires">
+                En savoir plus{' '}&nbsp;<IconNoSSR name="arrow-right" />
+              </Button>
             </div>
 
           </div>

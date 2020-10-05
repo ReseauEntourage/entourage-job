@@ -145,7 +145,6 @@ const CVList = ({ nb, search, filters, updateNumberOfResults, hideEmployed }) =>
               firstName={cv.user.candidat.firstName}
               gender={cv.user.candidat.gender}
               ambitions={cv.ambitions}
-              businessLines={cv.businessLines}
               locations={cv.locations}
               skills={cv.skills}
               catchphrase={cv.catchphrase}

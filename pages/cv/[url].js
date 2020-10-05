@@ -9,7 +9,7 @@ import {
 import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
-import {GridNoSSR, Section} from '../../components/utils';
+import {Section} from '../../components/utils';
 import {SharesCountContext} from "../../components/store/SharesCountProvider";
 import {SessionContext} from "../../components/store/SessionProvider";
 

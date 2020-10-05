@@ -1,6 +1,6 @@
 /* global UIkit */
-import React, {useState, useEffect, useRef} from 'react';
-import PropsType, { func } from 'prop-types';
+import React, {useState, useEffect} from 'react';
+import PropsType from 'prop-types';
 import moment from 'moment';
 import { GridNoSSR, Button, IconNoSSR, SimpleLink } from '../utils';
 import Textarea from '../forms/fields/Textarea';
@@ -81,11 +81,6 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
   const resetNoteBuffer = () => setNoteBuffer(note);
 
   useEffect(resetNoteBuffer, [currentOffer]);
-
-  // futur: use moment
-  const date = new Date(currentOffer.date);
-  const formatDate = `${date.getMonth() +
-    1}/${date.getDate()}/${date.getFullYear()}`;
 
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">

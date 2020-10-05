@@ -6,7 +6,6 @@ import Footer from './Footer';
 import Header from './headers/Header';
 import HeaderConnected from './headers/HeaderConnected';
 import { UserContext } from './store/UserProvider';
-import ModalShareCV from './modals/ModalShareCV';
 
 const Layout = ({
   children,
@@ -17,52 +16,65 @@ const Layout = ({
   metaUrl,
   metaType,
   router,
-}) => (
-  <>
-    <Head>
-      <title>{title}</title>
-      <link rel="icon" type="image/png" href="/static/img/fav.png" />
-      <link rel="canonical" href="https://www.linkedout.fr/" />
-      <meta property="og:site_name" content="LinkedOut" />
-      <meta
-        property="og:description"
-        content={metaDescription}
-      />
-      <meta
-        name="description"
-        content={metaDescription}
-      />
-      <meta property="og:image" content={metaImage} />
-      <meta name="image" content={metaImage} />
-      <meta property="og:type" content={metaType} />
-      <meta property="og:title" content={title} />
-      <meta property="og:url" content={metaUrl} />
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={metaTitle} />
-      <meta name="twitter:description" content={metaDescription} />
-      <meta name="twitter:site" content="@R_Entourage" />
-      <meta name="twitter:image" content={metaImage} />
-      {/* <meta name="fb:app_id" content="" /> */}
-    </Head>
-    <UserContext.Consumer>
-      {({ isAuthentificated }) =>
-        isAuthentificated &&
-        router.asPath.includes('/aider') &&
-        router.asPath.includes('/travailler') &&
-        router.asPath.includes('/recruter') &&
-        router.asPath.includes('/candidats') &&
-        router.asPath.includes('/partenaires') &&
-        router.asPath.includes('/contact') ? (
-          <HeaderConnected />
-        ) : (
-          router.asPath !== '/' && <Header isHome={false} />
-        )
+}) => {
+  const isPDF = router.asPath.includes('/pdf/');
+
+  return (
+    <>
+      <Head>
+        <title>{title}</title>
+        <link rel="icon" type="image/png" href="/static/img/fav.png" />
+        <link rel="canonical" href="https://www.linkedout.fr/" />
+        {
+          isPDF && <link rel="stylesheet" type="text/css" href="/static/dist/css/uikit.entourage.print.min.css" media="print" />
+        }
+        <meta property="og:site_name" content="LinkedOut" />
+        <meta
+          property="og:description"
+          content={metaDescription}
+        />
+        <meta
+          name="description"
+          content={metaDescription}
+        />
+        <meta property="og:image" content={metaImage} />
+        <meta name="image" content={metaImage} />
+        <meta property="og:type" content={metaType} />
+        <meta property="og:title" content={title} />
+        <meta property="og:url" content={metaUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={metaTitle} />
+        <meta name="twitter:description" content={metaDescription} />
+        <meta name="twitter:site" content="@R_Entourage" />
+        <meta name="twitter:image" content={metaImage} />
+        {/* <meta name="fb:app_id" content="" /> */}
+      </Head>
+      {
+        !isPDF &&
+        <UserContext.Consumer>
+          {({ isAuthentificated }) =>
+            isAuthentificated &&
+            router.asPath.includes('/aider') &&
+            router.asPath.includes('/travailler') &&
+            router.asPath.includes('/recruter') &&
+            router.asPath.includes('/candidats') &&
+            router.asPath.includes('/partenaires') &&
+            router.asPath.includes('/contact') ? (
+              <HeaderConnected />
+            ) : (
+              router.asPath !== '/' && <Header isHome={false} />
+            )
+          }
+        </UserContext.Consumer>
       }
-    </UserContext.Consumer>
-    {children}
-    <Footer />
-  </>
-);
+      {children}
+      {
+        !isPDF &&
+        <Footer />
+      }
+    </>
+  );
+};
 
 Layout.propTypes = {
   children: PropTypes.oneOfType([

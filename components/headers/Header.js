@@ -14,13 +14,12 @@ import {
 import './Header.less';
 import Button from "../utils/Button";
 
+const LINKS = [
+  { href: '/aider', name: 'Particuliers, agissez' },
+  { href: '/recruter', name: 'Entreprises, engagez-vous' },
+];
+
 const Header = ({ isHome }) => {
-  const LINKS = [
-    { href: '/aider', name: 'Aider' },
-    { href: '/recruter', name: 'Recruter' },
-    { href: '/travailler', name: 'Travailler' },
-    { href: '/orienter', name: 'Orienter' },
-  ];
   const router = useRouter();
   return (
     <header id="header">

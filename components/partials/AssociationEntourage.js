@@ -1,5 +1,5 @@
 import React from 'react';
-import {GridNoSSR, ImgNoSSR, Background, Section, IconNoSSR, SimpleLink} from '../utils';
+import {GridNoSSR, ImgNoSSR, Background, Section, IconNoSSR} from '../utils';
 import Button from "../utils/Button";
 import {EXTERNAL_LINKS} from "../../constants";
 import {event} from "../../lib/gtag";
@@ -42,6 +42,7 @@ const AssociationEntourage = () => (
             <ImgNoSSR
               className="uk-cover uk-position-center"
               src="/static/img/association_pic.jpg"
+              alt="association entourage"
             />
           </div>
         </GridNoSSR>

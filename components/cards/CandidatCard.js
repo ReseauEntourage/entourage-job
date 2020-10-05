@@ -23,10 +23,8 @@ const CandidatCard = ({
   url,
   imgSrc,
   imgAlt,
-  gender,
   firstName,
   ambitions,
-  businessLines,
   locations,
   skills,
   catchphrase,
@@ -137,7 +135,7 @@ const CandidatCard = ({
               className="uk-height-1-1"
             >
               <div style={{
-                marginBottom: 5
+                marginBottom: 0
               }}>
                 <h5 className="uk-margin-remove uk-text-uppercase uk-text-bold ent-line-clamp-1">
                   {firstName}
@@ -149,10 +147,10 @@ const CandidatCard = ({
                   }}
                   className="uk-text-small ent-line-clamp-3 uk-margin-remove"
                 >
-                  {catchphrase || "cherche un job pour s'en sortir"}
+                  {catchphrase || "Cherche un job pour s'en sortir"}
                 </p>
               </div>
-              {skills && (
+              {skills && skills.length > 0 && (
                 <GridNoSSR
                   column
                   style={{
@@ -169,14 +167,17 @@ const CandidatCard = ({
                   ))}
                 />
               )}
-             {/* {ambitions && ambitions.length > 0 && (
-                <>
+              {ambitions && ambitions.length > 0 && (
+                <div style={{
+                  marginTop: 5,
+                  marginBottom: 5
+                }}>
                   <p
                     style={{ fontSize: '0.775rem' }}
                     className="uk-margin-remove uk-margin-small-top"
                   >
                     Je souhaite
-                    <br /> travailler dans :
+                    <br />travailler dans&nbsp;:
                   </p>
                   <GridNoSSR column gap="collapse" childWidths={['1-1']}>
                     {ambitions.slice(0, 2).map((text, index) => (
@@ -188,9 +189,9 @@ const CandidatCard = ({
                       </span>
                     ))}
                   </GridNoSSR>
-                </>
-              )} */}
-              {businessLines && businessLines.length > 0 && (
+                </div>
+              )}
+             {/* {businessLines && businessLines.length > 0 && (
                 <div style={{
                   marginTop: 5,
                   marginBottom: 5
@@ -212,7 +213,7 @@ const CandidatCard = ({
                     ))}
                   </GridNoSSR>
                 </div>
-              )}
+              )} */}
               {reducedLocations && reducedLocations.length > 0 && (
                 <GridNoSSR column gap="collapse" childWidths={['1-1']} style={{marginTop: 10}}>
                   {reducedLocations.slice(0, 2).map((text, index) => (
@@ -318,14 +319,12 @@ CandidatCard.propTypes = {
   url: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
   ambitions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  businessLines: PropTypes.arrayOf(PropTypes.string).isRequired,
   locations: PropTypes.arrayOf(PropTypes.string).isRequired,
   imgSrc: PropTypes.string,
   imgAlt: PropTypes.string.isRequired,
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
   catchphrase: PropTypes.string,
   employed: PropTypes.bool,
-  gender: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired
 };
 

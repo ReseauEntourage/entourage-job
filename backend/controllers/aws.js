@@ -13,7 +13,7 @@ const upload = (data, contentType, outputPath) => {
     s3.upload(
       {
         Bucket: process.env.AWSS3_BUCKET_NAME,
-        Key: `${process.env.AWSS3_DIRECTORY}${outputPath}`, // File name you want to save as in S3
+        Key: `${contentType.includes('image/') ? process.env.AWSS3_IMAGE_DIRECTORY : process.env.AWSS3_FILE_DIRECTORY}${outputPath}`, // File name you want to save as in S3
         Body: data,
         ACL: 'public-read', // allow public reading access to the file
         ContentType: contentType
@@ -37,8 +37,8 @@ const copy = (originalPath, outputPath) => {
     s3.copyObject(
       {
         Bucket: process.env.AWSS3_BUCKET_NAME,
-        CopySource: `${process.env.AWSS3_DIRECTORY}${originalPath}`,
-        Key: `${process.env.AWSS3_DIRECTORY}${outputPath}`,
+        CopySource: originalPath,
+        Key: `${process.env.AWSS3_IMAGE_DIRECTORY}${outputPath}`,
       },
       (err, {Key}) => {
         if (err) {
@@ -46,6 +46,26 @@ const copy = (originalPath, outputPath) => {
         } else {
           console.log('============ AWS Copy ============', Key);
           resolve(Key);
+        }
+      }
+    );
+  });
+};
+
+const deleteFile = (key) => {
+  return new Promise((resolve, reject) => {
+    // Deleting files
+    s3.deleteObject(
+      {
+        Bucket: process.env.AWSS3_BUCKET_NAME,
+        Key: key,
+      },
+      (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          console.log('============ AWS Delete ============', key);
+          resolve(data);
         }
       }
     );
@@ -78,4 +98,4 @@ const uploadFile = (path, outputPath) => {
   return upload(fileContent, outputPath);
 };
 
-module.exports = {upload, uploadFile, download, copy};
+module.exports = {upload, uploadFile, deleteFile, download, copy};

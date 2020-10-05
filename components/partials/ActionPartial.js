@@ -1,10 +1,8 @@
 import React from 'react';
-import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { Section, GridNoSSR, IconNoSSR } from '../utils';
+import { Section, GridNoSSR } from '../utils';
 import {SharePartial} from "./index";
 import ContactPartial from "./ContactPartial";
-import Button from "../utils/Button";
 import MultipleCTA from "./MultipleCTA";
 
 const datas = [
@@ -17,17 +15,17 @@ const datas = [
   },
   {
     button: {
+      href: '/recruter',
+      label: 'S\'engager dans l\'inclusion'
+    },
+    title: 'Vous êtes une entreprise',
+  },
+  {
+    button: {
       href: '/orienter',
       label: 'Orienter des candidats'
     },
     title: 'Vous êtes un acteur de l’insertion sociale ou professionnelle',
-  },
-  {
-    button: {
-      href: '/recruter',
-      label: 'Recruter des candidats'
-    },
-    title: 'Vous êtes une entreprise',
   },
   {
     button: {
@@ -42,7 +40,7 @@ const ActionPartial = ({ style }) => (
     <GridNoSSR gap="large" column>
       <div className="uk-text-center">
         <h2 className="uk-text-bold">
-          <span className="uk-text-primary">J&apos;agis</span> avec LinkedOut
+          <span className="uk-text-primary">Agissez</span> avec LinkedOut
         </h2>
         <p>
           Depuis son lancement en juin 2019, de belles rencontres ont emergé

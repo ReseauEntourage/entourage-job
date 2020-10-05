@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import CountUp from "react-countup";
 import PropTypes from "prop-types";
 import {GridNoSSR, IconNoSSR, Section} from '../utils';

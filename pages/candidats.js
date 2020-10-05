@@ -1,7 +1,9 @@
+/* global UIkit */
+
 import React, {useEffect, useState} from 'react';
 import Layout from '../components/Layout';
 import CVList from '../components/cv/CVList';
-import {Button, GridNoSSR, IconNoSSR, Section} from '../components/utils';
+import {Button, OffcanvasNoSSR, GridNoSSR, IconNoSSR, Section} from '../components/utils';
 import ButtonIcon from '../components/utils/ButtonIcon';
 import {FILTERS_DATA} from "../constants";
 import {getChildrenFilters} from "../utils";
@@ -25,6 +27,16 @@ const Candidats = () => {
   const [filters, setFilters] = useState(initializeFilters());
   const [numberOfResults, setNumberOfResults] = useState(0);
   const [showNumberOfResults, setShowNumberOfResults] = useState(false);
+
+  useEffect(() => {
+    UIkit.util.on(document, 'show', '#toggle-filter-menu', () => {
+      event(TAGS.PAGE_GALERIE_AFFICHER_FILTRES_CLIC);
+      setFilterMenuOpened(true);
+    });
+    UIkit.util.on(document, 'hide', '#toggle-filter-menu', () => {
+      setFilterMenuOpened(false);
+    });
+  }, []);
 
   const resetFilters = () => {
     setFilters(initializeFilters());
@@ -60,7 +72,7 @@ const Candidats = () => {
       return (
         <div
           key={key + idx}
-          className="uk-padding-small uk-padding-remove-bottom uk-padding-remove-right">
+          style={{paddingLeft: 10, paddingTop: 10}}>
           <div
             role="button"
             tabIndex={0}
@@ -151,16 +163,12 @@ const Candidats = () => {
                 }}>
                   <Button
                     style="text"
-                    toggle="target: #toggle-animation; animation: uk-animation-fade"
-                    onClick={() => {
-                      if(!filterMenuOpened) {
-                        event(TAGS.PAGE_GALERIE_AFFICHER_FILTRES_CLIC);
-                      }
-                      setFilterMenuOpened(!filterMenuOpened);
-                    }}>
-                    Filtrer par{' '}&nbsp;<IconNoSSR
-                    ratio={1.2}
-                    name={`chevron-${filterMenuOpened ? 'up' : 'down'}`} />
+                    className="uk-margin-small-right"
+                    toggle="target: #toggle-filter-menu;">
+                    Filtrer par{' '}&nbsp;
+                    <IconNoSSR
+                      style={{width: 15, height: 15}}
+                      name={`filter${filterMenuOpened ? '' : '-empty'}`}/>
                   </Button>
                   {
                     showNumberOfResults && numberOfFilters > 0 &&
@@ -200,22 +208,24 @@ const Candidats = () => {
                   </div>
                 }
               </GridNoSSR>
-
-              <div id="toggle-animation" hidden className="uk-margin-medium-top">
-                {
-                  FILTERS_DATA.map(({title, constants, key, tag}) => {
-                    return (
-                      <div key={key}>
-                        <span className="uk-text-bold">{title}</span>
-                        <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom">
-                          {renderFilters(constants, key, tag)}
+              <OffcanvasNoSSR id="toggle-filter-menu" className="ent-filter-menu uk-padding-medium-top" flip={false}>
+                <div className="uk-margin-small-top">
+                  {
+                    FILTERS_DATA.map(({title, constants, key, tag}) => {
+                      return (
+                        <div key={key}>
+                          <span className="uk-text-bold">{title}</span>
+                          <div className="uk-flex uk-flex-wrap uk-margin-medium-bottom uk-margin-small-top">
+                            {renderFilters(constants, key, tag)}
+                          </div>
                         </div>
-                      </div>
-                    )
-                  })
-                }
+                      )
+                    })
+                  }
+                </div>
                 <div>
-                  <label htmlFor="hide-employed" className="uk-text-bold">Masquer les candidats ayant retrouvé un emploi
+                  <label htmlFor="hide-employed" className="uk-text-bold uk-flex uk-flex-middle">
+                    <div className="uk-flex-1">Masquer les candidats ayant retrouvé un emploi</div>
                     <input
                       id="hide-employed"
                       type="checkbox"
@@ -228,15 +238,12 @@ const Candidats = () => {
                 <div className="uk-flex uk-flex-center uk-margin-medium-top">
                   <Button
                     style="text"
-                    toggle="target: #toggle-animation; animation: uk-animation-fade"
-                    onClick={() => {
-                      setFilterMenuOpened(!filterMenuOpened);
-                    }}>
+                    toggle="target: #toggle-filter-menu;">
                     Fermer la liste{' '}&nbsp;
-                    <IconNoSSR ratio={1.2} name='chevron-up' />
+                    <IconNoSSR ratio={1} name='close' />
                   </Button>
                 </div>
-              </div>
+              </OffcanvasNoSSR>
             </div>
           </div>
           <CVList

@@ -4,7 +4,6 @@ import PARTNERS from '../constants/partners';
 import Grid from "../components/utils/Grid";
 import {ImgNoSSR, Section} from "../components/utils";
 import {formatParagraph} from "../utils";
-import CarouselItem from "../components/partials/CarouselItem";
 import Carousel from "../components/utils/Carousel";
 import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
 import SimpleSection from "../components/sections/SimpleSection";
@@ -84,9 +83,9 @@ const Partenaires = () => {
                   uk-scrollspy-class={`uk-animation-slide-${secondDirection}`}>
                   {
                     desc.length > 300 ?
-                      <h4 className={`uk-margin-medium-bottom uk-text-${secondDirection}`}>{formatParagraph(desc)}</h4>
+                      <h4 className={`${answer ? 'uk-margin-medium-bottom' : ''} uk-text-${secondDirection}`}>{formatParagraph(desc)}</h4>
                       :
-                      <h3 className={`uk-margin-medium-bottom uk-text-${secondDirection}`}>{formatParagraph(desc)}</h3>
+                      <h3 className={`${answer ? 'uk-margin-medium-bottom' : ''} uk-text-${secondDirection}`}>{formatParagraph(desc)}</h3>
                   }
                 </div>
                 {answer && <hr className="uk-divider-small" />}

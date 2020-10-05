@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useRef} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import StepperModal from './StepperModal';
