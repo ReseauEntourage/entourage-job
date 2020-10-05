@@ -404,13 +404,13 @@ router.get('/pdf/:url', auth(), async (req, res) => {
       // Fix because can't create page break
       await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=0`, {waitUntil: 'networkidle2'});
       await page.addStyleTag(options);
-      page.emulateMediaType('screen');
+      await page.emulateMediaType('screen');
       await page.pdf({ path: paths[0], preferCSSPageSize: true, printBackground: true });
       merger.add(paths[0]);
 
       await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=1`, {waitUntil: 'networkidle2'});
       await page.addStyleTag(options);
-      page.emulateMediaType('screen');
+      await page.emulateMediaType('screen');
       await page.pdf({ path: paths[1], preferCSSPageSize: true, printBackground: true });
       merger.add(paths[1]);
 
