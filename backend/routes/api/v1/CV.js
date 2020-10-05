@@ -226,7 +226,7 @@ router.post(
  * Description : Prise d'info partageur
  */
 router.post('/share', auth(), (req, res) => {
-  return airtable('newsletter').create(
+  return airtable('Newsletter').create(
     [
       {
         fields: {
