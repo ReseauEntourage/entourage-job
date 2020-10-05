@@ -1,6 +1,5 @@
 import React from 'react';
 import {Section} from '../utils';
-import HireCTA from "../partials/HireCTA";
 import Carousel from "../utils/Carousel";
 import CarouselItem from "../partials/CarouselItem";
 

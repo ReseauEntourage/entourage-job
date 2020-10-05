@@ -4,6 +4,7 @@ import { GridNoSSR, Section, IconNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import SimpleLink from '../utils/SimpleLink';
 import Api from '../../Axios';
+import Button from "../utils/Button";
 
 const DiscoverPartial = ({style}) => {
   const [cvs, setCVs] = useState(undefined);
@@ -38,6 +39,7 @@ const DiscoverPartial = ({style}) => {
             catchphrase={cv.catchphrase}
             employed={cv.user.employed}
             id={cv.user.candidat.id}
+            locations={cv.locations}
           />
         ))}
       />
@@ -45,16 +47,14 @@ const DiscoverPartial = ({style}) => {
   };
   return (
     <Section id="discover" style={style}>
-      <div className="uk-text-center">
-        <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
-          Découvrez les <span className="uk-text-primary">candidats</span>
-        </h2>
-        <SimpleLink href="/candidats">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
+        Découvrez les <span className="uk-text-primary">candidats</span>
+      </h2>
+      <Content />
+      <div className="uk-flex uk-flex-center">
+        <Button style="primary" href="/candidats" className="uk-margin-large-top">
           Voir tous les candidats{' '}<IconNoSSR name="arrow-right" />
-        </SimpleLink>
-      </div>
-      <div className="uk-text-center uk-margin-large-top">
-        <Content />
+        </Button>
       </div>
     </Section>
   );

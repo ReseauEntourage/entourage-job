@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  FacebookShareButton,
-  TwitterShareButton,
-  LinkedinShareButton,
-} from 'react-share';
 import { useRouter } from 'next/router';
-import { GridNoSSR, IconNoSSR, Section, SimpleLink, ImgNoSSR } from './utils';
+import { GridNoSSR, IconNoSSR, Section, SimpleLink } from './utils';
 import AssociationEntourage from './partials/AssociationEntourage';
 import Partners from './partials/Partners';
 import Button from "./utils/Button";
@@ -13,18 +8,13 @@ import {EXTERNAL_LINKS} from '../constants';
 import {event} from "../lib/gtag";
 import TAGS from "../constants/tags";
 
-const sharedTitle = 'LinkedOut';
-const sharedDescription =
-  "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail, vous avez du réseau.";
-const hashtags = ['LinkedOut'];
-const sharedURL = process.env.SERVER_URL;
-const viaTwitter = 'R_Entourage';
-
 const Footer = () => {
   const { asPath } = useRouter();
   return (
     <footer id="footer">
-      {asPath !== '/partenaires' && <Partners />}
+      {
+        asPath === '/' && <Partners />
+      }
       <AssociationEntourage />
       <Section style="secondary" size="small" container='large' preserveColor>
         <GridNoSSR
@@ -40,7 +30,7 @@ const Footer = () => {
                 className="ent-logo-hover"
                 href="https://www.linkedin.com/"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
               >
                 <span
                   style={{

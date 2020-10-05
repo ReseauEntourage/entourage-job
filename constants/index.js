@@ -12,93 +12,89 @@ const OFFER_STATUS = [
 
 const BUSINESS_LINES = [
   {
-    value: "Accueil",
-    label: "Accueil",
+    "value": "Administration / Fonction publique",
+    "label": "Administration / Fonction publique"
   },
   {
-    value: "Administratif",
-    label: "Administratif",
+    "value": "Agroalimentaire",
+    "label": "Agroalimentaire"
   },
   {
-    value: "Animalier",
-    label: "Animalier",
+    "value": "Artisanat d'art",
+    "label": "Artisanat d'art"
   },
   {
-    value: "Artisanat",
-    label: "Artisanat",
+    "value": "Associations",
+    "label": "Associations"
   },
   {
-    value: "Associatif",
-    label: "Associatif",
+    "value": "Banques / Assurances / Services financiers",
+    "label": "Banques / Assurances / Services financiers"
   },
   {
-    value: "Assurances / Banques",
-    label: "Assurances / Banques",
+    "value": "Commerce de détail / Grande distribution",
+    "label": "Commerce de détail / Grande distribution"
   },
   {
-    value: "Communication",
-    label: "Communication",
+    "value": "Communication / Marketing / Information",
+    "label": "Communication / Marketing / Information"
   },
   {
-    value: "Construction / BTP",
-    label: "Construction / BTP",
+    "value": "Construction / Bâtiment / Travaux publics",
+    "label": "Construction / Bâtiment / Travaux publics"
   },
   {
-    value: "Culture",
-    label: "Culture",
+    "value": "Culture / Sports / Loisirs",
+    "label": "Culture / Sports / Loisirs"
   },
   {
-    value: "Entretien",
-    label: "Entretien"
+    "value": "Énergie",
+    "label": "Énergie"
   },
   {
-    value: "Hôtellerie / Restauration",
-    label: "Hôtellerie / Restauration"
+    "value": "Environnement / Traitement des déchets et de l'eau",
+    "label": "Environnement / Traitement des déchets et de l'eau"
   },
   {
-    value: "Industrie",
-    label: "Industrie"
+    "value": "Gestion / Administration des entreprises",
+    "label": "Gestion / Administration des entreprises"
   },
   {
-    value: "Informatique",
-    label: "Informatique",
+    "value": "Hôtellerie / Restauration / Tourisme",
+    "label": "Hôtellerie / Restauration / Tourisme"
   },
   {
-    value: "Interprétariat",
-    label: "Interprétariat",
+    "value": "Immobilier",
+    "label": "Immobilier"
   },
   {
-    value: "Jardinage / Espaces verts",
-    label: "Jardinage / Espaces verts",
+    "value": "Industrie textile",
+    "label": "Industrie textile"
   },
   {
-    value: "Mécanique",
-    label: "Mécanique",
+    "value": "Informatique",
+    "label": "Informatique"
   },
   {
-    value: "Médico-social",
-    label: "Médico-social",
+    "value": "Logistique / Transports",
+    "label": "Logistique / Transports"
   },
   {
-    value: "Secrétariat / Assistanat",
-    label: "Secrétariat / Assistanat"
+    "value": "Matériel électrique / Électronique / Optique",
+    "label": "Matériel électrique / Électronique / Optique"
   },
   {
-    value: "Services à la personne",
-    label: "Services à la personne",
+    "value": "Mécanique / Métallurgie",
+    "label": "Mécanique / Métallurgie"
   },
   {
-    value: "Social",
-    label: "Social",
+    "value": "Santé / Action sociale",
+    "label": "Santé / Action sociale"
   },
   {
-    value: "Transports / Logistique",
-    label: "Transports / Logistique",
-  },
-  {
-    value: "Vente / Commerce",
-    label: "Vente / Commerce",
-  },
+    "value": "Services aux particuliers / Aux collectivités / Aux entreprises",
+    "label": "Services aux particuliers / Aux collectivités / Aux entreprises"
+  }
 ];
 
 const LOCATIONS = [
@@ -212,7 +208,8 @@ const EXTERNAL_LINKS = {
   LKO_VG_CONTEST: "https://www.linkedout-vendeeglobe.com/vendeearctique",
   LKO_BLOG: "https://blog.linkedout.fr",
   ENTOURAGE: "https://www.entourage.social",
-  LEGAL_MENTIONS: "https://docs.google.com/document/d/1a1IU9Y6qVDr4pvWJRE5XMVZ2fNhg0rhXMTL_lqY_f1M/pub"
+  LEGAL_MENTIONS: "https://docs.google.com/document/d/1a1IU9Y6qVDr4pvWJRE5XMVZ2fNhg0rhXMTL_lqY_f1M/pub",
+  ARTICLE_BC: "https://blog.linkedout.fr/2020/07/03/benevole-coach-linkedout/",
 };
 
 const VALUES = {

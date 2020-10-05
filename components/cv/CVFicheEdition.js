@@ -23,10 +23,10 @@ const CVFicheEdition = ({cv, gender, onChange, disablePicture}) => {
       // Use hash to reload image if an update is done
       const previewHash = Date.now();
       setPreviewUrl(
-        `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${cv.UserId}.${cv.status}.preview.jpg?${previewHash}`
+        `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${cv.UserId}.${cv.status}.preview.jpg?${previewHash}`
       );
       setImageUrl(
-        `${process.env.AWSS3_URL}${process.env.AWSS3_DIRECTORY}${cv.UserId}.${cv.status}.jpg?${previewHash}`
+        `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${cv.UserId}.${cv.status}.jpg?${previewHash}`
       );
     }
   }, [cv]);

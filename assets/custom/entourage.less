@@ -4,12 +4,35 @@
 // Your custom code goes here, e.g. mixins, variables.
 // See "how to create a theme" below for more info.
 
+@font-face {
+  font-family: 'Roboto';
+  src: url('/static/fonts/Roboto-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: bold;
+  src: url('/static/fonts/Roboto-Bold.ttf') format('truetype');
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color: inherit !important;
+    color-adjust: exact !important;
+  }
+
+  a, a:visited {
+    text-decoration: none !important;
+  }
+}
+
 //Font families
 @global-font-family: Roboto, sans-serif;
 @global-font-weight: normal;
 @global-font-size: 17px;
 @global-line-height: 22px;
-@global-color: black;
+@global-color: #363636;
 
 @dotnav-item-background: fade(@global-color, 0%);
 @dotnav-item-hover-background: fade(#F55F24, 100%);
@@ -34,22 +57,21 @@
 
 @base-body-font-family: Roboto, sans-serif;
 @base-body-font-weight: normal;
-@base-body-color: black;
+@base-body-color: #363636;
 
 @base-heading-font-family: Roboto, sans-serif;
-@base-heading-color: black;
+@base-heading-color: #363636;
 
 // overlay
 @global-primary-background: #f55f24;
 
-@global-muted-background: #F2F2F0;
+@global-muted-background: #FFF8F5;
 
 @overlay-primary-background: fade(@global-primary-background, 70%);
 
 //Link
 @global-link-color: #f55f24;
 @global-link-hover-color: #d53f00;
-
 
 //Button
 .hook-button() {
@@ -169,14 +191,16 @@
 }
 
 .hook-badge() {
+  height: inherit;
   font-size: 14px;
   color: #333;
-  background-color: #F2F2F0;
+  background-color: #FFF8F5;
+  padding: 0 10px;
 }
 
 .hook-badge-hover() {
   color: #333;
-  background-color: #F2F2F0;
+  background-color: #FFF8F5;
 }
 
 .hook-link-heading() {
@@ -318,11 +342,11 @@
 .hook-ent-filter() {
   border: 1px solid;
   border-radius: 5px;
-  padding: 0 15px;
-  min-height: 36px;
-  line-height: 36px;
+  padding: 0 5px;
+  min-height: 26px;
+  line-height: 26px;
+  font-size: 15px;
   cursor: pointer;
-
 }
 
 .ent-filter {
@@ -423,3 +447,69 @@
   background-color: white;
   border: 1px solid @global-primary-background;
 }
+
+.ent-filter-menu {
+  background-color: white;
+  border-right: 1px solid @global-muted-background;
+  color: @global-color;
+}
+
+.ent-filter-menu .uk-checkbox {
+  border: 1px solid #cccccc;
+  background-color: transparent;
+}
+
+.ent-filter-menu .uk-checkbox:focus {
+  border: 1px solid @global-primary-background;
+  background-color: transparent;
+}
+
+.ent-filter-menu .uk-checkbox:checked {
+  color: white;
+  border-color: transparent;
+  background-color: @global-primary-background;
+  .svg-fill(@internal-form-checkbox-image, "#000", @form-radio-checked-icon-color);
+}
+
+
+.ent-filter-menu .uk-checkbox:checked:focus {
+  color: white;
+  border-color: transparent;
+  background-color: @global-primary-background;
+  .svg-fill(@internal-form-checkbox-image, "#000", @form-radio-checked-icon-color);
+}
+
+
+.ent-filter-menu .uk-button-text {
+  color: @button-text-color;
+}
+
+.ent-filter-menu .uk-button-text:hover {
+  color: @button-text-hover-color;
+}
+
+.ent-filter-menu .uk-button-text:focus {
+  color: @button-text-hover-color;
+}
+
+.ent-filter-menu .uk-button-text::before {
+  border-bottom-color: @button-text-hover-color;
+}
+
+.ent-filter-menu .uk-offcanvas-close {
+  color: @close-color
+}
+
+.ent-filter-menu .uk-offcanvas-close:hover {
+  color: @close-hover-color !important;
+}
+
+.ent-filter-menu .uk-offcanvas-close:focus {
+  color: @close-hover-color !important;
+}
+
+.uk-list-bullet > ::before, [class*='uk-list'] > ::before {
+  margin-bottom: -@global-line-height;
+}
+
+

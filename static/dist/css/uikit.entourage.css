@@ -1,4 +1,4 @@
-/*! UIkit 3.5.4 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
+/*! UIkit 3.5.8 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 /* ========================================================================
    Component: Base
  ========================================================================== */
@@ -18,7 +18,7 @@ html {
   -webkit-text-size-adjust: 100%;
   /* 3 */
   background: #fff;
-  color: black;
+  color: #363636;
 }
 /*
  * Remove the margin in all browsers.
@@ -87,7 +87,7 @@ strong {
   color: #f0506e;
   white-space: nowrap;
   padding: 2px 6px;
-  background: #F2F2F0;
+  background: #FFF8F5;
 }
 /*
  * Emphasize
@@ -100,7 +100,7 @@ em {
  */
 ins {
   background: #ffd;
-  color: black;
+  color: #363636;
   text-decoration: none;
 }
 /*
@@ -108,7 +108,7 @@ ins {
  */
 mark {
   background: #ffd;
-  color: black;
+  color: #363636;
 }
 /*
  * Quote
@@ -247,7 +247,7 @@ h6,
   margin: 0 0 20px 0;
   font-family: Roboto, sans-serif;
   font-weight: normal;
-  color: black;
+  color: #363636;
   text-transform: none;
 }
 /* Add margin if adjacent element */
@@ -388,7 +388,7 @@ blockquote footer {
   margin-top: 10px;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: black;
+  color: #363636;
 }
 blockquote footer::before {
   content: "— ";
@@ -400,7 +400,7 @@ blockquote footer::before {
  */
 pre {
   font: 0.875rem / 1.5 Consolas, monaco, monospace;
-  color: black;
+  color: #363636;
   -moz-tab-size: 4;
   tab-size: 4;
   /* 1 */
@@ -479,7 +479,7 @@ a.uk-link-muted:hover,
 .uk-link-muted a:hover,
 .uk-link-toggle:hover .uk-link-muted,
 .uk-link-toggle:focus .uk-link-muted {
-  color: black;
+  color: #363636;
 }
 /* Text
  ========================================================================== */
@@ -741,69 +741,90 @@ a.uk-link-reset,
 /*
  * Remove margin from the last-child
  */
-.uk-list > li > :last-child {
+.uk-list > * > :last-child {
   margin-bottom: 0;
 }
 /*
  * Style
  */
-.uk-list > li:nth-child(n+2),
-.uk-list > li > ul {
+.uk-list > :nth-child(n+2),
+.uk-list > * > ul {
   margin-top: 10px;
 }
-/* Type modifiers
+/* Marker modifiers
+ * Moving `::marker` inside `::before` to style it differently
+ * To style the `::marker` is currently only supported in Firefox and Safari
  ========================================================================== */
-.uk-list-disc,
-.uk-list-circle,
-.uk-list-square,
-.uk-list-decimal,
-.uk-list-hyphen {
+.uk-list-disc > *,
+.uk-list-circle > *,
+.uk-list-square > *,
+.uk-list-decimal > *,
+.uk-list-hyphen > * {
   padding-left: 30px;
 }
-.uk-list-disc {
+/*
+ * Type modifiers
+ */
+.uk-list-decimal {
+  counter-reset: decimal;
+}
+.uk-list-decimal > * {
+  counter-increment: decimal;
+}
+[class*='uk-list'] > ::before {
+  content: '';
+  position: relative;
+  left: -30px;
+  width: 30px;
+  height: 22px;
+  margin-bottom: -22;
+  display: list-item;
+  list-style-position: inside;
+  text-align: right;
+}
+.uk-list-disc > ::before {
   list-style-type: disc;
 }
-.uk-list-circle {
+.uk-list-circle > ::before {
   list-style-type: circle;
 }
-.uk-list-square {
+.uk-list-square > ::before {
   list-style-type: square;
 }
-.uk-list-decimal {
-  list-style-type: decimal;
+.uk-list-decimal > ::before {
+  content: counter(decimal, decimal) '\200A.\00A0';
 }
-.uk-list-hyphen {
-  list-style-type: '–  ';
+.uk-list-hyphen > ::before {
+  content: '–\00A0\00A0';
 }
-/* Color modifiers
- * Doesn't work in Chrome and Edge yet
- ========================================================================== */
-.uk-list-muted li::marker {
+/*
+ * Color modifiers
+ */
+.uk-list-muted > ::before {
   color: #999 !important;
 }
-.uk-list-emphasis li::marker {
+.uk-list-emphasis > ::before {
   color: #333 !important;
 }
-.uk-list-primary li::marker {
+.uk-list-primary > ::before {
   color: #f55f24 !important;
 }
-.uk-list-secondary li::marker {
+.uk-list-secondary > ::before {
   color: #222 !important;
 }
 /* Image bullet modifier
  ========================================================================== */
-.uk-list-bullet > li {
-  position: relative;
+.uk-list-bullet > * {
   padding-left: 30px;
 }
-.uk-list-bullet > li::before {
+.uk-list-bullet > ::before {
   content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 22px;
+  position: relative;
+  left: -30px;
+  width: 30px;
   height: 22px;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%226%22%20height%3D%226%22%20viewBox%3D%220%200%206%206%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22black%22%20cx%3D%223%22%20cy%3D%223%22%20r%3D%223%22%20%2F%3E%0A%3C%2Fsvg%3E");
+  margin-bottom: -22;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%226%22%20height%3D%226%22%20viewBox%3D%220%200%206%206%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22%23363636%22%20cx%3D%223%22%20cy%3D%223%22%20r%3D%223%22%20%2F%3E%0A%3C%2Fsvg%3E");
   background-repeat: no-repeat;
   background-position: 50% 50%;
 }
@@ -812,7 +833,7 @@ a.uk-link-reset,
 /*
  * Divider
  */
-.uk-list-divider > li:nth-child(n+2) {
+.uk-list-divider > :nth-child(n+2) {
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid #e5e5e5;
@@ -820,52 +841,52 @@ a.uk-link-reset,
 /*
  * Striped
  */
-.uk-list-striped > li {
+.uk-list-striped > * {
   padding: 10px 10px;
 }
-.uk-list-striped > li:nth-of-type(odd) {
+.uk-list-striped > *:nth-of-type(odd) {
   border-top: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
 }
-.uk-list-striped > li:nth-of-type(odd) {
-  background: #F2F2F0;
+.uk-list-striped > :nth-of-type(odd) {
+  background: #FFF8F5;
 }
-.uk-list-striped > li:nth-child(n+2) {
+.uk-list-striped > :nth-child(n+2) {
   margin-top: 0;
 }
 /* Size modifier
  ========================================================================== */
-.uk-list-large > li:nth-child(n+2),
-.uk-list-large > li > ul {
+.uk-list-large > :nth-child(n+2),
+.uk-list-large > * > ul {
   margin-top: 20px;
 }
-.uk-list-collapse > li:nth-child(n+2),
-.uk-list-collapse > li > ul {
+.uk-list-collapse > :nth-child(n+2),
+.uk-list-collapse > * > ul {
   margin-top: 0;
 }
 /*
  * Divider
  */
-.uk-list-large.uk-list-divider > li:nth-child(n+2) {
+.uk-list-large.uk-list-divider > :nth-child(n+2) {
   margin-top: 20px;
   padding-top: 20px;
 }
-.uk-list-collapse.uk-list-divider > li:nth-child(n+2) {
+.uk-list-collapse.uk-list-divider > :nth-child(n+2) {
   margin-top: 0;
   padding-top: 0;
 }
 /*
  * Striped
  */
-.uk-list-large.uk-list-striped > li {
+.uk-list-large.uk-list-striped > * {
   padding: 20px 10px;
 }
-.uk-list-collapse.uk-list-striped > li {
+.uk-list-collapse.uk-list-striped > * {
   padding-top: 0;
   padding-bottom: 0;
 }
-.uk-list-large.uk-list-striped > li:nth-child(n+2),
-.uk-list-collapse.uk-list-striped > li:nth-child(n+2) {
+.uk-list-large.uk-list-striped > :nth-child(n+2),
+.uk-list-collapse.uk-list-striped > :nth-child(n+2) {
   margin-top: 0;
 }
 /* ========================================================================
@@ -977,7 +998,7 @@ a.uk-link-reset,
  */
 .uk-table-striped > tr:nth-of-type(odd),
 .uk-table-striped tbody tr:nth-of-type(odd) {
-  background: #F2F2F0;
+  background: #FFF8F5;
   border-top: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
 }
@@ -1167,13 +1188,13 @@ button.uk-icon:not(:disabled) {
 }
 .uk-icon-link:hover,
 .uk-icon-link:focus {
-  color: black;
+  color: #363636;
   outline: none;
 }
 /* OnClick + Active */
 .uk-icon-link:active,
 .uk-active > .uk-icon-link {
-  color: #000000;
+  color: #292929;
 }
 /*
  * Button
@@ -1318,32 +1339,32 @@ button.uk-icon:not(:disabled) {
 /* Webkit */
 .uk-range::-webkit-slider-runnable-track {
   height: 3px;
-  background: #e6e6e2;
+  background: #ffe6dc;
   border-radius: 500px;
 }
 .uk-range:focus::-webkit-slider-runnable-track,
 .uk-range:active::-webkit-slider-runnable-track {
-  background: #cecec7;
+  background: #ffc2a9;
 }
 /* Firefox */
 .uk-range::-moz-range-track {
   height: 3px;
-  background: #e6e6e2;
+  background: #ffe6dc;
   border-radius: 500px;
 }
 .uk-range:focus::-moz-range-track {
-  background: #cecec7;
+  background: #ffc2a9;
 }
 /* Edge */
 .uk-range::-ms-fill-lower,
 .uk-range::-ms-fill-upper {
   height: 3px;
-  background: #e6e6e2;
+  background: #ffe6dc;
   border-radius: 500px;
 }
 .uk-range:focus::-ms-fill-lower,
 .uk-range:focus::-ms-fill-upper {
-  background: #cecec7;
+  background: #ffc2a9;
 }
 /* ========================================================================
    Component: Form
@@ -1467,7 +1488,7 @@ button.uk-icon:not(:disabled) {
   /* 4 */
   padding: 0 10px;
   background: #fff;
-  color: black;
+  color: #363636;
   border: 1px solid #e5e5e5;
   transition: 0.2s ease-in-out;
   transition-property: color, background-color, border;
@@ -1506,14 +1527,14 @@ button.uk-icon:not(:disabled) {
 .uk-textarea:focus {
   outline: none;
   background-color: #fff;
-  color: black;
+  color: #363636;
   border-color: #f55f24;
 }
 /* Disabled */
 .uk-input:disabled,
 .uk-select:disabled,
 .uk-textarea:disabled {
-  background-color: #F2F2F0;
+  background-color: #FFF8F5;
   color: #999;
   border-color: #e5e5e5;
 }
@@ -1626,7 +1647,7 @@ select.uk-form-width-xsmall {
   -moz-appearance: none;
   /* 2 */
   padding-right: 20px;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22black%22%20points%3D%2212%201%209%206%2015%206%22%20%2F%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22black%22%20points%3D%2212%2013%209%208%2015%208%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23363636%22%20points%3D%2212%201%209%206%2015%206%22%20%2F%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23363636%22%20points%3D%2212%2013%209%208%2015%208%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
   background-repeat: no-repeat;
   background-position: 100% 50%;
 }
@@ -1656,7 +1677,7 @@ select.uk-form-width-xsmall {
 }
 .uk-input[list]:hover,
 .uk-input[list]:focus {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22black%22%20points%3D%2212%2012%208%206%2016%206%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23363636%22%20points%3D%2212%2012%208%206%2016%206%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
 }
 /* 1 */
 .uk-input[list]::-webkit-calendar-picker-indicator {
@@ -1737,7 +1758,7 @@ select.uk-form-width-xsmall {
  */
 .uk-radio:disabled,
 .uk-checkbox:disabled {
-  background-color: #F2F2F0;
+  background-color: #FFF8F5;
   border-color: #e5e5e5;
 }
 .uk-radio:disabled:checked {
@@ -1885,7 +1906,7 @@ select.uk-form-width-xsmall {
  * Required for `a`.
  */
 .uk-form-icon:hover {
-  color: black;
+  color: #363636;
 }
 /*
  * Make `input` element clickable through icon, e.g. if it's a `span`
@@ -2260,6 +2281,76 @@ select.uk-form-width-xsmall {
   z-index: 1;
 }
 /* ========================================================================
+   Component: Progress
+ ========================================================================== */
+/*
+ * 1. Add the correct vertical alignment in Chrome, Firefox, and Opera.
+ * 2. Remove default style
+ * 3. Behave like a block element
+ * 4. Remove borders in Firefox and Edge
+ * 5. Set background color for progress container in Firefox, IE11 and Edge
+ * 6. Style
+ */
+.uk-progress {
+  /* 1 */
+  vertical-align: baseline;
+  /* 2 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* 3 */
+  display: block;
+  width: 100%;
+  /* 4 */
+  border: 0;
+  /* 5 */
+  background-color: #FFF8F5;
+  /* 6 */
+  margin-bottom: 20px;
+  height: 15px;
+  border-radius: 500px;
+  overflow: hidden;
+}
+/* Add margin if adjacent element */
+* + .uk-progress {
+  margin-top: 20px;
+}
+/*
+ * Remove animated circles for indeterminate state in IE11 and Edge
+ */
+.uk-progress:indeterminate {
+  color: transparent;
+}
+/*
+ * Progress container
+ * 2. Remove progress bar for indeterminate state in Firefox
+ */
+.uk-progress::-webkit-progress-bar {
+  background-color: #FFF8F5;
+  border-radius: 500px;
+  overflow: hidden;
+}
+/* 2 */
+.uk-progress:indeterminate::-moz-progress-bar {
+  width: 0;
+}
+/*
+ * Progress bar
+ * 1. Remove right border in IE11 and Edge
+ */
+.uk-progress::-webkit-progress-value {
+  background-color: #f55f24;
+  transition: width 0.6s ease;
+}
+.uk-progress::-moz-progress-bar {
+  background-color: #f55f24;
+}
+.uk-progress::-ms-fill {
+  background-color: #f55f24;
+  transition: width 0.6s ease;
+  /* 1 */
+  border: 0;
+}
+/* ========================================================================
    Component: Section
  ========================================================================== */
 /*
@@ -2341,7 +2432,7 @@ select.uk-form-width-xsmall {
  * Muted
  */
 .uk-section-muted {
-  background: #F2F2F0;
+  background: #FFF8F5;
 }
 /*
  * Primary
@@ -2510,377 +2601,6 @@ select.uk-form-width-xsmall {
   }
 }
 /* ========================================================================
-   Component: Grid
- ========================================================================== */
-/*
- * 1. Allow cells to wrap into the next line
- * 2. Reset list
- */
-.uk-grid {
-  display: flex;
-  /* 1 */
-  flex-wrap: wrap;
-  /* 2 */
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-/*
- * Grid cell
- * Note: Space is allocated solely based on content dimensions, but shrinks: 0 1 auto
- * Reset margin for e.g. paragraphs
- */
-.uk-grid > * {
-  margin: 0;
-}
-/*
- * Remove margin from the last-child
- */
-.uk-grid > * > :last-child {
-  margin-bottom: 0;
-}
-/* Gutter
- ========================================================================== */
-/*
- * Default
- */
-/* Horizontal */
-.uk-grid {
-  margin-left: -30px;
-}
-.uk-grid > * {
-  padding-left: 30px;
-}
-/* Vertical */
-.uk-grid + .uk-grid,
-.uk-grid > .uk-grid-margin,
-* + .uk-grid-margin {
-  margin-top: 30px;
-}
-/* Desktop and bigger */
-@media (min-width: 1200px) {
-  /* Horizontal */
-  .uk-grid {
-    margin-left: -40px;
-  }
-  .uk-grid > * {
-    padding-left: 40px;
-  }
-  /* Vertical */
-  .uk-grid + .uk-grid,
-  .uk-grid > .uk-grid-margin,
-  * + .uk-grid-margin {
-    margin-top: 40px;
-  }
-}
-/*
- * Small
- */
-/* Horizontal */
-.uk-grid-small,
-.uk-grid-column-small {
-  margin-left: -15px;
-}
-.uk-grid-small > *,
-.uk-grid-column-small > * {
-  padding-left: 15px;
-}
-/* Vertical */
-.uk-grid + .uk-grid-small,
-.uk-grid + .uk-grid-row-small,
-.uk-grid-small > .uk-grid-margin,
-.uk-grid-row-small > .uk-grid-margin,
-* + .uk-grid-margin-small {
-  margin-top: 15px;
-}
-/*
- * Medium
- */
-/* Horizontal */
-.uk-grid-medium,
-.uk-grid-column-medium {
-  margin-left: -30px;
-}
-.uk-grid-medium > *,
-.uk-grid-column-medium > * {
-  padding-left: 30px;
-}
-/* Vertical */
-.uk-grid + .uk-grid-medium,
-.uk-grid + .uk-grid-row-medium,
-.uk-grid-medium > .uk-grid-margin,
-.uk-grid-row-medium > .uk-grid-margin,
-* + .uk-grid-margin-medium {
-  margin-top: 30px;
-}
-/*
- * Large
- */
-/* Horizontal */
-.uk-grid-large,
-.uk-grid-column-large {
-  margin-left: -40px;
-}
-.uk-grid-large > *,
-.uk-grid-column-large > * {
-  padding-left: 40px;
-}
-/* Vertical */
-.uk-grid + .uk-grid-large,
-.uk-grid + .uk-grid-row-large,
-.uk-grid-large > .uk-grid-margin,
-.uk-grid-row-large > .uk-grid-margin,
-* + .uk-grid-margin-large {
-  margin-top: 40px;
-}
-/* Desktop and bigger */
-@media (min-width: 1200px) {
-  /* Horizontal */
-  .uk-grid-large,
-  .uk-grid-column-large {
-    margin-left: -70px;
-  }
-  .uk-grid-large > *,
-  .uk-grid-column-large > * {
-    padding-left: 70px;
-  }
-  /* Vertical */
-  .uk-grid + .uk-grid-large,
-  .uk-grid + .uk-grid-row-large,
-  .uk-grid-large > .uk-grid-margin,
-  .uk-grid-row-large > .uk-grid-margin,
-  * + .uk-grid-margin-large {
-    margin-top: 70px;
-  }
-}
-/*
- * Collapse
- */
-/* Horizontal */
-.uk-grid-collapse,
-.uk-grid-column-collapse {
-  margin-left: 0;
-}
-.uk-grid-collapse > *,
-.uk-grid-column-collapse > * {
-  padding-left: 0;
-}
-/* Vertical */
-.uk-grid + .uk-grid-collapse,
-.uk-grid + .uk-grid-row-collapse,
-.uk-grid-collapse > .uk-grid-margin,
-.uk-grid-row-collapse > .uk-grid-margin {
-  margin-top: 0;
-}
-/* Divider
- ========================================================================== */
-.uk-grid-divider > * {
-  position: relative;
-}
-.uk-grid-divider > :not(.uk-first-column)::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  border-left: 1px solid #F55F24;
-}
-/* Vertical */
-.uk-grid-divider.uk-grid-stack > .uk-grid-margin::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  border-top: 1px solid #F55F24;
-}
-/*
- * Default
- */
-/* Horizontal */
-.uk-grid-divider {
-  margin-left: -60px;
-}
-.uk-grid-divider > * {
-  padding-left: 60px;
-}
-.uk-grid-divider > :not(.uk-first-column)::before {
-  left: 30px;
-}
-/* Vertical */
-.uk-grid-divider.uk-grid-stack > .uk-grid-margin {
-  margin-top: 60px;
-}
-.uk-grid-divider.uk-grid-stack > .uk-grid-margin::before {
-  top: -30px;
-  left: 60px;
-}
-/* Desktop and bigger */
-@media (min-width: 1200px) {
-  /* Horizontal */
-  .uk-grid-divider {
-    margin-left: -80px;
-  }
-  .uk-grid-divider > * {
-    padding-left: 80px;
-  }
-  .uk-grid-divider > :not(.uk-first-column)::before {
-    left: 40px;
-  }
-  /* Vertical */
-  .uk-grid-divider.uk-grid-stack > .uk-grid-margin {
-    margin-top: 80px;
-  }
-  .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before {
-    top: -40px;
-    left: 80px;
-  }
-}
-/*
- * Small
- */
-/* Horizontal */
-.uk-grid-divider.uk-grid-small,
-.uk-grid-divider.uk-grid-column-small {
-  margin-left: -30px;
-}
-.uk-grid-divider.uk-grid-small > *,
-.uk-grid-divider.uk-grid-column-small > * {
-  padding-left: 30px;
-}
-.uk-grid-divider.uk-grid-small > :not(.uk-first-column)::before,
-.uk-grid-divider.uk-grid-column-small > :not(.uk-first-column)::before {
-  left: 15px;
-}
-/* Vertical */
-.uk-grid-divider.uk-grid-small.uk-grid-stack > .uk-grid-margin,
-.uk-grid-divider.uk-grid-row-small.uk-grid-stack > .uk-grid-margin {
-  margin-top: 30px;
-}
-.uk-grid-divider.uk-grid-small.uk-grid-stack > .uk-grid-margin::before {
-  top: -15px;
-  left: 30px;
-}
-.uk-grid-divider.uk-grid-row-small.uk-grid-stack > .uk-grid-margin::before {
-  top: -15px;
-}
-.uk-grid-divider.uk-grid-column-small.uk-grid-stack > .uk-grid-margin::before {
-  left: 30px;
-}
-/*
- * Medium
- */
-/* Horizontal */
-.uk-grid-divider.uk-grid-medium,
-.uk-grid-divider.uk-grid-column-medium {
-  margin-left: -60px;
-}
-.uk-grid-divider.uk-grid-medium > *,
-.uk-grid-divider.uk-grid-column-medium > * {
-  padding-left: 60px;
-}
-.uk-grid-divider.uk-grid-medium > :not(.uk-first-column)::before,
-.uk-grid-divider.uk-grid-column-medium > :not(.uk-first-column)::before {
-  left: 30px;
-}
-/* Vertical */
-.uk-grid-divider.uk-grid-medium.uk-grid-stack > .uk-grid-margin,
-.uk-grid-divider.uk-grid-row-medium.uk-grid-stack > .uk-grid-margin {
-  margin-top: 60px;
-}
-.uk-grid-divider.uk-grid-medium.uk-grid-stack > .uk-grid-margin::before {
-  top: -30px;
-  left: 60px;
-}
-.uk-grid-divider.uk-grid-row-medium.uk-grid-stack > .uk-grid-margin::before {
-  top: -30px;
-}
-.uk-grid-divider.uk-grid-column-medium.uk-grid-stack > .uk-grid-margin::before {
-  left: 60px;
-}
-/*
- * Large
- */
-/* Horizontal */
-.uk-grid-divider.uk-grid-large,
-.uk-grid-divider.uk-grid-column-large {
-  margin-left: -80px;
-}
-.uk-grid-divider.uk-grid-large > *,
-.uk-grid-divider.uk-grid-column-large > * {
-  padding-left: 80px;
-}
-.uk-grid-divider.uk-grid-large > :not(.uk-first-column)::before,
-.uk-grid-divider.uk-grid-column-large > :not(.uk-first-column)::before {
-  left: 40px;
-}
-/* Vertical */
-.uk-grid-divider.uk-grid-large.uk-grid-stack > .uk-grid-margin,
-.uk-grid-divider.uk-grid-row-large.uk-grid-stack > .uk-grid-margin {
-  margin-top: 80px;
-}
-.uk-grid-divider.uk-grid-large.uk-grid-stack > .uk-grid-margin::before {
-  top: -40px;
-  left: 80px;
-}
-.uk-grid-divider.uk-grid-row-large.uk-grid-stack > .uk-grid-margin::before {
-  top: -40px;
-}
-.uk-grid-divider.uk-grid-column-large.uk-grid-stack > .uk-grid-margin::before {
-  left: 80px;
-}
-/* Desktop and bigger */
-@media (min-width: 1200px) {
-  /* Horizontal */
-  .uk-grid-divider.uk-grid-large,
-  .uk-grid-divider.uk-grid-column-large {
-    margin-left: -140px;
-  }
-  .uk-grid-divider.uk-grid-large > *,
-  .uk-grid-divider.uk-grid-column-large > * {
-    padding-left: 140px;
-  }
-  .uk-grid-divider.uk-grid-large > :not(.uk-first-column)::before,
-  .uk-grid-divider.uk-grid-column-large > :not(.uk-first-column)::before {
-    left: 70px;
-  }
-  /* Vertical */
-  .uk-grid-divider.uk-grid-large.uk-grid-stack > .uk-grid-margin,
-  .uk-grid-divider.uk-grid-row-large.uk-grid-stack > .uk-grid-margin {
-    margin-top: 140px;
-  }
-  .uk-grid-divider.uk-grid-large.uk-grid-stack > .uk-grid-margin::before {
-    top: -70px;
-    left: 140px;
-  }
-  .uk-grid-divider.uk-grid-row-large.uk-grid-stack > .uk-grid-margin::before {
-    top: -70px;
-  }
-  .uk-grid-divider.uk-grid-column-large.uk-grid-stack > .uk-grid-margin::before {
-    left: 140px;
-  }
-}
-/* Match child of a grid cell
- ========================================================================== */
-/*
- * Behave like a block element
- * 1. Wrap into the next line
- * 2. Take the full width, at least 100%. Only if no class from the Width component is set.
- * 3. Expand width even if larger than 100%, e.g. because of negative margin (Needed for nested grids)
- */
-.uk-grid-match > *,
-.uk-grid-item-match {
-  display: flex;
-  /* 1 */
-  flex-wrap: wrap;
-}
-.uk-grid-match > * > :not([class*='uk-width']),
-.uk-grid-item-match > :not([class*='uk-width']) {
-  /* 2 */
-  box-sizing: border-box;
-  width: 100%;
-  /* 3 */
-  flex: auto;
-}
-/* ========================================================================
    Component: Tile
  ========================================================================== */
 .uk-tile {
@@ -2970,7 +2690,7 @@ select.uk-form-width-xsmall {
  * Muted
  */
 .uk-tile-muted {
-  background: #F2F2F0;
+  background: #FFF8F5;
 }
 /*
  * Primary
@@ -3066,7 +2786,7 @@ select.uk-form-width-xsmall {
  */
 .uk-card-default {
   background: #fff;
-  color: black;
+  color: #363636;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 .uk-card-default .uk-card-title {
@@ -3238,7 +2958,7 @@ select.uk-form-width-xsmall {
 /* Hover + Focus */
 .uk-close:hover,
 .uk-close:focus {
-  color: black;
+  color: #363636;
   outline: none;
 }
 /* ========================================================================
@@ -3298,7 +3018,7 @@ select.uk-form-width-xsmall {
 /* Hover + Focus */
 .uk-totop:hover,
 .uk-totop:focus {
-  color: black;
+  color: #363636;
   outline: none;
 }
 /* OnClick */
@@ -3330,8 +3050,8 @@ select.uk-form-width-xsmall {
   position: relative;
   margin-bottom: 20px;
   padding: 15px 29px 15px 15px;
-  background: #F2F2F0;
-  color: black;
+  background: #FFF8F5;
+  color: #363636;
 }
 /* Add margin if adjacent element */
 * + .uk-alert {
@@ -3417,6 +3137,25 @@ select.uk-form-width-xsmall {
   text-decoration: underline;
 }
 /* ========================================================================
+   Component: Placeholder
+ ========================================================================== */
+.uk-placeholder {
+  margin-bottom: 20px;
+  padding: 30px 30px;
+  background: transparent;
+  border: 1px dashed #e5e5e5;
+}
+/* Add margin if adjacent element */
+* + .uk-placeholder {
+  margin-top: 20px;
+}
+/*
+ * Remove margin from the last-child
+ */
+.uk-placeholder > :last-child {
+  margin-bottom: 0;
+}
+/* ========================================================================
    Component: Badge
  ========================================================================== */
 /*
@@ -3438,9 +3177,11 @@ select.uk-form-width-xsmall {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  height: inherit;
   font-size: 14px;
   color: #333;
-  background-color: #F2F2F0;
+  background-color: #FFF8F5;
+  padding: 0 10px;
 }
 /*
  * Required for `a`
@@ -3451,7 +3192,7 @@ select.uk-form-width-xsmall {
   text-decoration: none;
   outline: none;
   color: #333;
-  background-color: #F2F2F0;
+  background-color: #FFF8F5;
 }
 /* ========================================================================
    Component: Label
@@ -3559,7 +3300,7 @@ select.uk-form-width-xsmall {
   color: #999;
 }
 .uk-article-meta a:hover {
-  color: black;
+  color: #363636;
   text-decoration: none;
 }
 /* ========================================================================
@@ -3631,7 +3372,7 @@ select.uk-form-width-xsmall {
  ========================================================================== */
 .uk-comment-primary {
   padding: 30px;
-  background-color: #F2F2F0;
+  background-color: #FFF8F5;
 }
 /* ========================================================================
    Component: Search
@@ -3697,7 +3438,7 @@ select.uk-form-width-xsmall {
   width: 100%;
   /* 9 */
   border: none;
-  color: black;
+  color: #363636;
 }
 .uk-search-input:focus {
   outline: none;
@@ -3848,1115 +3589,7 @@ select.uk-form-width-xsmall {
 /* Hover + Focus */
 .uk-search-toggle:hover,
 .uk-search-toggle:focus {
-  color: black;
-}
-/* ========================================================================
-   Component: Nav
- ========================================================================== */
-/*
- * Reset
- * 1. Prepare lists
- * 2. Prepare links
- * 3. Remove default focus style
- */
-/* 1 */
-.uk-nav,
-.uk-nav ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-/* 2 */
-.uk-nav li > a {
-  display: block;
-  text-decoration: none;
-}
-/* 3 */
-.uk-nav li > a:focus {
-  outline: none;
-}
-/*
- * Items
- * Must target `a` elements to exclude other elements (e.g. lists)
- */
-.uk-nav > li > a {
-  padding: 5px 0;
-}
-/* Sublists
- ========================================================================== */
-/*
- * Level 2
- * `ul` needed for higher specificity to override padding
- */
-ul.uk-nav-sub {
-  padding: 5px 0 5px 15px;
-}
-/*
- * Level 3 and deeper
- */
-.uk-nav-sub ul {
-  padding-left: 15px;
-}
-/*
- * Items
- */
-.uk-nav-sub a {
-  padding: 2px 0;
-}
-/* Parent icon modifier
- ========================================================================== */
-.uk-nav-parent-icon > .uk-parent > a::after {
-  content: "";
-  width: 22px;
-  height: 22px;
-  float: right;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2014%2014%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.1%22%20points%3D%2210%201%204%207%2010%2013%22%20%2F%3E%0A%3C%2Fsvg%3E");
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-}
-.uk-nav-parent-icon > .uk-parent.uk-open > a::after {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2014%2014%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.1%22%20points%3D%221%204%207%2010%2013%204%22%20%2F%3E%0A%3C%2Fsvg%3E");
-}
-/* Header
- ========================================================================== */
-.uk-nav-header {
-  padding: 5px 0;
-  text-transform: uppercase;
-  font-size: 0.875rem;
-}
-.uk-nav-header:not(:first-child) {
-  margin-top: 20px;
-}
-/* Divider
- ========================================================================== */
-.uk-nav-divider {
-  margin: 5px 0;
-}
-/* Default modifier
- ========================================================================== */
-.uk-nav-default {
-  font-size: 0.875rem;
-}
-/*
- * Items
- */
-.uk-nav-default > li > a {
-  color: #999;
-}
-/* Hover + Focus */
-.uk-nav-default > li > a:hover,
-.uk-nav-default > li > a:focus {
-  color: black;
-}
-/* Active */
-.uk-nav-default > li.uk-active > a {
-  color: #333;
-}
-/*
- * Header
- */
-.uk-nav-default .uk-nav-header {
-  color: #333;
-}
-/*
- * Divider
- */
-.uk-nav-default .uk-nav-divider {
-  border-top: 1px solid #e5e5e5;
-}
-/*
- * Sublists
- */
-.uk-nav-default .uk-nav-sub a {
-  color: #999;
-}
-.uk-nav-default .uk-nav-sub a:hover,
-.uk-nav-default .uk-nav-sub a:focus {
-  color: black;
-}
-.uk-nav-default .uk-nav-sub li.uk-active > a {
-  color: #333;
-}
-/* Primary modifier
- ========================================================================== */
-/*
- * Items
- */
-.uk-nav-primary > li > a {
-  font-size: 1.5rem;
-  line-height: 22px;
-  color: #999;
-}
-/* Hover + Focus */
-.uk-nav-primary > li > a:hover,
-.uk-nav-primary > li > a:focus {
-  color: black;
-}
-/* Active */
-.uk-nav-primary > li.uk-active > a {
-  color: #333;
-}
-/*
- * Header
- */
-.uk-nav-primary .uk-nav-header {
-  color: #333;
-}
-/*
- * Divider
- */
-.uk-nav-primary .uk-nav-divider {
-  border-top: 1px solid #e5e5e5;
-}
-/*
- * Sublists
- */
-.uk-nav-primary .uk-nav-sub a {
-  color: #999;
-}
-.uk-nav-primary .uk-nav-sub a:hover,
-.uk-nav-primary .uk-nav-sub a:focus {
-  color: black;
-}
-.uk-nav-primary .uk-nav-sub li.uk-active > a {
-  color: #333;
-}
-/* Alignment modifier
- ========================================================================== */
-.uk-nav-center {
-  text-align: center;
-}
-/* Sublists */
-.uk-nav-center .uk-nav-sub,
-.uk-nav-center .uk-nav-sub ul {
-  padding-left: 0;
-}
-/* Parent icon modifier  */
-.uk-nav-center.uk-nav-parent-icon > .uk-parent > a::after {
-  position: absolute;
-}
-/* ========================================================================
-   Component: Navbar
- ========================================================================== */
-/*
- * 1. Create position context to center navbar group
- */
-.uk-navbar {
-  display: flex;
-  /* 1 */
-  position: relative;
-}
-/* Container
- ========================================================================== */
-.uk-navbar-container:not(.uk-navbar-transparent) {
-  background: #F2F2F0;
-}
-/*
- * Remove pseudo elements created by micro clearfix as precaution (if Container component is used)
- */
-.uk-navbar-container > ::before,
-.uk-navbar-container > ::after {
-  display: none !important;
-}
-/* Groups
- ========================================================================== */
-/*
- * 1. Align navs and items vertically if they have a different height
- * 2. Note: IE 11 requires an extra `div` which affects the center selector
- */
-.uk-navbar-left,
-.uk-navbar-right,
-.uk-navbar-center,
-.uk-navbar-center-left > *,
-.uk-navbar-center-right > * {
-  display: flex;
-  /* 1 */
-  align-items: center;
-}
-/*
- * Horizontal alignment
- * 1. Create position context for centered navbar with sub groups (left/right)
- * 2. Fix text wrapping if content is larger than 50% of the container.
- * 3. Needed for dropdowns because a new position context is created
- *    `z-index` must be smaller than off-canvas
- * 4. Align sub groups for centered navbar
- */
-.uk-navbar-right {
-  margin-left: auto;
-}
-.uk-navbar-center:only-child {
-  margin-left: auto;
-  margin-right: auto;
-  /* 1 */
-  position: relative;
-}
-.uk-navbar-center:not(:only-child) {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* 2 */
-  width: max-content;
-  box-sizing: border-box;
-  /* 3 */
-  z-index: 990;
-}
-/* 4 */
-.uk-navbar-center-left,
-.uk-navbar-center-right {
-  position: absolute;
-  top: 0;
-}
-.uk-navbar-center-left {
-  right: 100%;
-}
-.uk-navbar-center-right {
-  left: 100%;
-}
-[class*='uk-navbar-center-'] {
-  width: max-content;
-  box-sizing: border-box;
-}
-/* Nav
- ========================================================================== */
-/*
- * 1. Reset list
- */
-.uk-navbar-nav {
-  display: flex;
-  /* 1 */
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-/*
- * Allow items to wrap into the next line
- * Only not `absolute` positioned groups
- */
-.uk-navbar-left,
-.uk-navbar-right,
-.uk-navbar-center:only-child {
-  flex-wrap: wrap;
-}
-/*
- * Items
- * 1. Center content vertically and horizontally
- * 2. Dimensions
- * 3. Style
- * 4. Required for `a`
- */
-.uk-navbar-nav > li > a,
-.uk-navbar-item,
-.uk-navbar-toggle {
-  /* 1 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* 2 */
-  box-sizing: border-box;
-  min-height: 80px;
-  padding: 0 15px;
-  /* 3 */
-  font-size: 0.875rem;
-  font-family: Roboto, sans-serif;
-  /* 4 */
-  text-decoration: none;
-}
-/*
- * Nav items
- */
-.uk-navbar-nav > li > a {
-  color: #999;
-  text-transform: uppercase;
-  transition: 0.1s ease-in-out;
-  transition-property: color, background-color;
-}
-/*
- * Hover
- * Apply hover style also to focus state and if dropdown is opened
- */
-.uk-navbar-nav > li:hover > a,
-.uk-navbar-nav > li > a:focus,
-.uk-navbar-nav > li > a.uk-open {
-  color: black;
-  outline: none;
-}
-/* OnClick */
-.uk-navbar-nav > li > a:active {
-  color: #333;
-}
-/* Active */
-.uk-navbar-nav > li.uk-active > a {
-  color: #333;
-}
-/* Item
- ========================================================================== */
-.uk-navbar-item {
-  color: black;
-}
-/* Toggle
- ========================================================================== */
-.uk-navbar-toggle {
-  color: #999;
-}
-.uk-navbar-toggle:hover,
-.uk-navbar-toggle:focus,
-.uk-navbar-toggle.uk-open {
-  color: black;
-  outline: none;
-  text-decoration: none;
-}
-/*
- * Icon
- * Adopts `uk-icon`
- */
-/* Hover + Focus */
-/* Subtitle
- ========================================================================== */
-.uk-navbar-subtitle {
-  font-size: 0.875rem;
-}
-/* Style modifiers
- ========================================================================== */
-/* Dropdown
- ========================================================================== */
-/*
- * Adopts `uk-dropdown`
- * 1. Hide by default
- * 2. Set position
- * 3. Set a default width
- * 4. Style
- */
-.uk-navbar-dropdown {
-  /* 1 */
-  display: none;
-  /* 2 */
-  position: absolute;
-  z-index: 1020;
-  /* 3 */
-  box-sizing: border-box;
-  width: 200px;
-  /* 4 */
-  padding: 25px;
-  background: #fff;
-  color: black;
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
-}
-/* Show */
-.uk-navbar-dropdown.uk-open {
-  display: block;
-}
-/*
- * Direction / Alignment modifiers
- */
-/* Direction */
-[class*='uk-navbar-dropdown-top'] {
-  margin-top: -15px;
-}
-[class*='uk-navbar-dropdown-bottom'] {
-  margin-top: 15px;
-}
-[class*='uk-navbar-dropdown-left'] {
-  margin-left: -15px;
-}
-[class*='uk-navbar-dropdown-right'] {
-  margin-left: 15px;
-}
-/*
- * Grid
- * Adopts `uk-grid`
- */
-/* Gutter Horizontal */
-.uk-navbar-dropdown-grid {
-  margin-left: -50px;
-}
-.uk-navbar-dropdown-grid > * {
-  padding-left: 50px;
-}
-/* Gutter Vertical */
-.uk-navbar-dropdown-grid > .uk-grid-margin {
-  margin-top: 50px;
-}
-/* Stack */
-.uk-navbar-dropdown-stack .uk-navbar-dropdown-grid > * {
-  width: 100% !important;
-}
-/*
- * Width modifier
- */
-.uk-navbar-dropdown-width-2:not(.uk-navbar-dropdown-stack) {
-  width: 400px;
-}
-.uk-navbar-dropdown-width-3:not(.uk-navbar-dropdown-stack) {
-  width: 600px;
-}
-.uk-navbar-dropdown-width-4:not(.uk-navbar-dropdown-stack) {
-  width: 800px;
-}
-.uk-navbar-dropdown-width-5:not(.uk-navbar-dropdown-stack) {
-  width: 1000px;
-}
-/*
- * Dropbar modifier
- */
-.uk-navbar-dropdown-dropbar {
-  margin-top: 0;
-  margin-bottom: 0;
-  box-shadow: none;
-}
-/* Dropdown Nav
- * Adopts `uk-nav`
- ========================================================================== */
-.uk-navbar-dropdown-nav {
-  font-size: 0.875rem;
-}
-/*
- * Items
- */
-.uk-navbar-dropdown-nav > li > a {
-  color: #999;
-}
-/* Hover + Focus */
-.uk-navbar-dropdown-nav > li > a:hover,
-.uk-navbar-dropdown-nav > li > a:focus {
-  color: black;
-}
-/* Active */
-.uk-navbar-dropdown-nav > li.uk-active > a {
-  color: #333;
-}
-/*
- * Header
- */
-.uk-navbar-dropdown-nav .uk-nav-header {
-  color: #333;
-}
-/*
- * Divider
- */
-.uk-navbar-dropdown-nav .uk-nav-divider {
-  border-top: 1px solid #e5e5e5;
-}
-/*
- * Sublists
- */
-.uk-navbar-dropdown-nav .uk-nav-sub a {
-  color: #999;
-}
-.uk-navbar-dropdown-nav .uk-nav-sub a:hover,
-.uk-navbar-dropdown-nav .uk-nav-sub a:focus {
-  color: black;
-}
-.uk-navbar-dropdown-nav .uk-nav-sub li.uk-active > a {
-  color: #333;
-}
-/* Dropbar
- ========================================================================== */
-.uk-navbar-dropbar {
-  background: #fff;
-}
-/*
- * Slide modifier
- */
-.uk-navbar-dropbar-slide {
-  position: absolute;
-  z-index: 980;
-  left: 0;
-  right: 0;
-  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.05);
-}
-/*
-     * Navbar
-     */
-.uk-navbar-container > .uk-container .uk-navbar-left {
-  margin-left: -15px;
-  margin-right: -15px;
-}
-.uk-navbar-container > .uk-container .uk-navbar-right {
-  margin-right: -15px;
-}
-/*
-     * Grid Divider
-     */
-.uk-navbar-dropdown-grid > * {
-  position: relative;
-}
-.uk-navbar-dropdown-grid > :not(.uk-first-column)::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 25px;
-  border-left: 1px solid #e5e5e5;
-}
-/* Vertical */
-.uk-navbar-dropdown-grid.uk-grid-stack > .uk-grid-margin::before {
-  content: "";
-  position: absolute;
-  top: -25px;
-  left: 50px;
-  right: 0;
-  border-top: 1px solid #e5e5e5;
-}
-/* ========================================================================
-   Component: Subnav
- ========================================================================== */
-/*
- * 1. Allow items to wrap into the next line
- * 2. Gutter
- * 3. Reset list
- */
-.uk-subnav {
-  display: flex;
-  /* 1 */
-  flex-wrap: wrap;
-  /* 2 */
-  margin-left: -20px;
-  /* 3 */
-  padding: 0;
-  list-style: none;
-}
-/*
- * 1. Space is allocated solely based on content dimensions: 0 0 auto
- * 2. Gutter
- * 3. Create position context for dropdowns
- */
-.uk-subnav > * {
-  /* 1 */
-  flex: none;
-  /* 2 */
-  padding-left: 20px;
-  /* 3 */
-  position: relative;
-}
-/* Items
- ========================================================================== */
-/*
- * Items must target `a` elements to exclude other elements (e.g. dropdowns)
- * Using `:first-child` instead of `a` to support `span` elements for text
- * 1. Prevent gap if child element is `inline-block`, e.g. an icon
- * 2. Style
- */
-.uk-subnav > * > :first-child {
-  /* 1 */
-  display: block;
-  /* 2 */
-  color: #999;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  transition: 0.1s ease-in-out;
-  transition-property: color, background-color;
-}
-/* Hover + Focus */
-.uk-subnav > * > a:hover,
-.uk-subnav > * > a:focus {
-  color: black;
-  text-decoration: none;
-  outline: none;
-}
-/* Active */
-.uk-subnav > .uk-active > a {
-  color: #333;
-}
-/* Divider modifier
- ========================================================================== */
-/*
- * Set gutter 
- */
-.uk-subnav-divider {
-  margin-left: -41px;
-}
-/*
- * Align items and divider vertically
- */
-.uk-subnav-divider > * {
-  display: flex;
-  align-items: center;
-}
-/*
- * Divider
- * 1. `nth-child` makes it also work without JS if it's only one row
- */
-.uk-subnav-divider > ::before {
-  content: "";
-  height: 1.5em;
-  margin-left: 0px;
-  margin-right: 20px;
-  border-left: 1px solid transparent;
-}
-/* 1 */
-.uk-subnav-divider > :nth-child(n+2):not(.uk-first-column)::before {
-  border-left-color: #e5e5e5;
-}
-/* Pill modifier
- ========================================================================== */
-.uk-subnav-pill > * > :first-child {
-  padding: 5px 10px;
-  background: transparent;
-  color: #999;
-}
-/* Hover + Focus */
-.uk-subnav-pill > * > a:hover,
-.uk-subnav-pill > * > a:focus {
-  background-color: #F2F2F0;
-  color: black;
-}
-/* OnClick */
-.uk-subnav-pill > * > a:active {
-  background-color: #F2F2F0;
-  color: black;
-}
-/* Active */
-.uk-subnav-pill > .uk-active > a {
-  background-color: #f55f24;
-  color: #fff;
-}
-/* Disabled
- * The same for all style modifiers
- ========================================================================== */
-.uk-subnav > .uk-disabled > a {
-  color: #999;
-}
-/* ========================================================================
-   Component: Breadcrumb
- ========================================================================== */
-/*
- * 1. Allow items to wrap into the next line
- * 2. Reset list
- */
-.uk-breadcrumb {
-  display: flex;
-  /* 1 */
-  flex-wrap: wrap;
-  /* 2 */
-  padding: 0;
-  list-style: none;
-}
-/*
- * Space is allocated solely based on content dimensions: 0 0 auto
- */
-.uk-breadcrumb > * {
-  flex: none;
-}
-/* Items
- ========================================================================== */
-.uk-breadcrumb > * > * {
-  display: inline-block;
-  font-size: 0.875rem;
-  color: #999;
-}
-/* Hover + Focus */
-.uk-breadcrumb > * > :hover,
-.uk-breadcrumb > * > :focus {
-  color: black;
-  text-decoration: none;
-}
-/* Disabled */
-/* Active */
-.uk-breadcrumb > :last-child > span,
-.uk-breadcrumb > :last-child > a:not([href]) {
-  color: black;
-}
-/*
- * Divider
- * `nth-child` makes it also work without JS if it's only one row
- */
-.uk-breadcrumb > :nth-child(n+2):not(.uk-first-column)::before {
-  content: "/";
-  display: inline-block;
-  margin: 0 20px;
-  font-size: 0.875rem;
-  color: #999;
-}
-/* ========================================================================
-   Component: Pagination
- ========================================================================== */
-/*
- * 1. Allow items to wrap into the next line
- * 2. Gutter
- * 3. Reset list
- */
-.uk-pagination {
-  display: flex;
-  /* 1 */
-  flex-wrap: wrap;
-  /* 2 */
-  margin-left: -20px;
-  /* 3 */
-  padding: 0;
-  list-style: none;
-}
-/*
- * 1. Space is allocated solely based on content dimensions: 0 0 auto
- * 2. Gutter
- * 3. Create position context for dropdowns
- */
-.uk-pagination > * {
-  /* 1 */
-  flex: none;
-  /* 2 */
-  padding-left: 20px;
-  /* 3 */
-  position: relative;
-}
-/* Items
- ========================================================================== */
-/*
- * 1. Prevent gap if child element is `inline-block`, e.g. an icon
- * 2. Style
- */
-.uk-pagination > * > * {
-  /* 1 */
-  display: block;
-  /* 2 */
-  color: #999;
-  transition: color 0.1s ease-in-out;
-}
-/* Hover + Focus */
-.uk-pagination > * > :hover,
-.uk-pagination > * > :focus {
-  color: black;
-  text-decoration: none;
-}
-/* Active */
-.uk-pagination > .uk-active > * {
-  color: black;
-}
-/* Disabled */
-.uk-pagination > .uk-disabled > * {
-  color: #999;
-}
-/* ========================================================================
-   Component: Tab
- ========================================================================== */
-/*
- * 1. Allow items to wrap into the next line
- * 2. Gutter
- * 3. Reset list
- */
-.uk-tab {
-  display: flex;
-  /* 1 */
-  flex-wrap: wrap;
-  /* 2 */
-  margin-left: -20px;
-  /* 3 */
-  padding: 0;
-  list-style: none;
-  position: relative;
-}
-.uk-tab::before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 20px;
-  right: 0;
-  border-bottom: 1px solid #e5e5e5;
-}
-/*
- * 1. Space is allocated solely based on content dimensions: 0 0 auto
- * 2. Gutter
- * 3. Create position context for dropdowns
- */
-.uk-tab > * {
-  /* 1 */
-  flex: none;
-  /* 2 */
-  padding-left: 20px;
-  /* 3 */
-  position: relative;
-}
-/* Items
- ========================================================================== */
-/*
- * Items must target `a` elements to exclude other elements (e.g. dropdowns)
- * 1. Center text if a width is set
- * 2. Style
- */
-.uk-tab > * > a {
-  /* 1 */
-  display: block;
-  text-align: center;
-  /* 2 */
-  padding: 5px 10px;
-  color: #999;
-  border-bottom: 1px solid transparent;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  transition: color 0.1s ease-in-out;
-}
-/* Hover + Focus */
-.uk-tab > * > a:hover,
-.uk-tab > * > a:focus {
-  color: black;
-  text-decoration: none;
-}
-/* Active */
-.uk-tab > .uk-active > a {
-  color: #333;
-  border-color: #f55f24;
-}
-/* Disabled */
-.uk-tab > .uk-disabled > a {
-  color: #999;
-}
-/* Position modifier
- ========================================================================== */
-/*
- * Bottom
- */
-.uk-tab-bottom::before {
-  top: 0;
-  bottom: auto;
-}
-.uk-tab-bottom > * > a {
-  border-top: 1px solid transparent;
-  border-bottom: none;
-}
-/*
- * Left + Right
- * 1. Reset Gutter
- */
-.uk-tab-left,
-.uk-tab-right {
-  flex-direction: column;
-  /* 1 */
-  margin-left: 0;
-}
-/* 1 */
-.uk-tab-left > *,
-.uk-tab-right > * {
-  padding-left: 0;
-}
-.uk-tab-left::before {
-  top: 0;
-  bottom: 0;
-  left: auto;
-  right: 0;
-  border-left: 1px solid #e5e5e5;
-  border-bottom: none;
-}
-.uk-tab-right::before {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: auto;
-  border-left: 1px solid #e5e5e5;
-  border-bottom: none;
-}
-.uk-tab-left > * > a {
-  text-align: left;
-  border-right: 1px solid transparent;
-  border-bottom: none;
-}
-.uk-tab-right > * > a {
-  text-align: left;
-  border-left: 1px solid transparent;
-  border-bottom: none;
-}
-.uk-tab .uk-dropdown {
-  margin-left: 30px;
-}
-/* ========================================================================
-   Component: Slidenav
- ========================================================================== */
-/*
- * Adopts `uk-icon`
- */
-.uk-slidenav {
-  padding: 5px 10px;
-  color: rgba(0, 0, 0, 0.5);
-  transition: color 0.1s ease-in-out;
-}
-/* Hover + Focus */
-.uk-slidenav:hover,
-.uk-slidenav:focus {
-  color: rgba(0, 0, 0, 0.9);
-  outline: none;
-}
-/* OnClick */
-.uk-slidenav:active {
-  color: rgba(0, 0, 0, 0.5);
-}
-/* Icon modifier
- ========================================================================== */
-/*
- * Previous
- */
-/*
- * Next
- */
-/* Size modifier
- ========================================================================== */
-.uk-slidenav-large {
-  padding: 10px 10px;
-}
-/* Container
- ========================================================================== */
-.uk-slidenav-container {
-  display: flex;
-}
-/* ========================================================================
-   Component: Dotnav
- ========================================================================== */
-/*
- * 1. Allow items to wrap into the next line
- * 2. Reset list
- * 3. Gutter
- */
-.uk-dotnav {
-  display: flex;
-  /* 1 */
-  flex-wrap: wrap;
-  /* 2 */
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  /* 3 */
-  margin-left: -12px;
-}
-/*
- * 1. Space is allocated solely based on content dimensions: 0 0 auto
- * 2. Gutter
- */
-.uk-dotnav > * {
-  /* 1 */
-  flex: none;
-  /* 2 */
-  padding-left: 12px;
-}
-/* Items
- ========================================================================== */
-/*
- * Items
- * 1. Hide text if present
- */
-.uk-dotnav > * > * {
-  display: block;
-  box-sizing: border-box;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0);
-  /* 1 */
-  text-indent: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  border: 1px solid #f55f24;
-  transition: 0.2s ease-in-out;
-  transition-property: background-color, border-color;
-}
-/* Hover + Focus */
-.uk-dotnav > * > :hover,
-.uk-dotnav > * > :focus {
-  background-color: #f55f24;
-  outline: none;
-  border-color: transparent;
-}
-/* OnClick */
-.uk-dotnav > * > :active {
-  background-color: rgba(245, 95, 36, 0.2);
-  border-color: transparent;
-}
-/* Active */
-.uk-dotnav > .uk-active > * {
-  background-color: #f55f24;
-  border-color: transparent;
-}
-/* Modifier: 'uk-dotnav-vertical'
- ========================================================================== */
-/*
- * 1. Change direction
- * 2. Gutter
- */
-.uk-dotnav-vertical {
-  /* 1 */
-  flex-direction: column;
-  /* 2 */
-  margin-left: 0;
-  margin-top: -12px;
-}
-/* 2 */
-.uk-dotnav-vertical > * {
-  padding-left: 0;
-  padding-top: 12px;
-}
-/* ========================================================================
-   Component: Thumbnav
- ========================================================================== */
-/*
- * 1. Allow items to wrap into the next line
- * 2. Reset list
- * 3. Gutter
- */
-.uk-thumbnav {
-  display: flex;
-  /* 1 */
-  flex-wrap: wrap;
-  /* 2 */
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  /* 3 */
-  margin-left: -15px;
-}
-/*
- * Space is allocated based on content dimensions, but shrinks: 0 1 auto
- * 1. Gutter
- */
-.uk-thumbnav > * {
-  /* 1 */
-  padding-left: 15px;
-}
-/* Items
- ========================================================================== */
-/*
- * Items
- */
-.uk-thumbnav > * > * {
-  display: inline-block;
-  position: relative;
-}
-.uk-thumbnav > * > *::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.4);
-  transition: background-color 0.1s ease-in-out;
-}
-/* Hover + Focus */
-.uk-thumbnav > * > :hover,
-.uk-thumbnav > * > :focus {
-  outline: none;
-}
-.uk-thumbnav > * > :hover::after,
-.uk-thumbnav > * > :focus::after {
-  background-color: transparent;
-}
-/* Active */
-.uk-thumbnav > .uk-active > *::after {
-  background-color: transparent;
-}
-/* Modifier: 'uk-thumbnav-vertical'
- ========================================================================== */
-/*
- * 1. Change direction
- * 2. Gutter
- */
-.uk-thumbnav-vertical {
-  /* 1 */
-  flex-direction: column;
-  /* 2 */
-  margin-left: 0;
-  margin-top: -15px;
-}
-/* 2 */
-.uk-thumbnav-vertical > * {
-  padding-left: 0;
-  padding-top: 15px;
+  color: #363636;
 }
 /* ========================================================================
    Component: Accordion
@@ -4985,17 +3618,17 @@ ul.uk-nav-sub {
   height: 1.4em;
   margin-left: 10px;
   float: right;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Crect%20fill%3D%22black%22%20width%3D%2213%22%20height%3D%221%22%20x%3D%220%22%20y%3D%226%22%20%2F%3E%0A%20%20%20%20%3Crect%20fill%3D%22black%22%20width%3D%221%22%20height%3D%2213%22%20x%3D%226%22%20y%3D%220%22%20%2F%3E%0A%3C%2Fsvg%3E");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Crect%20fill%3D%22%23363636%22%20width%3D%2213%22%20height%3D%221%22%20x%3D%220%22%20y%3D%226%22%20%2F%3E%0A%20%20%20%20%3Crect%20fill%3D%22%23363636%22%20width%3D%221%22%20height%3D%2213%22%20x%3D%226%22%20y%3D%220%22%20%2F%3E%0A%3C%2Fsvg%3E");
   background-repeat: no-repeat;
   background-position: 50% 50%;
 }
 .uk-open > .uk-accordion-title::before {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Crect%20fill%3D%22black%22%20width%3D%2213%22%20height%3D%221%22%20x%3D%220%22%20y%3D%226%22%20%2F%3E%0A%3C%2Fsvg%3E");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Crect%20fill%3D%22%23363636%22%20width%3D%2213%22%20height%3D%221%22%20x%3D%220%22%20y%3D%226%22%20%2F%3E%0A%3C%2Fsvg%3E");
 }
 /* Hover + Focus */
 .uk-accordion-title:hover,
 .uk-accordion-title:focus {
-  color: black;
+  color: #363636;
   text-decoration: none;
   outline: none;
 }
@@ -5074,7 +3707,7 @@ ul.uk-nav-sub {
   /* 4 */
   padding: 25px;
   background: #fff;
-  color: black;
+  color: #363636;
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
 }
 /* Show */
@@ -5098,7 +3731,7 @@ ul.uk-nav-sub {
 .uk-dropdown-nav > li > a:hover,
 .uk-dropdown-nav > li > a:focus,
 .uk-dropdown-nav > li.uk-active > a {
-  color: black;
+  color: #363636;
 }
 /*
  * Header
@@ -5121,7 +3754,7 @@ ul.uk-nav-sub {
 .uk-dropdown-nav .uk-nav-sub a:hover,
 .uk-dropdown-nav .uk-nav-sub a:focus,
 .uk-dropdown-nav .uk-nav-sub li.uk-active > a {
-  color: black;
+  color: #363636;
 }
 /* Direction / Alignment modifiers
  ========================================================================== */
@@ -5349,153 +3982,6 @@ ul.uk-nav-sub {
   right: 0;
   padding: 20px;
   background: #fff;
-}
-/* ========================================================================
-   Component: Lightbox
- ========================================================================== */
-/*
- * 1. Hide by default
- * 2. Set position
- * 3. Allow scrolling for the modal dialog
- * 4. Horizontal padding
- * 5. Mask the background page
- * 6. Fade-in transition
- * 7. Prevent cancellation of pointer events while dragging
- */
-.uk-lightbox {
-  /* 1 */
-  display: none;
-  /* 2 */
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1010;
-  /* 5 */
-  background: #000;
-  /* 6 */
-  opacity: 0;
-  transition: opacity 0.15s linear;
-  /* 7 */
-  touch-action: pinch-zoom;
-}
-/*
- * Open
- * 1. Center child
- * 2. Fade-in
- */
-.uk-lightbox.uk-open {
-  display: block;
-  /* 2 */
-  opacity: 1;
-}
-/* Page
- ========================================================================== */
-/*
- * Prevent scrollbars
- */
-.uk-lightbox-page {
-  overflow: hidden;
-}
-/* Item
- ========================================================================== */
-/*
- * 1. Center child within the viewport
- * 2. Not visible by default
- * 3. Color needed for spinner icon
- * 4. Optimize animation
- * 5. Responsiveness
- *    Using `vh` for `max-height` to fix image proportions after resize in Safari and Opera
- *    Using `vh` and `vw` to make responsive image work in IE11
- * 6. Suppress outline on focus
- */
-.uk-lightbox-items > * {
-  /* 1 */
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  /* 2 */
-  display: none;
-  justify-content: center;
-  align-items: center;
-  /* 3 */
-  color: rgba(255, 255, 255, 0.7);
-  /* 4 */
-  will-change: transform, opacity;
-}
-/* 5 */
-.uk-lightbox-items > * > * {
-  max-width: 100vw;
-  max-height: 100vh;
-}
-/* 6 */
-.uk-lightbox-items > :focus {
-  outline: none;
-}
-.uk-lightbox-items > * > :not(iframe) {
-  width: auto;
-  height: auto;
-}
-.uk-lightbox-items > .uk-active {
-  display: flex;
-}
-/* Toolbar
- ========================================================================== */
-.uk-lightbox-toolbar {
-  padding: 10px 10px;
-  background: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.7);
-}
-.uk-lightbox-toolbar > * {
-  color: rgba(255, 255, 255, 0.7);
-}
-/* Toolbar Icon (Close)
- ========================================================================== */
-.uk-lightbox-toolbar-icon {
-  padding: 5px;
-  color: rgba(255, 255, 255, 0.7);
-}
-/*
- * Hover
- */
-.uk-lightbox-toolbar-icon:hover {
-  color: #fff;
-}
-/* Button (Slidenav)
- ========================================================================== */
-/*
- * 1. Center icon vertically and horizontally
- */
-.uk-lightbox-button {
-  box-sizing: border-box;
-  width: 50px;
-  height: 50px;
-  background: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.7);
-  /* 1 */
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-}
-/*
- * Hover
- */
-.uk-lightbox-button:hover {
-  color: #fff;
-}
-/* Caption
- ========================================================================== */
-.uk-lightbox-caption:empty {
-  display: none;
-}
-/* Iframe
- ========================================================================== */
-.uk-lightbox-iframe {
-  width: 80%;
-  height: 80%;
 }
 /* ========================================================================
    Component: Slideshow
@@ -5932,74 +4418,6 @@ ul.uk-nav-sub {
   --uk-leader-fill-content: .;
 }
 /* ========================================================================
-   Component: Iconnav
- ========================================================================== */
-/*
- * 1. Allow items to wrap into the next line
- * 2. Reset list
- * 3. Gutter
- */
-.uk-iconnav {
-  display: flex;
-  /* 1 */
-  flex-wrap: wrap;
-  /* 2 */
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  /* 3 */
-  margin-left: -10px;
-}
-/*
- * Space is allocated based on content dimensions, but shrinks: 0 1 auto
- * 1. Gutter
- */
-.uk-iconnav > * {
-  /* 1 */
-  padding-left: 10px;
-}
-/* Items
- ========================================================================== */
-/*
- * Items must target `a` elements to exclude other elements (e.g. dropdowns)
- * 1. Prevent gap if child element is `inline-block`, e.g. an icon
- * 2. Style
- */
-.uk-iconnav > * > a {
-  /* 1 */
-  display: block;
-  /* 2 */
-  color: #999;
-}
-/* Hover + Focus */
-.uk-iconnav > * > a:hover,
-.uk-iconnav > * > a:focus {
-  color: black;
-  outline: none;
-}
-/* Active */
-.uk-iconnav > .uk-active > a {
-  color: black;
-}
-/* Modifier: 'uk-iconnav-vertical'
- ========================================================================== */
-/*
- * 1. Change direction
- * 2. Gutter
- */
-.uk-iconnav-vertical {
-  /* 1 */
-  flex-direction: column;
-  /* 2 */
-  margin-left: 0;
-  margin-top: -10px;
-}
-/* 2 */
-.uk-iconnav-vertical > * {
-  padding-left: 0;
-  padding-top: 10px;
-}
-/* ========================================================================
    Component: Notification
  ========================================================================== */
 /*
@@ -6050,8 +4468,8 @@ ul.uk-nav-sub {
 .uk-notification-message {
   position: relative;
   padding: 15px;
-  background: #F2F2F0;
-  color: black;
+  background: #FFF8F5;
+  color: #363636;
   font-size: 1.25rem;
   line-height: 1.4;
   cursor: pointer;
@@ -6145,105 +4563,10 @@ ul.uk-nav-sub {
   margin-left: 10px;
 }
 /* ========================================================================
-   Component: Placeholder
- ========================================================================== */
-.uk-placeholder {
-  margin-bottom: 20px;
-  padding: 30px 30px;
-  background: transparent;
-  border: 1px dashed #e5e5e5;
-}
-/* Add margin if adjacent element */
-* + .uk-placeholder {
-  margin-top: 20px;
-}
-/*
- * Remove margin from the last-child
- */
-.uk-placeholder > :last-child {
-  margin-bottom: 0;
-}
-/* ========================================================================
-   Component: Progress
- ========================================================================== */
-/*
- * 1. Add the correct vertical alignment in Chrome, Firefox, and Opera.
- * 2. Remove default style
- * 3. Behave like a block element
- * 4. Remove borders in Firefox and Edge
- * 5. Set background color for progress container in Firefox, IE11 and Edge
- * 6. Style
- */
-.uk-progress {
-  /* 1 */
-  vertical-align: baseline;
-  /* 2 */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  /* 3 */
-  display: block;
-  width: 100%;
-  /* 4 */
-  border: 0;
-  /* 5 */
-  background-color: #F2F2F0;
-  /* 6 */
-  margin-bottom: 20px;
-  height: 15px;
-  border-radius: 500px;
-  overflow: hidden;
-}
-/* Add margin if adjacent element */
-* + .uk-progress {
-  margin-top: 20px;
-}
-/*
- * Remove animated circles for indeterminate state in IE11 and Edge
- */
-.uk-progress:indeterminate {
-  color: transparent;
-}
-/*
- * Progress container
- * 2. Remove progress bar for indeterminate state in Firefox
- */
-.uk-progress::-webkit-progress-bar {
-  background-color: #F2F2F0;
-  border-radius: 500px;
-  overflow: hidden;
-}
-/* 2 */
-.uk-progress:indeterminate::-moz-progress-bar {
-  width: 0;
-}
-/*
- * Progress bar
- * 1. Remove right border in IE11 and Edge
- */
-.uk-progress::-webkit-progress-value {
-  background-color: #f55f24;
-  transition: width 0.6s ease;
-}
-.uk-progress::-moz-progress-bar {
-  background-color: #f55f24;
-}
-.uk-progress::-ms-fill {
-  background-color: #f55f24;
-  transition: width 0.6s ease;
-  /* 1 */
-  border: 0;
-}
-/* ========================================================================
    Component: Sortable
  ========================================================================== */
 .uk-sortable {
   position: relative;
-}
-/*
- * Deactivate pointer-events on SVGs in Safari
- */
-.uk-sortable svg {
-  pointer-events: none;
 }
 /*
  * Remove margin from the last-child
@@ -6325,6 +4648,1701 @@ ul.uk-nav-sub {
 }
 /* Label
  ========================================================================== */
+/* ========================================================================
+   Component: Grid
+ ========================================================================== */
+/*
+ * 1. Allow cells to wrap into the next line
+ * 2. Reset list
+ */
+.uk-grid {
+  display: flex;
+  /* 1 */
+  flex-wrap: wrap;
+  /* 2 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/*
+ * Grid cell
+ * Note: Space is allocated solely based on content dimensions, but shrinks: 0 1 auto
+ * Reset margin for e.g. paragraphs
+ */
+.uk-grid > * {
+  margin: 0;
+}
+/*
+ * Remove margin from the last-child
+ */
+.uk-grid > * > :last-child {
+  margin-bottom: 0;
+}
+/* Gutter
+ ========================================================================== */
+/*
+ * Default
+ */
+/* Horizontal */
+.uk-grid {
+  margin-left: -30px;
+}
+.uk-grid > * {
+  padding-left: 30px;
+}
+/* Vertical */
+.uk-grid + .uk-grid,
+.uk-grid > .uk-grid-margin,
+* + .uk-grid-margin {
+  margin-top: 30px;
+}
+/* Desktop and bigger */
+@media (min-width: 1200px) {
+  /* Horizontal */
+  .uk-grid {
+    margin-left: -40px;
+  }
+  .uk-grid > * {
+    padding-left: 40px;
+  }
+  /* Vertical */
+  .uk-grid + .uk-grid,
+  .uk-grid > .uk-grid-margin,
+  * + .uk-grid-margin {
+    margin-top: 40px;
+  }
+}
+/*
+ * Small
+ */
+/* Horizontal */
+.uk-grid-small,
+.uk-grid-column-small {
+  margin-left: -15px;
+}
+.uk-grid-small > *,
+.uk-grid-column-small > * {
+  padding-left: 15px;
+}
+/* Vertical */
+.uk-grid + .uk-grid-small,
+.uk-grid + .uk-grid-row-small,
+.uk-grid-small > .uk-grid-margin,
+.uk-grid-row-small > .uk-grid-margin,
+* + .uk-grid-margin-small {
+  margin-top: 15px;
+}
+/*
+ * Medium
+ */
+/* Horizontal */
+.uk-grid-medium,
+.uk-grid-column-medium {
+  margin-left: -30px;
+}
+.uk-grid-medium > *,
+.uk-grid-column-medium > * {
+  padding-left: 30px;
+}
+/* Vertical */
+.uk-grid + .uk-grid-medium,
+.uk-grid + .uk-grid-row-medium,
+.uk-grid-medium > .uk-grid-margin,
+.uk-grid-row-medium > .uk-grid-margin,
+* + .uk-grid-margin-medium {
+  margin-top: 30px;
+}
+/*
+ * Large
+ */
+/* Horizontal */
+.uk-grid-large,
+.uk-grid-column-large {
+  margin-left: -40px;
+}
+.uk-grid-large > *,
+.uk-grid-column-large > * {
+  padding-left: 40px;
+}
+/* Vertical */
+.uk-grid + .uk-grid-large,
+.uk-grid + .uk-grid-row-large,
+.uk-grid-large > .uk-grid-margin,
+.uk-grid-row-large > .uk-grid-margin,
+* + .uk-grid-margin-large {
+  margin-top: 40px;
+}
+/* Desktop and bigger */
+@media (min-width: 1200px) {
+  /* Horizontal */
+  .uk-grid-large,
+  .uk-grid-column-large {
+    margin-left: -70px;
+  }
+  .uk-grid-large > *,
+  .uk-grid-column-large > * {
+    padding-left: 70px;
+  }
+  /* Vertical */
+  .uk-grid + .uk-grid-large,
+  .uk-grid + .uk-grid-row-large,
+  .uk-grid-large > .uk-grid-margin,
+  .uk-grid-row-large > .uk-grid-margin,
+  * + .uk-grid-margin-large {
+    margin-top: 70px;
+  }
+}
+/*
+ * Collapse
+ */
+/* Horizontal */
+.uk-grid-collapse,
+.uk-grid-column-collapse {
+  margin-left: 0;
+}
+.uk-grid-collapse > *,
+.uk-grid-column-collapse > * {
+  padding-left: 0;
+}
+/* Vertical */
+.uk-grid + .uk-grid-collapse,
+.uk-grid + .uk-grid-row-collapse,
+.uk-grid-collapse > .uk-grid-margin,
+.uk-grid-row-collapse > .uk-grid-margin {
+  margin-top: 0;
+}
+/* Divider
+ ========================================================================== */
+.uk-grid-divider > * {
+  position: relative;
+}
+.uk-grid-divider > :not(.uk-first-column)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid #F55F24;
+}
+/* Vertical */
+.uk-grid-divider.uk-grid-stack > .uk-grid-margin::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #F55F24;
+}
+/*
+ * Default
+ */
+/* Horizontal */
+.uk-grid-divider {
+  margin-left: -60px;
+}
+.uk-grid-divider > * {
+  padding-left: 60px;
+}
+.uk-grid-divider > :not(.uk-first-column)::before {
+  left: 30px;
+}
+/* Vertical */
+.uk-grid-divider.uk-grid-stack > .uk-grid-margin {
+  margin-top: 60px;
+}
+.uk-grid-divider.uk-grid-stack > .uk-grid-margin::before {
+  top: -30px;
+  left: 60px;
+}
+/* Desktop and bigger */
+@media (min-width: 1200px) {
+  /* Horizontal */
+  .uk-grid-divider {
+    margin-left: -80px;
+  }
+  .uk-grid-divider > * {
+    padding-left: 80px;
+  }
+  .uk-grid-divider > :not(.uk-first-column)::before {
+    left: 40px;
+  }
+  /* Vertical */
+  .uk-grid-divider.uk-grid-stack > .uk-grid-margin {
+    margin-top: 80px;
+  }
+  .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before {
+    top: -40px;
+    left: 80px;
+  }
+}
+/*
+ * Small
+ */
+/* Horizontal */
+.uk-grid-divider.uk-grid-small,
+.uk-grid-divider.uk-grid-column-small {
+  margin-left: -30px;
+}
+.uk-grid-divider.uk-grid-small > *,
+.uk-grid-divider.uk-grid-column-small > * {
+  padding-left: 30px;
+}
+.uk-grid-divider.uk-grid-small > :not(.uk-first-column)::before,
+.uk-grid-divider.uk-grid-column-small > :not(.uk-first-column)::before {
+  left: 15px;
+}
+/* Vertical */
+.uk-grid-divider.uk-grid-small.uk-grid-stack > .uk-grid-margin,
+.uk-grid-divider.uk-grid-row-small.uk-grid-stack > .uk-grid-margin {
+  margin-top: 30px;
+}
+.uk-grid-divider.uk-grid-small.uk-grid-stack > .uk-grid-margin::before {
+  top: -15px;
+  left: 30px;
+}
+.uk-grid-divider.uk-grid-row-small.uk-grid-stack > .uk-grid-margin::before {
+  top: -15px;
+}
+.uk-grid-divider.uk-grid-column-small.uk-grid-stack > .uk-grid-margin::before {
+  left: 30px;
+}
+/*
+ * Medium
+ */
+/* Horizontal */
+.uk-grid-divider.uk-grid-medium,
+.uk-grid-divider.uk-grid-column-medium {
+  margin-left: -60px;
+}
+.uk-grid-divider.uk-grid-medium > *,
+.uk-grid-divider.uk-grid-column-medium > * {
+  padding-left: 60px;
+}
+.uk-grid-divider.uk-grid-medium > :not(.uk-first-column)::before,
+.uk-grid-divider.uk-grid-column-medium > :not(.uk-first-column)::before {
+  left: 30px;
+}
+/* Vertical */
+.uk-grid-divider.uk-grid-medium.uk-grid-stack > .uk-grid-margin,
+.uk-grid-divider.uk-grid-row-medium.uk-grid-stack > .uk-grid-margin {
+  margin-top: 60px;
+}
+.uk-grid-divider.uk-grid-medium.uk-grid-stack > .uk-grid-margin::before {
+  top: -30px;
+  left: 60px;
+}
+.uk-grid-divider.uk-grid-row-medium.uk-grid-stack > .uk-grid-margin::before {
+  top: -30px;
+}
+.uk-grid-divider.uk-grid-column-medium.uk-grid-stack > .uk-grid-margin::before {
+  left: 60px;
+}
+/*
+ * Large
+ */
+/* Horizontal */
+.uk-grid-divider.uk-grid-large,
+.uk-grid-divider.uk-grid-column-large {
+  margin-left: -80px;
+}
+.uk-grid-divider.uk-grid-large > *,
+.uk-grid-divider.uk-grid-column-large > * {
+  padding-left: 80px;
+}
+.uk-grid-divider.uk-grid-large > :not(.uk-first-column)::before,
+.uk-grid-divider.uk-grid-column-large > :not(.uk-first-column)::before {
+  left: 40px;
+}
+/* Vertical */
+.uk-grid-divider.uk-grid-large.uk-grid-stack > .uk-grid-margin,
+.uk-grid-divider.uk-grid-row-large.uk-grid-stack > .uk-grid-margin {
+  margin-top: 80px;
+}
+.uk-grid-divider.uk-grid-large.uk-grid-stack > .uk-grid-margin::before {
+  top: -40px;
+  left: 80px;
+}
+.uk-grid-divider.uk-grid-row-large.uk-grid-stack > .uk-grid-margin::before {
+  top: -40px;
+}
+.uk-grid-divider.uk-grid-column-large.uk-grid-stack > .uk-grid-margin::before {
+  left: 80px;
+}
+/* Desktop and bigger */
+@media (min-width: 1200px) {
+  /* Horizontal */
+  .uk-grid-divider.uk-grid-large,
+  .uk-grid-divider.uk-grid-column-large {
+    margin-left: -140px;
+  }
+  .uk-grid-divider.uk-grid-large > *,
+  .uk-grid-divider.uk-grid-column-large > * {
+    padding-left: 140px;
+  }
+  .uk-grid-divider.uk-grid-large > :not(.uk-first-column)::before,
+  .uk-grid-divider.uk-grid-column-large > :not(.uk-first-column)::before {
+    left: 70px;
+  }
+  /* Vertical */
+  .uk-grid-divider.uk-grid-large.uk-grid-stack > .uk-grid-margin,
+  .uk-grid-divider.uk-grid-row-large.uk-grid-stack > .uk-grid-margin {
+    margin-top: 140px;
+  }
+  .uk-grid-divider.uk-grid-large.uk-grid-stack > .uk-grid-margin::before {
+    top: -70px;
+    left: 140px;
+  }
+  .uk-grid-divider.uk-grid-row-large.uk-grid-stack > .uk-grid-margin::before {
+    top: -70px;
+  }
+  .uk-grid-divider.uk-grid-column-large.uk-grid-stack > .uk-grid-margin::before {
+    left: 140px;
+  }
+}
+/* Match child of a grid cell
+ ========================================================================== */
+/*
+ * Behave like a block element
+ * 1. Wrap into the next line
+ * 2. Take the full width, at least 100%. Only if no class from the Width component is set.
+ * 3. Expand width even if larger than 100%, e.g. because of negative margin (Needed for nested grids)
+ */
+.uk-grid-match > *,
+.uk-grid-item-match {
+  display: flex;
+  /* 1 */
+  flex-wrap: wrap;
+}
+.uk-grid-match > * > :not([class*='uk-width']),
+.uk-grid-item-match > :not([class*='uk-width']) {
+  /* 2 */
+  box-sizing: border-box;
+  width: 100%;
+  /* 3 */
+  flex: auto;
+}
+/* ========================================================================
+   Component: Nav
+ ========================================================================== */
+/*
+ * Reset
+ * 1. Prepare lists
+ * 2. Prepare links
+ * 3. Remove default focus style
+ */
+/* 1 */
+.uk-nav,
+.uk-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* 2 */
+.uk-nav li > a {
+  display: block;
+  text-decoration: none;
+}
+/* 3 */
+.uk-nav li > a:focus {
+  outline: none;
+}
+/*
+ * Items
+ * Must target `a` elements to exclude other elements (e.g. lists)
+ */
+.uk-nav > li > a {
+  padding: 5px 0;
+}
+/* Sublists
+ ========================================================================== */
+/*
+ * Level 2
+ * `ul` needed for higher specificity to override padding
+ */
+ul.uk-nav-sub {
+  padding: 5px 0 5px 15px;
+}
+/*
+ * Level 3 and deeper
+ */
+.uk-nav-sub ul {
+  padding-left: 15px;
+}
+/*
+ * Items
+ */
+.uk-nav-sub a {
+  padding: 2px 0;
+}
+/* Parent icon modifier
+ ========================================================================== */
+.uk-nav-parent-icon > .uk-parent > a::after {
+  content: "";
+  width: 22px;
+  height: 22px;
+  float: right;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2014%2014%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22%23363636%22%20stroke-width%3D%221.1%22%20points%3D%2210%201%204%207%2010%2013%22%20%2F%3E%0A%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+.uk-nav-parent-icon > .uk-parent.uk-open > a::after {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2014%2014%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22%23363636%22%20stroke-width%3D%221.1%22%20points%3D%221%204%207%2010%2013%204%22%20%2F%3E%0A%3C%2Fsvg%3E");
+}
+/* Header
+ ========================================================================== */
+.uk-nav-header {
+  padding: 5px 0;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+.uk-nav-header:not(:first-child) {
+  margin-top: 20px;
+}
+/* Divider
+ ========================================================================== */
+.uk-nav-divider {
+  margin: 5px 0;
+}
+/* Default modifier
+ ========================================================================== */
+.uk-nav-default {
+  font-size: 0.875rem;
+}
+/*
+ * Items
+ */
+.uk-nav-default > li > a {
+  color: #999;
+}
+/* Hover + Focus */
+.uk-nav-default > li > a:hover,
+.uk-nav-default > li > a:focus {
+  color: #363636;
+}
+/* Active */
+.uk-nav-default > li.uk-active > a {
+  color: #333;
+}
+/*
+ * Header
+ */
+.uk-nav-default .uk-nav-header {
+  color: #333;
+}
+/*
+ * Divider
+ */
+.uk-nav-default .uk-nav-divider {
+  border-top: 1px solid #e5e5e5;
+}
+/*
+ * Sublists
+ */
+.uk-nav-default .uk-nav-sub a {
+  color: #999;
+}
+.uk-nav-default .uk-nav-sub a:hover,
+.uk-nav-default .uk-nav-sub a:focus {
+  color: #363636;
+}
+.uk-nav-default .uk-nav-sub li.uk-active > a {
+  color: #333;
+}
+/* Primary modifier
+ ========================================================================== */
+/*
+ * Items
+ */
+.uk-nav-primary > li > a {
+  font-size: 1.5rem;
+  line-height: 22px;
+  color: #999;
+}
+/* Hover + Focus */
+.uk-nav-primary > li > a:hover,
+.uk-nav-primary > li > a:focus {
+  color: #363636;
+}
+/* Active */
+.uk-nav-primary > li.uk-active > a {
+  color: #333;
+}
+/*
+ * Header
+ */
+.uk-nav-primary .uk-nav-header {
+  color: #333;
+}
+/*
+ * Divider
+ */
+.uk-nav-primary .uk-nav-divider {
+  border-top: 1px solid #e5e5e5;
+}
+/*
+ * Sublists
+ */
+.uk-nav-primary .uk-nav-sub a {
+  color: #999;
+}
+.uk-nav-primary .uk-nav-sub a:hover,
+.uk-nav-primary .uk-nav-sub a:focus {
+  color: #363636;
+}
+.uk-nav-primary .uk-nav-sub li.uk-active > a {
+  color: #333;
+}
+/* Alignment modifier
+ ========================================================================== */
+.uk-nav-center {
+  text-align: center;
+}
+/* Sublists */
+.uk-nav-center .uk-nav-sub,
+.uk-nav-center .uk-nav-sub ul {
+  padding-left: 0;
+}
+/* Parent icon modifier  */
+.uk-nav-center.uk-nav-parent-icon > .uk-parent > a::after {
+  position: absolute;
+}
+/* ========================================================================
+   Component: Navbar
+ ========================================================================== */
+/*
+ * 1. Create position context to center navbar group
+ */
+.uk-navbar {
+  display: flex;
+  /* 1 */
+  position: relative;
+}
+/* Container
+ ========================================================================== */
+.uk-navbar-container:not(.uk-navbar-transparent) {
+  background: #FFF8F5;
+}
+/*
+ * Remove pseudo elements created by micro clearfix as precaution (if Container component is used)
+ */
+.uk-navbar-container > ::before,
+.uk-navbar-container > ::after {
+  display: none !important;
+}
+/* Groups
+ ========================================================================== */
+/*
+ * 1. Align navs and items vertically if they have a different height
+ * 2. Note: IE 11 requires an extra `div` which affects the center selector
+ */
+.uk-navbar-left,
+.uk-navbar-right,
+.uk-navbar-center,
+.uk-navbar-center-left > *,
+.uk-navbar-center-right > * {
+  display: flex;
+  /* 1 */
+  align-items: center;
+}
+/*
+ * Horizontal alignment
+ * 1. Create position context for centered navbar with sub groups (left/right)
+ * 2. Fix text wrapping if content is larger than 50% of the container.
+ * 3. Needed for dropdowns because a new position context is created
+ *    `z-index` must be smaller than off-canvas
+ * 4. Align sub groups for centered navbar
+ */
+.uk-navbar-right {
+  margin-left: auto;
+}
+.uk-navbar-center:only-child {
+  margin-left: auto;
+  margin-right: auto;
+  /* 1 */
+  position: relative;
+}
+.uk-navbar-center:not(:only-child) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* 2 */
+  width: max-content;
+  box-sizing: border-box;
+  /* 3 */
+  z-index: 990;
+}
+/* 4 */
+.uk-navbar-center-left,
+.uk-navbar-center-right {
+  position: absolute;
+  top: 0;
+}
+.uk-navbar-center-left {
+  right: 100%;
+}
+.uk-navbar-center-right {
+  left: 100%;
+}
+[class*='uk-navbar-center-'] {
+  width: max-content;
+  box-sizing: border-box;
+}
+/* Nav
+ ========================================================================== */
+/*
+ * 1. Reset list
+ */
+.uk-navbar-nav {
+  display: flex;
+  /* 1 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/*
+ * Allow items to wrap into the next line
+ * Only not `absolute` positioned groups
+ */
+.uk-navbar-left,
+.uk-navbar-right,
+.uk-navbar-center:only-child {
+  flex-wrap: wrap;
+}
+/*
+ * Items
+ * 1. Center content vertically and horizontally
+ * 2. Dimensions
+ * 3. Style
+ * 4. Required for `a`
+ */
+.uk-navbar-nav > li > a,
+.uk-navbar-item,
+.uk-navbar-toggle {
+  /* 1 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 2 */
+  box-sizing: border-box;
+  min-height: 80px;
+  padding: 0 15px;
+  /* 3 */
+  font-size: 0.875rem;
+  font-family: Roboto, sans-serif;
+  /* 4 */
+  text-decoration: none;
+}
+/*
+ * Nav items
+ */
+.uk-navbar-nav > li > a {
+  color: #999;
+  text-transform: uppercase;
+  transition: 0.1s ease-in-out;
+  transition-property: color, background-color;
+}
+/*
+ * Hover
+ * Apply hover style also to focus state and if dropdown is opened
+ */
+.uk-navbar-nav > li:hover > a,
+.uk-navbar-nav > li > a:focus,
+.uk-navbar-nav > li > a.uk-open {
+  color: #363636;
+  outline: none;
+}
+/* OnClick */
+.uk-navbar-nav > li > a:active {
+  color: #333;
+}
+/* Active */
+.uk-navbar-nav > li.uk-active > a {
+  color: #333;
+}
+/* Item
+ ========================================================================== */
+.uk-navbar-item {
+  color: #363636;
+}
+/* Toggle
+ ========================================================================== */
+.uk-navbar-toggle {
+  color: #999;
+}
+.uk-navbar-toggle:hover,
+.uk-navbar-toggle:focus,
+.uk-navbar-toggle.uk-open {
+  color: #363636;
+  outline: none;
+  text-decoration: none;
+}
+/*
+ * Icon
+ * Adopts `uk-icon`
+ */
+/* Hover + Focus */
+/* Subtitle
+ ========================================================================== */
+.uk-navbar-subtitle {
+  font-size: 0.875rem;
+}
+/* Style modifiers
+ ========================================================================== */
+/* Dropdown
+ ========================================================================== */
+/*
+ * Adopts `uk-dropdown`
+ * 1. Hide by default
+ * 2. Set position
+ * 3. Set a default width
+ * 4. Style
+ */
+.uk-navbar-dropdown {
+  /* 1 */
+  display: none;
+  /* 2 */
+  position: absolute;
+  z-index: 1020;
+  /* 3 */
+  box-sizing: border-box;
+  width: 200px;
+  /* 4 */
+  padding: 25px;
+  background: #fff;
+  color: #363636;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+}
+/* Show */
+.uk-navbar-dropdown.uk-open {
+  display: block;
+}
+/*
+ * Direction / Alignment modifiers
+ */
+/* Direction */
+[class*='uk-navbar-dropdown-top'] {
+  margin-top: -15px;
+}
+[class*='uk-navbar-dropdown-bottom'] {
+  margin-top: 15px;
+}
+[class*='uk-navbar-dropdown-left'] {
+  margin-left: -15px;
+}
+[class*='uk-navbar-dropdown-right'] {
+  margin-left: 15px;
+}
+/*
+ * Grid
+ * Adopts `uk-grid`
+ */
+/* Gutter Horizontal */
+.uk-navbar-dropdown-grid {
+  margin-left: -50px;
+}
+.uk-navbar-dropdown-grid > * {
+  padding-left: 50px;
+}
+/* Gutter Vertical */
+.uk-navbar-dropdown-grid > .uk-grid-margin {
+  margin-top: 50px;
+}
+/* Stack */
+.uk-navbar-dropdown-stack .uk-navbar-dropdown-grid > * {
+  width: 100% !important;
+}
+/*
+ * Width modifier
+ */
+.uk-navbar-dropdown-width-2:not(.uk-navbar-dropdown-stack) {
+  width: 400px;
+}
+.uk-navbar-dropdown-width-3:not(.uk-navbar-dropdown-stack) {
+  width: 600px;
+}
+.uk-navbar-dropdown-width-4:not(.uk-navbar-dropdown-stack) {
+  width: 800px;
+}
+.uk-navbar-dropdown-width-5:not(.uk-navbar-dropdown-stack) {
+  width: 1000px;
+}
+/*
+ * Dropbar modifier
+ */
+.uk-navbar-dropdown-dropbar {
+  margin-top: 0;
+  margin-bottom: 0;
+  box-shadow: none;
+}
+/* Dropdown Nav
+ * Adopts `uk-nav`
+ ========================================================================== */
+.uk-navbar-dropdown-nav {
+  font-size: 0.875rem;
+}
+/*
+ * Items
+ */
+.uk-navbar-dropdown-nav > li > a {
+  color: #999;
+}
+/* Hover + Focus */
+.uk-navbar-dropdown-nav > li > a:hover,
+.uk-navbar-dropdown-nav > li > a:focus {
+  color: #363636;
+}
+/* Active */
+.uk-navbar-dropdown-nav > li.uk-active > a {
+  color: #333;
+}
+/*
+ * Header
+ */
+.uk-navbar-dropdown-nav .uk-nav-header {
+  color: #333;
+}
+/*
+ * Divider
+ */
+.uk-navbar-dropdown-nav .uk-nav-divider {
+  border-top: 1px solid #e5e5e5;
+}
+/*
+ * Sublists
+ */
+.uk-navbar-dropdown-nav .uk-nav-sub a {
+  color: #999;
+}
+.uk-navbar-dropdown-nav .uk-nav-sub a:hover,
+.uk-navbar-dropdown-nav .uk-nav-sub a:focus {
+  color: #363636;
+}
+.uk-navbar-dropdown-nav .uk-nav-sub li.uk-active > a {
+  color: #333;
+}
+/* Dropbar
+ ========================================================================== */
+.uk-navbar-dropbar {
+  background: #fff;
+}
+/*
+ * Slide modifier
+ */
+.uk-navbar-dropbar-slide {
+  position: absolute;
+  z-index: 980;
+  left: 0;
+  right: 0;
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.05);
+}
+/*
+     * Navbar
+     */
+.uk-navbar-container > .uk-container .uk-navbar-left {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.uk-navbar-container > .uk-container .uk-navbar-right {
+  margin-right: -15px;
+}
+/*
+     * Grid Divider
+     */
+.uk-navbar-dropdown-grid > * {
+  position: relative;
+}
+.uk-navbar-dropdown-grid > :not(.uk-first-column)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 25px;
+  border-left: 1px solid #e5e5e5;
+}
+/* Vertical */
+.uk-navbar-dropdown-grid.uk-grid-stack > .uk-grid-margin::before {
+  content: "";
+  position: absolute;
+  top: -25px;
+  left: 50px;
+  right: 0;
+  border-top: 1px solid #e5e5e5;
+}
+/* ========================================================================
+   Component: Subnav
+ ========================================================================== */
+/*
+ * 1. Allow items to wrap into the next line
+ * 2. Gutter
+ * 3. Reset list
+ */
+.uk-subnav {
+  display: flex;
+  /* 1 */
+  flex-wrap: wrap;
+  /* 2 */
+  margin-left: -20px;
+  /* 3 */
+  padding: 0;
+  list-style: none;
+}
+/*
+ * 1. Space is allocated solely based on content dimensions: 0 0 auto
+ * 2. Gutter
+ * 3. Create position context for dropdowns
+ */
+.uk-subnav > * {
+  /* 1 */
+  flex: none;
+  /* 2 */
+  padding-left: 20px;
+  /* 3 */
+  position: relative;
+}
+/* Items
+ ========================================================================== */
+/*
+ * Items must target `a` elements to exclude other elements (e.g. dropdowns)
+ * Using `:first-child` instead of `a` to support `span` elements for text
+ * 1. Prevent gap if child element is `inline-block`, e.g. an icon
+ * 2. Style
+ */
+.uk-subnav > * > :first-child {
+  /* 1 */
+  display: block;
+  /* 2 */
+  color: #999;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  transition: 0.1s ease-in-out;
+  transition-property: color, background-color;
+}
+/* Hover + Focus */
+.uk-subnav > * > a:hover,
+.uk-subnav > * > a:focus {
+  color: #363636;
+  text-decoration: none;
+  outline: none;
+}
+/* Active */
+.uk-subnav > .uk-active > a {
+  color: #333;
+}
+/* Divider modifier
+ ========================================================================== */
+/*
+ * Set gutter 
+ */
+.uk-subnav-divider {
+  margin-left: -41px;
+}
+/*
+ * Align items and divider vertically
+ */
+.uk-subnav-divider > * {
+  display: flex;
+  align-items: center;
+}
+/*
+ * Divider
+ * 1. `nth-child` makes it also work without JS if it's only one row
+ */
+.uk-subnav-divider > ::before {
+  content: "";
+  height: 1.5em;
+  margin-left: 0px;
+  margin-right: 20px;
+  border-left: 1px solid transparent;
+}
+/* 1 */
+.uk-subnav-divider > :nth-child(n+2):not(.uk-first-column)::before {
+  border-left-color: #e5e5e5;
+}
+/* Pill modifier
+ ========================================================================== */
+.uk-subnav-pill > * > :first-child {
+  padding: 5px 10px;
+  background: transparent;
+  color: #999;
+}
+/* Hover + Focus */
+.uk-subnav-pill > * > a:hover,
+.uk-subnav-pill > * > a:focus {
+  background-color: #FFF8F5;
+  color: #363636;
+}
+/* OnClick */
+.uk-subnav-pill > * > a:active {
+  background-color: #FFF8F5;
+  color: #363636;
+}
+/* Active */
+.uk-subnav-pill > .uk-active > a {
+  background-color: #f55f24;
+  color: #fff;
+}
+/* Disabled
+ * The same for all style modifiers
+ ========================================================================== */
+.uk-subnav > .uk-disabled > a {
+  color: #999;
+}
+/* ========================================================================
+   Component: Breadcrumb
+ ========================================================================== */
+/*
+ * 1. Allow items to wrap into the next line
+ * 2. Reset list
+ */
+.uk-breadcrumb {
+  display: flex;
+  /* 1 */
+  flex-wrap: wrap;
+  /* 2 */
+  padding: 0;
+  list-style: none;
+}
+/*
+ * Space is allocated solely based on content dimensions: 0 0 auto
+ */
+.uk-breadcrumb > * {
+  flex: none;
+}
+/* Items
+ ========================================================================== */
+.uk-breadcrumb > * > * {
+  display: inline-block;
+  font-size: 0.875rem;
+  color: #999;
+}
+/* Hover + Focus */
+.uk-breadcrumb > * > :hover,
+.uk-breadcrumb > * > :focus {
+  color: #363636;
+  text-decoration: none;
+}
+/* Disabled */
+/* Active */
+.uk-breadcrumb > :last-child > span,
+.uk-breadcrumb > :last-child > a:not([href]) {
+  color: #363636;
+}
+/*
+ * Divider
+ * `nth-child` makes it also work without JS if it's only one row
+ */
+.uk-breadcrumb > :nth-child(n+2):not(.uk-first-column)::before {
+  content: "/";
+  display: inline-block;
+  margin: 0 20px;
+  font-size: 0.875rem;
+  color: #999;
+}
+/* ========================================================================
+   Component: Pagination
+ ========================================================================== */
+/*
+ * 1. Allow items to wrap into the next line
+ * 2. Gutter
+ * 3. Reset list
+ */
+.uk-pagination {
+  display: flex;
+  /* 1 */
+  flex-wrap: wrap;
+  /* 2 */
+  margin-left: 0;
+  /* 3 */
+  padding: 0;
+  list-style: none;
+}
+/*
+ * 1. Space is allocated solely based on content dimensions: 0 0 auto
+ * 2. Gutter
+ * 3. Create position context for dropdowns
+ */
+.uk-pagination > * {
+  /* 1 */
+  flex: none;
+  /* 2 */
+  padding-left: 0;
+  /* 3 */
+  position: relative;
+}
+/* Items
+ ========================================================================== */
+/*
+ * 1. Prevent gap if child element is `inline-block`, e.g. an icon
+ * 2. Style
+ */
+.uk-pagination > * > * {
+  /* 1 */
+  display: block;
+  /* 2 */
+  padding: 5px 10px;
+  color: #999;
+  transition: color 0.1s ease-in-out;
+}
+/* Hover + Focus */
+.uk-pagination > * > :hover,
+.uk-pagination > * > :focus {
+  color: #363636;
+  text-decoration: none;
+}
+/* Active */
+.uk-pagination > .uk-active > * {
+  color: #363636;
+}
+/* Disabled */
+.uk-pagination > .uk-disabled > * {
+  color: #999;
+}
+/* ========================================================================
+   Component: Tab
+ ========================================================================== */
+/*
+ * 1. Allow items to wrap into the next line
+ * 2. Gutter
+ * 3. Reset list
+ */
+.uk-tab {
+  display: flex;
+  /* 1 */
+  flex-wrap: wrap;
+  /* 2 */
+  margin-left: -20px;
+  /* 3 */
+  padding: 0;
+  list-style: none;
+  position: relative;
+}
+.uk-tab::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+/*
+ * 1. Space is allocated solely based on content dimensions: 0 0 auto
+ * 2. Gutter
+ * 3. Create position context for dropdowns
+ */
+.uk-tab > * {
+  /* 1 */
+  flex: none;
+  /* 2 */
+  padding-left: 20px;
+  /* 3 */
+  position: relative;
+}
+/* Items
+ ========================================================================== */
+/*
+ * Items must target `a` elements to exclude other elements (e.g. dropdowns)
+ * 1. Center text if a width is set
+ * 2. Style
+ */
+.uk-tab > * > a {
+  /* 1 */
+  display: block;
+  text-align: center;
+  /* 2 */
+  padding: 5px 10px;
+  color: #999;
+  border-bottom: 1px solid transparent;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  transition: color 0.1s ease-in-out;
+}
+/* Hover + Focus */
+.uk-tab > * > a:hover,
+.uk-tab > * > a:focus {
+  color: #363636;
+  text-decoration: none;
+}
+/* Active */
+.uk-tab > .uk-active > a {
+  color: #333;
+  border-color: #f55f24;
+}
+/* Disabled */
+.uk-tab > .uk-disabled > a {
+  color: #999;
+}
+/* Position modifier
+ ========================================================================== */
+/*
+ * Bottom
+ */
+.uk-tab-bottom::before {
+  top: 0;
+  bottom: auto;
+}
+.uk-tab-bottom > * > a {
+  border-top: 1px solid transparent;
+  border-bottom: none;
+}
+/*
+ * Left + Right
+ * 1. Reset Gutter
+ */
+.uk-tab-left,
+.uk-tab-right {
+  flex-direction: column;
+  /* 1 */
+  margin-left: 0;
+}
+/* 1 */
+.uk-tab-left > *,
+.uk-tab-right > * {
+  padding-left: 0;
+}
+.uk-tab-left::before {
+  top: 0;
+  bottom: 0;
+  left: auto;
+  right: 0;
+  border-left: 1px solid #e5e5e5;
+  border-bottom: none;
+}
+.uk-tab-right::before {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: auto;
+  border-left: 1px solid #e5e5e5;
+  border-bottom: none;
+}
+.uk-tab-left > * > a {
+  text-align: left;
+  border-right: 1px solid transparent;
+  border-bottom: none;
+}
+.uk-tab-right > * > a {
+  text-align: left;
+  border-left: 1px solid transparent;
+  border-bottom: none;
+}
+.uk-tab .uk-dropdown {
+  margin-left: 30px;
+}
+/* ========================================================================
+   Component: Slidenav
+ ========================================================================== */
+/*
+ * Adopts `uk-icon`
+ */
+.uk-slidenav {
+  padding: 5px 10px;
+  color: rgba(54, 54, 54, 0.5);
+  transition: color 0.1s ease-in-out;
+}
+/* Hover + Focus */
+.uk-slidenav:hover,
+.uk-slidenav:focus {
+  color: rgba(54, 54, 54, 0.9);
+  outline: none;
+}
+/* OnClick */
+.uk-slidenav:active {
+  color: rgba(54, 54, 54, 0.5);
+}
+/* Icon modifier
+ ========================================================================== */
+/*
+ * Previous
+ */
+/*
+ * Next
+ */
+/* Size modifier
+ ========================================================================== */
+.uk-slidenav-large {
+  padding: 10px 10px;
+}
+/* Container
+ ========================================================================== */
+.uk-slidenav-container {
+  display: flex;
+}
+/* ========================================================================
+   Component: Dotnav
+ ========================================================================== */
+/*
+ * 1. Allow items to wrap into the next line
+ * 2. Reset list
+ * 3. Gutter
+ */
+.uk-dotnav {
+  display: flex;
+  /* 1 */
+  flex-wrap: wrap;
+  /* 2 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* 3 */
+  margin-left: -12px;
+}
+/*
+ * 1. Space is allocated solely based on content dimensions: 0 0 auto
+ * 2. Gutter
+ */
+.uk-dotnav > * {
+  /* 1 */
+  flex: none;
+  /* 2 */
+  padding-left: 12px;
+}
+/* Items
+ ========================================================================== */
+/*
+ * Items
+ * 1. Hide text if present
+ */
+.uk-dotnav > * > * {
+  display: block;
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(54, 54, 54, 0);
+  /* 1 */
+  text-indent: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 1px solid #f55f24;
+  transition: 0.2s ease-in-out;
+  transition-property: background-color, border-color;
+}
+/* Hover + Focus */
+.uk-dotnav > * > :hover,
+.uk-dotnav > * > :focus {
+  background-color: #f55f24;
+  outline: none;
+  border-color: transparent;
+}
+/* OnClick */
+.uk-dotnav > * > :active {
+  background-color: rgba(245, 95, 36, 0.2);
+  border-color: transparent;
+}
+/* Active */
+.uk-dotnav > .uk-active > * {
+  background-color: #f55f24;
+  border-color: transparent;
+}
+/* Modifier: 'uk-dotnav-vertical'
+ ========================================================================== */
+/*
+ * 1. Change direction
+ * 2. Gutter
+ */
+.uk-dotnav-vertical {
+  /* 1 */
+  flex-direction: column;
+  /* 2 */
+  margin-left: 0;
+  margin-top: -12px;
+}
+/* 2 */
+.uk-dotnav-vertical > * {
+  padding-left: 0;
+  padding-top: 12px;
+}
+/* ========================================================================
+   Component: Thumbnav
+ ========================================================================== */
+/*
+ * 1. Allow items to wrap into the next line
+ * 2. Reset list
+ * 3. Gutter
+ */
+.uk-thumbnav {
+  display: flex;
+  /* 1 */
+  flex-wrap: wrap;
+  /* 2 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* 3 */
+  margin-left: -15px;
+}
+/*
+ * Space is allocated based on content dimensions, but shrinks: 0 1 auto
+ * 1. Gutter
+ */
+.uk-thumbnav > * {
+  /* 1 */
+  padding-left: 15px;
+}
+/* Items
+ ========================================================================== */
+/*
+ * Items
+ */
+.uk-thumbnav > * > * {
+  display: inline-block;
+  position: relative;
+}
+.uk-thumbnav > * > *::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.4);
+  transition: background-color 0.1s ease-in-out;
+}
+/* Hover + Focus */
+.uk-thumbnav > * > :hover,
+.uk-thumbnav > * > :focus {
+  outline: none;
+}
+.uk-thumbnav > * > :hover::after,
+.uk-thumbnav > * > :focus::after {
+  background-color: transparent;
+}
+/* Active */
+.uk-thumbnav > .uk-active > *::after {
+  background-color: transparent;
+}
+/* Modifier: 'uk-thumbnav-vertical'
+ ========================================================================== */
+/*
+ * 1. Change direction
+ * 2. Gutter
+ */
+.uk-thumbnav-vertical {
+  /* 1 */
+  flex-direction: column;
+  /* 2 */
+  margin-left: 0;
+  margin-top: -15px;
+}
+/* 2 */
+.uk-thumbnav-vertical > * {
+  padding-left: 0;
+  padding-top: 15px;
+}
+/* ========================================================================
+   Component: Iconnav
+ ========================================================================== */
+/*
+ * 1. Allow items to wrap into the next line
+ * 2. Reset list
+ * 3. Gutter
+ */
+.uk-iconnav {
+  display: flex;
+  /* 1 */
+  flex-wrap: wrap;
+  /* 2 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* 3 */
+  margin-left: -10px;
+}
+/*
+ * Space is allocated based on content dimensions, but shrinks: 0 1 auto
+ * 1. Gutter
+ */
+.uk-iconnav > * {
+  /* 1 */
+  padding-left: 10px;
+}
+/* Items
+ ========================================================================== */
+/*
+ * Items must target `a` elements to exclude other elements (e.g. dropdowns)
+ * 1. Prevent gap if child element is `inline-block`, e.g. an icon
+ * 2. Style
+ */
+.uk-iconnav > * > a {
+  /* 1 */
+  display: block;
+  /* 2 */
+  color: #999;
+}
+/* Hover + Focus */
+.uk-iconnav > * > a:hover,
+.uk-iconnav > * > a:focus {
+  color: #363636;
+  outline: none;
+}
+/* Active */
+.uk-iconnav > .uk-active > a {
+  color: #363636;
+}
+/* Modifier: 'uk-iconnav-vertical'
+ ========================================================================== */
+/*
+ * 1. Change direction
+ * 2. Gutter
+ */
+.uk-iconnav-vertical {
+  /* 1 */
+  flex-direction: column;
+  /* 2 */
+  margin-left: 0;
+  margin-top: -10px;
+}
+/* 2 */
+.uk-iconnav-vertical > * {
+  padding-left: 0;
+  padding-top: 10px;
+}
+/* ========================================================================
+   Component: Lightbox
+ ========================================================================== */
+/*
+ * 1. Hide by default
+ * 2. Set position
+ * 3. Allow scrolling for the modal dialog
+ * 4. Horizontal padding
+ * 5. Mask the background page
+ * 6. Fade-in transition
+ * 7. Prevent cancellation of pointer events while dragging
+ */
+.uk-lightbox {
+  /* 1 */
+  display: none;
+  /* 2 */
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1010;
+  /* 5 */
+  background: #000;
+  /* 6 */
+  opacity: 0;
+  transition: opacity 0.15s linear;
+  /* 7 */
+  touch-action: pinch-zoom;
+}
+/*
+ * Open
+ * 1. Center child
+ * 2. Fade-in
+ */
+.uk-lightbox.uk-open {
+  display: block;
+  /* 2 */
+  opacity: 1;
+}
+/* Page
+ ========================================================================== */
+/*
+ * Prevent scrollbars
+ */
+.uk-lightbox-page {
+  overflow: hidden;
+}
+/* Item
+ ========================================================================== */
+/*
+ * 1. Center child within the viewport
+ * 2. Not visible by default
+ * 3. Color needed for spinner icon
+ * 4. Optimize animation
+ * 5. Responsiveness
+ *    Using `vh` for `max-height` to fix image proportions after resize in Safari and Opera
+ *    Using `vh` and `vw` to make responsive image work in IE11
+ * 6. Suppress outline on focus
+ */
+.uk-lightbox-items > * {
+  /* 1 */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  /* 2 */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  /* 3 */
+  color: rgba(255, 255, 255, 0.7);
+  /* 4 */
+  will-change: transform, opacity;
+}
+/* 5 */
+.uk-lightbox-items > * > * {
+  max-width: 100vw;
+  max-height: 100vh;
+}
+/* 6 */
+.uk-lightbox-items > :focus {
+  outline: none;
+}
+.uk-lightbox-items > * > :not(iframe) {
+  width: auto;
+  height: auto;
+}
+.uk-lightbox-items > .uk-active {
+  display: flex;
+}
+/* Toolbar
+ ========================================================================== */
+.uk-lightbox-toolbar {
+  padding: 10px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+}
+.uk-lightbox-toolbar > * {
+  color: rgba(255, 255, 255, 0.7);
+}
+/* Toolbar Icon (Close)
+ ========================================================================== */
+.uk-lightbox-toolbar-icon {
+  padding: 5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+/*
+ * Hover
+ */
+.uk-lightbox-toolbar-icon:hover {
+  color: #fff;
+}
+/* Button (Slidenav)
+ ========================================================================== */
+/*
+ * 1. Center icon vertically and horizontally
+ */
+.uk-lightbox-button {
+  box-sizing: border-box;
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+  /* 1 */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+/* Hover + Focus */
+.uk-lightbox-button:hover,
+.uk-lightbox-button:focus {
+  color: #fff;
+}
+/* OnClick */
+/* Caption
+ ========================================================================== */
+.uk-lightbox-caption:empty {
+  display: none;
+}
+/* Iframe
+ ========================================================================== */
+.uk-lightbox-iframe {
+  width: 80%;
+  height: 80%;
+}
 /* ========================================================================
    Component: Animation
  ========================================================================== */
@@ -7270,7 +7288,7 @@ ul.uk-nav-sub {
   color: #999;
 }
 .uk-text-meta a:hover {
-  color: black;
+  color: #363636;
   text-decoration: none;
 }
 /* Size modifiers
@@ -7282,6 +7300,10 @@ ul.uk-nav-sub {
 .uk-text-large {
   font-size: 1.5rem;
   line-height: 1.5;
+}
+.uk-text-default {
+  font-size: 17px;
+  line-height: 22px;
 }
 /* Weight modifier
  ========================================================================== */
@@ -7654,7 +7676,7 @@ iframe.uk-cover {
   background-color: #fff;
 }
 .uk-background-muted {
-  background-color: #F2F2F0;
+  background-color: #FFF8F5;
 }
 .uk-background-primary {
   background-color: #f55f24;
@@ -8204,14 +8226,14 @@ iframe.uk-cover {
 .uk-logo {
   font-size: 1.5rem;
   font-family: Roboto, sans-serif;
-  color: black;
+  color: #363636;
   /* 1 */
   text-decoration: none;
 }
 /* Hover + Focus */
 .uk-logo:hover,
 .uk-logo:focus {
-  color: black;
+  color: #363636;
   outline: none;
   /* 1 */
   text-decoration: none;
@@ -9725,100 +9747,166 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-hr {
   border-top-color: rgba(255, 255, 255, 0.2);
 }
-.uk-light .uk-link-muted,
+.uk-light a.uk-link-muted,
 .uk-light .uk-link-muted a,
-.uk-section-primary:not(.uk-preserve-color) .uk-link-muted,
+.uk-section-primary:not(.uk-preserve-color) a.uk-link-muted,
 .uk-section-primary:not(.uk-preserve-color) .uk-link-muted a,
-.uk-section-secondary:not(.uk-preserve-color) .uk-link-muted,
+.uk-section-secondary:not(.uk-preserve-color) a.uk-link-muted,
 .uk-section-secondary:not(.uk-preserve-color) .uk-link-muted a,
-.uk-tile-primary:not(.uk-preserve-color) .uk-link-muted,
+.uk-tile-primary:not(.uk-preserve-color) a.uk-link-muted,
 .uk-tile-primary:not(.uk-preserve-color) .uk-link-muted a,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-link-muted,
+.uk-tile-secondary:not(.uk-preserve-color) a.uk-link-muted,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-link-muted a,
-.uk-card-primary.uk-card-body .uk-link-muted,
+.uk-card-primary.uk-card-body a.uk-link-muted,
 .uk-card-primary.uk-card-body .uk-link-muted a,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-link-muted,
+.uk-card-primary > :not([class*='uk-card-media']) a.uk-link-muted,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-link-muted a,
-.uk-card-secondary.uk-card-body .uk-link-muted,
+.uk-card-secondary.uk-card-body a.uk-link-muted,
 .uk-card-secondary.uk-card-body .uk-link-muted a,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-muted,
+.uk-card-secondary > :not([class*='uk-card-media']) a.uk-link-muted,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-link-muted a,
-.uk-overlay-primary .uk-link-muted,
+.uk-overlay-primary a.uk-link-muted,
 .uk-overlay-primary .uk-link-muted a,
-.uk-offcanvas-bar .uk-link-muted,
+.uk-offcanvas-bar a.uk-link-muted,
 .uk-offcanvas-bar .uk-link-muted a {
   color: rgba(255, 255, 255, 0.5);
 }
-.uk-light .uk-link-muted:hover,
+.uk-light a.uk-link-muted:hover,
 .uk-light .uk-link-muted a:hover,
-.uk-section-primary:not(.uk-preserve-color) .uk-link-muted:hover,
+.uk-light .uk-link-toggle:hover .uk-link-muted,
+.uk-light .uk-link-toggle:focus .uk-link-muted,
+.uk-section-primary:not(.uk-preserve-color) a.uk-link-muted:hover,
 .uk-section-primary:not(.uk-preserve-color) .uk-link-muted a:hover,
-.uk-section-secondary:not(.uk-preserve-color) .uk-link-muted:hover,
+.uk-section-primary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-muted,
+.uk-section-primary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-muted,
+.uk-section-secondary:not(.uk-preserve-color) a.uk-link-muted:hover,
 .uk-section-secondary:not(.uk-preserve-color) .uk-link-muted a:hover,
-.uk-tile-primary:not(.uk-preserve-color) .uk-link-muted:hover,
+.uk-section-secondary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-muted,
+.uk-section-secondary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-muted,
+.uk-tile-primary:not(.uk-preserve-color) a.uk-link-muted:hover,
 .uk-tile-primary:not(.uk-preserve-color) .uk-link-muted a:hover,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-link-muted:hover,
+.uk-tile-primary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-muted,
+.uk-tile-primary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-muted,
+.uk-tile-secondary:not(.uk-preserve-color) a.uk-link-muted:hover,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-link-muted a:hover,
-.uk-card-primary.uk-card-body .uk-link-muted:hover,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-muted,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-muted,
+.uk-card-primary.uk-card-body a.uk-link-muted:hover,
 .uk-card-primary.uk-card-body .uk-link-muted a:hover,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-link-muted:hover,
+.uk-card-primary.uk-card-body .uk-link-toggle:hover .uk-link-muted,
+.uk-card-primary.uk-card-body .uk-link-toggle:focus .uk-link-muted,
+.uk-card-primary > :not([class*='uk-card-media']) a.uk-link-muted:hover,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-link-muted a:hover,
-.uk-card-secondary.uk-card-body .uk-link-muted:hover,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-link-toggle:hover .uk-link-muted,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-link-toggle:focus .uk-link-muted,
+.uk-card-secondary.uk-card-body a.uk-link-muted:hover,
 .uk-card-secondary.uk-card-body .uk-link-muted a:hover,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-muted:hover,
+.uk-card-secondary.uk-card-body .uk-link-toggle:hover .uk-link-muted,
+.uk-card-secondary.uk-card-body .uk-link-toggle:focus .uk-link-muted,
+.uk-card-secondary > :not([class*='uk-card-media']) a.uk-link-muted:hover,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-link-muted a:hover,
-.uk-overlay-primary .uk-link-muted:hover,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-toggle:hover .uk-link-muted,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-toggle:focus .uk-link-muted,
+.uk-overlay-primary a.uk-link-muted:hover,
 .uk-overlay-primary .uk-link-muted a:hover,
-.uk-offcanvas-bar .uk-link-muted:hover,
-.uk-offcanvas-bar .uk-link-muted a:hover {
+.uk-overlay-primary .uk-link-toggle:hover .uk-link-muted,
+.uk-overlay-primary .uk-link-toggle:focus .uk-link-muted,
+.uk-offcanvas-bar a.uk-link-muted:hover,
+.uk-offcanvas-bar .uk-link-muted a:hover,
+.uk-offcanvas-bar .uk-link-toggle:hover .uk-link-muted,
+.uk-offcanvas-bar .uk-link-toggle:focus .uk-link-muted {
   color: rgba(255, 255, 255, 0.7);
 }
-.uk-light .uk-link-text:hover,
+.uk-light a.uk-link-text:hover,
 .uk-light .uk-link-text a:hover,
-.uk-section-primary:not(.uk-preserve-color) .uk-link-text:hover,
+.uk-light .uk-link-toggle:hover .uk-link-text,
+.uk-light .uk-link-toggle:focus .uk-link-text,
+.uk-section-primary:not(.uk-preserve-color) a.uk-link-text:hover,
 .uk-section-primary:not(.uk-preserve-color) .uk-link-text a:hover,
-.uk-section-secondary:not(.uk-preserve-color) .uk-link-text:hover,
+.uk-section-primary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-text,
+.uk-section-primary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-text,
+.uk-section-secondary:not(.uk-preserve-color) a.uk-link-text:hover,
 .uk-section-secondary:not(.uk-preserve-color) .uk-link-text a:hover,
-.uk-tile-primary:not(.uk-preserve-color) .uk-link-text:hover,
+.uk-section-secondary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-text,
+.uk-section-secondary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-text,
+.uk-tile-primary:not(.uk-preserve-color) a.uk-link-text:hover,
 .uk-tile-primary:not(.uk-preserve-color) .uk-link-text a:hover,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-link-text:hover,
+.uk-tile-primary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-text,
+.uk-tile-primary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-text,
+.uk-tile-secondary:not(.uk-preserve-color) a.uk-link-text:hover,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-link-text a:hover,
-.uk-card-primary.uk-card-body .uk-link-text:hover,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-text,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-text,
+.uk-card-primary.uk-card-body a.uk-link-text:hover,
 .uk-card-primary.uk-card-body .uk-link-text a:hover,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-link-text:hover,
+.uk-card-primary.uk-card-body .uk-link-toggle:hover .uk-link-text,
+.uk-card-primary.uk-card-body .uk-link-toggle:focus .uk-link-text,
+.uk-card-primary > :not([class*='uk-card-media']) a.uk-link-text:hover,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-link-text a:hover,
-.uk-card-secondary.uk-card-body .uk-link-text:hover,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-link-toggle:hover .uk-link-text,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-link-toggle:focus .uk-link-text,
+.uk-card-secondary.uk-card-body a.uk-link-text:hover,
 .uk-card-secondary.uk-card-body .uk-link-text a:hover,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-text:hover,
+.uk-card-secondary.uk-card-body .uk-link-toggle:hover .uk-link-text,
+.uk-card-secondary.uk-card-body .uk-link-toggle:focus .uk-link-text,
+.uk-card-secondary > :not([class*='uk-card-media']) a.uk-link-text:hover,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-link-text a:hover,
-.uk-overlay-primary .uk-link-text:hover,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-toggle:hover .uk-link-text,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-toggle:focus .uk-link-text,
+.uk-overlay-primary a.uk-link-text:hover,
 .uk-overlay-primary .uk-link-text a:hover,
-.uk-offcanvas-bar .uk-link-text:hover,
-.uk-offcanvas-bar .uk-link-text a:hover {
+.uk-overlay-primary .uk-link-toggle:hover .uk-link-text,
+.uk-overlay-primary .uk-link-toggle:focus .uk-link-text,
+.uk-offcanvas-bar a.uk-link-text:hover,
+.uk-offcanvas-bar .uk-link-text a:hover,
+.uk-offcanvas-bar .uk-link-toggle:hover .uk-link-text,
+.uk-offcanvas-bar .uk-link-toggle:focus .uk-link-text {
   color: rgba(255, 255, 255, 0.5);
 }
-.uk-light .uk-link-heading:hover,
+.uk-light a.uk-link-heading:hover,
 .uk-light .uk-link-heading a:hover,
-.uk-section-primary:not(.uk-preserve-color) .uk-link-heading:hover,
+.uk-light .uk-link-toggle:hover .uk-link-heading,
+.uk-light .uk-link-toggle:focus .uk-link-heading,
+.uk-section-primary:not(.uk-preserve-color) a.uk-link-heading:hover,
 .uk-section-primary:not(.uk-preserve-color) .uk-link-heading a:hover,
-.uk-section-secondary:not(.uk-preserve-color) .uk-link-heading:hover,
+.uk-section-primary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-heading,
+.uk-section-primary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-heading,
+.uk-section-secondary:not(.uk-preserve-color) a.uk-link-heading:hover,
 .uk-section-secondary:not(.uk-preserve-color) .uk-link-heading a:hover,
-.uk-tile-primary:not(.uk-preserve-color) .uk-link-heading:hover,
+.uk-section-secondary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-heading,
+.uk-section-secondary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-heading,
+.uk-tile-primary:not(.uk-preserve-color) a.uk-link-heading:hover,
 .uk-tile-primary:not(.uk-preserve-color) .uk-link-heading a:hover,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-link-heading:hover,
+.uk-tile-primary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-heading,
+.uk-tile-primary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-heading,
+.uk-tile-secondary:not(.uk-preserve-color) a.uk-link-heading:hover,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-link-heading a:hover,
-.uk-card-primary.uk-card-body .uk-link-heading:hover,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-link-toggle:hover .uk-link-heading,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-link-toggle:focus .uk-link-heading,
+.uk-card-primary.uk-card-body a.uk-link-heading:hover,
 .uk-card-primary.uk-card-body .uk-link-heading a:hover,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-link-heading:hover,
+.uk-card-primary.uk-card-body .uk-link-toggle:hover .uk-link-heading,
+.uk-card-primary.uk-card-body .uk-link-toggle:focus .uk-link-heading,
+.uk-card-primary > :not([class*='uk-card-media']) a.uk-link-heading:hover,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-link-heading a:hover,
-.uk-card-secondary.uk-card-body .uk-link-heading:hover,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-link-toggle:hover .uk-link-heading,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-link-toggle:focus .uk-link-heading,
+.uk-card-secondary.uk-card-body a.uk-link-heading:hover,
 .uk-card-secondary.uk-card-body .uk-link-heading a:hover,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-heading:hover,
+.uk-card-secondary.uk-card-body .uk-link-toggle:hover .uk-link-heading,
+.uk-card-secondary.uk-card-body .uk-link-toggle:focus .uk-link-heading,
+.uk-card-secondary > :not([class*='uk-card-media']) a.uk-link-heading:hover,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-link-heading a:hover,
-.uk-overlay-primary .uk-link-heading:hover,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-toggle:hover .uk-link-heading,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-toggle:focus .uk-link-heading,
+.uk-overlay-primary a.uk-link-heading:hover,
 .uk-overlay-primary .uk-link-heading a:hover,
-.uk-offcanvas-bar .uk-link-heading:hover,
-.uk-offcanvas-bar .uk-link-heading a:hover {
+.uk-overlay-primary .uk-link-toggle:hover .uk-link-heading,
+.uk-overlay-primary .uk-link-toggle:focus .uk-link-heading,
+.uk-offcanvas-bar a.uk-link-heading:hover,
+.uk-offcanvas-bar .uk-link-heading a:hover,
+.uk-offcanvas-bar .uk-link-toggle:hover .uk-link-heading,
+.uk-offcanvas-bar .uk-link-toggle:focus .uk-link-heading {
   color: #fff;
 }
 .uk-light .uk-heading-divider,
@@ -9934,109 +10022,109 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-divider-vertical {
   border-left-color: rgba(255, 255, 255, 0.2);
 }
-.uk-light .uk-list-muted li::marker,
-.uk-section-primary:not(.uk-preserve-color) .uk-list-muted li::marker,
-.uk-section-secondary:not(.uk-preserve-color) .uk-list-muted li::marker,
-.uk-tile-primary:not(.uk-preserve-color) .uk-list-muted li::marker,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-list-muted li::marker,
-.uk-card-primary.uk-card-body .uk-list-muted li::marker,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-list-muted li::marker,
-.uk-card-secondary.uk-card-body .uk-list-muted li::marker,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-muted li::marker,
-.uk-overlay-primary .uk-list-muted li::marker,
-.uk-offcanvas-bar .uk-list-muted li::marker {
+.uk-light .uk-list-muted > ::before,
+.uk-section-primary:not(.uk-preserve-color) .uk-list-muted > ::before,
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-muted > ::before,
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-muted > ::before,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-muted > ::before,
+.uk-card-primary.uk-card-body .uk-list-muted > ::before,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-muted > ::before,
+.uk-card-secondary.uk-card-body .uk-list-muted > ::before,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-muted > ::before,
+.uk-overlay-primary .uk-list-muted > ::before,
+.uk-offcanvas-bar .uk-list-muted > ::before {
   color: rgba(255, 255, 255, 0.5) !important;
 }
-.uk-light .uk-list-emphasis li::marker,
-.uk-section-primary:not(.uk-preserve-color) .uk-list-emphasis li::marker,
-.uk-section-secondary:not(.uk-preserve-color) .uk-list-emphasis li::marker,
-.uk-tile-primary:not(.uk-preserve-color) .uk-list-emphasis li::marker,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-list-emphasis li::marker,
-.uk-card-primary.uk-card-body .uk-list-emphasis li::marker,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-list-emphasis li::marker,
-.uk-card-secondary.uk-card-body .uk-list-emphasis li::marker,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-emphasis li::marker,
-.uk-overlay-primary .uk-list-emphasis li::marker,
-.uk-offcanvas-bar .uk-list-emphasis li::marker {
+.uk-light .uk-list-emphasis > ::before,
+.uk-section-primary:not(.uk-preserve-color) .uk-list-emphasis > ::before,
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-emphasis > ::before,
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-emphasis > ::before,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-emphasis > ::before,
+.uk-card-primary.uk-card-body .uk-list-emphasis > ::before,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-emphasis > ::before,
+.uk-card-secondary.uk-card-body .uk-list-emphasis > ::before,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-emphasis > ::before,
+.uk-overlay-primary .uk-list-emphasis > ::before,
+.uk-offcanvas-bar .uk-list-emphasis > ::before {
   color: #fff !important;
 }
-.uk-light .uk-list-primary li::marker,
-.uk-section-primary:not(.uk-preserve-color) .uk-list-primary li::marker,
-.uk-section-secondary:not(.uk-preserve-color) .uk-list-primary li::marker,
-.uk-tile-primary:not(.uk-preserve-color) .uk-list-primary li::marker,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-list-primary li::marker,
-.uk-card-primary.uk-card-body .uk-list-primary li::marker,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-list-primary li::marker,
-.uk-card-secondary.uk-card-body .uk-list-primary li::marker,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-primary li::marker,
-.uk-overlay-primary .uk-list-primary li::marker,
-.uk-offcanvas-bar .uk-list-primary li::marker {
+.uk-light .uk-list-primary > ::before,
+.uk-section-primary:not(.uk-preserve-color) .uk-list-primary > ::before,
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-primary > ::before,
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-primary > ::before,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-primary > ::before,
+.uk-card-primary.uk-card-body .uk-list-primary > ::before,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-primary > ::before,
+.uk-card-secondary.uk-card-body .uk-list-primary > ::before,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-primary > ::before,
+.uk-overlay-primary .uk-list-primary > ::before,
+.uk-offcanvas-bar .uk-list-primary > ::before {
   color: #fff !important;
 }
-.uk-light .uk-list-secondary li::marker,
-.uk-section-primary:not(.uk-preserve-color) .uk-list-secondary li::marker,
-.uk-section-secondary:not(.uk-preserve-color) .uk-list-secondary li::marker,
-.uk-tile-primary:not(.uk-preserve-color) .uk-list-secondary li::marker,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-list-secondary li::marker,
-.uk-card-primary.uk-card-body .uk-list-secondary li::marker,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-list-secondary li::marker,
-.uk-card-secondary.uk-card-body .uk-list-secondary li::marker,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-secondary li::marker,
-.uk-overlay-primary .uk-list-secondary li::marker,
-.uk-offcanvas-bar .uk-list-secondary li::marker {
+.uk-light .uk-list-secondary > ::before,
+.uk-section-primary:not(.uk-preserve-color) .uk-list-secondary > ::before,
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-secondary > ::before,
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-secondary > ::before,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-secondary > ::before,
+.uk-card-primary.uk-card-body .uk-list-secondary > ::before,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-secondary > ::before,
+.uk-card-secondary.uk-card-body .uk-list-secondary > ::before,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-secondary > ::before,
+.uk-overlay-primary .uk-list-secondary > ::before,
+.uk-offcanvas-bar .uk-list-secondary > ::before {
   color: #fff !important;
 }
-.uk-light .uk-list-bullet > li::before,
-.uk-section-primary:not(.uk-preserve-color) .uk-list-bullet > li::before,
-.uk-section-secondary:not(.uk-preserve-color) .uk-list-bullet > li::before,
-.uk-tile-primary:not(.uk-preserve-color) .uk-list-bullet > li::before,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-list-bullet > li::before,
-.uk-card-primary.uk-card-body .uk-list-bullet > li::before,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-list-bullet > li::before,
-.uk-card-secondary.uk-card-body .uk-list-bullet > li::before,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-bullet > li::before,
-.uk-overlay-primary .uk-list-bullet > li::before,
-.uk-offcanvas-bar .uk-list-bullet > li::before {
+.uk-light .uk-list-bullet > ::before,
+.uk-section-primary:not(.uk-preserve-color) .uk-list-bullet > ::before,
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-bullet > ::before,
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-bullet > ::before,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-bullet > ::before,
+.uk-card-primary.uk-card-body .uk-list-bullet > ::before,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-bullet > ::before,
+.uk-card-secondary.uk-card-body .uk-list-bullet > ::before,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-bullet > ::before,
+.uk-overlay-primary .uk-list-bullet > ::before,
+.uk-offcanvas-bar .uk-list-bullet > ::before {
   background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%226%22%20height%3D%226%22%20viewBox%3D%220%200%206%206%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22rgba%28255,%20255,%20255,%200.7%29%22%20cx%3D%223%22%20cy%3D%223%22%20r%3D%223%22%20%2F%3E%0A%3C%2Fsvg%3E");
 }
-.uk-light .uk-list-divider > li:nth-child(n+2),
-.uk-section-primary:not(.uk-preserve-color) .uk-list-divider > li:nth-child(n+2),
-.uk-section-secondary:not(.uk-preserve-color) .uk-list-divider > li:nth-child(n+2),
-.uk-tile-primary:not(.uk-preserve-color) .uk-list-divider > li:nth-child(n+2),
-.uk-tile-secondary:not(.uk-preserve-color) .uk-list-divider > li:nth-child(n+2),
-.uk-card-primary.uk-card-body .uk-list-divider > li:nth-child(n+2),
-.uk-card-primary > :not([class*='uk-card-media']) .uk-list-divider > li:nth-child(n+2),
-.uk-card-secondary.uk-card-body .uk-list-divider > li:nth-child(n+2),
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-divider > li:nth-child(n+2),
-.uk-overlay-primary .uk-list-divider > li:nth-child(n+2),
-.uk-offcanvas-bar .uk-list-divider > li:nth-child(n+2) {
+.uk-light .uk-list-divider > :nth-child(n+2),
+.uk-section-primary:not(.uk-preserve-color) .uk-list-divider > :nth-child(n+2),
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-divider > :nth-child(n+2),
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-divider > :nth-child(n+2),
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-divider > :nth-child(n+2),
+.uk-card-primary.uk-card-body .uk-list-divider > :nth-child(n+2),
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-divider > :nth-child(n+2),
+.uk-card-secondary.uk-card-body .uk-list-divider > :nth-child(n+2),
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-divider > :nth-child(n+2),
+.uk-overlay-primary .uk-list-divider > :nth-child(n+2),
+.uk-offcanvas-bar .uk-list-divider > :nth-child(n+2) {
   border-top-color: rgba(255, 255, 255, 0.2);
 }
-.uk-light .uk-list-striped > li:nth-of-type(odd),
-.uk-section-primary:not(.uk-preserve-color) .uk-list-striped > li:nth-of-type(odd),
-.uk-section-secondary:not(.uk-preserve-color) .uk-list-striped > li:nth-of-type(odd),
-.uk-tile-primary:not(.uk-preserve-color) .uk-list-striped > li:nth-of-type(odd),
-.uk-tile-secondary:not(.uk-preserve-color) .uk-list-striped > li:nth-of-type(odd),
-.uk-card-primary.uk-card-body .uk-list-striped > li:nth-of-type(odd),
-.uk-card-primary > :not([class*='uk-card-media']) .uk-list-striped > li:nth-of-type(odd),
-.uk-card-secondary.uk-card-body .uk-list-striped > li:nth-of-type(odd),
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-striped > li:nth-of-type(odd),
-.uk-overlay-primary .uk-list-striped > li:nth-of-type(odd),
-.uk-offcanvas-bar .uk-list-striped > li:nth-of-type(odd) {
+.uk-light .uk-list-striped > *:nth-of-type(odd),
+.uk-section-primary:not(.uk-preserve-color) .uk-list-striped > *:nth-of-type(odd),
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-striped > *:nth-of-type(odd),
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-striped > *:nth-of-type(odd),
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-striped > *:nth-of-type(odd),
+.uk-card-primary.uk-card-body .uk-list-striped > *:nth-of-type(odd),
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-striped > *:nth-of-type(odd),
+.uk-card-secondary.uk-card-body .uk-list-striped > *:nth-of-type(odd),
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-striped > *:nth-of-type(odd),
+.uk-overlay-primary .uk-list-striped > *:nth-of-type(odd),
+.uk-offcanvas-bar .uk-list-striped > *:nth-of-type(odd) {
   border-top-color: rgba(255, 255, 255, 0.2);
   border-bottom-color: rgba(255, 255, 255, 0.2);
 }
-.uk-light .uk-list-striped > li:nth-of-type(odd),
-.uk-section-primary:not(.uk-preserve-color) .uk-list-striped > li:nth-of-type(odd),
-.uk-section-secondary:not(.uk-preserve-color) .uk-list-striped > li:nth-of-type(odd),
-.uk-tile-primary:not(.uk-preserve-color) .uk-list-striped > li:nth-of-type(odd),
-.uk-tile-secondary:not(.uk-preserve-color) .uk-list-striped > li:nth-of-type(odd),
-.uk-card-primary.uk-card-body .uk-list-striped > li:nth-of-type(odd),
-.uk-card-primary > :not([class*='uk-card-media']) .uk-list-striped > li:nth-of-type(odd),
-.uk-card-secondary.uk-card-body .uk-list-striped > li:nth-of-type(odd),
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-striped > li:nth-of-type(odd),
-.uk-overlay-primary .uk-list-striped > li:nth-of-type(odd),
-.uk-offcanvas-bar .uk-list-striped > li:nth-of-type(odd) {
+.uk-light .uk-list-striped > :nth-of-type(odd),
+.uk-section-primary:not(.uk-preserve-color) .uk-list-striped > :nth-of-type(odd),
+.uk-section-secondary:not(.uk-preserve-color) .uk-list-striped > :nth-of-type(odd),
+.uk-tile-primary:not(.uk-preserve-color) .uk-list-striped > :nth-of-type(odd),
+.uk-tile-secondary:not(.uk-preserve-color) .uk-list-striped > :nth-of-type(odd),
+.uk-card-primary.uk-card-body .uk-list-striped > :nth-of-type(odd),
+.uk-card-primary > :not([class*='uk-card-media']) .uk-list-striped > :nth-of-type(odd),
+.uk-card-secondary.uk-card-body .uk-list-striped > :nth-of-type(odd),
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-list-striped > :nth-of-type(odd),
+.uk-overlay-primary .uk-list-striped > :nth-of-type(odd),
+.uk-offcanvas-bar .uk-list-striped > :nth-of-type(odd) {
   background-color: rgba(255, 255, 255, 0.1);
 }
 .uk-light .uk-table th,
@@ -10583,7 +10671,7 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-radio:checked,
 .uk-overlay-primary .uk-radio:checked,
 .uk-offcanvas-bar .uk-radio:checked {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22black%22%20cx%3D%228%22%20cy%3D%228%22%20r%3D%222%22%20%2F%3E%0A%3C%2Fsvg%3E");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22%23363636%22%20cx%3D%228%22%20cy%3D%228%22%20r%3D%222%22%20%2F%3E%0A%3C%2Fsvg%3E");
 }
 .uk-light .uk-checkbox:checked,
 .uk-section-primary:not(.uk-preserve-color) .uk-checkbox:checked,
@@ -10596,7 +10684,7 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-checkbox:checked,
 .uk-overlay-primary .uk-checkbox:checked,
 .uk-offcanvas-bar .uk-checkbox:checked {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2211%22%20viewBox%3D%220%200%2014%2011%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22black%22%20points%3D%2212%201%205%207.5%202%205%201%205.5%205%2010%2013%201.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2211%22%20viewBox%3D%220%200%2014%2011%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23363636%22%20points%3D%2212%201%205%207.5%202%205%201%205.5%205%2010%2013%201.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
 }
 .uk-light .uk-checkbox:indeterminate,
 .uk-section-primary:not(.uk-preserve-color) .uk-checkbox:indeterminate,
@@ -10609,7 +10697,7 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-checkbox:indeterminate,
 .uk-overlay-primary .uk-checkbox:indeterminate,
 .uk-offcanvas-bar .uk-checkbox:indeterminate {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Crect%20fill%3D%22black%22%20x%3D%223%22%20y%3D%228%22%20width%3D%2210%22%20height%3D%221%22%20%2F%3E%0A%3C%2Fsvg%3E");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Crect%20fill%3D%22%23363636%22%20x%3D%223%22%20y%3D%228%22%20width%3D%2210%22%20height%3D%221%22%20%2F%3E%0A%3C%2Fsvg%3E");
 }
 .uk-light .uk-form-label,
 .uk-section-primary:not(.uk-preserve-color) .uk-form-label,
@@ -10748,7 +10836,7 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-button-primary,
 .uk-offcanvas-bar .uk-button-primary {
   background-color: #fff;
-  color: black;
+  color: #363636;
 }
 .uk-light .uk-button-primary:hover,
 .uk-light .uk-button-primary:focus,
@@ -10773,7 +10861,7 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-button-primary:hover,
 .uk-offcanvas-bar .uk-button-primary:focus {
   background-color: #f2f2f2;
-  color: black;
+  color: #363636;
 }
 .uk-light .uk-button-primary:active,
 .uk-light .uk-button-primary.uk-active,
@@ -10798,7 +10886,7 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-button-primary:active,
 .uk-offcanvas-bar .uk-button-primary.uk-active {
   background-color: #e6e6e6;
-  color: black;
+  color: #363636;
 }
 .uk-light .uk-button-secondary,
 .uk-section-primary:not(.uk-preserve-color) .uk-button-secondary,
@@ -10812,6 +10900,7 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-button-secondary,
 .uk-offcanvas-bar .uk-button-secondary {
   background-color: #fff;
+  color: #363636;
   border: 1px solid transparent;
   text-transform: uppercase;
   transition: 0.1s ease-in-out;
@@ -10857,7 +10946,7 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-button-secondary:focus,
 .uk-offcanvas-bar .uk-button-secondary:hover,
 .uk-offcanvas-bar .uk-button-secondary:focus {
-  color: black;
+  color: #363636;
   color: #F55F24;
   background-color: #f2f2f2;
 }
@@ -10883,7 +10972,7 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-button-secondary.uk-active,
 .uk-offcanvas-bar .uk-button-secondary:active,
 .uk-offcanvas-bar .uk-button-secondary.uk-active {
-  color: black;
+  color: #363636;
   color: #F55F24;
   background-color: #e6e6e6;
 }
@@ -10987,32 +11076,6 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-button-link:focus {
   color: rgba(255, 255, 255, 0.7);
 }
-.uk-light .uk-grid-divider > :not(.uk-first-column)::before,
-.uk-section-primary:not(.uk-preserve-color) .uk-grid-divider > :not(.uk-first-column)::before,
-.uk-section-secondary:not(.uk-preserve-color) .uk-grid-divider > :not(.uk-first-column)::before,
-.uk-tile-primary:not(.uk-preserve-color) .uk-grid-divider > :not(.uk-first-column)::before,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-grid-divider > :not(.uk-first-column)::before,
-.uk-card-primary.uk-card-body .uk-grid-divider > :not(.uk-first-column)::before,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-grid-divider > :not(.uk-first-column)::before,
-.uk-card-secondary.uk-card-body .uk-grid-divider > :not(.uk-first-column)::before,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-grid-divider > :not(.uk-first-column)::before,
-.uk-overlay-primary .uk-grid-divider > :not(.uk-first-column)::before,
-.uk-offcanvas-bar .uk-grid-divider > :not(.uk-first-column)::before {
-  border-left-color: rgba(255, 255, 255, 0.2);
-}
-.uk-light .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
-.uk-section-primary:not(.uk-preserve-color) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
-.uk-section-secondary:not(.uk-preserve-color) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
-.uk-tile-primary:not(.uk-preserve-color) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
-.uk-card-primary.uk-card-body .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
-.uk-card-secondary.uk-card-body .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
-.uk-overlay-primary .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
-.uk-offcanvas-bar .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before {
-  border-top-color: rgba(255, 255, 255, 0.2);
-}
 .uk-light .uk-close,
 .uk-section-primary:not(.uk-preserve-color) .uk-close,
 .uk-section-secondary:not(.uk-preserve-color) .uk-close,
@@ -11111,8 +11174,8 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-marker,
 .uk-overlay-primary .uk-marker,
 .uk-offcanvas-bar .uk-marker {
-  background: #F2F2F0;
-  color: black;
+  background: #FFF8F5;
+  color: #363636;
 }
 .uk-light .uk-marker:hover,
 .uk-light .uk-marker:focus,
@@ -11136,7 +11199,7 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-marker:focus,
 .uk-offcanvas-bar .uk-marker:hover,
 .uk-offcanvas-bar .uk-marker:focus {
-  color: black;
+  color: #363636;
 }
 .uk-light .uk-badge,
 .uk-section-primary:not(.uk-preserve-color) .uk-badge,
@@ -11150,7 +11213,7 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-badge,
 .uk-offcanvas-bar .uk-badge {
   background-color: #fff;
-  color: black;
+  color: #363636;
 }
 .uk-light .uk-badge:hover,
 .uk-light .uk-badge:focus,
@@ -11174,7 +11237,7 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-badge:focus,
 .uk-offcanvas-bar .uk-badge:hover,
 .uk-offcanvas-bar .uk-badge:focus {
-  color: black;
+  color: #363636;
 }
 .uk-light .uk-label,
 .uk-section-primary:not(.uk-preserve-color) .uk-label,
@@ -11188,7 +11251,7 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-label,
 .uk-offcanvas-bar .uk-label {
   background-color: #fff;
-  color: black;
+  color: #363636;
 }
 .uk-light .uk-article-meta,
 .uk-section-primary:not(.uk-preserve-color) .uk-article-meta,
@@ -11357,6 +11420,69 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-search-toggle:hover,
 .uk-offcanvas-bar .uk-search-toggle:focus {
   color: rgba(255, 255, 255, 0.7);
+}
+.uk-light .uk-accordion-title,
+.uk-section-primary:not(.uk-preserve-color) .uk-accordion-title,
+.uk-section-secondary:not(.uk-preserve-color) .uk-accordion-title,
+.uk-tile-primary:not(.uk-preserve-color) .uk-accordion-title,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-accordion-title,
+.uk-card-primary.uk-card-body .uk-accordion-title,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-accordion-title,
+.uk-card-secondary.uk-card-body .uk-accordion-title,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-accordion-title,
+.uk-overlay-primary .uk-accordion-title,
+.uk-offcanvas-bar .uk-accordion-title {
+  color: #fff;
+}
+.uk-light .uk-accordion-title:hover,
+.uk-light .uk-accordion-title:focus,
+.uk-section-primary:not(.uk-preserve-color) .uk-accordion-title:hover,
+.uk-section-primary:not(.uk-preserve-color) .uk-accordion-title:focus,
+.uk-section-secondary:not(.uk-preserve-color) .uk-accordion-title:hover,
+.uk-section-secondary:not(.uk-preserve-color) .uk-accordion-title:focus,
+.uk-tile-primary:not(.uk-preserve-color) .uk-accordion-title:hover,
+.uk-tile-primary:not(.uk-preserve-color) .uk-accordion-title:focus,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-accordion-title:hover,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-accordion-title:focus,
+.uk-card-primary.uk-card-body .uk-accordion-title:hover,
+.uk-card-primary.uk-card-body .uk-accordion-title:focus,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-accordion-title:hover,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-accordion-title:focus,
+.uk-card-secondary.uk-card-body .uk-accordion-title:hover,
+.uk-card-secondary.uk-card-body .uk-accordion-title:focus,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-accordion-title:hover,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-accordion-title:focus,
+.uk-overlay-primary .uk-accordion-title:hover,
+.uk-overlay-primary .uk-accordion-title:focus,
+.uk-offcanvas-bar .uk-accordion-title:hover,
+.uk-offcanvas-bar .uk-accordion-title:focus {
+  color: rgba(255, 255, 255, 0.7);
+}
+.uk-light .uk-grid-divider > :not(.uk-first-column)::before,
+.uk-section-primary:not(.uk-preserve-color) .uk-grid-divider > :not(.uk-first-column)::before,
+.uk-section-secondary:not(.uk-preserve-color) .uk-grid-divider > :not(.uk-first-column)::before,
+.uk-tile-primary:not(.uk-preserve-color) .uk-grid-divider > :not(.uk-first-column)::before,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-grid-divider > :not(.uk-first-column)::before,
+.uk-card-primary.uk-card-body .uk-grid-divider > :not(.uk-first-column)::before,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-grid-divider > :not(.uk-first-column)::before,
+.uk-card-secondary.uk-card-body .uk-grid-divider > :not(.uk-first-column)::before,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-grid-divider > :not(.uk-first-column)::before,
+.uk-overlay-primary .uk-grid-divider > :not(.uk-first-column)::before,
+.uk-offcanvas-bar .uk-grid-divider > :not(.uk-first-column)::before {
+  border-left-color: rgba(255, 255, 255, 0.2);
+}
+.uk-light .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
+.uk-section-primary:not(.uk-preserve-color) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
+.uk-section-secondary:not(.uk-preserve-color) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
+.uk-tile-primary:not(.uk-preserve-color) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
+.uk-card-primary.uk-card-body .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
+.uk-card-secondary.uk-card-body .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
+.uk-overlay-primary .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before,
+.uk-offcanvas-bar .uk-grid-divider.uk-grid-stack > .uk-grid-margin::before {
+  border-top-color: rgba(255, 255, 255, 0.2);
 }
 .uk-light .uk-nav-parent-icon > .uk-parent > a::after,
 .uk-section-primary:not(.uk-preserve-color) .uk-nav-parent-icon > .uk-parent > a::after,
@@ -11899,7 +12025,7 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-subnav-pill > .uk-active > a,
 .uk-offcanvas-bar .uk-subnav-pill > .uk-active > a {
   background-color: #fff;
-  color: black;
+  color: #363636;
 }
 .uk-light .uk-subnav > .uk-disabled > a,
 .uk-section-primary:not(.uk-preserve-color) .uk-subnav > .uk-disabled > a,
@@ -12234,43 +12360,6 @@ iframe.uk-cover {
   background-color: rgba(255, 255, 255, 0.9);
   border-color: transparent;
 }
-.uk-light .uk-accordion-title,
-.uk-section-primary:not(.uk-preserve-color) .uk-accordion-title,
-.uk-section-secondary:not(.uk-preserve-color) .uk-accordion-title,
-.uk-tile-primary:not(.uk-preserve-color) .uk-accordion-title,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-accordion-title,
-.uk-card-primary.uk-card-body .uk-accordion-title,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-accordion-title,
-.uk-card-secondary.uk-card-body .uk-accordion-title,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-accordion-title,
-.uk-overlay-primary .uk-accordion-title,
-.uk-offcanvas-bar .uk-accordion-title {
-  color: #fff;
-}
-.uk-light .uk-accordion-title:hover,
-.uk-light .uk-accordion-title:focus,
-.uk-section-primary:not(.uk-preserve-color) .uk-accordion-title:hover,
-.uk-section-primary:not(.uk-preserve-color) .uk-accordion-title:focus,
-.uk-section-secondary:not(.uk-preserve-color) .uk-accordion-title:hover,
-.uk-section-secondary:not(.uk-preserve-color) .uk-accordion-title:focus,
-.uk-tile-primary:not(.uk-preserve-color) .uk-accordion-title:hover,
-.uk-tile-primary:not(.uk-preserve-color) .uk-accordion-title:focus,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-accordion-title:hover,
-.uk-tile-secondary:not(.uk-preserve-color) .uk-accordion-title:focus,
-.uk-card-primary.uk-card-body .uk-accordion-title:hover,
-.uk-card-primary.uk-card-body .uk-accordion-title:focus,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-accordion-title:hover,
-.uk-card-primary > :not([class*='uk-card-media']) .uk-accordion-title:focus,
-.uk-card-secondary.uk-card-body .uk-accordion-title:hover,
-.uk-card-secondary.uk-card-body .uk-accordion-title:focus,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-accordion-title:hover,
-.uk-card-secondary > :not([class*='uk-card-media']) .uk-accordion-title:focus,
-.uk-overlay-primary .uk-accordion-title:hover,
-.uk-overlay-primary .uk-accordion-title:focus,
-.uk-offcanvas-bar .uk-accordion-title:hover,
-.uk-offcanvas-bar .uk-accordion-title:focus {
-  color: rgba(255, 255, 255, 0.7);
-}
 .uk-light .uk-iconnav > * > a,
 .uk-section-primary:not(.uk-preserve-color) .uk-iconnav > * > a,
 .uk-section-secondary:not(.uk-preserve-color) .uk-iconnav > * > a,
@@ -12546,6 +12635,26 @@ iframe.uk-cover {
     page-break-after: avoid;
   }
 }
+@font-face {
+  font-family: 'Roboto';
+  src: url('/static/fonts/Roboto-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-weight: bold;
+  src: url('/static/fonts/Roboto-Bold.ttf') format('truetype');
+}
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color: inherit !important;
+    color-adjust: exact !important;
+  }
+  a,
+  a:visited {
+    text-decoration: none !important;
+  }
+}
 .ent-link-muted {
   color: white;
 }
@@ -12601,7 +12710,7 @@ iframe.uk-cover {
 }
 .ent-offer {
   overflow: hidden;
-  border: 1px solid #F2F2F0;
+  border: 1px solid #FFF8F5;
   border-radius: 2px;
 }
 .ent-offer-badge {
@@ -12642,9 +12751,10 @@ iframe.uk-cover {
 .ent-filter {
   border: 1px solid;
   border-radius: 5px;
-  padding: 0 15px;
-  min-height: 36px;
-  line-height: 36px;
+  padding: 0 5px;
+  min-height: 26px;
+  line-height: 26px;
+  font-size: 15px;
   cursor: pointer;
   border-color: #e5e5e5;
   background-color: white;
@@ -12653,9 +12763,10 @@ iframe.uk-cover {
 .ent-filter-activated {
   border: 1px solid;
   border-radius: 5px;
-  padding: 0 15px;
-  min-height: 36px;
-  line-height: 36px;
+  padding: 0 5px;
+  min-height: 26px;
+  line-height: 26px;
+  font-size: 15px;
   cursor: pointer;
   background-color: #F55F24;
   border-color: #F55F24;
@@ -12722,4 +12833,54 @@ iframe.uk-cover {
   color: #f55f24;
   background-color: white;
   border: 1px solid #f55f24;
+}
+.ent-filter-menu {
+  background-color: white;
+  border-right: 1px solid #FFF8F5;
+  color: #363636;
+}
+.ent-filter-menu .uk-checkbox {
+  border: 1px solid #cccccc;
+  background-color: transparent;
+}
+.ent-filter-menu .uk-checkbox:focus {
+  border: 1px solid #f55f24;
+  background-color: transparent;
+}
+.ent-filter-menu .uk-checkbox:checked {
+  color: white;
+  border-color: transparent;
+  background-color: #f55f24;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2211%22%20viewBox%3D%220%200%2014%2011%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23fff%22%20points%3D%2212%201%205%207.5%202%205%201%205.5%205%2010%2013%201.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
+}
+.ent-filter-menu .uk-checkbox:checked:focus {
+  color: white;
+  border-color: transparent;
+  background-color: #f55f24;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2211%22%20viewBox%3D%220%200%2014%2011%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23fff%22%20points%3D%2212%201%205%207.5%202%205%201%205.5%205%2010%2013%201.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
+}
+.ent-filter-menu .uk-button-text {
+  color: #333;
+}
+.ent-filter-menu .uk-button-text:hover {
+  color: #333;
+}
+.ent-filter-menu .uk-button-text:focus {
+  color: #333;
+}
+.ent-filter-menu .uk-button-text::before {
+  border-bottom-color: #333;
+}
+.ent-filter-menu .uk-offcanvas-close {
+  color: #999;
+}
+.ent-filter-menu .uk-offcanvas-close:hover {
+  color: #363636 !important;
+}
+.ent-filter-menu .uk-offcanvas-close:focus {
+  color: #363636 !important;
+}
+.uk-list-bullet > ::before,
+[class*='uk-list'] > ::before {
+  margin-bottom: -22px;
 }
