@@ -42,7 +42,7 @@ const Partners = () => {
             className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
             <span className="uk-text-primary">Les partenaires</span> du projet LinkedOut
           </h2>
-          <div className="uk-background-default uk-padding-large">
+          <div className="uk-background-muted uk-padding-large">
             <h4
               className="uk-text-primary uk-text-bold">
               Ce projet est développé en partenariat avec
