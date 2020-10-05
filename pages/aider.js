@@ -13,7 +13,7 @@ import TAGS from '../constants/tags';
 const Aider = () => (
   <Layout title="Aider - LinkedOut">
     <ImageTitle
-      img="static/img/header_pic_help.jpg"
+      img="/static/img/header_pic_help.jpg"
       alt="vous souhaitez aider"
       id="help-title"
       title={
