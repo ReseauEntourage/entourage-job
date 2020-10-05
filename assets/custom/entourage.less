@@ -3,16 +3,28 @@
 
 // Your custom code goes here, e.g. mixins, variables.
 // See "how to create a theme" below for more info.
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/static/fonts/Roboto-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: bold;
+  src: url('/static/fonts/Roboto-Bold.ttf') format('truetype');
+}
+
 @media print {
   * {
     -webkit-print-color-adjust: exact !important;
     color: inherit !important;
+    color-adjust: exact !important;
   }
 
   a, a:visited {
     text-decoration: none !important;
   }
-
 }
 
 //Font families
@@ -494,6 +506,10 @@
 
 .ent-filter-menu .uk-offcanvas-close:focus {
   color: @close-hover-color !important;
+}
+
+.uk-list-bullet > ::before, [class*='uk-list'] > ::before {
+  margin-bottom: -@global-line-height;
 }
 
 

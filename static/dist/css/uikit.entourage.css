@@ -12635,10 +12635,20 @@ iframe.uk-cover {
     page-break-after: avoid;
   }
 }
+@font-face {
+  font-family: 'Roboto';
+  src: url('/static/fonts/Roboto-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-weight: bold;
+  src: url('/static/fonts/Roboto-Bold.ttf') format('truetype');
+}
 @media print {
   * {
     -webkit-print-color-adjust: exact !important;
     color: inherit !important;
+    color-adjust: exact !important;
   }
   a,
   a:visited {
@@ -12869,4 +12879,8 @@ iframe.uk-cover {
 }
 .ent-filter-menu .uk-offcanvas-close:focus {
   color: #363636 !important;
+}
+.uk-list-bullet > ::before,
+[class*='uk-list'] > ::before {
+  margin-bottom: -22px;
 }
