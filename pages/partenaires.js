@@ -104,7 +104,7 @@ const Partenaires = () => {
                           alt=""
                           width="27"
                           height="21"
-                          src="static/img/guillemets.png"
+                          src="/static/img/guillemets.png"
                           className='uk-margin-small-right' />
                       </div>
                       <div className="uk-flex-1">
@@ -122,7 +122,7 @@ const Partenaires = () => {
                           alt=""
                           width="15"
                           height="12"
-                          src="static/img/guillemetsPetits.png"
+                          src="/static/img/guillemetsPetits.png"
                           className='uk-margin-small-left' />
                       </div>
                     </div>
