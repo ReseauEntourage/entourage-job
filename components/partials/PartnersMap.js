@@ -38,6 +38,8 @@ const partnersPlaces = [
   },
 ];
 
+const FRANCE_CENTER_COORDINATES = { lat: 46.71109, lng: 1.7191036 }
+
 const PartnersMap = ({ google }) => {
   const [clickedMarker, setClickedMarker] = useState(null);
 
@@ -55,7 +57,7 @@ const PartnersMap = ({ google }) => {
         height: '80vh',
       }}
       style={{ width: '100%', height: '100%', position: 'relative' }}
-      initialCenter={{ lat: 46.71109, lng: 1.7191036 }}
+      initialCenter={FRANCE_CENTER_COORDINATES}
       mapTypeControl={false}
       streetViewControl={false}
       noClear
