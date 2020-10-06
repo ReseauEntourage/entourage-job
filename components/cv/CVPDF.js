@@ -9,15 +9,18 @@ const CVPDF = ({cv, page}) => {
   const experiences = cv.experiences && cv.experiences.length > 0 ? sortExperiences(cv.experiences) : [];
 
   // Function to estimate where to divide the experiences between both pages
-  const averageCharsPerLine = 54;
+  const averageCharsPerLine = 59;
   const averageSkillsPerLine = 2;
-  const estimatedMaxLinesOnTheFirstPage = 20;
+  const estimatedMaxLinesOnTheFirstPage = 29;
 
   let indexToSplitAt = experiences.length;
   experiences.reduce((acc, curr, index) => {
-    let numberOfLines = curr.description.length / averageCharsPerLine;
-    numberOfLines += (curr.description.match(/\n/g) || []).length;
+    const lines = curr.description.replace(/\n\n/g, '\n').split(/\n/g);
+    let numberOfLines = lines.reduce((a, c) => {
+      return Math.floor(c.length / averageCharsPerLine) + a + 1;
+    }, 0);
     numberOfLines += Math.floor(curr.skills.length / averageSkillsPerLine) + 1;
+
     if((acc + numberOfLines) > estimatedMaxLinesOnTheFirstPage && index < indexToSplitAt) {
       indexToSplitAt = index > 0 ? index : 1;
     }
@@ -38,13 +41,13 @@ const CVPDF = ({cv, page}) => {
         <div
           style={{
             position: 'relative',
-            height: 200
+            height: 150
           }}>
           <div
             className="uk-background-cover uk-background-center uk-flex uk-flex-middle uk-flex-center"
-            style={{height: 200}}>
+            style={{height: 150}}>
             <img
-              style={{marginTop: 100}}
+              style={{marginTop: 75}}
               className="uk-box-shadow-small uk-width-expand"
               src={process.env.AWSS3_URL + cv.urlImg || '/static/img/arthur-background.jpg'}
               alt="" />
@@ -54,7 +57,7 @@ const CVPDF = ({cv, page}) => {
       <div className="uk-flex-1 uk-flex uk-padding uk-position-relative">
         <div className="uk-flex-1 uk-flex uk-flex-column uk-card uk-card-default uk-padding uk-background-default">
           <GridNoSSR childWidths={['1-1']} gap="small">
-            <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-small-bottom">
+            <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-remove-bottom">
               <h1 className="uk-text-bold uk-text-primary">
                 {cv.user.candidat.firstName} {cv.user.candidat.lastName}
               </h1>
@@ -81,7 +84,7 @@ const CVPDF = ({cv, page}) => {
               {/* uk-text-emphasis uk-text-bold */}
               {
                 cv.ambitions && cv.ambitions.length > 0 &&
-                <p className="uk-text-bold uk-width-xxlarge uk-text-center uk-margin-small-bottom uk-margin-small-top">
+                <p className="uk-text-bold uk-width-xxlarge uk-text-center uk-margin-small-bottom uk-margin-remove-top">
                   J&apos;aimerais beaucoup travailler dans{' '}
                   <span
                     className="uk-label uk-text-lowercase"
@@ -144,7 +147,7 @@ const CVPDF = ({cv, page}) => {
                             </dt>
                           )}
                           <dd className="uk-text-small uk-margin-small-top">
-                            {formatParagraph(exp.description)}
+                            {formatParagraph(exp.description, true)}
                           </dd>
                         </>
                       ))}
@@ -226,7 +229,7 @@ const CVPDF = ({cv, page}) => {
     }} className="uk-background-muted uk-flex">
       <div className="uk-flex-1 uk-flex cv-fiche uk-padding uk-position-relative">
         <div className="uk-flex-1 uk-flex uk-flex-column uk-card uk-card-default uk-padding uk-background-default">
-          <GridNoSSR childWidths={['1-1']} gap="small">
+          <GridNoSSR childWidths={['1-1']} gap="small" style={{scale: 0.9}}>
             <GridNoSSR className="uk-flex" eachWidths={['2-3', '1-3']}>
               <GridNoSSR column gap='medium'>
                 {
@@ -247,7 +250,7 @@ const CVPDF = ({cv, page}) => {
                             </dt>
                           )}
                           <dd className="uk-text-small uk-margin-small-top">
-                            {formatParagraph(exp.description)}
+                            {formatParagraph(exp.description, true)}
                           </dd>
                         </>
                       ))}
@@ -259,7 +262,7 @@ const CVPDF = ({cv, page}) => {
                     <h5 className="uk-margin-small-bottom">Mon histoire</h5>
                     <hr className="uk-divider-small uk-margin-remove-top" />
                     <p className="uk-text-small uk-margin-remove-bottom">
-                      {formatParagraph(cv.story)}
+                      {formatParagraph(cv.story, true)}
                     </p>
                   </div>
                 )}
@@ -279,7 +282,7 @@ const CVPDF = ({cv, page}) => {
                             name="quote-right"
                             ratio={1}
                           />
-                          <p className="uk-text-small uk-margin-remove">{formatParagraph(review.text)}</p>
+                          <p className="uk-text-small uk-margin-remove">{formatParagraph(review.text, true)}</p>
                           <GridNoSSR
                             className="uk-margin-small-top"
                             eachWidths={['expand', 'auto']}
@@ -335,12 +338,11 @@ const CVPDF = ({cv, page}) => {
           </GridNoSSR>
           <div className="uk-flex-1 uk-flex uk-flex-column uk-flex-right">
             <hr className="uk-margin-small-bottom"/>
-            <GridNoSSR column middle gap='medium'>
+            <GridNoSSR column middle gap='small'>
               <p className="uk-text-small uk-text-center uk-text-meta uk-width-xlarge@m uk-margin-remove">
                 Je suis accompagné(e) dans ma recherche d&apos;emploi et mon
                 intégration en entreprise par le projet LinkedOut. Pour plus
-                d&apos;information, contactez&nbsp;:
-                <br />
+                d&apos;information, contactez&nbsp;:{' '}
                 <SimpleLink
                   className="uk-link-text uk-text-primary"
                   isExternal

@@ -1,5 +1,8 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
+import { useRouter } from 'next/router'
+import PropTypes from "prop-types";
 import Layout from '../components/Layout';
+
 import {
   ActionPartial,
   CandidatListPartial,
@@ -11,10 +14,19 @@ import {
 import Header from '../components/headers/Header';
 import {SharesCountContext} from '../components/store/SharesCountProvider';
 import VendeeGlobePartial from "../components/partials/VendeeGlobePartial";
+import CVPDF from "../components/cv/CVPDF";
 
-const Index = () => {
-
+const Index = ({query}) => {
   const {totalShares} = useContext(SharesCountContext);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // Fix because the site would'nt load right if there was a query param on the root page
+    if (query) {
+      router.replace('/');
+    }
+  }, []);
 
   return (
     <Layout>
@@ -28,4 +40,17 @@ const Index = () => {
     </Layout>
   );
 };
+
+Index.propTypes = {
+  query: PropTypes.shape()
+};
+
+Index.defaultProps = {
+  query: undefined
+};
+
+Index.getInitialProps = ({ query }) => {
+  return { query };
+};
+
 export default Index;
