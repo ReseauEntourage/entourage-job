@@ -347,7 +347,7 @@ const updateOpportunity = async (opportunity) => {
   const updateTable = () => new Promise((res, rej) => {
 
     airtable("Offres d'emploi v2").select({
-      "filterByFormula": `"{Id}=${finalOpportunity.id}"`
+      "filterByFormula": `{Id}='${finalOpportunity.id}'`
     }).firstPage((err, results) => {
       if (err) {
         return rej(err);
