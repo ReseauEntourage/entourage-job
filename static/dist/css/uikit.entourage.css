@@ -3208,6 +3208,8 @@ select.uk-form-width-xsmall {
   white-space: nowrap;
   border-radius: 2px;
   text-transform: uppercase;
+  white-space: normal;
+  margin-top: 5px;
 }
 /* Color modifiers
  ========================================================================== */

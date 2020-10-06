@@ -8,7 +8,27 @@ import {formatParagraph, sortExperiences, sortReviews} from "../../utils";
 const CVPDF = ({cv, page}) => {
   const experiences = cv.experiences && cv.experiences.length > 0 ? sortExperiences(cv.experiences) : [];
 
+  // Function to estimate where to divide the experiences between both pages
+  const averageCharsPerLine = 54;
+  const averageSkillsPerLine = 2;
+  const estimatedMaxLinesOnTheFirstPage = 20;
+
+  let indexToSplitAt = experiences.length;
+  experiences.reduce((acc, curr, index) => {
+    let numberOfLines = curr.description.length / averageCharsPerLine;
+    numberOfLines += (curr.description.match(/\n/g) || []).length;
+    numberOfLines += Math.floor(curr.skills.length / averageSkillsPerLine) + 1;
+    if((acc + numberOfLines) > estimatedMaxLinesOnTheFirstPage && index < indexToSplitAt) {
+      indexToSplitAt = index > 0 ? index : 1;
+    }
+    return acc + numberOfLines;
+  }, 0);
+
+  const firstExperiences = experiences.slice(0, indexToSplitAt);
+  const restOfExperiences = experiences.slice(indexToSplitAt);
+
   const pages = [
+    // First Page
     <div style={{
       height: 1122,
       width: 794,
@@ -105,12 +125,12 @@ const CVPDF = ({cv, page}) => {
             </div>
             <GridNoSSR className="uk-flex" eachWidths={['2-3', '1-3']}>
               <GridNoSSR column gap='medium'>
-                {experiences && experiences.length > 0 && (
+                {firstExperiences && firstExperiences.length > 0 && (
                   <div className="">
                     <h5 className="uk-margin-small-bottom">Mes expériences et compétences</h5>
                     <hr className="uk-divider-small uk-margin-remove-top" />
                     <dl className="uk-description-list uk-margin-remove">
-                      {experiences.map((exp, i) => (
+                      {firstExperiences.map((exp, i) => (
                         <>
                           {exp.skills && (
                             <dt key={i} style={{display: 'block'}}>
@@ -198,6 +218,8 @@ const CVPDF = ({cv, page}) => {
         </div>
       </div>
     </div>,
+
+    // Second Page
     <div style={{
       height: 1122,
       width: 794,
@@ -207,6 +229,31 @@ const CVPDF = ({cv, page}) => {
           <GridNoSSR childWidths={['1-1']} gap="small">
             <GridNoSSR className="uk-flex" eachWidths={['2-3', '1-3']}>
               <GridNoSSR column gap='medium'>
+                {
+                  restOfExperiences && restOfExperiences.length > 0 &&
+                  <div className="">
+                    <dl className="uk-description-list uk-margin-remove">
+                      {restOfExperiences.map((exp, i) => (
+                        <>
+                          {exp.skills && (
+                            <dt key={i} style={{display: 'block'}}>
+                              {exp.skills.map((name, key) => (
+                                <span
+                                  key={key}
+                                  className="uk-label uk-text-lowercase uk-margin-small-right">
+                              {name}
+                            </span>
+                              ))}
+                            </dt>
+                          )}
+                          <dd className="uk-text-small uk-margin-small-top">
+                            {formatParagraph(exp.description)}
+                          </dd>
+                        </>
+                      ))}
+                    </dl>
+                  </div>
+                }
                 {cv.story && (
                   <div className="">
                     <h5 className="uk-margin-small-bottom">Mon histoire</h5>
