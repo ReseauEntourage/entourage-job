@@ -27,12 +27,6 @@ export default {
       link: 'https://share-it.io/'
     },
     {
-      key: 'neoxia',
-      title: 'Neoxia',
-      desc: 'Ensemble, créons l\'Internet of People, not Things... où la complexité des technologies s\'efface devant la simplicité de l\'expérience\xa0!\nPur player du Numérique, NEOXIA vous accompagne pour imaginer, construire et opérer la version digitale de votre coeur de métier.',
-      link: 'https://neoxia.com/'
-    },
-    {
       key: 'ares',
       title: 'Ares',
       desc: 'Ares est un groupe de structures d’insertion par l’activité économique. Ares propose à des personnes en situation d’exclusion, un travail et un accompagnement individualisé afin d’aider la personne à lever les freins à l’emploi et à se réinsérer vers un emploi durable.',
@@ -92,7 +86,13 @@ export default {
       key: 'caissedesdepots',
       title: 'Caisse des Dépôts',
       link: 'https://www.caissedesdepots.fr/'
-    }
+    },
+    {
+      key: 'neoxia',
+      title: 'Neoxia',
+      desc: 'Ensemble, créons l\'Internet of People, not Things... où la complexité des technologies s\'efface devant la simplicité de l\'expérience\xa0!\nPur player du Numérique, NEOXIA vous accompagne pour imaginer, construire et opérer la version digitale de votre coeur de métier.',
+      link: 'https://neoxia.com/'
+    },
   ],
   associations: [
     {
