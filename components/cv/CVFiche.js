@@ -88,7 +88,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
         <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom uk-text-center uk-text-muted">
           Partager mon CV
         </p>
-        <GridNoSSR row gap="small" center middle className="uk-margin-medium-bottom">
+        <GridNoSSR row gap="small" center middle>
           <LinkedinShareButton
             disabled={actionDisabled}
             onShareWindowClose={() => {
@@ -162,12 +162,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
             />
           </WhatsappShareButton>
         </GridNoSSR>
-        <ButtonDownload
-          cvUrl={cv.user.url}
-          firstName={cv.user.candidat.firstName}
-          lastName={cv.user.candidat.lastName}
-          disabled={actionDisabled}
-          tag={TAGS.PAGE_CV_TELECHARGEMENT_CV_CLIC}/>
       </div>
     )
   };
@@ -454,6 +448,14 @@ const CVFiche = ({ cv, actionDisabled }) => {
             </GridNoSSR>
           </GridNoSSR>
           {shareSection()}
+          <div className="uk-flex uk-flex-center">
+            <ButtonDownload
+              cvUrl={cv.user.url}
+              firstName={cv.user.candidat.firstName}
+              lastName={cv.user.candidat.lastName}
+              disabled={actionDisabled}
+              tag={TAGS.PAGE_CV_TELECHARGEMENT_CV_CLIC} />
+          </div>
           <hr />
           <div className="uk-text-center">
             <h2 className="uk-text-bold">

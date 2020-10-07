@@ -148,7 +148,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 className="uk-link-muted"
                 isExternal
               >
-                <span>{currentOffer.recruiterMail}</span>
+                <span>{currentOffer.recruiterMail}&nbsp;</span>
                 <IconNoSSR name="mail" ratio={0.8} />
               </SimpleLink>
               <SimpleLink
@@ -156,7 +156,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 className="uk-link-muted"
                 isExternal
               >
-                <span>{currentOffer.recruiterPhone}</span>
+                <span>{currentOffer.recruiterPhone}&nbsp;</span>
                 <IconNoSSR name="phone" ratio={0.8} />
               </SimpleLink>
               <span className="uk-text-italic">
@@ -176,7 +176,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                         className="uk-link-muted"
                         target="_blank"
                       >
-                        <span>{`${firstName} ${lastName}`}</span>
+                        <span>{`${firstName} ${lastName}`}&nbsp;</span>
                         <IconNoSSR name="link" ratio={0.8} />
                       </SimpleLink>
                     )
@@ -184,12 +184,15 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               </OfferInfoContainer>
             )}
           </GridNoSSR>
-          <GridNoSSR gap="medium">
+          <GridNoSSR gap="medium" childWidths={['1-1']}>
             <OfferInfoContainer icon="comment" title="Message">
               {currentOffer.description}
             </OfferInfoContainer>
+            <OfferInfoContainer icon="check" title="Pré-requis">
+              {currentOffer.prerequisites}
+            </OfferInfoContainer>
             {currentOffer.businessLines && (
-              <GridNoSSR center>
+              <GridNoSSR gap='small'>
                 {currentOffer.businessLines.map((businessLine) => (
                   <Button disabled>
                     <span style={{ color: '#666' }}>{businessLine}</span>
@@ -268,6 +271,7 @@ ModalOfferAdmin.propTypes = {
     title: PropsType.string,
     company: PropsType.string,
     description: PropsType.string,
+    prerequisites: PropsType.string,
     recruiterName: PropsType.string,
     isPublic: PropsType.bool,
     isArchived: PropsType.bool,

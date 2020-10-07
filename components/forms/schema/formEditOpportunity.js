@@ -64,6 +64,13 @@ export default {
       title: 'Votre description*',
     },
     {
+      id: 'prerequisites',
+      name: 'prerequisites',
+      component: 'textarea',
+      type: 'text',
+      title: 'Quels sont les pré-requis fondamentaux pour exercer cet emploi\xa0?*',
+    },
+    {
       id: 'isPublic',
       name: 'isPublic',
       component: 'checkbox',
@@ -200,6 +207,17 @@ export default {
     },
     {
       field: 'description',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'prerequisites',
       method: 'isEmpty',
       args: [
         {

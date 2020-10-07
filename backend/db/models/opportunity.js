@@ -53,6 +53,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.DATE,
       },
+      prerequisites: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
     {}
   );
