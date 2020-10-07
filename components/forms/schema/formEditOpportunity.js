@@ -155,9 +155,12 @@ export default {
     },
     {
       field: 'recruiterPhone',
-      method: 'isMobilePhone',
+      method: 'isLength',
       args: [
-        'fr-FR'
+        {
+          "min": 10,
+          "max": 13
+        }
       ],
       validWhen: true,
       message: 'Invalide',
