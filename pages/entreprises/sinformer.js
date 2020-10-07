@@ -7,6 +7,7 @@ import CarouselItem from '../../components/partials/CarouselItem';
 import { EXTERNAL_LINKS } from '../../constants';
 import MultipleCTA from '../../components/partials/MultipleCTA';
 import HowToBeInclusive from '../../components/sections/HowToBeInclusive';
+import CorporateNewsletter from '../../components/partials/CorporateNewsletterPartial';
 
 const Sinformer = () => {
   return (
@@ -196,6 +197,7 @@ const Sinformer = () => {
           showHorizontalDividers
         />
       </Section>
+      <CorporateNewsletter />
     </Layout>
   );
 };
