@@ -4,6 +4,7 @@ import ImageTitle from '../../components/sections/ImageTitle';
 import HireSteps from '../../components/sections/HireSteps';
 import DiscoverCandidates from '../../components/partials/SearchCandidates';
 import CorporateContact from '../../components/partials/CorporateContactPartial';
+import CorporateNewsletter from '../../components/partials/CorporateNewsletterPartial';
 
 const CVEntreprises = () => (
   <Layout title="CV Entreprises - LinkedOut">
@@ -22,6 +23,7 @@ const CVEntreprises = () => (
     <HireSteps />
     <DiscoverCandidates />
     <CorporateContact />
+    <CorporateNewsletter />
   </Layout>
 );
 

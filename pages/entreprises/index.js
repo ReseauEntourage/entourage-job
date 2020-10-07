@@ -6,6 +6,7 @@ import WhatItBrings from '../../components/sections/WhatItBrings';
 import HireCTA from '../../components/partials/HireCTA';
 import Reviews from '../../components/sections/Reviews';
 import HowToCommitDifferently from '../../components/sections/HowToCommitDifferently';
+import CorporateNewsletter from '../../components/partials/CorporateNewsletterPartial';
 
 const Entreprises = () => {
   return (
@@ -31,6 +32,7 @@ const Entreprises = () => {
       <HireCTA />
       <Reviews />
       <HowToCommitDifferently />
+      <CorporateNewsletter />
     </Layout>
   );
 };
