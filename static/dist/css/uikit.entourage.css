@@ -12814,7 +12814,7 @@ iframe.uk-cover {
 .uk-modal-footer > .uk-button {
   margin-left: 15px;
 }
-.uk-tab > .uk-active > a > h4 {
+.uk-tab > .uk-active > a > * {
   color: #f55f24;
 }
 .uk-offcanvas-bar .uk-button-primary {
