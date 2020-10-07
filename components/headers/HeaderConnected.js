@@ -105,22 +105,14 @@ const HeaderConnected = ({ isHome }) => {
               {
                 LINKS_CONNECTED[user.role.toLowerCase()].map((link, index) => (
                 <li key={index} style={{ borderRight: '1px solid lightgray' }}>
-                  <Link href={link.href}>
-                    <a
-                      className="uk-visible@m"
-                      style={{
-                        fontWeight: 500,
-                        fontSize: '1rem',
-                        color: 'black',
-                        textTransform: 'none',
-                      }}
-                    >
-                      <span className="uk-margin-small-right">
+                  <SimpleLink
+                    href={link.href}
+                    className="uk-visible@m uk-flex uk-flex-middle">
+                      <span className="uk-margin-small-right" style={{...router.asPath.includes(link.href) ? {color: 'black'} : {}}}>
                         <IconNoSSR name={link.icon} />
                       </span>
-                      {link.name}
-                    </a>
-                  </Link>
+                      <span style={{textTransform: 'none', fontSize: '1rem', ...router.asPath.includes(link.href) ? {color: 'black', fontWeight: 500} : {}}}>{link.name}</span>
+                  </SimpleLink>
                 </li>
               ))}
             </ul>

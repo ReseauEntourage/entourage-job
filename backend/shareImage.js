@@ -205,7 +205,7 @@ const createCandidatPreviewV2 = async (
           ellipsisByChar(
             text.toLowerCase(),
             (line) => textToSVGBold.getMetrics(line, options[4]).width,
-            cadranWidth
+            cadranWidth - ambitionPaddingLeftRight
           )
         ),
       textToSVGBold,
