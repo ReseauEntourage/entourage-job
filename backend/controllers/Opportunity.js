@@ -14,7 +14,7 @@ const {
   Sequelize: {Op, fn, col, where},
 } = require('../db/models');
 
-const {cleanOpportunity, controlText} = require('../utils');
+const {cleanOpportunity} = require('../utils');
 
 const INCLUDE_OPPORTUNITY_COMPLETE = [
   {
@@ -109,7 +109,7 @@ const createOpportunity = async (data) => {
     const businessLines = await Promise.all(
       data.businessLines.map((name) =>
         BusinessLine.findOrCreate({
-          where: {name: controlText(name)},
+          where: {name: name},
         }).then((model) => model[0])
       )
     );
@@ -302,7 +302,7 @@ const updateOpportunity = async (opportunity) => {
     const businessLines = await Promise.all(
       opportunity.businessLines.map((name) =>
         BusinessLine.findOrCreate({
-          where: {name: controlText(name)},
+          where: {name},
         }).then((model) => model[0])
       )
     );

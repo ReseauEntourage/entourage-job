@@ -26,9 +26,13 @@ List.defaultProps = {
 };
 
 export const OfferInfoContainer = ({ icon, title, children }) => {
-  if (!children.map) {
+  if(!children) {
+    children = [];
+  }
+  else if (!children.map) {
     children = [children];
   }
+
 
   return (
     <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
@@ -180,12 +184,15 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                     title={currentOffer.location}
                   />
                 </GridNoSSR>,
-                <GridNoSSR gap="medium">
+                <GridNoSSR gap="medium" childWidths={['1-1']}>
                   <OfferInfoContainer icon="comment" title="Message">
                     {currentOffer.description}
                   </OfferInfoContainer>
+                  <OfferInfoContainer icon="check" title="Pré-requis">
+                    {currentOffer.prerequisites}
+                  </OfferInfoContainer>
                   {currentOffer.businessLines && (
-                    <GridNoSSR center>
+                    <GridNoSSR gap='center'>
                       {currentOffer.businessLines.map((businessLine) => (
                         <Button disabled>
                           <span style={{ color: '#666' }}>{businessLine}</span>
@@ -242,6 +249,7 @@ ModalOffer.propTypes = {
     title: PropsType.string,
     company: PropsType.string,
     description: PropsType.string,
+    prerequisites: PropsType.string,
     recruiterName: PropsType.string,
     isPublic: PropsType.bool,
     recruiterMail: PropsType.string,

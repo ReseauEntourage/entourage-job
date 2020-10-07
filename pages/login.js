@@ -39,6 +39,7 @@ const Login = () => {
             <FormWithValidation
               formSchema={schemaLogin}
               submitText="Se connecter"
+              enterToSubmit
               onSubmit={({ email, password }, setError) => {
                 login(email, password).catch((err) => {
                   const errorMessage = err.response.status === 429 ? rateLimitErrorMessage :  'Erreur de connexion. Identifiant ou mot de passe invalide.';
