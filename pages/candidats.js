@@ -126,7 +126,7 @@ const Candidats = () => {
             <div
               style={{maxWidth: 1000}}
               className="uk-width-expand ent-search-bar">
-              <form className="uk-search uk-search-navbar uk-width-expand uk-background-muted">
+              <form className="uk-search uk-search-navbar uk-width-expand">
                 <input
                   className="uk-search-input"
                   type="search"

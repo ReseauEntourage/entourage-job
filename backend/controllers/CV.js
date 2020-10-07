@@ -336,7 +336,7 @@ const deleteCV = (id) => {
 
 const getCVbyUrl = async (url) => {
   console.log(`getCVbyUrl - Récupérer un CV ${url}`);
-  const cvs = await sequelize.query(queryConditionCV('url', url), {
+  const cvs = await sequelize.query(queryConditionCV('url', url.replace("'", "''")), {
     type: QueryTypes.SELECT,
   });
 
