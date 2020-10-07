@@ -10,12 +10,15 @@ import TAGS from "../constants/tags";
 
 const Footer = () => {
   const { asPath } = useRouter();
+
+  const showAssociationEntourage = !asPath.includes("/entreprises")
+
   return (
     <footer id="footer">
       {
         asPath === '/' && <Partners />
       }
-      <AssociationEntourage />
+      {showAssociationEntourage && <AssociationEntourage />}
       <Section style="secondary" size="small" container='large' preserveColor>
         <GridNoSSR
           middle
