@@ -5,9 +5,8 @@ const OFFER_STATUS = [
   {value: 0, label: "Contacté"},
   {value: 1, label: "Phase d'entretien"},
   {value: 2, label: "Embauche"},
-  {value: 3, label: "Refus"},
-  {value: 4, label: "Standby"},
-  {value: 5, label: "Relance"}
+  {value: 3, label: "Refus avant entretien"},
+  {value: 4, label: "Refus après entretien"},
 ];
 
 const BUSINESS_LINES = [

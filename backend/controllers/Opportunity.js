@@ -14,7 +14,7 @@ const {
   Sequelize: {Op, fn, col, where},
 } = require('../db/models');
 
-const {cleanOpportunity, controlText} = require('../utils');
+const {cleanOpportunity} = require('../utils');
 
 const INCLUDE_OPPORTUNITY_COMPLETE = [
   {
@@ -89,6 +89,7 @@ const getAirtableOpportunityFields = (opportunity, candidat, businessLines) => {
     Entreprise: opportunity.company,
     Localisation: opportunity.location,
     Description: opportunity.description,
+    "Pré-requis": opportunity.prerequisites,
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
     Candidat: opportunity.isPublic ? '' : `${candidat.firstName} ${candidat.lastName}`,
@@ -109,7 +110,7 @@ const createOpportunity = async (data) => {
     const businessLines = await Promise.all(
       data.businessLines.map((name) =>
         BusinessLine.findOrCreate({
-          where: {name: controlText(name)},
+          where: {name: name},
         }).then((model) => model[0])
       )
     );
@@ -302,7 +303,7 @@ const updateOpportunity = async (opportunity) => {
     const businessLines = await Promise.all(
       opportunity.businessLines.map((name) =>
         BusinessLine.findOrCreate({
-          where: {name: controlText(name)},
+          where: {name},
         }).then((model) => model[0])
       )
     );
