@@ -12,6 +12,7 @@ import Api from '../../Axios';
 import {Section} from '../../components/utils';
 import {SharesCountContext} from "../../components/store/SharesCountProvider";
 import {SessionContext} from "../../components/store/SessionProvider";
+import TAGS from "../../constants/tags";
 
 const CVPage = ({ cv, router }) => {
 
@@ -44,7 +45,7 @@ const CVPage = ({ cv, router }) => {
             supprimée.
           </p>
         </Section>
-        <ContactPartial submitLabel="Écrivez-moi" />
+        <ContactPartial submitLabel="Écrivez-moi" tag={TAGS.PAGE_CV_INSCRIPTION_NEWSLETTER_CLIC}/>
         <DiscoverPartial />
       </Layout>
     );
