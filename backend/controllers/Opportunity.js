@@ -89,6 +89,7 @@ const getAirtableOpportunityFields = (opportunity, candidat, businessLines) => {
     Entreprise: opportunity.company,
     Localisation: opportunity.location,
     Description: opportunity.description,
+    "Pré-requis": opportunity.prerequisites,
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
     Candidat: opportunity.isPublic ? '' : `${candidat.firstName} ${candidat.lastName}`,
