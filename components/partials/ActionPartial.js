@@ -4,6 +4,7 @@ import { Section, GridNoSSR } from '../utils';
 import {SharePartial} from "./index";
 import ContactPartial from "./ContactPartial";
 import MultipleCTA from "./MultipleCTA";
+import TAGS from "../../constants/tags";
 
 const datas = [
   {
@@ -52,7 +53,7 @@ const ActionPartial = ({ style }) => (
         data={datas}
         spacing='small'
         className="uk-margin-large-bottom" />
-      <ContactPartial />
+      <ContactPartial tag={TAGS.HOME_INSCRIPTION_NEWSLETTER_CLIC} />
       <SharePartial />
     </GridNoSSR>
   </Section>

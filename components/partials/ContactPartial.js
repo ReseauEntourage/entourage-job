@@ -5,8 +5,9 @@ import validator from 'validator';
 import { IconNoSSR, GridNoSSR } from '../utils';
 import Axios from "../../Axios";
 import Button from "../utils/Button";
+import {event} from "../../lib/gtag";
 
-const ContactPartial = ({ padding }) => {
+const ContactPartial = ({ padding, tag }) => {
   const [email, setEmail] = useState('');
   const [isValid, setIsValid] = useState(true);
 
@@ -42,6 +43,7 @@ const ContactPartial = ({ padding }) => {
           style='primary'
           onClick={async () => {
             if(validator.isEmail(email)) {
+              event(tag);
               try {
                 await Axios.post('/api/v1/cv/share', { email });
                 UIkit.notification('Votre inscription à la newsletter a bien été prise en compte !', 'success');
@@ -68,11 +70,13 @@ const ContactPartial = ({ padding }) => {
 )};
 
 ContactPartial.propTypes = {
-  padding: PropTypes.bool
+  padding: PropTypes.bool,
+  tag: PropTypes.shape()
 };
 
 ContactPartial.defaultProps = {
-  padding: true
+  padding: true,
+  tag: undefined
 };
 
 export default ContactPartial;
