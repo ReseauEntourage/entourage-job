@@ -4,6 +4,7 @@ import { Section } from '../../components/utils';
 import { PartnersMapNoSSR } from '../../components/partials/PartnersMap';
 import MultipleCTA from '../../components/partials/MultipleCTA';
 import { EXTERNAL_LINKS } from '../../constants';
+import CorporateNewsletter from '../../components/partials/CorporateNewsletterPartial';
 
 const RecruterHorsLinkedOut = () => (
   <Layout title="Recruter en dehors du réseau - LinkedOut">
@@ -57,6 +58,7 @@ const RecruterHorsLinkedOut = () => (
         ]}
       />
     </Section>
+    <CorporateNewsletter />
   </Layout>
 );
 
