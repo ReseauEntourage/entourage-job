@@ -25,6 +25,7 @@ const DiscoverPartial = ({style}) => {
     return (
       <GridNoSSR
         childWidths={['1-3@m']}
+        gap="small"
         items={cvs.map((cv) => (
           <CandidatCard
             url={cv.user && cv.user.url}
