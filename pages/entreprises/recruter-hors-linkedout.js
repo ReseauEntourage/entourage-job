@@ -1,10 +1,9 @@
 import React from 'react';
 import Layout from '../../components/Layout';
-import CorporateContact from '../../components/partials/CorporateContactPartial';
 import { Section } from '../../components/utils';
 import { PartnersMapNoSSR } from '../../components/partials/PartnersMap';
 import MultipleCTA from '../../components/partials/MultipleCTA';
-import {EXTERNAL_LINKS} from '../../constants';
+import { EXTERNAL_LINKS } from '../../constants';
 
 const RecruterHorsLinkedOut = () => (
   <Layout title="Recruter en dehors du réseau - LinkedOut">
@@ -14,9 +13,11 @@ const RecruterHorsLinkedOut = () => (
         &nbsp;un candidat en précarité
       </h1>
       <p className="uk-text-center">
-        @TODO Texte intro pour dire que LinkedOut n’est pas partout en France. Mais
-        dans chaque territoire, nos partenaires agissent et recherchent aussi
-        des offres d’emploi pour leurs candidats.
+        Le programme LinkedOut est pour l’instant présent seulement à Paris,
+        dans les Hauts de Seine, en Seine-St-Denis et dans le Nord. Dans les
+        territoires où nous ne sommes pas présents, nous avons mis en place des
+        partenariats avec des acteurs de l’insertion qui recherchent des
+        opportunités d’emploi pour leurs candidats.
       </p>
       <h2 className="uk-text-bold uk-text-center uk-text-large">
         Contactez nos partenaires&nbsp;:
@@ -28,17 +29,25 @@ const RecruterHorsLinkedOut = () => (
         data={[
           {
             title: 'Vous ne trouvez pas de partenaire sur votre territoire ?',
-            text:
-              <div>Il existe d’autres façons d’agir avec nous. Découvrez toutes les autres manières de vous engager aux côtés de LinkedOut&nbsp;:</div>,
+            text: (
+              <p>
+                Il existe d’autres façons d’agir avec nous. Découvrez toutes les
+                autres manières de vous engager aux côtés de LinkedOut&nbsp;:
+              </p>
+            ),
             button: {
               label: "S'engager",
-              href: '/entreprises/sengager',
+              href: '/entreprises#sengager',
             },
           },
           {
-            title:
-              'Rejoignez d’autres entreprises engagées dans votre territoire et découvrez des moyens d’agir localement',
-            text: <div>Découvrez les Clubs départementaux La France une Chance&nbsp;:</div>,
+            title: 'Découvrez les clubs La France une chance',
+            text: (
+              <p>
+                Rejoignez d’autres entreprises engagées dans votre département
+                et découvrez des moyens d’agir localement&nbsp;:
+              </p>
+            ),
             button: {
               label: 'Découvrir',
               href: EXTERNAL_LINKS.FRANCE_UNE_CHANCE,
@@ -48,7 +57,6 @@ const RecruterHorsLinkedOut = () => (
         ]}
       />
     </Section>
-    <CorporateContact />
   </Layout>
 );
 
