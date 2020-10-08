@@ -5,7 +5,7 @@ import MultipleCTA from '../partials/MultipleCTA';
 
 const HowToCommitDifferently = () => {
   return (
-    <Section container="small">
+    <Section container="small" id="sengager">
       <h2 className="uk-text-center uk-text-bold">
         <span className="uk-text-primary">S'engager</span>&nbsp;autrement avec
         LinkedOut
