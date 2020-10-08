@@ -8,16 +8,16 @@ import { EXTERNAL_LINKS } from '../../constants';
 import MultipleCTA from '../../components/partials/MultipleCTA';
 import HowToBeInclusive from '../../components/sections/HowToBeInclusive';
 
-const Sensibiliser = () => {
+const Sinformer = () => {
   return (
-    <Layout title="Sensibiliser - LinkedOut">
+    <Layout title="S'informer - LinkedOut">
       <ImageTitle
         img="/static/img/header_pic_hire.jpg"
-        id="sensibiliser-title"
+        id="sinformer-title"
         title={
           <>
-            Comment et pourquoi devenir une&nbsp;
-            <span className="uk-text-primary">entreprise&nbsp;inclusive</span>
+            Pourquoi et comment<div>devenir une</div>
+            <div className="uk-text-primary">entreprise&nbsp;inclusive</div>
           </>
         }
       />
@@ -28,9 +28,13 @@ const Sensibiliser = () => {
         </h2>
         <p className="uk-text-center">
           Chacun devrait pouvoir avoir sa place dans l’entreprise et dans la
-          société, c’est la conviction de LinkedOut. Ce n’est pas qu’aux
-          personnes exclues de faire le chemin mais aussi à l’entreprise de se
-          transformer pour faire une place à tous.
+          société, c’est la conviction de LinkedOut.
+        </p>
+        <p className="uk-text-center">
+          Il est temps de passer d’une logique d’insertion à une logique
+          d’inclusion : ce n’est pas qu’aux personnes exclues de faire le chemin
+          pour s’insérer mais aussi à l’entreprise de se transformer pour faire
+          une place à tous.
         </p>
         <div
           className="uk-flex uk-flex-middle uk-margin-large-top"
@@ -49,12 +53,19 @@ const Sensibiliser = () => {
         <h2 className="uk-text-bold uk-text-center">
           Un emploi, <span className="uk-text-primary">ça change une vie</span>
         </h2>
-        <p className="uk-text-center uk-margin-large-bottom">
+        <p className="uk-text-center">
           Jeunes issus de l’aide sociale à l’enfance, réfugiés nouvellement
-          arrivés, personnes ayant eu des accidents de la vie… tous ont en
+          arrivés, accidentés de la vie, familles très précaires… tous ont en
           commun de n’avoir que très peu de gens sur qui compter. Beaucoup ont
-          aussi des compétences, du talent, et l’envie de s’en sortir. Loin
-          d’être assistés, ils rêvent de travailler !
+          aussi des compétences, du talent, et l’envie de s’en sortir.
+        </p>
+        <p className="uk-text-center uk-margin-large-bottom">
+          Aujourd’hui,&nbsp;
+          <span className="uk-text-primary uk-text-bold">
+            2 millions de personnes sont exclues du marché de l’emploi et vivent
+            dans une grande précarité
+          </span>
+          . Pourtant, loin d’être assistés, ils rêvent de travailler !
         </p>
         <Carousel containerClasses="uk-child-width-1-1" style="muted">
           <CarouselItem
@@ -139,7 +150,7 @@ const Sensibiliser = () => {
             {
               title: 'Se former à l’inclusion',
               text:
-                'Pour approfondir les piliers ci-dessus et commencer à construire un plan d’action adapté à votre organisation, notre partenaire Le Campus de l’inclusion propose des formations aux dirigeants d’organisation.',
+                'Le Campus de l’inclusion propose des formations aux dirigeants d’organisation et vous aide à construire un plan d’action adapté à votre organisation.',
               button: {
                 label: "Plus d'infos ici",
                 href: EXTERNAL_LINKS.CAMPUS_INCLUSION,
@@ -148,9 +159,9 @@ const Sensibiliser = () => {
               },
             },
             {
-              title: <div>Sensibiliser mes collaborateurs</div>,
+              title: <div>Sensibiliser ses collaborateurs</div>,
               text:
-                'Nous proposons des ateliers de sensibilisation pour ouvrir le dialogue autour de ce sujet dans votre entreprise, sentir la sensibilité de vos collaborateurs et co-construire une démarche. Intéressé ?',
+                'Nous proposons des ateliers pour ouvrir le dialogue autour de ce sujet dans votre entreprise et initier une démarche parmi vos collaborateurs. Intéressés ?',
               button: {
                 label: 'Contactez nous',
                 href: 'mailto:florent@entourage.social',
@@ -159,9 +170,9 @@ const Sensibiliser = () => {
               },
             },
             {
-              title: 'Agir dans mon territoire',
+              title: 'Agir dans son territoire',
               text:
-                'Les clubs d’entreprise La France Une Chance rassemblent dans chaque territoire les entreprises engagées dans l’inclusion. Rejoignez le club et découvrez les formes d’engagement locales.',
+                'Les clubs La France Une Chance rassemblent dans chaque territoire les entreprises engagées dans l’inclusion. Rejoignez votre club et découvrez les formes d’engagement locales.',
               button: {
                 label: 'Retrouvez les clubs ici',
                 href: EXTERNAL_LINKS.FRANCE_UNE_CHANCE,
@@ -170,9 +181,14 @@ const Sensibiliser = () => {
               },
             },
             {
-              title: <div>Déjà prêt à recruter inclusif&nbsp;?</div>,
+              title: 'Prêt à recruter ?',
               text:
-                'Découvrez sur LinkedOut.fr si un candidat vous correspond. Si vous êtes dans un autre territoire, découvrez dans votre territoire nos organisations partenaires qui cherchent elles aussi des jobs à leurs candidats.',
+                'Découvrez si un candidat LinkedOut correspond à votre besoin. Si vous êtes dans un autre territoire, contactez nos partenaires qui cherchent aussi des emplois pour leurs candidats.',
+              button: {
+                label: 'Je recrute',
+                href: '/entreprises/cvs',
+                size: 'small',
+              },
             },
           ]}
           showHorizontalDividers
@@ -182,4 +198,4 @@ const Sensibiliser = () => {
   );
 };
 
-export default Sensibiliser;
+export default Sinformer;
