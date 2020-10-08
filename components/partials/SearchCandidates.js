@@ -179,8 +179,9 @@ const SearchCandidates = () => {
             Découvrez les <span className="uk-text-primary">candidats</span>
           </h2>
           <div>
-            Voici les CV de tous les candidats de la promotion actuelle de
-            LinkedOut.
+            80 candidats motivés, en Ile-de-France et en Hauts-de-France,
+            aspirent à travailler dans la vente, la restauration, le service à
+            la personne, etc. A vos jobs !
           </div>
         </div>
         <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-medium-top">

@@ -16,13 +16,13 @@ const CorporateContact = () => (
         alt="florent"
       />
       <a
-        href="mailto:florent@entourage.social"
+        href="mailto:entreprises@entourage.social"
         target="_blank"
         className="uk-text-bold uk-margin-small-left"
         rel="noopener noreferrer"
       >
         <span uk-icon="mail" />
-        &nbsp;florent@entourage.social
+        &nbsp;entreprises@entourage.social
       </a>
     </div>
   </Section>

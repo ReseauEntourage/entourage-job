@@ -13,12 +13,10 @@ const CVEntreprises = () => (
       id="companies-title"
       title={
         <span>
-          <div>Concrètement,</div>
-          <span className="uk-text-primary">comment recruter</span> un
+          <span className="uk-text-primary">Comment recruter</span> un
           candidat&nbsp;?
         </span>
       }
-      text={"Il n'y a pas de petit coup de pouce, aidez à votre échelle\xa0!"}
     />
     <HireSteps />
     <DiscoverCandidates />
