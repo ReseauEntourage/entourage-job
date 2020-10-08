@@ -5,7 +5,6 @@ import ImageTitle from '../../components/sections/ImageTitle';
 import WhatItBrings from '../../components/sections/WhatItBrings';
 import HireCTA from '../../components/partials/HireCTA';
 import Reviews from '../../components/sections/Reviews';
-import CorporateContact from '../../components/partials/CorporateContactPartial';
 import HowToCommitDifferently from '../../components/sections/HowToCommitDifferently';
 
 const Entreprises = () => {
@@ -17,12 +16,9 @@ const Entreprises = () => {
         title={
           <>
             Entreprises,&nbsp;
-            <span className="uk-text-primary">
-              agissez avec LinkedOut&nbsp;!
-            </span>
+            <span className="uk-text-primary">agissez avec LinkedOut</span>
           </>
         }
-        text={"La précarité et l'exclusion n'empêchent pas le talent\xa0!"}
       />
       <Section id="makeADifference" style="muted" container="small">
         <h4 className="uk-align-center uk-text-center">
@@ -35,7 +31,6 @@ const Entreprises = () => {
       <HireCTA />
       <Reviews />
       <HowToCommitDifferently />
-      <CorporateContact/>
     </Layout>
   );
 };

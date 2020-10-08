@@ -5,28 +5,54 @@ import Grid from '../utils/Grid';
 const tips = [
   {
     title: (
-      <div>
+      <>
         Recruter
         <br />
         inclusif
-      </div>
+      </>
+    ),
+    text: (
+      <p>
+        Osez donner sa chance à une personne en précarité pour lui permettre de
+        trouver sa place dans votre entreprise et dans la société.
+      </p>
     ),
   },
   {
     title: (
-      <div>
+      <>
         Acheter
         <br />
         inclusif
-      </div>
+      </>
+    ),
+    text: (
+      <p>
+        En achetant des services à des structures d’insertion ou à des ESAT,
+        vous créez de l’activité économique pour des personnes vulnérables.
+      </p>
     ),
   },
   {
-    title: "Soutenir les acteurs qui agissent pour l'inclusion",
-    text:
-      "Par du don financier, de la mise à disposition de moyens ou du mécénat de compétences, vous pouvez soutenir des projets comme LinkedOut ou d'autres qui accompagnent des personnes fragiles.",
+    title: 'Soutenir des projets solidaires',
+    text: (
+      <p>
+        Par du mécénat financier, de moyens ou de compétences, soutenez des
+        projets comme LinkedOut ou d'autres qui accompagnent des personnes
+        fragiles.
+      </p>
+    ),
   },
-  { title: 'Sensibiliser et engager mes collaborateurs' },
+  {
+    title: 'Engager ses collaborateurs',
+    text: (
+      <p>
+        Par la sensibilisation de vos salariés à la question de la fragilité,
+        vous contribuez à diffuser une culture de l’inclusion dans le monde du
+        travail.
+      </p>
+    ),
+  },
 ];
 
 const TipsGrid = () => {
