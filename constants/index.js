@@ -211,7 +211,6 @@ const EXTERNAL_LINKS = {
   ARTICLE_BC: "https://blog.linkedout.fr/2020/07/03/benevole-coach-linkedout/",
   CAMPUS_INCLUSION: "https://campus-inclusion.fr",
   FRANCE_UNE_CHANCE: "https://lafrance-unechance.fr/carte-des-clubs-la-france-une-chance/"
-
 };
 
 const NEWSLETTER_ORIGINS = {
@@ -223,6 +222,10 @@ const VALUES = {
   SHARES: 120000
 };
 
+const CONTACT_MAILS = {
+  CORPORATE_CONTACT: "entreprises@entourage.social"
+}
+
 module.exports = {
   OFFER_STATUS,
   CV_STATUS,
@@ -232,5 +235,6 @@ module.exports = {
   VALUES,
   LOCATIONS,
   FILTERS_DATA,
-  NEWSLETTER_ORIGINS
+  NEWSLETTER_ORIGINS,
+  CONTACT_MAILS
 };
