@@ -36,6 +36,12 @@ const CandidatCard = ({
 
   const isCandidatsPage = router.asPath.includes('/candidats');
 
+  const link = `${process.env.SERVER_URL}/cv/${url}`;
+  const hashtags = ['LinkedOut'];
+  const sharedDescription =
+    `La précarité n'exclut pas les compétences\xa0! Avec LinkedOut, aidons ${firstName} à retrouver un emploi en lui proposant un job ou en diffusant son CV\xa0!`;
+  const title = `LinkedOut\xa0: Aidez ${firstName} à retrouver un emploi`;
+
   // petit systeme pour ne pas avoir a afficher la modal a chaque carte
   // optimisation possible
   const [showModal, setShowModal] = useState(false);
@@ -245,12 +251,9 @@ const CandidatCard = ({
                   updateShareCount(id, 'linkedin');
                   openNewsletterModal();
                 }}
-                url={`${process.env.SERVER_URL}/cv/${url}`}
-                title={`${firstName.charAt(0).toUpperCase() +
-                firstName.slice(1).toLowerCase()} - LinkedOut`}
-                description={
-                  "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
-                }
+                url={link}
+                title={title}
+                summary={sharedDescription}
                 style={{ cursor: 'pointer' }}
                 className="uk-icon-button light-icon-button"
               >
@@ -268,11 +271,9 @@ const CandidatCard = ({
                   updateShareCount(id, 'facebook');
                   openNewsletterModal();
                 }}
-                url={`${process.env.SERVER_URL}/cv/${url}`}
-                quote={
-                  "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
-                }
-                hashtags={['LinkedOut']}
+                url={link}
+                quote={sharedDescription}
+                hashtags={hashtags}
                 style={{ cursor: 'pointer' }}
                 className="uk-icon-button light-icon-button"
               >
@@ -290,11 +291,9 @@ const CandidatCard = ({
                   updateShareCount(id, 'twitter');
                   openNewsletterModal();
                 }}
-                url={`${process.env.SERVER_URL}/cv/${url}`}
-                title={
-                  "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer."
-                }
-                hashtags={['LinkedOut']}
+                url={link}
+                title={title}
+                hashtags={hashtags}
                 via="R_Entourage"
                 style={{ cursor: 'pointer' }}
                 className="uk-icon-button light-icon-button"
