@@ -59,7 +59,7 @@ const HowToCommitDifferently = () => {
                 button: {
                   label: 'En savoir plus',
                   size: 'small',
-                  href: '/entreprises/sensibiliser',
+                  href: '/entreprises/sinformer',
                 },
               },
               {
