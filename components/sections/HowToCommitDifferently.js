@@ -11,8 +11,11 @@ const HowToCommitDifferently = () => {
         LinkedOut
       </h2>
       <p className="uk-text-center uk-margin-medium-top">
-        Vous n'avez pas la possibilité de recruter ? Il existe d'autres manières
-        de rendre votre entreprise plus inclusive avec LinkedOut.
+        Vous n'avez pas la possibilité de recruter ?
+      </p>
+      <p className="uk-text-center">
+        Il existe d'autres manières de rendre votre entreprise plus inclusive
+        avec LinkedOut.
       </p>
       <ul
         className="uk-margin-large-top"
@@ -44,16 +47,13 @@ const HowToCommitDifferently = () => {
               {
                 title: (
                   <h4 className="uk-text-bold">
-                    Comment et pourquoi devenir une entreprises inclusive ?
+                    Comment et pourquoi devenir une entreprise inclusive ?
                   </h4>
                 ),
                 text: (
                   <div>
-                    @TODO text à intégrer Lorem ipsum dolor sit amet,
-                    consectetur adipiscing elit. Vivamus et lectus ut enim
-                    feugiat fermentum. Etiam efficitur bibendum tincidunt. Fusce
-                    sollicitudin justo a nisi tempor, sit amet sagittis dui
-                    condimentum
+                    Découvrez du contenu pour démarrer et des ressources pour
+                    vous lancer.
                   </div>
                 ),
                 button: {
@@ -68,16 +68,15 @@ const HowToCommitDifferently = () => {
                 ),
                 text: (
                   <div>
-                    Nous proposons des ateliers de sensibilisation pour ouvrir
-                    le dialogue autour de ce sujet dans votre entreprise, sentir
-                    la sensibilité de vos collaborateurs et co-construire une
-                    démarche. Intéressé ?
+                    Nous vous proposons des ateliers pour aborder le sujet de
+                    l'inclusion avec vos collaborateurs. Intéressés ?
                   </div>
                 ),
                 button: {
-                  label: 'En savoir plus @TODO lien ?',
+                  label: 'Nous contacter',
                   size: 'small',
-                  href: '',
+                  external: true,
+                  href: 'mailto:entreprises@linkedout.fr',
                 },
               },
             ]}
@@ -96,16 +95,14 @@ const HowToCommitDifferently = () => {
                 ),
                 text: (
                   <div>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Vivamus et lectus ut enim feugiat fermentum. Etiam efficitur
-                    bibendum tincidunt. Fusce sollicitudin justo a nisi tempor,
-                    sit amet sagittis dui condimentum
+                    Faites connaître l’opération LinkedOut à vos salariés, et
+                    incitez-les à contribuer à la diffusion des CV
                   </div>
                 ),
                 button: {
-                  label: 'Partager des CV @TODO lien ?',
+                  label: 'Partager des CV',
                   size: 'small',
-                  href: '',
+                  href: '/candidats',
                 },
               },
               {
@@ -114,10 +111,9 @@ const HowToCommitDifferently = () => {
                 ),
                 text: (
                   <div>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Vivamus et lectus ut enim feugiat fermentum. Etiam efficitur
-                    bibendum tincidunt. Fusce sollicitudin justo a nisi tempor,
-                    sit amet sagittis dui condimentum
+                    Engagez vos collaborateurs de manière ludique en leur
+                    proposant de défier le bateau LinkedOut pendant le Vendée
+                    Globe !
                   </div>
                 ),
                 button: {
@@ -140,16 +136,16 @@ const HowToCommitDifferently = () => {
                   ),
                   text: (
                     <div>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Vivamus et lectus ut enim feugiat fermentum. Etiam
-                      efficitur bibendum tincidunt. Fusce sollicitudin justo a
-                      nisi tempor, sit amet sagittis dui condimentum
+                      Aidez les candidats LinkedOut à construire leur projet
+                      professionnel en partageant vos connaissances sur votre
+                      métier ou votre secteur d’activité.
                     </div>
                   ),
                   button: {
-                    label: "Rejoindre l'annuaire métier @TODO lien ?",
+                    label: "Rejoignez l'annuaire métier",
                     size: 'small',
-                    href: '',
+                    href: 'https://entourage-asso.typeform.com/to/Vo3eaU1i',
+                    external: true,
                   },
                 },
                 {
@@ -158,16 +154,16 @@ const HowToCommitDifferently = () => {
                   ),
                   text: (
                     <div>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Vivamus et lectus ut enim feugiat fermentum. Etiam
-                      efficitur bibendum tincidunt. Fusce sollicitudin justo a
-                      nisi tempor, sit amet sagittis dui condimentum
+                      Sensibilisez vos collaborateurs à la lutte contre
+                      l’exclusion et renforcez la cohésion de vos équipes au
+                      travers de nos team buildings sur-mesure
                     </div>
                   ),
                   button: {
-                    label: 'En savoir plus @TODO lien?',
+                    label: 'En savoir plus',
                     size: 'small',
-                    href: '',
+                    href: 'https://www.entourage.social/osez-la-rencontre/',
+                    external: true,
                   },
                 },
               ]}
@@ -177,14 +173,17 @@ const HowToCommitDifferently = () => {
         <li className="uk-text-center">
           <h4 className="uk-text-bold">Faire un don</h4>
           <p className="uk-container-xsmall">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus et
-            lectus ut enim feugiat fermentum. Etiam efficitur bibendum
-            tincidunt. Fusce sollicitudin justo a nisi tempor, sit amet sagittis
-            dui condimentum
+            Soutenez le déploiement de LinkedOut et permettez à des centaines de
+            personnes d’accéder à l’emploi
           </p>
           <div className="uk-flex uk-flex-center">
-            <Button href="" style="primary">
-              Faire un don @TODO lien ?
+            <Button
+              href="mailto:barnabe@entourage.social"
+              isExternal
+              newTab
+              style="primary"
+            >
+              Nous contacter
             </Button>
           </div>
         </li>

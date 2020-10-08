@@ -9,7 +9,7 @@ const HireCTA = () => {
         Vous souhaitez recruter&nbsp;?
       </h2>
       <div className="uk-margin-top uk-text-center uk-text-bold">
-        Recherchez le candidat qui correspond à vos besoins et proposez lui
+        Recherchez le candidat qui correspond à vos besoins et proposez-lui
         votre offre
       </div>
       <Grid
