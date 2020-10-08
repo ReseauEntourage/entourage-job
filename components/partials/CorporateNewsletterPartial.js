@@ -4,6 +4,7 @@ import validator from 'validator';
 import { IconNoSSR, GridNoSSR, Section } from '../utils';
 import Axios from '../../Axios';
 import Button from '../utils/Button';
+import { NEWSLETTER_ORIGINS } from '../../constants';
 
 const CorporateNewsletter = () => {
   const [email, setEmail] = useState('');
@@ -14,7 +15,7 @@ const CorporateNewsletter = () => {
       try {
         await Axios.post('/api/v1/cv/share', {
           email,
-          origin: 'LKO_ENTREPRISE',
+          origin: NEWSLETTER_ORIGINS.LKO_ENTREPRISES,
         });
         UIkit.notification(
           'Votre inscription à la newsletter a bien été prise en compte !',
