@@ -1,4 +1,5 @@
 import React from 'react';
+import { CONTACT_MAILS } from '../../constants';
 import { Button, Section } from '../utils';
 
 const CorporateContact = () => (
@@ -16,13 +17,13 @@ const CorporateContact = () => (
         alt="florent"
       />
       <a
-        href="mailto:entreprises@entourage.social"
+        href={`mailto:${CONTACT_MAILS.CORPORATE_CONTACT}`}
         target="_blank"
         className="uk-text-bold uk-margin-small-left"
         rel="noopener noreferrer"
       >
         <span uk-icon="mail" />
-        &nbsp;entreprises@entourage.social
+        &nbsp;{CONTACT_MAILS.CORPORATE_CONTACT}
       </a>
     </div>
   </Section>
