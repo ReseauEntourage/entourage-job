@@ -1,36 +1,34 @@
 import React from 'react';
-import { Section } from '../utils';
+import { ImgNoSSR, Section } from '../utils';
 import Carousel from '../utils/Carousel';
-import { ReviewCard } from '../cards';
+import CarouselItem from '../partials/CarouselItem';
 
 const reviews = [
   {
-    author: 'Paul Jean',
-    colorClass: 'uk-text-primary',
+    image: '/static/img/temoignage-entreprise-kenny.jpg',
+    author: 'Augustin Chavanne',
+    company: 'Vélissime',
+    industry: 'livraison de repas',
+    companyInfo: '20 salariés',
     review:
-      "Nous avons intégré Zineb à l'équipe il y a maintenant 6 mois. Tout a été rendu facile par Entourage et les équipes de travail sont très satisfaites.",
-    role: 'Directeur RH chez Sanofi',
+      'Dès l’entretien d’embauche, Kenny dénotait par son enthousiasme, son énergie et l’expérience qu’il avait vécue. Un vrai bonhomme, pas simplement un gars diplômé, fraîchement moulu, qui nous parle de choses qu’il n’a pas vécues. Par son expérience, il apporte quelque chose de radicalement différent. Si je pouvais embaucher 2 Kenny, je le ferais !',
   },
   {
-    author: 'Stéphane Joli',
-    colorClass: '',
+    image: '/static/img/temoignage-entreprise-miah.png',
+    author: 'François Biard',
+    company: 'Green Factory',
+    industry: 'créations végétales',
     review:
-      "Mohamed s'est fondu dans le groupe en un clin d'oeil, tout le monde a l'impression qu'il est là depuis 10 ans.",
-    role: 'Recruteur pour LVMH',
+      'Avec Miah c’était une réussite. Nous avons eu un cas moins positif mais nous avons alerté l’équipe LinkedOut qui tout de suite pris le sujet en main. Là où notre compétence s’arrête, on est rassurés par le fait que LinkedOut est là pour nous accompagner. Si on peut s’inscrire dans des actions comme celles-ci tout en gardant notre efficacité, en y ajoutant le sourire de quelqu’un de joyeux et qui a envie, je veux le faire !',
   },
   {
-    author: 'Jeanne Pierrot ',
-    colorClass: 'uk-text-primary',
+    image: '/static/img/temoignage-entreprise-laith.jpg',
+    author: 'Sylvie Lepoutre',
+    company: 'Advens',
+    industry: 'cybersécurité',
+    companyInfo: '200 salariés',
     review:
-      "La réinsertion est rendue plus facile grâce à LinkedOut, et c'est une belle victoire pour les candidats et pour les entreprises. Continuez !",
-    role: 'Directrice RH chez Le grand Breguet',
-  },
-  {
-    author: 'Titouan Pereirra ',
-    colorClass: 'uk-text-primary',
-    review:
-      'Les candidats sont devenus des atouts importants au sein de notre magasin, nous sommes ravis !',
-    role: 'Chef de rayon chez Monoprix',
+      'On était à mille lieux des problématiques des personnes en précarité. Maintenant, chez Advens, on entend des mots comme “résilience”, “deuxième chance”, “rebond”, “inclusion”. Les collaborateurs sont très fiers !',
   },
 ];
 
@@ -41,17 +39,55 @@ const Reviews = () => {
         <span className="uk-text-primary">LinkedOut plébiscité</span> par les
         recruteurs...
       </h2>
-      <div className="uk-width-expand">
-        <Carousel style="default" containerClasses="uk-child-width-1-1">
-          {reviews.map((review, index) => (
-            <ReviewCard
-              author={review.author}
-              colorclassName={review.colorClass}
-              key={index}
-              review={review.review}
-              role={review.role}
-            />
-          ))}
+      <div className="uk-flex uk-flex-center">
+        <Carousel
+          style="default"
+          containerClasses="uk-child-width-1-1 uk-container-small"
+        >
+          {reviews.map(
+            (
+              { author, company, industry, companyInfo, review, image },
+              index
+            ) => (
+              <CarouselItem
+                key={index}
+                index={index}
+                img={image}
+                description={
+                  <div>
+                    <ImgNoSSR
+                      alt="guillemets"
+                      width="27"
+                      height="21"
+                      src="/static/img/guillemets.png"
+                    />
+                    <p className="uk-text-small uk-margin-small uk-text-italic">
+                      {review}
+                    </p>
+                    <div
+                      className="uk-text-bottom"
+                      style={{ display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                      <ImgNoSSR
+                        alt="guillemets-petits"
+                        width="15"
+                        height="12"
+                        src="/static/img/guillemetsPetits.png"
+                      />
+                    </div>
+                    <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
+                      {author}
+                    </p>
+                    <p className="uk-text-meta uk-margin-remove">
+                      <span className="uk-text-bold">{company}</span>,&nbsp;
+                      <span>{industry}</span>
+                      {companyInfo && <span>,&nbsp;{companyInfo}</span>}
+                    </p>
+                  </div>
+                }
+              />
+            )
+          )}
         </Carousel>
       </div>
     </Section>
