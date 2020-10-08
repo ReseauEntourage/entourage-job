@@ -38,15 +38,9 @@ const Reviews = () => {
   return (
     <Section id="reviews" style="muted">
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-        <span className="uk-text-primary">LinkedOut plebiscité</span> par les
+        <span className="uk-text-primary">LinkedOut plébiscité</span> par les
         recruteurs...
       </h2>
-      <h4 className="uk-align-center uk-text-center uk-margin-medium-bottom">
-        Le retour des recruteurs en entreprise est unanime&nbsp;: l&apos;arrivée
-        des candidats fédère les salariés et transforme le projet
-        d&apos;entreprise en une véritable aventure humaine, porteuse de sens
-        pour tous&nbsp;!
-      </h4>
       <div className="uk-width-expand">
         <Carousel style="default" containerClasses="uk-child-width-1-1">
           {reviews.map((review, index) => (
