@@ -6,6 +6,7 @@ import { IconNoSSR, GridNoSSR } from '../utils';
 import Axios from '../../Axios';
 import Button from '../utils/Button';
 import { event } from '../../lib/gtag';
+import { NEWSLETTER_ORIGINS } from '../../constants';
 
 const NewsletterPartial = ({ padding, tag }) => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,10 @@ const NewsletterPartial = ({ padding, tag }) => {
     if (validator.isEmail(email)) {
       event(tag);
       try {
-        await Axios.post('/api/v1/cv/share', { email });
+        await Axios.post('/api/v1/cv/share', {
+          email,
+          origin: NEWSLETTER_ORIGINS.LKO,
+        });
         UIkit.notification(
           'Votre inscription à la newsletter a bien été prise en compte !',
           'success'

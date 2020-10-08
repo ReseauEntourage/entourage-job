@@ -13,7 +13,7 @@ const S3 = require('../../../controllers/aws');
 const { sendMail } = require('../../../controllers/mail');
 const { airtable } = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
-const { USER_ROLES, CV_STATUS } = require('../../../../constants');
+const { USER_ROLES, CV_STATUS, NEWSLETTER_ORIGINS } = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
 const upload = multer({ dest: 'uploads/' });
@@ -246,7 +246,7 @@ router.post('/share', auth(), (req, res) => {
       {
         fields: {
           email: req.body.email,
-          Origine: req.body.origin || NEWLETTER_ORIGINS.LKO,
+          Origine: req.body.origin || NEWSLETTER_ORIGINS.LKO,
         },
       },
     ],
