@@ -40,9 +40,11 @@ const Sinformer = () => {
           className="uk-flex uk-flex-middle uk-margin-large-top"
           style={{ justifyContent: 'space-around' }}
         >
-          <p className="uk-text-bold">
-            Changeons de paradigme,{' '}
-            <span className="uk-text-primary">à bas l’individualisme !</span>
+          <p className="uk-text-bold uk-text-center">
+            La performance durable, c’est de&nbsp;
+            <span className="uk-text-primary">
+              s'ouvrir à la différence et de bâtir la confiance !
+            </span>
           </p>
           <div style={{ background: 'black', color: 'white', padding: '8rem' }}>
             @TODO Vidéo à intégrer
