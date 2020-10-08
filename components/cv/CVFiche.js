@@ -34,8 +34,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
   const link = `${hostname}${router.asPath}`;
   const hashtags = ['LinkedOut'];
   const sharedDescription =
-    "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer.";
-  const title = `${cv.user.candidat.firstName} - LinkedOut`;
+    `La précarité n'exclut pas les compétences\xa0! Avec LinkedOut, aidons ${cv.user.candidat.firstName} à retrouver un emploi en lui proposant un job ou en diffusant son CV\xa0!`;
+  const title = `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`;
 
   // desactivation des champs candidat et publique
   const mutatedSchema = mutateFormSchema(schema, [
@@ -98,7 +98,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
             }}
             url={link}
             title={title}
-            description={sharedDescription}
+            summary={sharedDescription}
             className="uk-icon-button"
           >
             <IconNoSSR
