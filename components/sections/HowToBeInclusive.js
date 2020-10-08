@@ -13,9 +13,8 @@ const tips = [
     ),
     text: (
       <p>
-        Prenez le risque de laisser une chance à une personne en précarité pour
-        lui permettre de trouver sa place dans votre entreprise et dans la
-        société.
+        Osez donner sa chance à une personne en précarité pour lui permettre de
+        trouver sa place dans votre entreprise et dans la société.
       </p>
     ),
   },
