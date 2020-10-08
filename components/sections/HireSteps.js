@@ -33,9 +33,8 @@ const HireSteps = () => {
       title: 'LinkedOut vous accompagne',
       text: (
         <div>
-          L&apos;équipe LinkedOut et le bénévole-coach du candidat vous
-          accompagnent et vous donnent les outils pour l&apos;accueillir et
-          l&apos;intégrer dans votre organisation
+          L&apos;équipe LinkedOut vous accompagne et vous donne les outils pour
+          accueillir et intégrer au mieux le candidat
         </div>
       ),
     },
