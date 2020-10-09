@@ -51,10 +51,10 @@ const HowToCommitDifferently = () => {
                   </h4>
                 ),
                 text: (
-                  <div>
+                  <p>
                     Découvrez du contenu pour démarrer et des ressources pour
                     vous lancer.
-                  </div>
+                  </p>
                 ),
                 button: {
                   label: 'En savoir plus',
@@ -67,10 +67,10 @@ const HowToCommitDifferently = () => {
                   <h4 className="uk-text-bold">Ateliers de sensibilisation</h4>
                 ),
                 text: (
-                  <div>
+                  <p>
                     Nous vous proposons des ateliers pour aborder le sujet de
-                    l'inclusion avec vos collaborateurs. Intéressés ?
-                  </div>
+                    l'inclusion avec vos collaborateurs. Intéressés&nbsp;?
+                  </p>
                 ),
                 button: {
                   label: 'Nous contacter',
@@ -94,10 +94,10 @@ const HowToCommitDifferently = () => {
                   </h4>
                 ),
                 text: (
-                  <div>
+                  <p>
                     Faites connaître l’opération LinkedOut à vos salariés, et
-                    incitez-les à contribuer à la diffusion des CV
-                  </div>
+                    incitez-les à contribuer à la diffusion des CV.
+                  </p>
                 ),
                 button: {
                   label: 'Partager des CV',
@@ -110,16 +110,17 @@ const HowToCommitDifferently = () => {
                   <h4 className="uk-text-bold">Participer à Virtual Regatta</h4>
                 ),
                 text: (
-                  <div>
+                  <p>
                     Engagez vos collaborateurs de manière ludique en leur
                     proposant de défier le bateau LinkedOut pendant le Vendée
-                    Globe !
-                  </div>
+                    Globe&nbsp;! Vous voulez en savoir plus&nbsp;?
+                  </p>
                 ),
                 button: {
-                  label: 'En savoir plus @TODO lien ?',
+                  label: 'Nous contacter',
                   size: 'small',
-                  href: '',
+                  href: 'mailto:clement@entourage.social',
+                  external: true,
                 },
               },
             ]}
@@ -135,11 +136,11 @@ const HowToCommitDifferently = () => {
                     <h4 className="uk-text-bold">Inspirer avec son métier</h4>
                   ),
                   text: (
-                    <div>
+                    <p>
                       Aidez les candidats LinkedOut à construire leur projet
                       professionnel en partageant vos connaissances sur votre
                       métier ou votre secteur d’activité.
-                    </div>
+                    </p>
                   ),
                   button: {
                     label: "Rejoignez l'annuaire métier",
@@ -153,11 +154,11 @@ const HowToCommitDifferently = () => {
                     <h4 className="uk-text-bold">Team building solidaire</h4>
                   ),
                   text: (
-                    <div>
+                    <p>
                       Sensibilisez vos collaborateurs à la lutte contre
                       l’exclusion et renforcez la cohésion de vos équipes au
-                      travers de nos team buildings sur-mesure
-                    </div>
+                      travers de nos team buildings sur-mesure.
+                    </p>
                   ),
                   button: {
                     label: 'En savoir plus',
@@ -172,9 +173,9 @@ const HowToCommitDifferently = () => {
         </li>
         <li className="uk-text-center">
           <h4 className="uk-text-bold">Faire un don</h4>
-          <p className="uk-container-xsmall">
-            Soutenez le déploiement de LinkedOut et permettez à des centaines de
-            personnes d’accéder à l’emploi
+          <p className="uk-container-small">
+            Soutenez le déploiement de LinkedOut et permettez
+            <br />à des centaines de personnes d’accéder à l’emploi.
           </p>
           <div className="uk-flex uk-flex-center">
             <Button

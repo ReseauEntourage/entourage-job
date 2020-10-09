@@ -10,7 +10,7 @@ const WhatItBrings = () => {
             Des candidats prêts et motivés pour travailler
           </span>
           , accompagnés individuellement pendant la recherche et après la
-          reprise d’un emploi
+          reprise d’un emploi.
         </div>
       ),
     },
@@ -18,10 +18,10 @@ const WhatItBrings = () => {
       text: (
         <div>
           <span className="uk-text-bold">
-            Un accompagnement par l&apos;équipe LinkedOut{' '}
+            Un accompagnement par l&apos;équipe LinkedOut&nbsp;
           </span>
           dans votre démarche de recrutement inclusif (kit d'intégration,
-          interlocuteur privilégié...)
+          interlocuteur privilégié...).
         </div>
       ),
     },
