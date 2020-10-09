@@ -5,10 +5,21 @@ import CarouselItem from '../partials/CarouselItem';
 
 const testimonies = [
   {
+    image: '/static/img/temoignage-candidat-miah.png',
+    author: 'Miah',
+    quote: 'Trouver du travail a changé ma vie.',
+  },
+  {
     image: '/static/img/temoignage-candidat-laith.jpg',
     author: 'Laith',
     quote:
-      "L'inclusion c’est d’être tous égaux et pas oublier les faibles à côté. LinkedOut m’a permis d’avoir un emploi stable et rentrer dans la société. Avoir un réseau vers qui me tourner. Avoir un emploi pour moi c’est signification d’être utile dans la société.",
+      'LinkedOut m’a permis d’avoir un emploi stable et un réseau vers qui me tourner. Je peux enfin être utile à la société.',
+  },
+  {
+    image: '/static/img/temoignage-candidat-nasser.jpg',
+    author: 'Nasser',
+    quote:
+      'Avoir un emploi ouvre le champ des possibles dans une vie. Que de défis à affronter pour y arriver mais on puise nos forces au plus profond de nos âmes.',
   },
   {
     image: '/static/img/temoignage-candidat-kenny.jpg',
@@ -21,6 +32,18 @@ const testimonies = [
     author: 'Ross',
     quote:
       'Travailler, c’est une question de respect pour soi-même, je préfère gagner ma vie plutôt qu’être dépendant de la générosité des autres.',
+  },
+  {
+    image: '/static/img/temoignage-candidat-cornelia.jpg',
+    author: 'Cornelia',
+    quote:
+      'Travailler, c’est ne plus être seule, c’est retrouver des collègues tous les jours. Ca transforme et embellit le quotidien.',
+  },
+  {
+    image: '/static/img/temoignage-candidat-anais.jpg',
+    author: 'Anais',
+    quote:
+      'Je veux travailler pour être indépendante financièrement et offrir un avenir à ma fille.',
   },
 ];
 
@@ -85,6 +108,16 @@ const CandidateTestimonies = () => {
           ))}
         </Carousel>
       </div>
+      <p className="uk-text-center">
+        On sous-estime souvent le rôle que l’emploi joue dans nos vies. Loin de
+        se résumer à sa seule dimension économique,{' '}
+        <span className="uk-text-primary uk-text-bold">
+          l’emploi est une colonne vertébrale qui tient les gens debout
+        </span>{' '}
+        : il leur rend leur dignité, apporte du lien social, permet de se
+        projeter et de se sentir utile à la société. L’emploi est une clé
+        essentielle pour la réalisation de soi.
+      </p>
     </Section>
   );
 };
