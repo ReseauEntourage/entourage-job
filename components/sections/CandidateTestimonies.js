@@ -116,7 +116,7 @@ const CandidateTestimonies = () => {
         </span>{' '}
         : il leur rend leur dignité, apporte du lien social, permet de se
         projeter et de se sentir utile à la société. L’emploi est une clé
-        essentielle pour la réalisation de soi.
+        essentielle pour l'accomplissement de soi.
       </p>
     </Section>
   );

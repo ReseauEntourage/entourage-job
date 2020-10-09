@@ -18,7 +18,9 @@ const RecruterHorsLinkedOut = () => (
         dans les Hauts de Seine, en Seine-St-Denis et dans le Nord. Dans les
         territoires où nous ne sommes pas présents, nous avons mis en place des
         partenariats avec des acteurs de l’insertion qui recherchent des
-        opportunités d’emploi pour leurs candidats.
+        opportunités d’emploi pour leurs candidats tout au long de l’année.
+        Contactez-les de la part de LinkedOut, ils vous accueilleront à bras
+        ouverts !
       </p>
       <h2 className="uk-text-bold uk-text-center uk-text-large">
         Contactez nos partenaires&nbsp;:
