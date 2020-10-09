@@ -72,7 +72,7 @@ const Sinformer = () => {
             {
               title: 'Se former à l’inclusion',
               text:
-                'Le Campus de l’inclusion propose des formations aux dirigeants d’organisation et vous aide à construire un plan d’action adapté à votre organisation.',
+                'Le Campus de l’inclusion propose des formations aux dirigeants d’organisations et vous aide à construire un plan d’action adapté à votre organisation.',
               button: {
                 label: "Plus d'infos ici",
                 href: EXTERNAL_LINKS.CAMPUS_INCLUSION,
@@ -94,7 +94,7 @@ const Sinformer = () => {
             {
               title: 'Agir dans son territoire',
               text:
-                'Les clubs La France Une Chance rassemblent dans chaque territoire les entreprises engagées dans l’inclusion. Rejoignez votre club et découvrez les formes d’engagement locales.',
+                'Les clubs La France Une Chance rassemblent dans chaque territoire les entreprises inclusives. Rejoignez votre club et découvrez les formes d’engagement locales.',
               button: {
                 label: 'Retrouvez les clubs ici',
                 href: EXTERNAL_LINKS.FRANCE_UNE_CHANCE,
@@ -110,7 +110,7 @@ const Sinformer = () => {
                 </div>
               ),
               text:
-                'Découvrez si un candidat LinkedOut correspond à votre besoin. Si vous êtes dans un autre territoire, contactez nos partenaires qui cherchent aussi des emplois pour leurs candidats.',
+                'Découvrez si un candidat LinkedOut correspond à votre besoin ; ou contactez nos partenaires qui cherchent aussi des emplois pour leurs candidats.',
               button: {
                 label: 'Je recrute',
                 href: '/entreprises/cvs',
