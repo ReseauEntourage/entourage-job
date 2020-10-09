@@ -1,44 +1,37 @@
-import React, {useEffect, useContext} from 'react';
+import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import {
   DiscoverPartial,
-  ContactPartial,
+  NewsletterPartial,
   ActionPartial,
 } from '../../components/partials';
 import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
-import {Section} from '../../components/utils';
-import {SharesCountContext} from "../../components/store/SharesCountProvider";
-import {SessionContext} from "../../components/store/SessionProvider";
-import TAGS from "../../constants/tags";
+import { Section } from '../../components/utils';
+import { SharesCountContext } from '../../components/store/SharesCountProvider';
+import { SessionContext } from '../../components/store/SessionProvider';
+import TAGS from '../../constants/tags';
 
 const CVPage = ({ cv, router }) => {
 
   const hostname = process.env.SERVER_URL;
   const link = `${hostname}${router.asPath}`;
-  const hashtags = ['LinkedOut'];
   const sharedDescription =
     `La précarité n'exclut pas les compétences\xa0! Avec LinkedOut, aidons ${cv.user.candidat.firstName} à retrouver un emploi en lui proposant un job ou en diffusant son CV\xa0!`;
   const title = `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`;
 
 
-  const { incrementSharesCount } = useContext(SharesCountContext);
-  const {isFirstLoad} = useContext(SessionContext);
-
-  const updateShareCount = (candidatId, type) => {
-    Api.post('api/v1/cv/count', {
-      candidatId, type
-    }).then(() => {
-      incrementSharesCount();
-    }).catch((e) => {
-      console.log(e);
-    })
-  };
+  const { isFirstLoad } = useContext(SessionContext);
 
   useEffect(() => {
-    if(isFirstLoad && ((document.referrer && !document.referrer.includes(window.location.origin)) || !document.referrer)) {
+    if (
+      isFirstLoad &&
+      ((document.referrer &&
+        !document.referrer.includes(window.location.origin)) ||
+        !document.referrer)
+    ) {
       // updateShareCount(cv.UserId, 'other');
     }
   }, []);
@@ -53,7 +46,7 @@ const CVPage = ({ cv, router }) => {
             supprimée.
           </p>
         </Section>
-        <ContactPartial submitLabel="Écrivez-moi" tag={TAGS.PAGE_CV_INSCRIPTION_NEWSLETTER_CLIC}/>
+        <NewsletterPartial tag={TAGS.PAGE_CV_INSCRIPTION_NEWSLETTER_CLIC} />
         <DiscoverPartial />
       </Layout>
     );
@@ -77,7 +70,10 @@ const CVPage = ({ cv, router }) => {
     >
       <div className="uk-background-muted">
         {cv.urlImg && (
-          <CVBackground employed={cv.user ? cv.user.employed : false} url={process.env.AWSS3_URL + cv.urlImg || undefined} />
+          <CVBackground
+            employed={cv.user ? cv.user.employed : false}
+            url={process.env.AWSS3_URL + cv.urlImg || undefined}
+          />
         )}
         <CVFiche cv={cv} />
         <ActionPartial style="muted" />

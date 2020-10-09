@@ -1,16 +1,37 @@
 import React from 'react';
-import MultipleCTA from "../partials/MultipleCTA";
+import MultipleCTA from '../partials/MultipleCTA';
 
 const WhatItBrings = () => {
   const whatItBrings = [
     {
-      text: <div><span className="uk-text-bold">Des candidats prêts et motivés pour travailler</span>, accompagnés individuellement pendant la recherche et après la reprise d’un emploi</div>,
+      text: (
+        <div>
+          <span className="uk-text-bold">
+            Des candidats prêts et motivés pour travailler
+          </span>
+          , accompagnés individuellement pendant la recherche et après la
+          reprise d’un emploi.
+        </div>
+      ),
     },
     {
-      text: <div><span className="uk-text-bold">Un accompagnement par l&apos;équipe LinkedOut </span>dans votre démarche de recrutement inclusif (interlocuteur privilégié, kit d’accueil et d’intégration, échanges de feedback prise de feedback réguliers, etc.)</div>,
+      text: (
+        <div>
+          <span className="uk-text-bold">
+            Un accompagnement par l&apos;équipe LinkedOut&nbsp;
+          </span>
+          dans votre démarche de recrutement inclusif (kit d'intégration,
+          interlocuteur privilégié...).
+        </div>
+      ),
     },
     {
-      text: <div><span className="uk-text-bold">Des évènements et temps forts</span> à vivre avec un réseau d’entreprises engagées</div>,
+      text: (
+        <div>
+          Tous les candidats ont un logement stable ou temporaire, bénéficient
+          d’un accompagnement social et ont les papiers pour travailler.
+        </div>
+      ),
     },
   ];
 
@@ -31,11 +52,8 @@ const WhatItBrings = () => {
   );
 };
 
-WhatItBrings.propTypes = {
+WhatItBrings.propTypes = {};
 
-};
-
-WhatItBrings.defaultProps = {
-};
+WhatItBrings.defaultProps = {};
 
 export default WhatItBrings;

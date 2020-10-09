@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, GridNoSSR, IconNoSSR, Section } from '../components/utils';
-import { ContactPartial, SharePartial } from '../components/partials';
+import { NewsletterPartial, SharePartial } from '../components/partials';
 import { EXTERNAL_LINKS } from '../constants';
 import Layout from '../components/Layout';
 import HowItWorks from '../components/sections/HowItWorks';
@@ -13,7 +13,7 @@ import TAGS from '../constants/tags';
 const Aider = () => (
   <Layout title="Aider - LinkedOut">
     <ImageTitle
-      img="static/img/header_pic_help.jpg"
+      img="/static/img/header_pic_help.jpg"
       alt="vous souhaitez aider"
       id="help-title"
       title={
@@ -85,7 +85,7 @@ const Aider = () => (
     <HowItWorks style="default" />
     <Section style="muted">
       <GridNoSSR gap="large" column>
-        <ContactPartial padding={false} />
+        <NewsletterPartial padding={false} />
         <SharePartial />
       </GridNoSSR>
     </Section>

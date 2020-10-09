@@ -16,7 +16,7 @@ import Button from "../utils/Button";
 
 const LINKS = [
   { href: '/aider', name: 'Particuliers, agissez' },
-  { href: '/recruter', name: 'Entreprises, engagez-vous' },
+  { href: '/entreprises', name: 'Entreprises, engagez-vous' },
 ];
 
 const Header = ({ isHome }) => {

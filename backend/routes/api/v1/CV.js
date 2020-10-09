@@ -5,23 +5,23 @@ const fs = require('fs');
 const puppeteer = require('puppeteer');
 const PDFMerger = require('pdf-merger-js');
 
-const {auth} = require('../../../controllers/Auth');
+const { auth } = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
 const ShareController = require('../../../controllers/Share');
 const S3 = require('../../../controllers/aws');
-const {sendMail} = require('../../../controllers/mail');
-const {airtable} = require('../../../controllers/airtable');
+const { sendMail } = require('../../../controllers/mail');
+const { airtable } = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
-const {USER_ROLES, CV_STATUS} = require("../../../../constants");
-const {checkCandidatOrCoachAuthorization} = require('../../../utils');
+const { USER_ROLES, CV_STATUS, NEWSLETTER_ORIGINS } = require('../../../../constants');
+const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
-const upload = multer({dest: 'uploads/'});
+const upload = multer({ dest: 'uploads/' });
 
 // sharp.cache(false);
 
 const isEmpty = (obj) => {
-  return Object.keys(obj).length === 0 && obj.constructor === Object
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
 };
 
 /**
@@ -34,7 +34,8 @@ router.post(
   upload.single('profileImage'),
   (req, res) => {
     // si le cv est une string json le parser, sinon prendre l'objet
-    const reqCV = typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
+    const reqCV =
+      typeof req.body.cv === 'string' ? JSON.parse(req.body.cv) : req.body.cv;
     const autoSave = req.body && req.body.autoSave;
     checkCandidatOrCoachAuthorization(req, res, reqCV.UserId, async () => {
       switch (req.payload.role) {
@@ -42,7 +43,10 @@ router.post(
           reqCV.status = CV_STATUS.Progress.value;
           break;
         case USER_ROLES.COACH:
-          if (reqCV.status !== CV_STATUS.Progress.value && reqCV.status !== CV_STATUS.Pending.value) {
+          if (
+            reqCV.status !== CV_STATUS.Progress.value &&
+            reqCV.status !== CV_STATUS.Pending.value
+          ) {
             reqCV.status = CV_STATUS.Progress.value;
           }
           break;
@@ -58,8 +62,7 @@ router.post(
       }
 
       const processImage = async () => {
-
-        if(autoSave) {
+        if (autoSave) {
           return;
         }
 
@@ -70,10 +73,10 @@ router.post(
         const generatePreviewImage = (url) => {
           return new Promise((resolve, reject) => {
             UserController.getUser(reqCV.UserId)
-              .then(({firstName, gender}) => (
+              .then(({ firstName, gender }) =>
                 // Génération de la photo de preview
                 S3.download(url)
-                  .then(async ({Body}) => (
+                  .then(async ({ Body }) =>
                     createPreviewImage(
                       imageWidth,
                       imageHeight,
@@ -85,9 +88,17 @@ router.post(
                       reqCV.locations,
                       gender
                     )
-                  ))
-                  .then((sharpData) => sharpData.jpeg({quality: 75}).toBuffer())
-                  .then((buffer) => S3.upload(buffer, 'image/jpeg', `${reqCV.UserId}.${reqCV.status}.preview.jpg`))
+                  )
+                  .then((sharpData) =>
+                    sharpData.jpeg({ quality: 75 }).toBuffer()
+                  )
+                  .then((buffer) =>
+                    S3.upload(
+                      buffer,
+                      'image/jpeg',
+                      `${reqCV.UserId}.${reqCV.status}.preview.jpg`
+                    )
+                  )
                   .then((previewUrl) => {
                     console.log('preview uploaded: ', previewUrl);
                     resolve(previewUrl);
@@ -96,21 +107,21 @@ router.post(
                     console.error(err);
                     reject(err);
                   })
-              ))
+              )
               .catch((err) => {
                 console.error(err);
                 reject(err);
-              })
-          })
+              });
+          });
         };
 
         // uploading image and generating preview image
         if (req.file) {
-          const {path} = req.file;
+          const { path } = req.file;
           try {
             const fileBuffer = await sharp(path)
               .trim()
-              .jpeg({quality: 75})
+              .jpeg({ quality: 75 })
               .toBuffer();
             reqCV.urlImg = await S3.upload(
               fileBuffer,
@@ -118,7 +129,7 @@ router.post(
               `${reqCV.UserId}.${reqCV.status}.jpg`
             );
 
-           /*
+            /*
              TO KEEP If ever we want to pre-resize the preview background image
 
              const previewBuffer = await sharp(fileBuffer)
@@ -138,13 +149,16 @@ router.post(
           } catch (error) {
             console.error(error);
           } finally {
-            if(fs.existsSync(path)) fs.unlinkSync(path); // remove image localy after upload to S3
+            if (fs.existsSync(path)) fs.unlinkSync(path); // remove image localy after upload to S3
           }
-        }
-        else if(reqCV.urlImg) {
+        } else if (reqCV.urlImg) {
           try {
-            const {Body} = await S3.download(reqCV.urlImg);
-            reqCV.urlImg = await S3.upload(Body, 'image/jpeg', `${reqCV.UserId}.${reqCV.status}.jpg`);
+            const { Body } = await S3.download(reqCV.urlImg);
+            reqCV.urlImg = await S3.upload(
+              Body,
+              'image/jpeg',
+              `${reqCV.UserId}.${reqCV.status}.jpg`
+            );
 
             /*
               TO KEEP If ever we want to pre-resize the preview background image
@@ -155,24 +169,23 @@ router.post(
 
             // TODO use when we make it work
             // reqCV.urlImg = await S3.copy(reqCV.urlImg, `${reqCV.UserId}.${reqCV.status}.jpg`);
-
           } catch (error) {
             console.error(error);
           }
         }
-        if(reqCV.urlImg) {
+        if (reqCV.urlImg) {
           try {
-            await generatePreviewImage(reqCV.urlImg /* .replace('.jpg', '.small.jpg') */);
-          }
-          catch(error) {
+            await generatePreviewImage(
+              reqCV.urlImg /* .replace('.jpg', '.small.jpg') */
+            );
+          } catch (error) {
             console.log(error);
           }
         }
       };
 
       const createCVAndSendMail = async () => {
-
-        if(!autoSave && (reqCV.urlImg || req.file)) {
+        if (!autoSave && (reqCV.urlImg || req.file)) {
           reqCV.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
         }
 
@@ -181,7 +194,10 @@ router.post(
 
         try {
           // notification mail to coach and admin
-          if (req.payload.role === USER_ROLES.COACH && reqCV.status === CV_STATUS.Pending.value) {
+          if (
+            req.payload.role === USER_ROLES.COACH &&
+            reqCV.status === CV_STATUS.Pending.value
+          ) {
             const mailSubject = 'Soumission CV';
             const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
             // notification de l'admin
@@ -190,7 +206,6 @@ router.post(
               subject: mailSubject,
               text: mailText,
             });
-
           }
         } catch (e) {
           console.log(e);
@@ -198,25 +213,25 @@ router.post(
         return cv;
       };
 
-      const promises = [
-        processImage,
-        createCVAndSendMail
-      ];
+      const promises = [processImage, createCVAndSendMail];
 
-      Promise.all(promises.map(async (promise) => promise())).then(async (results) => {
-        if(reqCV.status === CV_STATUS.Published.value) {
-          try {
-            await S3.deleteFile(`${process.env.AWSS3_FILE_DIRECTORY}${results[1].user.url}.pdf`);
+      Promise.all(promises.map(async (promise) => promise()))
+        .then(async (results) => {
+          if (reqCV.status === CV_STATUS.Published.value) {
+            try {
+              await S3.deleteFile(
+                `${process.env.AWSS3_FILE_DIRECTORY}${results[1].user.url}.pdf`
+              );
+            } catch (err) {
+              console.log(err);
+            }
           }
-          catch (err) {
-            console.log(err);
-          }
-        }
-        return res.status(200).json(results[1]);
-      }).catch((e) => {
-        console.log(e);
-        return res.status(401).send(`Une erreur est survenue`);
-      });
+          return res.status(200).json(results[1]);
+        })
+        .catch((e) => {
+          console.log(e);
+          return res.status(401).send(`Une erreur est survenue`);
+        });
     });
   }
 );
@@ -231,7 +246,7 @@ router.post('/share', auth(), (req, res) => {
       {
         fields: {
           email: req.body.email,
-          Origine: "LKO"
+          Origine: req.body.origin || NEWSLETTER_ORIGINS.LKO,
         },
       },
     ],
@@ -270,7 +285,7 @@ router.post('/count', auth(), (req, res) => {
 router.get('/shares', auth(), (req, res) => {
   ShareController.getTotalShares()
     .then((total) => {
-      res.status(200).json({total});
+      res.status(200).json({ total });
     })
     .catch((err) => {
       console.log(err);
@@ -283,7 +298,7 @@ router.get('/shares', auth(), (req, res) => {
  * Description :  Récupère le CV lié au userId passé en query
  */
 router.get('/', auth(), (req, res) => {
-  const {userId} = req.query;
+  const { userId } = req.query;
   CVController.getCVbyUserId(userId)
     .then((cv) => {
       if (cv && !isEmpty(cv)) {
@@ -336,7 +351,6 @@ router.get('/', auth(), (req, res) => {
   });
 */
 
-
 /**
  * Route : GET /api/<VERSION>/cv/cards/random
  * Description : Retourne <nb> CV(s) pour des cartes de manière aléatoire
@@ -381,37 +395,59 @@ router.get('/:url', auth(), (req, res) => {
  * Description : Récupère le CV en PDF associé à l'<URL> fournit
  */
 router.get('/pdf/:url', auth(), async (req, res) => {
-  const paths = [`${req.params.url}-page1.pdf`, `${req.params.url}-page2.pdf`, `${req.params.url}.pdf`];
+  const paths = [
+    `${req.params.url}-page1.pdf`,
+    `${req.params.url}-page2.pdf`,
+    `${req.params.url}.pdf`,
+  ];
 
   let pdfBuffer = null;
 
   try {
-    const file = await S3.download(`${process.env.AWSS3_FILE_DIRECTORY}${paths[2]}`);
+    const file = await S3.download(
+      `${process.env.AWSS3_FILE_DIRECTORY}${paths[2]}`
+    );
     pdfBuffer = file.Body;
-  }
-  catch (e) {
-    console.log("PDF version doesn't exist.")
+  } catch (e) {
+    console.log("PDF version doesn't exist.");
   }
 
   try {
-    if(!pdfBuffer) {
-      const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+    if (!pdfBuffer) {
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox'],
+      });
       const page = await browser.newPage();
       const merger = new PDFMerger();
 
       const options = { content: '@page { size: A4 portrait; margin: 0; }' };
 
       // Fix because can't create page break
-      await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=0`, {waitUntil: 'networkidle2'});
+      await page.goto(
+        `${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=0`,
+        { waitUntil: 'networkidle2' }
+      );
       await page.addStyleTag(options);
       await page.emulateMediaType('screen');
-      await page.pdf({ path: paths[0], preferCSSPageSize: true, printBackground: true });
+      await page.pdf({
+        path: paths[0],
+        preferCSSPageSize: true,
+        printBackground: true,
+      });
       merger.add(paths[0]);
 
-      await page.goto(`${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=1`, {waitUntil: 'networkidle2'});
+      await page.goto(
+        `${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=1`,
+        { waitUntil: 'networkidle2' }
+      );
       await page.addStyleTag(options);
       await page.emulateMediaType('screen');
-      await page.pdf({ path: paths[1], preferCSSPageSize: true, printBackground: true });
+      await page.pdf({
+        path: paths[1],
+        preferCSSPageSize: true,
+        printBackground: true,
+      });
       merger.add(paths[1]);
 
       await browser.close();
@@ -423,17 +459,18 @@ router.get('/pdf/:url', auth(), async (req, res) => {
       await S3.upload(pdfBuffer, 'application/pdf', `${paths[2]}`);
     }
 
-    res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdfBuffer.length });
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Length': pdfBuffer.length,
+    });
     res.status(200).send(pdfBuffer);
-  }
-  catch(err) {
+  } catch (err) {
     console.log(err);
     res.status(401).send('Une erreur est survenue');
-  }
-  finally {
-    if(fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
-    if(fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
-    if(fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
+  } finally {
+    if (fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
+    if (fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
+    if (fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
   }
 });
 
