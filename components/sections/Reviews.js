@@ -5,30 +5,40 @@ import CarouselItem from '../partials/CarouselItem';
 
 const reviews = [
   {
-    image: '/static/img/temoignage-candidat-kenny.jpg',
+    image: '/static/img/temoignage-entreprise-augustin-kenny.jpg',
     author: 'Augustin Chavanne',
     company: 'Vélissime',
     industry: 'livraison de repas',
     companyInfo: '20 salariés',
     review:
-      'Dès l’entretien d’embauche, Kenny dénotait par son enthousiasme, son énergie et l’expérience qu’il avait vécue. Un vrai bonhomme, pas simplement un gars diplômé, fraîchement moulu, qui nous parle de choses qu’il n’a pas vécues. Par son expérience, il apporte quelque chose de radicalement différent. Si je pouvais embaucher 2 Kenny, je le ferais !',
+      'Kenny est un vrai bonhomme, pas simplement un gars diplômé, fraîchement moulu, qui nous parle de choses qu’il n’a pas vécues. Par son expérience, il apporte quelque chose de radicalement différent. Si je pouvais embaucher 2 Kenny, je le ferais !',
   },
   {
-    image: '/static/img/temoignage-entreprise-miah.png',
+    image: '/static/img/temoignage-entreprise-francois-miah.jpg',
     author: 'François Biard',
     company: 'Green Factory',
     industry: 'créations végétales',
+    companyInfo: '31 salariés',
     review:
-      'Avec Miah c’était une réussite. Nous avons eu un cas moins positif mais nous avons alerté l’équipe LinkedOut qui tout de suite pris le sujet en main. Là où notre compétence s’arrête, on est rassurés par le fait que LinkedOut est là pour nous accompagner. Si on peut s’inscrire dans des actions comme celles-ci tout en gardant notre efficacité, en y ajoutant le sourire de quelqu’un de joyeux et qui a envie, je veux le faire !',
+      'Avec Miah c’est une réussite. Là où notre compétence s’arrête, on est rassurés par le fait que LinkedOut est là pour nous accompagner. Si on peut s’inscrire dans des actions comme celles-ci tout en gardant notre efficacité, en y ajoutant le sourire de quelqu’un qui a envie, on le fait !',
   },
   {
-    image: '/static/img/temoignage-candidat-laith.jpg',
+    image: '/static/img/temoignage-entreprise-advens.jpg',
     author: 'Sylvie Lepoutre',
     company: 'Advens',
     industry: 'cybersécurité',
     companyInfo: '200 salariés',
     review:
-      'On était à mille lieux des problématiques des personnes en précarité. Maintenant, chez Advens, on entend des mots comme “résilience”, “deuxième chance”, “rebond”, “inclusion”. Les collaborateurs sont très fiers !',
+      'Nous étions à mille lieux des problématiques des personnes en précarité. Maintenant, chez Advens, on entend des mots comme “résilience”, “deuxième chance”, “rebond”, “inclusion”. Les collaborateurs sont très fiers !',
+  },
+  {
+    image: '/static/img/temoignage-entreprise-mcdo.jpg',
+    author: 'Arnaud Héry',
+    company: "10 ans chez McDonald's",
+    industry: 'restauration',
+    companyInfo: 'plus de 70 000 salariés en France',
+    review:
+      'Ce qu’il y a de plus important pour un employeur, c’est de voir la lumière qui brille dans les yeux de la personne en face et qui traduit l’envie d’apprendre et de s’en sortir.',
   },
 ];
 
