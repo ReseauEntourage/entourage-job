@@ -34,7 +34,7 @@ const tips = [
     ),
   },
   {
-    title: 'Soutenir des projets solidaires',
+    title: 'Soutenir des associations',
     text: (
       <p>
         Par du mécénat financier, de moyens ou de compétences, soutenez des

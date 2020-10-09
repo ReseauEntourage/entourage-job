@@ -49,7 +49,7 @@ const Sinformer = () => {
           </span>{' '}
           Toutes les organisations qui se sont engagées dans l’inclusion
           témoignent des effets positifs que cela a provoqué chez elles : plus
-          d’ouverture sur le monde, développement relationnel de l’équipe, une
+          d’ouverture sur le monde, développement relationnel des salariés, une
           équipe qui se fédère autour d’un projet commun.
         </p>
         <p className="uk-text-center">
@@ -103,7 +103,12 @@ const Sinformer = () => {
               },
             },
             {
-              title: 'Prêt à recruter ?',
+              title: (
+                <div>
+                  Prêt à<br />
+                  recruter&nbsp;?
+                </div>
+              ),
               text:
                 'Découvrez si un candidat LinkedOut correspond à votre besoin. Si vous êtes dans un autre territoire, contactez nos partenaires qui cherchent aussi des emplois pour leurs candidats.',
               button: {
