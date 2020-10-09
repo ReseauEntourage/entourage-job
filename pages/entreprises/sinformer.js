@@ -2,13 +2,12 @@ import React from 'react';
 import Layout from '../../components/Layout';
 import { Section } from '../../components/utils';
 import ImageTitle from '../../components/sections/ImageTitle';
-import Carousel from '../../components/utils/Carousel';
-import CarouselItem from '../../components/partials/CarouselItem';
 import { EXTERNAL_LINKS } from '../../constants';
 import MultipleCTA from '../../components/partials/MultipleCTA';
 import HowToBeInclusive from '../../components/sections/HowToBeInclusive';
 import CorporateNewsletter from '../../components/partials/CorporateNewsletterPartial';
 import CandidateTestimonies from '../../components/sections/CandidateTestimonies';
+import CompanyTestimonies from '../../components/sections/CompanyTestimonies';
 
 const Sinformer = () => {
   return (
@@ -26,7 +25,7 @@ const Sinformer = () => {
       <Section style="muted" container="small">
         <h2 className="uk-text-bold uk-text-center">
           <span className="uk-text-primary">Engager</span> mon entreprise dans
-          l’inclusion : pourquoi ?
+          l’inclusion : pourquoi&nbsp;?
         </h2>
         <p className="uk-text-center">
           Chacun devrait pouvoir avoir sa place dans l’entreprise et dans la
@@ -38,47 +37,30 @@ const Sinformer = () => {
           pour s’insérer mais aussi à l’entreprise de se transformer pour faire
           une place à tous.
         </p>
-        <div
-          className="uk-flex uk-flex-middle uk-margin-large-top"
-          style={{ justifyContent: 'space-around' }}
-        >
-          <p className="uk-text-bold uk-text-center">
-            La performance durable, c’est de&nbsp;
-            <span className="uk-text-primary">
-              s'ouvrir à la différence et de bâtir la confiance !
-            </span>
-          </p>
-          <div style={{ background: 'black', color: 'white', padding: '8rem' }}>
-            @TODO Vidéo à intégrer
-          </div>
-        </div>
+        <p className="uk-text-center">
+          Bien sûr ce n’est pas toujours facile. Accueillir des personnes ayant
+          eu des parcours de galère nécessite une capacité d’adaptation de tous
+          les côtés. Pourtant vous avez beaucoup à y gagner&nbsp;!
+        </p>
+        <p className="uk-text-center">
+          <span className="uk-text-primary uk-text-bold">
+            Vous allez non seulement transformer la vie de quelqu’un, mais
+            également votre entreprise.
+          </span>{' '}
+          Toutes les organisations qui se sont engagées dans l’inclusion
+          témoignent des effets positifs que cela a provoqué chez elles : plus
+          d’ouverture sur le monde, développement relationnel de l’équipe, une
+          équipe qui se fédère autour d’un projet commun.
+        </p>
+        <p className="uk-text-center">
+          Avec LinkedOut, nous vous aidons à devenir une entreprise du monde
+          d’après, qui apporte sa pierre dans la résolution des défis sociaux,
+          et qui remet l’économie à l’endroit, au service de l’humain.
+        </p>
       </Section>
       <CandidateTestimonies />
       <HowToBeInclusive />
-      <Section style="default" container="small">
-        <Carousel containerClasses="uk-child-width-1-1">
-          <CarouselItem
-            key={1}
-            index={1}
-            img="/static/img/highlight_1.jpg"
-            description={
-              <h4 className="uk-bold uk-text-primary">
-                @TODO contenu à intégrer
-              </h4>
-            }
-          />
-          <CarouselItem
-            key={2}
-            index={2}
-            img="/static/img/highlight_1.jpg"
-            description={
-              <h4 className="uk-bold uk-text-primary">
-                @TODO contenu à intégrer
-              </h4>
-            }
-          />
-        </Carousel>
-      </Section>
+      <CompanyTestimonies />
       <Section style="muted" container="small">
         <h2 className="uk-text-bold uk-text-center uk-margin-large-bottom">
           <span className="uk-text-primary">Des ressources</span>&nbsp;pour vous
@@ -101,7 +83,7 @@ const Sinformer = () => {
             {
               title: <div>Sensibiliser ses collaborateurs</div>,
               text:
-                'Nous proposons des ateliers pour ouvrir le dialogue autour de ce sujet dans votre entreprise et initier une démarche parmi vos collaborateurs. Intéressés ?',
+                'Nous proposons des ateliers pour ouvrir le dialogue autour de ce sujet dans votre entreprise et initier une démarche parmi vos collaborateurs.',
               button: {
                 label: 'Contactez nous',
                 href: 'mailto:florent@entourage.social',

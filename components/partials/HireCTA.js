@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, IconNoSSR, Section } from '../utils';
 import Grid from '../utils/Grid';
 
-import "./HireCTA.less"
+import './HireCTA.less';
 
 const HireCTA = () => {
   return (
@@ -12,7 +12,7 @@ const HireCTA = () => {
       </h2>
       <p className="uk-margin-medium-top uk-text-center uk-text-bold">
         Recherchez le candidat qui correspond à vos besoins et proposez-lui
-        votre offre
+        votre offre&nbsp;:
       </p>
       <Grid
         className="uk-margin-medium-top"
@@ -20,8 +20,12 @@ const HireCTA = () => {
         center
         match
       >
-        <Button href="/entreprises/cvs" style="primary" className="hireButton-xlarge">
-            Recruter en Île-de-France et dans les Hauts-de-France
+        <Button
+          href="/entreprises/cvs"
+          style="primary"
+          className="hireButton-xlarge"
+        >
+          Recruter en Île-de-France et dans les Hauts-de-France
           <IconNoSSR name="chevron-right" />
         </Button>
         <Button
