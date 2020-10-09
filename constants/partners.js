@@ -88,6 +88,11 @@ export default {
       link: 'https://www.caissedesdepots.fr/'
     },
     {
+      key: 'transdev',
+      title: 'Fondation Transdev',
+      link: 'http://www.fondation.transdev.com/'
+    },
+    {
       key: 'neoxia',
       title: 'Neoxia',
       desc: 'Ensemble, créons l\'Internet of People, not Things... où la complexité des technologies s\'efface devant la simplicité de l\'expérience\xa0!\nPur player du Numérique, NEOXIA vous accompagne pour imaginer, construire et opérer la version digitale de votre coeur de métier.',
