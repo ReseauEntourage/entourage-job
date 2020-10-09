@@ -31,7 +31,7 @@ const VendeeGlobePartial = () => {
   };
 
   return (
-    <Section container="small" style="muted" className="uk-padding-remove-top">
+    <Section container="small" className="uk-padding-remove-top">
       <div className="uk-inline uk-visible@m" uk-scrollspy="cls: uk-animation-scale-up; delay: 200;">
         <Img src='../../static/img/foil.jpg' alt='Bateau LinkedOut' />
         <div style={{backgroundColor: 'rgba(0,0,0,0.6)'}} className="uk-position-cover" />
