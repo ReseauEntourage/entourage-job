@@ -38,7 +38,7 @@ const HowToCommitDifferently = () => {
           </a>
         </li>
       </ul>
-      <ul className="uk-switcher uk-flex uk-flex-center uk-margin-large-top">
+      <ul className="uk-switcher uk-flex uk-flex-center uk-margin-medium-top">
         <li className="uk-flex">
           <MultipleCTA
             showHorizontalDividers

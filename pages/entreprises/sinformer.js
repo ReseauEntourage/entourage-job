@@ -8,6 +8,7 @@ import { EXTERNAL_LINKS } from '../../constants';
 import MultipleCTA from '../../components/partials/MultipleCTA';
 import HowToBeInclusive from '../../components/sections/HowToBeInclusive';
 import CorporateNewsletter from '../../components/partials/CorporateNewsletterPartial';
+import CandidateTestimonies from '../../components/sections/CandidateTestimonies';
 
 const Sinformer = () => {
   return (
@@ -52,71 +53,7 @@ const Sinformer = () => {
           </div>
         </div>
       </Section>
-      <Section style="default" container="small">
-        <h2 className="uk-text-bold uk-text-center">
-          Un emploi, <span className="uk-text-primary">ça change une vie</span>
-        </h2>
-        <p className="uk-text-center">
-          Jeunes issus de l’aide sociale à l’enfance, réfugiés nouvellement
-          arrivés, accidentés de la vie, familles très précaires… tous ont en
-          commun de n’avoir que très peu de gens sur qui compter. Beaucoup ont
-          aussi des compétences, du talent, et l’envie de s’en sortir.
-        </p>
-        <p className="uk-text-center uk-margin-large-bottom">
-          Aujourd’hui,&nbsp;
-          <span className="uk-text-primary uk-text-bold">
-            2 millions de personnes sont exclues du marché de l’emploi et vivent
-            dans une grande précarité
-          </span>
-          . Pourtant, loin d’être assistés, ils rêvent de travailler !
-        </p>
-        <Carousel containerClasses="uk-child-width-1-1" style="muted">
-          <CarouselItem
-            key={0}
-            index={0}
-            img="/static/img/highlight_1.jpg"
-            description={
-              <h4 className="uk-bold uk-text-primary">Retrouver sa dignité</h4>
-            }
-          />
-          <CarouselItem
-            key={1}
-            index={1}
-            img="/static/img/highlight_1.jpg"
-            description={
-              <h4 className="uk-bold uk-text-primary">
-                Retrouver son autonomie financière
-              </h4>
-            }
-          />
-          <CarouselItem
-            key={2}
-            index={2}
-            img="/static/img/highlight_1.jpg"
-            description={
-              <h4 className="uk-bold uk-text-primary">Se resocialiser</h4>
-            }
-          />
-          <CarouselItem
-            key={3}
-            index={3}
-            img="/static/img/highlight_1.jpg"
-            description={
-              <h4 className="uk-bold uk-text-primary">Se sentir utile</h4>
-            }
-          />
-          <CarouselItem
-            key={4}
-            index={4}
-            img="/static/img/highlight_1.jpg"
-            description={
-              <h4 className="uk-bold uk-text-primary">
-                Et pouvoir à nouveau se projeter.
-              </h4>
-            }
-          />
-        </Carousel>
-      </Section>
+      <CandidateTestimonies />
       <HowToBeInclusive />
       <Section style="default" container="small">
         <Carousel containerClasses="uk-child-width-1-1">
