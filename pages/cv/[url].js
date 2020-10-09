@@ -16,6 +16,14 @@ import TAGS from "../../constants/tags";
 
 const CVPage = ({ cv, router }) => {
 
+  const hostname = process.env.SERVER_URL;
+  const link = `${hostname}${router.asPath}`;
+  const hashtags = ['LinkedOut'];
+  const sharedDescription =
+    `La précarité n'exclut pas les compétences\xa0! Avec LinkedOut, aidons ${cv.user.candidat.firstName} à retrouver un emploi en lui proposant un job ou en diffusant son CV\xa0!`;
+  const title = `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`;
+
+
   const { incrementSharesCount } = useContext(SharesCountContext);
   const {isFirstLoad} = useContext(SessionContext);
 
@@ -53,10 +61,10 @@ const CVPage = ({ cv, router }) => {
 
   return (
     <Layout
-      title={`${cv.user.candidat.firstName} - LinkedOut`}
-      metaTitle={`Aidez ${cv.user.candidat.firstName} en partageant son CV.`}
-      metaUrl={`${process.env.SERVER_URL}${router.asPath}`}
-      metaDescription={cv.intro}
+      title={title}
+      metaTitle={title}
+      metaUrl={link}
+      metaDescription={sharedDescription}
       metaImage={
         cv.urlImg
           ? `${process.env.AWSS3_URL}${cv.urlImg.replace(
