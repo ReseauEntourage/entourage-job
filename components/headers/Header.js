@@ -41,7 +41,7 @@ const Header = ({ isHome }) => {
               ...LINKS.map((value, i) => {
                   if (router.asPath === value.href) {
                     return (
-                      <div className="uk-navbar-item uk-padding-remove-horizontal">
+                      <div className="uk-navbar-item uk-padding-remove-horizontal uk-visible@m">
                         <Button
                           href={value.href}
                           style='default'

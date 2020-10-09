@@ -57,10 +57,10 @@ const ModalShareCV = ({ firstName, id }) => {
               </p>
               <div className="uk-flex uk-flex-center">
                 <ImgNoSSR
-                  className="uk-width-small"
+                  className="uk-height-max-small uk-margin-medium-top"
                   src="../../static/img/logo-entourage.png" />
               </div>
-              <div className="uk-flex uk-flex-center uk-margin-small-top">
+              <div className="uk-flex uk-flex-center uk-margin-medium-top">
                 <Button
                   isExternal
                   newTab

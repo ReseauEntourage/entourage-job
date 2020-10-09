@@ -15,7 +15,6 @@ import {CV_STATUS, USER_ROLES} from "../../../constants";
 import NoCV from "./NoCV";
 import ButtonDownload from "./ButtonDownload";
 
-let currentVersion = 0;
 let originalStatus = CV_STATUS.Progress.value;
 
 const CVPageContent = ({ candidatId }) => {
@@ -40,7 +39,6 @@ const CVPageContent = ({ candidatId }) => {
             setCV(data);
             setImageUrl(`${process.env.AWSS3_URL}${data.urlImg}`);
             originalStatus = data.status;
-            currentVersion = data.version;
           } else {
             setCV(null);
             console.log('pas de cv');
@@ -94,7 +92,6 @@ const CVPageContent = ({ candidatId }) => {
     const obj = {
       ...cv,
       status,
-      version: (currentVersion > cv.version ? currentVersion : cv.version) + 1,
       profileImage: undefined,
     };
     delete obj.id;
@@ -108,7 +105,6 @@ const CVPageContent = ({ candidatId }) => {
     })
       .then(({ data }) => {
         setCV(data);
-        currentVersion += 1;
 
         // Use hash to reload image if an update is done
         const previewHash = Date.now();
@@ -134,7 +130,6 @@ const CVPageContent = ({ candidatId }) => {
     const obj = {
       ...tempCV,
       status: originalStatus,
-      version: currentVersion + 1,
       profileImage: undefined,
     };
     delete obj.id;
@@ -146,9 +141,9 @@ const CVPageContent = ({ candidatId }) => {
         'Content-Type': 'multipart/form-data',
       },
     })
-      .then(() => {
+      .then(({data}) => {
         console.log('Auto-save succeeded.');
-        currentVersion += 1;
+        setCV({...cv, version: data.version, status: CV_STATUS.Draft.value});
       })
       .catch(() => {
         console.log('Auto-save failed.');

@@ -47,7 +47,6 @@ const generateCv = async (props = {}) => {
     catchphrase: fakerStatic.lorem.sentence(),
     careerPathOpen: fakerStatic.random.boolean(),
     status: fakerStatic.random.arrayElement(getCvStatusValues(CV_STATUS)),
-    version: 1,
   };
 
   return {

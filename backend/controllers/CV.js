@@ -148,19 +148,30 @@ const createCV = async (data) => {
     delete data.userId;
   }
 
-  const modelCV = await models.CV.create(data); // TODO VERIFIER LES ENTREES
+  const maxVersions = await models.CV.findAll({
+    attributes: [[sequelize.fn('MAX', sequelize.col('version')), 'maxVersion'],],
+    raw: true,
+    where: {
+      UserId: data.UserId
+    }
+  });
 
-  // TODO make parallel
+  const cvData = {
+    ...data,
+    version: maxVersions[0].maxVersion + 1
+  };
+
+  const modelCV = await models.CV.create(cvData); // TODO VERIFIER LES ENTREES
 
   const promises = [];
 
   // Skills
-  if (data.skills) {
+  if (cvData.skills) {
     promises.push(async () => {
       console.log(`createCV - Skills`);
       const skills = await Promise.all(
         // pour chaque competence
-        data.skills.map((name) => {
+        cvData.skills.map((name) => {
           // on trouve ou créé la donné
           return models.Skill.findOrCreate({
             where: {name},
@@ -175,12 +186,12 @@ const createCV = async (data) => {
   }
 
   // languages
-  if (data.languages) {
+  if (cvData.languages) {
     promises.push(async () => {
       console.log(`createCV - Langues`);
       const languages = await Promise.all(
         // pour chaque competence
-        data.languages.map((name) => {
+        cvData.languages.map((name) => {
           // on trouve ou créé la donné
           return models.Language.findOrCreate({
             where: {name},
@@ -194,11 +205,11 @@ const createCV = async (data) => {
   }
 
   // Contracts
-  if (data.contracts) {
+  if (cvData.contracts) {
     promises.push(async () => {
       console.log(`createCV - Contrats`);
       const contracts = await Promise.all(
-        data.contracts.map((name) => {
+        cvData.contracts.map((name) => {
           return models.Contract.findOrCreate({
             where: {name},
           }).then((model) => model[0]);
@@ -209,11 +220,11 @@ const createCV = async (data) => {
   }
 
   // Passions
-  if (data.passions) {
+  if (cvData.passions) {
     promises.push(async () => {
       console.log(`createCV - Passions`);
       const passions = await Promise.all(
-        data.passions.map((name) => {
+        cvData.passions.map((name) => {
           return models.Passion.findOrCreate({
             where: {name},
           }).then((model) => model[0]);
@@ -224,11 +235,11 @@ const createCV = async (data) => {
   }
 
   // Ambitions
-  if (data.ambitions) {
+  if (cvData.ambitions) {
     promises.push(async () => {
       console.log(`createCV - Ambitions`);
       const ambitions = await Promise.all(
-        data.ambitions.map((name) => {
+        cvData.ambitions.map((name) => {
           return models.Ambition.findOrCreate({
             where: {name}, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
           }).then((model) => model[0]);
@@ -239,11 +250,11 @@ const createCV = async (data) => {
   }
 
   // BusinessLines
-  if (data.businessLines) {
+  if (cvData.businessLines) {
     promises.push(async () => {
       console.log(`createCV - BusinessLines`);
       const businessLines = await Promise.all(
-        data.businessLines.map((name) => {
+        cvData.businessLines.map((name) => {
           return models.BusinessLine.findOrCreate({
             where: {name},
           }).then((model) => model[0]);
@@ -254,11 +265,11 @@ const createCV = async (data) => {
   }
 
   // Locations
-  if (data.locations) {
+  if (cvData.locations) {
     promises.push(async () => {
       console.log(`createCV - Locations`);
       const locations = await Promise.all(
-        data.locations.map((name) => {
+        cvData.locations.map((name) => {
           return models.Location.findOrCreate({
             where: {name},
           }).then((model) => model[0]);
@@ -269,11 +280,11 @@ const createCV = async (data) => {
   }
 
   // Experiences
-  if (data.experiences) {
+  if (cvData.experiences) {
     promises.push(async () => {
       console.log(`createCV - Expériences`);
       const experiences = await Promise.all(
-        data.experiences.map(async (experience) => {
+        cvData.experiences.map(async (experience) => {
           const modelExperience = await models.Experience.create({
             CVId: modelCV.id,
             description: experience.description,
@@ -298,11 +309,11 @@ const createCV = async (data) => {
   }
 
   // Reviews
-  if (data.reviews) {
+  if (cvData.reviews) {
     promises.push(async () => {
       console.log(`createCV - Reviews`);
       const reviews = await Promise.all(
-        data.reviews.map(async (review) =>
+        cvData.reviews.map(async (review) =>
           models.Review.create({
             CVId: modelCV.id,
             text: review.text,

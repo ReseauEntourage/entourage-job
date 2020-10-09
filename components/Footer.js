@@ -37,6 +37,7 @@ const Footer = () => {
                     fontWeight: 700,
                     color: 'white',
                     fontSize: '16px',
+                    whiteSpace: 'nowrap'
                   }}
                 >
                   Linked
@@ -60,6 +61,7 @@ const Footer = () => {
                   fontWeight: 700,
                   color: 'white',
                   fontSize: '16px',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 Linked
@@ -83,6 +85,7 @@ const Footer = () => {
                   fontWeight: 700,
                   color: 'white',
                   fontSize: '16px',
+                  whiteSpace: 'nowrap'
                 }}
               >
                   Linked

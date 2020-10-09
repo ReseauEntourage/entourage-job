@@ -11,12 +11,13 @@ import TAGS from '../../constants/tags';
 
 // Home page partials
 const LandingPagePartial = () => {
-  const sharedTitle = 'LinkedOut';
+  const sharedTitle = 'LinkedOut\xa0: partagez votre réseau avec ceux qui n’en ont pas';
   const sharedDescription =
-    "Lorsqu'on est désocialisé, on devient invisible. Les chances de retrouver du travail sont très faibles. Un partage peut tout changer. Eux cherchent du travail, vous avez du réseau.";
+    "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer.";
   const hashtags = ['LinkedOut'];
   const sharedURL = process.env.SERVER_URL;
   const viaTwitter = 'R_Entourage';
+
   return (
     <Background
       blend={{ mode: 'soft-light', colorHex: 'rgba(0,0,0,0.4)' }}

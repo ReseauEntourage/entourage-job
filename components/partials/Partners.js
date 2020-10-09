@@ -17,7 +17,7 @@ const Partners = () => {
         middle
         center
         gap='small'
-        items={data.map(({key, link}) => {
+        items={data.map(({key, link, bis}) => {
           return (
             <SimpleLink
               className="uk-flex uk-flex-center"
@@ -26,6 +26,9 @@ const Partners = () => {
               onClick={() => event(TAGS.FOOTER_PARTENAIRE_CLIC)}
               href={link}>
               <div className="uk-background-center-center uk-background-contain uk-width-small uk-height-small" style={{maxHeight: 100, backgroundImage: `url(/static/img/partners/${key}/logo.png)`}} />
+              {
+                bis && <div className="uk-background-center-center uk-background-contain uk-width-small uk-height-small" style={{maxHeight: 100, backgroundImage: `url(/static/img/partners/${key}/logo_bis.png)`}} />
+              }
             </SimpleLink>
           );
         })}
