@@ -166,7 +166,7 @@ const CVList = ({
           />
         </div>
         {items.length > nbOfCVToDisplay && (
-          <div clasName="uk-flex uk-flex-center">
+          <div className="uk-flex uk-flex-center uk-margin-top">
             <Button style="primary" onClick={displayMoreCVs}>
               Voir plus
             </Button>
