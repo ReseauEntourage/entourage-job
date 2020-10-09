@@ -5,7 +5,7 @@ import CarouselItem from '../partials/CarouselItem';
 
 const reviews = [
   {
-    image: '/static/img/temoignage-entreprise-kenny.jpg',
+    image: '/static/img/temoignage-candidat-kenny.jpg',
     author: 'Augustin Chavanne',
     company: 'Vélissime',
     industry: 'livraison de repas',
@@ -22,7 +22,7 @@ const reviews = [
       'Avec Miah c’était une réussite. Nous avons eu un cas moins positif mais nous avons alerté l’équipe LinkedOut qui tout de suite pris le sujet en main. Là où notre compétence s’arrête, on est rassurés par le fait que LinkedOut est là pour nous accompagner. Si on peut s’inscrire dans des actions comme celles-ci tout en gardant notre efficacité, en y ajoutant le sourire de quelqu’un de joyeux et qui a envie, je veux le faire !',
   },
   {
-    image: '/static/img/temoignage-entreprise-laith.jpg',
+    image: '/static/img/temoignage-candidat-laith.jpg',
     author: 'Sylvie Lepoutre',
     company: 'Advens',
     industry: 'cybersécurité',
