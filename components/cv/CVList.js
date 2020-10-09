@@ -1,53 +1,17 @@
-/* global UIkit */
-
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {Button, GridNoSSR, IconNoSSR} from '../utils';
+import { GridNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import Api from '../../Axios';
 import {FILTERS_DATA} from "../../constants";
-import {hasAsChild, mutateFormSchema} from "../../utils";
-import StepperModal from "../modals/StepperModal";
-import FormWithValidation from "../forms/FormWithValidation";
-import {useResetForm} from "../../hooks";
-import schema from "../forms/schema/formEditOpportunity";
+import {hasAsChild} from "../../utils";
+import PostJobAdModal from '../modals/PostJobAdModal';
 
 
-const CVList = ({ nb, search, filters, updateNumberOfResults, hideEmployed }) => {
+const CVList = ({ nb, search, filters, updateNumberOfResults, hideEmployed, showShareOptions }) => {
   const [cvs, setCVs] = useState(undefined);
   const [filteredCvs, setFilteredCvs] = useState(undefined);
   const [error, setError] = useState(undefined);
-
-  const [form, resetForm] = useResetForm();
-
-  const mutatedSchema = mutateFormSchema(schema, [
-    {
-      fieldId: 'candidatId',
-      props: [
-        {
-          propName: 'disabled',
-          value: true
-        },
-        {
-          propName: 'hidden',
-          value: true
-        }
-      ]
-    },
-    {
-      fieldId: 'isPublic',
-      props: [
-        {
-          propName: 'disabled',
-          value: true
-        },
-        {
-          propName: 'hidden',
-          value: true
-        }
-      ]
-    },
-  ]);
 
   useEffect(() => {
     setCVs(undefined);
@@ -198,62 +162,7 @@ const CVList = ({ nb, search, filters, updateNumberOfResults, hideEmployed }) =>
                   </a> qui sera visible par tous les candidats LinkedOut, certains pourraient être intéressés&nbsp;!{' '}
                 </p>
                 {renderCvList(filteredOtherCvs)}
-                <StepperModal
-                  id="modal-offer-add-search"
-                  title="Proposer une opportunité"
-                  resetForm={resetForm}
-                  composers={[
-                    (closeModal, nextStep) => (
-                      <div>
-                        <p>
-                          Cet espace est dédié aux potentiels recruteurs qui souhaitent
-                          proposer une opportunité visible par tous les candidats.
-                        </p>
-                        <FormWithValidation
-                          ref={form}
-                          submitText="Envoyer"
-                          formSchema={mutatedSchema}
-                          onCancel={closeModal}
-                          onSubmit={(opportunity) => {
-                            Api.post('/api/v1/opportunity/', {
-                              ...opportunity,
-                              date: Date.now()
-                            })
-                              .then(nextStep)
-                              .catch((err) => {
-                                console.error(err);
-                                UIkit.notification(
-                                  "Une erreur s'est produite lors de l'envoie de l'offre",
-                                  {pos: 'bottom-center', status: 'danger'}
-                                );
-                              });
-                          }}
-                          defaultValues={{
-                            isPublic: true
-                          }}
-                        />
-                      </div>
-                    ),
-                    (closeModal) => (
-                      <div className="uk-flex uk-flex-center uk-margin-large">
-                        <div className="uk-card uk-card-body uk-text-center">
-                          <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
-                          <p className="uk-text-lead">
-                            Merci pour votre offre, nous reviendrons bientôt vers vous.
-                          </p>
-                          <div className="uk-flex uk-flex-center">
-                            <Button
-                              style="secondary"
-                              onClick={closeModal}
-                            >
-                              Fermer
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ),
-                  ]}
-                />
+                <PostJobAdModal />
               </div>
             )
           }
