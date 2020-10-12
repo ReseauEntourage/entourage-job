@@ -1,15 +1,6 @@
 export default {
   strategy: [
     {
-      key: 'advens',
-      title: 'Advens',
-      desc: 'Advens est le 1er pure player français de la cybersécurité et accompagne les entreprises, territoires et établissements publics pour les aider à prendre de l’avance et faire de la sécurité un actif différenciateur\xa0!',
-      question: 'Comment décrire le partenariat, la collaboration entre votre structure et LinkedOut\xa0?',
-      answer: 'Avec la Course Au Changement, nous avons tissé des liens très forts et étroits entre nos organisations et nos équipes.\n\n' +
-        'Nous sommes très heureux de contribuer au développement de LinkedOut, à la lutte contre la grande exclusion en France et, nous le souhaitons, au retour à l’emploi de milliers de personnes qui le méritent tant.',
-      link: 'https://www.advens.fr/fr/'
-    },
-    {
       key: 'tbwa',
       title: 'TBWA',
       desc: 'TBWA\\, The Disruption® Company, fait partie du réseau international TBWA\\ Worldwide implanté dans 95 pays avec 275 agences.\n\n' +
@@ -55,8 +46,27 @@ export default {
       },
       link: 'https://travail-emploi.gouv.fr/le-ministere-en-action/pic/'
     },
+    {
+      key: 'advens',
+      title: 'Advens',
+      desc: 'Advens est le 1er pure player français de la cybersécurité et accompagne les entreprises, territoires et établissements publics pour les aider à prendre de l’avance et faire de la sécurité un actif différenciateur\xa0!',
+      question: 'Comment décrire le partenariat, la collaboration entre votre structure et LinkedOut\xa0?',
+      answer: 'Avec la Course Au Changement, nous avons tissé des liens très forts et étroits entre nos organisations et nos équipes.\n\n' +
+        'Nous sommes très heureux de contribuer au développement de LinkedOut, à la lutte contre la grande exclusion en France et, nous le souhaitons, au retour à l’emploi de milliers de personnes qui le méritent tant.',
+      link: 'https://www.advens.fr/fr/'
+    },
   ],
   finance: [
+    {
+      key: 'caissedesdepots',
+      title: 'Caisse des Dépôts',
+      link: 'https://www.caissedesdepots.fr/'
+    },
+    {
+      key: 'transdev',
+      title: 'Fondation Transdev',
+      link: 'http://www.fondation.transdev.com/'
+    },
     {
       key: 'cera',
       title: 'Fondation CERA',
@@ -81,16 +91,6 @@ export default {
       key: 'kleever',
       title: 'Kleever',
       link: 'https://www.kleever.com/'
-    },
-    {
-      key: 'caissedesdepots',
-      title: 'Caisse des Dépôts',
-      link: 'https://www.caissedesdepots.fr/'
-    },
-    {
-      key: 'transdev',
-      title: 'Fondation Transdev',
-      link: 'http://www.fondation.transdev.com/'
     },
     {
       key: 'neoxia',
