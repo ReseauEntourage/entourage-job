@@ -37,10 +37,8 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,md,css,html}": [
-      "prettier --trailing-comma es5 --single-quote --write",
-      "echo 'pretty-quick -- staged'",
-      "eslint pages/ --fix",
+    "*.{js,jsx,md,json,html}": [
+      "prettier --write",
       "git add"
     ],
     "yarn.lock": [
@@ -110,7 +108,9 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.18.3",
     "faker": "^4.1.0",
+    "husky": "^4.3.0",
     "jest": "^26.4.1",
+    "lint-staged": "^10.4.0",
     "nodemon": "^1.19.4",
     "prettier": "^2.1.2",
     "supertest": "^4.0.2"
