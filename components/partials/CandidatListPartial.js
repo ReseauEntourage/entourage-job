@@ -18,7 +18,7 @@ const CandidatListPartial = ({nbShares}) => (
           <span className="uk-text-primary">changer</span>
         </h3>
         <p className="uk-margin-remove-bottom">
-          Ils ont la motivation, vous du réseau. Si vous pensez comme nous que chacun doit avoir sa place dans la société et en entreprise, partagez votre réseau professionnel avec ceux qui en ont le plus besoin.
+          Si vous pensez comme nous que chacun doit avoir sa place dans la société et en entreprise, partagez votre réseau professionnel avec ceux qui en ont le plus besoin.
         </p>
         <h4 className="uk-text-bold">
           Grâce à vous, ce sont déjà{' '}&nbsp;
