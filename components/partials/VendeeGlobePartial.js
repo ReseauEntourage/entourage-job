@@ -32,17 +32,19 @@ const VendeeGlobePartial = () => {
 
   return (
     <Section container="small" style="muted" className="uk-padding-remove-top">
-      <div className="uk-inline uk-visible@m">
-        <Img src='../../static/img/foil.jpg' alt='Bateau LinkedOut' />
-        <div style={{backgroundColor: 'rgba(0,0,0,0.6)'}} className="uk-position-cover" />
-        <div className="uk-overlay uk-position-center uk-flex uk-flex-column uk-flex-center uk-flex-middle uk-padding-large">
+      <div>
+        <div className="uk-inline uk-visible@m">
+          <Img width={2000} height={1333} src='../../static/img/foil.jpg' alt='Bateau LinkedOut' />
+          <div style={{backgroundColor: 'rgba(0,0,0,0.6)'}} className="uk-position-cover" />
+          <div className="uk-overlay uk-position-center uk-flex uk-flex-column uk-flex-center uk-flex-middle uk-padding-large">
+            {content()}
+          </div>
+        </div>
+        <div
+          className="uk-hidden@m uk-flex uk-flex-column uk-flex-middle uk-padding-small uk-background-center-center uk-background-cover uk-background-blend-overlay"
+          style={{backgroundImage: 'url(../../static/img/foil.jpg)', backgroundColor: 'rgba(0,0,0,0.6)'}}>
           {content()}
         </div>
-      </div>
-      <div
-        className="uk-hidden@m uk-flex uk-flex-column uk-flex-middle uk-padding-small uk-background-center-center uk-background-cover uk-background-blend-overlay"
-        style={{backgroundImage: 'url(../../static/img/foil.jpg)', backgroundColor: 'rgba(0,0,0,0.6)'}}>
-        {content()}
       </div>
     </Section>
   )

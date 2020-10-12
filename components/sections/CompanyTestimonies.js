@@ -7,22 +7,37 @@ const testimonies = [
   {
     image: '/static/img/temoignage-entreprise-alexandre-fayeulle.jpg',
     author: 'Alexandre Fayeulle',
-    company: 'Advens, Président',
+    company: "Président d'Advens",
     quote:
-      'La performance sociétale doit prendre le pas sur la performance financière. Je souhaite qu’Advens incarne cette nouvelle génération d’entreprises qui contribue à transformer l’économie pour la mettre au service du bien commun. Le mouvement semble en marche, et la crise que nous traversons nous offre l’opportunité de l’accélérer !',
+      'La performance sociétale doit prendre le pas sur la performance financière. Je souhaite qu’Advens incarne cette nouvelle génération d’entreprises qui contribue à transformer l’économie. Le mouvement semble en marche, et la crise que nous traversons nous offre l’opportunité de l’accélérer !',
   },
   {
     image: '/static/img/temoignage-entreprise-randstad.png',
     author: 'Laurent Morestain',
     company: 'ex-Secrétaire Général Randstad',
     quote:
-      'L’inclusion, c’est permettre à tout individu de prendre toute la place qu’il mérite dans la société. C’est l’aider à prendre pleine conscience de ses droits et devoirs. L’inclusion c’est un tout, dans lequel s’imbriquent le volet économique, social, professionnel et citoyen. C’est redonner de la dignité aux êtres !',
+      "L’inclusion, c’est permettre à tout individu de prendre toute la place qu’il mérite dans la société. C’est l’aider à prendre pleine conscience de ses droits et devoirs. L’inclusion c’est un tout, dans lequel s’imbriquent le volet économique, social, professionnel et citoyen. C’est redonner de la dignité aux êtres !",
   },
   {
-    image: '/static/img/highlight_1.jpg',
+    image: '/static/img/temoignage-entreprise-cadet.jpg',
     author: 'Patrick Wong',
+    company: "Directeur chez LeCADET Traiteur",
     quote:
       "Les salariés recrutés avec Emmaüs Défi sont très importants dans mon entreprise. Ils sont formés et opérationnels et je n'ai aucune envie de les voir partir !",
+  },
+  {
+    image: '/static/img/temoignage-entreprise-green-factory.jpg',
+    author: 'François Biard',
+    company: "Manager chez Green Factory",
+    quote:
+      "Même dans une équipe de 10 personnes, l’inclusion, ça marche. Les histoires de vie, les différents parcours, qu’ils soient chaotiques, difficiles…. créent de la richesse dans le collectif. C’est ce que nous trouvé avec Miah. Ca diffuse quelque chose de très positif, ça crée de la cohésion d’équipe et ça transforme.",
+  },
+  {
+    image: '/static/img/temoignage-entreprise-thibault.jpg',
+    author: 'Thibault Guilluy',
+    company: "Haut Commissaire à l’inclusion par l’emploi et à l’engagement des entreprises",
+    quote:
+      "Un système qui oublie les plus fragiles est un système faible pour tous, peu résilient et qui peut s’effondrer à la moindre crise. Nous ne pourrons pas repartir comme avant.",
   },
 ];
 
