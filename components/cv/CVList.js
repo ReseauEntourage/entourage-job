@@ -133,38 +133,36 @@ const CVList = ({
 
   const renderCvList = (items) => {
     return (
-      <div>
-        <div
-          className="cv-list"
-          uk-scrollspy="cls:uk-animation-slide-bottom-small; target: .uk-card; delay: 50"
-        >
-          <GridNoSSR
-            childWidths={['1-1', '1-2@s', '1-3@m']}
-            gap="small"
-            row
-            center
-            items={items.slice(0, nbOfCVToDisplay).map((cv) => {
-              return (
-                <CandidatCard
-                  url={cv.user.url}
-                  imgSrc={
-                    (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) ||
-                    undefined
-                  }
-                  imgAlt={cv.user.candidat.firstName}
-                  firstName={cv.user.candidat.firstName}
-                  gender={cv.user.candidat.gender}
-                  ambitions={cv.ambitions}
-                  locations={cv.locations}
-                  skills={cv.skills}
-                  catchphrase={cv.catchphrase}
-                  employed={cv.user.employed}
-                  id={cv.user.candidat.id}
-                />
-              );
-            })}
-          />
-        </div>
+      <div
+        className="cv-list"
+        uk-scrollspy="cls:uk-animation-slide-bottom-small; target: .uk-card; delay: 50"
+      >
+        <GridNoSSR
+          childWidths={['1-1', '1-2@s', '1-3@m']}
+          gap="small"
+          row
+          center
+          items={items.slice(0, nbOfCVToDisplay).map((cv) => {
+            return (
+              <CandidatCard
+                url={cv.user.url}
+                imgSrc={
+                  (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) ||
+                  undefined
+                }
+                imgAlt={cv.user.candidat.firstName}
+                firstName={cv.user.candidat.firstName}
+                gender={cv.user.candidat.gender}
+                ambitions={cv.ambitions}
+                locations={cv.locations}
+                skills={cv.skills}
+                catchphrase={cv.catchphrase}
+                employed={cv.user.employed}
+                id={cv.user.candidat.id}
+              />
+            );
+          })}
+        />
         {items.length > nbOfCVToDisplay && (
           <div className="uk-flex uk-flex-center uk-margin-top">
             <Button style="primary" onClick={displayMoreCVs}>
@@ -235,7 +233,7 @@ const CVList = ({
 
   return (
     <div className="uk-text-center">
-      <div data-uk-spinner="" />
+      <div data-uk-spinner />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import {Section} from "../components/utils";
 import FormWithValidation from "../components/forms/FormWithValidation";
 import Api from "../Axios";
 import {useResetForm} from "../hooks";
+import SimpleLink from "../components/utils/SimpleLink";
 
 const Contact = () => {
   const [form, resetForm] = useResetForm();
@@ -33,6 +34,25 @@ const Contact = () => {
               .catch(() => UIkit.notification("Une erreur s'est produite", "danger"));
           }}
         />
+        <h4 className="uk-align-center uk-text-center uk-margin-large-bottom">
+          Vous êtes journaliste&nbsp;? Contactez Claire Duizabo, responsable commucation du projet&nbsp;:
+          <br />
+          <SimpleLink
+            className="uk-link uk-margin-small-top uk-margin-small-bottom"
+            href="mailto:claire@entourage.social"
+            newTab
+            isExternal>
+            claire@entourage.social
+          </SimpleLink>
+          <br />
+          <SimpleLink
+              className="uk-link"
+              href="tel:06 88 51 45 03"
+              newTab
+              isExternal>
+              06 88 51 45 03
+          </SimpleLink>
+        </h4>
       </Section>
     </Layout>
   );
