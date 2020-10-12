@@ -16,7 +16,7 @@ import Button from "../utils/Button";
 
 const LINKS = [
   { href: '/aider', name: 'Particuliers, agissez' },
-  { href: '/recruter', name: 'Entreprises, engagez-vous' },
+  { href: '/entreprises', name: 'Entreprises, engagez-vous' },
 ];
 
 const Header = ({ isHome }) => {
@@ -41,7 +41,7 @@ const Header = ({ isHome }) => {
               ...LINKS.map((value, i) => {
                   if (router.asPath === value.href) {
                     return (
-                      <div className="uk-navbar-item uk-padding-remove-horizontal">
+                      <div className="uk-navbar-item uk-padding-remove-horizontal uk-visible@m">
                         <Button
                           href={value.href}
                           style='default'

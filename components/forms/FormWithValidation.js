@@ -20,6 +20,7 @@ const FormWithValidation = forwardRef(({
   submitText,
   onSubmit,
   onCancel,
+  enterToSubmit
 }, ref) => {
 
   const validator = new FormValidator(rules);
@@ -112,6 +113,13 @@ const FormWithValidation = forwardRef(({
       className="uk-form-stacked uk-grid-small uk-width-1-1 uk-child-width-1-1"
       data-uk-grid
       onSubmit={submitForm}
+      onKeyDown={(ev) => {
+        if(enterToSubmit) {
+          if(ev.key === 'Enter') {
+            submitForm(ev);
+          }
+        }
+      }}
     >
       <fieldset className="uk-fieldset">
         {fields.map((value, i) => (
@@ -152,12 +160,14 @@ FormWithValidation.propTypes = {
     rules: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   submitText: PropTypes.string,
+  enterToSubmit: PropTypes.bool
 };
 
 FormWithValidation.defaultProps = {
   submitText: undefined,
   defaultValues: {},
-  onCancel: undefined
+  onCancel: undefined,
+  enterToSubmit: false
 };
 
 export default FormWithValidation;

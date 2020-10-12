@@ -5,9 +5,8 @@ const OFFER_STATUS = [
   {value: 0, label: "Contacté"},
   {value: 1, label: "Phase d'entretien"},
   {value: 2, label: "Embauche"},
-  {value: 3, label: "Refus"},
-  {value: 4, label: "Standby"},
-  {value: 5, label: "Relance"}
+  {value: 3, label: "Refus avant entretien"},
+  {value: 4, label: "Refus après entretien"},
 ];
 
 const BUSINESS_LINES = [
@@ -210,11 +209,22 @@ const EXTERNAL_LINKS = {
   ENTOURAGE: "https://www.entourage.social",
   LEGAL_MENTIONS: "https://docs.google.com/document/d/1a1IU9Y6qVDr4pvWJRE5XMVZ2fNhg0rhXMTL_lqY_f1M/pub",
   ARTICLE_BC: "https://blog.linkedout.fr/2020/07/03/benevole-coach-linkedout/",
+  CAMPUS_INCLUSION: "https://campus-inclusion.fr",
+  FRANCE_UNE_CHANCE: "https://lafrance-unechance.fr/carte-des-clubs-la-france-une-chance/"
 };
+
+const NEWSLETTER_ORIGINS = {
+  LKO: "LKO",
+  LKO_ENTREPRISES: "LKO_ENTREPRISES"
+}
 
 const VALUES = {
   SHARES: 120000
 };
+
+const CONTACT_MAILS = {
+  CORPORATE_CONTACT: "entreprises@entourage.social"
+}
 
 module.exports = {
   OFFER_STATUS,
@@ -224,5 +234,7 @@ module.exports = {
   EXTERNAL_LINKS,
   VALUES,
   LOCATIONS,
-  FILTERS_DATA
+  FILTERS_DATA,
+  NEWSLETTER_ORIGINS,
+  CONTACT_MAILS
 };

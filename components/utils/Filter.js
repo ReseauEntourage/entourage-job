@@ -18,8 +18,7 @@ const Filter = ({ id, loading, filters, children, search }) => {
               uk-filter-control={`.tag-${tag}`}
               className={active ? 'uk-active' : ''}
             >
-              {/* todo to uppercase */}
-              <a href="#" styles={{ textTransform: 'uppercase !important' }}>
+              <a href="#">
                 {title}
               </a>
             </li>

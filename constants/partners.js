@@ -88,9 +88,20 @@ export default {
       link: 'https://www.caissedesdepots.fr/'
     },
     {
+      key: 'transdev',
+      title: 'Fondation Transdev',
+      link: 'http://www.fondation.transdev.com/'
+    },
+    {
       key: 'neoxia',
       title: 'Neoxia',
       desc: 'Ensemble, créons l\'Internet of People, not Things... où la complexité des technologies s\'efface devant la simplicité de l\'expérience\xa0!\nPur player du Numérique, NEOXIA vous accompagne pour imaginer, construire et opérer la version digitale de votre coeur de métier.',
+      question: 'Qu’est-ce que l’inclusion pour vous\xa0?',
+      answer: 'Pour dire une évidence, c’est l’inverse de l’exclusion qui est un mot plus couramment utilisé et compris\xa0! Pour inclure, il faut faire parfois l’effort d’aller vers celui qui exclus. Ce n’est pas un exercice si simple que cela mais c’est super important et valorisant.',
+      /*
+        question: 'Que souhaitez-vous à LinkedOut\xa0?',
+        answer: 'De réussir là où beaucoup échoue (ramener vers l’emploi des personnes en difficultés) et de se développer pour permettre à un maximum de personnes de revenir vers l’emploi avec l’aide de ceux qui sont près à les aider, et il y en a beaucoup\xa0!',
+      */
       link: 'https://neoxia.com/'
     },
   ],
