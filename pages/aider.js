@@ -29,9 +29,7 @@ const Aider = () => (
           Partagez votre réseau avec ceux qui n’en n’ont plus&nbsp;!
         </h3>
         <hr className="uk-divider-small uk-margin-remove-vertical" />
-        <div
-          className="uk-text-center uk-flex-1 uk-margin-top uk-margin-bottom uk-padding-small uk-padding-remove-top uk-padding-remove-bottom"
-        >
+        <div className="uk-text-center uk-flex-1 uk-margin-top uk-margin-bottom uk-padding-small uk-padding-remove-top uk-padding-remove-bottom">
           Partager un CV sur vos réseaux donne une visibilité inédite à un
           candidat auprès de potentiels recruteurs et permet de générer des
           opportunités d’emploi. Votre partage peut tout changer&nbsp;!
@@ -82,7 +80,6 @@ const Aider = () => (
         showHorizontalDividers
       />
     </Section>
-    <HowItWorks style="default" />
     <Section style="muted">
       <GridNoSSR gap="large" column>
         <NewsletterPartial padding={false} />
