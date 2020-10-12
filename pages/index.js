@@ -13,6 +13,7 @@ import {
 import Header from '../components/headers/Header';
 import { SharesCountContext } from '../components/store/SharesCountProvider';
 import VendeeGlobePartial from '../components/partials/VendeeGlobePartial';
+import HowItWorks from '../components/sections/HowItWorks';
 
 const Index = ({ query }) => {
   const { totalShares } = useContext(SharesCountContext);
@@ -32,6 +33,7 @@ const Index = ({ query }) => {
       <Header isHome />
       <CandidatListPartial nbShares={totalShares} />
       <VendeeGlobePartial />
+      <HowItWorks style="default" />
       <NumberPartial nbShares={totalShares} />
       <ActionPartial style="default" />
     </Layout>
