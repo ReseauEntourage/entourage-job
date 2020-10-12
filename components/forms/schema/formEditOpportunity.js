@@ -68,7 +68,7 @@ export default {
       name: 'prerequisites',
       component: 'textarea',
       type: 'text',
-      title: 'Quels sont les pré-requis fondamentaux pour exercer cet emploi\xa0?*',
+      title: 'Quels sont les pré-requis fondamentaux pour exercer cet emploi\xa0?',
     },
     {
       id: 'isPublic',
@@ -215,17 +215,6 @@ export default {
       ],
       validWhen: false,
       message: 'Obligatoire',
-    },
-    {
-      field: 'prerequisites',
-      method: 'isEmpty',
-      args: [
-        {
-          ignore_whitespace: true,
-        },
-      ],
-      validWhen: false,
-      message: 'Obligatoire',
-    },
+    }
   ],
 };
