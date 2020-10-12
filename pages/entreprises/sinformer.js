@@ -17,8 +17,8 @@ const Sinformer = () => {
         id="sinformer-title"
         title={
           <>
-            Pourquoi et comment<div>devenir une</div>
-            <div className="uk-text-primary">entreprise&nbsp;inclusive</div>
+            Pourquoi et comment<div>devenir une</div>{' '}
+            <div className="uk-text-primary">entreprise inclusive</div>
           </>
         }
       />
