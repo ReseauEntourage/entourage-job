@@ -19,7 +19,7 @@ const testimonies = [
       "L’inclusion, c’est permettre à tout individu de prendre toute la place qu’il mérite dans la société. C’est l’aider à prendre pleine conscience de ses droits et devoirs. L’inclusion c’est un tout, dans lequel s’imbriquent le volet économique, social, professionnel et citoyen. C’est redonner de la dignité aux êtres !",
   },
   {
-    image: '/static/img/highlight_1.jpg',
+    image: '/static/img/temoignage-entreprise-cadet.jpg',
     author: 'Patrick Wong',
     company: "Directeur chez LeCADET Traiteur",
     quote:

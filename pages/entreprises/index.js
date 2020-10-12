@@ -16,7 +16,7 @@ const Entreprises = () => {
         id="hire-title"
         title={
           <>
-            Entreprises,&nbsp;
+            Entreprises,{' '}
             <span className="uk-text-primary">agissez avec LinkedOut</span>
           </>
         }
