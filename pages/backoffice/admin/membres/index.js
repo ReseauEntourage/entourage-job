@@ -152,7 +152,7 @@ const MembersAdmin = ({ query: { role } }) => {
         ) : (
           <>
             <GridNoSSR eachWidths={['expand', 'auto']}>
-              <ul className="uk-subnav">
+              <ul className="uk-subnav ent-subnav">
                 <li
                   className={
                     role !== USER_ROLES.CANDIDAT && role !== USER_ROLES.COACH ? 'uk-active' : ''

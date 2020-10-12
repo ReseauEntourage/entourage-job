@@ -1,75 +1,107 @@
 import React from 'react';
-import {Section} from '../utils';
-import Carousel from "../utils/Carousel";
-import {ReviewCard} from "../cards";
+import { ImgNoSSR, Section } from '../utils';
+import Carousel from '../utils/Carousel';
+import CarouselItem from '../partials/CarouselItem';
+
+const reviews = [
+  {
+    image: '/static/img/temoignage-entreprise-augustin-kenny.jpg',
+    author: 'Augustin Chavanne',
+    company: 'Vélissime',
+    industry: 'livraison de repas',
+    companyInfo: '20 salariés',
+    review:
+      'Kenny est un vrai bonhomme, pas simplement un gars diplômé, fraîchement moulu, qui nous parle de choses qu’il n’a pas vécues. Par son expérience, il apporte quelque chose de radicalement différent. Si je pouvais embaucher 2 Kenny, je le ferais !',
+  },
+  {
+    image: '/static/img/temoignage-entreprise-francois-miah.jpg',
+    author: 'François Biard',
+    company: 'Green Factory',
+    industry: 'créations végétales',
+    companyInfo: '31 salariés',
+    review:
+      'Avec Miah c’est une réussite. Là où notre compétence s’arrête, on est rassurés par le fait que LinkedOut est là pour nous accompagner. Si on peut s’inscrire dans des actions comme celles-ci tout en gardant notre efficacité, en y ajoutant le sourire de quelqu’un qui a envie, on le fait !',
+  },
+  {
+    image: '/static/img/temoignage-entreprise-advens.jpg',
+    author: 'Sylvie Lepoutre',
+    company: 'Advens',
+    industry: 'cybersécurité',
+    companyInfo: '200 salariés',
+    review:
+      'Nous étions à mille lieux des problématiques des personnes en précarité. Maintenant, chez Advens, on entend des mots comme “résilience”, “deuxième chance”, “rebond”, “inclusion”. Les collaborateurs sont très fiers !',
+  },
+  {
+    image: '/static/img/temoignage-entreprise-mcdo.jpg',
+    author: 'Arnaud Héry',
+    company: "10 ans chez McDonald's",
+    industry: 'restauration',
+    companyInfo: 'plus de 70 000 salariés en France',
+    review:
+      'Ce qu’il y a de plus important pour un employeur, c’est de voir la lumière qui brille dans les yeux de la personne en face et qui traduit l’envie d’apprendre et de s’en sortir.',
+  },
+];
 
 const Reviews = () => {
-  const content = [
-    {
-      author: 'Paul Jean',
-      colorClass: 'uk-text-primary',
-      review:
-        "Nous avons intégré Zineb à l'équipe il y a maintenant 6 mois. Tout a été rendu facile par Entourage et les équipes de travail sont très satisfaites.",
-      role: 'Directeur RH chez Sanofi',
-    },
-    {
-      author: 'Stéphane Joli',
-      colorClass: '',
-      review:
-        "Mohamed s'est fondu dans le groupe en un clin d'oeil, tout le monde a l'impression qu'il est là depuis 10 ans.",
-      role: 'Recruteur pour LVMH',
-    },
-    {
-      author: 'Jeanne Pierrot ',
-      colorClass: 'uk-text-primary',
-      review:
-        "La réinsertion est rendue plus facile grâce à LinkedOut, et c'est une belle victoire pour les candidats et pour les entreprises. Continuez !",
-      role: 'Directrice RH chez Le grand Breguet',
-    },
-    {
-      author: 'Titouan Pereirra ',
-      colorClass: 'uk-text-primary',
-      review:
-        "Les candidats sont devenus des atouts importants au sein de notre magasin, nous sommes ravis !",
-      role: 'Chef de rayon chez Monoprix',
-    },
-  ];
-
   return (
-    <Section id="reviews">
+    <Section id="reviews" style="muted">
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-        <span className="uk-text-primary">LinkedOut plebiscité</span>{' '}
-        par les recruteurs...
+        <span className="uk-text-primary">LinkedOut plébiscité</span> par les
+        recruteurs...
       </h2>
-      <h4 className="uk-align-center uk-text-center uk-margin-medium-bottom">
-        Le retour des recruteurs en entreprise est unanime&nbsp;: l&apos;arrivée des candidats fédère les salariés et transforme le projet d&apos;entreprise en une véritable aventure humaine, porteuse de sens pour tous&nbsp;!
-      </h4>
-      <div className="uk-width-expand">
+      <div className="uk-flex uk-flex-center">
         <Carousel
-          itemRenderer={(review, index) => (
-            <div key={index.toString()}>
-              <ReviewCard
-                author={review.author}
-                colorclassName={review.colorClass}
-                key={index}
-                review={review.review}
-                role={review.role}
-              />
-            </div>
-          )}
           style="default"
-          items={content}
-          containerClasses="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid uk-grid-match uk-grid-small" />
+          containerClasses="uk-child-width-1-1 uk-container-small"
+        >
+          {reviews.map(
+            (
+              { author, company, industry, companyInfo, review, image },
+              index
+            ) => (
+              <CarouselItem
+                key={index}
+                index={index}
+                img={image}
+                description={
+                  <div>
+                    <ImgNoSSR
+                      alt="guillemets"
+                      width="27"
+                      height="21"
+                      src="/static/img/guillemets.png"
+                    />
+                    <p className="uk-text-small uk-margin-small uk-text-italic">
+                      {review}
+                    </p>
+                    <div
+                      className="uk-text-bottom"
+                      style={{ display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                      <ImgNoSSR
+                        alt="guillemets-petits"
+                        width="15"
+                        height="12"
+                        src="/static/img/guillemetsPetits.png"
+                      />
+                    </div>
+                    <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
+                      {author}
+                    </p>
+                    <p className="uk-text-meta uk-margin-remove">
+                      <span className="uk-text-bold">{company}</span>,&nbsp;
+                      <span>{industry}</span>
+                      {companyInfo && <span>,&nbsp;{companyInfo}</span>}
+                    </p>
+                  </div>
+                }
+              />
+            )
+          )}
+        </Carousel>
       </div>
     </Section>
   );
-};
-
-Reviews.propTypes = {
-
-};
-
-Reviews.defaultProps = {
 };
 
 export default Reviews;

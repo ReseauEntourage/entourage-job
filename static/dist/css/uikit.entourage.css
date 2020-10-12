@@ -1981,7 +1981,7 @@ select.uk-form-width-xsmall {
   text-transform: none;
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
-  border-radius: 2px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2024,7 +2024,7 @@ select.uk-form-width-xsmall {
   text-transform: none;
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
-  border-radius: 2px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2065,7 +2065,7 @@ select.uk-form-width-xsmall {
   text-transform: none;
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
-  border-radius: 2px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2103,7 +2103,7 @@ select.uk-form-width-xsmall {
   text-transform: none;
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
-  border-radius: 2px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10763,7 +10763,7 @@ iframe.uk-cover {
   text-transform: none;
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
-  border-radius: 2px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10912,7 +10912,7 @@ iframe.uk-cover {
   text-transform: none;
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
-  border-radius: 2px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12695,11 +12695,8 @@ iframe.uk-cover {
 .ent-subnav {
   margin-bottom: 30px !important;
 }
-.ent-subnav li > a {
-  text-transform: none !important;
-}
 .ent-subnav li.uk-active {
-  font-weight: 700;
+  font-weight: 500;
 }
 .ent-subnav > * {
   padding-left: 40px;
@@ -12797,6 +12794,7 @@ iframe.uk-cover {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  background-color: #F2F2F0;
 }
 .ent-search-icon {
   display: flex;
@@ -12816,7 +12814,7 @@ iframe.uk-cover {
 .uk-modal-footer > .uk-button {
   margin-left: 15px;
 }
-.uk-tab > .uk-active > a > h4 {
+.uk-tab > .uk-active > a > * {
   color: #f55f24;
 }
 .uk-offcanvas-bar .uk-button-primary {

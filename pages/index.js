@@ -1,23 +1,21 @@
-import React, {useContext, useEffect} from 'react';
-import { useRouter } from 'next/router'
-import PropTypes from "prop-types";
+import React, { useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import PropTypes from 'prop-types';
 import Layout from '../components/Layout';
 
 import {
   ActionPartial,
   CandidatListPartial,
-  EmphasePartial,
   LandingPagePartial,
   NumberPartial,
 } from '../components/partials';
 
 import Header from '../components/headers/Header';
-import {SharesCountContext} from '../components/store/SharesCountProvider';
-import VendeeGlobePartial from "../components/partials/VendeeGlobePartial";
-import CVPDF from "../components/cv/CVPDF";
+import { SharesCountContext } from '../components/store/SharesCountProvider';
+import VendeeGlobePartial from '../components/partials/VendeeGlobePartial';
 
-const Index = ({query}) => {
-  const {totalShares} = useContext(SharesCountContext);
+const Index = ({ query }) => {
+  const { totalShares } = useContext(SharesCountContext);
 
   const router = useRouter();
 
@@ -33,8 +31,7 @@ const Index = ({query}) => {
       <LandingPagePartial />
       <Header isHome />
       <CandidatListPartial nbShares={totalShares} />
-      <VendeeGlobePartial/>
-      <EmphasePartial />
+      <VendeeGlobePartial />
       <NumberPartial nbShares={totalShares} />
       <ActionPartial style="default" />
     </Layout>
@@ -42,11 +39,11 @@ const Index = ({query}) => {
 };
 
 Index.propTypes = {
-  query: PropTypes.shape()
+  query: PropTypes.shape(),
 };
 
 Index.defaultProps = {
-  query: undefined
+  query: undefined,
 };
 
 Index.getInitialProps = ({ query }) => {

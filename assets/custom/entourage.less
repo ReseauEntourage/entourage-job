@@ -81,7 +81,7 @@
   text-transform: none;
   border: solid 1px #e5e5e5;
   padding: 0px 20px;
-  border-radius: 2px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -256,12 +256,8 @@
 .ent-subnav {
   margin-bottom: 30px !important;
 
-  li > a {
-    text-transform: none !important;
-  }
-
   li.uk-active {
-    font-weight: 700;
+    font-weight: 500;
   }
 
   > * {
@@ -390,6 +386,8 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  // keep this background for better visibility
+  background-color: #F2F2F0;
 }
 
 .ent-search-icon {
@@ -419,7 +417,7 @@
   margin-left: 15px;
 }
 
-.uk-tab > .uk-active > a > h4 {
+.uk-tab > .uk-active > a > * {
   color: @global-primary-background
 }
 

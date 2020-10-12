@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Section, GridNoSSR } from '../utils';
-import {SharePartial} from "./index";
-import ContactPartial from "./ContactPartial";
-import MultipleCTA from "./MultipleCTA";
+import { SharePartial } from './index';
+import NewsletterPartial from './NewsletterPartial';
+import MultipleCTA from './MultipleCTA';
+import TAGS from '../../constants/tags';
 
 const datas = [
   {
@@ -16,14 +17,14 @@ const datas = [
   {
     button: {
       href: '/recruter',
-      label: 'S\'engager dans l\'inclusion'
+      label: "S'engager dans l'inclusion",
     },
     title: 'Vous êtes une entreprise',
   },
   {
     button: {
       href: '/orienter',
-      label: 'Orienter des candidats'
+      label: 'Orienter des candidats',
     },
     title: 'Vous êtes un acteur de l’insertion sociale ou professionnelle',
   },
@@ -50,9 +51,10 @@ const ActionPartial = ({ style }) => (
 
       <MultipleCTA
         data={datas}
-        spacing='small'
-        className="uk-margin-large-bottom" />
-      <ContactPartial />
+        spacing="small"
+        className="uk-margin-large-bottom"
+      />
+      <NewsletterPartial tag={TAGS.HOME_INSCRIPTION_NEWSLETTER_CLIC} />
       <SharePartial />
     </GridNoSSR>
   </Section>

@@ -93,9 +93,9 @@ Layout.propTypes = {
 };
 
 Layout.defaultProps = {
-  title: 'LinkedOut',
+  title: 'LinkedOut\xa0: partagez votre réseau avec ceux qui n’en ont pas',
   metaTitle:
-    'Faites don de votre visibilité avec LinkedOut. Un partage peut tout changer.',
+    'LinkedOut\xa0: partagez votre réseau avec ceux qui n’en ont pas',
   metaImage: `${process.env.SERVER_URL}/static/img/linkedout-preview.jpg`,
   metaDescription:
     "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer.",

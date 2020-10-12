@@ -84,7 +84,7 @@ Textarea.defaultProps = {
   placeholder: 'Tapez votre texte',
   rows: 5,
   valid: undefined,
-  maxLength: 1000,
+  maxLength: undefined,
   value: '',
   onChange: () => {},
 };

@@ -64,6 +64,13 @@ export default {
       title: 'Votre description*',
     },
     {
+      id: 'prerequisites',
+      name: 'prerequisites',
+      component: 'textarea',
+      type: 'text',
+      title: 'Quels sont les pré-requis fondamentaux pour exercer cet emploi\xa0?',
+    },
+    {
       id: 'isPublic',
       name: 'isPublic',
       component: 'checkbox',
@@ -155,9 +162,12 @@ export default {
     },
     {
       field: 'recruiterPhone',
-      method: 'isMobilePhone',
+      method: 'isLength',
       args: [
-        'fr-FR'
+        {
+          "min": 10,
+          "max": 13
+        }
       ],
       validWhen: true,
       message: 'Invalide',
@@ -205,6 +215,6 @@ export default {
       ],
       validWhen: false,
       message: 'Obligatoire',
-    },
+    }
   ],
 };
