@@ -143,7 +143,7 @@ const CVPageContent = ({ candidatId }) => {
     })
       .then(({data}) => {
         console.log('Auto-save succeeded.');
-        setCV({...cv, version: data.version, status: CV_STATUS.Draft.value});
+        setCV({...obj, version: data.version, status: CV_STATUS.Draft.value});
       })
       .catch(() => {
         console.log('Auto-save failed.');
