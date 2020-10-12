@@ -45,6 +45,18 @@ const testimonies = [
     quote:
       'Je veux travailler pour être indépendante financièrement et offrir un avenir à ma fille.',
   },
+  {
+    image: '/static/img/temoignage-candidat-orelio.jpg',
+    author: 'Orelio',
+    quote:
+      'Trouver un boulot ça change tout dans la tête : ça permet de rebondir. Un futur est possible !',
+  },
+  {
+    image: '/static/img/temoignage-candidat-mickael.jpg',
+    author: 'Mickaël',
+    quote:
+      'Quand tu touches le RSA, tu ne l’as pas gagné à la sueur de ton front, c’est humiliant de vivre aux crochets de la société.',
+  },
 ];
 
 const CandidateTestimonies = () => {
@@ -70,7 +82,7 @@ const CandidateTestimonies = () => {
       <div className="uk-flex uk-flex-center">
         <Carousel
           style="default"
-          containerClasses="uk-child-width-1-1 uk-container-small"
+          containerClasses="uk-container-small uk-child-width-1-1"
         >
           {testimonies.map(({ author, image, quote }, index) => (
             <CarouselItem

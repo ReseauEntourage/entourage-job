@@ -11,7 +11,7 @@ const reviews = [
     industry: 'livraison de repas',
     companyInfo: '20 salariés',
     review:
-      'Kenny est un vrai bonhomme, pas simplement un gars diplômé, fraîchement moulu, qui nous parle de choses qu’il n’a pas vécues. Par son expérience, il apporte quelque chose de radicalement différent. Si je pouvais embaucher 2 Kenny, je le ferais !',
+      'Kenny est un vrai bonhomme, pas un jeune diplômé fraîchement moulu qui nous parle de choses qu’il n’a pas vécues. Par son expérience, il apporte quelque chose de radicalement différent. Si je pouvais embaucher 2 Kenny, je le ferais !',
   },
   {
     image: '/static/img/temoignage-entreprise-francois-miah.jpg',
@@ -34,11 +34,11 @@ const reviews = [
   {
     image: '/static/img/temoignage-entreprise-mcdo.jpg',
     author: 'Arnaud Héry',
-    company: "10 ans chez McDonald's",
+    company: "Ex-directeur de la formation chez McDonald's",
     industry: 'restauration',
-    companyInfo: 'plus de 70 000 salariés en France',
+    companyInfo: '70 000 salariés en France',
     review:
-      'Ce qu’il y a de plus important pour un employeur, c’est de voir la lumière qui brille dans les yeux de la personne en face et qui traduit l’envie d’apprendre et de s’en sortir.',
+      'Ce qu’il y a de plus important pour un employeur, c’est de voir la lumière qui brille dans les yeux de la personne en face, qui traduit l’envie d’apprendre et de s’en sortir.',
   },
 ];
 
