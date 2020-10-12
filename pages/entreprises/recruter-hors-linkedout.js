@@ -10,8 +10,7 @@ const RecruterHorsLinkedOut = () => (
   <Layout title="Recruter en dehors du réseau - LinkedOut">
     <Section container="small" style="muted">
       <h1 className="uk-text-bold uk-text-center">
-        <span className="uk-text-primary">Recruter</span>
-        &nbsp;un candidat en précarité
+        <span className="uk-text-primary">Recruter</span> un candidat en précarité
       </h1>
       <p className="uk-text-center">
         Le programme LinkedOut est pour l’instant présent seulement à Paris,
