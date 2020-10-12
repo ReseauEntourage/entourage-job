@@ -19,6 +19,7 @@ let originalStatus = CV_STATUS.Progress.value;
 
 const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
+  const [cvVersion, setCvVersion] = useState(undefined);
   const [imageUrl, setImageUrl] = useState(undefined);
 
   const [loading, setLoading] = useState(true);
@@ -37,6 +38,7 @@ const CVPageContent = ({ candidatId }) => {
         .then(({ data }) => {
           if (data) {
             setCV(data);
+            setCvVersion(data.version);
             setImageUrl(`${process.env.AWSS3_URL}${data.urlImg}`);
             originalStatus = data.status;
           } else {
@@ -105,7 +107,7 @@ const CVPageContent = ({ candidatId }) => {
     })
       .then(({ data }) => {
         setCV(data);
-
+        setCvVersion(data.version);
         // Use hash to reload image if an update is done
         const previewHash = Date.now();
         setImageUrl(
@@ -143,7 +145,7 @@ const CVPageContent = ({ candidatId }) => {
     })
       .then(({data}) => {
         console.log('Auto-save succeeded.');
-        setCV({...obj, version: data.version, status: CV_STATUS.Draft.value});
+        setCvVersion(data.version);
       })
       .catch(() => {
         console.log('Auto-save failed.');
@@ -163,7 +165,10 @@ const CVPageContent = ({ candidatId }) => {
   // aucun CV
   if (cv === null) {
     return (
-      <NoCV candidatId={candidatId} user={user} setCV={setCV} />
+      <NoCV candidatId={candidatId} user={user} setCV={(cvData) => {
+        setCV(cvData);
+        setCvVersion(cvData.version);
+      }} />
     );
   }
 
@@ -181,7 +186,7 @@ const CVPageContent = ({ candidatId }) => {
             </span>
           </div>
           {(user.role === USER_ROLES.ADMIN) && (
-            <div>Version&nbsp;: {cv.version}</div>
+            <div>Version&nbsp;: {cvVersion}</div>
           )}
         </GridNoSSR>
 
