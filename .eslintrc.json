@@ -36,12 +36,6 @@
     "no-return-assign": "off",
     "no-console": "off",
     "no-unused-vars": "warn",
-    "max-len": [
-      "warn",
-      {
-        "code": 100
-      }
-    ],
     "jsx-a11y/anchor-is-valid": "off",
     "jsx-a11y/anchor-has-content": "off",
     "react/no-array-index-key": "off",
@@ -64,18 +58,17 @@
       }
     ],
     "prettier/prettier": [
-      "off",
+      "error",
+      {},
       {
-        "endOfLine": "auto"
+        "usePrettierrc": true
       }
     ]
   },
   "extends": [
     "airbnb",
     "prettier",
-    // "plugin:react/recommended",
-    // "plugin:prettier/recommended",
-    "prettier/react",
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:prettier/recommended" // should always be the last element in the array
   ]
 }
