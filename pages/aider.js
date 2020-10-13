@@ -55,7 +55,7 @@ const Aider = () => (
             style="secondary"
             onClick={() => event(TAGS.PAGE_AIDER_DON_CLIC)}
           >
-            Devenir bénévole-coach&nbsp;
+            Faire un don&nbsp;
             <IconNoSSR name="chevron-right" />
           </Button>
         </div>
@@ -80,7 +80,7 @@ const Aider = () => (
             style="secondary"
             onClick={() => event(TAGS.PAGE_AIDER_INSCRIPTION_COACH_CLIC)}
           >
-            Faire un don&nbsp;
+            Devenir bénévole-coach&nbsp;
             <IconNoSSR name="chevron-right" />
           </Button>
         </div>
