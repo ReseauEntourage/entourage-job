@@ -1,39 +1,6 @@
 export default {
   strategy: [
     {
-      key: 'tbwa',
-      title: 'TBWA',
-      desc: 'TBWA\\, The Disruption® Company, fait partie du réseau international TBWA\\ Worldwide implanté dans 95 pays avec 275 agences.\n\n' +
-        'En France, TBWA\\, 1100 collaborateurs, est le 3ème groupe de communication globale et est la seule agence élue 4 fois de suite Agence de l\'Année aux Cannes Lions.',
-      question: 'Quel est, pour vous, la force de LinkedOut\xa0?',
-      answer: 'Permettre en 1 clic de partager son réseau professionnel et personnel à ceux qui n’en ont pas et qui en ont cruellement besoin.',
-      link: 'https://www.tbwa-paris.com/fr'
-    },
-    {
-      key: 'shareit',
-      title: 'Share it',
-      desc: 'Share it est un accélérateur Tech for Good créé par Ashoka et des entrepreneurs convaincus que la technologie peut aider certaines organisations sociales à démultiplier leur impact. Nous codons gratuitement des solutions digitales complexes pour des associations et entreprises sociales.',
-      question: 'Que représente pour vous le projet LinkedOut\xa0?',
-      answer: 'LinkedOut c’est un tremplin vers l’inclusion\xa0: pour les entreprises qui cherchent à recruter des profils variés, pour les candidats qui pourront s’épanouir dans leur travail, et pour nous toutes et tous, qui pouvons agir simplement, en partageant un CV.',
-      link: 'https://share-it.io/'
-    },
-    {
-      key: 'ares',
-      title: 'Ares',
-      desc: 'Ares est un groupe de structures d’insertion par l’activité économique. Ares propose à des personnes en situation d’exclusion, un travail et un accompagnement individualisé afin d’aider la personne à lever les freins à l’emploi et à se réinsérer vers un emploi durable.',
-      question: 'Pourquoi avoir eu envie de vous engager aux côtés de LinkedOut\xa0?',
-      answer: 'Le projet, en plus d’être un véritable booster emploi que ce soit pour nos salariés ou pour d’autres bénéficiaires, aborde l’insertion professionnel sous un angle très innovant pour le secteur de l’insertion et pour Ares. Le côté réseaux sociaux, diffusion de masse et communication n’est aujourd’hui que peu ou pas utilisé dans les SIAE.',
-      link: 'http://www.groupeares.fr/'
-    },
-    {
-      key: 'randstad',
-      title: 'Institut Randstad',
-      desc: 'L’Institut Randstad est le laboratoire de l’innovation sociale du Groupe Randstad, pour le retour durable à l’emploi. Il soutient et co–construit avec ses partenaires, des programmes pour accompagner vers l’emploi, les publics fragilisés des territoires vulnérables en France.',
-      question: 'Quelle est l’expertise que vous apportez au projet\xa0?',
-      answer: 'Randstad apporte son expertise RH et sa parfaite connaissance des bassins d’emploi, pour structurer et sécuriser les parcours des candidats LinkedOut vers l’emploi durable\xa0: de l’accueil  à l’intégration et de l’accompagnement au maintien en emploi.',
-      link: 'https://www.grouperandstad.fr/institut/'
-    },
-    {
       key: 'pic',
       bis: true,
       title: 'L’appel à projets « 100 % Inclusion – La fabrique de la remobilisation » du Plan d’investissement dans les compétences',
@@ -55,6 +22,39 @@ export default {
         'Nous sommes très heureux de contribuer au développement de LinkedOut, à la lutte contre la grande exclusion en France et, nous le souhaitons, au retour à l’emploi de milliers de personnes qui le méritent tant.',
       link: 'https://www.advens.fr/fr/'
     },
+    {
+      key: 'tbwa',
+      title: 'TBWA',
+      desc: 'TBWA\\, The Disruption® Company, fait partie du réseau international TBWA\\ Worldwide implanté dans 95 pays avec 275 agences.\n\n' +
+        'En France, TBWA\\, 1100 collaborateurs, est le 3ème groupe de communication globale et est la seule agence élue 4 fois de suite Agence de l\'Année aux Cannes Lions.',
+      question: 'Quel est, pour vous, la force de LinkedOut\xa0?',
+      answer: 'Permettre en 1 clic de partager son réseau professionnel et personnel à ceux qui n’en ont pas et qui en ont cruellement besoin.',
+      link: 'https://www.tbwa-paris.com/fr'
+    },
+    {
+      key: 'randstad',
+      title: 'Institut Randstad',
+      desc: 'L’Institut Randstad est le laboratoire de l’innovation sociale du Groupe Randstad, pour le retour durable à l’emploi. Il soutient et co–construit avec ses partenaires, des programmes pour accompagner vers l’emploi, les publics fragilisés des territoires vulnérables en France.',
+      question: 'Quelle est l’expertise que vous apportez au projet\xa0?',
+      answer: 'Randstad apporte son expertise RH et sa parfaite connaissance des bassins d’emploi, pour structurer et sécuriser les parcours des candidats LinkedOut vers l’emploi durable\xa0: de l’accueil  à l’intégration et de l’accompagnement au maintien en emploi.',
+      link: 'https://www.grouperandstad.fr/institut/'
+    },
+    {
+      key: 'ares',
+      title: 'Ares',
+      desc: 'Ares est un groupe de structures d’insertion par l’activité économique. Ares propose à des personnes en situation d’exclusion, un travail et un accompagnement individualisé afin d’aider la personne à lever les freins à l’emploi et à se réinsérer vers un emploi durable.',
+      question: 'Pourquoi avoir eu envie de vous engager aux côtés de LinkedOut\xa0?',
+      answer: 'Le projet, en plus d’être un véritable booster emploi que ce soit pour nos salariés ou pour d’autres bénéficiaires, aborde l’insertion professionnel sous un angle très innovant pour le secteur de l’insertion et pour Ares. Le côté réseaux sociaux, diffusion de masse et communication n’est aujourd’hui que peu ou pas utilisé dans les SIAE.',
+      link: 'http://www.groupeares.fr/'
+    },
+    {
+      key: 'shareit',
+      title: 'Share it',
+      desc: 'Share it est un accélérateur Tech for Good créé par Ashoka et des entrepreneurs convaincus que la technologie peut aider certaines organisations sociales à démultiplier leur impact. Nous codons gratuitement des solutions digitales complexes pour des associations et entreprises sociales.',
+      question: 'Que représente pour vous le projet LinkedOut\xa0?',
+      answer: 'LinkedOut c’est un tremplin vers l’inclusion\xa0: pour les entreprises qui cherchent à recruter des profils variés, pour les candidats qui pourront s’épanouir dans leur travail, et pour nous toutes et tous, qui pouvons agir simplement, en partageant un CV.',
+      link: 'https://share-it.io/'
+    }
   ],
   finance: [
     {
@@ -63,9 +63,19 @@ export default {
       link: 'https://www.caissedesdepots.fr/'
     },
     {
-      key: 'transdev',
-      title: 'Fondation Transdev',
-      link: 'http://www.fondation.transdev.com/'
+      key: 'safran',
+      title: 'Fondation Safran',
+      link: 'https://www.safran-group.com/fr/engagements/un-groupe-citoyen'
+    },
+    {
+      key: 'camping',
+      title: 'Campings.com',
+      link: 'https://www.campings.com/fr/'
+    },
+    {
+      key: 'kleever',
+      title: 'Kleever',
+      link: 'https://www.kleever.com/'
     },
     {
       key: 'cera',
@@ -78,19 +88,14 @@ export default {
       link: 'https://www.fondationairliquide.com/'
     },
     {
-      key: 'safran',
-      title: 'Fondation Safran',
-      link: 'https://www.safran-group.com/fr/engagements/un-groupe-citoyen'
+      key: 'transdev',
+      title: 'Fondation Transdev',
+      link: 'http://www.fondation.transdev.com/'
     },
     {
       key: 'nuitdubiencommun',
       title: 'La Nuit du Bien Commun',
       link: 'https://lanuitdubiencommun.com/'
-    },
-    {
-      key: 'kleever',
-      title: 'Kleever',
-      link: 'https://www.kleever.com/'
     },
     {
       key: 'neoxia',

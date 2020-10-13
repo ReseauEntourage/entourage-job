@@ -12,7 +12,7 @@ const Partners = () => {
   const logoList = (data) => {
     return (
       <Grid
-        childWidths={[`1-4@m`, 'auto']}
+        childWidths={[`1-${Math.floor((data.length / 2) + 1)}@m`, 'auto']}
         match
         middle
         center
