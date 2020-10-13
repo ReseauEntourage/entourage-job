@@ -17,6 +17,16 @@ const HowToCommitDifferently = () => {
         Il existe d'autres manières de rendre votre entreprise plus inclusive
         avec LinkedOut.
       </p>
+      <p className="uk-text-center">
+        Vous ne savez pas par où commenter ?{' '}
+        <a
+          style={{ textDecoration: 'underline' }}
+          href="https://entourage-asso.typeform.com/to/LsizgJxd"
+          rel="noopener noreferrer"
+        >
+          Faites votre diagnostic et laissez-vous guider
+        </a>
+      </p>
       <ul
         className="uk-margin-large-top"
         style={{ justifyContent: 'space-evenly' }}
