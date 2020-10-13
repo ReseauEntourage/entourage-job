@@ -43,7 +43,7 @@ const HireSteps = () => {
   return (
     <Section id="hireSteps" style="muted">
       <MultipleCTA data={content} showNumbers showHorizontalDividers animate />
-      <div className="uk-text-bold uk-margin-medium-top uk-text-center">
+      <p className="uk-text-bold uk-margin-medium-top uk-text-center">
         Votre offre peut concerner plusieurs candidats LinkedOut&nbsp;?{' '}
         <a
           style={{ textDecoration: 'underline' }}
@@ -52,7 +52,7 @@ const HireSteps = () => {
         >
           Publiez-la ici !
         </a>
-      </div>
+      </p>
       <PostJobAdModal />
     </Section>
   );
