@@ -9,6 +9,7 @@ const partnersPlaces = [
     lat: 48.606821,
     lng: 2.3005192,
     contactName: 'Catherine YVELISE',
+    contactFunction: 'Coach emploi',
     contactNumber: '0637757809',
     contactMail: 'yvelise.catherine@groupevitaminet.com',
     address: 'Gare de Brétigny-sur-Orge, 91220 Bretigny-sur-Orge',
@@ -18,6 +19,7 @@ const partnersPlaces = [
     lat: 48.8535246,
     lng: 2.7643001,
     contactName: 'Catherine YVELISE',
+    contactFunction: 'Coach emploi',
     contactNumber: '0637757809',
     contactMail: 'yvelise.catherine@groupevitaminet.com',
     address: "14, avenue de l'Europe, 77144 Montevrain",
@@ -27,6 +29,7 @@ const partnersPlaces = [
     lat: 50.69133,
     lng: 3.18253,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: 'Tour Blériot, 69 Rue Jules WATTEEW, 59100 ROUBAIX',
@@ -36,6 +39,7 @@ const partnersPlaces = [
     lat: 50.72535,
     lng: 3.14692,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '37 Rue Jean Froissart, 59200 TOURCOING',
@@ -45,6 +49,7 @@ const partnersPlaces = [
     lat: 50.77968,
     lng: 3.10505,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '230, rue de la Lys 59250 HALLUIN',
@@ -54,6 +59,7 @@ const partnersPlaces = [
     lat: 50.45099,
     lng: 3.4118,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '215, rue du Marillon 59230 SAINT AMAND LES EAUX',
@@ -63,6 +69,7 @@ const partnersPlaces = [
     lat: 50.56195,
     lng: 3.03894,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '46, route de  Lille 59113 SECLIN',
@@ -72,6 +79,7 @@ const partnersPlaces = [
     lat: 50.562961,
     lng: 2.8629111,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '601, rue du faulx 59274 MARQUILLIES',
@@ -81,6 +89,7 @@ const partnersPlaces = [
     lat: 50.4959774,
     lng: 2.9625709,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '117, rue Anne Franck 62220 CARVIN',
@@ -90,6 +99,7 @@ const partnersPlaces = [
     lat: 50.397363,
     lng: 3.101444,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address:
@@ -100,6 +110,7 @@ const partnersPlaces = [
     lat: 50.3352322,
     lng: 3.238691,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '4, rue des Frères Faches 59580 ANICHE',
@@ -109,6 +120,7 @@ const partnersPlaces = [
     lat: 50.3945529,
     lng: 3.4791842,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '19, rue du cimetière 59590 RAIMES',
@@ -118,6 +130,7 @@ const partnersPlaces = [
     lat: 50.3628727,
     lng: 3.5208385,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '40-42, rue Hon Hon 59300 VALENCIENNES',
@@ -127,6 +140,7 @@ const partnersPlaces = [
     lat: 50.2841826,
     lng: 3.9402437,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: "49, rue de l'égalité ZI Petite Savate 59600 MAUBEUGE",
@@ -136,6 +150,7 @@ const partnersPlaces = [
     lat: 51.0116846,
     lng: 2.268134,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '283 rue de Quenez 59279 MARDYCK LOON PLAGE',
@@ -145,6 +160,7 @@ const partnersPlaces = [
     lat: 49.9059515,
     lng: 2.2754966,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '21, rue Alfred Catel 80000 AMIENS',
@@ -154,6 +170,7 @@ const partnersPlaces = [
     lat: 49.7730384,
     lng: 4.7205225,
     contactName: "Florence D'AYER",
+    contactFunction: 'Responsable emploi',
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '16, rue du petit bois 08000 CHARLEVILLE MEZIERES',
@@ -163,6 +180,7 @@ const partnersPlaces = [
     lat: 45.7633014,
     lng: 4.9364005,
     contactName: 'Claire DEVERINE',
+    contactFunction: 'Coordinatrice',
     contactNumber: '0757479697',
     contactMail: 'cdeverine@cvgce.org',
     address: '12 Rue Emile Zola, 69150 Décines-Charpieu',
@@ -172,6 +190,7 @@ const partnersPlaces = [
     lat: 45.773894,
     lng: 4.9130243,
     contactName: 'Claire DEVERINE',
+    contactFunction: 'Coordinatrice',
     contactNumber: '0757479697',
     contactMail: 'cdeverine@cvgce.org',
     address: '2 Rue Stalingrad, 69120 Vaulx-en-Velin',
@@ -181,6 +200,7 @@ const partnersPlaces = [
     lat: 45.7618994,
     lng: 4.8621717,
     contactName: 'Claire DEVERINE',
+    contactFunction: 'Coordinatrice',
     contactNumber: '0757479697',
     contactMail: 'cdeverine@cvgce.org',
     address: '24 Rue Riboud, 69003 Lyon',
@@ -190,18 +210,71 @@ const partnersPlaces = [
     lat: 48.9223279,
     lng: 2.2091179,
     contactName: 'Catherine YVELISE',
+    contactFunction: 'Coach emploi',
     contactNumber: '0637757809',
     contactMail: 'yvelise.catherine@groupevitaminet.com',
     address: 'Rue Emile Zola, 95870 Bezons',
   },
-  // {
-  //   title: 'Ares service Val de Marne',
-  //   lat: 48.7828641,
-  //   lng: 2.5042718,
-  //   contactName: 'Valérie De Fournoux',
-  //   contactNumber: '0634310152',
-  //   contactMail: 'valerie.defournoux@ares-association.fr',
-  // },
+  {
+    title: 'Ares Service Seine et Marne (77)',
+    lat: 48.6398925,
+    lng: 2.5720423,
+    contactName: 'Youssouf ALI',
+    contactFunction: 'Chargé de projet emploi',
+    contactNumber: '0635313119',
+    contactMail: 'partenaire-emploi@ares-association.fr',
+    address: "42 Rue de l'Innovation, 77550 Moissy-Cramayel",
+  },
+  {
+    title: 'Ares Service Val de Marne (94)',
+    lat: 48.7615397,
+    lng: 2.4710283,
+    contactName: 'Myriam BITRAN',
+    contactFunction: 'Chargée de mission emploi',
+    contactNumber: '0609518528',
+    contactMail: 'partenaire-emploi@ares-association.fr',
+    address: 'Rue des Longs Rideaux, 94450 Limeil-Brévannes',
+  },
+  {
+    title: 'Atelier sans Frontière',
+    lat: 48.7828641,
+    lng: 2.5042718,
+    contactName: 'Xénia NEDELCOUX',
+    contactFunction: 'Cheffe de projets emploi',
+    contactNumber: '0776195638',
+    contactMail: 'partenaire-emploi@ares-association.fr',
+    address: '73 Rue du Moulin Bateau, 94380 Bonneuil-sur-Marne',
+  },
+  {
+    title: "Log'ins Ile de France",
+    lat: 48.5882379,
+    lng: 2.4408674,
+    contactName: 'Valérie DE FOURNOUX',
+    contactFunction: 'Cheffe de projets emploi',
+    contactNumber: '0634310152',
+    contactMail: 'partenaire-emploi@ares-association.fr',
+    address: 'Rue des 44 Arpents, 91100 Villabé',
+  },
+  {
+    title: "Log'ins Auverne Rhône Alpes",
+    lat: 45.8428954,
+    lng: 5.2778809,
+    contactName: 'Valérie DE FOURNOUX',
+    contactFunction: 'Cheffe de projets emploi',
+    contactNumber: '0634310152',
+    contactMail: 'partenaire-emploi@ares-association.fr',
+    address:
+      'Allée des peupliers - Bâtiment C – Zone Distripole 01150 SAINT-VULBAS',
+  },
+  {
+    title: 'Arescoop',
+    lat: 45.1880604,
+    lng: -1.0426095,
+    contactName: 'Frédéric CHAOUNI',
+    contactNumber: '0661408032',
+    contactMail: 'partenaire-emploi@ares-association.fr',
+    address: '3 rue de l’Industrie 33990 Hourtin',
+  },
 ];
 
 const buildGMapsLink = (address) => `https://maps.google.com/?q=${address}`;
@@ -213,7 +286,8 @@ const PartnersMap = ({ google }) => {
   const [clickedMarker, setClickedMarker] = useState(null);
 
   const getPartnerPlaceInfo = (infoKey) => {
-    return clickedMarker ? partnersPlaces[clickedMarker.id][infoKey] : '-';
+    const info = clickedMarker && partnersPlaces[clickedMarker.id][infoKey];
+    return info || '';
   };
 
   return (
@@ -251,7 +325,10 @@ const PartnersMap = ({ google }) => {
           </h4>
           <p>
             <span uk-icon="user" className="uk-margin-small-right" />
-            <span>{getPartnerPlaceInfo('contactName')}</span>
+            <span>
+              {getPartnerPlaceInfo('contactName')},&nbsp;
+              {getPartnerPlaceInfo('contactFunction').toLowerCase()}
+            </span>
           </p>
           <p>
             <span uk-icon="phone" className="uk-margin-small-right" />
