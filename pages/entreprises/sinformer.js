@@ -13,7 +13,7 @@ const Sinformer = () => {
   return (
     <Layout title="S'informer - LinkedOut">
       <ImageTitle
-        img="/static/img/header_pic_hire.jpg"
+        img="/static/img/header_pic_sinformer.jpg"
         id="sinformer-title"
         title={
           <>

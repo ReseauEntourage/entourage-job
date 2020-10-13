@@ -18,9 +18,10 @@ const CVPage = ({ cv, router }) => {
 
   const hostname = process.env.SERVER_URL;
   const link = `${hostname}${router.asPath}`;
-  const sharedDescription =
-    `La précarité n'exclut pas les compétences\xa0! Avec LinkedOut, aidons ${cv.user.candidat.firstName} à retrouver un emploi en lui proposant un job ou en diffusant son CV\xa0!`;
-  const title = `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`;
+  const candidateExists = cv && cv.user && cv.user.candidat;
+  const sharedDescription = candidateExists ?
+    `La précarité n'exclut pas les compétences\xa0! Avec LinkedOut, aidons ${cv.user.candidat.firstName} à retrouver un emploi en lui proposant un job ou en diffusant son CV\xa0!` : '';
+  const title = candidateExists ? `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi` : '';
 
 
   const { isFirstLoad } = useContext(SessionContext);
