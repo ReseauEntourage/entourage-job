@@ -13,8 +13,7 @@
   - _migrations_ : Fichiers de migration de la structure de la base.
   - _models_ : Fichiers modèles des objets en base.
   - _seeders_ : Fichiers d'ajout de données dans la base.
-- _pages_ : Dossier contenant les components **React** de rendu de pages.
-  -_app.js_ : Permet la customisation du component parent général. (Navbar présente sur tout le site par exemple).
+- _pages_ : Dossier contenant les components **React** de rendu de pages. -_app.js_ : Permet la customisation du component parent général. (Navbar présente sur tout le site par exemple).
   - _document.js_ : Permet la customisation du document HTML. (Inclusion des scripts JS de UiKit par exemple).
 - _static_ : Stockage des éléments non dynamique tels que les images ou la partie CSS.
 - _test_ : Dédiés au tests. Utilisation de **Mocha**.
@@ -55,7 +54,6 @@ Pour lancer le projet vous avez besoin de **Docker** ainsi que de **NodeJs**.
 
 - `npm run dev`
 
-
 ## 3# Insertion des données dans la BDD
 
 Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
@@ -79,6 +77,5 @@ Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
 - `npm run test` est utilisé pour l'intégration continue pour lancer les tests avec les valeurs du fichier `.env`
 - `npm run dev-test-coverage` pour lancer les tests avec un rapport de couverture
 - `npm run dev-test` pour lancer les tests en mode watch sans rapport de couverture
-
 
 ### You are all set !
