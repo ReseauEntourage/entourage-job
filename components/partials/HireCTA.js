@@ -25,15 +25,16 @@ const HireCTA = () => {
           style="primary"
           className="hireButton-xlarge"
         >
-          Recruter en Île-de-France et dans les Hauts-de-France
-          <IconNoSSR name="chevron-right" />
+          <span>Recruter en Île-de-France et dans les Hauts-de-France</span>
+          <IconNoSSR className="hireButton-xlarge-icon" name="chevron-right" />
         </Button>
         <Button
           href="/entreprises/recruter-hors-linkedout"
           style="primary"
           className="hireButton-xlarge"
         >
-          Recruter ailleurs <IconNoSSR name="chevron-right" />
+          <span>Recruter ailleurs</span>
+          <IconNoSSR className="hireButton-xlarge-icon" name="chevron-right" />
         </Button>
       </Grid>
     </Section>
