@@ -9,10 +9,10 @@ import {
   OffcanvasNoSSR,
   HamburgerNoSSR,
   NavbarLogo,
-  IconNoSSR
+  IconNoSSR,
 } from '../utils';
 import './Header.less';
-import Button from "../utils/Button";
+import Button from '../utils/Button';
 
 const LINKS = [
   { href: '/aider', name: 'Particuliers, agissez' },
@@ -38,33 +38,39 @@ const Header = ({ isHome }) => {
           <Nav
             navbar
             items={[
-              ...LINKS.map((value, i) => {
-                  if (router.asPath === value.href) {
-                    return (
-                      <div className="uk-navbar-item uk-padding-remove-horizontal uk-visible@m">
-                        <Button
-                          href={value.href}
-                          style='default'
-                          className="uk-padding-small uk-padding-remove-vertical">
-                            {value.name}
-                        </Button>
-                      </div>
-                    );
-                  }
+              ...LINKS.map((link, i) => {
+                if (router.asPath.includes(link.href)) {
                   return (
-                    <Link href={value.href} key={i}>
-                      {/* Hack so that the links don't move when changing current page */}
-                      <a style={{border: '1px solid transparent'}} className={`uk-visible@m ${router.asPath === value.href && 'uk-text-bold uk-text-primary'}`}>{value.name}</a>
-                    </Link>
+                    <div className="uk-navbar-item uk-padding-remove-horizontal uk-visible@m">
+                      <Button
+                        href={link.href}
+                        style="default"
+                        className="uk-padding-small uk-padding-remove-vertical"
+                      >
+                        {link.name}
+                      </Button>
+                    </div>
                   );
                 }
-              ),
+                return (
+                  <Link href={link.href} key={i}>
+                    {/* Hack so that the links don't move when changing current page */}
+                    <a
+                      style={{ border: '1px solid transparent' }}
+                      className={`uk-visible@m ${
+                        router.asPath === link.href &&
+                        'uk-text-bold uk-text-primary'
+                      }`}
+                    >
+                      {link.name}
+                    </a>
+                  </Link>
+                );
+              }),
               // separateurs en css .ent-nav
               <div className="uk-navbar-item uk-visible@m">
-                <Button
-                  href="/candidats"
-                  style='primary'>
-                  Découvrir les CV{' '}<IconNoSSR name="chevron-right" />
+                <Button href="/candidats" style="primary">
+                  Découvrir les CV <IconNoSSR name="chevron-right" />
                 </Button>
               </div>,
               <HamburgerNoSSR targetId="offcanvas-guest" hidden="m" />,
@@ -108,8 +114,9 @@ const Header = ({ isHome }) => {
             <Button
               href="/candidats"
               onClick={() => UIkit.offcanvas('#offcanvas-guest').hide()}
-              style='primary'>
-              Découvrir les CV{' '}<IconNoSSR name="chevron-right" />
+              style="primary"
+            >
+              Découvrir les CV <IconNoSSR name="chevron-right" />
             </Button>
           </li>
         </ul>
