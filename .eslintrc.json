@@ -21,27 +21,15 @@
     "allowImportExportEverywhere": false,
     "codeFrame": false
   },
-  "plugins": [
-    "react",
-    "prettier"
-  ],
+  "plugins": ["react", "prettier"],
   "root": true,
   "rules": {
     "curly": "warn",
-    "strict": [
-      "error",
-      "global"
-    ],
+    "strict": ["error", "global"],
     "prefer-promise-reject-errors": "off",
     "no-return-assign": "off",
     "no-console": "off",
     "no-unused-vars": "warn",
-    "max-len": [
-      "warn",
-      {
-        "code": 100
-      }
-    ],
     "jsx-a11y/anchor-is-valid": "off",
     "jsx-a11y/anchor-has-content": "off",
     "react/no-array-index-key": "off",
@@ -50,32 +38,25 @@
     "react/prop-types": "error",
     "react/style-prop-object": "off",
     "react/forbid-prop-types": "warn",
-    "react/static-property-placement": [
-      "warn",
-      "static getter"
-    ],
+    "react/static-property-placement": ["warn", "static getter"],
     "react/jsx-filename-extension": [
       "warn",
       {
-        "extensions": [
-          ".js",
-          ".jsx"
-        ]
+        "extensions": [".js", ".jsx"]
       }
     ],
     "prettier/prettier": [
-      "off",
+      "error",
+      {},
       {
-        "endOfLine": "auto"
+        "usePrettierrc": true
       }
     ]
   },
   "extends": [
     "airbnb",
     "prettier",
-    // "plugin:react/recommended",
-    // "plugin:prettier/recommended",
-    "prettier/react",
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:prettier/recommended" // should always be the last element in the array
   ]
 }
