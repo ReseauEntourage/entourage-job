@@ -1,3 +1,5 @@
+/* global UIkit */
+
 import React from 'react';
 import { Section } from '../utils';
 import MultipleCTA from './MultipleCTA';
