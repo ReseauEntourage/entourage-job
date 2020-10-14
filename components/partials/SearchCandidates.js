@@ -39,13 +39,14 @@ const CVFiltersSideBar = ({
       const indexInSelectedFilters = filters[key].findIndex((filter) => {
         return filter.value === filterConst.value;
       });
+
       const isFilterSelected = indexInSelectedFilters > -1;
 
       const onFilterClick = () => {
         const updatedFilters = { ...filters };
         if (isFilterSelected) {
           // remove filter
-          updatedFilters[key].splice(index, 1);
+          updatedFilters[key].splice(indexInSelectedFilters, 1);
         } else {
           // add filter
           updatedFilters[key].push(filterConst);
