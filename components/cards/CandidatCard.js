@@ -35,7 +35,7 @@ const CandidatCard = ({
   const isCandidatsPage = router.asPath.includes('/candidats');
   const showShareOptions = !router.asPath.includes('/entreprises');
 
-  const link = `${process.env.SERVER_URL}/cv/${url}`;
+  const link = encodeURI(`${process.env.SERVER_URL}/cv/${url}`);
   const hashtags = ['LinkedOut'];
   const sharedDescription = `La précarité n'exclut pas les compétences\xa0! Avec LinkedOut, aidons ${firstName} à retrouver un emploi en lui proposant un job ou en diffusant son CV\xa0!`;
   const title = `LinkedOut\xa0: Aidez ${firstName} à retrouver un emploi`;
