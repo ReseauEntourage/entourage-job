@@ -138,13 +138,23 @@ const SearchCandidates = () => {
   const [numberOfResults, setNumberOfResults] = useState(0);
 
   useEffect(() => {
-    UIkit.util.on(document, 'show', '#toggle-filter-menu', () => {
-      event(TAGS.PAGE_GALERIE_AFFICHER_FILTRES_CLIC);
-      setFilterMenuOpened(true);
-    });
-    UIkit.util.on(document, 'hide', '#toggle-filter-menu', () => {
-      setFilterMenuOpened(false);
-    });
+    const modalInterval = setInterval(() => {
+      if(UIkit) {
+        clearInterval(modalInterval);
+        UIkit.util.on(document, 'show', '#toggle-filter-menu', () => {
+          event(TAGS.PAGE_GALERIE_AFFICHER_FILTRES_CLIC);
+          setFilterMenuOpened(true);
+        });
+        UIkit.util.on(document, 'hide', '#toggle-filter-menu', () => {
+          setFilterMenuOpened(false);
+        });
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(modalInterval);
+    };
+
   }, []);
 
   const resetFilters = () => {
