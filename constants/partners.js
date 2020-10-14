@@ -68,16 +68,6 @@ export default {
       link: 'https://www.safran-group.com/fr/engagements/un-groupe-citoyen'
     },
     {
-      key: 'camping',
-      title: 'Campings.com',
-      link: 'https://www.campings.com/fr/'
-    },
-    {
-      key: 'kleever',
-      title: 'Kleever',
-      link: 'https://www.kleever.com/'
-    },
-    {
       key: 'cera',
       title: 'Fondation CERA',
       link: 'https://www.caissedepargnerhonealpes.fr/fondation-caisse-depargne-rhone-alpes'
@@ -91,6 +81,16 @@ export default {
       key: 'transdev',
       title: 'Fondation Transdev',
       link: 'http://www.fondation.transdev.com/'
+    },
+    {
+      key: 'camping',
+      title: 'Campings.com',
+      link: 'https://www.campings.com/fr/'
+    },
+    {
+      key: 'kleever',
+      title: 'Kleever',
+      link: 'https://www.kleever.com/'
     },
     {
       key: 'nuitdubiencommun',
