@@ -52,6 +52,7 @@ const Aider = () => (
           <Button
             href={EXTERNAL_LINKS.DONATION}
             isExternal
+            newTab
             style="secondary"
             onClick={() => event(TAGS.PAGE_AIDER_DON_CLIC)}
           >
@@ -77,6 +78,7 @@ const Aider = () => (
           <Button
             href={EXTERNAL_LINKS.ARTICLE_BC}
             isExternal
+            newTab
             style="secondary"
             onClick={() => event(TAGS.PAGE_AIDER_INSCRIPTION_COACH_CLIC)}
           >
