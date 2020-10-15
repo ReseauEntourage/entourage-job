@@ -85,7 +85,7 @@ const Sinformer = () => {
               text:
                 'Nous proposons des ateliers pour ouvrir le dialogue autour de ce sujet dans votre entreprise et initier une démarche parmi vos collaborateurs.',
               button: {
-                label: 'Contactez nous',
+                label: 'Contactez-nous',
                 href: 'mailto:florent@entourage.social',
                 external: true,
                 size: 'small',
