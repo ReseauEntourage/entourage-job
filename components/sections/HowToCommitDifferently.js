@@ -18,11 +18,12 @@ const HowToCommitDifferently = () => {
         avec LinkedOut.
       </p>
       <p className="uk-text-center">
-        Vous ne savez pas par où commenter ?{' '}
+        Vous ne savez pas par où commencer ?{' '}
         <a
           style={{ textDecoration: 'underline' }}
           href="https://entourage-asso.typeform.com/to/LsizgJxd"
           rel="noopener noreferrer"
+          target="_blank"
         >
           Faites votre diagnostic et laissez-vous guider
         </a>

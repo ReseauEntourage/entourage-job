@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropsType from 'prop-types';
 import moment from 'moment';
 import Api from '../../Axios';
@@ -9,7 +9,8 @@ import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
-import {useResetForm} from "../../hooks";
+import { useResetForm } from '../../hooks';
+import { formatParagraph } from '../../utils';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
@@ -25,10 +26,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
     setError(false);
     setLoading(true);
     try {
-      const { data } = await Api.put(
-        `/api/v1/opportunity/`,
-        opportunity
-      );
+      const { data } = await Api.put(`/api/v1/opportunity/`, opportunity);
       setCurrentOffer(data);
     } catch (err) {
       setError(true);
@@ -148,7 +146,10 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 className="uk-link-muted"
                 isExternal
               >
-                <span>{currentOffer.recruiterMail}&nbsp;</span>
+                <span>
+                  {currentOffer.recruiterMail}
+                  &nbsp;
+                </span>
                 <IconNoSSR name="mail" ratio={0.8} />
               </SimpleLink>
               <SimpleLink
@@ -156,7 +157,10 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 className="uk-link-muted"
                 isExternal
               >
-                <span>{currentOffer.recruiterPhone}&nbsp;</span>
+                <span>
+                  {currentOffer.recruiterPhone}
+                  &nbsp;
+                </span>
                 <IconNoSSR name="phone" ratio={0.8} />
               </SimpleLink>
               <span className="uk-text-italic">
@@ -176,7 +180,10 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                         className="uk-link-muted"
                         target="_blank"
                       >
-                        <span>{`${firstName} ${lastName}`}&nbsp;</span>
+                        <span>
+                          {`${firstName} ${lastName}`}
+                          &nbsp;
+                        </span>
                         <IconNoSSR name="link" ratio={0.8} />
                       </SimpleLink>
                     )
@@ -186,13 +193,13 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
           </GridNoSSR>
           <GridNoSSR gap="medium" childWidths={['1-1']}>
             <OfferInfoContainer icon="comment" title="Message">
-              {currentOffer.description}
+              {formatParagraph(currentOffer.description, true)}
             </OfferInfoContainer>
             <OfferInfoContainer icon="check" title="Pré-requis">
-              {currentOffer.prerequisites}
+              {formatParagraph(currentOffer.prerequisites, true)}
             </OfferInfoContainer>
             {currentOffer.businessLines && (
-              <GridNoSSR gap='small'>
+              <GridNoSSR gap="small">
                 {currentOffer.businessLines.map((businessLine) => (
                   <Button disabled>
                     <span style={{ color: '#666' }}>{businessLine}</span>
@@ -252,15 +259,19 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   return (
     <div id="modal-offer-admin" data-uk-modal="bg-close:false">
       <div
-        className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${currentOffer.isArchived &&
-          'uk-light uk-background-secondary'}`}
+        className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
+          currentOffer.isArchived && 'uk-light uk-background-secondary'
+        }`}
       >
-        <CloseButtonNoSSR className="uk-modal-close-default" onClick={() => {
-          if(isEditing) {
-            setIsEditing(false);
-          }
-          resetForm();
-        }} />
+        <CloseButtonNoSSR
+          className="uk-modal-close-default"
+          onClick={() => {
+            if (isEditing) {
+              setIsEditing(false);
+            }
+            resetForm();
+          }}
+        />
         <div className="uk-modal-body">{contentBuilder()}</div>
       </div>
     </div>
