@@ -61,12 +61,14 @@ const ResetPasswordPage = () => {
                 Ce lien ne semble pas valide. Veuillez contacter l&apos;équipe
                 Linkedout.
               </p>
-              <Button
-                style="primary"
-                onClick={() => router.push('/')}
-              >
-                Retourner à l&apos;accueil
-              </Button>
+              <div className="uk-flex uk-flex-center">
+                <Button
+                  style="primary"
+                  onClick={() => router.push('/')}
+                >
+                  Retourner à l&apos;accueil
+                </Button>
+              </div>
             </div>
           )}
         </div>
