@@ -84,11 +84,9 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 ...fields,
               };
               if (fields.candidatId) {
-                tmpOpportunity.usersId = [
-                  fields.candidatId.value
-                    ? fields.candidatId.value
-                    : fields.candidatId,
-                ];
+                tmpOpportunity.candidatId = fields.candidatId.value
+                  ? fields.candidatId.value
+                  : fields.candidatId;
               }
               updateOpportunity(tmpOpportunity);
               setIsEditing(false);
