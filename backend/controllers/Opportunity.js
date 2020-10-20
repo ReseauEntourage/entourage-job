@@ -307,16 +307,13 @@ const updateOpportunityUser = async (opportunityUser) => {
 };
 
 const updateOpportunity = async (opportunity) => {
-  const opp = await Opportunity.update(opportunity, {
+  const oldOpportunity = await getOpportunity(opportunity.id);
+
+  const modelOpportunity = await Opportunity.update(opportunity, {
     where: { id: opportunity.id },
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     individualHooks: true,
-  });
-
-  const previousOpportunity =
-    opp && opp.length > 1 && opp[1][0] && opp[1][0]._previousDataValues;
-
-  const modelOpportunity = opp && opp.length > 1 && opp[1][0] && opp[1][0];
+  }).then((model) => model && model.length > 1 && model[1][0]);
 
   if (opportunity.businessLines) {
     const businessLines = await Promise.all(
@@ -359,7 +356,17 @@ const updateOpportunity = async (opportunity) => {
       },
     });
 
-    if (modelOpportunity.isValidated) {
+    const previousCandidat =
+      oldOpportunity.userOpportunity &&
+      oldOpportunity.userOpportunity.length > 0
+        ? oldOpportunity.userOpportunity[0].User
+        : null;
+
+    if (
+      !previousCandidat ||
+      (previousCandidat.id !== opportunity.candidatId &&
+        modelOpportunity.isValidated)
+    ) {
       shouldSendMail = true;
     }
   }
@@ -367,8 +374,8 @@ const updateOpportunity = async (opportunity) => {
   const finalOpportunity = await getOpportunity(opportunity.id);
 
   if (
-    previousOpportunity &&
-    !previousOpportunity.isValidated &&
+    oldOpportunity &&
+    !oldOpportunity.isValidated &&
     finalOpportunity.isValidated &&
     !finalOpportunity.isPublic
   ) {
@@ -468,10 +475,14 @@ const updateOpportunity = async (opportunity) => {
   try {
     await updateTable();
     if (shouldSendMail) await sendJobOfferMails();
-    console.log('Updated table with modified offer and sent mail to candidate and coach.');
+    console.log(
+      'Updated table with modified offer and sent mail to candidate and coach.'
+    );
   } catch (err) {
     console.error(err);
-    console.log('Failed to update table with modified offer or send mail to candidate and coach.');
+    console.log(
+      'Failed to update table with modified offer or send mail to candidate and coach.'
+    );
   }
 
   return finalOpportunity;
