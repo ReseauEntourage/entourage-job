@@ -20,7 +20,7 @@
       "name": "text",
       "component": "textarea",
       "type": "text",
-      "title": "Votre recommendation*"
+      "title": "Votre recommandation*"
     }
   ],
   "rules": [

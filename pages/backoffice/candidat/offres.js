@@ -109,7 +109,7 @@ const Opportunites = () => {
           if (offer) {
             console.log(offer);
             setCurrentOffer(offer);
-            UIkit.modal('#modal-offer-admin').show();
+            UIkit.modal('#modal-offer').show();
           }
         }
       });
