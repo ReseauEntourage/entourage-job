@@ -181,7 +181,7 @@
     }
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('countdown', Component);
+      window.UIkit.component('countdown', Component);
     }
 
     return Component;

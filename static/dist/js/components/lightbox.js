@@ -1822,7 +1822,7 @@
     }
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('lightbox', Component);
+      window.UIkit.component('lightbox', Component);
     }
 
     return Component;

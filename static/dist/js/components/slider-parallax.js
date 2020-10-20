@@ -531,7 +531,7 @@
     }
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('sliderParallax', Component);
+      window.UIkit.component('sliderParallax', Component);
     }
 
     return Component;

@@ -1110,7 +1110,7 @@
     };
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('slider', Component);
+      window.UIkit.component('slider', Component);
     }
 
     return Component;

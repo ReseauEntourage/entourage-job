@@ -2107,29 +2107,24 @@ select.uk-form-width-xsmall {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #F55F24;
-  color: white;
-  border: none;
-  padding: 0 24px;
-  border-radius: 3px;
-  min-height: 44px;
-  font-size: 17px;
+  background-color: #E5E5E5;
+  color: #F55F24;
 }
 /* Hover + Focus */
 .uk-button-secondary:hover,
 .uk-button-secondary:focus {
   background-color: #151515;
   color: #fff;
-  background-color: #f44d0c;
-  color: white;
+  background-color: #d8d8d8;
+  color: #F55F24;
 }
 /* OnClick + Active */
 .uk-button-secondary:active,
 .uk-button-secondary.uk-active {
   background-color: #080808;
   color: #fff;
-  background-color: #dc450a;
-  color: white;
+  background-color: #cccccc;
+  color: #F55F24;
 }
 /*
  * Danger
@@ -10916,13 +10911,7 @@ iframe.uk-cover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #F55F24;
-  color: white;
-  border: none;
-  padding: 0 24px;
-  border-radius: 3px;
-  min-height: 44px;
-  font-size: 17px;
+  background-color: #E5E5E5;
   color: #F55F24;
   background-color: white;
 }

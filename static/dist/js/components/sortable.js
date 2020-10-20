@@ -529,7 +529,7 @@
     }
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('sortable', Component);
+      window.UIkit.component('sortable', Component);
     }
 
     return Component;

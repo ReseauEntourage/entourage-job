@@ -136,7 +136,7 @@
     }
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('notification', Component);
+      window.UIkit.component('notification', Component);
     }
 
     return Component;

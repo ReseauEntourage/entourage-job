@@ -1040,7 +1040,7 @@
     };
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('slideshow', Component);
+      window.UIkit.component('slideshow', Component);
     }
 
     return Component;

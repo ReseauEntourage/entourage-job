@@ -372,7 +372,7 @@
     }
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('filter', Component);
+      window.UIkit.component('filter', Component);
     }
 
     return Component;

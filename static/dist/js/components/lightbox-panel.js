@@ -1711,7 +1711,7 @@
     }
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('lightboxPanel', Component);
+      window.UIkit.component('lightboxPanel', Component);
     }
 
     return Component;

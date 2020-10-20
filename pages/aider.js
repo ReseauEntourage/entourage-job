@@ -32,7 +32,7 @@ const Aider = () => (
           opportunités d’emploi. Votre partage peut tout changer&nbsp;!
         </p>
         <div className="uk-flex-center uk-flex uk-flex-middle">
-          <Button href="/candidats" style="secondary">
+          <Button href="/candidats" style="primary" size="large">
             Partager un CV <IconNoSSR name="chevron-right" />
           </Button>
         </div>

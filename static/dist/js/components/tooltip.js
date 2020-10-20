@@ -437,7 +437,7 @@
     };
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('tooltip', Component);
+      window.UIkit.component('tooltip', Component);
     }
 
     return Component;

@@ -209,7 +209,7 @@
     }
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('upload', Component);
+      window.UIkit.component('upload', Component);
     }
 
     return Component;

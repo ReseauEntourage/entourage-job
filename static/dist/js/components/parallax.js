@@ -490,7 +490,7 @@
     }
 
     if (typeof window !== 'undefined' && window.UIkit) {
-        window.UIkit.component('parallax', Component);
+      window.UIkit.component('parallax', Component);
     }
 
     return Component;
