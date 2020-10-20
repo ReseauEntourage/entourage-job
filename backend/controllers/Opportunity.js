@@ -1,7 +1,9 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable camelcase */
 
-const {airtable} = require('./airtable');
+const { sendMail } = require('./mail');
+
+const { airtable } = require('./airtable');
 
 const {
   models: {
@@ -9,19 +11,20 @@ const {
     Opportunity_User,
     Opportunity_BusinessLine,
     Opportunity,
+    User_Candidat,
     User,
   },
-  Sequelize: {Op, fn, col, where},
+  Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 
-const {cleanOpportunity} = require('../utils');
+const { cleanOpportunity } = require('../utils');
 
 const INCLUDE_OPPORTUNITY_COMPLETE = [
   {
     model: BusinessLine,
     as: 'businessLines',
     attributes: ['name'],
-    through: {attributes: []},
+    through: { attributes: [] },
   },
   {
     model: Opportunity_User,
@@ -38,7 +41,21 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
     include: [
       {
         model: User,
-        attributes: ['id', 'email', 'firstName', 'lastName', 'gender', 'email'],
+        attributes: ['id', 'email', 'firstName', 'lastName', 'gender'],
+        include: [
+          {
+            model: User_Candidat,
+            as: 'candidat',
+            attributes: ['employed', 'hidden', 'note', 'url'],
+            include: [
+              {
+                model: User,
+                as: 'coach',
+                attributes: ['id', 'email', 'firstName', 'lastName'],
+              },
+            ],
+          },
+        ],
       },
     ],
   },
@@ -49,7 +66,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
     model: BusinessLine,
     as: 'businessLines',
     attributes: ['name'],
-    through: {attributes: []},
+    through: { attributes: [] },
   },
   {
     model: Opportunity_User,
@@ -57,14 +74,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
     include: [
       {
         model: User,
-        attributes: [
-          'id',
-          'email',
-          'firstName',
-          'lastName',
-          'gender',
-          'email',
-        ],
+        attributes: ['id', 'email', 'firstName', 'lastName', 'gender', 'email'],
       },
     ],
     attributes: [
@@ -89,15 +99,17 @@ const getAirtableOpportunityFields = (opportunity, candidat, businessLines) => {
     Entreprise: opportunity.company,
     Localisation: opportunity.location,
     Description: opportunity.description,
-    "Pré-requis": opportunity.prerequisites,
+    'Pré-requis': opportunity.prerequisites,
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
-    Candidat: opportunity.isPublic ? '' : `${candidat.firstName} ${candidat.lastName}`,
+    Candidat:
+      !opportunity.isPublic && candidat
+        ? `${candidat.firstName} ${candidat.lastName}`
+        : '',
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
   };
-}
-
+};
 
 const createOpportunity = async (data) => {
   console.log(`createOpportunity - Création de l'opportunité`);
@@ -110,7 +122,7 @@ const createOpportunity = async (data) => {
     const businessLines = await Promise.all(
       data.businessLines.map((name) =>
         BusinessLine.findOrCreate({
-          where: {name: name},
+          where: { name },
         }).then((model) => model[0])
       )
     );
@@ -131,33 +143,36 @@ const createOpportunity = async (data) => {
 
   const cleanedOpportunity = cleanOpportunity(modelOpportunity);
 
-  const fillTable = () => new Promise((res, rej) => {
-    airtable("Offres d'emploi v2").create(
-      [
-        {
-          fields: getAirtableOpportunityFields(cleanedOpportunity, candidat, data.businessLines),
-        },
-      ],
-      (err, records) => {
-        if (err) {
-          return rej(err);
+  const fillTable = () =>
+    new Promise((res, rej) => {
+      airtable("Offres d'emploi v2").create(
+        [
+          {
+            fields: getAirtableOpportunityFields(
+              cleanedOpportunity,
+              candidat,
+              data.businessLines
+            ),
+          },
+        ],
+        (err, records) => {
+          if (err) {
+            return rej(err);
+          }
+          return res();
         }
-        return res();
-      }
-    );
-  });
+      );
+    });
 
   try {
     await fillTable();
     console.log('Filled table with new offer.');
-  }
-  catch(err){
+  } catch (err) {
     console.error(err);
     console.log('Failed to fill table with new offer.');
   }
 
   return cleanedOpportunity;
-
 };
 
 const deleteOpportunity = (id) => {
@@ -165,7 +180,7 @@ const deleteOpportunity = (id) => {
     `deleteOpportunity - Suppression d'une opportunité à partir de son id`
   );
   return Opportunity.destroy({
-    where: {id},
+    where: { id },
   });
 };
 
@@ -178,7 +193,7 @@ const getOpportunity = async (id) => {
 
 const getOpportunities = async (search) => {
   const options = {
-    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN
+    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
   };
   if (search) {
     const lowerCaseSearch = search.toLowerCase();
@@ -219,7 +234,7 @@ const getPublicOpportunities = async () => {
 const getPrivateUserOpportunities = async (userId) => {
   console.log(`getOpportunities - Récupérer les opportunités`);
   const opportunityUsers = await Opportunity_User.findAll({
-    where: {UserId: userId},
+    where: { UserId: userId },
     attributes: ['OpportunityId'],
   });
 
@@ -227,7 +242,7 @@ const getPrivateUserOpportunities = async (userId) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     where: {
       id: opportunityUsers.map((model) => model.OpportunityId),
-      isPublic: false
+      isPublic: false,
     },
   });
 
@@ -237,7 +252,7 @@ const getPrivateUserOpportunities = async (userId) => {
 const getAllUserOpportunities = async (userId) => {
   // private
   const opportunityUsers = await Opportunity_User.findAll({
-    where: {UserId: userId},
+    where: { UserId: userId },
     attributes: ['OpportunityId'],
   });
 
@@ -245,7 +260,7 @@ const getAllUserOpportunities = async (userId) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       [Op.or]: [
-        {isPublic: true, isValidated: true},
+        { isPublic: true, isValidated: true },
         {
           id: opportunityUsers.map((model) => model.OpportunityId),
           isPublic: false,
@@ -275,7 +290,7 @@ const addUserToOpportunity = (opportunityId, userId) =>
 
 const updateOpportunityUser = async (opportunityUser) => {
   await Opportunity_User.update(opportunityUser, {
-    where: {id: opportunityUser.id},
+    where: { id: opportunityUser.id },
     individualHooks: true,
   });
   return Opportunity_User.findByPk(opportunityUser.id, {
@@ -292,18 +307,19 @@ const updateOpportunityUser = async (opportunityUser) => {
 };
 
 const updateOpportunity = async (opportunity) => {
-  Opportunity.update(opportunity, {
-    where: {id: opportunity.id},
-  });
+  const oldOpportunity = await getOpportunity(opportunity.id);
 
-  const modelOpportunity = await Opportunity.findByPk(opportunity.id, {
+  const modelOpportunity = await Opportunity.update(opportunity, {
+    where: { id: opportunity.id },
     include: INCLUDE_OPPORTUNITY_COMPLETE,
-  });
+    individualHooks: true,
+  }).then((model) => model && model.length > 1 && model[1][0]);
+
   if (opportunity.businessLines) {
     const businessLines = await Promise.all(
       opportunity.businessLines.map((name) =>
         BusinessLine.findOrCreate({
-          where: {name},
+          where: { name },
         }).then((model) => model[0])
       )
     );
@@ -311,100 +327,162 @@ const updateOpportunity = async (opportunity) => {
     await Opportunity_BusinessLine.destroy({
       where: {
         OpportunityId: opportunity.id,
-        BusinessLineId: {[Op.not]: businessLines.map((bl) => bl.id)},
+        BusinessLineId: { [Op.not]: businessLines.map((bl) => bl.id) },
       },
     });
   }
 
-  // TODO maybe in trigger
+  let shouldSendMail = false;
+
   if (opportunity.isPublic) {
     await Opportunity_User.destroy({
       where: {
         OpportunityId: modelOpportunity.id,
       },
     });
-  } else if (opportunity.usersId) {
-    const opportunityUsers = await Promise.all(
-      opportunity.usersId.map((userId) =>
-        Opportunity_User.findOrCreate({
-          where: {
-            OpportunityId: modelOpportunity.id,
-            UserId: userId, // to rename in userId
-          },
-        }).then((model) => model[0])
-      )
-    );
+  } else if (opportunity.candidatId) {
+    const opportunityUser = await Opportunity_User.findOrCreate({
+      where: {
+        OpportunityId: modelOpportunity.id,
+        UserId: opportunity.candidatId, // to rename in userId
+      },
+    }).then((model) => model[0]);
+
     // suppression des secteurs d'activité non inclus dans les liens user->opportunité
     await Opportunity_User.destroy({
       where: {
         OpportunityId: modelOpportunity.id,
-        UserId: {[Op.not]: opportunityUsers.map((bl) => bl.UserId)},
+        UserId: { [Op.not]: opportunityUser.UserId },
       },
     });
+
+    const previousCandidat =
+      oldOpportunity.userOpportunity &&
+      oldOpportunity.userOpportunity.length > 0
+        ? oldOpportunity.userOpportunity[0].User
+        : null;
+
+    if (
+      !previousCandidat ||
+      (previousCandidat.id !== opportunity.candidatId &&
+        modelOpportunity.isValidated)
+    ) {
+      shouldSendMail = true;
+    }
   }
 
   const finalOpportunity = await getOpportunity(opportunity.id);
 
-  const updateTable = () => new Promise((res, rej) => {
+  if (
+    oldOpportunity &&
+    !oldOpportunity.isValidated &&
+    finalOpportunity.isValidated &&
+    !finalOpportunity.isPublic
+  ) {
+    shouldSendMail = true;
+  }
 
-    airtable("Offres d'emploi v2").select({
-      "filterByFormula": `{Id}='${finalOpportunity.id}'`
-    }).firstPage((err, results) => {
-      if (err) {
-        return rej(err);
-      }
+  const candidat =
+    finalOpportunity.userOpportunity &&
+    finalOpportunity.userOpportunity.length > 0
+      ? finalOpportunity.userOpportunity[0].User
+      : null;
 
-      const candidat = (finalOpportunity.userOpportunity && finalOpportunity.userOpportunity.length > 0) ? finalOpportunity.userOpportunity[0].User : null;
-
-      const fields = getAirtableOpportunityFields(finalOpportunity, candidat, finalOpportunity.businessLines);
-
-      if(results.length === 0) {
-        airtable("Offres d'emploi v2").create(
-          [
-            {
-              fields,
-            },
-          ],
-          (error, records) => {
-            if (error) {
-              return rej(error);
-            }
-            return res();
+  const updateTable = () =>
+    new Promise((res, rej) => {
+      airtable("Offres d'emploi v2")
+        .select({
+          filterByFormula: `{Id}='${finalOpportunity.id}'`,
+        })
+        .firstPage((err, results) => {
+          if (err) {
+            return rej(err);
           }
-        );
-      }
-      else {
-        const record = results[0];
 
-        // grab the record id
-        // and then push an update to this record
-        const record_id = record.id;
-        airtable("Offres d'emploi v2").update(
-          [
-            {
-              id: record_id,
-              fields,
-            },
-          ],
-          (error, records) => {
-            if (error) {
-              return rej(error);
-            }
-            return res();
+          const fields = getAirtableOpportunityFields(
+            finalOpportunity,
+            candidat,
+            finalOpportunity.businessLines
+          );
+
+          if (results.length === 0) {
+            airtable("Offres d'emploi v2").create(
+              [
+                {
+                  fields,
+                },
+              ],
+              (error, records) => {
+                if (error) {
+                  return rej(error);
+                }
+                return res();
+              }
+            );
+          } else {
+            const record = results[0];
+
+            // grab the record id
+            // and then push an update to this record
+            const record_id = record.id;
+            airtable("Offres d'emploi v2").update(
+              [
+                {
+                  id: record_id,
+                  fields,
+                },
+              ],
+              (error, records) => {
+                if (error) {
+                  return rej(error);
+                }
+                return res();
+              }
+            );
           }
-        );
-      }
+        });
+    });
 
-    })
-  });
+  const sendJobOfferMails = async () => {
+    if (candidat) {
+      await sendMail({
+        toEmail: candidat.email,
+        subject: `Vous avez reçu une nouvelle offre d'emploi`,
+        text: `
+          Vous venez de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
+          Vous pouvez la consulter en cliquant ici :
+          ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
+      });
+
+      const coach =
+        candidat && candidat.candidat && candidat.candidat.coach
+          ? candidat.candidat.coach
+          : null;
+
+      if (coach) {
+        await sendMail({
+          toEmail: coach.email,
+          subject: `${candidat.firstName} a reçu une nouvelle offre d'emploi`,
+          text: `
+         ${candidat.firstName} vient de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
+         Vous pouvez la consulter en cliquant ici :
+         ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
+        });
+      }
+    }
+  };
 
   try {
     await updateTable();
-    console.log('Updated table with modified offer.');
-  }
-  catch(err){
+    if (shouldSendMail) await sendJobOfferMails();
+    console.log(
+      'Updated table with modified offer and sent mail to candidate and coach.'
+    );
+  } catch (err) {
     console.error(err);
-    console.log('Failed to update table with modified offer.');
+    console.log(
+      'Failed to update table with modified offer or send mail to candidate and coach.'
+    );
   }
 
   return finalOpportunity;
