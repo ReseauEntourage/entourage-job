@@ -6,42 +6,42 @@
       "name": "skill1",
       "component": "input",
       "type": "text",
-      "title": "Compétence 1"
+      "title": "Atout 1"
     },
     {
       "id": "skill2",
       "name": "skill2",
       "component": "input",
       "type": "text",
-      "title": "Compétence 2"
+      "title": "Atout 2"
     },
     {
       "id": "skill3",
       "name": "skill3",
       "component": "input",
       "type": "text",
-      "title": "Compétence 3"
+      "title": "Atout 3"
     },
     {
       "id": "skill4",
       "name": "skill4",
       "component": "input",
       "type": "text",
-      "title": "Compétence 4"
+      "title": "Atout 4"
     },
     {
       "id": "skill5",
       "name": "skill5",
       "component": "input",
       "type": "text",
-      "title": "Compétence 5"
+      "title": "Atout 5"
     },
     {
       "id": "skill6",
       "name": "skill6",
       "component": "input",
       "type": "text",
-      "title": "Compétence 6"
+      "title": "Atout 6"
     }
   ],
   "rules": [

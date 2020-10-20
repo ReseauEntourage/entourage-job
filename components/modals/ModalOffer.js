@@ -9,6 +9,7 @@ import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import axios from '../../Axios';
 import {OFFER_STATUS} from "../../constants";
+import {formatParagraph} from "../../utils";
 
 export const List = ({ className, children }) => (
   <ul className={`uk-nav ${className}`}>
@@ -163,7 +164,10 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       className="uk-link-muted"
                       isExternal
                     >
-                      <span>{currentOffer.recruiterMail}</span>
+                      <span>
+                        {currentOffer.recruiterMail}
+                        &nbsp;
+                      </span>
                       <IconNoSSR name="mail" ratio={0.8} />
                     </SimpleLink>
                     <SimpleLink
@@ -171,7 +175,10 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       className="uk-link-muted"
                       isExternal
                     >
-                      <span>{currentOffer.recruiterPhone}</span>
+                      <span>
+                        {currentOffer.recruiterPhone}
+                        &nbsp;
+                      </span>
                       <IconNoSSR name="phone" ratio={0.8} />
                     </SimpleLink>
                     <span className="uk-text-italic">
@@ -186,10 +193,10 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                 </GridNoSSR>,
                 <GridNoSSR gap="medium" childWidths={['1-1']}>
                   <OfferInfoContainer icon="comment" title="Message">
-                    {currentOffer.description}
+                    {formatParagraph(currentOffer.description, true)}
                   </OfferInfoContainer>
                   <OfferInfoContainer icon="check" title="Pré-requis">
-                    {currentOffer.prerequisites}
+                    {formatParagraph(currentOffer.prerequisites, true)}
                   </OfferInfoContainer>
                   {currentOffer.businessLines && (
                     <GridNoSSR gap='center'>

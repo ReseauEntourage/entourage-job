@@ -495,15 +495,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
             </GridNoSSR>
           </GridNoSSR>
           {shareSection()}
-          <div className="uk-flex uk-flex-center">
-            <ButtonDownload
-              cvUrl={cv.user.url}
-              firstName={cv.user.candidat.firstName}
-              lastName={cv.user.candidat.lastName}
-              disabled={actionDisabled}
-              tag={TAGS.PAGE_CV_TELECHARGEMENT_CV_CLIC}
-            />
-          </div>
           <hr />
           <div className="uk-text-center">
             <h2 className="uk-text-bold">
@@ -520,8 +511,8 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 toggle="target: #modal-send-opportunity"
               >
                 Contactez-moi
-{' '}
-<IconNoSSR name="chevron-right" />
+                {' '}
+                <IconNoSSR name="chevron-right" />
               </Button>
             </div>
             <div>
