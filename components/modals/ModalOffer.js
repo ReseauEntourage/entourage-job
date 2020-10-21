@@ -7,7 +7,7 @@ import Textarea from '../forms/fields/Textarea';
 import Select from '../forms/fields/Select';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
-import axios from '../../Axios';
+import Api from '../../Axios';
 import {OFFER_STATUS} from "../../constants";
 import {formatParagraph} from "../../utils";
 
@@ -76,7 +76,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
   const [loading, setLoading] = useState(false);
 
   const updateOpportunityUser = async (opportunityUser) => {
-    await axios.put(
+    await Api.put(
       `${process.env.SERVER_URL}/api/v1/opportunity/join`,
       opportunityUser
     );
@@ -163,6 +163,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       href={`mailto:${currentOffer.recruiterMail}`}
                       className="uk-link-muted"
                       isExternal
+                      newTab
                     >
                       <span>
                         {currentOffer.recruiterMail}
@@ -174,6 +175,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       href={`tel:${currentOffer.recruiterPhone}`}
                       className="uk-link-muted"
                       isExternal
+                      newTab
                     >
                       <span>
                         {currentOffer.recruiterPhone}
@@ -193,13 +195,17 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                 </GridNoSSR>,
                 <GridNoSSR gap="medium" childWidths={['1-1']}>
                   <OfferInfoContainer icon="comment" title="Message">
-                    {formatParagraph(currentOffer.description, true)}
+                    <div>
+                      {formatParagraph(currentOffer.description)}
+                    </div>
                   </OfferInfoContainer>
                   <OfferInfoContainer icon="check" title="Pré-requis">
-                    {formatParagraph(currentOffer.prerequisites, true)}
+                    <div>
+                      {formatParagraph(currentOffer.prerequisites,)}
+                    </div>
                   </OfferInfoContainer>
                   {currentOffer.businessLines && (
-                    <GridNoSSR gap='center'>
+                    <GridNoSSR gap="small">
                       {currentOffer.businessLines.map((businessLine) => (
                         <Button disabled>
                           <span style={{ color: '#666' }}>{businessLine}</span>

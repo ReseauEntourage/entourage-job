@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import {OFFER_STATUS} from "../../constants";
-import { GridNoSSR, Button, IconNoSSR } from '../utils';
+import {OFFER_STATUS, USER_ROLES} from "../../constants";
+import {GridNoSSR, Button, IconNoSSR, SimpleLink} from '../utils';
 
 function translateStatus(status) {
   const currentStatus = OFFER_STATUS.find((oStatus) => oStatus.value === status);
@@ -15,13 +15,14 @@ const OfferCard = ({
   title,
   from,
   shortDescription,
-  status,
   isStared,
   isNew,
   archived,
   isPublic,
-  specifiedOffer,
   date,
+  userOpportunity,
+  isValidated,
+  isAdmin,
 }) => (
   <div
     className={`ent-offer uk-card uk-card-hover uk-card-body uk-card-${
@@ -41,69 +42,84 @@ const OfferCard = ({
           />
         )}
       </GridNoSSR>
-      <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
+      <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
         <IconNoSSR name="user" />
         <p>{from}</p>
       </GridNoSSR>
-      <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
+      <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
         <IconNoSSR name="world" />
         <p>{shortDescription}</p>
       </GridNoSSR>
-      {isPublic !== undefined && (
-        <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
-          <IconNoSSR name="info" />
-          <p>
-            {isPublic
-              ? 'Offre générale'
-              : specifiedOffer
-              ? `Offre pour ${specifiedOffer}`
-              : 'Offre privée'}
-          </p>
-        </GridNoSSR>
-      )}
+      <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
+        <IconNoSSR name="info" />
+        <div>
+          {
+            isPublic ?
+              <p className="uk-margin-remove-bottom">Offre générale</p> :
+              (
+                userOpportunity &&
+                userOpportunity.User &&
+                userOpportunity.User.firstName &&
+                isAdmin ?
+                  (
+                    <p className="uk-margin-remove-bottom">Offre pour {userOpportunity.User.firstName}</p>
+                  ) :
+                  <p className="uk-margin-remove-bottom">Offre personnelle</p>
+              )
+          }
+          {
+            userOpportunity &&
+            userOpportunity.status !== undefined &&
+            <span className="uk-text-meta uk-text-warning" style={{ color: '#666' }}>{translateStatus(userOpportunity.status)}</span>
+          }
+        </div>
+      </GridNoSSR>
       {date && (
-        <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
+        <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
           <IconNoSSR name="calendar" />
           <p>{moment(date).format('DD/MM/YYYY')}</p>
         </GridNoSSR>
       )}
-      <GridNoSSR
-        gap="small"
-        between
-        items={[
-          status === undefined ? (
-            <></>
-          ) : (
-            <Button disabled>
-              <span style={{ color: '#666' }}>{translateStatus(status)}</span>
-            </Button>
-          ),
-          <u className="uk-link-muted">voir l&rsquo;offre</u>,
-        ]}
-      />
+      <div className="uk-flex uk-flex-between uk-flex-bottom uk-margin-small-top">
+        {
+          isAdmin &&
+          <div className="uk-flex-1 uk-text-left uk-text-meta uk-text-success uk-flex uk-flex-bottom">
+            {
+              !archived && (
+              isValidated ?
+                <div className="uk-flex uk-flex-middle">Validé&nbsp;<IconNoSSR name="check"/></div> :
+                <div className="uk-flex uk-flex-middle uk-text-danger">En attente</div>
+              )
+            }
+          </div>
+        }
+        <u className="uk-link-muted uk-flex-1 uk-text-right">Voir l&rsquo;offre</u>
+      </div>
     </GridNoSSR>
   </div>
 );
+
 OfferCard.propTypes = {
   title: PropTypes.string.isRequired,
   from: PropTypes.string.isRequired,
   shortDescription: PropTypes.string.isRequired,
-  status: PropTypes.string,
   isStared: PropTypes.bool,
   isNew: PropTypes.bool,
   archived: PropTypes.bool,
   isPublic: PropTypes.bool,
-  specifiedOffer: PropTypes.string,
   date: PropTypes.string,
+  userOpportunity: PropTypes.shape(),
+  isValidated: PropTypes.bool.isRequired,
+  isAdmin: PropTypes.bool,
 };
 
 OfferCard.defaultProps = {
   isStared: undefined,
   isNew: undefined,
   archived: undefined,
-  status: undefined,
   isPublic: undefined,
-  specifiedOffer: undefined,
   date: undefined,
+  userOpportunity: undefined,
+  isAdmin: false,
 };
 export default OfferCard;

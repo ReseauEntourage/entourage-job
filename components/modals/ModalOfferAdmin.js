@@ -143,6 +143,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 href={`mailto:${currentOffer.recruiterMail}`}
                 className="uk-link-muted"
                 isExternal
+                newTab
               >
                 <span>
                   {currentOffer.recruiterMail}
@@ -154,6 +155,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 href={`tel:${currentOffer.recruiterPhone}`}
                 className="uk-link-muted"
                 isExternal
+                newTab
               >
                 <span>
                   {currentOffer.recruiterPhone}
@@ -191,10 +193,14 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
           </GridNoSSR>
           <GridNoSSR gap="medium" childWidths={['1-1']}>
             <OfferInfoContainer icon="comment" title="Message">
-              {formatParagraph(currentOffer.description, true)}
+              <div>
+                {formatParagraph(currentOffer.description)}
+              </div>
             </OfferInfoContainer>
             <OfferInfoContainer icon="check" title="Pré-requis">
-              {formatParagraph(currentOffer.prerequisites, true)}
+              <div>
+                {formatParagraph(currentOffer.prerequisites)}
+              </div>
             </OfferInfoContainer>
             {currentOffer.businessLines && (
               <GridNoSSR gap="small">
@@ -207,7 +213,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
             )}
           </GridNoSSR>
         </GridNoSSR>
-        <GridNoSSR className="uk-flex-right" row>
+        <GridNoSSR className="uk-flex-right" gap="small" row>
           {!currentOffer.isArchived ? (
             <Button
               style="default"
@@ -253,6 +259,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
       </div>
     );
   };
+
   // Modal
   return (
     <div id="modal-offer-admin" data-uk-modal="bg-close:false">

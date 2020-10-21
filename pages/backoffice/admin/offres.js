@@ -96,7 +96,7 @@ const LesOpportunites = () => {
       if (data) {
         const offer = data.find((o) => o.id === opportunityId);
         if (offer) {
-          setCurrentOffer(offer);
+          setCurrentOffer({...offer});
           UIkit.modal('#modal-offer-admin').show();
         }
       }
@@ -173,7 +173,7 @@ const LesOpportunites = () => {
                         role="button"
                         className="uk-link-reset"
                         onClick={() => {
-                          setCurrentOffer(offer);
+                          setCurrentOffer({...offer});
                           UIkit.modal('#modal-offer-admin').show();
                         }}
                       >
@@ -184,32 +184,13 @@ const LesOpportunites = () => {
                           date={offer.date}
                           archived={offer.isArchived}
                           isPublic={offer.isPublic}
-                          specifiedOffer={
-                            !offer.isPublic &&
+                          isValidated={offer.isValidated}
+                          userOpportunity={
                             offer.userOpportunity &&
                             offer.userOpportunity[0] &&
-                            offer.userOpportunity[0].User &&
-                            offer.userOpportunity[0].User.firstName
+                            offer.userOpportunity[0]
                           }
-                          customBadge={(() => {
-                            let className = ' uk-label-warning';
-                            let content = 'En attente';
-                            if (offer.isValidated) {
-                              content = 'Validé';
-                              className = ' uk-label-success';
-                            }
-                            if (offer.isArchived) {
-                              content = 'Archivé';
-                              className = ' uk-label-danger';
-                            }
-                            return (
-                              <div
-                                className={`uk-card-badge uk-label${className}`}
-                              >
-                                {content}
-                              </div>
-                            );
-                          })()}
+                          isAdmin
                         />
                       </a>
                     </li>
@@ -220,7 +201,7 @@ const LesOpportunites = () => {
               <ModalOfferAdmin
                 currentOffer={currentOffer}
                 setCurrentOffer={(offer) => {
-                  setCurrentOffer(offer);
+                  setCurrentOffer({...offer});
                   fetchData();
                 }}
               />

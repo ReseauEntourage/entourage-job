@@ -30,6 +30,7 @@ const Opportunites = () => {
   const [loading, setLoading] = useState(true);
   const [candidatId, setCandidatId] = useState();
 
+
   const fetchData = async (userId) => {
     if (user) {
       setLoading(true);
@@ -96,7 +97,7 @@ const Opportunites = () => {
       }
       fetchData(candidatId);
     }
-    setCurrentOffer(opportunity);
+    setCurrentOffer({...opportunity});
     UIkit.modal('#modal-offer').show();
   };
 
@@ -107,8 +108,7 @@ const Opportunites = () => {
         if (data) {
           const offer = data.find((o) => o.id === opportunityId);
           if (offer) {
-            console.log(offer);
-            setCurrentOffer(offer);
+            setCurrentOffer({...offer});
             UIkit.modal('#modal-offer').show();
           }
         }
@@ -189,6 +189,10 @@ const Opportunites = () => {
                           title={offer.title}
                           from={offer.recruiterName}
                           shortDescription={offer.company}
+                          date={offer.date}
+                          isValidated={offer.isValidated}
+                          isPublic={offer.isPublic}
+                          userOpportunity={offer.userOpportunity}
                           archived={
                             offer.userOpportunity &&
                             offer.userOpportunity.archived
@@ -201,10 +205,6 @@ const Opportunites = () => {
                             offer.userOpportunity &&
                             offer.userOpportunity.bookmarked
                           }
-                          status={
-                            offer.userOpportunity &&
-                            offer.userOpportunity.status
-                          }
                         />
                       </a>
                     </li>
@@ -215,7 +215,7 @@ const Opportunites = () => {
               <ModalOffer
                 currentOffer={currentOffer}
                 setCurrentOffer={(offer) => {
-                  setCurrentOffer(offer);
+                  setCurrentOffer({...offer});
                   fetchData(candidatId);
                 }}
               />
