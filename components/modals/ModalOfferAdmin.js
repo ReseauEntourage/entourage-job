@@ -10,7 +10,7 @@ import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
 import { useResetForm } from '../../hooks';
-import { formatParagraph } from '../../utils';
+import {findOfferStatus, formatParagraph} from '../../utils';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
@@ -27,7 +27,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
     setLoading(true);
     try {
       const { data } = await Api.put(`/api/v1/opportunity/`, opportunity);
-      setCurrentOffer(data);
+      setCurrentOffer({...data});
     } catch (err) {
       setError(true);
     } finally {
@@ -100,7 +100,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
     // view
     return (
       <div>
-        <GridNoSSR gap="small" between middle>
+        <GridNoSSR gap="small" between middle eachWidths={['expand', 'auto']}>
           <GridNoSSR gap="collapse" column>
             <h3 className="uk-text-bold uk-margin-remove-bottom">
               {currentOffer.title}
@@ -163,7 +163,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 </span>
                 <IconNoSSR name="phone" ratio={0.8} />
               </SimpleLink>
-              <span className="uk-text-italic">
+              <span className="uk-text-italic uk-text-small">
                 offre soumise le{' '}
                 {moment(currentOffer.date).format('DD/MM/YYYY')}
               </span>
@@ -173,19 +173,22 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               <OfferInfoContainer icon="users" title="Candidat lié">
                 {currentOffer.userOpportunity &&
                   currentOffer.userOpportunity.map(
-                    ({ User: { firstName, lastName, id } }) => (
-                      <SimpleLink
-                        as={`/backoffice/admin/membres/${id}`}
-                        href="/backoffice/admin/membres/[id]"
-                        className="uk-link-muted"
-                        target="_blank"
-                      >
+                    ({ status, User: { firstName, lastName, id } }) => (
+                      <div className="uk-flex uk-flex-column">
+                        <SimpleLink
+                          as={`/backoffice/admin/membres/${id}`}
+                          href="/backoffice/admin/membres/[id]"
+                          className="uk-link-muted"
+                          target="_blank"
+                        >
                         <span>
                           {`${firstName} ${lastName}`}
                           &nbsp;
                         </span>
-                        <IconNoSSR name="link" ratio={0.8} />
-                      </SimpleLink>
+                          <IconNoSSR name="link" ratio={0.8} />
+                        </SimpleLink>
+                        <span className={`uk-text-meta uk-text-${findOfferStatus(status).color}`}>{findOfferStatus(status).label}</span>
+                      </div>
                     )
                   )}
               </OfferInfoContainer>
@@ -197,11 +200,14 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 {formatParagraph(currentOffer.description)}
               </div>
             </OfferInfoContainer>
-            <OfferInfoContainer icon="check" title="Pré-requis">
-              <div>
-                {formatParagraph(currentOffer.prerequisites)}
-              </div>
-            </OfferInfoContainer>
+            {
+              currentOffer.prerequisites &&
+              <OfferInfoContainer icon="check" title="Pré-requis">
+                <div>
+                  {formatParagraph(currentOffer.prerequisites)}
+                </div>
+              </OfferInfoContainer>
+            }
             {currentOffer.businessLines && (
               <GridNoSSR gap="small">
                 {currentOffer.businessLines.map((businessLine) => (

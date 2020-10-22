@@ -96,9 +96,9 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
         <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetNoteBuffer} />
         {!currentOffer ? null : (
           <div className="uk-modal-body">
-            <GridNoSSR gap="small" between middle>
-              <div>
-                <h3 className="uk-text-bold uk-margin-remove-bottom">
+            <GridNoSSR gap="small" between middle eachWidths={['expand', 'auto']}>
+              <div className="uk-flex uk-flex-column">
+                <h3 className="uk-flex-1 uk-text-bold uk-margin-remove-bottom">
                   {currentOffer.title}
                 </h3>
                 <span>{translateCategory(currentOffer.isPublic)}</span>
@@ -183,7 +183,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       </span>
                       <IconNoSSR name="phone" ratio={0.8} />
                     </SimpleLink>
-                    <span className="uk-text-italic">
+                    <span className="uk-text-italic uk-text-small">
                       offre soumise le{' '}
                       {moment(currentOffer.date).format('DD/MM/YYYY')}
                     </span>
@@ -199,11 +199,14 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       {formatParagraph(currentOffer.description)}
                     </div>
                   </OfferInfoContainer>
-                  <OfferInfoContainer icon="check" title="Pré-requis">
-                    <div>
-                      {formatParagraph(currentOffer.prerequisites,)}
-                    </div>
-                  </OfferInfoContainer>
+                  {
+                    currentOffer.prerequisites &&
+                    <OfferInfoContainer icon="check" title="Pré-requis">
+                      <div>
+                        {formatParagraph(currentOffer.prerequisites)}
+                      </div>
+                    </OfferInfoContainer>
+                  }
                   {currentOffer.businessLines && (
                     <GridNoSSR gap="small">
                       {currentOffer.businessLines.map((businessLine) => (

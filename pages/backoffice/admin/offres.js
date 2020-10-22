@@ -186,6 +186,7 @@ const LesOpportunites = () => {
                           isPublic={offer.isPublic}
                           isValidated={offer.isValidated}
                           userOpportunity={
+                            !offer.isPublic &&
                             offer.userOpportunity &&
                             offer.userOpportunity[0] &&
                             offer.userOpportunity[0]

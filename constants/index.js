@@ -1,12 +1,12 @@
 const TAGS = require('./tags');
 
 const OFFER_STATUS = [
-  {value: -1, label: "Offre à traiter"},
-  {value: 0, label: "Contacté"},
-  {value: 1, label: "Phase d'entretien"},
-  {value: 2, label: "Embauche"},
-  {value: 3, label: "Refus avant entretien"},
-  {value: 4, label: "Refus après entretien"},
+  {value: -1, label: "Offre à traiter", color: 'muted'},
+  {value: 0, label: "Contacté", color: 'muted'},
+  {value: 1, label: "Phase d'entretien", color: 'warning'},
+  {value: 2, label: "Embauche", color: 'success'},
+  {value: 3, label: "Refus avant entretien", color: 'danger'},
+  {value: 4, label: "Refus après entretien", color: 'danger'},
 ];
 
 const BUSINESS_LINES = [

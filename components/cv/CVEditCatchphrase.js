@@ -38,7 +38,9 @@ const CVEditCatchphrase = ({ catchphrase, onChange }) => {
             defaultValues={{ catchphrase }}
             onSubmit={(fields, closeModal) => {
               closeModal();
-              onChange(fields);
+              onChange({
+                ...fields
+              });
             }}
           />
         </div>

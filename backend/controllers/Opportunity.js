@@ -1,6 +1,8 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable camelcase */
 
+const { findOfferStatus } = require('../../utils/Finding');
+
 const { sendMail } = require('./mail');
 
 const { airtable } = require('./airtable');
@@ -61,6 +63,22 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
   },
 ];
 
+const INCLUDE_OPPORTUNITY_USER = [
+  {
+    model: Opportunity_User,
+    as: 'userOpportunity',
+    attributes: [
+      'id',
+      'UserId',
+      'status',
+      'seen',
+      'bookmarked',
+      'archived',
+      'note',
+    ],
+  },
+];
+
 const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
   {
     model: BusinessLine,
@@ -105,7 +123,13 @@ const getAirtableOpportunityFields = (opportunity, candidat, businessLines) => {
     Candidat:
       !opportunity.isPublic && candidat
         ? `${candidat.firstName} ${candidat.lastName}`
-        : '',
+        : null,
+    Statut:
+      !opportunity.isPublic &&
+      opportunity.userOpportunity &&
+      opportunity.userOpportunity.length > 0
+        ? findOfferStatus(opportunity.userOpportunity[0].status).label
+        : null,
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
   };
@@ -141,18 +165,23 @@ const createOpportunity = async (data) => {
 
   console.log(`Etape finale - Reprendre l'opportunité complète à retourner`);
 
+  const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
+    include: INCLUDE_OPPORTUNITY_USER,
+  });
+
   const cleanedOpportunity = cleanOpportunity(modelOpportunity);
 
   const fillTable = () =>
     new Promise((res, rej) => {
+      const fields = getAirtableOpportunityFields(
+        finalOpportunity,
+        candidat,
+        data.businessLines
+      );
       airtable("Offres d'emploi v2").create(
         [
           {
-            fields: getAirtableOpportunityFields(
-              cleanedOpportunity,
-              candidat,
-              data.businessLines
-            ),
+            fields,
           },
         ],
         (err, records) => {

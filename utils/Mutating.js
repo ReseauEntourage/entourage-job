@@ -1,27 +1,27 @@
-export const mutateFormSchema = (schema, fields, id) => {
+const mutateFormSchema = (schema, fields, id) => {
   const newSchema = {
     id: id ? schema.id + id : schema.id,
-    fields: [
-      ...schema.fields
-    ],
-    rules: [
-      ...schema.rules
-    ]
+    fields: [...schema.fields],
+    rules: [...schema.rules],
   };
 
-  fields.map(({fieldId, props}) => {
-    const indexToUpdate = newSchema.fields.findIndex((field) => field.id === fieldId);
+  fields.map(({ fieldId, props }) => {
+    const indexToUpdate = newSchema.fields.findIndex(
+      (field) => field.id === fieldId
+    );
 
     const fieldToUpdate = {
-      ...newSchema.fields[indexToUpdate]
+      ...newSchema.fields[indexToUpdate],
     };
 
-    for(let i = 0; i < props.length; i += 1) {
-      if(props[i].option) {
-        const optionIndexToUpdate = fieldToUpdate.options.findIndex((option) => option.value === props[i].option);
-        fieldToUpdate.options[optionIndexToUpdate][props[i].propName] = props[i].value;
-      }
-      else {
+    for (let i = 0; i < props.length; i += 1) {
+      if (props[i].option) {
+        const optionIndexToUpdate = fieldToUpdate.options.findIndex(
+          (option) => option.value === props[i].option
+        );
+        fieldToUpdate.options[optionIndexToUpdate][props[i].propName] =
+          props[i].value;
+      } else {
         fieldToUpdate[props[i].propName] = props[i].value;
       }
     }
@@ -32,4 +32,8 @@ export const mutateFormSchema = (schema, fields, id) => {
   });
 
   return newSchema;
+};
+
+module.exports = {
+  mutateFormSchema,
 };

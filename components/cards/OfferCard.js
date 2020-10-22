@@ -4,12 +4,7 @@ import moment from 'moment';
 
 import {OFFER_STATUS, USER_ROLES} from "../../constants";
 import {GridNoSSR, Button, IconNoSSR, SimpleLink} from '../utils';
-
-function translateStatus(status) {
-  const currentStatus = OFFER_STATUS.find((oStatus) => oStatus.value === status);
-  if(currentStatus) return currentStatus.label;
-  return "Non défini";
-}
+import {findOfferStatus} from "../../utils";
 
 const OfferCard = ({
   title,
@@ -70,7 +65,7 @@ const OfferCard = ({
           {
             userOpportunity &&
             userOpportunity.status !== undefined &&
-            <span className="uk-text-meta uk-text-warning" style={{ color: '#666' }}>{translateStatus(userOpportunity.status)}</span>
+            <span className={`uk-text-meta uk-text-${findOfferStatus(userOpportunity.status).color}`}>{findOfferStatus(userOpportunity.status).label}</span>
           }
         </div>
       </GridNoSSR>
@@ -88,7 +83,7 @@ const OfferCard = ({
               !archived && (
               isValidated ?
                 <div className="uk-flex uk-flex-middle">Validé&nbsp;<IconNoSSR name="check"/></div> :
-                <div className="uk-flex uk-flex-middle uk-text-danger">En attente</div>
+                <div className="uk-flex uk-flex-middle uk-text-warning">En attente</div>
               )
             }
           </div>
