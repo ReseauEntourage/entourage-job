@@ -11,15 +11,16 @@ import axios from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
 import {USER_ROLES} from "../../../constants";
 
-const getTag = (offer) => {
-  if (offer.userOpportunity && offer.userOpportunity.archived) {
-    return 'tag-archive';
-  }
-  return `tag-${offer.isPublic ? 'public' : 'private'}`;
-};
+const filtersConst = [
+  { tag: 'all', title: 'Toutes les offres' },
+  { tag: 'private', title: 'Offres du candidat', active: true },
+  { tag: 'public', title: 'Offres générales' },
+  { tag: 'archived', title: 'Offres archivées' },
+];
 
 const Opportunites = () => {
   const { user } = useContext(UserContext);
+
   const {
     query: { q: opportunityId },
   } = useRouter();
@@ -29,7 +30,21 @@ const Opportunites = () => {
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [candidatId, setCandidatId] = useState();
+  const [filters, setFilters] = useState(filtersConst);
 
+  const getTag = (offer) => {
+    const tag = ['all'];
+    if (offer.userOpportunity && offer.userOpportunity.archived) {
+      tag.push('archived');
+    }
+    else if (offer.isPublic) {
+      tag.push('public');
+    }
+    else {
+      tag.push('private');
+    }
+    return tag.map((t) => `tag-${t}`).join(' ');
+  };
 
   const fetchData = async (userId) => {
     if (user) {
@@ -58,7 +73,6 @@ const Opportunites = () => {
           return new Date(b.date) - new Date(a.date);
         });
         setOffers(sortedOffers);
-        setLoading(false);
         return data;
       } catch (err) {
         console.error(err);
@@ -68,6 +82,15 @@ const Opportunites = () => {
     } else console.log('no user');
     return null;
   };
+
+  useEffect(() => {
+    if(offers) {
+      setLoading(false);
+    }
+    else {
+      setLoading(true);
+    }
+  }, [offers]);
 
   const onClickOpportunityCard = async (offer) => {
     const opportunity = offer;
@@ -115,6 +138,10 @@ const Opportunites = () => {
       });
 
     if (user) {
+      const updatedFilterConsts = [...filtersConst];
+      updatedFilterConsts[1].title = user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat';
+      setFilters(updatedFilterConsts);
+
       if (user.role === USER_ROLES.CANDIDAT) {
         setCandidatId(user.id);
         fetchAndAct(user.id);
@@ -138,6 +165,7 @@ const Opportunites = () => {
       }
     }
   }, [user, opportunityId]);
+
   if (!user) return null;
 
   return (
@@ -169,11 +197,8 @@ const Opportunites = () => {
             <Filter
               id="opportunitees"
               loading={loading}
-              filters={[
-                { tag: 'private', title: user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat'},
-                { tag: 'public', title: 'Offres générales' },
-                { tag: 'archive', title: 'Offres archivées' },
-              ]}
+              filters={filters}
+              setFilters={setFilters}
             >
               {offers &&
                 offers.map((offer, i) => {

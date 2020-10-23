@@ -140,7 +140,7 @@ const Suivi = () => {
             className="uk-textarea uk-form-large"
           />
         </div>
-        <GridNoSSR className="uk-flex-right">
+        <GridNoSSR match className="uk-flex-right">
           <Button
             style="default"
             onClick={() => updateValue(userCandidat.note)}

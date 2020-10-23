@@ -13,8 +13,16 @@ import { UserContext } from '../../../components/store/UserProvider';
 import ModalEdit from '../../../components/modals/ModalEdit';
 import {mutateFormSchema} from "../../../utils";
 
+const filtersConst = [
+  { tag: 'all', title: 'Toutes les offres' },
+  { tag: 'pending', title: 'Offres à valider', active: true },
+  { tag: 'validated', title: 'Offres publiées' },
+  { tag: 'archived', title: 'Offres archivées' },
+];
+
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
+
   const {
     query: { q: opportunityId },
   } = useRouter();
@@ -23,6 +31,19 @@ const LesOpportunites = () => {
   const [offers, setOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState(filtersConst);
+
+  const getTag = (offer) => {
+    const tag = ['all'];
+    if (offer.isArchived) {
+      tag.push('archived');
+    } else if (offer.isValidated) {
+      tag.push('validated');
+    } else {
+      tag.push('pending');
+    }
+    return tag.map((t) => `tag-${t}`).join(' ');
+  };
 
   // desactivation du champ de disclaimer
   const mutatedSchema = mutateFormSchema(schema, [
@@ -37,25 +58,6 @@ const LesOpportunites = () => {
     }
   ]);
 
-  const filters = [
-    { tag: 'all', title: 'Toutes les offres' },
-    { tag: 'pending', title: 'Offres à valider', active: true },
-    { tag: 'validated', title: 'Offres publiées' },
-    { tag: 'archived', title: 'Offres archivées' },
-  ];
-
-  const getTag = (offer) => {
-    const tag = ['all'];
-    if (offer.isArchived) {
-      tag.push('archived');
-    } else if (offer.isValidated) {
-      tag.push('validated');
-    } else {
-      tag.push('pending');
-    }
-    return tag.map((t) => `tag-${t}`).join(' ');
-  };
-
   const fetchData = async (query) => {
     if (user) {
       try {
@@ -69,7 +71,6 @@ const LesOpportunites = () => {
           }
         );
         setOffers(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
-        setLoading(false);
         return data;
       } catch (err) {
         console.error(err);
@@ -79,6 +80,15 @@ const LesOpportunites = () => {
     }
     return null;
   };
+
+  useEffect(() => {
+    if(offers) {
+      setLoading(false);
+    }
+    else {
+      setLoading(true);
+    }
+  }, [offers]);
 
   const postOpportunity = async (opportunity, closeModal) => {
     try {
@@ -160,6 +170,7 @@ const LesOpportunites = () => {
               id="opportunitees"
               loading={loading}
               filters={filters}
+              setFilters={setFilters}
               search={({ target: { value } }) => {
                 fetchData(value);
               }}

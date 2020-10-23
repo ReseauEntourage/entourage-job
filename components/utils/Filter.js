@@ -1,28 +1,41 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR } from './Grid';
 
 let debounceTimeoutId;
 
-const Filter = ({ id, loading, filters, children, search }) => {
+const Filter = ({ id, loading, filters, children, search, setFilters }) => {
   if (filters.length > 0 && !filters.some(({ active }) => active)) {
     filters[0].active = true;
   }
+
   return (
     <div uk-filter={`target: #${id}`}>
       <GridNoSSR eachWidths={['expand', 'auto']}>
         <ul className="uk-subnav ent-subnav">
-          {filters.map(({ title, tag, active }, i) => (
-            <li
-              key={i}
-              uk-filter-control={`.tag-${tag}`}
-              className={active ? 'uk-active' : ''}
-            >
-              <a href="#">
-                {title}
-              </a>
-            </li>
-          ))}
+          {
+            !loading &&
+            filters.map(({ title, tag, active }, i) => (
+                <li
+                  key={`filter-${i}`}
+                  className={active ? 'uk-active' : ''}
+                  uk-filter-control={`.tag-${tag}`}
+                >
+                  <a
+                    href="#"
+                    onClick={() => {
+                      const updatedFilters = [...filters];
+                      const filterToDeActivate = updatedFilters.find((filter) => filter.active);
+                      const filterToActivate = updatedFilters.find((filter) => filter.tag === tag);
+                      filterToDeActivate.active = false;
+                      filterToActivate.active = true;
+                      setFilters(updatedFilters);
+                    }}>
+                    {title}
+                  </a>
+                </li>
+              ))
+          }
         </ul>
         <div className="uk-margin">
           <div className="uk-search uk-search-default">
@@ -67,6 +80,7 @@ Filter.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.shape).isRequired,
   children: PropTypes.arrayOf(PropTypes.element),
   search: PropTypes.func,
+  setFilters: PropTypes.func.isRequired
 };
 Filter.defaultProps = {
   children: [],

@@ -116,6 +116,7 @@ const CVPage = () => {
       </LayoutBackOffice>
     );
   }
+
   return (
     <LayoutBackOffice title={`${user.firstName} - Gestion des membres`}>
       <Section>
@@ -163,29 +164,33 @@ const CVPage = () => {
               </a>
             </li>
           </ul>
-          {onglet === 'cv' && (
-            <>
-              {user.role === USER_ROLES.COACH &&
-                (user.coach ? (
-                  <CVPageContent candidatId={user.coach.candidat.id} />
-                ) : (
-                  <>
-                    <h2 className="uk-text-bold">
-                      <span className="uk-text-primary">Aucun candidat</span>{' '}
-                      n&apos;est rattaché à ce compte coach.
-                    </h2>
-                    <p>
-                      Il peut y avoir plusieurs raisons à ce sujet. Contacte
-                      l&apos;équipe LinkedOut pour en savoir plus.
-                    </p>
-                  </>
-                ))}
-              {user.role === USER_ROLES.CANDIDAT && (
-                <CVPageContent candidatId={user.id} />
-              )}
-            </>
-          )}
-          {onglet === 'opportunities' && <OpportunitiesList candidatId={id} />}
+          {
+            onglet !== 'settings' && user.role === USER_ROLES.COACH && (
+              user.coach ?
+                <div>
+                  {onglet === 'cv' && <CVPageContent candidatId={user.coach.candidat.id} />}
+                  {onglet === 'opportunities' && <OpportunitiesList candidatId={user.coach.candidat.id} />}
+                </div> :
+                <div>
+                  <h2 className="uk-text-bold">
+                    <span className="uk-text-primary">Aucun candidat</span>{' '}
+                    n&apos;est rattaché à ce compte coach.
+                  </h2>
+                  <p>
+                    Il peut y avoir plusieurs raisons à ce sujet. Contacte
+                    l&apos;équipe LinkedOut pour en savoir plus.
+                  </p>
+                </div>
+            )
+          }
+          {
+            onglet !== 'settings' && user.role === USER_ROLES.CANDIDAT && (
+              <div>
+                {onglet === 'cv' && <CVPageContent candidatId={user.id} />}
+                {onglet === 'opportunities' && <OpportunitiesList candidatId={user.id} />}
+              </div>
+            )
+          }
           {onglet === 'settings' && (
             <GridNoSSR childWidths={['1-2@m']}>
               {(user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
