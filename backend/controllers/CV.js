@@ -1,16 +1,16 @@
 /* eslint-disable no-restricted-globals */
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
-const {QueryTypes} = require('sequelize');
+const { QueryTypes } = require('sequelize');
 const {
   models,
   sequelize,
   // Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 
-const {cleanCV, escapeColumn, escapeQuery} = require('../utils');
+const { cleanCV, escapeColumn, escapeQuery } = require('../utils');
 
-const {CV_STATUS} = require('../../constants');
+const { CV_STATUS } = require('../../constants');
 
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
@@ -31,49 +31,49 @@ const INCLUDE_ALL_USERS = {
 };
 const INCLUDE_NOT_HIDDEN_USERS = {
   ...INCLUDE_ALL_USERS,
-  where: {hidden: false},
+  where: { hidden: false },
 };
 const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
   {
     model: models.Contract,
     as: 'contracts',
-    through: {attributes: []},
+    through: { attributes: [] },
     attributes: ['id', 'name'],
   },
   {
     model: models.Language,
     as: 'languages',
-    through: {attributes: []},
+    through: { attributes: [] },
     attributes: ['id', 'name'],
   },
   {
     model: models.Passion,
     as: 'passions',
-    through: {attributes: []},
+    through: { attributes: [] },
     attributes: ['id', 'name'],
   },
   {
     model: models.Skill,
     as: 'skills',
-    through: {attributes: []},
+    through: { attributes: [] },
     attributes: ['id', 'name'],
   },
   {
     model: models.Ambition,
     as: 'ambitions',
-    through: {attributes: []},
+    through: { attributes: [] },
     attributes: ['id', 'name'],
   },
   {
     model: models.BusinessLine,
     as: 'businessLines',
-    through: {attributes: []},
+    through: { attributes: [] },
     attributes: ['id', 'name'],
   },
   {
     model: models.Location,
     as: 'locations',
-    through: {attributes: []},
+    through: { attributes: [] },
     attributes: ['id', 'name'],
   },
   {
@@ -84,13 +84,11 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
       {
         model: models.Skill,
         as: 'skills',
-        through: {attributes: []},
+        through: { attributes: [] },
         attributes: ['id', 'name'],
       },
     ],
-    order: [
-      ['order', 'ASC'],
-    ]
+    order: [['order', 'ASC']],
   },
   {
     model: models.Review,
@@ -116,8 +114,8 @@ const dividedCompleteCVQuery = async (query) => {
     const cleanedCurr = cleanCV(curr);
     return {
       ...acc,
-      ...cleanedCurr
-    }
+      ...cleanedCurr,
+    };
   }, {});
 };
 
@@ -149,16 +147,16 @@ const createCV = async (data) => {
   }
 
   const maxVersions = await models.CV.findAll({
-    attributes: [[sequelize.fn('MAX', sequelize.col('version')), 'maxVersion'],],
+    attributes: [[sequelize.fn('MAX', sequelize.col('version')), 'maxVersion']],
     raw: true,
     where: {
-      UserId: data.UserId
-    }
+      UserId: data.UserId,
+    },
   });
 
   const cvData = {
     ...data,
-    version: maxVersions[0].maxVersion + 1
+    version: maxVersions[0].maxVersion + 1,
   };
 
   const modelCV = await models.CV.create(cvData); // TODO VERIFIER LES ENTREES
@@ -173,11 +171,13 @@ const createCV = async (data) => {
         // pour chaque competence
         cvData.skills.map((name) => {
           // on trouve ou créé la donné
-          return models.Skill.findOrCreate({
-            where: {name},
-          })
-            // on recupere de model retourné
-            .then((model) => model[0])
+          return (
+            models.Skill.findOrCreate({
+              where: { name },
+            })
+              // on recupere de model retourné
+              .then((model) => model[0])
+          );
         })
       );
       // on ajoute toutes les competences
@@ -194,9 +194,9 @@ const createCV = async (data) => {
         cvData.languages.map((name) => {
           // on trouve ou créé la donné
           return models.Language.findOrCreate({
-            where: {name},
+            where: { name },
             // on recupere de model retourné
-          }).then((model) => model[0])
+          }).then((model) => model[0]);
         })
       );
       // on ajoute toutes les competences
@@ -211,7 +211,7 @@ const createCV = async (data) => {
       const contracts = await Promise.all(
         cvData.contracts.map((name) => {
           return models.Contract.findOrCreate({
-            where: {name},
+            where: { name },
           }).then((model) => model[0]);
         })
       );
@@ -226,7 +226,7 @@ const createCV = async (data) => {
       const passions = await Promise.all(
         cvData.passions.map((name) => {
           return models.Passion.findOrCreate({
-            where: {name},
+            where: { name },
           }).then((model) => model[0]);
         })
       );
@@ -241,7 +241,7 @@ const createCV = async (data) => {
       const ambitions = await Promise.all(
         cvData.ambitions.map((name) => {
           return models.Ambition.findOrCreate({
-            where: {name}, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
+            where: { name }, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
           }).then((model) => model[0]);
         })
       );
@@ -256,7 +256,7 @@ const createCV = async (data) => {
       const businessLines = await Promise.all(
         cvData.businessLines.map((name) => {
           return models.BusinessLine.findOrCreate({
-            where: {name},
+            where: { name },
           }).then((model) => model[0]);
         })
       );
@@ -271,7 +271,7 @@ const createCV = async (data) => {
       const locations = await Promise.all(
         cvData.locations.map((name) => {
           return models.Location.findOrCreate({
-            where: {name},
+            where: { name },
           }).then((model) => model[0]);
         })
       );
@@ -288,7 +288,7 @@ const createCV = async (data) => {
           const modelExperience = await models.Experience.create({
             CVId: modelCV.id,
             description: experience.description,
-            order: experience.order
+            order: experience.order,
           });
           // Skills
           if (experience.skills) {
@@ -296,7 +296,7 @@ const createCV = async (data) => {
             const skills = await Promise.all(
               experience.skills.map((name) => {
                 return models.Skill.findOrCreate({
-                  where: {name},
+                  where: { name },
                 }).then((model) => model[0]);
               })
             );
@@ -330,33 +330,36 @@ const createCV = async (data) => {
   // renvoie du cv complet
   console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
 
-  return dividedCompleteCVQuery(async (include) => (
+  return dividedCompleteCVQuery(async (include) =>
     models.CV.findByPk(modelCV.id, {
       exclude: ['UserId'],
       include: [include],
     })
-  ));
+  );
 };
 
 const deleteCV = (id) => {
   console.log(`deleteCV - Suppression d'un CV à partir de son id`);
   return models.CV.destroy({
-    where: {id},
+    where: { id },
   });
 };
 
 const getCVbyUrl = async (url) => {
   console.log(`getCVbyUrl - Récupérer un CV ${url}`);
-  const cvs = await sequelize.query(queryConditionCV('url', url.replace("'", "''")), {
-    type: QueryTypes.SELECT,
-  });
+  const cvs = await sequelize.query(
+    queryConditionCV('url', url.replace("'", "''")),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
 
-  if(cvs && cvs.length > 0) {
-    return dividedCompleteCVQuery(async (include) => (
+  if (cvs && cvs.length > 0) {
+    return dividedCompleteCVQuery(async (include) =>
       models.CV.findByPk(cvs[0].id, {
-        include: [include]
+        include: [include],
       })
-    ));
+    );
   }
 
   return null;
@@ -368,8 +371,8 @@ const getCVbyUserId = async (userId) => {
 
   const user = await models.User.findByPk(userId);
 
-  if(user) {
-    return dividedCompleteCVQuery(async (include) => (
+  if (user) {
+    return dividedCompleteCVQuery(async (include) =>
       models.CV.findOne({
         include: [include],
         where: {
@@ -377,7 +380,7 @@ const getCVbyUserId = async (userId) => {
         },
         order: [['version', 'DESC']],
       })
-    ));
+    );
   }
 
   return null;
@@ -395,7 +398,6 @@ const getCVs = async () => {
   return modelCVs.map((modelCV) => cleanCV(modelCV));
 };
 
-
 const getRandomShortCVs = async (nb, query) => {
   console.log(
     `getRandomShortCVs - Récupère des CVs au format court de manière aléatoire`
@@ -403,33 +405,34 @@ const getRandomShortCVs = async (nb, query) => {
 
   const escapedQuery = escapeQuery(query);
 
-  const cvs = await sequelize.query(`
+  const cvs = await sequelize.query(
+    `
     /* CV par recherche */
 
-    select cv.id
-    from
-      "Users",
-      "User_Candidats",
-
+    with groupCVs as (	select
       /* pour chaque user, dernier CV publiés */
-      "CVs" cv inner join
-        (select "UserId", MAX(version) as version
-          from "CVs"
-          where "CVs".status = '${CV_STATUS.Published.value}'
-          group by "UserId") groupCVs
-        on cv."UserId" = groupCVs."UserId"
-        and cv.version =  groupCVs.version
+        "UserId", MAX(version) as version
+      from
+        "User_Candidats",
+        "CVs"
+      where
+        "CVs".status = '${CV_STATUS.Published.value}' 
+        and "User_Candidats"."candidatId" = "CVs"."UserId"
+        and "User_Candidats".hidden = false	
+      group by
+        "UserId")
+    select
+      cv.id
+    from
+      "CVs" cv
+    inner join groupCVs on
+      cv."UserId" = groupCVs."UserId" and cv.version = groupCVs.version
 
-      /* jointure */
-      where "Users"."id" = "User_Candidats"."candidatId"
-      and "User_Candidats"."candidatId" = cv."UserId"
-
-      /* CV visibles */
-      and "User_Candidats".hidden = false
-
-    ${query ? `
+    ${
+      query
+        ? `
     /* recherche par toutes information du CV */
-    and (
+    where (
       cv."id" in (
         select distinct "CV_Ambitions"."CVId"
         FROM "CV_Ambitions" INNER JOIN "Ambitions"
@@ -503,38 +506,40 @@ const getRandomShortCVs = async (nb, query) => {
       or ${escapeColumn('cv."availability"')} like '%${escapedQuery}%'
       or ${escapeColumn('cv."story"')} like '%${escapedQuery}%'
       or ${escapeColumn('cv."transport"')} like '%${escapedQuery}%'
-    )` : ''}`,
+    )`
+        : ''
+    }`,
     {
       type: QueryTypes.SELECT,
     }
   );
 
   const modelCVs = await models.CV.findAll({
-    where: {id: cvs.map((cv) => cv.id)},
+    where: { id: cvs.map((cv) => cv.id) },
     attributes: ['id', 'catchphrase', 'urlImg'],
     include: [
       {
         model: models.Ambition,
         as: 'ambitions',
-        through: {attributes: []},
+        through: { attributes: [] },
         attributes: ['name'],
       },
       {
         model: models.Skill,
         as: 'skills',
-        through: {attributes: []},
+        through: { attributes: [] },
         attributes: ['name'],
       },
       {
         model: models.BusinessLine,
         as: 'businessLines',
-        through: {attributes: []},
+        through: { attributes: [] },
         attributes: ['name'],
       },
       {
         model: models.Location,
         as: 'locations',
-        through: {attributes: []},
+        through: { attributes: [] },
         attributes: ['name'],
       },
       INCLUDE_ALL_USERS,
@@ -552,7 +557,7 @@ const setCV = (id, cv) => {
     const infoLog = 'setCV -';
     console.log(`${infoLog} Modification du CV`);
     models.CV.update(cv, {
-      where: {id},
+      where: { id },
     })
       .then((result) => resolve(result))
       .catch((err) => reject(err));
