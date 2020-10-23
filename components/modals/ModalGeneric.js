@@ -2,16 +2,12 @@
 /* eslint-disable no-undef */
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
+import {useRemoveModal} from "../../hooks";
 
 const ModalGeneric = ({ children, classNameSize: className, id, param, resetForm }) => {
 
   // Fix because of bug where multiple modals with the same id are created
-  useEffect(() => {
-    const modals = document.querySelectorAll(`#${id}`);
-    if(modals.length > 1) {
-      modals[1].remove();
-    }
-  }, []);
+  useRemoveModal(id);
 
   return (
     <div id={id} className="uk-flex-top" data-uk-modal={param}>

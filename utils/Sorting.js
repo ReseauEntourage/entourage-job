@@ -1,5 +1,3 @@
-const React = require('react');
-
 const sortExperiences = (list) => {
   const listToSort = [...list];
   listToSort.sort((a, b) => (a.order < b.order ? -1 : 1));
@@ -12,7 +10,7 @@ const sortReviews = (list) => {
   return listToSort;
 };
 
-module.export = {
+module.exports = {
   sortExperiences,
   sortReviews,
 };

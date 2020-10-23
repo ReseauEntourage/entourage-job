@@ -10,6 +10,7 @@ import { CloseButtonNoSSR } from '../utils/CloseButton';
 import Api from '../../Axios';
 import {OFFER_STATUS} from "../../constants";
 import {formatParagraph} from "../../utils";
+import {useRemoveModal} from "../../hooks";
 
 export const List = ({ className, children }) => (
   <ul className={`uk-nav ${className}`}>
@@ -74,6 +75,9 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [noteBuffer, setNoteBuffer] = useState(note);
   const [loading, setLoading] = useState(false);
+
+  // Fix because of bug where multiple modals with the same id are created
+  useRemoveModal('modal-offer');
 
   const updateOpportunityUser = async (opportunityUser) => {
     await Api.put(

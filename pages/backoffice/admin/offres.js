@@ -188,7 +188,7 @@ const LesOpportunites = () => {
                           userOpportunity={
                             !offer.isPublic &&
                             offer.userOpportunity &&
-                            offer.userOpportunity[0] &&
+                            offer.userOpportunity.length > 0 &&
                             offer.userOpportunity[0]
                           }
                           isAdmin

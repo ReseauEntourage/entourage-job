@@ -50,7 +50,7 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
 /**
  * Route : GET /api/<VERSION>/user/private/<ID>
  * Description : Read the opportunities associated to a user wich are
- * private (isPublic: false) and validated (isValidated: true)
+ * private as well as the general opportunities and the candidate status about them
  * Params:
  * - ID: string (user's id)
  * Responses:

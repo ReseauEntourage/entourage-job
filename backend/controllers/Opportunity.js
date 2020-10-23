@@ -270,8 +270,7 @@ const getPrivateUserOpportunities = async (userId) => {
   const opportunities = await Opportunity.findAll({
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     where: {
-      id: opportunityUsers.map((model) => model.OpportunityId),
-      isPublic: false,
+      id: opportunityUsers.map((model) => model.OpportunityId)
     },
   });
 

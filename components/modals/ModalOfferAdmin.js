@@ -9,7 +9,7 @@ import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
-import { useResetForm } from '../../hooks';
+import {useRemoveModal, useResetForm} from '../../hooks';
 import {findOfferStatus, formatParagraph} from '../../utils';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
@@ -21,6 +21,9 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const [form, resetForm] = useResetForm();
+
+  // Fix because of bug where multiple modals with the same id are created
+  useRemoveModal('modal-offer-admin');
 
   const updateOpportunity = async (opportunity) => {
     setError(false);
@@ -191,6 +194,25 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                       </div>
                     )
                   )}
+              </OfferInfoContainer>
+            )}
+            {currentOffer.isPublic && currentOffer.currentUserOpportunity && (
+              <OfferInfoContainer icon="users" title={`Statut pour`}>
+                <div className="uk-flex uk-flex-column">
+                  <SimpleLink
+                    as={`/backoffice/admin/membres/${currentOffer.currentUserOpportunity.User.id}`}
+                    href="/backoffice/admin/membres/[id]"
+                    className="uk-link-muted"
+                    target="_blank"
+                  >
+                    <span>
+                     {`${currentOffer.currentUserOpportunity.User.firstName} ${currentOffer.currentUserOpportunity.User.lastName}`}
+                      &nbsp;
+                    </span>
+                    <IconNoSSR name="link" ratio={0.8} />
+                  </SimpleLink>
+                  <span className={`uk-text-meta uk-text-${findOfferStatus(currentOffer.currentUserOpportunity.status).color}`}>{findOfferStatus(currentOffer.currentUserOpportunity.status).label}</span>
+                </div>
               </OfferInfoContainer>
             )}
           </GridNoSSR>
