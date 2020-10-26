@@ -3,23 +3,24 @@ import PropTypes from 'prop-types';
 import { Button, GridNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import Api from '../../Axios';
-import { FILTERS_DATA } from '../../constants';
+import { CV_FILTERS_DATA } from '../../constants';
 import { hasAsChild } from '../../utils';
 import PostJobAdModal from '../modals/PostJobAdModal';
+import SimpleLink from '../utils/SimpleLink';
 
 const NoCVInThisArea = () => (
   <p className="uk-text-center uk-text-italic">
     LinkedOut se déploie d’ici mars 2023 dans les régions de Paris, de Lille et
-    de Lyon. Vous ne trouvez pas de candidats LinkedOut dans votre région ?
+    de Lyon. Vous ne trouvez pas de candidats LinkedOut dans votre région&nbsp;?
     Contactez-nous à{' '}
-    <a
+    <SimpleLink
+      isExternal
+      newTab
       className="uk-link-text uk-text-primary"
-      target="_blank"
-      rel="noopener"
       href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
     >
       {process.env.MAILJET_CONTACT_EMAIL}
-    </a>
+    </SimpleLink>
   </p>
 );
 
@@ -73,7 +74,7 @@ const CVList = ({
           filteredList = cvs.filter((cv) => {
             const resultForEachFilter = [];
             for (let i = 0; i < keys.length; i += 1) {
-              const currentFilterConstants = FILTERS_DATA.find(
+              const currentFilterConstants = CV_FILTERS_DATA.find(
                 (data) => data.key === keys[i]
               ).constants;
 
@@ -147,8 +148,7 @@ const CVList = ({
               <CandidatCard
                 url={cv.user.url}
                 imgSrc={
-                  (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) ||
-                  undefined
+                  (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) || undefined
                 }
                 imgAlt={cv.user.candidat.firstName}
                 firstName={cv.user.candidat.firstName}
@@ -182,16 +182,16 @@ const CVList = ({
     if (filteredCvs.length <= 0) {
       if (
         filters &&
-        filters[FILTERS_DATA[1].key] &&
-        filters[FILTERS_DATA[1].key].length > 0
+        filters[CV_FILTERS_DATA[1].key] &&
+        filters[CV_FILTERS_DATA[1].key].length > 0
       ) {
         if (
-          filters[FILTERS_DATA[0].key] &&
-          filters[FILTERS_DATA[0].key].length > 0
+          filters[CV_FILTERS_DATA[0].key] &&
+          filters[CV_FILTERS_DATA[0].key].length > 0
         ) {
           const filteredOtherCvs = filterCvs({
             ...filters,
-            [FILTERS_DATA[0].key]: [],
+            [CV_FILTERS_DATA[0].key]: [],
           });
 
           if (filteredOtherCvs && filteredOtherCvs.length > 0) {

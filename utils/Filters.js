@@ -69,9 +69,17 @@ const hasAsChild = (filters, parent, value, notFirst) => {
   return false;
 };
 
+const initializeFilters = (filtersConst) => {
+  return filtersConst.reduce((acc, curr) => {
+    acc[curr.key] = [];
+    return acc;
+  }, {});
+};
+
 module.exports = {
   getChildrenFilters,
   getAllFilters,
   findFilter,
   hasAsChild,
+  initializeFilters,
 };

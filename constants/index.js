@@ -147,7 +147,7 @@ const LOCATIONS = [
   },
 ];
 
-const FILTERS_DATA = [
+const CV_FILTERS_DATA = [
   {
     key: 'businessLines',
     constants: BUSINESS_LINES,
@@ -159,6 +159,12 @@ const FILTERS_DATA = [
     constants: LOCATIONS,
     title: 'Secteurs géographiques',
     tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
+  },
+  {
+    key: 'hideEmployed',
+    type: 'checkbox',
+    constants: [{ label: 'Masquer les candidats employés', value: true }],
+    title: 'Masquer les candidats ayant retrouvé un emploi',
   },
 ];
 
@@ -236,7 +242,7 @@ module.exports = {
   EXTERNAL_LINKS,
   VALUES,
   LOCATIONS,
-  FILTERS_DATA,
+  CV_FILTERS_DATA,
   NEWSLETTER_ORIGINS,
   CONTACT_MAILS,
 };
