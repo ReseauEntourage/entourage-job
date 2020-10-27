@@ -63,9 +63,18 @@ const OfferCard = ({
               )
           }
           {
-            userOpportunity &&
-            userOpportunity.status !== undefined &&
-            <span className={`uk-text-meta uk-text-${findOfferStatus(userOpportunity.status).color}`}>{findOfferStatus(userOpportunity.status).label}</span>
+            userOpportunity && (
+              Array.isArray(userOpportunity) ?
+                (
+                  isAdmin && (
+                    <span className="uk-text-meta">{userOpportunity.length}&nbsp;candidat{userOpportunity.length !== 1 ? 's' : ''} sur l'offre</span>
+                  )
+                ) :
+                (
+                  userOpportunity.status !== undefined &&
+                  <span className={`uk-text-meta uk-text-${findOfferStatus(userOpportunity.status).color}`}>{findOfferStatus(userOpportunity.status).label}</span>
+                )
+            )
           }
         </div>
       </GridNoSSR>
@@ -103,7 +112,7 @@ OfferCard.propTypes = {
   archived: PropTypes.bool,
   isPublic: PropTypes.bool,
   date: PropTypes.string,
-  userOpportunity: PropTypes.shape(),
+  userOpportunity: PropTypes.oneOfType([PropTypes.shape(), PropTypes.arrayOf(PropTypes.shape())]),
   isValidated: PropTypes.bool.isRequired,
   isAdmin: PropTypes.bool,
 };

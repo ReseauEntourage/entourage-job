@@ -97,11 +97,15 @@ const LesOpportunites = () => {
 
   const getUserOpportunity = (offer) => {
     let userOpportunity;
-    if(!offer.isPublic &&
-      offer.userOpportunity &&
-      offer.userOpportunity.length > 0) {
-      userOpportunity = offer.userOpportunity[0];
+    if(offer.userOpportunity && offer.userOpportunity.length > 0) {
+      if(!offer.isPublic) {
+        userOpportunity = offer.userOpportunity[0];
+      }
+      else {
+        userOpportunity = offer.userOpportunity;
+      }
     }
+
     return userOpportunity;
   };
 
@@ -178,7 +182,17 @@ const LesOpportunites = () => {
               } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
                 const userOpportunity = getUserOpportunity(offer);
                 hasFound = filtersObj[keys[i]].some((currentFilter) => {
-                  return userOpportunity && currentFilter.value === userOpportunity.status;
+                  if(userOpportunity) {
+                    if(Array.isArray(userOpportunity)) {
+                      return userOpportunity.some((userOpp) => {
+                        return currentFilter.value === userOpp.status;
+                      });
+                    }
+                    return currentFilter.value === userOpportunity.status;
+                  }
+                  else {
+                    return false;
+                  }
                 });
               } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[1].key) {
                 hasFound = offer.isPublic;
@@ -202,7 +216,7 @@ const LesOpportunites = () => {
 
     setFilteredOffers(filterOffers(filters));
     setLoading(false);
-  }, [/*hidePrivate*/, filters, tabFilteredOffers]);
+  }, [filters, tabFilteredOffers]);
 
   useEffect(() => {
     if (filteredOffers) {
@@ -294,6 +308,7 @@ const LesOpportunites = () => {
               {filteredOffers &&
               filteredOffers.length > 0 ?
                 filteredOffers.map((offer, i) => {
+                  const userOpportunity = getUserOpportunity(offer);
                   return (
                     <li key={i}>
                       <a
@@ -301,7 +316,10 @@ const LesOpportunites = () => {
                         role="button"
                         className="uk-link-reset"
                         onClick={() => {
-                          setCurrentOffer({...offer});
+                          setCurrentOffer({
+                            ...offer,
+                            currentUserOpportunity: userOpportunity,
+                          });
                           UIkit.modal('#modal-offer-admin').show();
                         }}
                       >

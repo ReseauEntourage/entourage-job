@@ -1,5 +1,5 @@
 import React from 'react';
-import PropsTypes from 'prop-types';
+import PropTypess from 'prop-types';
 import { GridNoSSR } from '../utils';
 
 const HeaderBackoffice = ({ title, description, children, childrenBottom }) => (
@@ -19,13 +19,13 @@ const HeaderBackoffice = ({ title, description, children, childrenBottom }) => (
   </div>
 );
 HeaderBackoffice.propTypes = {
-  title: PropsTypes.string.isRequired,
-  description: PropsTypes.string.isRequired,
-  children: PropsTypes.oneOfType([
-    PropsTypes.arrayOf(PropsTypes.node),
-    PropsTypes.node,
+  title: PropTypess.string.isRequired,
+  description: PropTypess.string.isRequired,
+  children: PropTypess.oneOfType([
+    PropTypess.arrayOf(PropTypess.node),
+    PropTypess.node,
   ]),
-  childrenBottom: PropsTypes.bool,
+  childrenBottom: PropTypess.bool,
 };
 HeaderBackoffice.defaultProps = {
   children: [],

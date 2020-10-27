@@ -1,6 +1,6 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
-import PropsType from 'prop-types';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import Api from '../../Axios';
 import schema from '../forms/schema/formEditOpportunity';
@@ -100,6 +100,13 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
       );
     }
 
+    let userOpportunitiesList = currentOffer.currentUserOpportunity;
+    if(currentOffer.isPublic && userOpportunitiesList) {
+      if(!Array.isArray(userOpportunitiesList)) {
+        userOpportunitiesList = [userOpportunitiesList];
+      }
+    }
+
     // view
     return (
       <div>
@@ -196,25 +203,31 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                   )}
               </OfferInfoContainer>
             )}
-            {currentOffer.isPublic && currentOffer.currentUserOpportunity && (
+            {userOpportunitiesList && userOpportunitiesList.length > 0 &&
               <OfferInfoContainer icon="users" title={`Statut pour`}>
-                <div className="uk-flex uk-flex-column">
-                  <SimpleLink
-                    as={`/backoffice/admin/membres/${currentOffer.currentUserOpportunity.User.id}`}
-                    href="/backoffice/admin/membres/[id]"
-                    className="uk-link-muted"
-                    target="_blank"
-                  >
-                    <span>
-                     {`${currentOffer.currentUserOpportunity.User.firstName} ${currentOffer.currentUserOpportunity.User.lastName}`}
-                      &nbsp;
-                    </span>
-                    <IconNoSSR name="link" ratio={0.8} />
-                  </SimpleLink>
-                  <span className={`uk-text-meta uk-text-${findOfferStatus(currentOffer.currentUserOpportunity.status).color}`}>{findOfferStatus(currentOffer.currentUserOpportunity.status).label}</span>
+                <div className="uk-height-max-medium uk-overflow-auto">
+                  {
+                    userOpportunitiesList.map((userOpportunity, index) => (
+                      <div key={userOpportunity.User.id + index} className="uk-flex uk-flex-column uk-margin-small-top">
+                        <SimpleLink
+                          as={`/backoffice/admin/membres/${userOpportunity.User.id}`}
+                          href="/backoffice/admin/membres/[id]"
+                          className="uk-link-muted"
+                          target="_blank">
+                          <span>
+                           {`${userOpportunity.User.firstName} ${userOpportunity.User.lastName}`}
+                            &nbsp;
+                          </span>
+                          <IconNoSSR name="link" ratio={0.8} />
+                        </SimpleLink>
+                        <span className={`uk-text-meta uk-text-italic uk-text-${findOfferStatus(userOpportunity.status).color}`}>{findOfferStatus(userOpportunity.status).label}</span>
+                      </div>
+                    ))
+                  }
                 </div>
+
               </OfferInfoContainer>
-            )}
+            }
           </GridNoSSR>
           <GridNoSSR gap="medium" childWidths={['1-1']}>
             <OfferInfoContainer icon="comment" title="Message">
@@ -232,8 +245,8 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
             }
             {currentOffer.businessLines && (
               <GridNoSSR gap="small">
-                {currentOffer.businessLines.map((businessLine) => (
-                  <Button disabled>
+                {currentOffer.businessLines.map((businessLine, index) => (
+                  <Button key={index} disabled>
                     <span style={{ color: '#666' }}>{businessLine}</span>
                   </Button>
                 ))}
@@ -311,30 +324,31 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   );
 };
 ModalOfferAdmin.propTypes = {
-  currentOffer: PropsType.shape({
-    title: PropsType.string,
-    company: PropsType.string,
-    description: PropsType.string,
-    prerequisites: PropsType.string,
-    recruiterName: PropsType.string,
-    isPublic: PropsType.bool,
-    isArchived: PropsType.bool,
-    isValidated: PropsType.bool,
-    recruiterMail: PropsType.string,
-    recruiterPhone: PropsType.string,
-    businessLines: PropsType.arrayOf(PropsType.string),
-    date: PropsType.string,
-    location: PropsType.string,
-    userOpportunity: PropsType.arrayOf(
-      PropsType.shape({
-        status: PropsType.string,
-        bookmarked: PropsType.string,
-        note: PropsType.string,
-        archived: PropsType.string,
-      })
+  currentOffer: PropTypes.shape({
+    title: PropTypes.string,
+    company: PropTypes.string,
+    description: PropTypes.string,
+    prerequisites: PropTypes.string,
+    recruiterName: PropTypes.string,
+    isPublic: PropTypes.bool,
+    isArchived: PropTypes.bool,
+    isValidated: PropTypes.bool,
+    recruiterMail: PropTypes.string,
+    recruiterPhone: PropTypes.string,
+    businessLines: PropTypes.arrayOf(PropTypes.string),
+    date: PropTypes.string,
+    location: PropTypes.string,
+    userOpportunity: PropTypes.arrayOf(
+      PropTypes.shape({
+        status: PropTypes.string,
+        bookmarked: PropTypes.string,
+        note: PropTypes.string,
+        archived: PropTypes.string,
+      }),
     ),
+    currentUserOpportunity: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.shape()), PropTypes.shape()]),
   }),
-  setCurrentOffer: PropsType.func.isRequired,
+  setCurrentOffer: PropTypes.func.isRequired,
 };
 ModalOfferAdmin.defaultProps = {
   currentOffer: { userOpportunity: {}, businessLines: [] },

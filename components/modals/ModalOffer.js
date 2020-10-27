@@ -1,6 +1,6 @@
 /* global UIkit */
 import React, {useState, useEffect} from 'react';
-import PropsType from 'prop-types';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { GridNoSSR, Button, IconNoSSR, SimpleLink } from '../utils';
 import Textarea from '../forms/fields/Textarea';
@@ -20,8 +20,8 @@ export const List = ({ className, children }) => (
   </ul>
 );
 List.propTypes = {
-  className: PropsType.string,
-  children: PropsType.arrayOf(PropsType.element).isRequired,
+  className: PropTypes.string,
+  children: PropTypes.arrayOf(PropTypes.element).isRequired,
 };
 List.defaultProps = {
   className: undefined,
@@ -49,9 +49,9 @@ export const OfferInfoContainer = ({ icon, title, children }) => {
   );
 };
 OfferInfoContainer.propTypes = {
-  icon: PropsType.string,
-  title: PropsType.string,
-  children: PropsType.arrayOf(PropsType.string),
+  icon: PropTypes.string,
+  title: PropTypes.string,
+  children: PropTypes.arrayOf(PropTypes.string),
 };
 OfferInfoContainer.defaultProps = {
   title: undefined,
@@ -213,8 +213,8 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                   }
                   {currentOffer.businessLines && (
                     <GridNoSSR gap="small">
-                      {currentOffer.businessLines.map((businessLine) => (
-                        <Button disabled>
+                      {currentOffer.businessLines.map((businessLine, index) => (
+                        <Button key={index} disabled>
                           <span style={{ color: '#666' }}>{businessLine}</span>
                         </Button>
                       ))}
@@ -265,26 +265,26 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
   );
 };
 ModalOffer.propTypes = {
-  currentOffer: PropsType.shape({
-    title: PropsType.string,
-    company: PropsType.string,
-    description: PropsType.string,
-    prerequisites: PropsType.string,
-    recruiterName: PropsType.string,
-    isPublic: PropsType.bool,
-    recruiterMail: PropsType.string,
-    recruiterPhone: PropsType.string,
-    businessLines: PropsType.arrayOf(PropsType.string),
-    date: PropsType.string,
-    location: PropsType.string,
-    userOpportunity: PropsType.shape({
-      status: PropsType.string,
-      bookmarked: PropsType.string,
-      note: PropsType.string,
-      archived: PropsType.string,
+  currentOffer: PropTypes.shape({
+    title: PropTypes.string,
+    company: PropTypes.string,
+    description: PropTypes.string,
+    prerequisites: PropTypes.string,
+    recruiterName: PropTypes.string,
+    isPublic: PropTypes.bool,
+    recruiterMail: PropTypes.string,
+    recruiterPhone: PropTypes.string,
+    businessLines: PropTypes.arrayOf(PropTypes.string),
+    date: PropTypes.string,
+    location: PropTypes.string,
+    userOpportunity: PropTypes.shape({
+      status: PropTypes.string,
+      bookmarked: PropTypes.string,
+      note: PropTypes.string,
+      archived: PropTypes.string,
     }),
   }),
-  setCurrentOffer: PropsType.func.isRequired,
+  setCurrentOffer: PropTypes.func.isRequired,
 };
 ModalOffer.defaultProps = {
   currentOffer: { userOpportunity: {}, businessLines: [] },

@@ -31,12 +31,6 @@ const CurrentFilters = ({ numberOfResults, filters, resetFilters }) => {
 
     return () => {
       clearInterval(modalInterval);
-      UIkit.util.off(document, 'show', '#toggle-filter-menu', () =>
-        onFilterMenuToggle(true)
-      );
-      UIkit.util.off(document, 'hide', '#toggle-filter-menu', () =>
-        onFilterMenuToggle(false)
-      );
     };
   }, []);
 
