@@ -81,7 +81,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       },
     });
   }
-  UserController.getUserByEmail(email)
+  return UserController.getUserByEmail(email)
     .then((userFound) => {
       user = userFound;
 
@@ -101,32 +101,28 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
         salt
       } = AuthController.encryptPassword(token);
 
-      UserController.setUser(user.id, {
+      return UserController.setUser(user.id, {
         hashReset: hash,
         saltReset: salt,
-      })
-        .then(async (updatedUser) => {
-          if (!updatedUser) {
-            return res.status(404).send(`Utilisateur inexistant`);
-          }
-          console.log('sending email');
-          // Envoi du mail
-          await sendMail({
-            toEmail: user.email,
-            subject: 'Réinitialisation mot de passe',
-            text: 'Bonjour,\n\n' +
-              'Pour réinitialiser votre mot de passe, cliquer ici sur ce lien : \n' +
-              `${process.env.SERVER_URL}/reset/${user.id}/${token}\n\n` +
-              'Cordialement,\n\n' +
-              `L'équipe LinkedOut`,
-          });
+      });
+    })
+    .then(async (updatedUser) => {
+      if (!updatedUser) {
+        return res.status(404).send(`Utilisateur inexistant`);
+      }
+      console.log('sending email');
+      // Envoi du mail
+      await sendMail({
+        toEmail: user.email,
+        subject: 'Réinitialisation mot de passe',
+        text: 'Bonjour,\n\n' +
+          'Pour réinitialiser votre mot de passe, cliquer ici sur ce lien : \n' +
+          `${process.env.SERVER_URL}/reset/${user.id}/${token}\n\n` +
+          'Cordialement,\n\n' +
+          `L'équipe LinkedOut`,
+      });
 
-          return res.status(200).send('Demande envoyée');
-        })
-        .catch((err) => {
-          console.log(err);
-          return res.status(401).send(`Une erreur est survenue`);
-        });
+      return res.status(200).send('Demande envoyée');
     })
     .catch((err) => {
       console.log(err);
