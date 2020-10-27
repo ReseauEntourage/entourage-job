@@ -15,6 +15,7 @@ import {initializeFilters, mutateFormSchema} from "../../../utils";
 import {OPPORTUNITY_FILTERS_DATA} from "../../../constants";
 import CurrentFilters from "../../../components/filters/CurrentFilters";
 import FiltersSideBar from "../../../components/filters/FiltersSideBar";
+import OpportunityError from "../../../components/opportunities/OpportunityError";
 
 const tabFiltersConst = [
   { tag: 'all', title: 'Toutes les offres' },
@@ -256,24 +257,7 @@ const LesOpportunites = () => {
             }}
           />
         </HeaderBackoffice>
-        {hasError ? (
-          <Section className="uk-width-1-1">
-            <div className=" uk-text-center uk-flex uk-flex-center">
-              <div className="uk-width-xlarge">
-                <h2 className="uk-margin-remove">
-                  Les opportunités n&apos;ont pas pu etre chargés correctement.
-                </h2>
-                <p>
-                  Contacte{' '}
-                  <span className="uk-text-primary">
-                    l&apos;équipe LinkedOut
-                  </span>{' '}
-                  pour en savoir plus.
-                </p>
-              </div>
-            </div>
-          </Section>
-        ) : (
+        {hasError ? <OpportunityError /> : (
           <>
             <Filter
               loading={loading}
@@ -340,7 +324,7 @@ const LesOpportunites = () => {
                       return acc + curr.length;
                     }, 0) > 0
                       ? 'Aucun résultat.'
-                      : 'Aucune offre d\'emploi n\'a été faite sur la plateforme.'}
+                      : 'Aucune offre d\'emploi.'}
                   </p>
                 </div>
               }

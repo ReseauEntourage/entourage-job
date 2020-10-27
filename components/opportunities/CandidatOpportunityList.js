@@ -7,6 +7,7 @@ import Axios from '../../Axios';
 import { UserContext } from '../store/UserProvider';
 import ModalOfferAdmin from '../modals/ModalOfferAdmin';
 import { OPPORTUNITY_FILTERS_DATA } from '../../constants';
+import OpportunityError from "./OpportunityError";
 
 const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults }) => {
   const { user } = useContext(UserContext);
@@ -115,23 +116,7 @@ const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults })
           <div data-uk-spinner />
         </div>
       )}
-      {!loading && hasError && (
-        <Section className="uk-width-1-1">
-          <div className=" uk-text-center uk-flex uk-flex-center">
-            <div className="uk-width-xlarge">
-              <h2 className="uk-margin-remove">
-                Les opportunités du candidat n&apos;ont pas pu etre chargés
-                correctement.
-              </h2>
-              <p>
-                Contacte{' '}
-                <span className="uk-text-primary">l&apos;équipe LinkedOut</span>{' '}
-                pour en savoir plus.
-              </p>
-            </div>
-          </div>
-        </Section>
-      )}
+      {!loading && hasError && <OpportunityError />}
       {!loading && !hasError && (
         <div>
           {filteredOffers && filteredOffers.length > 0 ? (

@@ -10,6 +10,7 @@ import ModalOffer from '../../../components/modals/ModalOffer';
 import axios from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
 import {USER_ROLES} from "../../../constants";
+import OpportunityError from "../../../components/opportunities/OpportunityError";
 
 const tabFiltersConst = [
   { tag: 'all', title: 'Toutes les offres' },
@@ -195,24 +196,7 @@ const Opportunites = () => {
           title={user.role === USER_ROLES.CANDIDAT ? "Consultez toutes les opportunités de travail" : "Consultez les opportunités de travail du candidat"}
           description={user.role === USER_ROLES.CANDIDAT ? "Parcourez les offres qui vous sont directement adressées ainsi que celles communes aux différents candidats du parcours LinkedOut." : "Parcourez les offres qui ont été adressées à votre candidat ainsi que celles communes aux différents candidats du parcours LinkedOut."}
         />
-        {hasError ? (
-          <Section className="uk-width-1-1">
-            <div className=" uk-text-center uk-flex uk-flex-center">
-              <div className="uk-width-xlarge">
-                <h2 className="uk-margin-remove">
-                  Les opportunités n&apos;ont pas pu etre chargés correctement.
-                </h2>
-                <p>
-                  Contacte{' '}
-                  <span className="uk-text-primary">
-                    l&apos;équipe LinkedOut
-                  </span>{' '}
-                  pour en savoir plus.
-                </p>
-              </div>
-            </div>
-          </Section>
-        ) : (
+        {hasError ? <OpportunityError /> : (
           <>
             <Filter
               loading={loading}
@@ -220,6 +204,7 @@ const Opportunites = () => {
               setFilters={setTabFilters}
             >
               {tabFilteredOffers &&
+                tabFilteredOffers.length > 0 ?
                 tabFilteredOffers.map((offer, i) => {
                   return (
                     <li key={i}>
@@ -253,7 +238,14 @@ const Opportunites = () => {
                       </a>
                     </li>
                   );
-                })}
+                })
+                :
+                <div className="uk-text-center uk-flex uk-flex-center uk-flex-1">
+                  <p className="uk-text-italic">
+                    Aucune offre d&apos;emploi dans cette catégorie.
+                  </p>
+                </div>
+              }
             </Filter>
             <div>
               <ModalOffer
