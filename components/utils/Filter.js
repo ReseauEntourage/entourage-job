@@ -1,41 +1,47 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR } from './Grid';
 
 let debounceTimeoutId;
 
-const Filter = ({ id, loading, filters, children, search, setFilters }) => {
+const Filter = ({
+  id,
+  loading,
+  filters,
+  children,
+  search,
+  setFilters,
+  otherFilterComponent,
+}) => {
   if (filters.length > 0 && !filters.some(({ active }) => active)) {
     filters[0].active = true;
   }
 
   return (
-    <div uk-filter={`target: #${id}`}>
+    <div>
       <GridNoSSR eachWidths={['expand', 'auto']}>
         <ul className="uk-subnav ent-subnav">
-          {
-            !loading &&
+          {!loading &&
             filters.map(({ title, tag, active }, i) => (
-                <li
-                  key={`filter-${i}`}
-                  className={active ? 'uk-active' : ''}
-                  uk-filter-control={`.tag-${tag}`}
+              <li key={`filter-${i}`} className={active ? 'uk-active' : ''}>
+                <a
+                  onClick={() => {
+                    const updatedFilters = [...filters];
+                    const filterToDeActivate = updatedFilters.find(
+                      (filter) => filter.active
+                    );
+                    const filterToActivate = updatedFilters.find(
+                      (filter) => filter.tag === tag
+                    );
+                    filterToDeActivate.active = false;
+                    filterToActivate.active = true;
+                    setFilters(updatedFilters);
+                  }}
                 >
-                  <a
-                    href="#"
-                    onClick={() => {
-                      const updatedFilters = [...filters];
-                      const filterToDeActivate = updatedFilters.find((filter) => filter.active);
-                      const filterToActivate = updatedFilters.find((filter) => filter.tag === tag);
-                      filterToDeActivate.active = false;
-                      filterToActivate.active = true;
-                      setFilters(updatedFilters);
-                    }}>
-                    {title}
-                  </a>
-                </li>
-              ))
-          }
+                  {title}
+                </a>
+              </li>
+            ))}
         </ul>
         <div className="uk-margin">
           <div className="uk-search uk-search-default">
@@ -45,7 +51,7 @@ const Filter = ({ id, loading, filters, children, search, setFilters }) => {
               type="search"
               placeholder="Rechercher..."
               onKeyDown={(ev) => {
-                if (ev.key === "Enter") {
+                if (ev.key === 'Enter') {
                   ev.preventDefault();
                 }
               }}
@@ -58,6 +64,7 @@ const Filter = ({ id, loading, filters, children, search, setFilters }) => {
           </div>
         </div>
       </GridNoSSR>
+      {otherFilterComponent}
       {loading ? (
         <div className="uk-height-medium uk-flex uk-flex-center uk-flex-middle">
           <div data-uk-spinner="" />
@@ -80,12 +87,14 @@ Filter.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.shape).isRequired,
   children: PropTypes.arrayOf(PropTypes.element),
   search: PropTypes.func,
-  setFilters: PropTypes.func.isRequired
+  setFilters: PropTypes.func.isRequired,
+  otherFilterComponent: PropTypes.element,
 };
 Filter.defaultProps = {
   children: [],
   search: null,
   loading: false,
+  otherFilterComponent: undefined,
 };
 
 export default Filter;

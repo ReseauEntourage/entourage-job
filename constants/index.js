@@ -168,6 +168,20 @@ const CV_FILTERS_DATA = [
   },
 ];
 
+const OPPORTUNITY_FILTERS_DATA = [
+  {
+    key: 'status',
+    constants: OFFER_STATUS,
+    title: 'Status',
+  },
+  {
+    key: 'isPublic',
+    type: 'checkbox',
+    constants: [{ label: 'Masquer les offres privées', value: true }],
+    title: 'Masquer les offres privées',
+  },
+];
+
 const CV_STATUS = {
   Published: {
     label: 'Publié',
@@ -243,6 +257,7 @@ module.exports = {
   VALUES,
   LOCATIONS,
   CV_FILTERS_DATA,
+  OPPORTUNITY_FILTERS_DATA,
   NEWSLETTER_ORIGINS,
   CONTACT_MAILS,
 };

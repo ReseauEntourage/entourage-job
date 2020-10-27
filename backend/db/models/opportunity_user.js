@@ -78,9 +78,22 @@ module.exports = (sequelize, DataTypes) => {
         nextData.status === 2
       ) {
         try {
-          const [{firstName, userToCoach}, {title}] = await Promise.all([
+          const [{firstName, candidat}, {title}] = await Promise.all([
             models.User.findByPk(nextData.UserId, {
-              attributes: ['firstName', 'userToCoach'],
+              attributes: ['firstName'],
+              include: [
+                {
+                  model: models.User_Candidat,
+                  as: 'candidat',
+                  include: [
+                    {
+                      model: models.User,
+                      as: 'coach',
+                      attributes: ['email'],
+                    },
+                  ],
+                },
+              ]
             }),
             models.Opportunity.findByPk(nextData.OpportunityId, {
               attributes: ['title'],
@@ -95,11 +108,9 @@ module.exports = (sequelize, DataTypes) => {
             nextData.OpportunityId,
             'admin'
           );
-          if (userToCoach) {
+          if (candidat && candidat.coach) {
             // mail coach
-            const {email} = await models.User.findByPk(userToCoach, {
-              attributes: ['email'],
-            });
+            const email = candidat.coach.email;
             await sendMailEmbauche(
               email,
               firstName,

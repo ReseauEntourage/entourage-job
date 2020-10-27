@@ -1,6 +1,6 @@
 /* global UIkit */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import CVList from '../cv/CVList';
 import { GridNoSSR, Section } from '../utils';
 import FiltersSideBar from '../filters/FiltersSideBar';
@@ -86,7 +86,11 @@ const SearchCandidates = () => {
               filters={filters}
               resetFilters={resetFilters}
             />
-            <FiltersSideBar filters={filters} setFilters={setFilters} />
+            <FiltersSideBar
+              filterData={CV_FILTERS_DATA}
+              filters={filters}
+              setFilters={setFilters}
+            />
           </div>
         </div>
         <CVList

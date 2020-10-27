@@ -11,9 +11,12 @@ import Axios from '../../../Axios';
 import schema from '../../../components/forms/schema/formEditOpportunity';
 import { UserContext } from '../../../components/store/UserProvider';
 import ModalEdit from '../../../components/modals/ModalEdit';
-import {mutateFormSchema} from "../../../utils";
+import {initializeFilters, mutateFormSchema} from "../../../utils";
+import {OPPORTUNITY_FILTERS_DATA} from "../../../constants";
+import CurrentFilters from "../../../components/filters/CurrentFilters";
+import FiltersSideBar from "../../../components/filters/FiltersSideBar";
 
-const filtersConst = [
+const tabFiltersConst = [
   { tag: 'all', title: 'Toutes les offres' },
   { tag: 'pending', title: 'Offres à valider', active: true },
   { tag: 'validated', title: 'Offres publiées' },
@@ -27,24 +30,6 @@ const LesOpportunites = () => {
     query: { q: opportunityId },
   } = useRouter();
 
-  const [currentOffer, setCurrentOffer] = useState(null);
-  const [offers, setOffers] = useState(undefined);
-  const [hasError, setHasError] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState(filtersConst);
-
-  const getTag = (offer) => {
-    const tag = ['all'];
-    if (offer.isArchived) {
-      tag.push('archived');
-    } else if (offer.isValidated) {
-      tag.push('validated');
-    } else {
-      tag.push('pending');
-    }
-    return tag.map((t) => `tag-${t}`).join(' ');
-  };
-
   // desactivation du champ de disclaimer
   const mutatedSchema = mutateFormSchema(schema, [
     {
@@ -52,11 +37,17 @@ const LesOpportunites = () => {
       props: [
         {
           propName: 'hidden',
-          value: true
-        }
-      ]
-    }
+          value: true,
+        },
+      ],
+    },
   ]);
+
+  const [currentOffer, setCurrentOffer] = useState(null);
+  const [offers, setOffers] = useState(undefined);
+
+  const [hasError, setHasError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = async (query) => {
     if (user) {
@@ -81,15 +72,6 @@ const LesOpportunites = () => {
     return null;
   };
 
-  useEffect(() => {
-    if(offers) {
-      setLoading(false);
-    }
-    else {
-      setLoading(true);
-    }
-  }, [offers]);
-
   const postOpportunity = async (opportunity, closeModal) => {
     try {
       await Axios.post(`/api/v1/opportunity/`, opportunity);
@@ -112,6 +94,123 @@ const LesOpportunites = () => {
       }
     });
   }, [user, opportunityId]);
+
+  const getUserOpportunity = (offer) => {
+    let userOpportunity;
+    if(!offer.isPublic &&
+      offer.userOpportunity &&
+      offer.userOpportunity.length > 0) {
+      userOpportunity = offer.userOpportunity[0];
+    }
+    return userOpportunity;
+  };
+
+  /* TAB FILTERS */
+
+  const [tabFilteredOffers, setTabFilteredOffers] = useState(undefined);
+  const [tabFilters, setTabFilters] = useState(tabFiltersConst);
+
+  const tabFilterOffers = () => {
+    let filteredList = offers;
+    if (offers) {
+      const activeFilter = tabFilters.find((filter) => filter.active);
+      filteredList = filteredList.filter((offer) => {
+        switch (activeFilter.tag) {
+          case tabFiltersConst[0].tag:
+            return true;
+          case tabFiltersConst[1].tag:
+            return !offer.isValidated && !offer.isArchived;
+          case tabFiltersConst[2].tag:
+            return offer.isValidated && !offer.isArchived;
+          case tabFiltersConst[3].tag:
+            return offer.isArchived;
+          default:
+            return true;
+        }
+      });
+    }
+
+    return filteredList;
+  };
+
+  useEffect(() => {
+    setTabFilteredOffers(undefined);
+    setHasError(false);
+    setLoading(true);
+
+    setTabFilteredOffers(tabFilterOffers());
+    setLoading(false);
+  }, [offers, tabFilters]);
+
+  /* END TAB FILTERS */
+
+  /* STATUS FILTER */
+  const [filteredOffers, setFilteredOffers] = useState(undefined);
+
+  const [filters, setFilters] = useState(
+    initializeFilters(OPPORTUNITY_FILTERS_DATA)
+  );
+  const [numberOfResults, setNumberOfResults] = useState(0);
+
+  const resetFilters = () => {
+    setFilters(initializeFilters(OPPORTUNITY_FILTERS_DATA));
+  };
+
+  const filterOffers = (filtersObj) => {
+    let filteredList = tabFilteredOffers;
+
+    if (tabFilteredOffers && filtersObj) {
+      const keys = Object.keys(filtersObj);
+
+      if (keys.length > 0) {
+        const totalFilters = keys.reduce((acc, curr) => {
+          return acc + filtersObj[curr].length;
+        }, 0);
+
+        if (totalFilters > 0) {
+          filteredList = tabFilteredOffers.filter((offer) => {
+            // TODO make generic if several filters
+            const resultForEachFilter = [];
+            for (let i = 0; i < keys.length; i += 1) {
+              let hasFound = false;
+              if (filtersObj[keys[i]].length === 0) {
+                hasFound = true;
+              } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
+                const userOpportunity = getUserOpportunity(offer);
+                hasFound = filtersObj[keys[i]].some((currentFilter) => {
+                  return userOpportunity && currentFilter.value === userOpportunity.status;
+                });
+              } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[1].key) {
+                hasFound = offer.isPublic;
+              }
+              resultForEachFilter.push(hasFound);
+            }
+
+            return resultForEachFilter.every((value) => value);
+          });
+        }
+      }
+    }
+
+    return filteredList;
+  };
+
+  useEffect(() => {
+    setFilteredOffers(undefined);
+    setHasError(false);
+    setLoading(true);
+
+    setFilteredOffers(filterOffers(filters));
+    setLoading(false);
+  }, [/*hidePrivate*/, filters, tabFilteredOffers]);
+
+  useEffect(() => {
+    if (filteredOffers) {
+      setNumberOfResults(filteredOffers.length);
+    }
+  }, [filteredOffers]);
+
+  /* END STATUS FILTER */
 
   if (!user) return null;
 
@@ -169,16 +268,34 @@ const LesOpportunites = () => {
             <Filter
               id="opportunitees"
               loading={loading}
-              filters={filters}
-              setFilters={setFilters}
+              filters={tabFilters}
+              setFilters={setTabFilters}
               search={({ target: { value } }) => {
                 fetchData(value);
               }}
+              otherFilterComponent={
+                <div
+                  style={{ maxWidth: 1100 }}
+                  className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-bottom"
+                >
+                  <CurrentFilters
+                    numberOfResults={numberOfResults}
+                    filters={filters}
+                    resetFilters={resetFilters}
+                  />
+                  <FiltersSideBar
+                    filterData={OPPORTUNITY_FILTERS_DATA}
+                    filters={filters}
+                    setFilters={setFilters}
+                  />
+                </div>
+              }
             >
-              {offers &&
-                offers.map((offer, i) => {
+              {filteredOffers &&
+              filteredOffers.length > 0 ?
+                filteredOffers.map((offer, i) => {
                   return (
-                    <li key={i} className={getTag(offer)}>
+                    <li key={i}>
                       <a
                         aria-hidden
                         role="button"
@@ -196,18 +313,24 @@ const LesOpportunites = () => {
                           archived={offer.isArchived}
                           isPublic={offer.isPublic}
                           isValidated={offer.isValidated}
-                          userOpportunity={
-                            !offer.isPublic &&
-                            offer.userOpportunity &&
-                            offer.userOpportunity.length > 0 &&
-                            offer.userOpportunity[0]
-                          }
+                          userOpportunity={getUserOpportunity(offer)}
                           isAdmin
                         />
                       </a>
                     </li>
                   );
-                })}
+                })
+                :
+                <div className="uk-text-center uk-flex uk-flex-center uk-flex-1">
+                  <p className="uk-text-italic">
+                    {Object.values(filters).reduce((acc, curr) => {
+                      return acc + curr.length;
+                    }, 0) > 0
+                      ? 'Aucun résultat.'
+                      : 'Aucune offre d\'emploi n\'a été faite sur la plateforme.'}
+                  </p>
+                </div>
+              }
             </Filter>
             <div>
               <ModalOfferAdmin

@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import { getChildrenFilters } from '../../utils';
 import { event } from '../../lib/gtag';
 import { Button, IconNoSSR, OffcanvasNoSSR } from '../utils';
-import { CV_FILTERS_DATA } from '../../constants';
 
-const FiltersSideBar = ({ filters, setFilters }) => {
+const FiltersSideBar = ({ filterData, filters, setFilters }) => {
   const renderFilters = (filterConstants, key, tag) => {
     const reducedFilters = getChildrenFilters(filterConstants);
 
@@ -60,7 +59,7 @@ const FiltersSideBar = ({ filters, setFilters }) => {
       flip={false}
     >
       <div className="uk-margin-small-top">
-        {CV_FILTERS_DATA.map(({ title, constants, key, tag, type }) => {
+        {filterData.map(({ title, constants, key, tag, type }) => {
           if (type && type === 'checkbox') {
             return (
               <div key={key}>
@@ -109,6 +108,7 @@ const FiltersSideBar = ({ filters, setFilters }) => {
 FiltersSideBar.propTypes = {
   filters: PropTypes.shape().isRequired,
   setFilters: PropTypes.func.isRequired,
+  filterData: PropTypes.arrayOf(PropTypes.shape()),
 };
 
 export default FiltersSideBar;

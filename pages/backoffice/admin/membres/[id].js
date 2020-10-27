@@ -20,7 +20,7 @@ import {USER_ROLES} from "../../../../constants";
 import ToggleWithConfirmationModal
   from "../../../../components/backoffice/ToggleWithConfirmationModal";
 import {mutateFormSchema} from "../../../../utils";
-import OpportunitiesList from "../../../../components/opportunities/OpportunitiesList";
+import CandidatOpportunities from "../../../../components/opportunities/CandidatOpportunities";
 
 const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
@@ -169,7 +169,7 @@ const CVPage = () => {
               user.coach ?
                 <div>
                   {onglet === 'cv' && <CVPageContent candidatId={user.coach.candidat.id} />}
-                  {onglet === 'opportunities' && <OpportunitiesList candidatId={user.coach.candidat.id} />}
+                  {onglet === 'opportunities' && <CandidatOpportunities candidatId={user.coach.candidat.id} />}
                 </div> :
                 <div>
                   <h2 className="uk-text-bold">
@@ -187,7 +187,7 @@ const CVPage = () => {
             onglet !== 'settings' && user.role === USER_ROLES.CANDIDAT && (
               <div>
                 {onglet === 'cv' && <CVPageContent candidatId={user.id} />}
-                {onglet === 'opportunities' && <OpportunitiesList candidatId={user.id} />}
+                {onglet === 'opportunities' && <CandidatOpportunities candidatId={user.id} />}
               </div>
             )
           }
