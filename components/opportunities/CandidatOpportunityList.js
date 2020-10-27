@@ -6,9 +6,9 @@ import OfferCard from '../cards/OfferCard';
 import Axios from '../../Axios';
 import { UserContext } from '../store/UserProvider';
 import ModalOfferAdmin from '../modals/ModalOfferAdmin';
-import { OPPORTUNITY_FILTERS_DATA } from "../../constants";
+import { OPPORTUNITY_FILTERS_DATA } from '../../constants';
 
-const OpportunityList = ({ candidatId, filters, updateNumberOfResults }) => {
+const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults }) => {
   const { user } = useContext(UserContext);
 
   const [currentOffer, setCurrentOffer] = useState(null);
@@ -94,17 +94,15 @@ const OpportunityList = ({ candidatId, filters, updateNumberOfResults }) => {
   };
 
   useEffect(() => {
-    setFilteredOffers(undefined);
     setHasError(false);
     setLoading(true);
-
     setFilteredOffers(filterOffers(filters));
-    setLoading(false);
   }, [filters, offers]);
 
   useEffect(() => {
     if (filteredOffers) {
       updateNumberOfResults(filteredOffers.length);
+      setLoading(false);
     }
   }, [filteredOffers]);
 
@@ -112,11 +110,12 @@ const OpportunityList = ({ candidatId, filters, updateNumberOfResults }) => {
 
   return (
     <div>
-      {loading ? (
-        <div className="uk-height-medium uk-flex uk-flex-center uk-flex-middle">
-          <div data-uk-spinner="" />
+      {loading && (
+        <div className="uk-text-center">
+          <div data-uk-spinner />
         </div>
-      ) : hasError ? (
+      )}
+      {!loading && hasError && (
         <Section className="uk-width-1-1">
           <div className=" uk-text-center uk-flex uk-flex-center">
             <div className="uk-width-xlarge">
@@ -132,51 +131,56 @@ const OpportunityList = ({ candidatId, filters, updateNumberOfResults }) => {
             </div>
           </div>
         </Section>
-      ) : filteredOffers && filteredOffers.length > 0 ? (
-        <GridNoSSR childWidths={['1-4@l', '1-3@m', '1-2@s']} left top>
-          {filteredOffers.map((offer, i) => {
-            const userOpportunity = getUserOpportunity(offer);
-            return (
-              <li key={i}>
-                <a
-                  aria-hidden
-                  role="button"
-                  className="uk-link-reset"
-                  onClick={() => {
-                    setCurrentOffer({
-                      ...offer,
-                      currentUserOpportunity: userOpportunity,
-                    });
-                    UIkit.modal('#modal-offer-admin').show();
-                  }}
-                >
-                  <OfferCard
-                    title={offer.title}
-                    from={offer.recruiterName}
-                    shortDescription={offer.company}
-                    date={offer.date}
-                    archived={offer.isArchived}
-                    isPublic={offer.isPublic}
-                    isValidated={offer.isValidated}
-                    userOpportunity={userOpportunity}
-                    isAdmin
-                  />
-                </a>
-              </li>
-            );
-          })}
-        </GridNoSSR>
-      ) : (
-        <div className=" uk-text-center uk-flex uk-flex-center">
-          <div className="uk-width-xlarge">
-            <p className="uk-text-italic">
-              {Object.values(filters).reduce((acc, curr) => {
-                return acc + curr.length;
-              }, 0) > 0
-                ? 'Aucun résultat.'
-                : 'Aucune proposition n\'a été faite au candidat.'}
-            </p>
-          </div>
+      )}
+      {!loading && !hasError && (
+        <div>
+          {filteredOffers && filteredOffers.length > 0 ? (
+            <GridNoSSR childWidths={['1-4@l', '1-3@m', '1-2@s']} left top>
+              {filteredOffers.map((offer, i) => {
+                const userOpportunity = getUserOpportunity(offer);
+                return (
+                  <li key={i}>
+                    <a
+                      aria-hidden
+                      role="button"
+                      className="uk-link-reset"
+                      onClick={() => {
+                        setCurrentOffer({
+                          ...offer,
+                          currentUserOpportunity: userOpportunity,
+                        });
+                        UIkit.modal('#modal-offer-admin').show();
+                      }}
+                    >
+                      <OfferCard
+                        title={offer.title}
+                        from={offer.recruiterName}
+                        shortDescription={offer.company}
+                        date={offer.date}
+                        archived={offer.isArchived}
+                        isPublic={offer.isPublic}
+                        isValidated={offer.isValidated}
+                        userOpportunity={userOpportunity}
+                        isAdmin
+                      />
+                    </a>
+                  </li>
+                );
+              })}
+            </GridNoSSR>
+          ) : (
+            <div className=" uk-text-center uk-flex uk-flex-center">
+              <div className="uk-width-xlarge">
+                <p className="uk-text-italic">
+                  {Object.values(filters).reduce((acc, curr) => {
+                    return acc + curr.length;
+                  }, 0) > 0
+                    ? 'Aucun résultat.'
+                    : "Aucune proposition n'a été faite au candidat."}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       )}
       <div>
@@ -192,15 +196,15 @@ const OpportunityList = ({ candidatId, filters, updateNumberOfResults }) => {
   );
 };
 
-OpportunityList.propTypes = {
+CandidatOpportunityList.propTypes = {
   candidatId: PropTypes.string.isRequired,
   filters: PropTypes.shape(),
   updateNumberOfResults: PropTypes.func,
 };
 
-OpportunityList.defaultProps = {
+CandidatOpportunityList.defaultProps = {
   filters: undefined,
   updateNumberOfResults: () => {},
 };
 
-export default OpportunityList;
+export default CandidatOpportunityList;

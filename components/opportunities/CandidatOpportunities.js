@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import OpportunityList from './OpportunityList';
+import CandidatOpportunityList from './CandidatOpportunityList';
 import CurrentFilters from '../filters/CurrentFilters';
 import FiltersSideBar from '../filters/FiltersSideBar';
 import { initializeFilters } from '../../utils';
@@ -35,7 +35,7 @@ const CandidatOpportunities = ({ candidatId }) => {
           setFilters={setFilters}
         />
       </div>
-      <OpportunityList
+      <CandidatOpportunityList
         candidatId={candidatId}
         filters={filters}
         updateNumberOfResults={setNumberOfResults}

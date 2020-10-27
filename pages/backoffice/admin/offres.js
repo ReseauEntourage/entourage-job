@@ -138,12 +138,9 @@ const LesOpportunites = () => {
   };
 
   useEffect(() => {
-    setTabFilteredOffers(undefined);
     setHasError(false);
     setLoading(true);
-
     setTabFilteredOffers(tabFilterOffers());
-    setLoading(false);
   }, [offers, tabFilters]);
 
   /* END TAB FILTERS */
@@ -210,21 +207,20 @@ const LesOpportunites = () => {
   };
 
   useEffect(() => {
-    setFilteredOffers(undefined);
     setHasError(false);
     setLoading(true);
-
     setFilteredOffers(filterOffers(filters));
-    setLoading(false);
   }, [filters, tabFilteredOffers]);
 
   useEffect(() => {
     if (filteredOffers) {
       setNumberOfResults(filteredOffers.length);
+      setLoading(false);
     }
   }, [filteredOffers]);
 
   /* END STATUS FILTER */
+
 
   if (!user) return null;
 
@@ -280,7 +276,6 @@ const LesOpportunites = () => {
         ) : (
           <>
             <Filter
-              id="opportunitees"
               loading={loading}
               filters={tabFilters}
               setFilters={setTabFilters}

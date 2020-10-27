@@ -5,7 +5,6 @@ import { GridNoSSR } from './Grid';
 let debounceTimeoutId;
 
 const Filter = ({
-  id,
   loading,
   filters,
   children,
@@ -21,8 +20,7 @@ const Filter = ({
     <div>
       <GridNoSSR eachWidths={['expand', 'auto']}>
         <ul className="uk-subnav ent-subnav">
-          {!loading &&
-            filters.map(({ title, tag, active }, i) => (
+          {filters.map(({ title, tag, active }, i) => (
               <li key={`filter-${i}`} className={active ? 'uk-active' : ''}>
                 <a
                   onClick={() => {
@@ -66,12 +64,11 @@ const Filter = ({
       </GridNoSSR>
       {otherFilterComponent}
       {loading ? (
-        <div className="uk-height-medium uk-flex uk-flex-center uk-flex-middle">
-          <div data-uk-spinner="" />
+        <div className="uk-text-center">
+          <div data-uk-spinner />
         </div>
       ) : (
         <ul
-          id={id}
           className="uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l"
           data-uk-grid=""
         >
@@ -82,7 +79,6 @@ const Filter = ({
   );
 };
 Filter.propTypes = {
-  id: PropTypes.string.isRequired,
   loading: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.shape).isRequired,
   children: PropTypes.arrayOf(PropTypes.element),
@@ -93,7 +89,7 @@ Filter.propTypes = {
 Filter.defaultProps = {
   children: [],
   search: null,
-  loading: false,
+  loading: true,
   otherFilterComponent: undefined,
 };
 

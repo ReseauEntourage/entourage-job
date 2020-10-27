@@ -62,13 +62,16 @@ const Opportunites = () => {
   };
 
   useEffect(() => {
-    setTabFilteredOffers(undefined);
     setHasError(false);
     setLoading(true);
-
     setTabFilteredOffers(tabFilterOffers());
-    setLoading(false);
   }, [offers, tabFilters]);
+
+  useEffect(() => {
+    if(tabFilteredOffers) {
+      setLoading(false);
+    }
+  }, [tabFilteredOffers]);
 
   /* END TAB FILTERS */
 
@@ -212,7 +215,6 @@ const Opportunites = () => {
         ) : (
           <>
             <Filter
-              id="opportunitees"
               loading={loading}
               filters={tabFilters}
               setFilters={setTabFilters}
