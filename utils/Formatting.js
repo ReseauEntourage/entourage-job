@@ -1,6 +1,6 @@
-import React from 'react';
+const React = require('react');
 
-export const formatParagraph = (text, condense) => {
+const formatParagraph = (text, condense) => {
   if (text) {
     let formattedText = text;
     if (condense) formattedText = text.replace(/\n\n/g, '\n');
@@ -12,4 +12,8 @@ export const formatParagraph = (text, condense) => {
     }, []);
   }
   return text;
+};
+
+module.exports = {
+  formatParagraph,
 };

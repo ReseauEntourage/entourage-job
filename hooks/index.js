@@ -1,1 +1,2 @@
-export * from './useResetForm'
+export * from './useResetForm';
+export * from './useRemoveModal';

@@ -1,13 +1,16 @@
-import React from 'react';
-
-export const sortExperiences = (list) => {
+const sortExperiences = (list) => {
   const listToSort = [...list];
-  listToSort.sort((a, b) => a.order < b.order ? -1 : 1);
+  listToSort.sort((a, b) => (a.order < b.order ? -1 : 1));
   return listToSort;
 };
 
-export const sortReviews = (list) => {
+const sortReviews = (list) => {
   const listToSort = [...list];
-  listToSort.sort((a, b) => a.name.localeCompare(b.name) < 0 ? -1 : 1);
+  listToSort.sort((a, b) => (a.name.localeCompare(b.name) < 0 ? -1 : 1));
   return listToSort;
+};
+
+module.exports = {
+  sortExperiences,
+  sortReviews,
 };

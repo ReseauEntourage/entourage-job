@@ -41,7 +41,7 @@ const StoryProfileCard = ({ description, onChange }) => (
           defaultValues={{ story: description }}
           onSubmit={(fields, closeModal) => {
             closeModal();
-            onChange(fields);
+            onChange({...fields});
           }}
         />
       </h3>

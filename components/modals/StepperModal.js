@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { CloseButtonNoSSR } from '../utils/CloseButton';
+import { useRemoveModal } from '../../hooks';
 import HeaderModal from './HeaderModal';
 
 /**
@@ -34,12 +35,7 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
   }, [composers]);
 
   // Fix because of bug where multiple modals with the same id are created
-  useEffect(() => {
-    const modals = document.querySelectorAll(`#${id}`);
-    if(modals.length > 1) {
-      modals[1].remove();
-    }
-  }, []);
+  useRemoveModal(id);
 
   return (
     <div id={id} className="uk-flex-top" data-uk-modal="bg-close:false">

@@ -1,7 +1,6 @@
-import {useRef} from "react";
+import { useRef } from 'react';
 
 export function useResetForm() {
-
   const form = useRef(null);
 
   const resetForm = () => {
@@ -10,4 +9,3 @@ export function useResetForm() {
 
   return [form, resetForm];
 }
-

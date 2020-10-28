@@ -10,16 +10,18 @@ import ModalOffer from '../../../components/modals/ModalOffer';
 import axios from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
 import {USER_ROLES} from "../../../constants";
+import OpportunityError from "../../../components/opportunities/OpportunityError";
 
-const getTag = (offer) => {
-  if (offer.userOpportunity && offer.userOpportunity.archived) {
-    return 'tag-archive';
-  }
-  return `tag-${offer.isPublic ? 'public' : 'private'}`;
-};
+const tabFiltersConst = [
+  { tag: 'all', title: 'Toutes les offres' },
+  { tag: 'private', title: 'Offres du candidat', active: true },
+  { tag: 'public', title: 'Offres générales' },
+  { tag: 'archived', title: 'Offres archivées' },
+];
 
 const Opportunites = () => {
   const { user } = useContext(UserContext);
+
   const {
     query: { q: opportunityId },
   } = useRouter();
@@ -29,6 +31,50 @@ const Opportunites = () => {
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [candidatId, setCandidatId] = useState();
+
+
+  /* TAB FILTERS */
+
+  const [tabFilters, setTabFilters] = useState(tabFiltersConst);
+  const [tabFilteredOffers, setTabFilteredOffers] = useState(undefined);
+
+  const tabFilterOffers = () => {
+    let filteredList = offers;
+    if (offers) {
+      const activeFilter = tabFilters.find((filter) => filter.active);
+      filteredList = filteredList.filter((offer) => {
+        const isArchived = offer.userOpportunity && offer.userOpportunity.archived;
+        switch (activeFilter.tag) {
+          case tabFiltersConst[0].tag:
+            return true;
+          case tabFiltersConst[1].tag:
+            return !offer.isPublic && !isArchived;
+          case tabFiltersConst[2].tag:
+            return offer.isPublic && !isArchived;
+          case tabFiltersConst[3].tag:
+            return offer.userOpportunity && offer.userOpportunity.archived;
+          default:
+            return true;
+        }
+      });
+    }
+
+    return filteredList;
+  };
+
+  useEffect(() => {
+    setHasError(false);
+    setLoading(true);
+    setTabFilteredOffers(tabFilterOffers());
+  }, [offers, tabFilters]);
+
+  useEffect(() => {
+    if(tabFilteredOffers) {
+      setLoading(false);
+    }
+  }, [tabFilteredOffers]);
+
+  /* END TAB FILTERS */
 
   const fetchData = async (userId) => {
     if (user) {
@@ -57,7 +103,6 @@ const Opportunites = () => {
           return new Date(b.date) - new Date(a.date);
         });
         setOffers(sortedOffers);
-        setLoading(false);
         return data;
       } catch (err) {
         console.error(err);
@@ -96,7 +141,7 @@ const Opportunites = () => {
       }
       fetchData(candidatId);
     }
-    setCurrentOffer(opportunity);
+    setCurrentOffer({...opportunity});
     UIkit.modal('#modal-offer').show();
   };
 
@@ -107,14 +152,17 @@ const Opportunites = () => {
         if (data) {
           const offer = data.find((o) => o.id === opportunityId);
           if (offer) {
-            console.log(offer);
-            setCurrentOffer(offer);
+            setCurrentOffer({...offer});
             UIkit.modal('#modal-offer').show();
           }
         }
       });
 
     if (user) {
+      const updatedFilterConsts = [...tabFiltersConst];
+      updatedFilterConsts[1].title = user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat';
+      setTabFilters(updatedFilterConsts);
+
       if (user.role === USER_ROLES.CANDIDAT) {
         setCandidatId(user.id);
         fetchAndAct(user.id);
@@ -138,6 +186,7 @@ const Opportunites = () => {
       }
     }
   }, [user, opportunityId]);
+
   if (!user) return null;
 
   return (
@@ -147,38 +196,18 @@ const Opportunites = () => {
           title={user.role === USER_ROLES.CANDIDAT ? "Consultez toutes les opportunités de travail" : "Consultez les opportunités de travail du candidat"}
           description={user.role === USER_ROLES.CANDIDAT ? "Parcourez les offres qui vous sont directement adressées ainsi que celles communes aux différents candidats du parcours LinkedOut." : "Parcourez les offres qui ont été adressées à votre candidat ainsi que celles communes aux différents candidats du parcours LinkedOut."}
         />
-        {hasError ? (
-          <Section className="uk-width-1-1">
-            <div className=" uk-text-center uk-flex uk-flex-center">
-              <div className="uk-width-xlarge">
-                <h2 className="uk-margin-remove">
-                  Les opportunités n&apos;ont pas pu etre chargés correctement.
-                </h2>
-                <p>
-                  Contacte{' '}
-                  <span className="uk-text-primary">
-                    l&apos;équipe LinkedOut
-                  </span>{' '}
-                  pour en savoir plus.
-                </p>
-              </div>
-            </div>
-          </Section>
-        ) : (
+        {hasError ? <OpportunityError /> : (
           <>
             <Filter
-              id="opportunitees"
               loading={loading}
-              filters={[
-                { tag: 'private', title: user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat'},
-                { tag: 'public', title: 'Offres générales' },
-                { tag: 'archive', title: 'Offres archivées' },
-              ]}
+              filters={tabFilters}
+              setFilters={setTabFilters}
             >
-              {offers &&
-                offers.map((offer, i) => {
+              {tabFilteredOffers &&
+                tabFilteredOffers.length > 0 ?
+                tabFilteredOffers.map((offer, i) => {
                   return (
-                    <li key={i} className={getTag(offer)}>
+                    <li key={i}>
                       <a
                         aria-hidden
                         role="button"
@@ -189,6 +218,10 @@ const Opportunites = () => {
                           title={offer.title}
                           from={offer.recruiterName}
                           shortDescription={offer.company}
+                          date={offer.date}
+                          isValidated={offer.isValidated}
+                          isPublic={offer.isPublic}
+                          userOpportunity={offer.userOpportunity}
                           archived={
                             offer.userOpportunity &&
                             offer.userOpportunity.archived
@@ -201,21 +234,24 @@ const Opportunites = () => {
                             offer.userOpportunity &&
                             offer.userOpportunity.bookmarked
                           }
-                          status={
-                            offer.userOpportunity &&
-                            offer.userOpportunity.status
-                          }
                         />
                       </a>
                     </li>
                   );
-                })}
+                })
+                :
+                <div className="uk-text-center uk-flex uk-flex-center uk-flex-1">
+                  <p className="uk-text-italic">
+                    Aucune offre d&apos;emploi dans cette catégorie.
+                  </p>
+                </div>
+              }
             </Filter>
             <div>
               <ModalOffer
                 currentOffer={currentOffer}
                 setCurrentOffer={(offer) => {
-                  setCurrentOffer(offer);
+                  setCurrentOffer({...offer});
                   fetchData(candidatId);
                 }}
               />

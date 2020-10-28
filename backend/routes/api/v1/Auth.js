@@ -100,6 +100,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
         hash,
         salt
       } = AuthController.encryptPassword(token);
+
       return UserController.setUser(user.id, {
         hashReset: hash,
         saltReset: salt,
