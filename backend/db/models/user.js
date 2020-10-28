@@ -1,14 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 
 const uuid = require('uuid/v4');
-const {
-  USER_ROLES
-} = require("../../../constants");
+const { USER_ROLES } = require('../../../constants');
 
 module.exports = (sequelize, DataTypes) => {
-
   const User = sequelize.define(
-    'User', {
+    'User',
+    {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -85,8 +83,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-    }, {}
+    },
+    {}
   );
+
+  const generateUrl = (user) =>
+    `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`;
 
   User.associate = (models) => {
     User.belongsToMany(models.Opportunity, {
@@ -119,10 +121,10 @@ module.exports = (sequelize, DataTypes) => {
       if (user.role === USER_ROLES.CANDIDAT) {
         await models.User_Candidat.create({
           candidatId: user.id,
-          url: `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`,
+          url: generateUrl(user),
         });
         await models.Share.create({
-          CandidatId: user.id
+          CandidatId: user.id,
         });
       }
       return user;
@@ -131,58 +133,79 @@ module.exports = (sequelize, DataTypes) => {
     User.beforeUpdate(async (instance, option) => {
       const nextData = instance.dataValues;
       const previousData = instance._previousDataValues;
-      if (
-        nextData &&
-        previousData &&
-        nextData.role &&
-        nextData.role !== previousData.role
-      ) {
-        if (previousData.role === USER_ROLES.CANDIDAT && nextData.role !== USER_ROLES.CANDIDAT) {
-          try {
-            await models.User_Candidat.destroy({
-              where: {
-                candidatId: nextData.id
-              },
-            });
-          } catch (e) {
-            console.log('Candidat inexistant');
-          }
-
-        } else if (previousData.role !== USER_ROLES.CANDIDAT && nextData.role === USER_ROLES.CANDIDAT) {
-          if (previousData.role === USER_ROLES.COACH) {
+      if (nextData && previousData) {
+        if (nextData.role && nextData.role !== previousData.role) {
+          if (
+            previousData.role === USER_ROLES.CANDIDAT &&
+            nextData.role !== USER_ROLES.CANDIDAT
+          ) {
             try {
-              await models.User_Candidat.update(
-                {
-                  coachId: null
+              await models.User_Candidat.destroy({
+                where: {
+                  candidatId: nextData.id,
                 },
-                {
-                  where: {
-                    candidatId: previousData.coach.candidat.id
-                  },
-                });
+              });
             } catch (e) {
-              console.log('Pas de candidat associé');
+              console.log('Candidat inexistant');
+            }
+          } else if (
+            previousData.role !== USER_ROLES.CANDIDAT &&
+            nextData.role === USER_ROLES.CANDIDAT
+          ) {
+            if (previousData.role === USER_ROLES.COACH) {
+              try {
+                await models.User_Candidat.update(
+                  {
+                    coachId: null,
+                  },
+                  {
+                    where: {
+                      candidatId: previousData.coach.candidat.id,
+                    },
+                  }
+                );
+              } catch (e) {
+                console.log('Pas de candidat associé');
+              }
+            }
+
+            try {
+              await models.User_Candidat.create({
+                candidatId: nextData.id,
+                url: generateUrl(nextData),
+              });
+
+              await models.Share.findOrCreate({
+                where: {
+                  CandidatId: nextData.id,
+                },
+              });
+            } catch (e) {
+              console.log(e);
             }
           }
-
+        }
+        if (
+          nextData.firstName !== previousData.firstName &&
+          nextData.role === USER_ROLES.CANDIDAT
+        ) {
           try {
-            await models.User_Candidat.create({
-              candidatId: nextData.id,
-              url: `${nextData.firstName.toLowerCase()}-${nextData.id.substring(0, 8)}`,
-            });
-
-            await models.Share.findOrCreate({
-              where: {
-                CandidatId: nextData.id
+            await models.User_Candidat.update(
+              {
+                url: generateUrl(nextData),
+              },
+              {
+                where: {
+                  candidatId: nextData.id,
+                },
               }
-            });
+            );
           } catch (e) {
             console.log(e);
           }
         }
-
       }
-    })
+    });
   };
   return User;
 };
