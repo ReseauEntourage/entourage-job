@@ -69,9 +69,17 @@ const hasAsChild = (filters, parent, value, notFirst) => {
   return false;
 };
 
-const initializeFilters = (filtersConst) => {
-  return filtersConst.reduce((acc, curr) => {
-    acc[curr.key] = [];
+const initializeFilters = (filtersConst, defaultIndexes) => {
+  let hasDefaults = false;
+  if (Array.isArray(defaultIndexes) && defaultIndexes.length > 0) {
+    hasDefaults = true;
+  }
+  return filtersConst.reduce((acc, curr, index) => {
+    if (hasDefaults && defaultIndexes.includes(index)) {
+      acc[curr.key] = curr.constants;
+    } else {
+      acc[curr.key] = [];
+    }
     return acc;
   }, {});
 };

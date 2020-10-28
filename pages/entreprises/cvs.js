@@ -21,7 +21,7 @@ const CVEntreprises = () => (
       }
     />
     <HireSteps />
-    <SearchCandidates />
+    <SearchCandidates defaultHideEmployed />
     <Section style="default">
       <h4 className="uk-text-bold uk-text-center">
         Vous ne trouvez pas de candidat ?&nbsp;

@@ -1,6 +1,7 @@
 /* global UIkit */
 
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import CVList from '../cv/CVList';
 import { GridNoSSR, Section } from '../utils';
 import FiltersSideBar from '../filters/FiltersSideBar';
@@ -13,9 +14,11 @@ import { initializeFilters } from '../../utils';
 
 let debounceTimeoutId;
 
-const SearchCandidates = () => {
+const SearchCandidates = ({ defaultHideEmployed }) => {
   const [search, setSearch] = useState();
-  const [filters, setFilters] = useState(initializeFilters(CV_FILTERS_DATA));
+  const [filters, setFilters] = useState(
+    initializeFilters(CV_FILTERS_DATA, defaultHideEmployed ? [2] : null)
+  );
   const [numberOfResults, setNumberOfResults] = useState(0);
 
   const resetFilters = () => {
@@ -106,4 +109,13 @@ const SearchCandidates = () => {
     </Section>
   );
 };
+
+SearchCandidates.propTypes = {
+  defaultHideEmployed: PropTypes.bool,
+};
+
+SearchCandidates.defaultProps = {
+  defaultHideEmployed: false,
+};
+
 export default SearchCandidates;
