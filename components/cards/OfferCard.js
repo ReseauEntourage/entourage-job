@@ -25,7 +25,7 @@ const OfferCard = ({
     }`}
   >
     {isNew && <div className="ent-offer-badge" />}
-    <GridNoSSR className="uk-height-max-large" gap="medium" childWidths={['1-1']}>
+    <GridNoSSR gap="medium" childWidths={['1-1']}>
       <GridNoSSR eachWidths={['expand', 'auto']}>
         <h5 className="uk-text-bold">{title}</h5>
         {isStared === undefined ? (

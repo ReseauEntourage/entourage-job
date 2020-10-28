@@ -255,6 +255,8 @@ const CONTACT_MAILS = {
   CORPORATE_CONTACT: 'entreprises@entourage.social',
 };
 
+const INITIAL_NB_OF_CV_TO_DISPLAY = 9;
+
 module.exports = {
   OFFER_STATUS,
   CV_STATUS,
@@ -268,4 +270,5 @@ module.exports = {
   NEWSLETTER_ORIGINS,
   REDIS_KEYS,
   CONTACT_MAILS,
+  INITIAL_NB_OF_CV_TO_DISPLAY
 };

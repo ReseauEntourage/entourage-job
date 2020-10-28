@@ -1,8 +1,7 @@
-/* eslint-disable no-restricted-globals */
-/* eslint no-param-reassign: ["error", { "props": false }] */
-
 const { QueryTypes } = require('sequelize');
 const RedisManager = require('../utils/RedisManager');
+
+const { INITIAL_NB_OF_CV_TO_DISPLAY } = require('../../constants');
 
 const {
   models,
@@ -568,7 +567,51 @@ const getRandomShortCVs = async (nb, query) => {
       )`);
   }
 
-  return modelCVs.sort(() => Math.random() - 0.5).slice(0, nb); // shuffle and take the nb first;
+  const totalSharesPerUser = await sequelize.query(
+    `
+      select shares."CandidatId", (SUM(facebook) + SUM(linkedin) + SUM(twitter) + SUM(whatsapp)) as totalshares
+      from "Shares" shares
+      GROUP BY shares."CandidatId";
+    `,
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
+
+  const totalShares = totalSharesPerUser.reduce((acc, curr) => {
+    return acc + parseInt(curr.totalshares, 10);
+  }, 0);
+
+  let finalCVList = modelCVs.map((modelCV) => {
+    const cv = cleanCV(modelCV);
+    const totalSharesForUser = totalSharesPerUser.find(
+      (shares) => shares.CandidatId === cv.user.candidat.id
+    );
+    cv.ranking = 0;
+    if (totalSharesForUser) {
+      cv.ranking = totalSharesForUser.totalshares / totalShares;
+    }
+    if (cv.user.employed) {
+      cv.ranking = 1;
+    }
+    return cv;
+  });
+
+  finalCVList = finalCVList
+    .sort(() => Math.random() - 0.5)
+    .slice(0, nb) // shuffle and take the nb first
+    .sort((a, b) => a.ranking - b.ranking); // then order reverse by ranking
+
+  if (nb > INITIAL_NB_OF_CV_TO_DISPLAY) {
+    finalCVList = [
+      ...finalCVList.slice(0, INITIAL_NB_OF_CV_TO_DISPLAY),
+      ...finalCVList
+        .slice(INITIAL_NB_OF_CV_TO_DISPLAY, nb)
+        .sort(() => Math.random() - 0.5),
+    ];
+  }
+
+  return finalCVList;
 };
 
 const setCV = (id, cv) => {

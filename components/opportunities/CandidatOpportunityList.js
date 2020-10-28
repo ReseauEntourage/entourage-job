@@ -124,7 +124,7 @@ const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults })
               {filteredOffers.map((offer, i) => {
                 const userOpportunity = getUserOpportunity(offer);
                 return (
-                  <li key={i}>
+                  <li key={i} className="uk-height-max-large uk-overflow-auto">
                     <a
                       aria-hidden
                       role="button"
