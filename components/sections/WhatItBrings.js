@@ -28,8 +28,8 @@ const WhatItBrings = () => {
     {
       text: (
         <div>
-          Tous les candidats ont un logement stable ou temporaire, bénéficient
-          d’un accompagnement social et ont les papiers pour travailler.
+          Tous les candidats ont <span className="uk-text-bold">un logement stable ou temporaire</span>, bénéficient
+          d’<span className="uk-text-bold">un accompagnement social</span> et ont tous <span className="uk-text-bold">une autorisation de travail</span>.
         </div>
       ),
     },

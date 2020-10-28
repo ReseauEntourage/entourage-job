@@ -148,9 +148,7 @@ const HowToCommitDifferently = () => {
                   ),
                   text: (
                     <p>
-                      Aidez les candidats LinkedOut à construire leur projet
-                      professionnel en partageant vos connaissances sur votre
-                      métier ou votre secteur d’activité.
+                      Soyez contactés ponctuellement par un candidat LinkedOut pour répondre à des questions sur un métier ou un secteur que vous connaissez bien.
                     </p>
                   ),
                   button: {
