@@ -17,7 +17,7 @@ const Entreprises = () => {
         title={
           <>
             Entreprises,{' '}
-            <span className="uk-text-primary">agissez avec LinkedOut</span>
+            <span className="uk-text-primary">engagez-vous avec LinkedOut</span>
           </>
         }
       />

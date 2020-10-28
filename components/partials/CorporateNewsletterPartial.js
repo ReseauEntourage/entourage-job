@@ -34,7 +34,7 @@ const CorporateNewsletter = () => {
   return (
     <Section>
       <h4 className="uk-align-center uk-text-center uk-text-bold uk-width-1-2@m">
-        Inscrivez-vous à la newsletter pour être informé des prochaines
+        Inscrivez-vous à la newsletter pour être informé·e des prochaines
         promotions de candidats et recevoir du contenu et des conseils sur
         l&apos;inclusion
       </h4>
