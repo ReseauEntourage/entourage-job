@@ -1,6 +1,8 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable camelcase */
 
+const { OFFER_STATUS } = require('../../constants');
+
 const { findOfferStatus } = require('../../utils/Finding');
 
 const { sendMail } = require('./mail');
@@ -353,7 +355,7 @@ const getAllUserOpportunities = async (userId) => {
     },
   });
 
-  return opportunities.map((model) => {
+  const finalOpportunities = opportunities.map((model) => {
     const opportunity = cleanOpportunity(model);
     opportunity.userOpportunity = opportunity.userOpportunity.find(
       (uo) => uo.UserId === userId
@@ -363,6 +365,54 @@ const getAllUserOpportunities = async (userId) => {
     }
     return opportunity;
   });
+
+  // order by bookmarked, then by new, then by status, then by date
+  finalOpportunities.sort((a, b) => {
+    if (a.userOpportunity || b.userOpportunity) {
+      if (a.userOpportunity && b.userOpportunity) {
+        if (a.userOpportunity.bookmarked === b.userOpportunity.bookmarked) {
+          if (a.userOpportunity.seen === b.userOpportunity.seen) {
+            if (a.userOpportunity.status === b.userOpportunity.status) {
+              return new Date(b.date) - new Date(a.date);
+            }
+            if (
+              a.userOpportunity.status >= OFFER_STATUS[4].status &&
+              b.userOpportunity.status >= OFFER_STATUS[4].status
+            ) {
+              return a.userOpportunity.status - b.userOpportunity.status;
+            }
+            if (a.userOpportunity.status >= OFFER_STATUS[4].status && b.userOpportunity.status < OFFER_STATUS[4].status) {
+              return -1;
+            }
+            if (a.userOpportunity.status < OFFER_STATUS[4].status && b.userOpportunity.status >= OFFER_STATUS[4].status) {
+              return 1;
+            }
+
+            return b.userOpportunity.status - a.userOpportunity.status;
+          }
+          if (a.userOpportunity.seen && !b.userOpportunity.seen) return -1;
+          if (!a.userOpportunity.seen && b.userOpportunity.seen) return 1;
+        }
+        if (a.userOpportunity.bookmarked && !b.userOpportunity.bookmarked) {
+          return -1;
+        }
+        if (!a.userOpportunity.bookmarked && b.userOpportunity.bookmarked) {
+          return 1;
+        }
+      }
+
+      // TODO do the same
+      if (b.userOpportunity) {
+        return -1;
+      }
+      if (a.userOpportunity) {
+        return 1;
+      }
+    }
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  return finalOpportunities;
 };
 
 const addUserToOpportunity = (opportunityId, userId) =>
