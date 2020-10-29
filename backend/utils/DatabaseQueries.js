@@ -1,11 +1,14 @@
 const escapeQuery = (query) => {
-  return query ? query
-    .toLowerCase()
-    .replace("'", "''")
-    .replace("-", " ")
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") : '';
+  return query
+    ? query
+        .trim()
+        .toLowerCase()
+        .replace("'", "''")
+        .replace('-', ' ')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+    : '';
 };
-
 
 const escapeColumn = (column) => {
   return `replace(lower(unaccent(${column})), '-', ' ')`;
@@ -13,5 +16,5 @@ const escapeColumn = (column) => {
 
 module.exports = {
   escapeQuery,
-  escapeColumn
+  escapeColumn,
 };

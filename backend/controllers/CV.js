@@ -399,11 +399,13 @@ const getCVs = async () => {
 };
 
 const getRandomShortCVs = async (nb, query) => {
-  console.log(
-    `getRandomShortCVs - Récupère des CVs au format court de manière aléatoire`
-  );
-
   const escapedQuery = escapeQuery(query);
+
+  console.log(
+    `getRandomShortCVs - Récupère des CVs au format court de manière aléatoire ${
+      escapedQuery ? `pour "${escapedQuery}"` : ''
+    }`
+  );
 
   const cvs = await sequelize.query(
     `
@@ -429,7 +431,7 @@ const getRandomShortCVs = async (nb, query) => {
       cv."UserId" = groupCVs."UserId" and cv.version = groupCVs.version
 
     ${
-      query
+      escapedQuery
         ? `
     /* recherche par toutes information du CV */
     where (
