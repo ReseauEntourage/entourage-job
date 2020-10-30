@@ -376,16 +376,16 @@ const getAllUserOpportunities = async (userId) => {
               return new Date(b.date) - new Date(a.date);
             }
             if (
-              a.userOpportunity.status >= OFFER_STATUS[4].status &&
-              b.userOpportunity.status >= OFFER_STATUS[4].status
+              a.userOpportunity.status >= OFFER_STATUS[4].value &&
+              b.userOpportunity.status >= OFFER_STATUS[4].value
             ) {
-              return a.userOpportunity.status - b.userOpportunity.status;
+              return b.userOpportunity.status - a.userOpportunity.status;
             }
-            if (a.userOpportunity.status >= OFFER_STATUS[4].status && b.userOpportunity.status < OFFER_STATUS[4].status) {
-              return -1;
-            }
-            if (a.userOpportunity.status < OFFER_STATUS[4].status && b.userOpportunity.status >= OFFER_STATUS[4].status) {
+            if (a.userOpportunity.status >= OFFER_STATUS[4].value && b.userOpportunity.status < OFFER_STATUS[4].value) {
               return 1;
+            }
+            if (a.userOpportunity.status < OFFER_STATUS[4].value && b.userOpportunity.status >= OFFER_STATUS[4].value) {
+              return -1;
             }
 
             return b.userOpportunity.status - a.userOpportunity.status;
