@@ -517,7 +517,12 @@ const getRandomShortCVs = async (nb, query) => {
   );
 
   const modelCVs = await models.CV.findAll({
-    where: { id: cvs.map((cv) => cv.id) },
+    where: {
+      id: cvs
+        .sort(() => Math.random() - 0.5)
+        .slice(0, nb) // shuffle and take the nb first
+        .map((cv) => cv.id),
+    },
     attributes: ['id', 'catchphrase', 'urlImg'],
     include: [
       {
@@ -548,10 +553,7 @@ const getRandomShortCVs = async (nb, query) => {
     ],
   });
 
-  return modelCVs
-    .map(cleanCV)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, nb); // shuffle and take the nb first
+  return modelCVs.map(cleanCV);
 };
 
 const setCV = (id, cv) => {
