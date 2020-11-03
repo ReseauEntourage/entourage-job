@@ -1,6 +1,6 @@
 const express = require('express');
 const enforce = require('express-sslify');
-
+const RedisManager = require('./utils/RedisManager');
 const passport = require('./config/passport');
 
 const routeCV = require('./routes/api/v1/CV');
@@ -16,12 +16,15 @@ const dev = process.env.NODE_ENV !== 'production';
 
 let server;
 
-const apiLimiter = dev ? (req, res, next) => next() : RateLimiter.createLimiter(100);
+
+const apiLimiter = dev
+  ? (req, res, next) => next()
+  : RateLimiter.createLimiter(100);
+
 
 module.exports.prepare = () => {
-
   // enable ssl redirect
-  if (!dev) app.use(enforce.HTTPS({trustProtoHeader: true}));
+  if (!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
   app.set('trust proxy', 1);
 
@@ -30,8 +33,9 @@ module.exports.prepare = () => {
   // adding Passport
   app.use(passport.initialize());
 
-
-  const apiTimeout = process.env.SERVER_TIMEOUT ? parseInt(process.env.SERVER_TIMEOUT, 10) : 30000;
+  const apiTimeout = process.env.SERVER_TIMEOUT
+    ? parseInt(process.env.SERVER_TIMEOUT, 10)
+    : 30000;
 
   app.use((req, res, next) => {
     // Set the timeout for all HTTP requests
@@ -59,7 +63,7 @@ module.exports.prepare = () => {
 
   app.use((err, req, res, next) => {
     if (err) {
-      return res.status(err.status).send({message: err.message});
+      return res.status(err.status).send({ message: err.message });
     }
     next();
   });
@@ -86,5 +90,6 @@ module.exports.start = (port) => {
 
 module.exports.close = async () => {
   if (!server) throw 'The express server is not started'; // eslint-disable-line no-throw-literal
+  await RedisManager.quitAsync();
   await server.close();
 };

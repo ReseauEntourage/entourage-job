@@ -2,6 +2,8 @@
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
 const { QueryTypes } = require('sequelize');
+const RedisManager = require('../utils/RedisManager');
+
 const {
   models,
   sequelize,
@@ -10,7 +12,7 @@ const {
 
 const { cleanCV, escapeColumn, escapeQuery } = require('../utils');
 
-const { CV_STATUS } = require('../../constants');
+const { CV_STATUS, REDIS_KEYS } = require('../../constants');
 
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
@@ -407,8 +409,7 @@ const getRandomShortCVs = async (nb, query) => {
     }`
   );
 
-  const cvs = await sequelize.query(
-    `
+  const defaultQuery = `
     /* CV par recherche */
 
     with groupCVs as (	select
@@ -418,9 +419,9 @@ const getRandomShortCVs = async (nb, query) => {
         "User_Candidats",
         "CVs"
       where
-        "CVs".status = '${CV_STATUS.Published.value}' 
+        "CVs".status = '${CV_STATUS.Published.value}'
         and "User_Candidats"."candidatId" = "CVs"."UserId"
-        and "User_Candidats".hidden = false	
+        and "User_Candidats".hidden = false
       group by
         "UserId")
     select
@@ -428,132 +429,147 @@ const getRandomShortCVs = async (nb, query) => {
     from
       "CVs" cv
     inner join groupCVs on
-      cv."UserId" = groupCVs."UserId" and cv.version = groupCVs.version
+      cv."UserId" = groupCVs."UserId" and cv.version = groupCVs.version`;
 
-    ${
-      escapedQuery
-        ? `
-    /* recherche par toutes information du CV */
-    where (
-      cv."id" in (
-        select distinct "CV_Ambitions"."CVId"
-        FROM "CV_Ambitions" INNER JOIN "Ambitions"
-        on "CV_Ambitions"."AmbitionId" = "Ambitions".id
-        WHERE ${escapeColumn('"Ambitions"."name"')} like '%${escapedQuery}%'
-      )
-      or cv."id" in (
-        select distinct "CV_BusinessLines"."CVId"
-        FROM "CV_BusinessLines" INNER JOIN "BusinessLines"
-        on "CV_BusinessLines"."BusinessLineId" = "BusinessLines".id
-        where ${escapeColumn('"BusinessLines"."name"')} like '%${escapedQuery}%'
-      )
-      or cv."id" in (
-        select distinct "CV_Contracts"."CVId"
-        FROM "CV_Contracts" INNER JOIN "Contracts"
-        on "CV_Contracts"."ContractId" = "Contracts".id
-        where ${escapeColumn('"Contracts"."name"')} like '%${escapedQuery}%'
-      )
-      or cv."id" in (
-        select distinct "CV_Languages"."CVId"
-        FROM "CV_Languages" INNER JOIN "Languages"
-        on "CV_Languages"."LanguageId" = "Languages".id
-        where ${escapeColumn('"Languages"."name"')} like '%${escapedQuery}%'
-      )
-      or cv."id" in (
-        select distinct "CV_Locations"."CVId"
-        FROM "CV_Locations" INNER JOIN "Locations"
-        on "CV_Locations"."LocationId" = "Locations".id
-        where ${escapeColumn('"Locations"."name"')} like '%${escapedQuery}%'
-      )
-      or cv."id" in (
-        select distinct "CV_Passions"."CVId"
-        FROM "CV_Passions" INNER JOIN "Passions"
-        on "CV_Passions"."PassionId" = "Passions".id
-        where ${escapeColumn('"Passions"."name"')} like '%${escapedQuery}%'
-      )
-      or cv."id" in (
-        select distinct "CV_Skills"."CVId"
-        FROM "CV_Skills" INNER JOIN "Skills"
-        on "CV_Skills"."SkillId" = "Skills".id
-        where ${escapeColumn('"Skills"."name"')} like '%${escapedQuery}%'
-      )
-      or cv."id" in (
-        select distinct exp."CVId"
-        FROM "Experiences" exp
-        where ${escapeColumn('exp."description"')} like '%${escapedQuery}%'
-        or exp."id" in (
-            select distinct "Experience_Skills"."ExperienceId"
-            FROM "Experience_Skills" INNER JOIN "Skills"
-            on "Experience_Skills"."SkillId" = "Skills".id
-            where ${escapeColumn('"Skills"."name"')} like '%${escapedQuery}%'
-        )
-      )
-      or cv."id" in (
-          select distinct "Reviews"."CVId"
-          FROM "Reviews"
-          where ${escapeColumn('"Reviews"."name"')} like '%${escapedQuery}%'
-          or ${escapeColumn('"Reviews"."text"')} like '%${escapedQuery}%'
-          or ${escapeColumn('"Reviews"."status"')} like '%${escapedQuery}%'
-      )
-      or cv."id" in (
-          select "CVs".id
-          FROM "Users" INNER JOIN "CVs"
-          on "CVs"."UserId" = "Users"."id"
-          where (
-            ${escapeColumn('"Users"."firstName"')} like '%${escapedQuery}%'
-            or ${escapeColumn('"Users"."lastName"')} like '%${escapedQuery}%'
-          )
-      )
-      or ${escapeColumn('cv."catchphrase"')} like '%${escapedQuery}%'
-      or ${escapeColumn('cv."availability"')} like '%${escapedQuery}%'
-      or ${escapeColumn('cv."story"')} like '%${escapedQuery}%'
-      or ${escapeColumn('cv."transport"')} like '%${escapedQuery}%'
-    )`
-        : ''
-    }`,
-    {
+  const getAllCvs = async (dbQuery) => {
+    const cvs = await sequelize.query(dbQuery, {
       type: QueryTypes.SELECT,
+    });
+
+    const cvList = await models.CV.findAll({
+      where: {
+        id: cvs.map((cv) => cv.id),
+      },
+      attributes: ['id', 'catchphrase', 'urlImg'],
+      include: [
+        {
+          model: models.Ambition,
+          as: 'ambitions',
+          through: { attributes: [] },
+          attributes: ['name'],
+        },
+        {
+          model: models.Skill,
+          as: 'skills',
+          through: { attributes: [] },
+          attributes: ['name'],
+        },
+        {
+          model: models.BusinessLine,
+          as: 'businessLines',
+          through: { attributes: [] },
+          attributes: ['name'],
+        },
+        {
+          model: models.Location,
+          as: 'locations',
+          through: { attributes: [] },
+          attributes: ['name'],
+        },
+        INCLUDE_ALL_USERS,
+      ],
+    });
+
+    return cvList.map(cleanCV);
+  };
+
+  let modelCVs;
+
+  if (!escapedQuery) {
+    const redisKey = REDIS_KEYS.CV_LIST;
+    const redisCvs = await RedisManager.getAsync(redisKey);
+
+    if (redisCvs) {
+      modelCVs = JSON.parse(redisCvs);
+    } else {
+      modelCVs = await getAllCvs(defaultQuery);
+
+      await RedisManager.setAsync(redisKey, JSON.stringify(modelCVs));
+      await RedisManager.expireAsync(redisKey, 60 * 60 * 24);
     }
-  );
+  } else {
+    modelCVs = await getAllCvs(`${defaultQuery}
+      /* recherche par toutes information du CV */
+      where (
+        cv."id" in (
+          select distinct "CV_Ambitions"."CVId"
+          FROM "CV_Ambitions" INNER JOIN "Ambitions"
+          on "CV_Ambitions"."AmbitionId" = "Ambitions".id
+          WHERE ${escapeColumn('"Ambitions"."name"')} like '%${escapedQuery}%'
+        )
+        or cv."id" in (
+          select distinct "CV_BusinessLines"."CVId"
+          FROM "CV_BusinessLines" INNER JOIN "BusinessLines"
+          on "CV_BusinessLines"."BusinessLineId" = "BusinessLines".id
+          where ${escapeColumn(
+            '"BusinessLines"."name"'
+          )} like '%${escapedQuery}%'
+        )
+        or cv."id" in (
+          select distinct "CV_Contracts"."CVId"
+          FROM "CV_Contracts" INNER JOIN "Contracts"
+          on "CV_Contracts"."ContractId" = "Contracts".id
+          where ${escapeColumn('"Contracts"."name"')} like '%${escapedQuery}%'
+        )
+        or cv."id" in (
+          select distinct "CV_Languages"."CVId"
+          FROM "CV_Languages" INNER JOIN "Languages"
+          on "CV_Languages"."LanguageId" = "Languages".id
+          where ${escapeColumn('"Languages"."name"')} like '%${escapedQuery}%'
+        )
+        or cv."id" in (
+          select distinct "CV_Locations"."CVId"
+          FROM "CV_Locations" INNER JOIN "Locations"
+          on "CV_Locations"."LocationId" = "Locations".id
+          where ${escapeColumn('"Locations"."name"')} like '%${escapedQuery}%'
+        )
+        or cv."id" in (
+          select distinct "CV_Passions"."CVId"
+          FROM "CV_Passions" INNER JOIN "Passions"
+          on "CV_Passions"."PassionId" = "Passions".id
+          where ${escapeColumn('"Passions"."name"')} like '%${escapedQuery}%'
+        )
+        or cv."id" in (
+          select distinct "CV_Skills"."CVId"
+          FROM "CV_Skills" INNER JOIN "Skills"
+          on "CV_Skills"."SkillId" = "Skills".id
+          where ${escapeColumn('"Skills"."name"')} like '%${escapedQuery}%'
+        )
+        or cv."id" in (
+          select distinct exp."CVId"
+          FROM "Experiences" exp
+          where ${escapeColumn('exp."description"')} like '%${escapedQuery}%'
+          or exp."id" in (
+              select distinct "Experience_Skills"."ExperienceId"
+              FROM "Experience_Skills" INNER JOIN "Skills"
+              on "Experience_Skills"."SkillId" = "Skills".id
+              where ${escapeColumn('"Skills"."name"')} like '%${escapedQuery}%'
+          )
+        )
+        or cv."id" in (
+            select distinct "Reviews"."CVId"
+            FROM "Reviews"
+            where ${escapeColumn('"Reviews"."name"')} like '%${escapedQuery}%'
+            or ${escapeColumn('"Reviews"."text"')} like '%${escapedQuery}%'
+            or ${escapeColumn('"Reviews"."status"')} like '%${escapedQuery}%'
+        )
+        or cv."id" in (
+            select "CVs".id
+            FROM "Users" INNER JOIN "CVs"
+            on "CVs"."UserId" = "Users"."id"
+            where (
+              ${escapeColumn('"Users"."firstName"')} like '%${escapedQuery}%'
+              or ${escapeColumn('"Users"."lastName"')} like '%${escapedQuery}%'
+            )
+        )
+        or ${escapeColumn('cv."catchphrase"')} like '%${escapedQuery}%'
+        or ${escapeColumn('cv."availability"')} like '%${escapedQuery}%'
+        or ${escapeColumn('cv."story"')} like '%${escapedQuery}%'
+        or ${escapeColumn('cv."transport"')} like '%${escapedQuery}%'
+      )`);
+  }
 
-  const modelCVs = await models.CV.findAll({
-    where: {
-      id: cvs
-        .sort(() => Math.random() - 0.5)
-        .slice(0, nb) // shuffle and take the nb first
-        .map((cv) => cv.id),
-    },
-    attributes: ['id', 'catchphrase', 'urlImg'],
-    include: [
-      {
-        model: models.Ambition,
-        as: 'ambitions',
-        through: { attributes: [] },
-        attributes: ['name'],
-      },
-      {
-        model: models.Skill,
-        as: 'skills',
-        through: { attributes: [] },
-        attributes: ['name'],
-      },
-      {
-        model: models.BusinessLine,
-        as: 'businessLines',
-        through: { attributes: [] },
-        attributes: ['name'],
-      },
-      {
-        model: models.Location,
-        as: 'locations',
-        through: { attributes: [] },
-        attributes: ['name'],
-      },
-      INCLUDE_ALL_USERS,
-    ],
-  });
-
-  return modelCVs.map(cleanCV);
+  return modelCVs.sort(() => Math.random() - 0.5).slice(0, nb); // shuffle and take the nb first;
 };
 
 const setCV = (id, cv) => {

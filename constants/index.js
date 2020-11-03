@@ -240,6 +240,11 @@ const NEWSLETTER_ORIGINS = {
   LKO_ENTREPRISES: 'LKO_ENTREPRISES',
 };
 
+const REDIS_KEYS = {
+  CV_LIST: 'cvList',
+  CVS_TOTAL_SHARES: 'cvsTotalShares',
+};
+
 const VALUES = {
   SHARES: 120000,
 };
@@ -259,5 +264,6 @@ module.exports = {
   CV_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
   NEWSLETTER_ORIGINS,
+  REDIS_KEYS,
   CONTACT_MAILS,
 };

@@ -81,6 +81,7 @@
     "react-select": "^3.0.8",
     "react-share": "^3.0.1",
     "react-sortable-hoc": "^1.11.0",
+    "redis": "^3.0.2",
     "sequelize": "^5.21.5",
     "sequelize-cli": "^5.5.1",
     "serialize-javascript": "^3.1.0",

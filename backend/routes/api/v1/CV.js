@@ -5,6 +5,7 @@ const fs = require('fs');
 const puppeteer = require('puppeteer');
 const PDFMerger = require('pdf-merger-js');
 
+const RedisManager = require('../../../utils/RedisManager');
 const { auth } = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
@@ -13,7 +14,7 @@ const S3 = require('../../../controllers/aws');
 const { sendMail } = require('../../../controllers/mail');
 const { airtable } = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
-const { USER_ROLES, CV_STATUS, NEWSLETTER_ORIGINS } = require('../../../../constants');
+const { USER_ROLES, CV_STATUS, NEWSLETTER_ORIGINS, REDIS_KEYS } = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
 const upload = multer({ dest: 'uploads/' });
@@ -222,6 +223,7 @@ router.post(
               await S3.deleteFile(
                 `${process.env.AWSS3_FILE_DIRECTORY}${results[1].user.url}.pdf`
               );
+              await RedisManager.delAsync(REDIS_KEYS.CV_LIST);
             } catch (err) {
               console.log(err);
             }
