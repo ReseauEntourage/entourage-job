@@ -1,5 +1,5 @@
 import axios from '../../../Axios';
-import {USER_ROLES, BUSINESS_LINES} from "../../../constants";
+import { USER_ROLES, BUSINESS_LINES } from '../../../constants';
 
 export default {
   id: 'form-offer',
@@ -38,9 +38,9 @@ export default {
       title: "Secteur d'activité*",
       placeholder: "Sélectionnez les secteurs d'activité",
       type: 'text',
-      component: "select-request-creatable",
+      component: 'select-request',
       isMulti: true,
-      options: BUSINESS_LINES
+      options: BUSINESS_LINES,
     },
     {
       id: 'company',
@@ -68,13 +68,14 @@ export default {
       name: 'prerequisites',
       component: 'textarea',
       type: 'text',
-      title: 'Quels sont les pré-requis fondamentaux pour exercer cet emploi\xa0?',
+      title:
+        'Quels sont les pré-requis fondamentaux pour exercer cet emploi\xa0?',
     },
     {
       id: 'isPublic',
       name: 'isPublic',
       component: 'checkbox',
-      title: "Adresser cette offre à tous les candidats",
+      title: 'Adresser cette offre à tous les candidats',
     },
     {
       id: 'candidatId',
@@ -106,7 +107,8 @@ export default {
       id: 'disclaimer',
       name: 'disclaimer',
       component: 'text',
-      title: "* Les offres font l'objet d'une validation par Entourage avant de devenir publiques",
+      title:
+        "* Les offres font l'objet d'une validation par Entourage avant de devenir publiques",
     },
   ],
   rules: [
@@ -165,9 +167,9 @@ export default {
       method: 'isLength',
       args: [
         {
-          "min": 10,
-          "max": 13
-        }
+          min: 10,
+          max: 13,
+        },
       ],
       validWhen: true,
       message: 'Invalide',
@@ -215,6 +217,6 @@ export default {
       ],
       validWhen: false,
       message: 'Obligatoire',
-    }
+    },
   ],
 };

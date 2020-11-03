@@ -135,6 +135,61 @@ const getAirtableOpportunityFields = (opportunity, candidat, businessLines) => {
   };
 };
 
+const updateTable = (opportunity, candidat) =>
+  new Promise((res, rej) => {
+    airtable("Offres d'emploi v2")
+      .select({
+        filterByFormula: `{Id}='${opportunity.id}'`,
+      })
+      .firstPage((err, results) => {
+        if (err) {
+          return rej(err);
+        }
+
+        const fields = getAirtableOpportunityFields(
+          opportunity,
+          candidat,
+          opportunity.businessLines
+        );
+
+        if (results.length === 0) {
+          airtable("Offres d'emploi v2").create(
+            [
+              {
+                fields,
+              },
+            ],
+            (error, records) => {
+              if (error) {
+                return rej(error);
+              }
+              return res();
+            }
+          );
+        } else {
+          const record = results[0];
+
+          // grab the record id
+          // and then push an update to this record
+          const record_id = record.id;
+          airtable("Offres d'emploi v2").update(
+            [
+              {
+                id: record_id,
+                fields,
+              },
+            ],
+            (error, records) => {
+              if (error) {
+                return rej(error);
+              }
+              return res();
+            }
+          );
+        }
+      });
+  });
+
 const createOpportunity = async (data) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
@@ -270,7 +325,7 @@ const getPrivateUserOpportunities = async (userId) => {
   const opportunities = await Opportunity.findAll({
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     where: {
-      id: opportunityUsers.map((model) => model.OpportunityId)
+      id: opportunityUsers.map((model) => model.OpportunityId),
     },
   });
 
@@ -317,21 +372,35 @@ const addUserToOpportunity = (opportunityId, userId) =>
   });
 
 const updateOpportunityUser = async (opportunityUser) => {
-  await Opportunity_User.update(opportunityUser, {
+  const modelOpportunityUser = await Opportunity_User.update(opportunityUser, {
     where: { id: opportunityUser.id },
     individualHooks: true,
-  });
-  return Opportunity_User.findByPk(opportunityUser.id, {
     attributes: [
       'id',
       'UserId',
+      'OpportunityId',
       'status',
       'bookmarked',
       'archived',
       'note',
+
       'seen',
     ],
-  });
+  }).then((model) => model && model.length > 1 && model[1][0]);
+
+  const finalOpportunity = await getOpportunity(
+    modelOpportunityUser.OpportunityId
+  );
+
+  const candidat =
+    finalOpportunity.userOpportunity &&
+    finalOpportunity.userOpportunity.length > 0
+      ? finalOpportunity.userOpportunity[0].User
+      : null;
+
+  await updateTable(finalOpportunity, candidat);
+
+  return modelOpportunityUser;
 };
 
 const updateOpportunity = async (opportunity) => {
@@ -416,61 +485,6 @@ const updateOpportunity = async (opportunity) => {
       ? finalOpportunity.userOpportunity[0].User
       : null;
 
-  const updateTable = () =>
-    new Promise((res, rej) => {
-      airtable("Offres d'emploi v2")
-        .select({
-          filterByFormula: `{Id}='${finalOpportunity.id}'`,
-        })
-        .firstPage((err, results) => {
-          if (err) {
-            return rej(err);
-          }
-
-          const fields = getAirtableOpportunityFields(
-            finalOpportunity,
-            candidat,
-            finalOpportunity.businessLines
-          );
-
-          if (results.length === 0) {
-            airtable("Offres d'emploi v2").create(
-              [
-                {
-                  fields,
-                },
-              ],
-              (error, records) => {
-                if (error) {
-                  return rej(error);
-                }
-                return res();
-              }
-            );
-          } else {
-            const record = results[0];
-
-            // grab the record id
-            // and then push an update to this record
-            const record_id = record.id;
-            airtable("Offres d'emploi v2").update(
-              [
-                {
-                  id: record_id,
-                  fields,
-                },
-              ],
-              (error, records) => {
-                if (error) {
-                  return rej(error);
-                }
-                return res();
-              }
-            );
-          }
-        });
-    });
-
   const sendJobOfferMails = async () => {
     if (candidat) {
       await sendMail({
@@ -501,7 +515,7 @@ const updateOpportunity = async (opportunity) => {
   };
 
   try {
-    await updateTable();
+    await updateTable(finalOpportunity, candidat);
     if (shouldSendMail) await sendJobOfferMails();
     console.log(
       'Updated table with modified offer and sent mail to candidate and coach.'
