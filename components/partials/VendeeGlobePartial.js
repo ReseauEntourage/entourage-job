@@ -33,8 +33,8 @@ const VendeeGlobePartial = () => {
       <div>
         <div className="uk-inline uk-visible@m">
           <Img
-            width={1500}
-            height={1000}
+            width="1500"
+            height="1000"
             src="/static/img/foil.jpg"
             alt="Bateau LinkedOut"
           />

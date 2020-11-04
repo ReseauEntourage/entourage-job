@@ -2,21 +2,22 @@ const express = require('express');
 
 const router = express.Router();
 const passport = require('passport');
-const {auth} = require('../../../controllers/Auth');
-const {sendMail} = require('../../../controllers/mail');
+const { auth } = require('../../../controllers/Auth');
+const { sendMail } = require('../../../controllers/mail');
 const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
-const {USER_ROLES} = require('../../../../constants');
+const { USER_ROLES } = require('../../../../constants');
 const RateLimiter = require('../../../utils/RateLimiter');
+const { REDIS_KEYS } = require('../../../../constants');
 
-const authLimiter = process.env.NODE_ENV !== 'production' ? (req, res, next) => next() : RateLimiter.createLimiter(10);
+const authLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_AUTH, 10);
 
 /**
  * Utilisation d'un "custom callback" pour mieux gérer l'echec d'authentification
  * Source : http://www.passportjs.org/docs/downloads/html/#custom-callback
  */
 router.post('/login', authLimiter, auth(), (req, res, next) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
 
   if (!email) {
     return res.status(422).json({
@@ -35,8 +36,9 @@ router.post('/login', authLimiter, auth(), (req, res, next) => {
   }
 
   return passport.authenticate(
-    'local', {
-      session: false
+    'local',
+    {
+      session: false,
     },
     (err, passportUser, info) => {
       if (err) {
@@ -49,28 +51,33 @@ router.post('/login', authLimiter, auth(), (req, res, next) => {
         user.token = AuthController.generateJWT(passportUser);
 
         return res.json({
-          user: AuthController.toAuthJSON(user)
+          user: AuthController.toAuthJSON(user),
         });
       }
 
       return res.status(400).json({
-        error: info.error
+        error: info.error,
       });
     }
   )(req, res, next);
 });
 
-router.post('/logout', authLimiter, auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res /* , next */) => {
-  req.logout();
+router.post(
+  '/logout',
+  authLimiter,
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res /* , next */) => {
+    req.logout();
 
-  // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
-  res.redirect(process.env.SERVER_URL);
-});
+    // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
+    res.redirect(process.env.SERVER_URL);
+  }
+);
 
 router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
   let token = null;
   let user = null;
-  const {email} = req.body;
+  const { email } = req.body;
   console.log(
     `Demande de réinitialisation du mot de passe du compte : ${email}`
   );
@@ -96,10 +103,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
 
       const endDate = Date.now() + 1000 * 60 * 60 * 24;
       token = AuthController.generateJWT(user, endDate);
-      const {
-        hash,
-        salt
-      } = AuthController.encryptPassword(token);
+      const { hash, salt } = AuthController.encryptPassword(token);
 
       return UserController.setUser(user.id, {
         hashReset: hash,
@@ -115,7 +119,8 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       await sendMail({
         toEmail: user.email,
         subject: 'Réinitialisation mot de passe',
-        text: 'Bonjour,\n\n' +
+        text:
+          'Bonjour,\n\n' +
           'Pour réinitialiser votre mot de passe, cliquer ici sur ce lien : \n' +
           `${process.env.SERVER_URL}/reset/${user.id}/${token}\n\n` +
           'Cordialement,\n\n' +
@@ -133,10 +138,13 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
 /**
  * GET Vérification lien de réinitialisation mot de passe
  */
-router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */) => {
+router.get('/reset/:userId/:token', authLimiter, auth(), (
+  req,
+  res /* , next */
+) => {
   const infoLog = 'GET /reset/:userId/:token -';
 
-  const {userId, token} = req.params;
+  const { userId, token } = req.params;
   console.log(
     `${infoLog} Vérification du lien de réinitialisation de mot de passe`
   );
@@ -151,7 +159,7 @@ router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */)
           `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
         );
         return res.status(403).send({
-          error: 'Lien non valide'
+          error: 'Lien non valide',
         });
       }
       /* console.log(`${infoLog} DEBUG :`);
@@ -161,7 +169,7 @@ router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */)
       ) {
         console.log(` ${infoLog} Token invalide`);
         return res.status(403).send({
-          error: 'Lien non valide'
+          error: 'Lien non valide',
         });
       }
       return res.status(200).send('Lien valide');
@@ -175,10 +183,13 @@ router.get('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */)
 /**
  * POST Réinitialisation mot de passe
  */
-router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */) => {
+router.post('/reset/:userId/:token', authLimiter, auth(), (
+  req,
+  res /* , next */
+) => {
   const infoLog = 'POST /reset/:userId/:token -';
-  const {userId, token} = req.params;
-  const {newPassword, confirmPassword} = req.body;
+  const { userId, token } = req.params;
+  const { newPassword, confirmPassword } = req.body;
   console.log(
     `${infoLog} Vérification du lien de réinitialisation de mot de passe`
   );
@@ -192,7 +203,7 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
           `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
         );
         return res.status(403).send({
-          error: 'Lien non valide'
+          error: 'Lien non valide',
         });
       }
       /* console.log(`${infoLog} DEBUG :`);
@@ -202,7 +213,7 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
       ) {
         console.log(`${infoLog} Token invalide`);
         return res.status(403).send({
-          error: 'Lien non valide'
+          error: 'Lien non valide',
         });
       }
       console.log(`${infoLog} Lien valide`);
@@ -210,18 +221,13 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
         console.log(
           `${infoLog} La confirmation de mot de passe est incorrecte`
         );
-        return res
-          .status(400)
-          .send({
-            error: `La confirmation du mot de passe est incorrecte`
-          });
+        return res.status(400).send({
+          error: `La confirmation du mot de passe est incorrecte`,
+        });
       }
       console.log(`${infoLog} Les 2 mots de passe sont valides`);
       console.log(`${infoLog} Chiffrement du nouveau mot de passe`);
-      const {
-        hash,
-        salt
-      } = AuthController.encryptPassword(newPassword);
+      const { hash, salt } = AuthController.encryptPassword(newPassword);
       console.log(`${infoLog} Mise à jour du mot de passe de l'utilisateur`);
       return UserController.setUser(user.id, {
         password: hash,
@@ -245,24 +251,28 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (req, res /* , next */
 /**
  * GET current route (required, only authenticated users have access)
  */
-router.get('/current', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), async (req, res /* , next */) => {
-  const {
-    payload: {
-      id
-    },
-  } = req;
-  const user = await UserController.getUser(id);
-  if (!user) {
-    return res.sendStatus(400);
-  }
-  UserController.setUser(id, {lastConnection: Date.now()}).then((updatedUser) => {
-    if (!updatedUser) {
-      return res.status(401).send(`Utilisateur inexistant`);
+router.get(
+  '/current',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  async (req, res /* , next */) => {
+    const {
+      payload: { id },
+    } = req;
+    const user = await UserController.getUser(id);
+    if (!user) {
+      return res.sendStatus(400);
     }
-    return res.json({user: AuthController.toAuthJSON(user)});
-  }).catch((err) => {
-    return res.status(401).send(`Une erreur est survenue`);
-  })
-});
+    UserController.setUser(id, { lastConnection: Date.now() })
+      .then((updatedUser) => {
+        if (!updatedUser) {
+          return res.status(401).send(`Utilisateur inexistant`);
+        }
+        return res.json({ user: AuthController.toAuthJSON(user) });
+      })
+      .catch((err) => {
+        return res.status(401).send(`Une erreur est survenue`);
+      });
+  }
+);
 
 module.exports = router;
