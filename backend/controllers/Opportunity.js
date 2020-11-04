@@ -383,7 +383,6 @@ const updateOpportunityUser = async (opportunityUser) => {
       'bookmarked',
       'archived',
       'note',
-
       'seen',
     ],
   }).then((model) => model && model.length > 1 && model[1][0]);
@@ -398,7 +397,11 @@ const updateOpportunityUser = async (opportunityUser) => {
       ? finalOpportunity.userOpportunity[0].User
       : null;
 
-  await updateTable(finalOpportunity, candidat);
+  try {
+    await updateTable(finalOpportunity, candidat);
+  } catch (e) {
+    console.log('Failed to update table with modified offer.');
+  }
 
   return modelOpportunityUser;
 };
