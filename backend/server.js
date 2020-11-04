@@ -10,17 +10,14 @@ const routeMail = require('./routes/api/v1/Mail');
 const routeOpportunity = require('./routes/api/v1/Opportunity');
 
 const RateLimiter = require('./utils/RateLimiter');
+const { REDIS_KEYS } = require('../constants');
 
 const app = express();
 const dev = process.env.NODE_ENV !== 'production';
 
 let server;
 
-
-const apiLimiter = dev
-  ? (req, res, next) => next()
-  : RateLimiter.createLimiter(100);
-
+const apiLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_GENERAL, 100);
 
 module.exports.prepare = () => {
   // enable ssl redirect

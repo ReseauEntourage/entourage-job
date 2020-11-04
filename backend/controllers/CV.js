@@ -485,7 +485,7 @@ const getRandomShortCVs = async (nb, query) => {
       modelCVs = await getAllCvs(defaultQuery);
 
       await RedisManager.setAsync(redisKey, JSON.stringify(modelCVs));
-      await RedisManager.expireAsync(redisKey, 60 * 60 * 24);
+      await RedisManager.expireAsync(redisKey, 60 * 10);
     }
   } else {
     modelCVs = await getAllCvs(`${defaultQuery}

@@ -1,6 +1,19 @@
 const redis = require('redis');
 const { promisify } = require('util');
 
+const dev = process.env.NODE_ENV !== 'production';
+
+const promisifyOrResolve = (instance, func, args) => {
+  if (!dev) {
+    const asyncFunc = promisify(instance[func]).bind(instance);
+    if (args) {
+      return asyncFunc(...args);
+    }
+    return asyncFunc();
+  }
+  return Promise.resolve();
+};
+
 const RedisManager = {
   getInstance() {
     if (!this.redisClient) {
@@ -18,32 +31,23 @@ const RedisManager = {
   },
 
   getAsync(key) {
-    const getAsync = promisify(this.getInstance().get).bind(this.getInstance());
-    return getAsync(key);
+    return promisifyOrResolve(this.getInstance(), 'get', [key]);
   },
 
   setAsync(key, value) {
-    const setAsync = promisify(this.getInstance().set).bind(this.getInstance());
-    return setAsync(key, value);
+    return promisifyOrResolve(this.getInstance(), 'set', [key, value]);
   },
 
   expireAsync(key, expire) {
-    const expireAsync = promisify(this.getInstance().expire).bind(
-      this.getInstance()
-    );
-    return expireAsync(key, expire);
+    return promisifyOrResolve(this.getInstance(), 'expire', [key, expire]);
   },
 
   delAsync(key) {
-    const delAsync = promisify(this.getInstance().del).bind(this.getInstance());
-    return delAsync(key);
+    return promisifyOrResolve(this.getInstance(), 'del', [key]);
   },
 
   quitAsync() {
-    const quitAsync = promisify(this.getInstance().quit).bind(
-      this.getInstance()
-    );
-    return quitAsync();
+    return promisifyOrResolve(this.getInstance(), 'quit');
   },
 };
 

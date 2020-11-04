@@ -243,6 +243,8 @@ const NEWSLETTER_ORIGINS = {
 const REDIS_KEYS = {
   CV_LIST: 'cvList',
   CVS_TOTAL_SHARES: 'cvsTotalShares',
+  RL_AUTH: 'rl-auth:',
+  RL_GENERAL: 'rl-general:',
 };
 
 const VALUES = {

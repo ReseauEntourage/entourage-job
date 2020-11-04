@@ -8,8 +8,9 @@ const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const {USER_ROLES} = require('../../../../constants');
 const RateLimiter = require('../../../utils/RateLimiter');
+const { REDIS_KEYS } = require('../constants');
 
-const authLimiter = process.env.NODE_ENV !== 'production' ? (req, res, next) => next() : RateLimiter.createLimiter(10);
+const authLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_AUTH, 10);
 
 /**
  * Utilisation d'un "custom callback" pour mieux gérer l'echec d'authentification
