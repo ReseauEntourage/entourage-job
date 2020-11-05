@@ -1,7 +1,7 @@
 const redis = require('redis');
 const { promisify } = require('util');
 
-const dev = process.env.NODE_ENV !== 'production';
+const dev = true; /* process.env.NODE_ENV !== 'production'; */
 
 const promisifyOrResolve = (instance, func, args) => {
   if (!dev) {
