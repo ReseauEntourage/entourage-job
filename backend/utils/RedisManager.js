@@ -1,7 +1,7 @@
 const redis = require('redis');
 const { promisify } = require('util');
 
-const dev = true; /* process.env.NODE_ENV !== 'production'; */
+const dev = process.env.NODE_ENV !== 'production';
 
 const promisifyOrResolve = (instance, func, args) => {
   if (!dev) {
@@ -26,7 +26,7 @@ const RedisManager = {
 
       this.redisClient.on('end', () => {
         delete this.redisClient;
-        console.log('CLEARED REDIS CLIENT = ', this.redisClient);
+        console.log('CLEARED REDIS CLIENT');
       });
     }
     return this.redisClient;
