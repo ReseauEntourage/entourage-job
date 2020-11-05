@@ -25,7 +25,7 @@ const RedisManager = {
       });
 
       this.redisClient.on('end', () => {
-        delete this.redisClient;
+        // delete this.redisClient;
         console.log('CLEARED REDIS CLIENT');
       });
     }
