@@ -16,7 +16,7 @@ const promisifyOrResolve = (instance, func, args) => {
 
 const RedisManager = {
   getInstance() {
-    if (!this.redisClient) {
+    if (!this.redisClient && !dev) {
       this.redisClient = redis.createClient(process.env.REDIS_URL);
 
       this.redisClient.on('error', (error) => {
