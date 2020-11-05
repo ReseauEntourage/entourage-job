@@ -16,12 +16,12 @@ const promisifyOrResolve = (instance, func, args) => {
 
 const RedisManager = {
   getInstance() {
-    if (!this.redisClient && !dev) {
+    if (!this.redisClient) {
       this.redisClient = redis.createClient(process.env.REDIS_URL);
-      console.log("REDIS CREATED CLIENT");
+      console.log('REDIS CREATED CLIENT');
       console.log(Error().stack);
       this.redisClient.on('error', (error) => {
-        console.error("REDIS ERROR = ", error.name, error.message);
+        console.error('REDIS ERROR = ', error.name, error.message);
       });
 
       this.redisClient.on('end', () => {
