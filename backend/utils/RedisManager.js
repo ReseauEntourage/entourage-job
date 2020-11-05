@@ -18,13 +18,15 @@ const RedisManager = {
   getInstance() {
     if (!this.redisClient && !dev) {
       this.redisClient = redis.createClient(process.env.REDIS_URL);
-
+      console.log("REDIS CREATED CLIENT");
+      console.log(Error().stack);
       this.redisClient.on('error', (error) => {
-        console.error(error);
+        console.error("REDIS ERROR = ", error.name, error.message);
       });
 
       this.redisClient.on('end', () => {
         delete this.redisClient;
+        console.log('CLEARED REDIS CLIENT = ', this.redisClient);
       });
     }
     return this.redisClient;
