@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ImgNoSSR} from "../utils";
+import { ImgNoSSR } from '../utils';
+import { addPrefix } from '../../utils';
 
 const CVBackground = ({ url, employed }) => {
-
   const employedBadgeContent = (
     <>
       <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-small-right">
@@ -15,7 +15,7 @@ const CVBackground = ({ url, employed }) => {
         />
       </div>
       <div className="uk-text-uppercase uk-text-bold uk-text-primary">
-        &nbsp;{' '}a retrouvé un emploi
+        &nbsp; a retrouvé un emploi
       </div>
     </>
   );
@@ -43,7 +43,7 @@ const CVBackground = ({ url, employed }) => {
       <div
         className="uk-background-cover uk-background-center uk-box-shadow-small"
         style={{
-          backgroundImage: `url("${url}")`,
+          backgroundImage: `url("${addPrefix(url)}")`,
           backgroundPosition: 'center 55%',
           position: 'absolute',
           right: 0,
@@ -58,14 +58,14 @@ const CVBackground = ({ url, employed }) => {
       />
     </div>
   );
-}
+};
 CVBackground.propTypes = {
   url: PropTypes.string,
-  employed: PropTypes.bool
+  employed: PropTypes.bool,
 };
 CVBackground.defaultProps = {
   url: '/static/img/arthur-background.jpg',
-  employed: false
+  employed: false,
 };
 
 export default CVBackground;

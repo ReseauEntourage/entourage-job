@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { UIKIT_STYLES, UIKIT_BLENDS } from '../variables';
+import { addPrefix } from '../../utils';
 
 const Background = ({ src, position, blend, fixed, children }) => {
   let classBuffer = 'uk-background-cover';
@@ -9,7 +10,7 @@ const Background = ({ src, position, blend, fixed, children }) => {
   if (blend.mode) classBuffer += ` uk-background-blend-${blend.mode}`;
   if (fixed) classBuffer += ` uk-background-fixed`;
   if (src) {
-    styleBuffer.backgroundImage = `url(${src})`;
+    styleBuffer.backgroundImage = `url(${addPrefix(src)})`;
   }
   if (blend.color) {
     classBuffer += ` uk-background-${blend.color}`;

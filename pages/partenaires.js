@@ -3,7 +3,7 @@ import Layout from '../components/Layout';
 import PARTNERS from '../constants/partners';
 import Grid from "../components/utils/Grid";
 import {ImgNoSSR, Section} from "../components/utils";
-import {formatParagraph} from "../utils";
+import {addPrefix, formatParagraph} from "../utils";
 import Carousel from "../components/utils/Carousel";
 import ModalInterestLinkedOut from "../components/modals/ModalInterestLinkedOut";
 import SimpleSection from "../components/sections/SimpleSection";
@@ -24,7 +24,7 @@ const Partenaires = () => {
         style={{minHeight: viewportHeightWithoutHeader}}>
         <div
           className="uk-position-cover uk-background uk-background-cover uk-background-center-center"
-          style={{backgroundImage: 'url(/static/img/partners.jpg)'}}
+          style={{backgroundImage: `url("${addPrefix('/static/img/partners.jpg')}")`}}
           uk-scrollspy="cls: uk-animation-kenburns uk-animation-reverse; delay: 200;" />
         <div className={`uk-overlay-${overlay} uk-position-cover`}/>
         <div className="uk-overlay uk-position-center">
@@ -200,7 +200,7 @@ const Partenaires = () => {
       <SimpleSection
         title={
           <>
-            Rejoignez{' '}<span className="uk-text-primary">LinkedOut&nbsp;!</span>
+            Rejoignez <span className="uk-text-primary">LinkedOut&nbsp;!</span>
           </>
         }
         text="Vous êtes intéressé(e) par l’approche de LinkedOut et souhaitez coopérer avec nous ? Contactez-nous pour devenir partenaire !"

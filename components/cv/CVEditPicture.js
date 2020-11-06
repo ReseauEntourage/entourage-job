@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Resizer from 'react-image-file-resizer';
-
+import { addPrefix } from '../../utils';
 
 const CVEditPicture = ({ urlImg, onChange, disablePicture }) => {
   const [url, setUrl] = useState(urlImg);
@@ -10,19 +10,26 @@ const CVEditPicture = ({ urlImg, onChange, disablePicture }) => {
     setUrl(urlImg);
   }, [urlImg]);
 
-  const resizeFile = (file) => new Promise(resolve => {
-    Resizer.imageFileResizer(file, 2000, 1500, 'JPEG', 75, 0,
-      uri => {
-        resolve(uri);
-      },
-      'blob'
-    );
-  });
+  const resizeFile = (file) =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        2000,
+        1500,
+        'JPEG',
+        75,
+        0,
+        (uri) => {
+          resolve(uri);
+        },
+        'blob'
+      );
+    });
 
   return (
     <div
       className="uk-card uk-card-default uk-height-1-1 uk-background-cover"
-      style={{ backgroundImage: `url(${url})`, minHeight: '300px' }}
+      style={{ backgroundImage: `url(${addPrefix(url)})`, minHeight: '300px' }}
     >
       {!disablePicture && (
         <div className=" uk-position-center " data-uk-form-custom>
@@ -38,15 +45,16 @@ const CVEditPicture = ({ urlImg, onChange, disablePicture }) => {
                 onChange={async ({ target }) => {
                   const file = target.files[0];
 
-                  if(file) {
-                    if(!file.type.includes('image/') ) {
-                      UIkit.notification("Le fichier doit être une image", 'danger');
+                  if (file) {
+                    if (!file.type.includes('image/')) {
+                      UIkit.notification(
+                        'Le fichier doit être une image',
+                        'danger'
+                      );
                     }
 
                     const image = await resizeFile(file);
-                    const profileImageObjectUrl = URL.createObjectURL(
-                      image
-                    );
+                    const profileImageObjectUrl = URL.createObjectURL(image);
                     onChange({
                       profileImage: image,
                       profileImageObjectUrl,

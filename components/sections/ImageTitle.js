@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { addPrefix } from '../../utils';
 
-const ImageTitle = ({id, title, text, img}) => {
+const ImageTitle = ({ id, title, text, img }) => {
   return (
     <div
       id={id}
@@ -18,7 +19,7 @@ const ImageTitle = ({id, title, text, img}) => {
         <div
           className="uk-background-cover uk-background-center uk-box-shadow-small"
           style={{
-            backgroundImage: `url("${img}")`,
+            backgroundImage: `url("${addPrefix(img)}")`,
             backgroundPosition: 'center 30%',
             position: 'absolute',
             right: 0,
@@ -33,15 +34,17 @@ const ImageTitle = ({id, title, text, img}) => {
         />
       </div>
       <div
-        className="uk-flex uk-flex-column uk-flex-center uk-position-relative uk-width-1-2@m uk-align-center uk-background-default uk-padding uk-box-shadow-medium" style={{minHeight: 250}}>
+        className="uk-flex uk-flex-column uk-flex-center uk-position-relative uk-width-1-2@m uk-align-center uk-background-default uk-padding uk-box-shadow-medium"
+        style={{ minHeight: 250 }}
+      >
         <h1 className="uk-text-center uk-align-center uk-text-bold uk-margin-remove-vertical">
           {title}
         </h1>
-        {
-          text &&  <h3 className="uk-text-center uk-align-center uk-margin-remove-bottom">
+        {text && (
+          <h3 className="uk-text-center uk-align-center uk-margin-remove-bottom">
             {text}
           </h3>
-        }
+        )}
       </div>
     </div>
   );
@@ -51,11 +54,11 @@ ImageTitle.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.element.isRequired,
   text: PropTypes.string,
-  img: PropTypes.string.isRequired
+  img: PropTypes.string.isRequired,
 };
 
 ImageTitle.defaultProps = {
-  text: undefined
+  text: undefined,
 };
 
 export default ImageTitle;
