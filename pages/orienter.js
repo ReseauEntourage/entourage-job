@@ -29,7 +29,7 @@ const Orienter = () => {
         id="entourage"
         style='muted'
         fontSize='small'>
-        <div className="uk-width-medium uk-padding uk-padding-remove-vertical">
+        <div className="uk-width-small">
           <Img src='../static/img/logo-entourage.png' alt='Logo Entourage' />
         </div>
       </SimpleSection>
@@ -151,7 +151,7 @@ const Orienter = () => {
                       key={index}
                       className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
                       <div className="uk-width-large uk-flex uk-flex-center uk-flex-middle">
-                        <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
+                        <Img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
                       </div>
                     </SimpleLink>
                   )

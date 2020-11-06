@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, IconNoSSR} from "../utils";
 import Grid from '../utils/Grid';
+import Img from "../utils/Img";
 
 const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers, data, spacing, className, animate}) => {
   return (
@@ -20,7 +21,7 @@ const MultipleCTA = ({showNumbers, showHorizontalDividers, showVerticalDividers,
               {
                 item.img &&
                 <div className="uk-height-small uk-flex uk-flex-bottom uk-flex-center uk-margin-medium-bottom">
-                  <img src={item.img} width="" height="" alt="" className="uk-height-max-small"/>
+                  <Img src={item.img} width="" height="" alt="" className="uk-height-max-small"/>
                 </div>
               }
               <div className="uk-flex uk-flex-1">

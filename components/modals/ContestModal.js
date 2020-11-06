@@ -3,6 +3,7 @@
 import React, {useState, useEffect} from 'react';
 import {Button, IconNoSSR} from "../utils";
 import {EXTERNAL_LINKS} from '../../constants';
+import Img from "../utils/Img";
 
 const ContestModal = () => {
   const [countdown, setCountdown] = useState('');
@@ -82,7 +83,7 @@ const ContestModal = () => {
             aria-label="close"
           />
           <div className="uk-inline uk-visible@m">
-            <img src="../../static/img/thomas.jpg" alt="Thomas Ruyant" />
+            <Img src="../../static/img/thomas.jpg" alt="Thomas Ruyant" />
             <div style={{backgroundColor: 'rgba(0,0,0,0.5)'}} className="uk-position-cover" />
             <div className="uk-overlay uk-position-center uk-flex uk-flex-column uk-flex-middle">
               {modalContent()}

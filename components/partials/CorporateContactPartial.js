@@ -1,6 +1,7 @@
 import React from 'react';
 import { CONTACT_MAILS } from '../../constants';
 import { Button, Section } from '../utils';
+import Img from '../utils/Img';
 
 const CorporateContact = () => (
   <Section style="muted">
@@ -11,11 +12,13 @@ const CorporateContact = () => (
       Pour tout renseignement, Florent se tient à votre disposition :
     </p>
     <div className="uk-flex uk-flex-center uk-flex-middle">
-      <img
-        style={{ width: '80px', borderRadius: '50%' }}
-        src="/static/img/florent.jpg"
-        alt="florent"
-      />
+      <div style={{ borderRadius: '50%', width: 80, height: 80 }} className="uk-overflow-hidden">
+        <Img
+          width="80px"
+          src="/static/img/florent.jpg"
+          alt="florent"
+        />
+      </div>
       <a
         href={`mailto:${CONTACT_MAILS.CORPORATE_CONTACT}`}
         target="_blank"
@@ -23,7 +26,8 @@ const CorporateContact = () => (
         rel="noopener noreferrer"
       >
         <span uk-icon="mail" />
-        &nbsp;{CONTACT_MAILS.CORPORATE_CONTACT}
+        &nbsp;
+        {CONTACT_MAILS.CORPORATE_CONTACT}
       </a>
     </div>
   </Section>

@@ -71,10 +71,10 @@ const Partenaires = () => {
             >
               <div
                 className="uk-flex uk-flex-column uk-flex-middle uk-flex-center">
-                <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" />
+                <ImgNoSSR src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" />
                 {
                   bis &&
-                  <img src={`/static/img/partners/${key}/logo_bis.png`} width="" height="" alt="" />
+                  <ImgNoSSR src={`/static/img/partners/${key}/logo_bis.png`} width="" height="" alt="" />
                 }
               </div>
               <div className="uk-flex uk-flex-column uk-flex-middle">
@@ -177,7 +177,7 @@ const Partenaires = () => {
                               key={index}
                               className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large">
                                 <div className="uk-width-large uk-flex uk-flex-center uk-flex-middle">
-                                  <img src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
+                                  <ImgNoSSR src={`/static/img/partners/${key}/logo.png`} width="" height="" alt="" className='uk-height-max-small' />
                                 </div>
                             </SimpleLink>
                           )

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Layout from '../components/Layout';
 import {Section, SimpleLink} from "../components/utils";
 import Grid from "../components/utils/Grid";
+import Img from "../components/utils/Img";
 
 const Chapter = ({title, content, imgSrc, style, animate, direction}) => {
   return (
@@ -22,25 +23,26 @@ const Chapter = ({title, content, imgSrc, style, animate, direction}) => {
           </h4>
           <div className="uk-overflow-hidden uk-flex uk-flex-center uk-flex-middle">
             {animate ?
-              <img
-                uk-scrollspy="cls: uk-animation-kenburns; delay: 200;"
-                src={imgSrc}
-                width=""
-                height=""
-                alt=""
-                className="uk-animation-reverse"
-                style={{maxHeight: 600}} />
+              (
+              <div uk-scrollspy="cls: uk-animation-kenburns; delay: 200; target: > img;">
+                <Img
+                  src={imgSrc}
+                  width=""
+                  height="600px"
+                  alt=""
+                  className="uk-animation-reverse uk-height-max-large" />
+              </div>
+              )
               :
-              <img
+              <Img
                 src={imgSrc}
                 width=""
-                height=""
+                height="600px"
                 alt=""
-                style={{maxHeight: 600}} />
+                className="uk-height-max-large" />
             }
           </div>
         </Grid>
-
       </div>
     </Section>
   )
@@ -114,9 +116,7 @@ const Linkedout = () => {
             <span className="uk-text-bold">Un constat simple&nbsp;:</span> quand on est en précarité ou exclu, les chances de retrouver un job sont proches de zéro, car on est invisible. Or, la précarité n’empêche pas le talent&nbsp;: de nombreuses personnes ont des projets et l’envie de travailler&nbsp;!
             <br />
             <br />
-            Les personnes exclues se heurtent à un frein majeur&nbsp;: <span
-            className="uk-text-bold">l’absence de réseau personnel et professionnel.</span> Sans réseau, et avec un parcours difficile, il est quasiment impossible de retrouver un emploi par ses propres moyens. <span
-            className="uk-text-bold uk-text-primary">LinkedOut vise à lever ce frein en donnant un réseau professionnel à ceux qui n’en ont pas&nbsp;!</span>
+            Les personnes exclues se heurtent à un frein majeur&nbsp;: <span className="uk-text-bold">l’absence de réseau personnel et professionnel.</span> Sans réseau, et avec un parcours difficile, il est quasiment impossible de retrouver un emploi par ses propres moyens. <span className="uk-text-bold uk-text-primary">LinkedOut vise à lever ce frein en donnant un réseau professionnel à ceux qui n’en ont pas&nbsp;!</span>
             <br />
             <br />
             LinkedOut est un modèle de technologie positive pour insérer les personnes très précaires créé en 2019 par l’association Entourage.

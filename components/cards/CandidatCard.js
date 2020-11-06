@@ -102,7 +102,7 @@ const CandidatCard = ({
           }}
         >
           {/* Image de fond */}
-          <img src={imgSrc} alt={imgAlt} data-uk-cover />
+          <ImgNoSSR src={imgSrc} alt={imgAlt} cover />
           {/* Bandeau à retrouvé un emploie */}
           {employed && (
             <div
