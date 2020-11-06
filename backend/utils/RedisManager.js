@@ -1,30 +1,59 @@
 const redis = require('redis');
-const { promisify } = require('util');
 
 const dev = process.env.NODE_ENV !== 'production';
 
-const promisifyOrResolve = (instance, func, args) => {
-  if (!dev) {
-    const asyncFunc = promisify(instance[func]).bind(instance);
-    if (args) {
-      return asyncFunc(...args);
+const promisify = (instance, func, args) => {
+  return new Promise((res, rej) => {
+    const handleResponse = (error, result) => {
+      if (!error) {
+        res(result);
+      } else {
+        console.error(error);
+        res();
+      }
+    };
+
+    try {
+      if (args) {
+        instance[func](...args, handleResponse);
+      } else {
+        instance[func](handleResponse);
+      }
     }
-    return asyncFunc();
+    catch (e) {
+      console.error(e);
+      res();
+    }
+  });
+  /* setTimeout(() => {
+      console.log('REDIS TIMEOUT');
+      res();
+    }, 1000); */
+};
+
+const promisifyOrResolve = (instance, func, args) => {
+  if (dev && !instance.error) {
+    return promisify(instance, func, args);
   }
   return Promise.resolve();
 };
 
 const RedisManager = {
   getInstance() {
+    console.log('DYNO VERSION = ', process.env.HEROKU_RELEASE_VERSION);
     if (!this.redisClient) {
       this.redisClient = redis.createClient(process.env.REDIS_URL);
 
       this.redisClient.on('error', (error) => {
-        console.error(error);
+        console.error('REDIS ERROR = ', error.name, error.message);
+        this.error = error;
+        this.redisClient.quit();
       });
 
       this.redisClient.on('end', () => {
         delete this.redisClient;
+        delete this.error;
+        console.log('CLEARED REDIS CLIENT');
       });
     }
     return this.redisClient;

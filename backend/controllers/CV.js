@@ -480,8 +480,10 @@ const getRandomShortCVs = async (nb, query) => {
     const redisCvs = await RedisManager.getAsync(redisKey);
 
     if (redisCvs) {
+      console.log("GET CV FROM REDIS");
       modelCVs = JSON.parse(redisCvs);
     } else {
+      console.log("GET CV FROM DB");
       modelCVs = await getAllCvs(defaultQuery);
 
       await RedisManager.setAsync(redisKey, JSON.stringify(modelCVs));
