@@ -23,7 +23,11 @@ const apiLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_GENERAL, 100);
 module.exports.prepare = () => {
   // enable ssl redirect
   if (!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
-  app.use(cors());
+  app.use(
+    cors({
+      origin: process.env.SERVER_URL,
+    })
+  );
 
   app.set('trust proxy', 1);
 
