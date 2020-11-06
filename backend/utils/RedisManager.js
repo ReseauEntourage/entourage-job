@@ -3,13 +3,18 @@ const { promisify } = require('util');
 
 const dev = process.env.NODE_ENV !== 'production';
 
-const promisifyOrResolve = (instance, func, args) => {
+const promisifyOrResolve = (instance, func, args=[]) => {
   if (!dev) {
-    const asyncFunc = promisify(instance[func]).bind(instance);
-    if (args) {
-      return asyncFunc(...args);
-    }
-    return asyncFunc();
+    return new Promise((resolve, reject) => {
+      instance[func](...args, (error, result) => {
+        if (error === null) {
+          resolve(result);
+        }
+        else {
+          resolve();
+        }
+      });
+    });
   }
   return Promise.resolve();
 };
