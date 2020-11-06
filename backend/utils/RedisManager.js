@@ -22,7 +22,16 @@ const promisifyOrResolve = (instance, func, args=[]) => {
 const RedisManager = {
   getInstance() {
     if (!this.redisClient) {
-      this.redisClient = redis.createClient(process.env.REDIS_URL);
+      this.redisClient = redis.createClient(
+        process.env.REDIS_URL,
+        {
+          connect_timeout: 50, // milliseconds
+          retry_strategy: (retry_params) => {
+            // return a number of ms to retry, or a non-number to stop
+            return null; // never retry commands on error
+          }
+        }
+      );
 
       this.redisClient.on('error', (error) => {
         console.error(error);
