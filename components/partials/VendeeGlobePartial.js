@@ -50,7 +50,7 @@ const VendeeGlobePartial = () => {
         <div
           className="uk-hidden@m uk-flex uk-flex-column uk-flex-middle uk-padding-small uk-background-center-center uk-background-cover uk-background-blend-overlay"
           style={{
-            backgroundImage: `url(${addPrefix('/static/img/foil.jpg')}`,
+            backgroundImage: `url(${addPrefix('/static/img/foil.jpg')})`,
             backgroundColor: 'rgba(0,0,0,0.3)',
           }}
         >

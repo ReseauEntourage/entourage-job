@@ -126,8 +126,6 @@ const Header = ({ isHome }) => {
                   >
                     {name}
                   </a>
-                  {/* <SimpleLink scroll={false} href={href}>
-                </SimpleLink> */}
                 </li>
               )
             ),
