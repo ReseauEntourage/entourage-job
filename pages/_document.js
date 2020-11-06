@@ -1,6 +1,7 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
+import { addPrefix } from '../utils';
 // import ReactGA from 'react-ga';
 
 export default class MyDocument extends Document {
@@ -73,8 +74,8 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <script src="/static/dist/js/uikit.js" />
-          <script src="/static/dist/js/uikit-icons.js" />
+          <script src={addPrefix('/static/dist/js/uikit.js')} />
+          <script src={addPrefix('/static/dist/js/uikit-icons.js')} />
           {/* Google Tag Manager (noscript) */}
           <noscript>
             <iframe
