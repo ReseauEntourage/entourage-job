@@ -39,14 +39,14 @@ const Container = ({ Component, pageProps }) => {
     });
     setTimeout(() => {
       setFading(true);
-    }, 2000);
+    }, 1000);
   }, []);
 
   useEffect(() => {
     if (fading) {
       setTimeout(() => {
         setLoading(false);
-      }, 1000);
+      }, 500);
     }
   }, [fading]);
 
@@ -56,15 +56,16 @@ const Container = ({ Component, pageProps }) => {
       className="uk-inline uk-width-expand uk-overflow-hidden"
     >
       <Component {...pageProps} />
-      {/* TODO PUT BACK FOR TESTS */}
-      {/* {
-        !router.asPath.includes('/pdf/') &&
+      {!router.asPath.includes('/pdf/') && (
         <div
-          style={{height: '100vh', zIndex: 9999}}
-          className={`${loading ? 'uk-visible' : 'uk-hidden'} ${fading ? 'uk-animation-fade uk-animation-reverse' : ''} uk-position-cover uk-background-default`}>
+          style={{ height: '100vh', zIndex: 9999 }}
+          className={`${loading ? 'uk-visible' : 'uk-hidden'} ${
+            fading ? 'uk-animation-fade uk-animation-reverse' : ''
+          } uk-position-cover uk-background-default`}
+        >
           <SplashScreenNoSSR fading={fading} />
         </div>
-      } */}
+      )}
     </div>
   );
 };

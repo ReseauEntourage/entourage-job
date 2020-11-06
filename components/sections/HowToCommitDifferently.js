@@ -130,7 +130,7 @@ const HowToCommitDifferently = () => {
                 button: {
                   label: 'Nous contacter',
                   size: 'small',
-                  href: 'mailto:clement@entourage.social',
+                  href: 'mailto:barnabe@entourage.social',
                   external: true,
                 },
               },
