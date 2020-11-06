@@ -1,7 +1,7 @@
 const RateLimit = require('express-rate-limit');
 const RedisStore = require('rate-limit-redis');
 
-const dev = process.env.NODE_ENV !== 'production';
+const dev = true; // process.env.NODE_ENV !== 'production';
 
 const RateLimiter = {
   createStore(prefix) {
