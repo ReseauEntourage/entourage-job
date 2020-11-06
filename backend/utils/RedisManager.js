@@ -4,7 +4,7 @@ const { promisify } = require('util');
 const dev = process.env.NODE_ENV !== 'production';
 
 const promisifyOrResolve = (instance, func, args=[]) => {
-  if (!dev) {
+  if (instance) {
     return new Promise((resolve, reject) => {
       instance[func](...args, (error, result) => {
         if (error === null) {
@@ -21,6 +21,10 @@ const promisifyOrResolve = (instance, func, args=[]) => {
 
 const RedisManager = {
   getInstance() {
+    if (dev) {
+      return null;
+    }
+
     if (!this.redisClient) {
       this.redisClient = redis.createClient(
         process.env.REDIS_URL,
