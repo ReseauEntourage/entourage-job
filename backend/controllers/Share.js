@@ -51,8 +51,7 @@ const getTotalShares = async () => {
         );
       }
 
-      await RedisManager.setAsync(redisKey, totalShares);
-      await RedisManager.expireAsync(redisKey, 60);
+      await RedisManager.setWithExpireAsync(redisKey, totalShares, 60);
     }
   } catch (e) {
     console.log(e);

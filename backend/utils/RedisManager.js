@@ -38,8 +38,8 @@ const RedisManager = {
     return promisifyOrResolve(this.getInstance(), 'set', [key, value]);
   },
 
-  expireAsync(key, expire) {
-    return promisifyOrResolve(this.getInstance(), 'expire', [key, expire]);
+  setWithExpireAsync(key, value, expire) {
+    return promisifyOrResolve(this.getInstance(), 'setex', [key, expire, value]);
   },
 
   delAsync(key) {
