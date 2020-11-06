@@ -12,6 +12,6 @@ module.exports = withLess(
       config.plugins.push(new webpack.EnvironmentPlugin(process.env));
       return config;
     },
-    assetPrefix: !dev ? 'https://d280vsj7wg1qqw.cloudfront.net' : '',
+    assetPrefix: !dev ? process.env.CDN_URL || '' : '',
   })
 );

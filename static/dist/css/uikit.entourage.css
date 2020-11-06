@@ -12640,11 +12640,13 @@ iframe.uk-cover {
 @font-face {
   font-family: 'Roboto';
   src: url('/static/fonts/Roboto-Regular.ttf') format('truetype');
+  src: url('https://d280vsj7wg1qqw.cloudfront.net/static/fonts/Roboto-Regular.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Roboto';
   font-weight: bold;
   src: url('/static/fonts/Roboto-Bold.ttf') format('truetype');
+  src: url('https://d280vsj7wg1qqw.cloudfront.net/static/fonts/Roboto-Bold.ttf') format('truetype');
 }
 @media print {
   * {
