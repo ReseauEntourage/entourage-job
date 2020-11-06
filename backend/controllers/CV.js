@@ -477,11 +477,14 @@ const getRandomShortCVs = async (nb, query) => {
 
   if (!escapedQuery) {
     const redisKey = REDIS_KEYS.CV_LIST;
+
     const redisCvs = await RedisManager.getAsync(redisKey);
 
     if (redisCvs) {
+      console.log("GET FROM REDIS");
       modelCVs = JSON.parse(redisCvs);
     } else {
+      console.log("GET FROM DATABASE");
       modelCVs = await getAllCvs(defaultQuery);
 
       await RedisManager.setAsync(redisKey, JSON.stringify(modelCVs));

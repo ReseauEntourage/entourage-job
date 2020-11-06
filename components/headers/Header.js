@@ -9,10 +9,13 @@ import {
   OffcanvasNoSSR,
   HamburgerNoSSR,
   NavbarLogo,
-  IconNoSSR,
+  IconNoSSR, GridNoSSR,
 } from '../utils';
 import './Header.less';
 import Button from '../utils/Button';
+import {EXTERNAL_LINKS} from "../../constants";
+import {event} from "../../lib/gtag";
+import TAGS from "../../constants/tags";
 
 const LINKS = [
   { href: '/aider', name: 'Particuliers, agissez' },
@@ -27,12 +30,25 @@ const Header = ({ isHome }) => {
         sticky=""
         className="uk-background-secondary uk-navbar-transparent ent-home"
         left={
-          <NavbarLogo
-            href="/"
-            src="/static/img/linkedout_logo_white.png"
-            alt="Linkedout"
-            alwaysVisible={!isHome}
-          />
+          <div className="uk-flex">
+            <NavbarLogo
+              href="/"
+              src="/static/img/linkedout_logo_white.png"
+              alt="Linkedout"
+              alwaysVisible={!isHome}
+            />
+            <div className="uk-flex uk-flex-center uk-light">
+              <Button
+                href={EXTERNAL_LINKS.DONATION}
+                isExternal
+                newTab
+                className={`${!isHome && 'uk-animation-fade'}`}
+                onClick={() => event(TAGS.FOOTER_DON_CLIC)}
+                style='primary'>
+                Faire un don{' '}<IconNoSSR name="chevron-right" />
+              </Button>
+            </div>
+          </div>
         }
         right={
           <Nav
