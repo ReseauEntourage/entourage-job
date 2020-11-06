@@ -13,6 +13,9 @@ import {
 } from '../utils';
 import './Header.less';
 import Button from '../utils/Button';
+import { EXTERNAL_LINKS } from '../../constants';
+import { event } from '../../lib/gtag';
+import TAGS from '../../constants/tags';
 
 const LINKS = [
   { href: '/aider', name: 'Particuliers, agissez' },
@@ -27,12 +30,30 @@ const Header = ({ isHome }) => {
         sticky=""
         className="uk-background-secondary uk-navbar-transparent ent-home"
         left={
-          <NavbarLogo
-            href="/"
-            src="/static/img/linkedout_logo_white.png"
-            alt="Linkedout"
-            alwaysVisible={!isHome}
-          />
+          <div className="uk-flex uk-flex-middle">
+            <NavbarLogo
+              href="/"
+              src="/static/img/linkedout_logo_white.png"
+              alt="Linkedout"
+              alwaysVisible={!isHome}
+            />
+            <div
+              className={`uk-visible@m uk-margin-small-left uk-flex uk-flex-center uk-light ${
+                isHome && 'uk-logo uk-animation-fade'
+              }`}
+            >
+              <Button
+                href={EXTERNAL_LINKS.DONATION}
+                isExternal
+                newTab
+                onClick={() => event(TAGS.FOOTER_DON_CLIC)}
+                style="default"
+              >
+                Faire un don&nbsp;
+                <IconNoSSR name="chevron-right" />
+              </Button>
+            </div>
+          </div>
         }
         right={
           <Nav
@@ -70,7 +91,8 @@ const Header = ({ isHome }) => {
               // separateurs en css .ent-nav
               <div className="uk-navbar-item uk-visible@m">
                 <Button href="/candidats" style="primary">
-                  Découvrir les CV <IconNoSSR name="chevron-right" />
+                  Découvrir les CV&nbsp;
+                  <IconNoSSR name="chevron-right" />
                 </Button>
               </div>,
               <HamburgerNoSSR targetId="offcanvas-guest" hidden="m" />,
@@ -116,7 +138,23 @@ const Header = ({ isHome }) => {
               onClick={() => UIkit.offcanvas('#offcanvas-guest').hide()}
               style="primary"
             >
-              Découvrir les CV <IconNoSSR name="chevron-right" />
+              Découvrir les CV&nbsp;
+              <IconNoSSR name="chevron-right" />
+            </Button>
+          </li>
+          <li className="uk-margin-small-top">
+            <Button
+              href={EXTERNAL_LINKS.DONATION}
+              isExternal
+              newTab
+              onClick={() => {
+                UIkit.offcanvas('#offcanvas-guest').hide();
+                event(TAGS.FOOTER_DON_CLIC)
+              }}
+              style="default"
+            >
+              Faire un don&nbsp;
+              <IconNoSSR name="chevron-right" />
             </Button>
           </li>
         </ul>
