@@ -6,6 +6,7 @@ import Footer from './Footer';
 import Header from './headers/Header';
 import HeaderConnected from './headers/HeaderConnected';
 import { UserContext } from './store/UserProvider';
+import { addPrefix } from '../utils';
 
 const Layout = ({
   children,
@@ -23,7 +24,7 @@ const Layout = ({
     <>
       <Head>
         <title>{title}</title>
-        <link rel="icon" type="image/png" href="/static/img/fav.png" />
+        <link rel="icon" type="image/png" href={addPrefix('/static/img/fav.png')} />
         <link rel="canonical" href="https://www.linkedout.fr/" />
         {
           isPDF && <link rel="stylesheet" type="text/css" href="/static/dist/css/uikit.entourage.print.min.css" media="print" />
