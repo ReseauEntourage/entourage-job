@@ -36,7 +36,7 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
   };
 
   useEffect(() => {
-    if(!process.env.DISABLE_SEARCH_ON_THE_FLY !== 'true') {
+    if(process.env.DISABLE_SEARCH_ON_THE_FLY !== 'true') {
       clearTimeout(debounceTimeoutId);
       debounceTimeoutId = setTimeout(() => startSearch(searchBuffer), 1000);
     }
