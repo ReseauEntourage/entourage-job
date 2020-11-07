@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {GridNoSSR} from '../utils/Grid';
 import {IconNoSSR, SimpleLink} from "../utils";
-import {formatParagraph, sortExperiences, sortReviews} from "../../utils";
+import {addPrefix, formatParagraph, sortExperiences, sortReviews} from "../../utils";
 
 const CVPDF = ({cv, page}) => {
   const experiences = cv.experiences && cv.experiences.length > 0 ? sortExperiences(cv.experiences) : [];
@@ -46,10 +46,11 @@ const CVPDF = ({cv, page}) => {
           <div
             className="uk-background-cover uk-background-center uk-flex uk-flex-middle uk-flex-center"
             style={{height: 150}}>
+            {/* Can't use <Img /> component because doesn't work for PDF */}
             <img
               style={{marginTop: 75}}
               className="uk-box-shadow-small uk-width-expand"
-              src={process.env.AWSS3_URL + cv.urlImg || '/static/img/arthur-background.jpg'}
+              src={process.env.AWSS3_URL + cv.urlImg || addPrefix('/static/img/arthur-background.jpg')}
               alt="" />
           </div>
         </div>
@@ -352,10 +353,11 @@ const CVPDF = ({cv, page}) => {
                   {process.env.MAILJET_CONTACT_EMAIL}
                 </SimpleLink>
               </p>
+              {/* Can't use <Img /> component because doesn't work for PDF */}
               <img
                 alt="logo linkedout"
                 className="uk-width-small"
-                src="/static/img/linkedout_logo_orange_small.png"
+                src={addPrefix('/static/img/linkedout_logo_orange_small.png')}
               />
             </GridNoSSR>
           </div>

@@ -20,3 +20,10 @@ app
     console.error(ex.stack);
     process.exit(1);
   });
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing HTTP server');
+  server.close().then(() => {
+    console.log('HTTP server closed');
+  });
+});

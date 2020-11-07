@@ -1,32 +1,70 @@
 const redis = require('redis');
-const { promisify } = require('util');
+const { v4: uuidv4 } = require('uuid');
 
 const dev = true; /* process.env.NODE_ENV !== 'production'; */
 
-const promisifyOrResolve = (instance, func, args) => {
-  if (!dev) {
-    const asyncFunc = promisify(instance[func]).bind(instance);
-    if (args) {
-      return asyncFunc(...args);
-    }
-    return asyncFunc();
+const promisifyOrResolve = (instance, func, args=[]) => {
+  if (instance) {
+    return new Promise((resolve, reject) => {
+      instance[func](...args, (error, result) => {
+        if (error === null) {
+          resolve(result);
+        }
+        else {
+          resolve();
+        }
+      });
+    });
   }
   return Promise.resolve();
 };
 
 const RedisManager = {
   getInstance() {
+    if (dev) {
+      return null;
+    }
+
     if (!this.redisClient) {
-      this.redisClient = redis.createClient(process.env.REDIS_URL);
-      console.log('REDIS CREATED CLIENT');
-      console.log(Error().stack);
-      this.redisClient.on('error', (error) => {
-        console.error('REDIS ERROR = ', error.name, error.message);
+      this.redisClient = redis.createClient(
+        process.env.REDIS_URL,
+        {
+          connect_timeout: 50, // milliseconds
+          retry_strategy: (retry_params) => {
+            // return a number of ms to retry, or a non-number to stop
+            return null; // never retry commands on error
+          }
+        }
+      );
+      this.redisClient.uuid = uuidv4();
+      console.log(`type=redis.create id=${this.redisClient.uuid}`);
+
+      this.redisClient.on('connect', function() { console.log(`type=redis.connected id=${this.uuid}`); });
+      this.redisClient.on('ready', function() { console.log(`type=redis.ready id=${this.uuid}`); });
+      this.redisClient.on('reconnecting', function(reconnecting_params) { console.log(`type=redis.reconnecting params=${reconnecting_params} id=${this.uuid}`); });
+
+      this.redisClient.on('error', function(error) {
+        console.log(`type=redis.error name=${error.name} message="${error.message}" closing=${this.closing} id=${this.uuid}`, error);
+
+        if (this.closing) {
+          // the connection is closed, we must create new client.
+          console.error(`type=redis.delete context=error id=${this.uuid}`);
+          if (RedisManager.redisClient === this) {
+            delete RedisManager.redisClient;
+          }
+        }
       });
 
-      this.redisClient.on('end', () => {
-        // delete this.redisClient;
-        console.log('CLEARED REDIS CLIENT');
+      this.redisClient.on('end', function() {
+        console.log(`type=redis.disconnected closing=${this.closing} id=${this.uuid}`);
+
+        if (this.closing) {
+          // the connection is closed, we must create new client.
+          console.error(`type=redis.delete context=disconnected id=${this.uuid}`);
+          if (RedisManager.redisClient === this) {
+            delete RedisManager.redisClient;
+          }
+        }
       });
     }
     return this.redisClient;
@@ -40,8 +78,8 @@ const RedisManager = {
     return promisifyOrResolve(this.getInstance(), 'set', [key, value]);
   },
 
-  expireAsync(key, expire) {
-    return promisifyOrResolve(this.getInstance(), 'expire', [key, expire]);
+  setWithExpireAsync(key, value, expire) {
+    return promisifyOrResolve(this.getInstance(), 'setex', [key, expire, value]);
   },
 
   delAsync(key) {

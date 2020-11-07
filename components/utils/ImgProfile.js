@@ -1,10 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types';
+import Img from "./Img";
 
 const ImgProfile = ({ src, alt, width, height, border }) => (
   <div className={("uk-cover-container uk-border-") + border}
     style={{ "width": width, "height": height }}>
-    <img data-uk-cover
+    <Img
+      cover
       src={src}
       alt={alt}
     />

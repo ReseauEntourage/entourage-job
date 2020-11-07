@@ -1,6 +1,7 @@
 import React from 'react';
 import {IconNoSSR, Section} from '../utils';
 import Grid from "../utils/Grid";
+import Img from "../utils/Img";
 
 const HowToJoin = () => {
   const content = [
@@ -40,7 +41,7 @@ const HowToJoin = () => {
           return (
             <div key={index.toString()} className="uk-flex uk-flex-column uk-flex-middle">
               <div className="uk-height-small uk-flex uk-flex-bottom uk-flex-center uk-margin-small-bottom uk-padding-small">
-                <img src={img} width="" height="" alt="" className="uk-height-max-small"/>
+                <Img src={img} width="" height="" alt="" className="uk-height-max-small"/>
               </div>
               <div className="uk-flex uk-flex-top">
                 <div className="uk-text-primary"><IconNoSSR name="triangle-right" />&nbsp;</div>

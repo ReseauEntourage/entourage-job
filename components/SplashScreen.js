@@ -17,7 +17,7 @@ const SplashScreen = () => {
         />
       </div>
       <h2
-        uk-scrollspy="cls: uk-animation-fade; delay: 500;"
+        uk-scrollspy="cls: uk-animation-fade;"
         className="uk-text-bold uk-text-center uk-width-xlarge@m uk-margin-remove"
         style={{opacity: 0}}>
         <span>Partagez votre </span>

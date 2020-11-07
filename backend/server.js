@@ -1,5 +1,6 @@
 const express = require('express');
 const enforce = require('express-sslify');
+const cors = require('cors');
 const RedisManager = require('./utils/RedisManager');
 const passport = require('./config/passport');
 
@@ -22,6 +23,11 @@ const apiLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_GENERAL, 100);
 module.exports.prepare = () => {
   // enable ssl redirect
   if (!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  app.use(
+    cors({
+      origin: process.env.SERVER_URL,
+    })
+  );
 
   app.set('trust proxy', 1);
 
@@ -60,7 +66,7 @@ module.exports.prepare = () => {
 
   app.use((err, req, res, next) => {
     if (err) {
-      return res.status(err.status).send({ message: err.message });
+      return res.status(err.status || 500).send({ message: err.message });
     }
     next();
   });
