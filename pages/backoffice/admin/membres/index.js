@@ -212,7 +212,7 @@ const MembersAdmin = ({ query: { role } }) => {
                     onChange={(event) => {
                       clearTimeout(debounceTimeoutId);
                       event.persist();
-                      debounceTimeoutId = setTimeout(() => setSearchQuery(event.target.value), 500);
+                      debounceTimeoutId = setTimeout(() => setSearchQuery(event.target.value), 1000);
                     }}
                   />
                 </form>

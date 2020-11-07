@@ -1,6 +1,6 @@
 /* global UIkit */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import CVList from '../cv/CVList';
 import { GridNoSSR, Section } from '../utils';
@@ -16,6 +16,7 @@ let debounceTimeoutId;
 
 const SearchCandidates = ({ defaultHideEmployed }) => {
   const [search, setSearch] = useState();
+  const [searchBuffer, setSearchBuffer] = useState();
   const [filters, setFilters] = useState(
     initializeFilters(CV_FILTERS_DATA, defaultHideEmployed ? [2] : null)
   );
@@ -25,14 +26,21 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
     setFilters(initializeFilters(CV_FILTERS_DATA));
   };
 
-  const startSearch = (ev) => {
-    if (ev.target.value) {
+  const startSearch = (searchString) => {
+    if (searchString) {
       event(TAGS.PAGE_GALERIE_RECHERCHE);
-      setSearch(ev.target.value);
+      setSearch(searchString);
     } else {
       setSearch(null);
     }
   };
+
+  useEffect(() => {
+    if(!process.env.DISABLE_SEARCH_ON_THE_FLY !== 'true') {
+      clearTimeout(debounceTimeoutId);
+      debounceTimeoutId = setTimeout(() => startSearch(searchBuffer), 1000);
+    }
+  }, [searchBuffer]);
 
   return (
     <Section style="default">
@@ -66,18 +74,23 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
                 onKeyDown={(ev) => {
                   if (ev.key === 'Enter') {
                     ev.preventDefault();
+                    clearTimeout(debounceTimeoutId);
+                    startSearch(searchBuffer);
                   }
                 }}
                 onChange={(ev) => {
-                  clearTimeout(debounceTimeoutId);
-                  ev.persist();
-                  debounceTimeoutId = setTimeout(() => startSearch(ev), 500);
+                  setSearchBuffer(ev.target.value);
                 }}
               />
             </form>
-            <div className="ent-search-icon uk-background-primary uk-light">
+            <a
+              className="ent-search-icon uk-background-primary uk-light"
+              onClick={() => {
+                clearTimeout(debounceTimeoutId);
+                startSearch(searchBuffer);
+              }}>
               <Icon name="search" className="uk-text-secondary" />
-            </div>
+            </a>
           </div>
 
           <div

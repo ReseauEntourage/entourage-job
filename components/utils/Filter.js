@@ -56,7 +56,7 @@ const Filter = ({
               onChange={(event) => {
                 clearTimeout(debounceTimeoutId);
                 event.persist();
-                debounceTimeoutId = setTimeout(() => search(event), 500);
+                debounceTimeoutId = setTimeout(() => search(event), 1000);
               }}
             />
           </div>
