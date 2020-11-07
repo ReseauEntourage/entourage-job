@@ -1,7 +1,7 @@
 const redis = require('redis');
 const { v4: uuidv4 } = require('uuid');
 
-const dev = true; /* process.env.NODE_ENV !== 'production'; */
+const dev = process.env.NODE_ENV !== 'production';
 
 const promisifyOrResolve = (instance, func, args=[]) => {
   if (instance) {
