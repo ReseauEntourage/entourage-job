@@ -401,7 +401,6 @@ const getAllUserOpportunities = async (userId) => {
         }
       }
 
-      // TODO do the same
       if (b.userOpportunity) {
         return -1;
       }

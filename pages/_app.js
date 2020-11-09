@@ -13,7 +13,7 @@ import SessionProvider, {
 import SharesCountProvider from '../components/store/SharesCountProvider';
 
 import * as gtag from '../lib/gtag';
-import { SplashScreenNoSSR } from '../components/SplashScreen';
+import SplashScreen from '../components/SplashScreen';
 
 const Container = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -63,7 +63,7 @@ const Container = ({ Component, pageProps }) => {
             fading ? 'uk-animation-fade uk-animation-reverse' : ''
           } uk-position-cover uk-background-default`}
         >
-          <SplashScreenNoSSR fading={fading} />
+          <SplashScreen fading={fading} />
         </div>
       )}
     </div>
