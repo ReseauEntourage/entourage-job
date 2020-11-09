@@ -442,9 +442,9 @@ const getRandomShortCVs = async (nb, query) => {
       group by
         "UserId")
     select
-      cvs.id,
+      cvs.id
     from
-      "CVs" cvs,
+      "CVs" cvs
     inner join groupCVs on
       cvs."UserId" = groupCVs."UserId" and cvs.version = groupCVs.version`;
 
