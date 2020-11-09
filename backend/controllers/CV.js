@@ -1,8 +1,7 @@
-/* eslint-disable no-restricted-globals */
-/* eslint no-param-reassign: ["error", { "props": false }] */
-
 const { QueryTypes } = require('sequelize');
 const RedisManager = require('../utils/RedisManager');
+
+const { INITIAL_NB_OF_CV_TO_DISPLAY } = require('../../constants');
 
 const {
   models,
@@ -123,23 +122,23 @@ const dividedCompleteCVQuery = async (query) => {
 
 // permet de recuperer les id de cv recherchés pour ensuite fetch ses données
 const queryConditionCV = (attribute, value, allowHidden) => `
-  SELECT cv.id
-  FROM "CVs" cv
+  SELECT cvs.id
+  FROM "CVs" cvs
   inner join (
     select "UserId", MAX(version) as version
     from "CVs"
     where "CVs".status = '${CV_STATUS.Published.value}'
     group by "UserId") groupCVs
-  on cv."UserId" = groupCVs."UserId"
-  and cv.version =  groupCVs.version
-  and cv.status = '${CV_STATUS.Published.value}'
+  on cvs."UserId" = groupCVs."UserId"
+  and cvs.version =  groupCVs.version
+  and cvs.status = '${CV_STATUS.Published.value}'
   inner join (
     select distinct "candidatId"
     from "User_Candidats"
     where ${allowHidden ? '' : ` hidden = false `}
     ${attribute && value && !allowHidden ? ' and ' : ''}
     ${attribute && value ? ` ${attribute} = '${value}'` : ''}) groupUsers
-  on cv."UserId" = groupUsers."candidatId"`;
+  on cvs."UserId" = groupUsers."candidatId"`;
 
 const createCV = async (data) => {
   console.log(`createCV - Création du CV`);
@@ -349,6 +348,7 @@ const deleteCV = (id) => {
 
 const getCVbyUrl = async (url) => {
   console.log(`getCVbyUrl - Récupérer un CV ${url}`);
+
   const cvs = await sequelize.query(
     queryConditionCV('url', url.replace("'", "''")),
     {
@@ -357,11 +357,28 @@ const getCVbyUrl = async (url) => {
   );
 
   if (cvs && cvs.length > 0) {
-    return dividedCompleteCVQuery(async (include) =>
-      models.CV.findByPk(cvs[0].id, {
-        include: [include],
-      })
-    );
+    let cv;
+
+    const redisKey = REDIS_KEYS.CV_PREFIX + url;
+    const redisCV = await RedisManager.getAsync(redisKey);
+
+    if (redisCV) {
+      cv = JSON.parse(redisCV);
+    } else {
+      cv = await dividedCompleteCVQuery(async (include) =>
+        models.CV.findByPk(cvs[0].id, {
+          include: [include],
+        })
+      );
+
+      await RedisManager.setWithExpireAsync(
+        redisKey,
+        JSON.stringify(cv),
+        60 * 10
+      );
+    }
+
+    return cv;
   }
 
   return null;
@@ -425,11 +442,11 @@ const getRandomShortCVs = async (nb, query) => {
       group by
         "UserId")
     select
-      cv.id
+      cvs.id
     from
-      "CVs" cv
+      "CVs" cvs
     inner join groupCVs on
-      cv."UserId" = groupCVs."UserId" and cv.version = groupCVs.version`;
+      cvs."UserId" = groupCVs."UserId" and cvs.version = groupCVs.version`;
 
   const getAllCvs = async (dbQuery) => {
     const cvs = await sequelize.query(dbQuery, {
@@ -484,19 +501,23 @@ const getRandomShortCVs = async (nb, query) => {
     } else {
       modelCVs = await getAllCvs(defaultQuery);
 
-      await RedisManager.setWithExpireAsync(redisKey, JSON.stringify(modelCVs), 60 * 10);
+      await RedisManager.setWithExpireAsync(
+        redisKey,
+        JSON.stringify(modelCVs),
+        60 * 10
+      );
     }
   } else {
     modelCVs = await getAllCvs(`${defaultQuery}
       /* recherche par toutes information du CV */
       where (
-        cv."id" in (
+        cvs."id" in (
           select distinct "CV_Ambitions"."CVId"
           FROM "CV_Ambitions" INNER JOIN "Ambitions"
           on "CV_Ambitions"."AmbitionId" = "Ambitions".id
           WHERE ${escapeColumn('"Ambitions"."name"')} like '%${escapedQuery}%'
         )
-        or cv."id" in (
+        or cvs."id" in (
           select distinct "CV_BusinessLines"."CVId"
           FROM "CV_BusinessLines" INNER JOIN "BusinessLines"
           on "CV_BusinessLines"."BusinessLineId" = "BusinessLines".id
@@ -504,37 +525,37 @@ const getRandomShortCVs = async (nb, query) => {
             '"BusinessLines"."name"'
           )} like '%${escapedQuery}%'
         )
-        or cv."id" in (
+        or cvs."id" in (
           select distinct "CV_Contracts"."CVId"
           FROM "CV_Contracts" INNER JOIN "Contracts"
           on "CV_Contracts"."ContractId" = "Contracts".id
           where ${escapeColumn('"Contracts"."name"')} like '%${escapedQuery}%'
         )
-        or cv."id" in (
+        or cvs."id" in (
           select distinct "CV_Languages"."CVId"
           FROM "CV_Languages" INNER JOIN "Languages"
           on "CV_Languages"."LanguageId" = "Languages".id
           where ${escapeColumn('"Languages"."name"')} like '%${escapedQuery}%'
         )
-        or cv."id" in (
+        or cvs."id" in (
           select distinct "CV_Locations"."CVId"
           FROM "CV_Locations" INNER JOIN "Locations"
           on "CV_Locations"."LocationId" = "Locations".id
           where ${escapeColumn('"Locations"."name"')} like '%${escapedQuery}%'
         )
-        or cv."id" in (
+        or cvs."id" in (
           select distinct "CV_Passions"."CVId"
           FROM "CV_Passions" INNER JOIN "Passions"
           on "CV_Passions"."PassionId" = "Passions".id
           where ${escapeColumn('"Passions"."name"')} like '%${escapedQuery}%'
         )
-        or cv."id" in (
+        or cvs."id" in (
           select distinct "CV_Skills"."CVId"
           FROM "CV_Skills" INNER JOIN "Skills"
           on "CV_Skills"."SkillId" = "Skills".id
           where ${escapeColumn('"Skills"."name"')} like '%${escapedQuery}%'
         )
-        or cv."id" in (
+        or cvs."id" in (
           select distinct exp."CVId"
           FROM "Experiences" exp
           where ${escapeColumn('exp."description"')} like '%${escapedQuery}%'
@@ -545,14 +566,14 @@ const getRandomShortCVs = async (nb, query) => {
               where ${escapeColumn('"Skills"."name"')} like '%${escapedQuery}%'
           )
         )
-        or cv."id" in (
+        or cvs."id" in (
             select distinct "Reviews"."CVId"
             FROM "Reviews"
             where ${escapeColumn('"Reviews"."name"')} like '%${escapedQuery}%'
             or ${escapeColumn('"Reviews"."text"')} like '%${escapedQuery}%'
             or ${escapeColumn('"Reviews"."status"')} like '%${escapedQuery}%'
         )
-        or cv."id" in (
+        or cvs."id" in (
             select "CVs".id
             FROM "Users" INNER JOIN "CVs"
             on "CVs"."UserId" = "Users"."id"
@@ -561,14 +582,58 @@ const getRandomShortCVs = async (nb, query) => {
               or ${escapeColumn('"Users"."lastName"')} like '%${escapedQuery}%'
             )
         )
-        or ${escapeColumn('cv."catchphrase"')} like '%${escapedQuery}%'
-        or ${escapeColumn('cv."availability"')} like '%${escapedQuery}%'
-        or ${escapeColumn('cv."story"')} like '%${escapedQuery}%'
-        or ${escapeColumn('cv."transport"')} like '%${escapedQuery}%'
+        or ${escapeColumn('cvs."catchphrase"')} like '%${escapedQuery}%'
+        or ${escapeColumn('cvs."availability"')} like '%${escapedQuery}%'
+        or ${escapeColumn('cvs."story"')} like '%${escapedQuery}%'
+        or ${escapeColumn('cvs."transport"')} like '%${escapedQuery}%'
       )`);
   }
 
-  return modelCVs.sort(() => Math.random() - 0.5).slice(0, nb); // shuffle and take the nb first;
+  const totalSharesPerUser = await sequelize.query(
+    `
+      select shares."CandidatId", (SUM(facebook) + SUM(linkedin) + SUM(twitter) + SUM(whatsapp)) as totalshares
+      from "Shares" shares
+      GROUP BY shares."CandidatId";
+    `,
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
+
+  const totalShares = totalSharesPerUser.reduce((acc, curr) => {
+    return acc + parseInt(curr.totalshares, 10);
+  }, 0);
+
+  let finalCVList = modelCVs.map((modelCV) => {
+    const cv = modelCV;
+    const totalSharesForUser = totalSharesPerUser.find(
+      (shares) => shares.CandidatId === cv.user.candidat.id
+    );
+    cv.ranking = 0;
+    if (totalSharesForUser) {
+      cv.ranking = totalSharesForUser.totalshares / totalShares;
+    }
+    if (cv.user.employed) {
+      cv.ranking = 1;
+    }
+    return cv;
+  });
+
+  finalCVList = finalCVList
+    .sort(() => Math.random() - 0.5)
+    .slice(0, nb) // shuffle and take the nb first
+    .sort((a, b) => a.ranking - b.ranking); // then order reverse by ranking
+
+  if (nb > INITIAL_NB_OF_CV_TO_DISPLAY) {
+    finalCVList = [
+      ...finalCVList.slice(0, INITIAL_NB_OF_CV_TO_DISPLAY),
+      ...finalCVList
+        .slice(INITIAL_NB_OF_CV_TO_DISPLAY, nb)
+        .sort(() => Math.random() - 0.5),
+    ];
+  }
+
+  return finalCVList;
 };
 
 const setCV = (id, cv) => {

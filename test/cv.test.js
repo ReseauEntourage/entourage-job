@@ -238,7 +238,7 @@ describe('CV', () => {
                     expect(response.status).toBe(200);
                     expect(response.body.length).toBe(2);
                 });
-                it('Should return 200, and 1 cv if user\'s first name or buisness line contain the query',
+                it('Should return 200, and 1 cv if user\'s first name or other property contains the query',
                     async () => {
                         const newUser = await userFactory({
                             firstName: 'xxxxKnownFirstNamexxxx',

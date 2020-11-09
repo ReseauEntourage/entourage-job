@@ -223,6 +223,7 @@ router.post(
               await S3.deleteFile(
                 `${process.env.AWSS3_FILE_DIRECTORY}${results[1].user.url}.pdf`
               );
+              await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + reqCV.user.url);
               await RedisManager.delAsync(REDIS_KEYS.CV_LIST);
             } catch (err) {
               console.log(err);
