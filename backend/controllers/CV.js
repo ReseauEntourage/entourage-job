@@ -348,6 +348,7 @@ const deleteCV = (id) => {
 
 const getCVbyUrl = async (url) => {
   console.log(`getCVbyUrl - Récupérer un CV ${url}`);
+
   const cvs = await sequelize.query(
     queryConditionCV('url', url.replace("'", "''")),
     {
@@ -356,11 +357,28 @@ const getCVbyUrl = async (url) => {
   );
 
   if (cvs && cvs.length > 0) {
-    return dividedCompleteCVQuery(async (include) =>
-      models.CV.findByPk(cvs[0].id, {
-        include: [include],
-      })
-    );
+    let cv;
+
+    const redisKey = REDIS_KEYS.CV_PREFIX + url;
+    const redisCV = await RedisManager.getAsync(redisKey);
+
+    if (redisCV) {
+      cv = JSON.parse(redisCV);
+    } else {
+      cv = await dividedCompleteCVQuery(async (include) =>
+        models.CV.findByPk(cvs[0].id, {
+          include: [include],
+        })
+      );
+
+      await RedisManager.setWithExpireAsync(
+        redisKey,
+        JSON.stringify(cv),
+        60 * 10
+      );
+    }
+
+    return cv;
   }
 
   return null;
@@ -424,11 +442,11 @@ const getRandomShortCVs = async (nb, query) => {
       group by
         "UserId")
     select
-      cv.id
+      cvs.id,
     from
-      "CVs" cv
+      "CVs" cvs,
     inner join groupCVs on
-      cv."UserId" = groupCVs."UserId" and cv.version = groupCVs.version`;
+      cvs."UserId" = groupCVs."UserId" and cvs.version = groupCVs.version`;
 
   const getAllCvs = async (dbQuery) => {
     const cvs = await sequelize.query(dbQuery, {
@@ -483,7 +501,11 @@ const getRandomShortCVs = async (nb, query) => {
     } else {
       modelCVs = await getAllCvs(defaultQuery);
 
-      await RedisManager.setWithExpireAsync(redisKey, JSON.stringify(modelCVs), 60 * 10);
+      await RedisManager.setWithExpireAsync(
+        redisKey,
+        JSON.stringify(modelCVs),
+        60 * 10
+      );
     }
   } else {
     modelCVs = await getAllCvs(`${defaultQuery}
@@ -583,7 +605,7 @@ const getRandomShortCVs = async (nb, query) => {
   }, 0);
 
   let finalCVList = modelCVs.map((modelCV) => {
-    const cv = cleanCV(modelCV);
+    const cv = modelCV;
     const totalSharesForUser = totalSharesPerUser.find(
       (shares) => shares.CandidatId === cv.user.candidat.id
     );
