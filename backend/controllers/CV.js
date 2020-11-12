@@ -653,7 +653,7 @@ const getRandomShortCVs = async (nb, query) => {
     .slice(0, nb) // shuffle and take the nb first
     .sort((a, b) => a.ranking - b.ranking); // then order reverse by ranking
 
-  if (nb > INITIAL_NB_OF_CV_TO_DISPLAY) {
+  if (!nb || nb > INITIAL_NB_OF_CV_TO_DISPLAY) {
     finalCVList = [
       ...finalCVList.slice(0, INITIAL_NB_OF_CV_TO_DISPLAY),
       ...finalCVList
