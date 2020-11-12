@@ -30,6 +30,25 @@ const INCLUDE_ALL_USERS = {
     },
   ],
 };
+
+const INCLUDE_ALL_USERS_PRIVATE = {
+  model: models.User_Candidat,
+  as: 'user',
+  attributes: ['employed', 'hidden', 'url'],
+  include: [
+    {
+      model: models.User,
+      as: 'coach',
+      attributes: ['id', 'firstName', 'lastName', 'gender', 'email', 'phone'],
+    },
+    {
+      model: models.User,
+      as: 'candidat',
+      attributes: ['id', 'firstName', 'lastName', 'gender', 'email', 'phone'],
+    },
+  ],
+};
+
 const INCLUDE_NOT_HIDDEN_USERS = {
   ...INCLUDE_ALL_USERS,
   where: { hidden: false },
@@ -101,14 +120,22 @@ const INCLUDES_COMPLETE_CV_WITH_NOT_HIDDEN_USER = [
   ...INCLUDES_COMPLETE_CV_WITHOUT_USER,
   INCLUDE_NOT_HIDDEN_USERS,
 ];
+
 const INCLUDES_COMPLETE_CV_WITH_ALL_USER = [
   ...INCLUDES_COMPLETE_CV_WITHOUT_USER,
   INCLUDE_ALL_USERS,
 ];
 
-const dividedCompleteCVQuery = async (query) => {
+const INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE = [
+  ...INCLUDES_COMPLETE_CV_WITHOUT_USER,
+  INCLUDE_ALL_USERS_PRIVATE,
+];
+
+const dividedCompleteCVQuery = async (query, privateUser) => {
+  const completeIncludes = privateUser ? INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE : INCLUDES_COMPLETE_CV_WITH_ALL_USER;
+
   const results = await Promise.all(
-    INCLUDES_COMPLETE_CV_WITH_ALL_USER.map(async (include) => query(include))
+    completeIncludes.map(async (include) => query(include))
   );
 
   return results.reduce((acc, curr) => {
@@ -398,13 +425,15 @@ const getCVbyUserId = async (userId) => {
           UserId: userId,
         },
         order: [['version', 'DESC']],
-      })
+      }),
+      true
     );
   }
 
   return null;
 };
 
+// TODO Delete if not used
 const getCVs = async () => {
   console.log(`getCVs - Récupérer les CVs`);
   // TODO change for better performance if you ever need to use it
