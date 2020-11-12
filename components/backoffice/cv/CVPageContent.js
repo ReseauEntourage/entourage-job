@@ -192,7 +192,7 @@ const CVPageContent = ({ candidatId }) => {
 
         <GridNoSSR row gap="small">
           <ButtonDownload
-            cvUrl={cv.user.url}
+            candidatId={cv.UserId}
             firstName={cv.user.candidat.firstName}
             lastName={cv.user.candidat.lastName} />
           <Button toggle="target: #preview-modal" style="default">

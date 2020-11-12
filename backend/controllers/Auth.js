@@ -77,7 +77,7 @@ function toAuthJSON(user) {
     role: user.role,
     token: generateJWT(user),
     candidat,
-    coach
+    coach,
   };
 }
 
@@ -121,4 +121,5 @@ module.exports = {
   generateJWT,
   toAuthJSON,
   validatePassword,
+  getTokenFromHeaders,
 };

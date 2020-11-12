@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Layout from '../../../components/Layout';
 import Api from '../../../Axios';
-import {Section} from '../../../components/utils';
-import CVPDF from "../../../components/cv/CVPDF";
+import { Section } from '../../../components/utils';
+import CVPDF from '../../../components/cv/CVPDF';
 
 const CVPDFPage = ({ cv, page, router }) => {
   if (!cv) {
@@ -38,21 +38,32 @@ const CVPDFPage = ({ cv, page, router }) => {
       metaType="profile"
     >
       <div className="uk-background-muted">
-        <CVPDF cv={cv} page={page}/>
+        <CVPDF cv={cv} page={page} />
       </div>
     </Layout>
   );
 };
 
-CVPDFPage.getInitialProps = async ({query}) => {
-  return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
-    .then(({ data }) => {
-      return { cv: data, page: query.page };
+CVPDFPage.getInitialProps = async ({ query }) => {
+  if (query.token) {
+    return Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
+      params: {
+        userId: query.id,
+      },
+      headers: {
+        authorization: `Token ${query.token}`,
+      },
     })
-    .catch((err) => {
-      console.log(err);
-      return { cv: null };
-    });
+      .then(({ data }) => {
+        return { cv: data, page: query.page };
+      })
+      .catch((err) => {
+        console.log(err);
+        return { cv: null };
+      });
+  }
+  console.log('No token provided');
+  return { cv: null };
 };
 CVPDFPage.propTypes = {
   cv: PropTypes.shape(),

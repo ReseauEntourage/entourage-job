@@ -14,7 +14,14 @@ const S3 = require('../../../controllers/aws');
 const { sendMail } = require('../../../controllers/mail');
 const { airtable } = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
-const { USER_ROLES, CV_STATUS, NEWSLETTER_ORIGINS, REDIS_KEYS } = require('../../../../constants');
+const { getTokenFromHeaders } = require('../../../controllers/Auth');
+
+const {
+  USER_ROLES,
+  CV_STATUS,
+  NEWSLETTER_ORIGINS,
+  REDIS_KEYS,
+} = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
 const upload = multer({ dest: 'uploads/' });
@@ -220,14 +227,19 @@ router.post(
         .then(async (results) => {
           if (reqCV.status === CV_STATUS.Published.value) {
             try {
-              await S3.deleteFile(
-                `${process.env.AWSS3_FILE_DIRECTORY}${results[1].user.url}.pdf`
+              await RedisManager.delAsync(
+                REDIS_KEYS.CV_PREFIX + reqCV.user.url
               );
-              await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + reqCV.user.url);
               await RedisManager.delAsync(REDIS_KEYS.CV_LIST);
             } catch (err) {
               console.log(err);
             }
+          }
+          if (!autoSave) {
+            const { firstName, lastName } = results[1].user.candidat;
+            await S3.deleteFile(
+              `${process.env.AWSS3_FILE_DIRECTORY}${firstName}_${lastName}_${results[1].UserId.substring(0, 8)}.pdf`
+            );
           }
           return res.status(200).json(results[1]);
         })
@@ -397,85 +409,99 @@ router.get('/:url', auth(), (req, res) => {
  * Route : GET /api/<VERSION>/cv/pdf/<URL>
  * Description : Récupère le CV en PDF associé à l'<URL> fournit
  */
-router.get('/pdf/:url', auth(), async (req, res) => {
-  const paths = [
-    `${req.params.url}-page1.pdf`,
-    `${req.params.url}-page2.pdf`,
-    `${req.params.url}.pdf`,
-  ];
+router.get(
+  '/pdf/:userId',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  async (req, res) => {
+    checkCandidatOrCoachAuthorization(req, res, req.params.userId, async () => {
+      const { userId } = req.params;
+      const fileName = req.query.fileName
+        ? `${req.query.fileName}_${userId.substring(0, 8)}`
+        : userId;
 
-  let pdfBuffer = null;
+      const paths = [
+        `${userId}-page1.pdf`,
+        `${userId}-page2.pdf`,
+        `${fileName}.pdf`,
+      ];
 
-  try {
-    const file = await S3.download(
-      `${process.env.AWSS3_FILE_DIRECTORY}${paths[2]}`
-    );
-    pdfBuffer = file.Body;
-  } catch (e) {
-    console.log("PDF version doesn't exist.");
-  }
+      let pdfUrl = null;
+      const s3Key = `${process.env.AWSS3_FILE_DIRECTORY}${paths[2]}`;
+      try {
+        const pdfExists = await S3.getHead(s3Key);
 
-  try {
-    if (!pdfBuffer) {
-      const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox'],
-      });
-      const page = await browser.newPage();
-      const merger = new PDFMerger();
+        if (pdfExists) {
+          pdfUrl = await S3.getSignedUrl(s3Key);
+        }
+      } catch (e) {
+        console.log("PDF version doesn't exist.");
+      }
 
-      const options = { content: '@page { size: A4 portrait; margin: 0; }' };
+      try {
+        if (!pdfUrl) {
+          const token = getTokenFromHeaders(req);
 
-      // Fix because can't create page break
-      await page.goto(
-        `${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=0`,
-        { waitUntil: 'networkidle2' }
-      );
-      await page.addStyleTag(options);
-      await page.emulateMediaType('screen');
-      await page.pdf({
-        path: paths[0],
-        preferCSSPageSize: true,
-        printBackground: true,
-      });
-      merger.add(paths[0]);
+          const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox'],
+          });
+          const page = await browser.newPage();
+          const merger = new PDFMerger();
 
-      await page.goto(
-        `${process.env.SERVER_URL}/cv/pdf/${req.params.url}?page=1`,
-        { waitUntil: 'networkidle2' }
-      );
-      await page.addStyleTag(options);
-      await page.emulateMediaType('screen');
-      await page.pdf({
-        path: paths[1],
-        preferCSSPageSize: true,
-        printBackground: true,
-      });
-      merger.add(paths[1]);
+          const options = {
+            content: '@page { size: A4 portrait; margin: 0; }',
+          };
 
-      await browser.close();
+          // Fix because can't create page break
+          await page.goto(
+            `${process.env.SERVER_URL}/cv/pdf/${req.params.userId}?token=${token}&page=0`,
+            { waitUntil: 'networkidle2' }
+          );
+          await page.addStyleTag(options);
+          await page.emulateMediaType('screen');
+          await page.pdf({
+            path: paths[0],
+            preferCSSPageSize: true,
+            printBackground: true,
+          });
+          merger.add(paths[0]);
 
-      await merger.save(paths[2]);
+          await page.goto(
+            `${process.env.SERVER_URL}/cv/pdf/${req.params.userId}?token=${token}&page=1`,
+            { waitUntil: 'networkidle2' }
+          );
+          await page.addStyleTag(options);
+          await page.emulateMediaType('screen');
+          await page.pdf({
+            path: paths[1],
+            preferCSSPageSize: true,
+            printBackground: true,
+          });
+          merger.add(paths[1]);
 
-      pdfBuffer = fs.readFileSync(paths[2]);
+          await browser.close();
 
-      await S3.upload(pdfBuffer, 'application/pdf', `${paths[2]}`);
-    }
+          await merger.save(paths[2]);
 
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Length': pdfBuffer.length,
+          const pdfBuffer = fs.readFileSync(paths[2]);
+
+          await S3.upload(pdfBuffer, 'application/pdf', `${paths[2]}`, true);
+
+          pdfUrl = await S3.getSignedUrl(s3Key);
+        }
+
+        res.status(200).send({ pdfUrl });
+      } catch (err) {
+        console.log(err);
+        res.status(401).send('Une erreur est survenue');
+      } finally {
+        if (fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
+        if (fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
+        if (fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
+      }
     });
-    res.status(200).send(pdfBuffer);
-  } catch (err) {
-    console.log(err);
-    res.status(401).send('Une erreur est survenue');
-  } finally {
-    if (fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
-    if (fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
-    if (fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
   }
-});
+);
 
 /**
  * Route : PUT /api/<VERSION>/cv/<ID>
