@@ -25,7 +25,7 @@ const cleanCV = (model) => {
   if (tmpCV.experiences) {
     tmpCV.experiences = tmpCV.experiences.map((e) => {
       if (e.skills) {
-        return {...e, skills: e.skills.map(({name}) => name)};
+        return { ...e, skills: e.skills.map(({ name }) => name) };
       }
       return e;
     });

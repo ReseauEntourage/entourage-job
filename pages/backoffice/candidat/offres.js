@@ -84,25 +84,7 @@ const Opportunites = () => {
           `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${userId}`
         );
 
-        // sorted by bookmark and date
-        const sortedOffers = data.sort((a, b) => {
-          if (a.userOpportunity || b.userOpportunity) {
-            if (a.userOpportunity && b.userOpportunity) {
-              if (
-                b.userOpportunity.bookmarked &&
-                a.userOpportunity.bookmarked
-              ) {
-                return new Date(b.date) - new Date(a.date);
-              }
-              return (
-                b.userOpportunity.bookmarked - a.userOpportunity.bookmarked
-              );
-            }
-            if (b.userOpportunity) return b.userOpportunity.bookmarked;
-          }
-          return new Date(b.date) - new Date(a.date);
-        });
-        setOffers(sortedOffers);
+        setOffers(data);
         return data;
       } catch (err) {
         console.error(err);

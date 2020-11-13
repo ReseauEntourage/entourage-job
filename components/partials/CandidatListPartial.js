@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import {GridNoSSR, IconNoSSR, Section} from '../utils';
 import CVList from '../cv/CVList';
 import Button from "../utils/Button";
+import {INITIAL_NB_OF_CV_TO_DISPLAY} from "../../constants";
 
 const CandidatListPartial = ({nbShares}) => (
   <Section style="muted" id="candidat">
@@ -50,7 +51,7 @@ const CandidatListPartial = ({nbShares}) => (
           &nbsp;{' '}partages de CV&nbsp;!
         </h4>
       </div>
-      <CVList nb={9} />
+      <CVList nb={INITIAL_NB_OF_CV_TO_DISPLAY} />
       <GridNoSSR middle column gap="collapse">
         <Button
           href="/candidats"

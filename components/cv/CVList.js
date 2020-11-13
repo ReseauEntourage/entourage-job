@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, GridNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import Api from '../../Axios';
-import { CV_FILTERS_DATA } from '../../constants';
+import {CV_FILTERS_DATA, INITIAL_NB_OF_CV_TO_DISPLAY} from '../../constants';
 import { hasAsChild } from '../../utils';
 import PostJobAdModal from '../modals/PostJobAdModal';
 import SimpleLink from '../utils/SimpleLink';
@@ -23,8 +23,6 @@ const NoCVInThisArea = () => (
     </SimpleLink>
   </p>
 );
-
-const INITIAL_NB_OF_CV_TO_DISPLAY = 9;
 
 const CVList = ({
   nb,
