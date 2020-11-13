@@ -132,7 +132,9 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE = [
 ];
 
 const dividedCompleteCVQuery = async (query, privateUser) => {
-  const completeIncludes = privateUser ? INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE : INCLUDES_COMPLETE_CV_WITH_ALL_USER;
+  const completeIncludes = privateUser
+    ? INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE
+    : INCLUDES_COMPLETE_CV_WITH_ALL_USER;
 
   const results = await Promise.all(
     completeIncludes.map(async (include) => query(include))
@@ -418,14 +420,15 @@ const getCVbyUserId = async (userId) => {
   const user = await models.User.findByPk(userId);
 
   if (user) {
-    return dividedCompleteCVQuery(async (include) =>
-      models.CV.findOne({
-        include: [include],
-        where: {
-          UserId: userId,
-        },
-        order: [['version', 'DESC']],
-      }),
+    return dividedCompleteCVQuery(
+      async (include) =>
+        models.CV.findOne({
+          include: [include],
+          where: {
+            UserId: userId,
+          },
+          order: [['version', 'DESC']],
+        }),
       true
     );
   }
@@ -653,7 +656,7 @@ const getRandomShortCVs = async (nb, query) => {
     .slice(0, nb) // shuffle and take the nb first
     .sort((a, b) => a.ranking - b.ranking); // then order reverse by ranking
 
-  if (!nb || nb > INITIAL_NB_OF_CV_TO_DISPLAY) {
+  if (!nb || nb > INITIAL_NB_OF_CV_TO_DISPLAY) {
     finalCVList = [
       ...finalCVList.slice(0, INITIAL_NB_OF_CV_TO_DISPLAY),
       ...finalCVList
@@ -677,6 +680,72 @@ const setCV = (id, cv) => {
   });
 };
 
+const createSearchString = async (cv) => {
+  await sequelize.query(
+    `
+    INSERT INTO "CV_Search" ("CVId", "searchString")
+    select distinct
+        cvs.id, concat(string_agg(distinct ambitions.name, ' '), ' ', string_agg(distinct businessLines.name, ' '), ' ', string_agg(distinct contracts.name, ' '), ' ', string_agg(distinct languages.name, ' '), ' ', string_agg(distinct locations.name, ' '), ' ', string_agg(distinct passions.name, ' '), ' ', string_agg(distinct skills.name, ' '), ' ', string_agg(distinct experiences.description, ' '), ' ', string_agg(distinct experienceSkills.name, ' '), ' ', string_agg(distinct reviews.name, ' '), ' ', string_agg(distinct reviews.status, ' '), ' ', string_agg(distinct reviews.text, ' '), ' ', string_agg(distinct users."firstName", ' '), ' ', string_agg(distinct users."lastName", ' '), ' ', string_agg(distinct cvs.catchphrase, ' '), ' ', string_agg(distinct cvs.availability, ' '), ' ', string_agg(distinct cvs.story, ' '), ' ', string_agg(distinct cvs.transport, ' ')) as searchstring
+    from
+        "CVs" cvs
+
+    INNER JOIN "CV_Ambitions"
+    ON cvs.id="CV_Ambitions"."CVId"
+        JOIN "Ambitions" ambitions
+            ON ambitions.id="CV_Ambitions"."AmbitionId"
+
+    INNER JOIN "CV_BusinessLines"
+               ON cvs.id="CV_BusinessLines"."CVId"
+    JOIN "BusinessLines" businessLines
+         ON businessLines.id="CV_BusinessLines"."BusinessLineId"
+
+    INNER JOIN "CV_Contracts"
+               ON cvs.id="CV_Contracts"."CVId"
+    JOIN "Contracts" contracts
+         ON contracts.id="CV_Contracts"."ContractId"
+
+    INNER JOIN "CV_Languages"
+               ON cvs.id="CV_Languages"."CVId"
+    JOIN "Languages" languages
+         ON languages.id="CV_Languages"."LanguageId"
+
+    INNER JOIN "CV_Locations"
+               ON cvs.id="CV_Locations"."CVId"
+    JOIN "Locations" locations
+         ON locations.id="CV_Locations"."LocationId"
+
+    INNER JOIN "CV_Passions"
+               ON cvs.id="CV_Passions"."CVId"
+    JOIN "Passions" passions
+         ON passions.id="CV_Passions"."PassionId"
+
+    INNER JOIN "CV_Skills"
+               ON cvs.id="CV_Skills"."CVId"
+    JOIN "Skills" skills
+         ON skills.id="CV_Skills"."SkillId"
+
+    INNER JOIN "Experiences" experiences
+               ON cvs.id=experiences."CVId"
+    INNER JOIN "Experience_Skills"
+         ON experiences.id="Experience_Skills"."ExperienceId"
+        JOIN "Skills" experienceSkills
+         ON experienceSkills.id = "Experience_Skills"."SkillId"
+
+    INNER JOIN "Reviews" reviews
+               ON cvs.id=reviews."CVId"
+
+    INNER JOIN "Users" users
+               ON cvs."UserId"=users.id
+
+    where cvs.id = ${cv.id}
+    group by cvs.id;
+    `,
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
+};
+
 module.exports = {
   createCV,
   deleteCV,
@@ -685,4 +754,5 @@ module.exports = {
   getCVs,
   getRandomShortCVs,
   setCV,
+  createSearchString,
 };
