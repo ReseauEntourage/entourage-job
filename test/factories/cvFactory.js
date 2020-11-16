@@ -1,12 +1,9 @@
 const fakerStatic = require('faker');
+const uuid = require('uuid/v4');
+
+const { CV_STATUS } = require('../../constants');
 const {
-  CV_STATUS
-} = require('../../constants');
-const {
-  models: {
-    CV,
-    User,
-  }
+  models: { CV, CV_Search, User },
 } = require('../../backend/db/models');
 
 /**
@@ -17,7 +14,7 @@ const {
  */
 const getCvStatusValues = (cvStatus) => {
   return Object.keys(cvStatus).map((status) => cvStatus[status].value);
-}
+};
 
 /**
  * Generate data to create a CV
@@ -51,9 +48,9 @@ const generateCv = async (props = {}) => {
 
   return {
     ...fakeData,
-    ...props
-  }
-}
+    ...props,
+  };
+};
 
 /**
  * Create a cv in DB.
@@ -80,21 +77,22 @@ const generateCv = async (props = {}) => {
  * @param {boolean} insertInDB @default true
  * @return {Promise<CV>}
  */
-const cvFactory = async (
-  props = {},
-  componentsId = {},
-  insertInDB = true,
-) => {
+const cvFactory = async (props = {}, componentsId = {}, insertInDB = true) => {
   const cvData = await generateCv(props);
   const cvFull = {
     ...cvData,
-    ...componentsId
-  }
+    ...componentsId,
+  };
   let cvDB;
   if (insertInDB) {
     cvDB = await CV.create(cvFull);
+    await CV_Search.create({
+      id: uuid(),
+      CVId: cvDB.id,
+      searchString: JSON.stringify({ ...cvFull, ...props }),
+    });
   }
   return insertInDB ? cvDB.dataValues : cvFull;
-}
+};
 
 module.exports = cvFactory;

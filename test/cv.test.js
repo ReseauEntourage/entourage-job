@@ -247,6 +247,7 @@ describe('CV', () => {
                         const newCV = await cvFactory({
                             status: CV_STATUS.Published.value,
                             UserId: newUser.id,
+                            firstName: newUser.firstName,
                         });
                         const response = await request(serverTest)
                             .get(`${route}/cards/random/?nb=1&q=xxxxKnownFirstNamexxxx`);
