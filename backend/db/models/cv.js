@@ -126,6 +126,12 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'UserId',
       targetKey: 'candidatId',
     });
+
+    CV.hasOne(models.CV_Search, {
+      as: 'cvSearch',
+      foreignKey: 'CVId',
+      sourceKey: 'id',
+    });
   };
   return CV;
 };

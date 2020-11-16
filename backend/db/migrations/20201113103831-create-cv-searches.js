@@ -2,7 +2,7 @@ const uuid = require('uuid/v4');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('CV_Search', {
+    return queryInterface.createTable('CV_Searches', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -35,6 +35,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('CV_Search');
+    return queryInterface.dropTable('CV_Searches');
   },
 };
