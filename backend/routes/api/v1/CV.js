@@ -231,6 +231,8 @@ router.post(
                 REDIS_KEYS.CV_PREFIX + reqCV.user.url
               );
               await RedisManager.delAsync(REDIS_KEYS.CV_LIST);
+              await CVController.createSearchString(results[1]);
+
             } catch (err) {
               console.log(err);
             }

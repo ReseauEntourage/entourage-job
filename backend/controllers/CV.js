@@ -132,7 +132,9 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE = [
 ];
 
 const dividedCompleteCVQuery = async (query, privateUser) => {
-  const completeIncludes = privateUser ? INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE : INCLUDES_COMPLETE_CV_WITH_ALL_USER;
+  const completeIncludes = privateUser
+    ? INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE
+    : INCLUDES_COMPLETE_CV_WITH_ALL_USER;
 
   const results = await Promise.all(
     completeIncludes.map(async (include) => query(include))
@@ -418,14 +420,15 @@ const getCVbyUserId = async (userId) => {
   const user = await models.User.findByPk(userId);
 
   if (user) {
-    return dividedCompleteCVQuery(async (include) =>
-      models.CV.findOne({
-        include: [include],
-        where: {
-          UserId: userId,
-        },
-        order: [['version', 'DESC']],
-      }),
+    return dividedCompleteCVQuery(
+      async (include) =>
+        models.CV.findOne({
+          include: [include],
+          where: {
+            UserId: userId,
+          },
+          order: [['version', 'DESC']],
+        }),
       true
     );
   }
@@ -537,85 +540,15 @@ const getRandomShortCVs = async (nb, query) => {
       );
     }
   } else {
-    modelCVs = await getAllCvs(`${defaultQuery}
-      /* recherche par toutes information du CV */
-      where (
-        cvs."id" in (
-          select distinct "CV_Ambitions"."CVId"
-          FROM "CV_Ambitions" INNER JOIN "Ambitions"
-          on "CV_Ambitions"."AmbitionId" = "Ambitions".id
-          WHERE ${escapeColumn('"Ambitions"."name"')} like '%${escapedQuery}%'
-        )
-        or cvs."id" in (
-          select distinct "CV_BusinessLines"."CVId"
-          FROM "CV_BusinessLines" INNER JOIN "BusinessLines"
-          on "CV_BusinessLines"."BusinessLineId" = "BusinessLines".id
-          where ${escapeColumn(
-            '"BusinessLines"."name"'
-          )} like '%${escapedQuery}%'
-        )
-        or cvs."id" in (
-          select distinct "CV_Contracts"."CVId"
-          FROM "CV_Contracts" INNER JOIN "Contracts"
-          on "CV_Contracts"."ContractId" = "Contracts".id
-          where ${escapeColumn('"Contracts"."name"')} like '%${escapedQuery}%'
-        )
-        or cvs."id" in (
-          select distinct "CV_Languages"."CVId"
-          FROM "CV_Languages" INNER JOIN "Languages"
-          on "CV_Languages"."LanguageId" = "Languages".id
-          where ${escapeColumn('"Languages"."name"')} like '%${escapedQuery}%'
-        )
-        or cvs."id" in (
-          select distinct "CV_Locations"."CVId"
-          FROM "CV_Locations" INNER JOIN "Locations"
-          on "CV_Locations"."LocationId" = "Locations".id
-          where ${escapeColumn('"Locations"."name"')} like '%${escapedQuery}%'
-        )
-        or cvs."id" in (
-          select distinct "CV_Passions"."CVId"
-          FROM "CV_Passions" INNER JOIN "Passions"
-          on "CV_Passions"."PassionId" = "Passions".id
-          where ${escapeColumn('"Passions"."name"')} like '%${escapedQuery}%'
-        )
-        or cvs."id" in (
-          select distinct "CV_Skills"."CVId"
-          FROM "CV_Skills" INNER JOIN "Skills"
-          on "CV_Skills"."SkillId" = "Skills".id
-          where ${escapeColumn('"Skills"."name"')} like '%${escapedQuery}%'
-        )
-        or cvs."id" in (
-          select distinct exp."CVId"
-          FROM "Experiences" exp
-          where ${escapeColumn('exp."description"')} like '%${escapedQuery}%'
-          or exp."id" in (
-              select distinct "Experience_Skills"."ExperienceId"
-              FROM "Experience_Skills" INNER JOIN "Skills"
-              on "Experience_Skills"."SkillId" = "Skills".id
-              where ${escapeColumn('"Skills"."name"')} like '%${escapedQuery}%'
-          )
-        )
-        or cvs."id" in (
-            select distinct "Reviews"."CVId"
-            FROM "Reviews"
-            where ${escapeColumn('"Reviews"."name"')} like '%${escapedQuery}%'
-            or ${escapeColumn('"Reviews"."text"')} like '%${escapedQuery}%'
-            or ${escapeColumn('"Reviews"."status"')} like '%${escapedQuery}%'
-        )
-        or cvs."id" in (
-            select "CVs".id
-            FROM "Users" INNER JOIN "CVs"
-            on "CVs"."UserId" = "Users"."id"
-            where (
-              ${escapeColumn('"Users"."firstName"')} like '%${escapedQuery}%'
-              or ${escapeColumn('"Users"."lastName"')} like '%${escapedQuery}%'
-            )
-        )
-        or ${escapeColumn('cvs."catchphrase"')} like '%${escapedQuery}%'
-        or ${escapeColumn('cvs."availability"')} like '%${escapedQuery}%'
-        or ${escapeColumn('cvs."story"')} like '%${escapedQuery}%'
-        or ${escapeColumn('cvs."transport"')} like '%${escapedQuery}%'
-      )`);
+    modelCVs = await getAllCvs(`
+      with publishedCVs as (${defaultQuery})
+      SELECT cvSearches."CVId" as id
+      FROM "CV_Searches" cvSearches
+        INNER JOIN publishedCVs on cvSearches."CVId" = publishedCVs."id"
+        WHERE ${escapeColumn(
+          'cvSearches."searchString"'
+        )} like '%${escapedQuery}%'
+    `);
   }
 
   const totalSharesPerUser = await sequelize.query(
@@ -653,7 +586,7 @@ const getRandomShortCVs = async (nb, query) => {
     .slice(0, nb) // shuffle and take the nb first
     .sort((a, b) => a.ranking - b.ranking); // then order reverse by ranking
 
-  if (!nb || nb > INITIAL_NB_OF_CV_TO_DISPLAY) {
+  if (!nb || nb > INITIAL_NB_OF_CV_TO_DISPLAY) {
     finalCVList = [
       ...finalCVList.slice(0, INITIAL_NB_OF_CV_TO_DISPLAY),
       ...finalCVList
@@ -677,6 +610,32 @@ const setCV = (id, cv) => {
   });
 };
 
+const createSearchString = async (cv) => {
+  const searchString = [
+    cv.ambitions.join(' '),
+    cv.businessLines.join(' '),
+    cv.contracts.join(' '),
+    cv.skills.join(' '),
+    cv.languages.join(' '),
+    cv.transports,
+    cv.story,
+    cv.availability,
+    cv.user.candidat.firstName,
+    cv.user.candidat.lastName,
+    cv.experiences
+      .map((exp) => [exp.description, exp.skills.join(' ')].join(' '))
+      .join(' '),
+    cv.reviews
+      .map((reviews) => [reviews.text, reviews.status, reviews.name].join(' '))
+      .join(' '),
+  ].join(' ');
+
+  models.CV_Search.create({
+    CVId: cv.id,
+    searchString,
+  });
+};
+
 module.exports = {
   createCV,
   deleteCV,
@@ -685,4 +644,5 @@ module.exports = {
   getCVs,
   getRandomShortCVs,
   setCV,
+  createSearchString,
 };
