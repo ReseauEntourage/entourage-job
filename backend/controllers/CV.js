@@ -615,11 +615,14 @@ const createSearchString = async (cv) => {
     cv.ambitions.join(' '),
     cv.businessLines.join(' '),
     cv.contracts.join(' '),
-    cv.skills.join(' '),
     cv.languages.join(' '),
-    cv.transports,
+    cv.locations.join(' '),
+    cv.passions.join(' '),
+    cv.skills.join(' '),
+    cv.transport,
     cv.story,
     cv.availability,
+    cv.catchphrase,
     cv.user.candidat.firstName,
     cv.user.candidat.lastName,
     cv.experiences
@@ -630,7 +633,7 @@ const createSearchString = async (cv) => {
       .join(' '),
   ].join(' ');
 
-  models.CV_Search.create({
+  await models.CV_Search.create({
     CVId: cv.id,
     searchString,
   });
