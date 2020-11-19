@@ -53,6 +53,7 @@ const INCLUDE_NOT_HIDDEN_USERS = {
   ...INCLUDE_ALL_USERS,
   where: { hidden: false },
 };
+
 const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
   {
     model: models.Contract,
@@ -116,6 +117,7 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
     attributes: ['id', 'text', 'status', 'name'],
   },
 ];
+
 const INCLUDES_COMPLETE_CV_WITH_NOT_HIDDEN_USER = [
   ...INCLUDES_COMPLETE_CV_WITHOUT_USER,
   INCLUDE_NOT_HIDDEN_USERS,
@@ -130,6 +132,28 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE = [
   ...INCLUDES_COMPLETE_CV_WITHOUT_USER,
   INCLUDE_ALL_USERS_PRIVATE,
 ];
+
+const publishedCVQuery = `
+    /* CV par recherche */
+
+    with groupCVs as (	select
+      /* pour chaque user, dernier CV publiés */
+        "UserId", MAX(version) as version
+      from
+        "User_Candidats",
+        "CVs"
+      where
+        "CVs".status = '${CV_STATUS.Published.value}'
+        and "User_Candidats"."candidatId" = "CVs"."UserId"
+        and "User_Candidats".hidden = false
+      group by
+        "UserId")
+    select
+      cvs.id, cvs."UserId"
+    from
+      "CVs" cvs
+    inner join groupCVs on
+      cvs."UserId" = groupCVs."UserId" and cvs.version = groupCVs.version`;
 
 const dividedCompleteCVQuery = async (query, privateUser) => {
   const completeIncludes = privateUser
@@ -458,28 +482,6 @@ const getRandomShortCVs = async (nb, query) => {
     }`
   );
 
-  const defaultQuery = `
-    /* CV par recherche */
-
-    with groupCVs as (	select
-      /* pour chaque user, dernier CV publiés */
-        "UserId", MAX(version) as version
-      from
-        "User_Candidats",
-        "CVs"
-      where
-        "CVs".status = '${CV_STATUS.Published.value}'
-        and "User_Candidats"."candidatId" = "CVs"."UserId"
-        and "User_Candidats".hidden = false
-      group by
-        "UserId")
-    select
-      cvs.id
-    from
-      "CVs" cvs
-    inner join groupCVs on
-      cvs."UserId" = groupCVs."UserId" and cvs.version = groupCVs.version`;
-
   const getAllCvs = async (dbQuery) => {
     const cvs = await sequelize.query(dbQuery, {
       type: QueryTypes.SELECT,
@@ -531,7 +533,7 @@ const getRandomShortCVs = async (nb, query) => {
     if (redisCvs) {
       modelCVs = JSON.parse(redisCvs);
     } else {
-      modelCVs = await getAllCvs(defaultQuery);
+      modelCVs = await getAllCvs(publishedCVQuery);
 
       await RedisManager.setWithExpireAsync(
         redisKey,
@@ -541,7 +543,7 @@ const getRandomShortCVs = async (nb, query) => {
     }
   } else {
     modelCVs = await getAllCvs(`
-      with publishedCVs as (${defaultQuery})
+      with publishedCVs as (${publishedCVQuery})
       SELECT cvSearches."CVId" as id
       FROM "CV_Searches" cvSearches
         INNER JOIN publishedCVs on cvSearches."CVId" = publishedCVs."id"
@@ -648,4 +650,5 @@ module.exports = {
   getRandomShortCVs,
   setCV,
   createSearchString,
+  publishedCVQuery,
 };

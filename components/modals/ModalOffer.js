@@ -60,7 +60,7 @@ OfferInfoContainer.defaultProps = {
 };
 
 export function translateCategory(isPublic) {
-  if (!isPublic) return 'Offre personnelle';
+  if (!isPublic) return 'Offre privé';
   if (isPublic) return 'Offre générale';
   return 'Offre inconnue';
 }

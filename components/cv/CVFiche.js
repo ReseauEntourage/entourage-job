@@ -26,7 +26,6 @@ import {
 import { SharesCountContext } from '../store/SharesCountProvider';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
-import ButtonDownload from '../backoffice/cv/ButtonDownload';
 
 /**
  * Le cv en public et en preview
@@ -46,18 +45,14 @@ const CVFiche = ({ cv, actionDisabled }) => {
     ? `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`
     : '';
 
-  // desactivation des champs candidat et publique
+  // Modification du texte sur le champ des candidats
   const mutatedSchema = mutateFormSchema(schema, [
     {
-      fieldId: 'candidatId',
+      fieldId: 'candidatesId',
       props: [
         {
-          propName: 'disabled',
-          value: true,
-        },
-        {
-          propName: 'hidden',
-          value: true,
+          propName: 'title',
+          value: `Ajouter d'autres candidats à qui adresser l'offre en plus de ${cv.user.candidat.firstName}`,
         },
       ],
     },
@@ -522,18 +517,15 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
                 submitText="Envoyer"
                 defaultValues={{
-                  isPublic: false,
-                  candidatId: {
-                    value: cv.UserId,
-                    label: `${cv.user.candidat.firstName}`,
-                  },
+                  isPublic: false
                 }}
                 formSchema={mutatedSchema}
-                onSubmit={(fields, closeModal) => {
-                  postOpportunity(
-                    {
+                onSubmit={async (fields, closeModal) => {
+                  const candidatesId = fields.candidatesId.map((candidateId) => typeof candidateId === 'object' ? candidateId.value : candidateId);
+                  if(!candidatesId.includes(cv.UserId)) candidatesId.push(cv.UserId);
+                  await postOpportunity({
                       ...fields,
-                      candidatId: cv.UserId,
+                      candidatesId: candidatesId,
                       date: Date.now(),
                     },
                     closeModal

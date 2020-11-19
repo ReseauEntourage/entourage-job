@@ -19,7 +19,7 @@ const PostJobAdModal = () => {
     schema,
     [
       {
-        fieldId: 'candidatId',
+        fieldId: 'candidatesId',
         props: [
           {
             propName: 'disabled',
