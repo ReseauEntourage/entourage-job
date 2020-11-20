@@ -23,6 +23,25 @@ const {
 
 const { cleanOpportunity } = require('../utils');
 
+const INCLUDE_OPPORTUNITY_CANDIDATE = [{
+  model: User,
+  attributes: ['id', 'email', 'firstName', 'lastName', 'gender'],
+  include: [
+    {
+      model: User_Candidat,
+      as: 'candidat',
+      attributes: ['employed', 'hidden', 'note', 'url'],
+      include: [
+        {
+          model: User,
+          as: 'coach',
+          attributes: ['id', 'email', 'firstName', 'lastName'],
+        },
+      ],
+    },
+  ],
+}];
+
 const INCLUDE_OPPORTUNITY_COMPLETE = [
   {
     model: BusinessLine,
@@ -42,26 +61,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
       'archived',
       'note',
     ],
-    include: [
-      {
-        model: User,
-        attributes: ['id', 'email', 'firstName', 'lastName', 'gender'],
-        include: [
-          {
-            model: User_Candidat,
-            as: 'candidat',
-            attributes: ['employed', 'hidden', 'note', 'url'],
-            include: [
-              {
-                model: User,
-                as: 'coach',
-                attributes: ['id', 'email', 'firstName', 'lastName'],
-              },
-            ],
-          },
-        ],
-      },
-    ],
+    include: INCLUDE_OPPORTUNITY_CANDIDATE
   },
 ];
 
@@ -128,16 +128,16 @@ const getAirtableOpportunityFields = (opportunity, candidates, businessLines) =>
         : null,
     Statut:
       !opportunity.isPublic &&
-      opportunity.userOpportunity &&
-      opportunity.userOpportunity.length > 0
-        ? findOfferStatus(opportunity.userOpportunity[0].status).label
+      candidates &&
+      candidates.length === 1
+        ? findOfferStatus(candidates[0].status).label
         : null,
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
   };
 };
 
-const updateTable = (opportunity, candidat) =>
+const updateTable = (opportunity, candidates) =>
   new Promise((res, rej) => {
     airtable("Offres d'emploi v2")
       .select({
@@ -150,7 +150,7 @@ const updateTable = (opportunity, candidat) =>
 
         const fields = getAirtableOpportunityFields(
           opportunity,
-          candidat,
+          candidates,
           opportunity.businessLines
         );
 
@@ -213,20 +213,22 @@ const createOpportunity = async (data) => {
   let candidates = [];
   if (data.candidatesId && data.candidatesId.length > 0) {
     console.log(`Etape 4 - Détermine le(s) User(s) à qui l'opportunité s'adresse`);
-    await Promise.all(
+    candidates = await Promise.all(
       data.candidatesId.map((candidatId) =>
         Opportunity_User.create(
           {
             OpportunityId: modelOpportunity.id,
             UserId: candidatId, // to rename in userId
           }
-        )
+        ).then((model) => model[0])
     ));
 
-    candidates = await User.findAll({
+    candidates = await Opportunity_User.findAll({
       where: {
-        id: data.candidatesId,
+        UserId: data.candidatesId,
+        OpportunityId:  modelOpportunity.id,
       },
+      include: INCLUDE_OPPORTUNITY_CANDIDATE,
     });
   }
 
@@ -504,7 +506,7 @@ const updateOpportunity = async (opportunity) => {
         }).then((model) => model[0])
     )));
 
-    const deletions = await Opportunity_User.destroy({
+    await Opportunity_User.destroy({
       where: {
         OpportunityId: modelOpportunity.id,
         UserId: { [Op.not]: opportunitiesUser.map((opportunityUser) => opportunityUser.UserId) },
@@ -557,11 +559,11 @@ const updateOpportunity = async (opportunity) => {
     }
   }
 
-  const sendJobOfferMails = async (candidates) => {
-    await Promise.all(
+  const sendJobOfferMails = (candidates) => {
+    return Promise.all(
       candidates.map(async (candidat) => {
         await sendMail({
-          toEmail: candidat.email,
+          toEmail: candidat.User.email,
           subject: `Vous avez reçu une nouvelle offre d'emploi`,
           text: `
             Vous venez de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
@@ -570,16 +572,16 @@ const updateOpportunity = async (opportunity) => {
         });
 
         const coach =
-          candidat && candidat.candidat && candidat.candidat.coach
-            ? candidat.candidat.coach
+          candidat.User && candidat.User.candidat && candidat.User.candidat.coach
+            ? candidat.User.candidat.coach
             : null;
 
         if (coach) {
           await sendMail({
             toEmail: coach.email,
-            subject: `${candidat.firstName} a reçu une nouvelle offre d'emploi`,
+            subject: `${candidat.User.firstName} a reçu une nouvelle offre d'emploi`,
             text: `
-           ${candidat.firstName} vient de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
+           ${candidat.User.firstName} vient de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
            Vous pouvez la consulter en cliquant ici :
            ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
           });

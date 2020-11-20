@@ -184,9 +184,15 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
   }
   if (data.component === 'select-request-async') {
     let valueToUse = null;
-    if (value && value.length > 0) {
-      valueToUse = value.every((v) => typeof v === 'object') ? value : getValue(value);
+    if (value) {
+      if (data.isMulti) {
+        valueToUse = value.every((v) => typeof v === 'object') ? value : getValue(value);
+      }
+      else {
+        valueToUse = (typeof value === 'string') ? getValue(value) : value;
+      }
     }
+
     return (
       <div className="uk-padding-small uk-padding-remove-left uk-padding-remove-right">
         {data.title && (

@@ -30,12 +30,15 @@ import TAGS from '../../constants/tags';
 /**
  * Le cv en public et en preview
  */
-const CVFiche = ({ cv, actionDisabled }) => {
+const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
   const { incrementSharesCount } = useContext(SharesCountContext);
 
   const router = useRouter();
   const hostname = process.env.SERVER_URL;
-  const link = `${hostname}${router.asPath}`;
+  const path = router.asPath.includes('?')
+    ? router.asPath.slice(0, router.asPath.indexOf('?'))
+    : router.asPath;
+  const link = `${hostname}${path}`;
   const hashtags = ['LinkedOut'];
   const candidateExists = cv && cv.user && cv.user.candidat;
   const sharedDescription = candidateExists
@@ -44,6 +47,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
   const title = candidateExists
     ? `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`
     : '';
+
 
   // Modification du texte sur le champ des candidats
   const mutatedSchema = mutateFormSchema(schema, [
@@ -89,89 +93,87 @@ const CVFiche = ({ cv, actionDisabled }) => {
 
   const experiences = sortExperiences(cv.experiences);
 
-  const shareSection = () => {
-    return (
-      <div className="uk-flex uk-flex-column uk-flex-middle">
-        <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom uk-text-center uk-text-muted">
-          Partager mon CV
-        </p>
-        <GridNoSSR row gap="small" center middle>
-          <LinkedinShareButton
-            disabled={actionDisabled}
-            onShareWindowClose={() => {
-              event(TAGS.PAGE_CV_PARTAGE_CV_LINKEDIN_CLIC);
-              updateShareCount(cv.UserId, 'linkedin');
-              openNewsletterModal();
-            }}
-            url={link}
-            title={title}
-            summary={sharedDescription}
-            className="uk-icon-button"
-          >
-            <IconNoSSR
-              className={!actionDisabled ? 'ent-text-white' : undefined}
-              name="linkedin"
-              ratio={1.2}
-            />
-          </LinkedinShareButton>
-          <FacebookShareButton
-            disabled={actionDisabled}
-            onShareWindowClose={() => {
-              event(TAGS.PAGE_CV_PARTAGE_CV_FACEBOOK_CLIC);
-              updateShareCount(cv.UserId, 'facebook');
-              openNewsletterModal();
-            }}
-            url={link}
-            quote={sharedDescription}
-            hashtags={hashtags}
-            className="uk-icon-button"
-          >
-            <IconNoSSR
-              className={!actionDisabled ? 'ent-text-white' : undefined}
-              name="facebook"
-              ratio={1.2}
-            />
-          </FacebookShareButton>
-          <TwitterShareButton
-            disabled={actionDisabled}
-            onShareWindowClose={() => {
-              event(TAGS.PAGE_CV_PARTAGE_CV_TWITTER_CLIC);
-              updateShareCount(cv.UserId, 'twitter');
-              openNewsletterModal();
-            }}
-            url={link}
-            title={sharedDescription}
-            hashtags={hashtags}
-            via="R_Entourage"
-            className="uk-icon-button"
-          >
-            <IconNoSSR
-              className={!actionDisabled ? 'ent-text-white' : undefined}
-              name="twitter"
-              ratio={1.2}
-            />
-          </TwitterShareButton>
-          <WhatsappShareButton
-            disabled={actionDisabled}
-            onShareWindowClose={() => {
-              event(TAGS.PAGE_CV_PARTAGE_CV_WHATSAPP_CLIC);
-              updateShareCount(cv.UserId, 'whatsapp');
-              openNewsletterModal();
-            }}
-            url={link}
-            title={sharedDescription}
-            className="uk-icon-button"
-          >
-            <IconNoSSR
-              className={!actionDisabled && 'ent-text-white'}
-              name="whatsapp"
-              ratio={1.2}
-            />
-          </WhatsappShareButton>
-        </GridNoSSR>
-      </div>
-    );
-  };
+  const shareSection = (
+    <div className="uk-flex uk-flex-column uk-flex-middle">
+      <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom uk-text-center uk-text-muted">
+        Partager mon CV
+      </p>
+      <GridNoSSR row gap="small" center middle>
+        <LinkedinShareButton
+          disabled={actionDisabled}
+          onShareWindowClose={() => {
+            event(TAGS.PAGE_CV_PARTAGE_CV_LINKEDIN_CLIC);
+            updateShareCount(cv.UserId, 'linkedin');
+            openNewsletterModal();
+          }}
+          url={link}
+          title={title}
+          summary={sharedDescription}
+          className="uk-icon-button"
+        >
+          <IconNoSSR
+            className={!actionDisabled ? 'ent-text-white' : undefined}
+            name="linkedin"
+            ratio={1.2}
+          />
+        </LinkedinShareButton>
+        <FacebookShareButton
+          disabled={actionDisabled}
+          onShareWindowClose={() => {
+            event(TAGS.PAGE_CV_PARTAGE_CV_FACEBOOK_CLIC);
+            updateShareCount(cv.UserId, 'facebook');
+            openNewsletterModal();
+          }}
+          url={link}
+          quote={sharedDescription}
+          hashtags={hashtags}
+          className="uk-icon-button"
+        >
+          <IconNoSSR
+            className={!actionDisabled ? 'ent-text-white' : undefined}
+            name="facebook"
+            ratio={1.2}
+          />
+        </FacebookShareButton>
+        <TwitterShareButton
+          disabled={actionDisabled}
+          onShareWindowClose={() => {
+            event(TAGS.PAGE_CV_PARTAGE_CV_TWITTER_CLIC);
+            updateShareCount(cv.UserId, 'twitter');
+            openNewsletterModal();
+          }}
+          url={link}
+          title={sharedDescription}
+          hashtags={hashtags}
+          via="R_Entourage"
+          className="uk-icon-button"
+        >
+          <IconNoSSR
+            className={!actionDisabled ? 'ent-text-white' : undefined}
+            name="twitter"
+            ratio={1.2}
+          />
+        </TwitterShareButton>
+        <WhatsappShareButton
+          disabled={actionDisabled}
+          onShareWindowClose={() => {
+            event(TAGS.PAGE_CV_PARTAGE_CV_WHATSAPP_CLIC);
+            updateShareCount(cv.UserId, 'whatsapp');
+            openNewsletterModal();
+          }}
+          url={link}
+          title={sharedDescription}
+          className="uk-icon-button"
+        >
+          <IconNoSSR
+            className={!actionDisabled && 'ent-text-white'}
+            name="whatsapp"
+            ratio={1.2}
+          />
+        </WhatsappShareButton>
+      </GridNoSSR>
+    </div>
+  );
 
   return (
     <div id="cv-fiche" className="uk-container uk-position-relative">
@@ -283,7 +285,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   />
                 </a>
               </div>
-              {shareSection()}
+              {shareSection}
               <ModalShareCV
                 id={`info-share-${cv.UserId}`}
                 firstName={cv.user.candidat.firstName}
@@ -489,7 +491,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
               )}
             </GridNoSSR>
           </GridNoSSR>
-          {shareSection()}
+          {!hideShareOptions && shareSection}
           <hr />
           <div className="uk-text-center">
             <h2 className="uk-text-bold">
@@ -566,10 +568,12 @@ const CVFiche = ({ cv, actionDisabled }) => {
 CVFiche.propTypes = {
   cv: PropTypes.shape().isRequired,
   actionDisabled: PropTypes.bool,
+  hideShareOptions: PropTypes.bool,
 };
 
 CVFiche.defaultProps = {
   actionDisabled: false,
+  hideShareOptions: false,
 };
 
 export default CVFiche;
