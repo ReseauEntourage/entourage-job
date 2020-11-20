@@ -250,13 +250,13 @@ const partnersPlaces = [
   },
   {
     title: 'Ares Service Val de Marne (94)',
-    lat: 48.7615397,
-    lng: 2.4710283,
+    lat: 48.7828641,
+    lng: 2.5042718,
     contactName: 'Myriam BITRAN',
     contactFunction: 'Chargée de mission emploi',
     contactNumber: '0609518528',
     contactMail: 'partenaire-emploi@ares-association.fr',
-    address: 'Rue des Longs Rideaux, 94450 Limeil-Brévannes',
+    address: '73 Rue du Moulin Bateau, 94380 Bonneuil-sur-Marne',
     link: 'https://www.groupeares.fr/notre-groupe/',
   },
   {
@@ -282,7 +282,7 @@ const partnersPlaces = [
     link: 'https://www.groupeares.fr/notre-groupe/',
   },
   {
-    title: "Log'ins Auverne Rhône Alpes",
+    title: "Log'ins Auvergne Rhône Alpes",
     lat: 45.8428954,
     lng: 5.2778809,
     contactName: 'Valérie DE FOURNOUX',

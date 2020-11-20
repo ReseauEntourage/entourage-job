@@ -10,8 +10,11 @@ const {
   associateCoachAndCandidat,
 } = require('./helpers');
 const {
-  USER_ROLES
+  USER_ROLES,
+  CV_STATUS
 } = require('../constants');
+
+const cvFactory = require('./factories/cvFactory');
 
 const route = '/api/v1/user';
 let serverTest;
@@ -242,18 +245,25 @@ describe('User', () => {
               password: 'candidat',
             });
 
-            const response = await request(serverTest)
-              .get(`${route}/search?query=e`)
+            const cv = await cvFactory(
+              {
+                UserId: candidat.id,
+                status: CV_STATUS.Published.value,
+              }
+            );
 
-            const publicCandidateInfo = {
+            const publicCandidateInfo = [{
               id: candidat.id,
               firstName: candidat.firstName,
               lastName: candidat.lastName,
               role: candidat.role,
-            };
+            }];
+
+            const response = await request(serverTest)
+              .get(`${route}/search?query=${candidat.firstName}`)
 
             expect(response.status).toBe(200);
-            expect(response.body).toBe(publicCandidateInfo);
+            expect(response.body).toStrictEqual(publicCandidateInfo);
           });
           it('Should return 200 and users', async () => {
             const response = await request(serverTest)
@@ -262,7 +272,6 @@ describe('User', () => {
               .send({
                 ...loggedInAdmin.user
               });
-            expect(response.status).toBe(200);
             expect(response.status).toBe(200);
           });
         });

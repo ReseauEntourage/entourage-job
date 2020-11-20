@@ -86,7 +86,7 @@ const CVPage = ({ cv, router, hideShareOptions }) => {
 CVPage.getInitialProps = async ({ query }) => {
   return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
     .then(({ data }) => {
-      return { cv: data, hideShareOptions: query.hideShareOptions === "true" };
+      return { cv: data, hideShareOptions: query.hideShareOptions === 'true' };
     })
     .catch((err) => {
       console.log(err);
