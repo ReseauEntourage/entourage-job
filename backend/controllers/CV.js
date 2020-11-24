@@ -1,5 +1,10 @@
 const { QueryTypes } = require('sequelize');
+const fs = require('fs');
+const S3 = require('../controllers/aws');
+
 const RedisManager = require('../utils/RedisManager');
+const puppeteer = require('puppeteer');
+const PDFMerger = require('pdf-merger-js');
 
 const { INITIAL_NB_OF_CV_TO_DISPLAY } = require('../../constants');
 
@@ -399,8 +404,10 @@ const deleteCV = (id) => {
   });
 };
 
-const getCVbyUrl = async (url) => {
-  console.log(`getCVbyUrl - Récupérer un CV ${url}`);
+const getAndCacheCV = async (url) => {
+  const redisKey = REDIS_KEYS.CV_PREFIX + url;
+
+  let cv;
 
   const cvs = await sequelize.query(
     queryConditionCV('url', url.replace("'", "''")),
@@ -410,31 +417,45 @@ const getCVbyUrl = async (url) => {
   );
 
   if (cvs && cvs.length > 0) {
-    let cv;
+    cv = await dividedCompleteCVQuery(async (include) =>
+      models.CV.findByPk(cvs[0].id, {
+        include: [include],
+      })
+    );
 
-    const redisKey = REDIS_KEYS.CV_PREFIX + url;
-    const redisCV = await RedisManager.getAsync(redisKey);
-
-    if (redisCV) {
-      cv = JSON.parse(redisCV);
-    } else {
-      cv = await dividedCompleteCVQuery(async (include) =>
-        models.CV.findByPk(cvs[0].id, {
-          include: [include],
-        })
-      );
-
-      await RedisManager.setWithExpireAsync(
-        redisKey,
-        JSON.stringify(cv),
-        60 * 10
-      );
-    }
-
-    return cv;
+    await RedisManager.setAsync(
+      redisKey,
+      JSON.stringify(cv),
+    );
   }
 
-  return null;
+  return cv;
+};
+
+const getCVbyUrl = async (url) => {
+  console.log(`getCVbyUrl - Récupérer un CV ${url}`);
+
+  const redisKey = REDIS_KEYS.CV_PREFIX + url;
+  const redisCV = await RedisManager.getAsync(redisKey);
+
+  let cv;
+
+  if (redisCV) {
+    cv = JSON.parse(redisCV);
+  } else {
+    const cvs = await sequelize.query(
+      queryConditionCV('url', url.replace("'", "''")),
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+
+    if (cvs && cvs.length > 0) {
+      cv = await getAndCacheCV(url);
+    }
+  }
+
+  return cv;
 };
 
 // todo: revoir
@@ -612,6 +633,58 @@ const setCV = (id, cv) => {
   });
 };
 
+const generatePDF = async (userId, token, paths) => {
+  const s3Key = `${process.env.AWSS3_FILE_DIRECTORY}${paths[2]}`;
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox'],
+  });
+  const page = await browser.newPage();
+  const merger = new PDFMerger();
+
+  const options = {
+    content: '@page { size: A4 portrait; margin: 0; }',
+  };
+
+  // Fix because can't create page break
+  await page.goto(
+    `${process.env.SERVER_URL}/cv/pdf/${userId}?token=${token}&page=0`,
+    { waitUntil: 'networkidle2' }
+  );
+  await page.addStyleTag(options);
+  await page.emulateMediaType('screen');
+  await page.pdf({
+    path: paths[0],
+    preferCSSPageSize: true,
+    printBackground: true,
+  });
+  merger.add(paths[0]);
+
+  await page.goto(
+    `${process.env.SERVER_URL}/cv/pdf/${userId}?token=${token}&page=1`,
+    { waitUntil: 'networkidle2' }
+  );
+  await page.addStyleTag(options);
+  await page.emulateMediaType('screen');
+  await page.pdf({
+    path: paths[1],
+    preferCSSPageSize: true,
+    printBackground: true,
+  });
+  merger.add(paths[1]);
+
+  await browser.close();
+
+  await merger.save(paths[2]);
+
+  const pdfBuffer = fs.readFileSync(paths[2]);
+
+  await S3.upload(pdfBuffer, 'application/pdf', `${paths[2]}`, true);
+
+  return S3.getSignedUrl(s3Key);
+};
+
 const createSearchString = async (cv) => {
   const searchString = [
     cv.ambitions.join(' '),
@@ -650,5 +723,7 @@ module.exports = {
   getRandomShortCVs,
   setCV,
   createSearchString,
+  generatePDF,
+  getAndCacheCV,
   publishedCVQuery,
 };

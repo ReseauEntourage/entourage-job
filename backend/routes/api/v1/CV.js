@@ -15,12 +15,14 @@ const { sendMail } = require('../../../controllers/mail');
 const { airtable } = require('../../../controllers/airtable');
 const createPreviewImage = require('../../../shareImage');
 const { getTokenFromHeaders } = require('../../../controllers/Auth');
+const { workQueue } = require('../../../worker');
 
 const {
   USER_ROLES,
   CV_STATUS,
   NEWSLETTER_ORIGINS,
   REDIS_KEYS,
+  WORKER_KEYS,
 } = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
@@ -30,6 +32,18 @@ const upload = multer({ dest: 'uploads/' });
 
 const isEmpty = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
+};
+
+const getPDFPaths = (userId, queryFileName) => {
+  const fileName = queryFileName ?
+    `${queryFileName}_${userId.substring(0, 8)}`
+    : userId;
+
+  return [
+    `${userId}-page1.pdf`,
+    `${userId}-page2.pdf`,
+    `${fileName}.pdf`,
+  ];
 };
 
 /**
@@ -73,123 +87,8 @@ router.post(
         if (autoSave) {
           return;
         }
-
-        const ratio = 2.1;
-        const imageWidth = Math.trunc(520 * ratio);
-        const imageHeight = Math.trunc(272 * ratio);
-
-        const generatePreviewImage = (url) => {
-          return new Promise((resolve, reject) => {
-            UserController.getUser(reqCV.UserId)
-              .then(({ firstName, gender }) =>
-                // Génération de la photo de preview
-                S3.download(url)
-                  .then(async ({ Body }) =>
-                    createPreviewImage(
-                      imageWidth,
-                      imageHeight,
-                      Body,
-                      firstName,
-                      reqCV.catchphrase,
-                      reqCV.ambitions,
-                      reqCV.skills,
-                      reqCV.locations,
-                      gender
-                    )
-                  )
-                  .then((sharpData) =>
-                    sharpData.jpeg({ quality: 75 }).toBuffer()
-                  )
-                  .then((buffer) =>
-                    S3.upload(
-                      buffer,
-                      'image/jpeg',
-                      `${reqCV.UserId}.${reqCV.status}.preview.jpg`
-                    )
-                  )
-                  .then((previewUrl) => {
-                    console.log('preview uploaded: ', previewUrl);
-                    resolve(previewUrl);
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                    reject(err);
-                  })
-              )
-              .catch((err) => {
-                console.error(err);
-                reject(err);
-              });
-          });
-        };
-
-        // uploading image and generating preview image
-        if (req.file) {
-          const { path } = req.file;
-          try {
-            const fileBuffer = await sharp(path)
-              .trim()
-              .jpeg({ quality: 75 })
-              .toBuffer();
-            reqCV.urlImg = await S3.upload(
-              fileBuffer,
-              'image/jpeg',
-              `${reqCV.UserId}.${reqCV.status}.jpg`
-            );
-
-            /*
-             TO KEEP If ever we want to pre-resize the preview background image
-
-             const previewBuffer = await sharp(fileBuffer)
-                .trim()
-                .resize(imageWidth, imageHeight, {
-                  fit: 'cover',
-                })
-                .jpeg({quality: 75})
-                .toBuffer();
-
-              await S3.upload(
-                previewBuffer,
-                'image/jpeg',
-                `${reqCV.UserId}.${reqCV.status}.small.jpg`
-              );
-          */
-          } catch (error) {
-            console.error(error);
-          } finally {
-            if (fs.existsSync(path)) fs.unlinkSync(path); // remove image localy after upload to S3
-          }
-        } else if (reqCV.urlImg) {
-          try {
-            const { Body } = await S3.download(reqCV.urlImg);
-            reqCV.urlImg = await S3.upload(
-              Body,
-              'image/jpeg',
-              `${reqCV.UserId}.${reqCV.status}.jpg`
-            );
-
-            /*
-              TO KEEP If ever we want to pre-resize the preview background image
-
-              const {Body} = await S3.download(reqCV.urlImg);
-              await S3.upload(s3image.Body, 'image/jpeg', `${reqCV.UserId}.${reqCV.status}.small.jpg`);
-            */
-
-            // TODO use when we make it work
-            // reqCV.urlImg = await S3.copy(reqCV.urlImg, `${reqCV.UserId}.${reqCV.status}.jpg`);
-          } catch (error) {
-            console.error(error);
-          }
-        }
-        if (reqCV.urlImg) {
-          try {
-            await generatePreviewImage(
-              reqCV.urlImg /* .replace('.jpg', '.small.jpg') */
-            );
-          } catch (error) {
-            console.log(error);
-          }
-        }
+        await workQueue.add(WORKER_KEYS.GENERATE_CV_PREVIEW, {cv: reqCV, file: req.file});
+        reqCV.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
       };
 
       const createCVAndSendMail = async () => {
@@ -227,21 +126,27 @@ router.post(
         .then(async (results) => {
           if (reqCV.status === CV_STATUS.Published.value) {
             try {
-              await RedisManager.delAsync(
-                REDIS_KEYS.CV_PREFIX + reqCV.user.url
-              );
+              await workQueue.add(WORKER_KEYS.CACHE_CV, {
+                url: reqCV.user.url,
+              });
+              await workQueue.add(WORKER_KEYS.CREATE_CV_SEARCH_STRING, {
+                url: reqCV.user.url,
+              });
               await RedisManager.delAsync(REDIS_KEYS.CV_LIST);
-              await CVController.createSearchString(results[1]);
-
             } catch (err) {
               console.log(err);
             }
           }
           if (!autoSave) {
             const { firstName, lastName } = results[1].user.candidat;
-            await S3.deleteFile(
-              `${process.env.AWSS3_FILE_DIRECTORY}${firstName}_${lastName}_${results[1].UserId.substring(0, 8)}.pdf`
-            );
+
+            const token = getTokenFromHeaders(req);
+            const paths = getPDFPaths(reqCV.UserId, `${firstName}_${lastName}`);
+            await workQueue.add(WORKER_KEYS.GENERATE_CV_PDF, {
+              userId: reqCV.UserId,
+              token,
+              paths,
+            });
           }
           return res.status(200).json(results[1]);
         })
@@ -417,15 +322,8 @@ router.get(
   async (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.params.userId, async () => {
       const { userId } = req.params;
-      const fileName = req.query.fileName
-        ? `${req.query.fileName}_${userId.substring(0, 8)}`
-        : userId;
 
-      const paths = [
-        `${userId}-page1.pdf`,
-        `${userId}-page2.pdf`,
-        `${fileName}.pdf`,
-      ];
+      const paths = getPDFPaths(userId, req.query.fileName);
 
       let pdfUrl = null;
       const s3Key = `${process.env.AWSS3_FILE_DIRECTORY}${paths[2]}`;
@@ -442,54 +340,7 @@ router.get(
       try {
         if (!pdfUrl) {
           const token = getTokenFromHeaders(req);
-
-          const browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox'],
-          });
-          const page = await browser.newPage();
-          const merger = new PDFMerger();
-
-          const options = {
-            content: '@page { size: A4 portrait; margin: 0; }',
-          };
-
-          // Fix because can't create page break
-          await page.goto(
-            `${process.env.SERVER_URL}/cv/pdf/${req.params.userId}?token=${token}&page=0`,
-            { waitUntil: 'networkidle2' }
-          );
-          await page.addStyleTag(options);
-          await page.emulateMediaType('screen');
-          await page.pdf({
-            path: paths[0],
-            preferCSSPageSize: true,
-            printBackground: true,
-          });
-          merger.add(paths[0]);
-
-          await page.goto(
-            `${process.env.SERVER_URL}/cv/pdf/${req.params.userId}?token=${token}&page=1`,
-            { waitUntil: 'networkidle2' }
-          );
-          await page.addStyleTag(options);
-          await page.emulateMediaType('screen');
-          await page.pdf({
-            path: paths[1],
-            preferCSSPageSize: true,
-            printBackground: true,
-          });
-          merger.add(paths[1]);
-
-          await browser.close();
-
-          await merger.save(paths[2]);
-
-          const pdfBuffer = fs.readFileSync(paths[2]);
-
-          await S3.upload(pdfBuffer, 'application/pdf', `${paths[2]}`, true);
-
-          pdfUrl = await S3.getSignedUrl(s3Key);
+          pdfUrl = await CVController.generatePDF(userId, token, paths);
         }
 
         res.status(200).send({ pdfUrl });

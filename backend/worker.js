@@ -1,11 +1,11 @@
 const Queue = require('bull');
-/*const { WORKER_KEYS } = require('../constants');
+const { WORKER_KEYS } = require('../constants');
 const {
   generatePDF,
   processImage,
   cacheCV,
   createCVSearchString,
-} = require('./workers');*/
+} = require('./workers');
 
 const workQueue = new Queue('work', process.env.REDIS_URL);
 
@@ -33,7 +33,7 @@ workQueue.on('error', (error) => {
 
 workQueue.process(async (job) => {
   console.log('RECEIVED JOB = ', job);
-  /* switch (job.name) {
+  switch (job.name) {
     case WORKER_KEYS.GENERATE_CV_PDF:
       return generatePDF(...job.data);
     case WORKER_KEYS.GENERATE_CV_PREVIEW:
@@ -43,9 +43,8 @@ workQueue.process(async (job) => {
     case WORKER_KEYS.CREATE_CV_SEARCH_STRING:
       return createCVSearchString(...job.data);
     default:
-      break;
-  } */
-  return Promise.resolve();
+      return Promise.resolve();
+  }
 });
 
 module.exports = {
