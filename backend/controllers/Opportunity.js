@@ -23,6 +23,25 @@ const {
 
 const { cleanOpportunity } = require('../utils');
 
+const INCLUDE_OPPORTUNITY_CANDIDATE = [{
+  model: User,
+  attributes: ['id', 'email', 'firstName', 'lastName', 'gender'],
+  include: [
+    {
+      model: User_Candidat,
+      as: 'candidat',
+      attributes: ['employed', 'hidden', 'note', 'url'],
+      include: [
+        {
+          model: User,
+          as: 'coach',
+          attributes: ['id', 'email', 'firstName', 'lastName'],
+        },
+      ],
+    },
+  ],
+}];
+
 const INCLUDE_OPPORTUNITY_COMPLETE = [
   {
     model: BusinessLine,
@@ -42,26 +61,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
       'archived',
       'note',
     ],
-    include: [
-      {
-        model: User,
-        attributes: ['id', 'email', 'firstName', 'lastName', 'gender'],
-        include: [
-          {
-            model: User_Candidat,
-            as: 'candidat',
-            attributes: ['employed', 'hidden', 'note', 'url'],
-            include: [
-              {
-                model: User,
-                as: 'coach',
-                attributes: ['id', 'email', 'firstName', 'lastName'],
-              },
-            ],
-          },
-        ],
-      },
-    ],
+    include: INCLUDE_OPPORTUNITY_CANDIDATE
   },
 ];
 
@@ -109,7 +109,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
   },
 ];
 
-const getAirtableOpportunityFields = (opportunity, candidat, businessLines) => {
+const getAirtableOpportunityFields = (opportunity, candidates, businessLines) => {
   return {
     Id: opportunity.id,
     Titre: opportunity.title,
@@ -123,21 +123,21 @@ const getAirtableOpportunityFields = (opportunity, candidat, businessLines) => {
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
     Candidat:
-      !opportunity.isPublic && candidat
-        ? `${candidat.firstName} ${candidat.lastName}`
+      !opportunity.isPublic && candidates && candidates.length > 0 ?
+          candidates.map((candidate) => `${candidate.User.firstName} ${candidate.User.lastName}`).join(' / ')
         : null,
     Statut:
       !opportunity.isPublic &&
-      opportunity.userOpportunity &&
-      opportunity.userOpportunity.length > 0
-        ? findOfferStatus(opportunity.userOpportunity[0].status).label
+      candidates &&
+      candidates.length === 1
+        ? findOfferStatus(candidates[0].status).label
         : null,
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
   };
 };
 
-const updateTable = (opportunity, candidat) =>
+const updateTable = (opportunity, candidates) =>
   new Promise((res, rej) => {
     airtable("Offres d'emploi v2")
       .select({
@@ -150,7 +150,7 @@ const updateTable = (opportunity, candidat) =>
 
         const fields = getAirtableOpportunityFields(
           opportunity,
-          candidat,
+          candidates,
           opportunity.businessLines
         );
 
@@ -210,14 +210,26 @@ const createOpportunity = async (data) => {
     await modelOpportunity.addBusinessLines(businessLines);
   }
 
-  let candidat = null;
-  if (data.candidatId) {
-    console.log(`Etape 4 - Détermine le User à qui l'opportunité s'adresse`);
-    await Opportunity_User.create({
-      OpportunityId: modelOpportunity.id,
-      UserId: data.candidatId, // to rename in userId
+  let candidates = [];
+  if (data.candidatesId && data.candidatesId.length > 0) {
+    console.log(`Etape 4 - Détermine le(s) User(s) à qui l'opportunité s'adresse`);
+    candidates = await Promise.all(
+      data.candidatesId.map((candidatId) =>
+        Opportunity_User.create(
+          {
+            OpportunityId: modelOpportunity.id,
+            UserId: candidatId, // to rename in userId
+          }
+        ).then((model) => model[0])
+    ));
+
+    candidates = await Opportunity_User.findAll({
+      where: {
+        UserId: data.candidatesId,
+        OpportunityId:  modelOpportunity.id,
+      },
+      include: INCLUDE_OPPORTUNITY_CANDIDATE,
     });
-    candidat = await User.findByPk(data.candidatId);
   }
 
   console.log(`Etape finale - Reprendre l'opportunité complète à retourner`);
@@ -232,7 +244,7 @@ const createOpportunity = async (data) => {
     new Promise((res, rej) => {
       const fields = getAirtableOpportunityFields(
         finalOpportunity,
-        candidat,
+        candidates,
         data.businessLines
       );
       airtable("Offres d'emploi v2").create(
@@ -440,14 +452,8 @@ const updateOpportunityUser = async (opportunityUser) => {
     modelOpportunityUser.OpportunityId
   );
 
-  const candidat =
-    finalOpportunity.userOpportunity &&
-    finalOpportunity.userOpportunity.length > 0
-      ? finalOpportunity.userOpportunity[0].User
-      : null;
-
   try {
-    await updateTable(finalOpportunity, candidat);
+    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
   } catch (e) {
     console.log('Failed to update table with modified offer.');
   }
@@ -481,7 +487,7 @@ const updateOpportunity = async (opportunity) => {
     });
   }
 
-  let shouldSendMail = false;
+  let newCandidatesIdsToSendMailTo;
 
   if (opportunity.isPublic) {
     await Opportunity_User.destroy({
@@ -489,86 +495,104 @@ const updateOpportunity = async (opportunity) => {
         OpportunityId: modelOpportunity.id,
       },
     });
-  } else if (opportunity.candidatId) {
-    const opportunityUser = await Opportunity_User.findOrCreate({
-      where: {
-        OpportunityId: modelOpportunity.id,
-        UserId: opportunity.candidatId, // to rename in userId
-      },
-    }).then((model) => model[0]);
+  } else if (opportunity.candidatesId) {
+    const opportunitiesUser = await Promise.all(
+      opportunity.candidatesId.map((candidatId) => (
+        Opportunity_User.findOrCreate({
+          where: {
+            OpportunityId: modelOpportunity.id,
+            UserId: candidatId, // to rename in userId
+          },
+        }).then((model) => model[0])
+    )));
 
-    // suppression des secteurs d'activité non inclus dans les liens user->opportunité
     await Opportunity_User.destroy({
       where: {
         OpportunityId: modelOpportunity.id,
-        UserId: { [Op.not]: opportunityUser.UserId },
+        UserId: { [Op.not]: opportunitiesUser.map((opportunityUser) => opportunityUser.UserId) },
       },
     });
 
-    const previousCandidat =
-      oldOpportunity.userOpportunity &&
-      oldOpportunity.userOpportunity.length > 0
-        ? oldOpportunity.userOpportunity[0].User
-        : null;
+    // Check case where the opportunity has become private and has candidates, to see if there are any new candidates so send mail to
+    const newCandidates =
+      opportunity.candidatesId &&
+      opportunity.candidatesId.length > 0 &&
+      opportunity.candidatesId.filter(
+        (candidateId) =>
+          !oldOpportunity.userOpportunity.some(
+            (oldUserOpp) => candidateId === oldUserOpp.User.id
+          )
+      );
 
     if (
-      !previousCandidat ||
-      (previousCandidat.id !== opportunity.candidatId &&
-        modelOpportunity.isValidated)
+      newCandidates &&
+      newCandidates.length > 0 &&
+      modelOpportunity.isValidated
     ) {
-      shouldSendMail = true;
+      newCandidatesIdsToSendMailTo = newCandidates;
     }
   }
 
   const finalOpportunity = await getOpportunity(opportunity.id);
 
-  if (
-    oldOpportunity &&
-    !oldOpportunity.isValidated &&
-    finalOpportunity.isValidated &&
-    !finalOpportunity.isPublic
-  ) {
-    shouldSendMail = true;
+  let candidatesToSendMailTo;
+
+  if(!finalOpportunity.isPublic && oldOpportunity) {
+    // Case where the opportunity is was not validated and has been validated, we send the mail to everybody
+    if (
+      !oldOpportunity.isValidated &&
+      finalOpportunity.isValidated
+    ) {
+      candidatesToSendMailTo =
+        finalOpportunity.userOpportunity &&
+        finalOpportunity.userOpportunity.length > 0
+          ? finalOpportunity.userOpportunity
+          : null;
+    }
+    else if (newCandidatesIdsToSendMailTo) {
+      // Case where the opportunity was already validated, and we just added new candidates to whom we have to send the mail
+      candidatesToSendMailTo =
+        finalOpportunity.userOpportunity &&
+        finalOpportunity.userOpportunity.length > 0
+          ? finalOpportunity.userOpportunity.filter((userOpp) => newCandidatesIdsToSendMailTo.includes(userOpp.User.id))
+          : null;
+    }
   }
 
-  const candidat =
-    finalOpportunity.userOpportunity &&
-    finalOpportunity.userOpportunity.length > 0
-      ? finalOpportunity.userOpportunity[0].User
-      : null;
-
-  const sendJobOfferMails = async () => {
-    if (candidat) {
-      await sendMail({
-        toEmail: candidat.email,
-        subject: `Vous avez reçu une nouvelle offre d'emploi`,
-        text: `
-          Vous venez de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
-          Vous pouvez la consulter en cliquant ici :
-          ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
-      });
-
-      const coach =
-        candidat && candidat.candidat && candidat.candidat.coach
-          ? candidat.candidat.coach
-          : null;
-
-      if (coach) {
+  const sendJobOfferMails = (candidates) => {
+    return Promise.all(
+      candidates.map(async (candidat) => {
         await sendMail({
-          toEmail: coach.email,
-          subject: `${candidat.firstName} a reçu une nouvelle offre d'emploi`,
+          toEmail: candidat.User.email,
+          subject: `Vous avez reçu une nouvelle offre d'emploi`,
           text: `
-         ${candidat.firstName} vient de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
-         Vous pouvez la consulter en cliquant ici :
-         ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
+            Vous venez de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
+            Vous pouvez la consulter en cliquant ici :
+            ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
         });
-      }
-    }
+
+        const coach =
+          candidat.User && candidat.User.candidat && candidat.User.candidat.coach
+            ? candidat.User.candidat.coach
+            : null;
+
+        if (coach) {
+          await sendMail({
+            toEmail: coach.email,
+            subject: `${candidat.User.firstName} a reçu une nouvelle offre d'emploi`,
+            text: `
+           ${candidat.User.firstName} vient de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
+           Vous pouvez la consulter en cliquant ici :
+           ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
+          });
+        }
+      })
+    );
   };
 
   try {
-    await updateTable(finalOpportunity, candidat);
-    if (shouldSendMail) await sendJobOfferMails();
+    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
+    if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) await sendJobOfferMails(candidatesToSendMailTo);
     console.log(
       'Updated table with modified offer and sent mail to candidate and coach.'
     );

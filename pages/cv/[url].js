@@ -14,7 +14,7 @@ import { SharesCountContext } from '../../components/store/SharesCountProvider';
 import { SessionContext } from '../../components/store/SessionProvider';
 import TAGS from '../../constants/tags';
 
-const CVPage = ({ cv, router }) => {
+const CVPage = ({ cv, router, hideShareOptions }) => {
 
   const hostname = process.env.SERVER_URL;
   const link = `${hostname}${router.asPath}`;
@@ -76,7 +76,7 @@ const CVPage = ({ cv, router }) => {
             url={process.env.AWSS3_URL + cv.urlImg || undefined}
           />
         )}
-        <CVFiche cv={cv} />
+        <CVFiche cv={cv} hideShareOptions={hideShareOptions} />
         <ActionPartial style="muted" />
       </div>
     </Layout>
@@ -86,7 +86,7 @@ const CVPage = ({ cv, router }) => {
 CVPage.getInitialProps = async ({ query }) => {
   return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
     .then(({ data }) => {
-      return { cv: data };
+      return { cv: data, hideShareOptions: query.hideShareOptions === 'true' };
     })
     .catch((err) => {
       console.log(err);
@@ -95,10 +95,12 @@ CVPage.getInitialProps = async ({ query }) => {
 };
 CVPage.propTypes = {
   cv: PropTypes.shape(),
+  hideShareOptions: PropTypes.bool,
   router: PropTypes.shape(),
 };
 CVPage.defaultProps = {
   cv: null,
+  hideShareOptions: false,
   router: {
     asPath: '',
   },

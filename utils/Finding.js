@@ -8,6 +8,17 @@ const findOfferStatus = (status) => {
   return { label: 'Non défini', color: 'muted' };
 };
 
+const getUserOpportunityFromOffer = (offer, candidatId) => {
+  let userOpportunity;
+  if (offer.userOpportunity && offer.userOpportunity.length > 0) {
+    userOpportunity = offer.userOpportunity.find((userOpp) => {
+      return userOpp.UserId === candidatId;
+    });
+  }
+  return userOpportunity;
+};
+
 module.exports = {
   findOfferStatus,
+  getUserOpportunityFromOffer,
 };

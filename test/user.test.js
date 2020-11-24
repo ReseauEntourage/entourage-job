@@ -10,8 +10,11 @@ const {
   associateCoachAndCandidat,
 } = require('./helpers');
 const {
-  USER_ROLES
+  USER_ROLES,
+  CV_STATUS
 } = require('../constants');
+
+const cvFactory = require('./factories/cvFactory');
 
 const route = '/api/v1/user';
 let serverTest;
@@ -235,11 +238,32 @@ describe('User', () => {
       describe(
         'Search - search a user where query string in email, first name or last name',
         () => {
-          it('Should return 401 if user is not a logged in admin', async () => {
+          it('Should return 200 and part of candidates if user is not logged in', async () => {
+
+            const candidat = await userFactory({
+              role: USER_ROLES.CANDIDAT,
+              password: 'candidat',
+            });
+
+            const cv = await cvFactory(
+              {
+                UserId: candidat.id,
+                status: CV_STATUS.Published.value,
+              }
+            );
+
+            const publicCandidateInfo = [{
+              id: candidat.id,
+              firstName: candidat.firstName,
+              lastName: candidat.lastName,
+              role: candidat.role,
+            }];
+
             const response = await request(serverTest)
-              .get(`${route}/search?query=e&role=${USER_ROLES.CANDIDAT}`)
-              .set('authorization', `Token ${loggedInCandidat.token}`);
-            expect(response.status).toBe(401);
+              .get(`${route}/search?query=${candidat.firstName}`)
+
+            expect(response.status).toBe(200);
+            expect(response.body).toStrictEqual(publicCandidateInfo);
           });
           it('Should return 200 and users', async () => {
             const response = await request(serverTest)

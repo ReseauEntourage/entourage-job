@@ -17,7 +17,7 @@ const RecruterHorsLinkedOut = () => (
         Le programme LinkedOut est pour l’instant présent seulement à Paris,
         dans les Hauts de Seine, en Seine-St-Denis et dans le Nord.
       </p>
-      <p uk-text-center>
+      <p className="uk-text-center">
         Dans les territoires où nous ne sommes pas présents, nous avons mis en
         place des partenariats avec des acteurs de l’insertion qui recherchent
         des opportunités d’emploi pour leurs candidats tout au long de l’année.

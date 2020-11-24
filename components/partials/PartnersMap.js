@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
+import SimpleLink from "../utils/SimpleLink";
 
 const partnersPlaces = [
   {
@@ -13,6 +14,7 @@ const partnersPlaces = [
     contactNumber: '0637757809',
     contactMail: 'yvelise.catherine@groupevitaminet.com',
     address: 'Gare de Brétigny-sur-Orge, 91220 Bretigny-sur-Orge',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Janus 77',
@@ -23,6 +25,7 @@ const partnersPlaces = [
     contactNumber: '0637757809',
     contactMail: 'yvelise.catherine@groupevitaminet.com',
     address: "14, avenue de l'Europe, 77144 Montevrain",
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Janus',
@@ -33,6 +36,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: 'Tour Blériot, 69 Rue Jules WATTEEW, 59100 ROUBAIX',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Envie Nord',
@@ -43,6 +47,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '37 Rue Jean Froissart, 59200 TOURCOING',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Vitinser',
@@ -53,6 +58,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '230, rue de la Lys 59250 HALLUIN',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Solutis Nord',
@@ -63,6 +69,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '215, rue du Marillon 59230 SAINT AMAND LES EAUX',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Le Grenier',
@@ -73,6 +80,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '46, route de  Lille 59113 SECLIN',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Le Grenier',
@@ -83,6 +91,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '601, rue du faulx 59274 MARQUILLIES',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Janus',
@@ -93,6 +102,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '117, rue Anne Franck 62220 CARVIN',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Janus',
@@ -104,6 +114,7 @@ const partnersPlaces = [
     contactMail: 'florence.dayer@groupevitaminet.com',
     address:
       "709, rue Jean Perrin - Hôtel d'Entreprises de Douai Dorignies 59500 DOUAI",
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Soluval',
@@ -114,6 +125,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '4, rue des Frères Faches 59580 ANICHE',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Envie Nord',
@@ -124,6 +136,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '19, rue du cimetière 59590 RAIMES',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Janus',
@@ -134,6 +147,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '40-42, rue Hon Hon 59300 VALENCIENNES',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Janus',
@@ -144,6 +158,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: "49, rue de l'égalité ZI Petite Savate 59600 MAUBEUGE",
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'La Ferme des Jésuites',
@@ -154,6 +169,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '283 rue de Quenez 59279 MARDYCK LOON PLAGE',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Envie Nord',
@@ -164,6 +180,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '21, rue Alfred Catel 80000 AMIENS',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Janus',
@@ -174,6 +191,7 @@ const partnersPlaces = [
     contactNumber: '0320617070',
     contactMail: 'florence.dayer@groupevitaminet.com',
     address: '16, rue du petit bois 08000 CHARLEVILLE MEZIERES',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Foyer Notre-Dame des sans-abri',
@@ -184,6 +202,7 @@ const partnersPlaces = [
     contactNumber: '0757479697',
     contactMail: 'cdeverine@cvgce.org',
     address: '12 Rue Emile Zola, 69150 Décines-Charpieu',
+    link: 'https://convergence-france.org/',
   },
   {
     title: 'Armée du salut',
@@ -194,6 +213,7 @@ const partnersPlaces = [
     contactNumber: '0757479697',
     contactMail: 'cdeverine@cvgce.org',
     address: '2 Rue Stalingrad, 69120 Vaulx-en-Velin',
+    link: 'https://convergence-france.org/',
   },
   {
     title: 'Le grenier de Lahso',
@@ -204,6 +224,7 @@ const partnersPlaces = [
     contactNumber: '0757479697',
     contactMail: 'cdeverine@cvgce.org',
     address: '24 Rue Riboud, 69003 Lyon',
+    link: 'https://convergence-france.org/',
   },
   {
     title: 'Ménage et Propreté',
@@ -214,6 +235,7 @@ const partnersPlaces = [
     contactNumber: '0637757809',
     contactMail: 'yvelise.catherine@groupevitaminet.com',
     address: 'Rue Emile Zola, 95870 Bezons',
+    link: 'https://www.groupevitaminet.com/',
   },
   {
     title: 'Ares Service Seine et Marne (77)',
@@ -224,16 +246,18 @@ const partnersPlaces = [
     contactNumber: '0635313119',
     contactMail: 'partenaire-emploi@ares-association.fr',
     address: "42 Rue de l'Innovation, 77550 Moissy-Cramayel",
+    link: 'https://www.groupeares.fr/notre-groupe/',
   },
   {
     title: 'Ares Service Val de Marne (94)',
-    lat: 48.7615397,
-    lng: 2.4710283,
+    lat: 48.7828641,
+    lng: 2.5042718,
     contactName: 'Myriam BITRAN',
     contactFunction: 'Chargée de mission emploi',
     contactNumber: '0609518528',
     contactMail: 'partenaire-emploi@ares-association.fr',
-    address: 'Rue des Longs Rideaux, 94450 Limeil-Brévannes',
+    address: '73 Rue du Moulin Bateau, 94380 Bonneuil-sur-Marne',
+    link: 'https://www.groupeares.fr/notre-groupe/',
   },
   {
     title: 'Atelier sans Frontière',
@@ -244,6 +268,7 @@ const partnersPlaces = [
     contactNumber: '0776195638',
     contactMail: 'partenaire-emploi@ares-association.fr',
     address: '73 Rue du Moulin Bateau, 94380 Bonneuil-sur-Marne',
+    link: 'https://www.groupeares.fr/notre-groupe/',
   },
   {
     title: "Log'ins Ile de France",
@@ -254,9 +279,10 @@ const partnersPlaces = [
     contactNumber: '0634310152',
     contactMail: 'partenaire-emploi@ares-association.fr',
     address: 'Rue des 44 Arpents, 91100 Villabé',
+    link: 'https://www.groupeares.fr/notre-groupe/',
   },
   {
-    title: "Log'ins Auverne Rhône Alpes",
+    title: "Log'ins Auvergne Rhône Alpes",
     lat: 45.8428954,
     lng: 5.2778809,
     contactName: 'Valérie DE FOURNOUX',
@@ -265,6 +291,7 @@ const partnersPlaces = [
     contactMail: 'partenaire-emploi@ares-association.fr',
     address:
       'Allée des peupliers - Bâtiment C – Zone Distripole 01150 SAINT-VULBAS',
+    link: 'https://www.groupeares.fr/notre-groupe/',
   },
   {
     title: 'Arescoop',
@@ -321,7 +348,9 @@ const PartnersMap = ({ google }) => {
       >
         <div>
           <h4 className="uk-text-primary uk-text-bold uk-text-center">
-            {getPartnerPlaceInfo('title')}
+            <SimpleLink href={getPartnerPlaceInfo('link')} isExternal newTab>
+              {getPartnerPlaceInfo('title')}
+            </SimpleLink>
           </h4>
           <p>
             <span uk-icon="user" className="uk-margin-small-right" />

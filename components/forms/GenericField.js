@@ -13,6 +13,8 @@ import FormValidatorErrorMessage from "./FormValidatorErrorMessage";
 import {SimpleLink} from "../utils";
 import {EXTERNAL_LINKS} from "../../constants";
 
+let debounceTimeoutId;
+
 const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
 
   const parseValueToUseSelect = () => {
@@ -35,6 +37,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
     } else if (event && event.value) {
       valueToReturn = event.value;
     }
+
     onChange({
       target: {
         name: data.name,
@@ -181,7 +184,14 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
   }
   if (data.component === 'select-request-async') {
     let valueToUse = null;
-    if (value) valueToUse = (typeof(value) === 'string') ? getValue(value) : value;
+    if (value) {
+      if (data.isMulti) {
+        valueToUse = value.every((v) => typeof v === 'object') ? value : getValue(value);
+      }
+      else {
+        valueToUse = (typeof value === 'string') ? getValue(value) : value;
+      }
+    }
 
     return (
       <div className="uk-padding-small uk-padding-remove-left uk-padding-remove-right">
@@ -204,9 +214,10 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
           noOptionsMessage={
             data.noOptionsMessage || ((val) => `Aucun résultat`)
           }
-          loadOptions={(inputValue, callback) =>
-            data.loadOptions(inputValue, callback, getValue)
-          }
+          loadOptions={(inputValue, callback) => {
+            clearTimeout(debounceTimeoutId);
+            debounceTimeoutId = setTimeout(() => data.loadOptions(inputValue, callback, getValue), 1000);
+          }}
           isDisabled={data.disable ? data.disable(getValue) : false}
           onChange={parseValueToReturnSelect}
         />
@@ -297,7 +308,7 @@ GenericField.propTypes = {
   value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string, PropTypes.number, PropTypes.arrayOf(PropTypes.string)]),
   onChange: PropTypes.func.isRequired,
   getValid: PropTypes.func.isRequired,
-  getValue: PropTypes.func.isRequired
+  getValue: PropTypes.func.isRequired,
 };
 
 GenericField.defaultProps = {};

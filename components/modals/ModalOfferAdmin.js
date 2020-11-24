@@ -68,29 +68,24 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
             formSchema={schema}
             defaultValues={{
               ...currentOffer,
-              candidatId:
+              candidatesId:
                 !currentOffer.isPublic &&
                 currentOffer.userOpportunity &&
-                currentOffer.userOpportunity[0] &&
-                currentOffer.userOpportunity[0].User &&
-                currentOffer.userOpportunity[0].User.firstName
-                  ? {
-                      value: currentOffer.userOpportunity[0].User.id,
-                      label: `${currentOffer.userOpportunity[0].User.firstName} ${currentOffer.userOpportunity[0].User.lastName}`,
-                    }
-                  : undefined,
+                currentOffer.userOpportunity.length > 0 ?
+                currentOffer.userOpportunity.map((userOpp) => {
+                  return {
+                      value: userOpp.User.id,
+                      label: `${userOpp.User.firstName} ${userOpp.User.lastName}`,
+                  }
+                }) : undefined,
             }}
             onCancel={() => setIsEditing(false)}
             onSubmit={(fields) => {
               const tmpOpportunity = {
                 ...currentOffer,
                 ...fields,
+                candidatesId: fields.candidatesId.map((candidateId) => typeof candidateId === 'object' ? candidateId.value : candidateId)
               };
-              if (fields.candidatId) {
-                tmpOpportunity.candidatId = fields.candidatId.value
-                  ? fields.candidatId.value
-                  : fields.candidatId;
-              }
               updateOpportunity(tmpOpportunity);
               setIsEditing(false);
             }}
@@ -98,13 +93,6 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
           />
         </div>
       );
-    }
-
-    let userOpportunitiesList = currentOffer.currentUserOpportunity;
-    if(currentOffer.isPublic && userOpportunitiesList) {
-      if(!Array.isArray(userOpportunitiesList)) {
-        userOpportunitiesList = [userOpportunitiesList];
-      }
     }
 
     // view
@@ -179,12 +167,12 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               </span>
             </OfferInfoContainer>
             <OfferInfoContainer icon="location" title={currentOffer.location} />
-            {!currentOffer.isPublic && (
-              <OfferInfoContainer icon="users" title="Candidat lié">
-                {currentOffer.userOpportunity &&
+            {currentOffer.userOpportunity && (
+              <OfferInfoContainer icon="users" title={`${currentOffer.isPublic ? 'Statut pour' : 'Candidat(s) lié(s)'}`}>
+                {
                   currentOffer.userOpportunity.map(
                     ({ status, User: { firstName, lastName, id } }) => (
-                      <div className="uk-flex uk-flex-column">
+                      <div className="uk-flex uk-flex-column" style={{marginTop: 5}}>
                         <SimpleLink
                           as={`/backoffice/admin/membres/${id}`}
                           href="/backoffice/admin/membres/[id]"
@@ -203,31 +191,6 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                   )}
               </OfferInfoContainer>
             )}
-            {userOpportunitiesList && userOpportunitiesList.length > 0 &&
-              <OfferInfoContainer icon="users" title={`Statut pour`}>
-                <div className="uk-height-max-medium uk-overflow-auto">
-                  {
-                    userOpportunitiesList.map((userOpportunity, index) => (
-                      <div key={userOpportunity.User.id + index} className="uk-flex uk-flex-column uk-margin-small-top">
-                        <SimpleLink
-                          as={`/backoffice/admin/membres/${userOpportunity.User.id}`}
-                          href="/backoffice/admin/membres/[id]"
-                          className="uk-link-muted"
-                          target="_blank">
-                          <span>
-                           {`${userOpportunity.User.firstName} ${userOpportunity.User.lastName}`}
-                            &nbsp;
-                          </span>
-                          <IconNoSSR name="link" ratio={0.8} />
-                        </SimpleLink>
-                        <span className={`uk-text-meta uk-text-italic uk-text-${findOfferStatus(userOpportunity.status).color}`}>{findOfferStatus(userOpportunity.status).label}</span>
-                      </div>
-                    ))
-                  }
-                </div>
-
-              </OfferInfoContainer>
-            }
           </GridNoSSR>
           <GridNoSSR gap="medium" childWidths={['1-1']}>
             <OfferInfoContainer icon="comment" title="Message">
@@ -344,9 +307,9 @@ ModalOfferAdmin.propTypes = {
         bookmarked: PropTypes.string,
         note: PropTypes.string,
         archived: PropTypes.string,
+        User: PropTypes.shape(),
       }),
     ),
-    currentUserOpportunity: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.shape()), PropTypes.shape()]),
   }),
   setCurrentOffer: PropTypes.func.isRequired,
 };

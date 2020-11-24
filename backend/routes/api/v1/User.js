@@ -119,12 +119,19 @@ router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
  * Route : GET /api/<VERSION>/user
  * Description : Récupère tous les Users
  */
-router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
-  UserController.searchUsers(req.query.query, req.query.role)
-    .then((users) => {
-      console.log(`Users récupérés (Total : ${users.length})`);
-      res.status(200).json(users);
-    })
+router.get('/search', auth(), (req, res) => {
+  let method;
+  if (req.payload && req.payload.role && req.payload.role === USER_ROLES.ADMIN) {
+    method = UserController.searchUsers(req.query.query, req.query.role);
+  }
+  else {
+    method = UserController.searchCandidates(req.query.query);
+  }
+
+  method.then((users) => {
+    console.log(`Users récupérés (Total : ${users.length})`);
+    res.status(200).json(users);
+  })
     .catch((err) => {
       console.log(err);
       res.status(401).send('Une erreur est survenue');
