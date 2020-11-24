@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "worker": "node ./backend/worker.js",
     "dev": "nodemon -r dotenv/config ./backend/serveur-next.js",
     "dev-server": "nodemon --watch ./backend/* -r dotenv/config ./backend/serveur-next.js",
     "dev-front": "node -r dotenv/config ./backend/serveur-next.js",
@@ -55,6 +56,7 @@
     "aws-s3": "^2.0.5",
     "aws-sdk": "^2.626.0",
     "axios": "^0.19.2",
+    "bull": "^3.19.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

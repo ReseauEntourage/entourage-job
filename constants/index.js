@@ -248,6 +248,13 @@ const REDIS_KEYS = {
   RL_GENERAL: 'rl-general:',
 };
 
+const WORKER_KEYS = {
+  GENERATE_CV_PDF: 'generate_cv_pdf',
+  GENERATE_CV_PREVIEW: 'generate_cv_preview',
+  CREATE_CV_SEARCH_STRING: 'create_cv_search_string',
+  CACHE_CV: 'cache_cv',
+};
+
 const VALUES = {
   SHARES: 120000,
 };
@@ -270,6 +277,7 @@ module.exports = {
   OPPORTUNITY_FILTERS_DATA,
   NEWSLETTER_ORIGINS,
   REDIS_KEYS,
+  WORKER_KEYS,
   CONTACT_MAILS,
-  INITIAL_NB_OF_CV_TO_DISPLAY
+  INITIAL_NB_OF_CV_TO_DISPLAY,
 };
