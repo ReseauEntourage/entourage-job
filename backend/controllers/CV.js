@@ -1,10 +1,10 @@
 const { QueryTypes } = require('sequelize');
 const fs = require('fs');
+const puppeteer = require('puppeteer');
+const PDFMerger = require('pdf-merger-js');
 const S3 = require('../controllers/aws');
 
 const RedisManager = require('../utils/RedisManager');
-const puppeteer = require('puppeteer');
-const PDFMerger = require('pdf-merger-js');
 
 const { INITIAL_NB_OF_CV_TO_DISPLAY } = require('../../constants');
 

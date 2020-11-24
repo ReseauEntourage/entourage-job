@@ -1,21 +1,18 @@
 const router = require('express').Router();
 const multer = require('multer');
-const sharp = require('sharp');
 const fs = require('fs');
-const puppeteer = require('puppeteer');
-const PDFMerger = require('pdf-merger-js');
+const Queue = require('bull');
+
 
 const RedisManager = require('../../../utils/RedisManager');
 const { auth } = require('../../../controllers/Auth');
-const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
 const ShareController = require('../../../controllers/Share');
 const S3 = require('../../../controllers/aws');
 const { sendMail } = require('../../../controllers/mail');
 const { airtable } = require('../../../controllers/airtable');
-const createPreviewImage = require('../../../shareImage');
 const { getTokenFromHeaders } = require('../../../controllers/Auth');
-const { workQueue } = require('../../../worker');
+const workQueue = new Queue('work', process.env.REDIS_URL);
 
 const {
   USER_ROLES,

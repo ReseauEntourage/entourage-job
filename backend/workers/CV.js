@@ -7,7 +7,7 @@ const UserController = require('../controllers/User');
 const CVController = require('../controllers/CV');
 
 const generatePDF = async (userId, token, paths) => {
-  await CVController.generatePDF(userId, token, paths);
+  return CVController.generatePDF(userId, token, paths);
 };
 
 const processImage = async (cv, file) => {
@@ -120,21 +120,22 @@ const processImage = async (cv, file) => {
   }
   if (cv.urlImg) {
     try {
-      await generatePreviewImage(
+      return await generatePreviewImage(
         cv.urlImg /* .replace('.jpg', '.small.jpg') */
       );
     } catch (error) {
       console.log(error);
     }
   }
+  return Promise.resolve();
 };
 
 const cacheCV = async (url) => {
-  await CVController.getAndCacheCV(url);
+  return CVController.getAndCacheCV(url);
 };
 
 const createCVSearchString = async (cv) => {
-  await CVController.createSearchString(cv);
+  return CVController.createSearchString(cv);
 };
 
 module.exports = {
