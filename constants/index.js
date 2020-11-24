@@ -248,7 +248,7 @@ const REDIS_KEYS = {
   RL_GENERAL: 'rl-general:',
 };
 
-const WORKER_KEYS = {
+const WORKER_TYPES = {
   GENERATE_CV_PDF: 'generate_cv_pdf',
   GENERATE_CV_PREVIEW: 'generate_cv_preview',
   CREATE_CV_SEARCH_STRING: 'create_cv_search_string',
@@ -277,7 +277,7 @@ module.exports = {
   OPPORTUNITY_FILTERS_DATA,
   NEWSLETTER_ORIGINS,
   REDIS_KEYS,
-  WORKER_KEYS,
+  WORKER_TYPES,
   CONTACT_MAILS,
   INITIAL_NB_OF_CV_TO_DISPLAY,
 };

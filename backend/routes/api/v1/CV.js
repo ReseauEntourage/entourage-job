@@ -19,7 +19,7 @@ const {
   CV_STATUS,
   NEWSLETTER_ORIGINS,
   REDIS_KEYS,
-  WORKER_KEYS,
+  WORKER_TYPES,
 } = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
@@ -80,17 +80,23 @@ router.post(
           break;
       }
 
+      const urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
+
       const processImage = async () => {
         if (autoSave) {
           return;
         }
-        await workQueue.add(WORKER_KEYS.GENERATE_CV_PREVIEW, {cv: reqCV, file: req.file});
-        reqCV.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
+        await workQueue.add({
+          type: WORKER_TYPES.GENERATE_CV_PREVIEW,
+          cv: reqCV,
+          file: req.file,
+        });
+        reqCV.urlImg = urlImg;
       };
 
       const createCVAndSendMail = async () => {
         if (!autoSave && (reqCV.urlImg || req.file)) {
-          reqCV.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
+          reqCV.urlImg = urlImg;
         }
 
         // création du corps du CV
@@ -123,10 +129,12 @@ router.post(
         .then(async (results) => {
           if (reqCV.status === CV_STATUS.Published.value) {
             try {
-              await workQueue.add(WORKER_KEYS.CACHE_CV, {
+              await workQueue.add({
+                type: WORKER_TYPES.CACHE_CV,
                 url: reqCV.user.url,
               });
-              await workQueue.add(WORKER_KEYS.CREATE_CV_SEARCH_STRING, {
+              await workQueue.add({
+                type: WORKER_TYPES.CREATE_CV_SEARCH_STRING,
                 url: reqCV.user.url,
               });
               await RedisManager.delAsync(REDIS_KEYS.CV_LIST);
@@ -139,7 +147,8 @@ router.post(
 
             const token = getTokenFromHeaders(req);
             const paths = getPDFPaths(reqCV.UserId, `${firstName}_${lastName}`);
-            await workQueue.add(WORKER_KEYS.GENERATE_CV_PDF, {
+            await workQueue.add({
+              type: WORKER_TYPES.GENERATE_CV_PDF,
               userId: reqCV.UserId,
               token,
               paths,

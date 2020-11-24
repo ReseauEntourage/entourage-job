@@ -712,6 +712,8 @@ const createSearchString = async (cv) => {
     CVId: cv.id,
     searchString,
   });
+
+  return searchString;
 };
 
 module.exports = {
