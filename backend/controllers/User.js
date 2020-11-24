@@ -2,9 +2,9 @@ const { QueryTypes } = require('sequelize');
 
 const {USER_ROLES, REDIS_KEYS, WORKER_KEYS} = require("../../constants");
 
-const RedisManager = require('../../../utils/RedisManager');
+const RedisManager = require('../utils/RedisManager');
 
-const { workQueue } = require('../../../worker');
+const { workQueue } = require('../worker');
 
 
 const {
