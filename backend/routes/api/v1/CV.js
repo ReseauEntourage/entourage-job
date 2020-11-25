@@ -135,7 +135,7 @@ router.post(
               });
               await workQueue.add({
                 type: WORKER_TYPES.CREATE_CV_SEARCH_STRING,
-                url: reqCV.user.url,
+                cv: results[1],
               });
               await RedisManager.delAsync(REDIS_KEYS.CV_LIST);
             } catch (err) {
@@ -346,17 +346,13 @@ router.get(
       try {
         if (!pdfUrl) {
           const token = getTokenFromHeaders(req);
-          pdfUrl = await CVController.generatePDF(userId, token, paths);
+          pdfUrl = await CVController.generatePdfFromCV(userId, token, paths);
         }
 
         res.status(200).send({ pdfUrl });
       } catch (err) {
         console.log(err);
         res.status(401).send('Une erreur est survenue');
-      } finally {
-        if (fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
-        if (fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
-        if (fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
       }
     });
   }

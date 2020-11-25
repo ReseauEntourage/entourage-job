@@ -1,3 +1,4 @@
+const throng = require('throng');
 const Queue = require('bull');
 const { WORKER_TYPES } = require('../constants');
 const {
@@ -7,46 +8,52 @@ const {
   createCVSearchString,
 } = require('./workers');
 
-const workQueue = new Queue('work', process.env.REDIS_URL);
+const workers = process.env.WEB_CONCURRENCY || 1;
 
-workQueue.on('completed', (job, result) => {
-  console.log(
-    `Job ${job.id} of type ${job.data.type} completed with result ${result}`
-  );
-});
+// const maxJobsPerWorker = 50;
 
-workQueue.on('failed', (job, err) => {
-  console.log(`Job ${job.id} of type ${job.data.type} failed with error ${err}`);
-});
+const start = () => {
+  const workQueue = new Queue('work', process.env.REDIS_URL);
 
-workQueue.on('waiting', (jobId) => {
-  console.log(`Job ${jobId} is waiting to be processed`);
-});
+  workQueue.on('completed', (job, result) => {
+    console.log(
+      `Job ${job.id} of type ${job.data.type} completed with result ${result}`
+    );
+  });
 
-workQueue.on('active', (job, jobPromise) => {
-  console.log(`Job ${job.id} of type ${job.data.type} has started`);
-});
+  workQueue.on('failed', (job, err) => {
+    console.log(
+      `Job ${job.id} of type ${job.data.type} failed with error ${err}`
+    );
+  });
 
-workQueue.on('error', (error) => {
-  console.log(`An error occured on the work queue : ${error}`);
-});
+  workQueue.on('waiting', (jobId) => {
+    console.log(`Job ${jobId} is waiting to be processed`);
+  });
 
-workQueue.process(async (job) => {
-  const { data } = job;
-  switch (data.type) {
-    case WORKER_TYPES.GENERATE_CV_PDF:
-      return generatePDF(data.userId, data.token, data.paths);
-    case WORKER_TYPES.GENERATE_CV_PREVIEW:
-      return processImage(data.cv, data.file);
-    case WORKER_TYPES.CACHE_CV:
-      return cacheCV(data.url);
-    case WORKER_TYPES.CREATE_CV_SEARCH_STRING:
-      return createCVSearchString(data.cv);
-    default:
-      return Promise.resolve();
-  }
-});
+  workQueue.on('active', (job, jobPromise) => {
+    console.log(`Job ${job.id} of type ${job.data.type} has started`);
+  });
 
-module.exports = {
-  workQueue,
+  workQueue.on('error', (error) => {
+    console.log(`An error occured on the work queue : ${error}`);
+  });
+
+  workQueue.process(async (job) => {
+    const { data } = job;
+    switch (data.type) {
+      case WORKER_TYPES.GENERATE_CV_PDF:
+        return generatePDF(data.userId, data.token, data.paths);
+      case WORKER_TYPES.GENERATE_CV_PREVIEW:
+        return processImage(data.cv, data.file);
+      case WORKER_TYPES.CACHE_CV:
+        return cacheCV(data.url);
+      case WORKER_TYPES.CREATE_CV_SEARCH_STRING:
+        return createCVSearchString(data.cv);
+      default:
+        return Promise.resolve();
+    }
+  });
 };
+
+throng({ workers, start });

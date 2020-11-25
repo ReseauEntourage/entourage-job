@@ -3,11 +3,15 @@ const fs = require('fs');
 const sharp = require('sharp');
 const S3 = require('../controllers/aws');
 const createPreviewImage = require('../shareImage');
-const UserController = require('../controllers/User');
-const CVController = require('../controllers/CV');
+const { getUser } = require('../controllers/User');
+const {
+  generatePdfFromCV,
+  getAndCacheCV,
+  createSearchString,
+} = require('../controllers/CV');
 
 const generatePDF = async (userId, token, paths) => {
-  return CVController.generatePDF(userId, token, paths);
+  return generatePdfFromCV(userId, token, paths);
 };
 
 const processImage = async (cv, file) => {
@@ -15,48 +19,7 @@ const processImage = async (cv, file) => {
   const imageWidth = Math.trunc(520 * ratio);
   const imageHeight = Math.trunc(272 * ratio);
 
-  const generatePreviewImage = (url) => {
-    return new Promise((resolve, reject) => {
-      UserController.getUser(cv.UserId)
-        .then(({ firstName, gender }) =>
-          // Génération de la photo de preview
-          S3.download(url)
-            .then(async ({ Body }) =>
-              createPreviewImage(
-                imageWidth,
-                imageHeight,
-                Body,
-                firstName,
-                cv.catchphrase,
-                cv.ambitions,
-                cv.skills,
-                cv.locations,
-                gender
-              )
-            )
-            .then((sharpData) => sharpData.jpeg({ quality: 75 }).toBuffer())
-            .then((buffer) =>
-              S3.upload(
-                buffer,
-                'image/jpeg',
-                `${cv.UserId}.${cv.status}.preview.jpg`
-              )
-            )
-            .then((previewUrl) => {
-              console.log('preview uploaded: ', previewUrl);
-              resolve(previewUrl);
-            })
-            .catch((err) => {
-              console.error(err);
-              reject(err);
-            })
-        )
-        .catch((err) => {
-          console.error(err);
-          reject(err);
-        });
-    });
-  };
+  let urlImg;
 
   // uploading image and generating preview image
   if (file) {
@@ -67,7 +30,7 @@ const processImage = async (cv, file) => {
         .jpeg({ quality: 75 })
         .toBuffer();
 
-      await S3.upload(
+      urlImg = await S3.upload(
         fileBuffer,
         'image/jpeg',
         `${cv.UserId}.${cv.status}.jpg`
@@ -99,7 +62,7 @@ const processImage = async (cv, file) => {
     try {
       const { Body } = await S3.download(cv.urlImg);
 
-      await S3.upload(
+      urlImg = await S3.upload(
         Body,
         'image/jpeg',
         `${cv.UserId}.${cv.status}.jpg`
@@ -118,11 +81,31 @@ const processImage = async (cv, file) => {
       console.error(error);
     }
   }
-  if (cv.urlImg) {
+  if (urlImg) {
     try {
-      return await generatePreviewImage(
-        cv.urlImg /* .replace('.jpg', '.small.jpg') */
+      const { firstName, gender } = await getUser(cv.UserId);
+
+      // Génération de la photo de preview
+      const { Body } = await S3.download(cv.urlImg);
+      const sharpData = await createPreviewImage(
+        imageWidth,
+        imageHeight,
+        Body,
+        firstName,
+        cv.catchphrase,
+        cv.ambitions,
+        cv.skills,
+        cv.locations,
+        gender
       );
+      const buffer = await sharpData.jpeg({ quality: 75 }).toBuffer();
+      const previewUrl = await S3.upload(
+        buffer,
+        'image/jpeg',
+        `${cv.UserId}.${cv.status}.preview.jpg`
+      );
+      console.log('preview uploaded: ', previewUrl);
+      return previewUrl;
     } catch (error) {
       console.log(error);
     }
@@ -131,11 +114,11 @@ const processImage = async (cv, file) => {
 };
 
 const cacheCV = async (url) => {
-  return CVController.getAndCacheCV(url);
+  return getAndCacheCV(url);
 };
 
 const createCVSearchString = async (cv) => {
-  return CVController.createSearchString(cv);
+  return createSearchString(cv);
 };
 
 module.exports = {

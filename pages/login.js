@@ -42,7 +42,7 @@ const Login = () => {
               enterToSubmit
               onSubmit={({ email, password }, setError) => {
                 login(email, password).catch((err) => {
-                  const errorMessage = err.response.status === 429 ? rateLimitErrorMessage :  'Erreur de connexion. Identifiant ou mot de passe invalide.';
+                  const errorMessage = err && err.response && err.response.status === 429 ? rateLimitErrorMessage :  'Erreur de connexion. Identifiant ou mot de passe invalide.';
                   setError(errorMessage);
                 });
               }}
@@ -73,7 +73,7 @@ const Login = () => {
                   Api.post('/api/v1/auth/forgot', {email: email.toLowerCase()})
                     .then(() => nextStep())
                     .catch((err) => {
-                      const errorMessage = err.response.status === 429 ? rateLimitErrorMessage : "L'adresse mail ne correspond à aucun utilisateur";
+                      const errorMessage = err && err.response && err.response.status === 429 ? rateLimitErrorMessage : "L'adresse mail ne correspond à aucun utilisateur";
                       setError(errorMessage)
                     });
                 }}

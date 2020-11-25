@@ -633,7 +633,7 @@ const setCV = (id, cv) => {
   });
 };
 
-const generatePDF = async (userId, token, paths) => {
+const generatePdfFromCV = async (userId, token, paths) => {
   const s3Key = `${process.env.AWSS3_FILE_DIRECTORY}${paths[2]}`;
 
   const browser = await puppeteer.launch({
@@ -682,6 +682,10 @@ const generatePDF = async (userId, token, paths) => {
 
   await S3.upload(pdfBuffer, 'application/pdf', `${paths[2]}`, true);
 
+  if (fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
+  if (fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
+  if (fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
+
   return S3.getSignedUrl(s3Key);
 };
 
@@ -725,7 +729,7 @@ module.exports = {
   getRandomShortCVs,
   setCV,
   createSearchString,
-  generatePDF,
+  generatePdfFromCV,
   getAndCacheCV,
   publishedCVQuery,
 };
