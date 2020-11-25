@@ -94,7 +94,7 @@ const CandidatCard = ({
   return (
     <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small uk-text-left">
       {/* Contenue de la carte */}
-      <SimpleLink as={`/cv/${url}?hideShareOptions=${!showShareOptions}`} href="/cv/[url]" className="uk-link-toggle">
+      <SimpleLink as={`/cv/${url}?hideShareOptions=${!showShareOptions}`} href={`/cv/[url]?hideShareOptions=${!showShareOptions}`} className="uk-link-toggle">
         <div
           className="uk-cover-container uk-margin-bottom"
           style={{
