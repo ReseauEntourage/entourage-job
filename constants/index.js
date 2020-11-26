@@ -253,6 +253,10 @@ const WORKER_TYPES = {
   GENERATE_CV_PREVIEW: 'generate_cv_preview',
   CREATE_CV_SEARCH_STRING: 'create_cv_search_string',
   CACHE_CV: 'cache_cv',
+  CACHE_ALL_CVS: 'cache_all_cvs',
+  SEND_MAIL: 'send_mail',
+  INSERT_AIRTABLE: 'insert_airtable',
+  UPDATE_AIRTABLE: 'update_airtable',
 };
 
 const VALUES = {

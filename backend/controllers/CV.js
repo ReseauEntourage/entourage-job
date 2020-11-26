@@ -2,7 +2,7 @@ const { QueryTypes } = require('sequelize');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 const PDFMerger = require('pdf-merger-js');
-const S3 = require('../controllers/aws');
+const S3 = require('./Aws');
 
 const RedisManager = require('../utils/RedisManager');
 
@@ -404,14 +404,25 @@ const deleteCV = (id) => {
   });
 };
 
-const getAndCacheCV = async (url) => {
-  // TODO USE ID IF NO URL
-  const redisKey = REDIS_KEYS.CV_PREFIX + url;
+const getAndCacheCV = async (url, id) => {
+  let urlToUse = url;
+
+  if (!urlToUse && id) {
+    const userCandidat = await models.User_Candidat.findOne({
+      where: {
+        candidatId: id,
+      },
+      attributes: ['url'],
+    });
+    urlToUse = userCandidat.url;
+  }
+
+  const redisKey = REDIS_KEYS.CV_PREFIX + urlToUse;
 
   let cv;
 
   const cvs = await sequelize.query(
-    queryConditionCV('url', url.replace("'", "''")),
+    queryConditionCV('url', urlToUse.replace("'", "''")),
     {
       type: QueryTypes.SELECT,
     }
@@ -424,12 +435,8 @@ const getAndCacheCV = async (url) => {
       })
     );
 
-    await RedisManager.setAsync(
-      redisKey,
-      JSON.stringify(cv),
-    );
+    await RedisManager.setAsync(redisKey, JSON.stringify(cv));
   }
-
   return cv;
 };
 
@@ -444,16 +451,7 @@ const getCVbyUrl = async (url) => {
   if (redisCV) {
     cv = JSON.parse(redisCV);
   } else {
-    const cvs = await sequelize.query(
-      queryConditionCV('url', url.replace("'", "''")),
-      {
-        type: QueryTypes.SELECT,
-      }
-    );
-
-    if (cvs && cvs.length > 0) {
-      cv = await getAndCacheCV(url);
-    }
+    cv = await getAndCacheCV(url);
   }
 
   return cv;
@@ -495,6 +493,57 @@ const getCVs = async () => {
   return modelCVs.map((modelCV) => cleanCV(modelCV));
 };
 
+const getAndCacheAllCVs = async (dbQuery, cache) => {
+  const cvs = await sequelize.query(dbQuery || publishedCVQuery, {
+    type: QueryTypes.SELECT,
+  });
+
+  const cvList = await models.CV.findAll({
+    where: {
+      id: cvs.map((cv) => cv.id),
+    },
+    attributes: ['id', 'catchphrase', 'urlImg'],
+    include: [
+      {
+        model: models.Ambition,
+        as: 'ambitions',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      {
+        model: models.Skill,
+        as: 'skills',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      {
+        model: models.BusinessLine,
+        as: 'businessLines',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      {
+        model: models.Location,
+        as: 'locations',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      INCLUDE_ALL_USERS,
+    ],
+  });
+
+  const cleanedCVList = cvList.map(cleanCV);
+
+  if(cache) {
+    await RedisManager.setAsync(
+      REDIS_KEYS.CV_LIST,
+      JSON.stringify(cleanedCVList),
+    );
+  }
+
+  return cleanedCVList;
+};
+
 const getRandomShortCVs = async (nb, query) => {
   const escapedQuery = escapeQuery(query);
 
@@ -503,48 +552,6 @@ const getRandomShortCVs = async (nb, query) => {
       escapedQuery ? `pour "${escapedQuery}"` : ''
     }`
   );
-
-  const getAllCvs = async (dbQuery) => {
-    const cvs = await sequelize.query(dbQuery, {
-      type: QueryTypes.SELECT,
-    });
-
-    const cvList = await models.CV.findAll({
-      where: {
-        id: cvs.map((cv) => cv.id),
-      },
-      attributes: ['id', 'catchphrase', 'urlImg'],
-      include: [
-        {
-          model: models.Ambition,
-          as: 'ambitions',
-          through: { attributes: [] },
-          attributes: ['name'],
-        },
-        {
-          model: models.Skill,
-          as: 'skills',
-          through: { attributes: [] },
-          attributes: ['name'],
-        },
-        {
-          model: models.BusinessLine,
-          as: 'businessLines',
-          through: { attributes: [] },
-          attributes: ['name'],
-        },
-        {
-          model: models.Location,
-          as: 'locations',
-          through: { attributes: [] },
-          attributes: ['name'],
-        },
-        INCLUDE_ALL_USERS,
-      ],
-    });
-
-    return cvList.map(cleanCV);
-  };
 
   let modelCVs;
 
@@ -555,16 +562,10 @@ const getRandomShortCVs = async (nb, query) => {
     if (redisCvs) {
       modelCVs = JSON.parse(redisCvs);
     } else {
-      modelCVs = await getAllCvs(publishedCVQuery);
-
-      await RedisManager.setWithExpireAsync(
-        redisKey,
-        JSON.stringify(modelCVs),
-        60 * 10
-      );
+      modelCVs = await getAndCacheAllCVs(publishedCVQuery, true);
     }
   } else {
-    modelCVs = await getAllCvs(`
+    modelCVs = await getAndCacheAllCVs(`
       with publishedCVs as (${publishedCVQuery})
       SELECT cvSearches."CVId" as id
       FROM "CV_Searches" cvSearches
@@ -732,5 +733,6 @@ module.exports = {
   createSearchString,
   generatePdfFromCV,
   getAndCacheCV,
+  getAndCacheAllCVs,
   publishedCVQuery,
 };

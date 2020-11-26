@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-underscore-dangle */
 
-const {sendMail} = require('../../controllers/mail');
+const {sendMail} = require('../../controllers/Mail');
 
 module.exports = (sequelize, DataTypes) => {
   const Opportunity_User = sequelize.define('Opportunity_User', {

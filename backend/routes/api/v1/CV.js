@@ -1,25 +1,18 @@
 const router = require('express').Router();
 const multer = require('multer');
-const fs = require('fs');
-const Queue = require('bull');
 
-
-const RedisManager = require('../../../utils/RedisManager');
 const { auth } = require('../../../controllers/Auth');
 const CVController = require('../../../controllers/CV');
 const ShareController = require('../../../controllers/Share');
-const S3 = require('../../../controllers/aws');
-const { sendMail } = require('../../../controllers/mail');
-const { airtable } = require('../../../controllers/airtable');
+const S3 = require('../../../controllers/Aws');
 const { getTokenFromHeaders } = require('../../../controllers/Auth');
-const workQueue = new Queue('work', process.env.REDIS_URL);
+const { addToWorkQueue } = require('../../../workers');
 
 const {
   USER_ROLES,
   CV_STATUS,
-  NEWSLETTER_ORIGINS,
-  REDIS_KEYS,
   WORKER_TYPES,
+  NEWSLETTER_ORIGINS,
 } = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
@@ -82,18 +75,6 @@ router.post(
 
       const urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
 
-      const processImage = async () => {
-        if (autoSave) {
-          return;
-        }
-        await workQueue.add({
-          type: WORKER_TYPES.GENERATE_CV_PREVIEW,
-          cv: reqCV,
-          file: req.file,
-        });
-        reqCV.urlImg = urlImg;
-      };
-
       const createCVAndSendMail = async () => {
         if (!autoSave && (reqCV.urlImg || req.file)) {
           reqCV.urlImg = urlImg;
@@ -111,7 +92,8 @@ router.post(
             const mailSubject = 'Soumission CV';
             const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
             // notification de l'admin
-            await sendMail({
+            await addToWorkQueue({
+              type: WORKER_TYPES.SEND_MAIL,
               toEmail: process.env.MAILJET_TO_EMAIL,
               subject: mailSubject,
               text: mailText,
@@ -123,43 +105,51 @@ router.post(
         return cv;
       };
 
-      const promises = [processImage, createCVAndSendMail];
+      try {
+        const cv = await createCVAndSendMail();
 
-      Promise.all(promises.map(async (promise) => promise()))
-        .then(async (results) => {
-          if (reqCV.status === CV_STATUS.Published.value) {
-            try {
-              await workQueue.add({
-                type: WORKER_TYPES.CACHE_CV,
-                url: reqCV.user.url,
-              });
-              await workQueue.add({
-                type: WORKER_TYPES.CREATE_CV_SEARCH_STRING,
-                cv: results[1],
-              });
-              await RedisManager.delAsync(REDIS_KEYS.CV_LIST);
-            } catch (err) {
-              console.log(err);
-            }
-          }
-          if (!autoSave) {
-            const { firstName, lastName } = results[1].user.candidat;
+        if (!autoSave) {
+          await addToWorkQueue({
+            type: WORKER_TYPES.GENERATE_CV_PREVIEW,
+            cv,
+            file: req.file,
+          });
+        }
 
-            const token = getTokenFromHeaders(req);
-            const paths = getPDFPaths(reqCV.UserId, `${firstName}_${lastName}`);
-            await workQueue.add({
-              type: WORKER_TYPES.GENERATE_CV_PDF,
-              userId: reqCV.UserId,
-              token,
-              paths,
+        if (reqCV.status === CV_STATUS.Published.value) {
+          try {
+            await addToWorkQueue({
+              type: WORKER_TYPES.CACHE_CV,
+              url: reqCV.user.url,
             });
+            await addToWorkQueue({
+              type: WORKER_TYPES.CACHE_ALL_CVS,
+            });
+            await addToWorkQueue({
+              type: WORKER_TYPES.CREATE_CV_SEARCH_STRING,
+              cv,
+            });
+          } catch (err) {
+            console.log(err);
           }
-          return res.status(200).json(results[1]);
-        })
-        .catch((e) => {
-          console.log(e);
-          return res.status(401).send(`Une erreur est survenue`);
-        });
+        }
+        if (!autoSave) {
+          const { firstName, lastName } = cv.user.candidat;
+
+          const token = getTokenFromHeaders(req);
+          const paths = getPDFPaths(reqCV.UserId, `${firstName}_${lastName}`);
+          await addToWorkQueue({
+            type: WORKER_TYPES.GENERATE_CV_PDF,
+            userId: reqCV.UserId,
+            token,
+            paths,
+          });
+        }
+        return res.status(200).json(cv);
+      } catch (e) {
+        console.log(e);
+        return res.status(401).send(`Une erreur est survenue`);
+      }
     });
   }
 );
@@ -169,26 +159,14 @@ router.post(
  * Description : Prise d'info partageur
  */
 router.post('/share', auth(), (req, res) => {
-  return airtable('Newsletter').create(
-    [
-      {
-        fields: {
-          email: req.body.email,
-          Origine: req.body.origin || NEWSLETTER_ORIGINS.LKO,
-        },
-      },
-    ],
-    (err, records) => {
-      if (err) {
-        console.error(err);
-        return res.status(401).send(`Une erreur est survenue`);
-      }
-      records.forEach((record) => {
-        console.log(record.getId());
-      });
-      return res.status(200).json(records);
-    }
-  );
+  return addToWorkQueue({
+    type: WORKER_TYPES.INSERT_AIRTABLE,
+    tableName: 'Newsletter',
+    fields: {
+      email: req.body.email,
+      Origine: req.body.origin || NEWSLETTER_ORIGINS.LKO,
+    },
+  });
 });
 
 /**

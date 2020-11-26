@@ -1,12 +1,13 @@
 const fs = require('fs');
 
 const sharp = require('sharp');
-const S3 = require('../controllers/aws');
+const S3 = require('../controllers/Aws');
 const createPreviewImage = require('../shareImage');
 const { getUser } = require('../controllers/User');
 const {
   generatePdfFromCV,
   getAndCacheCV,
+  getAndCacheAllCVs,
   createSearchString,
 } = require('../controllers/CV');
 
@@ -113,8 +114,12 @@ const processImage = async (cv, file) => {
   return Promise.resolve();
 };
 
-const cacheCV = async (url) => {
-  return getAndCacheCV(url);
+const cacheCV = async (url, id) => {
+  return getAndCacheCV(url, id);
+};
+
+const cacheAllCVs = async () => {
+  return getAndCacheAllCVs();
 };
 
 const createCVSearchString = async (cv) => {
@@ -125,5 +130,6 @@ module.exports = {
   generatePDF,
   processImage,
   cacheCV,
+  cacheAllCVs,
   createCVSearchString,
 };

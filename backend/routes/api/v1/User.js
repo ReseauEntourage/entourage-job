@@ -3,7 +3,7 @@ const express = require('express');
 const {checkCandidatOrCoachAuthorization, checkUserAuthorization} = require('../../../utils');
 const {USER_ROLES} = require("../../../../constants");
 const {auth} = require('../../../controllers/Auth');
-const {sendMail} = require('../../../controllers/mail');
+const {sendMail} = require('../../../controllers/Mail');
 
 const router = express.Router();
 const UserController = require('../../../controllers/User');

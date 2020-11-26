@@ -1,14 +1,15 @@
+
 const express = require('express');
 
 const router = express.Router();
 const passport = require('passport');
 const { auth } = require('../../../controllers/Auth');
-const { sendMail } = require('../../../controllers/mail');
 const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const { USER_ROLES } = require('../../../../constants');
 const RateLimiter = require('../../../utils/RateLimiter');
-const { REDIS_KEYS } = require('../../../../constants');
+const { REDIS_KEYS, WORKER_TYPES } = require('../../../../constants');
+const {addToWorkQueue} = require("../../../workers");
 
 const authLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_AUTH, 10);
 
@@ -116,7 +117,8 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       }
       console.log('sending email');
       // Envoi du mail
-      await sendMail({
+      await addToWorkQueue({
+        type: WORKER_TYPES.SEND_MAIL,
         toEmail: user.email,
         subject: 'Réinitialisation mot de passe',
         text:
