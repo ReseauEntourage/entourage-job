@@ -1,11 +1,11 @@
 const { QueryTypes } = require('sequelize');
+const Queue = require('bull');
 
 const {USER_ROLES, REDIS_KEYS, WORKER_TYPES} = require("../../constants");
 
 const RedisManager = require('../utils/RedisManager');
 
-const { workQueue } = require('../worker');
-
+const workQueue = new Queue('work', process.env.REDIS_URL);
 
 const {
   models: {User, User_Candidat, Share, CV},

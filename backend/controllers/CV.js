@@ -405,6 +405,7 @@ const deleteCV = (id) => {
 };
 
 const getAndCacheCV = async (url) => {
+  // TODO USE ID IF NO URL
   const redisKey = REDIS_KEYS.CV_PREFIX + url;
 
   let cv;
