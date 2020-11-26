@@ -301,6 +301,7 @@ const partnersPlaces = [
     contactNumber: '0661408032',
     contactMail: 'partenaire-emploi@ares-association.fr',
     address: '3 rue de l’Industrie 33990 Hourtin',
+    link: 'https://www.groupeares.fr/notre-groupe/',
   },
 ];
 
@@ -348,7 +349,7 @@ const PartnersMap = ({ google }) => {
       >
         <div>
           <h4 className="uk-text-primary uk-text-bold uk-text-center">
-            <SimpleLink href={getPartnerPlaceInfo('link')} isExternal newTab>
+            <SimpleLink href={getPartnerPlaceInfo('link')} isExternal target='_blank'>
               {getPartnerPlaceInfo('title')}
             </SimpleLink>
           </h4>
