@@ -91,10 +91,15 @@ const CandidatCard = ({
 
   const reducedLocations = getReducedLocations();
 
+  const linksToCV = {
+    as: `/cv/${url}?hideShareOptions=${!showShareOptions}`,
+    href: `/cv/[url]?hideShareOptions=${!showShareOptions}`,
+  };
+
   return (
     <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small uk-text-left">
       {/* Contenue de la carte */}
-      <SimpleLink as={`/cv/${url}?hideShareOptions=${!showShareOptions}`} href={`/cv/[url]?hideShareOptions=${!showShareOptions}`} className="uk-link-toggle">
+      <SimpleLink as={linksToCV.as} href={linksToCV.href} className="uk-link-toggle">
         <div
           className="uk-cover-container uk-margin-bottom"
           style={{
@@ -262,8 +267,8 @@ const CandidatCard = ({
       {showShareOptions ? (
         <GridNoSSR gap="small" between middle eachWidths={['expand', 'auto']}>
           <SimpleLink
-            as={`/cv/${url}`}
-            href="/cv/[url]"
+            as={linksToCV.as}
+            href={linksToCV.href}
             className="uk-link-toggle"
           >
             <u className="uk-text-link uk-text-primary">Voir le CV</u>
@@ -350,8 +355,8 @@ const CandidatCard = ({
       ) : (
         <div className="uk-text-center">
           <SimpleLink
-            as={`/cv/${url}`}
-            href="/cv/[url]"
+            as={linksToCV.as}
+            href={linksToCV.href}
             className="uk-link-toggle uk-text-center"
           >
             <u className="uk-text-link uk-text-primary te">Voir le CV</u>
