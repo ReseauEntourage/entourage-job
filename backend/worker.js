@@ -14,7 +14,7 @@ const {
 
 const workers = process.env.WEB_CONCURRENCY || 1;
 
-// const maxJobsPerWorker = 50;
+const maxJobsPerWorker = process.env.MAX_JOBS_PER_WORKER || 50;
 
 const start = () => {
   const workQueue = new Queue('work', process.env.REDIS_URL);
@@ -36,15 +36,15 @@ const start = () => {
   });
 
   workQueue.on('active', (job, jobPromise) => {
-    // TODO add time it was stuck in the queue
-    console.log(`Job ${job.id} of type ${job.data.type} has started`);
+    const timeInQueue = job.processedOn - job.timestamp;
+    console.log(`Job ${job.id} of type ${job.data.type} has started after waiting for ${timeInQueue} ms`);
   });
 
   workQueue.on('error', (error) => {
     console.log(`An error occured on the work queue : ${error}`);
   });
 
-  workQueue.process(async (job) => {
+  workQueue.process(maxJobsPerWorker, async (job) => {
     const { data } = job;
     switch (data.type) {
       case WORKER_TYPES.GENERATE_CV_PDF:
