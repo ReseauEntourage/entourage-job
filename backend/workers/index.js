@@ -16,9 +16,10 @@ const workQueue = new Queue('work', process.env.REDIS_URL);
 
 const addToWorkQueue = async (data) => {
   return workQueue.add(data, {
+    attempts: process.env.JOBS_NB_ATTEMPS || 10,
     backoff: {
-      type: 'exponential', // Backoff type, which can be either `fixed` or `exponential`. A custom backoff strategy can also be specified in `backoffStrategies` on the queue settings.
-      delay: 10000, // Backoff delay, in milliseconds.
+      type: 'exponential',
+      delay: process.env.JOBS_BACKOFF_DELAY || 60000,
     },
   });
 };
