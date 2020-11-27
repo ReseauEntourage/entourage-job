@@ -3,7 +3,7 @@ const Queue = require('bull');
 const { WORKER_TYPES } = require('../constants');
 const {
   generatePDF,
-  processImage,
+  generatePreview,
   cacheCV,
   cacheAllCVs,
   createCVSearchString,
@@ -37,7 +37,9 @@ const start = () => {
 
   workQueue.on('active', (job, jobPromise) => {
     const timeInQueue = job.processedOn - job.timestamp;
-    console.log(`Job ${job.id} of type ${job.data.type} has started after waiting for ${timeInQueue} ms`);
+    console.log(
+      `Job ${job.id} of type ${job.data.type} has started after waiting for ${timeInQueue} ms`
+    );
   });
 
   workQueue.on('error', (error) => {
@@ -48,12 +50,16 @@ const start = () => {
     const { data } = job;
     switch (data.type) {
       case WORKER_TYPES.GENERATE_CV_PDF:
-        await generatePDF(data.userId, data.token, data.paths);
-        return `PDF generated for User ${data.userId} : ${data.paths[2]}`;
+        await generatePDF(data.candidatId, data.token, data.paths);
+        return `PDF generated for User ${data.candidatId} : ${data.paths[2]}`;
 
       case WORKER_TYPES.GENERATE_CV_PREVIEW:
-        const previewImageName = await processImage(data.cv, data.file);
-        return `Preview generated for User ${data.cv.UserId} and CV ${data.cv.id} : ${previewImageName}`;
+        const previewImageName = await generatePreview(
+          data.candidatId,
+          data.file,
+          data.oldImg,
+        );
+        return `Preview generated for User ${data.candidatId} : ${previewImageName}`;
 
       case WORKER_TYPES.CACHE_CV:
         const cv = await cacheCV(data.url, data.id);
@@ -70,8 +76,8 @@ const start = () => {
           : `No CVs cached`;
 
       case WORKER_TYPES.CREATE_CV_SEARCH_STRING:
-        await createCVSearchString(data.cv);
-        return `CV search string created for User ${data.cv.UserId} and CV ${data.cv.id}`;
+        await createCVSearchString(data.candidatId);
+        return `CV search string created for User ${data.candidatId}`;
 
       case WORKER_TYPES.SEND_MAIL:
         await sendMailBackground(data);

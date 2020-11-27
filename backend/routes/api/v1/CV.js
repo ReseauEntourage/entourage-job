@@ -25,15 +25,11 @@ const isEmpty = (obj) => {
 };
 
 const getPDFPaths = (userId, queryFileName) => {
-  const fileName = queryFileName ?
-    `${queryFileName}_${userId.substring(0, 8)}`
+  const fileName = queryFileName
+    ? `${queryFileName}_${userId.substring(0, 8)}`
     : userId;
 
-  return [
-    `${userId}-page1.pdf`,
-    `${userId}-page2.pdf`,
-    `${fileName}.pdf`,
-  ];
+  return [`${userId}-page1.pdf`, `${userId}-page2.pdf`, `${fileName}.pdf`];
 };
 
 /**
@@ -75,49 +71,35 @@ router.post(
 
       const urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
 
-      const createCVAndSendMail = async () => {
+      let oldImg;
+
+      try {
         if (!autoSave && (reqCV.urlImg || req.file)) {
+          oldImg = reqCV.urlImg;
           reqCV.urlImg = urlImg;
         }
 
         // création du corps du CV
         const cv = await CVController.createCV(reqCV);
 
-        try {
-          // notification mail to coach and admin
-          if (
-            req.payload.role === USER_ROLES.COACH &&
-            reqCV.status === CV_STATUS.Pending.value
-          ) {
-            const mailSubject = 'Soumission CV';
-            const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
-            // notification de l'admin
-            await addToWorkQueue({
-              type: WORKER_TYPES.SEND_MAIL,
-              toEmail: process.env.MAILJET_TO_EMAIL,
-              subject: mailSubject,
-              text: mailText,
-            });
-          }
-        } catch (e) {
-          console.log(e);
-        }
-        return cv;
-      };
-
-      try {
-        const cv = await createCVAndSendMail();
-
-        if (!autoSave) {
+        // notification mail to coach and admin
+        if (
+          req.payload.role === USER_ROLES.COACH &&
+          reqCV.status === CV_STATUS.Pending.value
+        ) {
+          const mailSubject = 'Soumission CV';
+          const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
+          // notification de l'admin
           await addToWorkQueue({
-            type: WORKER_TYPES.GENERATE_CV_PREVIEW,
-            cv,
-            file: req.file,
+            type: WORKER_TYPES.SEND_MAIL,
+            toEmail: process.env.MAILJET_TO_EMAIL,
+            subject: mailSubject,
+            text: mailText,
           });
         }
 
-        if (reqCV.status === CV_STATUS.Published.value) {
-          try {
+        if (!autoSave) {
+          if (reqCV.status === CV_STATUS.Published.value) {
             await addToWorkQueue({
               type: WORKER_TYPES.CACHE_CV,
               url: reqCV.user.url,
@@ -127,24 +109,29 @@ router.post(
             });
             await addToWorkQueue({
               type: WORKER_TYPES.CREATE_CV_SEARCH_STRING,
-              cv,
+              candidatId: reqCV.UserId,
             });
-          } catch (err) {
-            console.log(err);
           }
-        }
-        if (!autoSave) {
+
+          await addToWorkQueue({
+            type: WORKER_TYPES.GENERATE_CV_PREVIEW,
+            candidatId: reqCV.UserId,
+            oldImg,
+            file: req.file,
+          });
+
           const { firstName, lastName } = cv.user.candidat;
 
           const token = getTokenFromHeaders(req);
           const paths = getPDFPaths(reqCV.UserId, `${firstName}_${lastName}`);
           await addToWorkQueue({
             type: WORKER_TYPES.GENERATE_CV_PDF,
-            userId: reqCV.UserId,
+            candidatId: reqCV.UserId,
             token,
             paths,
           });
         }
+
         return res.status(200).json(cv);
       } catch (e) {
         console.log(e);

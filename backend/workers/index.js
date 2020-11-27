@@ -2,7 +2,7 @@ const Queue = require('bull');
 
 const {
   generatePDF,
-  processImage,
+  generatePreview,
   cacheCV,
   cacheAllCVs,
   createCVSearchString,
@@ -27,7 +27,7 @@ const addToWorkQueue = async (data) => {
 module.exports = {
   addToWorkQueue,
   generatePDF,
-  processImage,
+  generatePreview,
   cacheCV,
   cacheAllCVs,
   createCVSearchString,

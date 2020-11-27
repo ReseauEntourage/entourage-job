@@ -9,13 +9,16 @@ const {
   getAndCacheCV,
   getAndCacheAllCVs,
   createSearchString,
+  getCVbyUserId,
 } = require('../controllers/CV');
 
-const generatePDF = async (userId, token, paths) => {
-  return generatePdfFromCV(userId, token, paths);
+const generatePDF = async (candidatId, token, paths) => {
+  return generatePdfFromCV(candidatId, token, paths);
 };
 
-const processImage = async (cv, file) => {
+const generatePreview = async (candidatId, file, oldImg) => {
+  const cv = await getCVbyUserId(candidatId);
+
   const ratio = 2.1;
   const imageWidth = Math.trunc(520 * ratio);
   const imageHeight = Math.trunc(272 * ratio);
@@ -59,9 +62,9 @@ const processImage = async (cv, file) => {
     } finally {
       if (fs.existsSync(path)) fs.unlinkSync(path); // remove image localy after upload to S3
     }
-  } else if (cv.urlImg) {
+  } else if (oldImg) {
     try {
-      const { Body } = await S3.download(cv.urlImg);
+      const { Body } = await S3.download(oldImg);
 
       urlImg = await S3.upload(
         Body,
@@ -84,7 +87,7 @@ const processImage = async (cv, file) => {
   }
   if (urlImg) {
     try {
-      const { firstName, gender } = await getUser(cv.UserId);
+      const { firstName, gender } = await getUser(candidatId);
 
       // Génération de la photo de preview
       const { Body } = await S3.download(cv.urlImg);
@@ -114,21 +117,21 @@ const processImage = async (cv, file) => {
   return Promise.resolve();
 };
 
-const cacheCV = async (url, id) => {
-  return getAndCacheCV(url, id);
+const cacheCV = async (url, candidatId) => {
+  return getAndCacheCV(url, candidatId);
 };
 
 const cacheAllCVs = async () => {
   return getAndCacheAllCVs();
 };
 
-const createCVSearchString = async (cv) => {
-  return createSearchString(cv);
+const createCVSearchString = async (candidatId) => {
+  return createSearchString(candidatId);
 };
 
 module.exports = {
   generatePDF,
-  processImage,
+  generatePreview,
   cacheCV,
   cacheAllCVs,
   createCVSearchString,

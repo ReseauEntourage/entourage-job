@@ -404,13 +404,13 @@ const deleteCV = (id) => {
   });
 };
 
-const getAndCacheCV = async (url, id) => {
+const getAndCacheCV = async (url, candidatId) => {
   let urlToUse = url;
 
-  if (!urlToUse && id) {
+  if (!urlToUse && candidatId) {
     const userCandidat = await models.User_Candidat.findOne({
       where: {
-        candidatId: id,
+        candidatId: candidatId,
       },
       attributes: ['url'],
     });
@@ -691,7 +691,8 @@ const generatePdfFromCV = async (userId, token, paths) => {
   return S3.getSignedUrl(s3Key);
 };
 
-const createSearchString = async (cv) => {
+const createSearchString = async (userId) => {
+  const cv = await getCVbyUserId(userId);
   const searchString = [
     cv.ambitions.join(' '),
     cv.businessLines.join(' '),

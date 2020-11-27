@@ -15,8 +15,6 @@ import {CV_STATUS, USER_ROLES} from "../../../constants";
 import NoCV from "./NoCV";
 import ButtonDownload from "./ButtonDownload";
 
-let originalStatus = CV_STATUS.Progress.value;
-
 const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
   const [cvVersion, setCvVersion] = useState(undefined);
@@ -40,7 +38,6 @@ const CVPageContent = ({ candidatId }) => {
             setCV(data);
             setCvVersion(data.version);
             setImageUrl(`${process.env.AWSS3_URL}${data.urlImg}`);
-            originalStatus = data.status;
           } else {
             setCV(null);
             console.log('pas de cv');
@@ -131,7 +128,7 @@ const CVPageContent = ({ candidatId }) => {
     const formData = new FormData();
     const obj = {
       ...tempCV,
-      status: originalStatus,
+      status: CV_STATUS.Progress.value,
       profileImage: undefined,
     };
     delete obj.id;
