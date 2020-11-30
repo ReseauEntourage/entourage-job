@@ -1,4 +1,9 @@
 const { QueryTypes } = require('sequelize');
+const fs = require('fs');
+const puppeteer = require('puppeteer');
+const PDFMerger = require('pdf-merger-js');
+const S3 = require('./Aws');
+
 const RedisManager = require('../utils/RedisManager');
 
 const { INITIAL_NB_OF_CV_TO_DISPLAY } = require('../../constants');
@@ -399,42 +404,57 @@ const deleteCV = (id) => {
   });
 };
 
-const getCVbyUrl = async (url) => {
-  console.log(`getCVbyUrl - Récupérer un CV ${url}`);
+const getAndCacheCV = async (url, candidatId) => {
+  let urlToUse = url;
+
+  if (!urlToUse && candidatId) {
+    const userCandidat = await models.User_Candidat.findOne({
+      where: {
+        candidatId: candidatId,
+      },
+      attributes: ['url'],
+    });
+    urlToUse = userCandidat.url;
+  }
+
+  const redisKey = REDIS_KEYS.CV_PREFIX + urlToUse;
+
+  let cv;
 
   const cvs = await sequelize.query(
-    queryConditionCV('url', url.replace("'", "''")),
+    queryConditionCV('url', urlToUse.replace("'", "''")),
     {
       type: QueryTypes.SELECT,
     }
   );
 
   if (cvs && cvs.length > 0) {
-    let cv;
+    cv = await dividedCompleteCVQuery(async (include) =>
+      models.CV.findByPk(cvs[0].id, {
+        include: [include],
+      })
+    );
 
-    const redisKey = REDIS_KEYS.CV_PREFIX + url;
-    const redisCV = await RedisManager.getAsync(redisKey);
+    await RedisManager.setAsync(redisKey, JSON.stringify(cv));
+  }
+  return cv;
+};
 
-    if (redisCV) {
-      cv = JSON.parse(redisCV);
-    } else {
-      cv = await dividedCompleteCVQuery(async (include) =>
-        models.CV.findByPk(cvs[0].id, {
-          include: [include],
-        })
-      );
+const getCVbyUrl = async (url) => {
+  console.log(`getCVbyUrl - Récupérer un CV ${url}`);
 
-      await RedisManager.setWithExpireAsync(
-        redisKey,
-        JSON.stringify(cv),
-        60 * 10
-      );
-    }
+  const redisKey = REDIS_KEYS.CV_PREFIX + url;
+  const redisCV = await RedisManager.getAsync(redisKey);
 
-    return cv;
+  let cv;
+
+  if (redisCV) {
+    cv = JSON.parse(redisCV);
+  } else {
+    cv = await getAndCacheCV(url);
   }
 
-  return null;
+  return cv;
 };
 
 // todo: revoir
@@ -473,6 +493,57 @@ const getCVs = async () => {
   return modelCVs.map((modelCV) => cleanCV(modelCV));
 };
 
+const getAndCacheAllCVs = async (dbQuery, cache) => {
+  const cvs = await sequelize.query(dbQuery || publishedCVQuery, {
+    type: QueryTypes.SELECT,
+  });
+
+  const cvList = await models.CV.findAll({
+    where: {
+      id: cvs.map((cv) => cv.id),
+    },
+    attributes: ['id', 'catchphrase', 'urlImg'],
+    include: [
+      {
+        model: models.Ambition,
+        as: 'ambitions',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      {
+        model: models.Skill,
+        as: 'skills',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      {
+        model: models.BusinessLine,
+        as: 'businessLines',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      {
+        model: models.Location,
+        as: 'locations',
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+      INCLUDE_ALL_USERS,
+    ],
+  });
+
+  const cleanedCVList = cvList.map(cleanCV);
+
+  if(cache) {
+    await RedisManager.setAsync(
+      REDIS_KEYS.CV_LIST,
+      JSON.stringify(cleanedCVList),
+    );
+  }
+
+  return cleanedCVList;
+};
+
 const getRandomShortCVs = async (nb, query) => {
   const escapedQuery = escapeQuery(query);
 
@@ -481,48 +552,6 @@ const getRandomShortCVs = async (nb, query) => {
       escapedQuery ? `pour "${escapedQuery}"` : ''
     }`
   );
-
-  const getAllCvs = async (dbQuery) => {
-    const cvs = await sequelize.query(dbQuery, {
-      type: QueryTypes.SELECT,
-    });
-
-    const cvList = await models.CV.findAll({
-      where: {
-        id: cvs.map((cv) => cv.id),
-      },
-      attributes: ['id', 'catchphrase', 'urlImg'],
-      include: [
-        {
-          model: models.Ambition,
-          as: 'ambitions',
-          through: { attributes: [] },
-          attributes: ['name'],
-        },
-        {
-          model: models.Skill,
-          as: 'skills',
-          through: { attributes: [] },
-          attributes: ['name'],
-        },
-        {
-          model: models.BusinessLine,
-          as: 'businessLines',
-          through: { attributes: [] },
-          attributes: ['name'],
-        },
-        {
-          model: models.Location,
-          as: 'locations',
-          through: { attributes: [] },
-          attributes: ['name'],
-        },
-        INCLUDE_ALL_USERS,
-      ],
-    });
-
-    return cvList.map(cleanCV);
-  };
 
   let modelCVs;
 
@@ -533,16 +562,10 @@ const getRandomShortCVs = async (nb, query) => {
     if (redisCvs) {
       modelCVs = JSON.parse(redisCvs);
     } else {
-      modelCVs = await getAllCvs(publishedCVQuery);
-
-      await RedisManager.setWithExpireAsync(
-        redisKey,
-        JSON.stringify(modelCVs),
-        60 * 10
-      );
+      modelCVs = await getAndCacheAllCVs(publishedCVQuery, true);
     }
   } else {
-    modelCVs = await getAllCvs(`
+    modelCVs = await getAndCacheAllCVs(`
       with publishedCVs as (${publishedCVQuery})
       SELECT cvSearches."CVId" as id
       FROM "CV_Searches" cvSearches
@@ -612,7 +635,64 @@ const setCV = (id, cv) => {
   });
 };
 
-const createSearchString = async (cv) => {
+const generatePdfFromCV = async (userId, token, paths) => {
+  const s3Key = `${process.env.AWSS3_FILE_DIRECTORY}${paths[2]}`;
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox'],
+  });
+  const page = await browser.newPage();
+  const merger = new PDFMerger();
+
+  const options = {
+    content: '@page { size: A4 portrait; margin: 0; }',
+  };
+
+  // Fix because can't create page break
+  await page.goto(
+    `${process.env.SERVER_URL}/cv/pdf/${userId}?token=${token}&page=0`,
+    { waitUntil: 'networkidle2' }
+  );
+  await page.addStyleTag(options);
+  await page.emulateMediaType('screen');
+  await page.pdf({
+    path: paths[0],
+    preferCSSPageSize: true,
+    printBackground: true,
+  });
+  merger.add(paths[0]);
+
+  await page.goto(
+    `${process.env.SERVER_URL}/cv/pdf/${userId}?token=${token}&page=1`,
+    { waitUntil: 'networkidle2' }
+  );
+  await page.addStyleTag(options);
+  await page.emulateMediaType('screen');
+  await page.pdf({
+    path: paths[1],
+    preferCSSPageSize: true,
+    printBackground: true,
+  });
+  merger.add(paths[1]);
+
+  await browser.close();
+
+  await merger.save(paths[2]);
+
+  const pdfBuffer = fs.readFileSync(paths[2]);
+
+  await S3.upload(pdfBuffer, 'application/pdf', `${paths[2]}`, true);
+
+  if (fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
+  if (fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
+  if (fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
+
+  return S3.getSignedUrl(s3Key);
+};
+
+const createSearchString = async (userId) => {
+  const cv = await getCVbyUserId(userId);
   const searchString = [
     cv.ambitions.join(' '),
     cv.businessLines.join(' '),
@@ -639,6 +719,8 @@ const createSearchString = async (cv) => {
     CVId: cv.id,
     searchString,
   });
+
+  return searchString;
 };
 
 module.exports = {
@@ -650,5 +732,8 @@ module.exports = {
   getRandomShortCVs,
   setCV,
   createSearchString,
+  generatePdfFromCV,
+  getAndCacheCV,
+  getAndCacheAllCVs,
   publishedCVQuery,
 };

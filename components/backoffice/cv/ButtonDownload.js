@@ -22,7 +22,6 @@ const ButtonDownload = ({ disabled, candidatId, firstName, lastName, tag }) => {
           }
         )
           .then(({ data }) => {
-            console.log(data);
             const pdfLink = document.createElement('a');
             pdfLink.href = data.pdfUrl;
             pdfLink.click();

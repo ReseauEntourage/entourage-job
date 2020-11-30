@@ -37,7 +37,7 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.getOpportunities(req.query.query)
     .then((listeOpportunities) => {
       console.log(
-        `Opportunités récupérés (Total : ${listeOpportunities.length}`
+        `Opportunités récupérés (Total : ${listeOpportunities.length})`
       );
       res.status(200).json(listeOpportunities);
     })

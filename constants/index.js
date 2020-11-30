@@ -248,6 +248,36 @@ const REDIS_KEYS = {
   RL_GENERAL: 'rl-general:',
 };
 
+const WORKERS = {
+  WORKER_TYPES: {
+    GENERATE_CV_PDF: 'generate_cv_pdf',
+    GENERATE_CV_PREVIEW: 'generate_cv_preview',
+    CREATE_CV_SEARCH_STRING: 'create_cv_search_string',
+    CACHE_CV: 'cache_cv',
+    CACHE_ALL_CVS: 'cache_all_cvs',
+    SEND_MAIL: 'send_mail',
+    INSERT_AIRTABLE: 'insert_airtable',
+    UPDATE_AIRTABLE: 'update_airtable',
+  },
+  QUEUES: {
+    WORK: 'work',
+  },
+};
+
+const SOCKETS = {
+  CHANNEL_NAMES: {
+    CV_PREVIEW: 'cv-preview-channel',
+  },
+  EVENTS: {
+    CV_PREVIEW_DONE: 'cv-preview-done',
+  },
+};
+
+const AIRTABLE_NAMES = {
+  NEWSLETTER: 'Newsletter',
+  OFFERS: "Offres d'emploi v2",
+};
+
 const VALUES = {
   SHARES: 120000,
 };
@@ -270,6 +300,9 @@ module.exports = {
   OPPORTUNITY_FILTERS_DATA,
   NEWSLETTER_ORIGINS,
   REDIS_KEYS,
+  WORKERS,
   CONTACT_MAILS,
-  INITIAL_NB_OF_CV_TO_DISPLAY
+  INITIAL_NB_OF_CV_TO_DISPLAY,
+  AIRTABLE_NAMES,
+  SOCKETS,
 };

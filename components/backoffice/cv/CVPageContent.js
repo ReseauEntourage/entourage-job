@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
+import Pusher from 'pusher-js';
 import Api from '../../../Axios';
 import { GridNoSSR, Button } from '../../utils';
 import { CVFicheEdition, CVBackground, CVFiche } from '../../cv';
@@ -11,20 +12,28 @@ import ButtonPost from './ButtonPost';
 import ErrorMessage from './ErrorMessage';
 import LoadingScreen from './LoadingScreen';
 
-import {CV_STATUS, USER_ROLES} from "../../../constants";
-import NoCV from "./NoCV";
-import ButtonDownload from "./ButtonDownload";
+import { CV_STATUS, USER_ROLES, SOCKETS } from '../../../constants';
+import NoCV from './NoCV';
+import ButtonDownload from './ButtonDownload';
 
-let originalStatus = CV_STATUS.Progress.value;
+const pusher = new Pusher(process.env.PUSHER_API_KEY, {
+  cluster: 'eu',
+  forceTLS: true,
+});
 
 const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
   const [cvVersion, setCvVersion] = useState(undefined);
   const [imageUrl, setImageUrl] = useState(undefined);
+  const [previewGenerating, setPreviewGenerating] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    return () => pusher.unsubscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
+  }, []);
 
   useEffect(() => {
     // fetch CV
@@ -40,7 +49,6 @@ const CVPageContent = ({ candidatId }) => {
             setCV(data);
             setCvVersion(data.version);
             setImageUrl(`${process.env.AWSS3_URL}${data.urlImg}`);
-            originalStatus = data.status;
           } else {
             setCV(null);
             console.log('pas de cv');
@@ -88,7 +96,26 @@ const CVPageContent = ({ candidatId }) => {
     };
   }, [cv]);
 
+  useEffect(() => {
+    if (!previewGenerating && cv) {
+      // Use hash to reload image if an update is done
+      const previewHash = Date.now();
+      setImageUrl(
+        `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${cv.UserId}.${cv.status}.jpg?${previewHash}`
+      );
+    }
+  }, [previewGenerating]);
+
   const postCV = (status) => {
+    const channel = pusher.subscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
+    setPreviewGenerating(true);
+    channel.bind(SOCKETS.EVENTS.CV_PREVIEW_DONE, (data) => {
+      if (data.candidatId === candidatId) {
+        setPreviewGenerating(false);
+        pusher.unsubscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
+      }
+    });
+
     // prepare data
     const formData = new FormData();
     const obj = {
@@ -108,11 +135,6 @@ const CVPageContent = ({ candidatId }) => {
       .then(({ data }) => {
         setCV(data);
         setCvVersion(data.version);
-        // Use hash to reload image if an update is done
-        const previewHash = Date.now();
-        setImageUrl(
-          `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${data.UserId}.${data.status}.jpg?${previewHash}`
-        );
 
         UIkit.notification(
           user.role === USER_ROLES.CANDIDAT
@@ -131,7 +153,7 @@ const CVPageContent = ({ candidatId }) => {
     const formData = new FormData();
     const obj = {
       ...tempCV,
-      status: originalStatus,
+      status: CV_STATUS.Progress.value,
       profileImage: undefined,
     };
     delete obj.id;
@@ -143,7 +165,7 @@ const CVPageContent = ({ candidatId }) => {
         'Content-Type': 'multipart/form-data',
       },
     })
-      .then(({data}) => {
+      .then(({ data }) => {
         console.log('Auto-save succeeded.');
         setCvVersion(data.version);
       })
@@ -165,14 +187,20 @@ const CVPageContent = ({ candidatId }) => {
   // aucun CV
   if (cv === null) {
     return (
-      <NoCV candidatId={candidatId} user={user} setCV={(cvData) => {
-        setCV(cvData);
-        setCvVersion(cvData.version);
-      }} />
+      <NoCV
+        candidatId={candidatId}
+        user={user}
+        setCV={(cvData) => {
+          setCV(cvData);
+          setCvVersion(cvData.version);
+        }}
+      />
     );
   }
 
-  const cvStatus = CV_STATUS[cv.status] ? CV_STATUS[cv.status] : CV_STATUS.Unknown;
+  const cvStatus = CV_STATUS[cv.status]
+    ? CV_STATUS[cv.status]
+    : CV_STATUS.Unknown;
 
   // affichage du CV
   return (
@@ -185,8 +213,11 @@ const CVPageContent = ({ candidatId }) => {
               {cvStatus.label}
             </span>
           </div>
-          {(user.role === USER_ROLES.ADMIN) && (
-            <div>Version&nbsp;: {cvVersion}</div>
+          {user.role === USER_ROLES.ADMIN && (
+            <div>
+              Version&nbsp;:&nbsp;
+              {cvVersion}
+            </div>
           )}
         </GridNoSSR>
 
@@ -194,7 +225,8 @@ const CVPageContent = ({ candidatId }) => {
           <ButtonDownload
             candidatId={cv.UserId}
             firstName={cv.user.candidat.firstName}
-            lastName={cv.user.candidat.lastName} />
+            lastName={cv.user.candidat.lastName}
+          />
           <Button toggle="target: #preview-modal" style="default">
             Prévisualiser
           </Button>
@@ -203,14 +235,14 @@ const CVPageContent = ({ candidatId }) => {
             action={() => postCV(CV_STATUS.Progress.value)}
             text="Sauvegarder"
           />
-          {(user.role === USER_ROLES.COACH) && (
+          {user.role === USER_ROLES.COACH && (
             <ButtonPost
               style="primary"
               action={() => postCV(CV_STATUS.Pending.value)}
               text="Soumettre"
             />
           )}
-          {(user.role === USER_ROLES.ADMIN) && (
+          {user.role === USER_ROLES.ADMIN && (
             <ButtonPost
               style="primary"
               action={() => postCV(CV_STATUS.Published.value)}
@@ -222,9 +254,12 @@ const CVPageContent = ({ candidatId }) => {
       <CVFicheEdition
         gender={cv.user.candidat.gender}
         cv={cv}
-        disablePicture={user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH}
+        previewGenerating={previewGenerating}
+        disablePicture={
+          user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH
+        }
         onChange={(fields) => {
-          autoSaveCV({...cv, ...fields});
+          autoSaveCV({ ...cv, ...fields });
           setCV({ ...cv, ...fields, status: CV_STATUS.Draft.value });
         }}
       />
@@ -248,9 +283,7 @@ const CVPageContent = ({ candidatId }) => {
             {cv.urlImg && (
               <CVBackground
                 url={
-                  cv.profileImageObjectUrl
-                    ? cv.profileImageObjectUrl
-                    : imageUrl
+                  cv.profileImageObjectUrl ? cv.profileImageObjectUrl : imageUrl
                 }
               />
             )}

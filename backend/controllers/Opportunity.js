@@ -1,13 +1,10 @@
-/* eslint-disable no-restricted-globals */
-/* eslint-disable camelcase */
-
-const { OFFER_STATUS } = require('../../constants');
+const { OFFER_STATUS, WORKERS, AIRTABLE_NAMES } = require('../../constants');
 
 const { findOfferStatus } = require('../../utils/Finding');
 
-const { sendMail } = require('./mail');
+const { addToWorkQueue } = require('../workers');
 
-const { airtable } = require('./airtable');
+const offerTable = AIRTABLE_NAMES.OFFERS;
 
 const {
   models: {
@@ -137,60 +134,20 @@ const getAirtableOpportunityFields = (opportunity, candidates, businessLines) =>
   };
 };
 
-const updateTable = (opportunity, candidates) =>
-  new Promise((res, rej) => {
-    airtable("Offres d'emploi v2")
-      .select({
-        filterByFormula: `{Id}='${opportunity.id}'`,
-      })
-      .firstPage((err, results) => {
-        if (err) {
-          return rej(err);
-        }
+const updateTable = (opportunity, candidates) => {
+  const fields = getAirtableOpportunityFields(
+    opportunity,
+    candidates,
+    opportunity.businessLines
+  );
 
-        const fields = getAirtableOpportunityFields(
-          opportunity,
-          candidates,
-          opportunity.businessLines
-        );
-
-        if (results.length === 0) {
-          airtable("Offres d'emploi v2").create(
-            [
-              {
-                fields,
-              },
-            ],
-            (error, records) => {
-              if (error) {
-                return rej(error);
-              }
-              return res();
-            }
-          );
-        } else {
-          const record = results[0];
-
-          // grab the record id
-          // and then push an update to this record
-          const record_id = record.id;
-          airtable("Offres d'emploi v2").update(
-            [
-              {
-                id: record_id,
-                fields,
-              },
-            ],
-            (error, records) => {
-              if (error) {
-                return rej(error);
-              }
-              return res();
-            }
-          );
-        }
-      });
+  return addToWorkQueue({
+    type: WORKERS.WORKER_TYPES.UPDATE_AIRTABLE,
+    tableName: offerTable,
+    idToUpdate: opportunity.id,
+    fields,
   });
+};
 
 const createOpportunity = async (data) => {
   console.log(`createOpportunity - Création de l'opportunité`);
@@ -240,35 +197,17 @@ const createOpportunity = async (data) => {
 
   const cleanedOpportunity = cleanOpportunity(modelOpportunity);
 
-  const fillTable = () =>
-    new Promise((res, rej) => {
-      const fields = getAirtableOpportunityFields(
-        finalOpportunity,
-        candidates,
-        data.businessLines
-      );
-      airtable("Offres d'emploi v2").create(
-        [
-          {
-            fields,
-          },
-        ],
-        (err, records) => {
-          if (err) {
-            return rej(err);
-          }
-          return res();
-        }
-      );
-    });
+  const fields = getAirtableOpportunityFields(
+    finalOpportunity,
+    candidates,
+    data.businessLines
+  );
 
-  try {
-    await fillTable();
-    console.log('Filled table with new offer.');
-  } catch (err) {
-    console.error(err);
-    console.log('Failed to fill table with new offer.');
-  }
+  await addToWorkQueue({
+    type: WORKERS.WORKER_TYPES.INSERT_AIRTABLE,
+    tableName: offerTable,
+    fields,
+  });
 
   return cleanedOpportunity;
 };
@@ -562,7 +501,8 @@ const updateOpportunity = async (opportunity) => {
   const sendJobOfferMails = (candidates) => {
     return Promise.all(
       candidates.map(async (candidat) => {
-        await sendMail({
+        await addToWorkQueue({
+          type: WORKERS.WORKER_TYPES.SEND_MAIL,
           toEmail: candidat.User.email,
           subject: `Vous avez reçu une nouvelle offre d'emploi`,
           text: `
@@ -577,7 +517,8 @@ const updateOpportunity = async (opportunity) => {
             : null;
 
         if (coach) {
-          await sendMail({
+          await addToWorkQueue({
+            type: WORKERS.WORKER_TYPES.SEND_MAIL,
             toEmail: coach.email,
             subject: `${candidat.User.firstName} a reçu une nouvelle offre d'emploi`,
             text: `

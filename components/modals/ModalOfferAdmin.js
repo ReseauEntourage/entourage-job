@@ -9,8 +9,8 @@ import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
-import {useRemoveModal, useResetForm} from '../../hooks';
-import {findOfferStatus, formatParagraph} from '../../utils';
+import { useRemoveModal, useResetForm } from '../../hooks';
+import { findOfferStatus, formatParagraph } from '../../utils';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
@@ -30,7 +30,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
     setLoading(true);
     try {
       const { data } = await Api.put(`/api/v1/opportunity/`, opportunity);
-      setCurrentOffer({...data});
+      setCurrentOffer({ ...data });
     } catch (err) {
       setError(true);
     } finally {
@@ -71,20 +71,25 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               candidatesId:
                 !currentOffer.isPublic &&
                 currentOffer.userOpportunity &&
-                currentOffer.userOpportunity.length > 0 ?
-                currentOffer.userOpportunity.map((userOpp) => {
-                  return {
-                      value: userOpp.User.id,
-                      label: `${userOpp.User.firstName} ${userOpp.User.lastName}`,
-                  }
-                }) : undefined,
+                currentOffer.userOpportunity.length > 0
+                  ? currentOffer.userOpportunity.map((userOpp) => {
+                      return {
+                        value: userOpp.User.id,
+                        label: `${userOpp.User.firstName} ${userOpp.User.lastName}`,
+                      };
+                    })
+                  : undefined,
             }}
             onCancel={() => setIsEditing(false)}
             onSubmit={(fields) => {
               const tmpOpportunity = {
                 ...currentOffer,
                 ...fields,
-                candidatesId: fields.candidatesId.map((candidateId) => typeof candidateId === 'object' ? candidateId.value : candidateId)
+                candidatesId: fields.candidatesId.map((candidateId) =>
+                  typeof candidateId === 'object'
+                    ? candidateId.value
+                    : candidateId
+                ),
               };
               updateOpportunity(tmpOpportunity);
               setIsEditing(false);
@@ -168,44 +173,54 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
             </OfferInfoContainer>
             <OfferInfoContainer icon="location" title={currentOffer.location} />
             {currentOffer.userOpportunity && (
-              <OfferInfoContainer icon="users" title={`${currentOffer.isPublic ? 'Statut pour' : 'Candidat(s) lié(s)'}`}>
-                {
-                  currentOffer.userOpportunity.map(
+              <OfferInfoContainer
+                icon="users"
+                title={`${
+                  currentOffer.isPublic ? 'Statut pour' : 'Candidat(s) lié(s)'
+                }`}
+              >
+                <div className="uk-height-max-medium uk-overflow-auto">
+                  {currentOffer.userOpportunity.map(
                     ({ status, User: { firstName, lastName, id } }) => (
-                      <div className="uk-flex uk-flex-column" style={{marginTop: 5}}>
+                      <div
+                        className="uk-flex uk-flex-column"
+                        style={{ marginTop: 5 }}
+                      >
                         <SimpleLink
                           as={`/backoffice/admin/membres/${id}`}
                           href="/backoffice/admin/membres/[id]"
                           className="uk-link-muted"
                           target="_blank"
                         >
-                        <span>
-                          {`${firstName} ${lastName}`}
-                          &nbsp;
-                        </span>
+                          <span>
+                            {`${firstName} ${lastName}`}
+                            &nbsp;
+                          </span>
                           <IconNoSSR name="link" ratio={0.8} />
                         </SimpleLink>
-                        <span className={`uk-text-meta uk-text-${findOfferStatus(status).color}`}>{findOfferStatus(status).label}</span>
+                        <span
+                          className={`uk-text-meta uk-text-${
+                            findOfferStatus(status).color
+                          }`}
+                        >
+                          {findOfferStatus(status).label}
+                        </span>
                       </div>
                     )
                   )}
+                </div>
               </OfferInfoContainer>
             )}
           </GridNoSSR>
           <GridNoSSR gap="medium" childWidths={['1-1']}>
             <OfferInfoContainer icon="comment" title="Message">
-              <div>
-                {formatParagraph(currentOffer.description)}
-              </div>
+              <div>{formatParagraph(currentOffer.description)}</div>
             </OfferInfoContainer>
-            {
-              currentOffer.prerequisites &&
+            {currentOffer.prerequisites && (
               <OfferInfoContainer icon="check" title="Pré-requis">
-                <div>
-                  {formatParagraph(currentOffer.prerequisites)}
-                </div>
+                <div>{formatParagraph(currentOffer.prerequisites)}</div>
               </OfferInfoContainer>
-            }
+            )}
             {currentOffer.businessLines && (
               <GridNoSSR gap="small">
                 {currentOffer.businessLines.map((businessLine, index) => (
@@ -308,7 +323,7 @@ ModalOfferAdmin.propTypes = {
         note: PropTypes.string,
         archived: PropTypes.string,
         User: PropTypes.shape(),
-      }),
+      })
     ),
   }),
   setCurrentOffer: PropTypes.func.isRequired,

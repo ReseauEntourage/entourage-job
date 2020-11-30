@@ -1,26 +1,19 @@
 const router = require('express').Router();
 const multer = require('multer');
-const sharp = require('sharp');
-const fs = require('fs');
-const puppeteer = require('puppeteer');
-const PDFMerger = require('pdf-merger-js');
 
-const RedisManager = require('../../../utils/RedisManager');
 const { auth } = require('../../../controllers/Auth');
-const UserController = require('../../../controllers/User');
 const CVController = require('../../../controllers/CV');
 const ShareController = require('../../../controllers/Share');
-const S3 = require('../../../controllers/aws');
-const { sendMail } = require('../../../controllers/mail');
-const { airtable } = require('../../../controllers/airtable');
-const createPreviewImage = require('../../../shareImage');
+const S3 = require('../../../controllers/Aws');
 const { getTokenFromHeaders } = require('../../../controllers/Auth');
+const { addToWorkQueue } = require('../../../workers');
 
 const {
   USER_ROLES,
   CV_STATUS,
+  WORKERS,
   NEWSLETTER_ORIGINS,
-  REDIS_KEYS,
+  AIRTABLE_NAMES,
 } = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
@@ -30,6 +23,14 @@ const upload = multer({ dest: 'uploads/' });
 
 const isEmpty = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
+};
+
+const getPDFPaths = (userId, queryFileName) => {
+  const fileName = queryFileName
+    ? `${queryFileName}_${userId.substring(0, 8)}`
+    : userId;
+
+  return [`${userId}-page1.pdf`, `${userId}-page2.pdf`, `${fileName}.pdf`];
 };
 
 /**
@@ -69,186 +70,74 @@ router.post(
           break;
       }
 
-      const processImage = async () => {
-        if (autoSave) {
-          return;
-        }
+      const urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
 
-        const ratio = 2.1;
-        const imageWidth = Math.trunc(520 * ratio);
-        const imageHeight = Math.trunc(272 * ratio);
+      let oldImg;
 
-        const generatePreviewImage = (url) => {
-          return new Promise((resolve, reject) => {
-            UserController.getUser(reqCV.UserId)
-              .then(({ firstName, gender }) =>
-                // Génération de la photo de preview
-                S3.download(url)
-                  .then(async ({ Body }) =>
-                    createPreviewImage(
-                      imageWidth,
-                      imageHeight,
-                      Body,
-                      firstName,
-                      reqCV.catchphrase,
-                      reqCV.ambitions,
-                      reqCV.skills,
-                      reqCV.locations,
-                      gender
-                    )
-                  )
-                  .then((sharpData) =>
-                    sharpData.jpeg({ quality: 75 }).toBuffer()
-                  )
-                  .then((buffer) =>
-                    S3.upload(
-                      buffer,
-                      'image/jpeg',
-                      `${reqCV.UserId}.${reqCV.status}.preview.jpg`
-                    )
-                  )
-                  .then((previewUrl) => {
-                    console.log('preview uploaded: ', previewUrl);
-                    resolve(previewUrl);
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                    reject(err);
-                  })
-              )
-              .catch((err) => {
-                console.error(err);
-                reject(err);
-              });
-          });
-        };
-
-        // uploading image and generating preview image
-        if (req.file) {
-          const { path } = req.file;
-          try {
-            const fileBuffer = await sharp(path)
-              .trim()
-              .jpeg({ quality: 75 })
-              .toBuffer();
-            reqCV.urlImg = await S3.upload(
-              fileBuffer,
-              'image/jpeg',
-              `${reqCV.UserId}.${reqCV.status}.jpg`
-            );
-
-            /*
-             TO KEEP If ever we want to pre-resize the preview background image
-
-             const previewBuffer = await sharp(fileBuffer)
-                .trim()
-                .resize(imageWidth, imageHeight, {
-                  fit: 'cover',
-                })
-                .jpeg({quality: 75})
-                .toBuffer();
-
-              await S3.upload(
-                previewBuffer,
-                'image/jpeg',
-                `${reqCV.UserId}.${reqCV.status}.small.jpg`
-              );
-          */
-          } catch (error) {
-            console.error(error);
-          } finally {
-            if (fs.existsSync(path)) fs.unlinkSync(path); // remove image localy after upload to S3
-          }
-        } else if (reqCV.urlImg) {
-          try {
-            const { Body } = await S3.download(reqCV.urlImg);
-            reqCV.urlImg = await S3.upload(
-              Body,
-              'image/jpeg',
-              `${reqCV.UserId}.${reqCV.status}.jpg`
-            );
-
-            /*
-              TO KEEP If ever we want to pre-resize the preview background image
-
-              const {Body} = await S3.download(reqCV.urlImg);
-              await S3.upload(s3image.Body, 'image/jpeg', `${reqCV.UserId}.${reqCV.status}.small.jpg`);
-            */
-
-            // TODO use when we make it work
-            // reqCV.urlImg = await S3.copy(reqCV.urlImg, `${reqCV.UserId}.${reqCV.status}.jpg`);
-          } catch (error) {
-            console.error(error);
-          }
-        }
-        if (reqCV.urlImg) {
-          try {
-            await generatePreviewImage(
-              reqCV.urlImg /* .replace('.jpg', '.small.jpg') */
-            );
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      };
-
-      const createCVAndSendMail = async () => {
+      try {
         if (!autoSave && (reqCV.urlImg || req.file)) {
-          reqCV.urlImg = `images/${reqCV.UserId}.${reqCV.status}.jpg`;
+          oldImg = reqCV.urlImg;
+          reqCV.urlImg = urlImg;
         }
 
         // création du corps du CV
         const cv = await CVController.createCV(reqCV);
 
-        try {
-          // notification mail to coach and admin
-          if (
-            req.payload.role === USER_ROLES.COACH &&
-            reqCV.status === CV_STATUS.Pending.value
-          ) {
-            const mailSubject = 'Soumission CV';
-            const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
-            // notification de l'admin
-            await sendMail({
-              toEmail: process.env.MAILJET_TO_EMAIL,
-              subject: mailSubject,
-              text: mailText,
+        // notification mail to coach and admin
+        if (
+          req.payload.role === USER_ROLES.COACH &&
+          reqCV.status === CV_STATUS.Pending.value
+        ) {
+          const mailSubject = 'Soumission CV';
+          const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
+          // notification de l'admin
+          await addToWorkQueue({
+            type: WORKERS.WORKER_TYPES.SEND_MAIL,
+            toEmail: process.env.MAILJET_TO_EMAIL,
+            subject: mailSubject,
+            text: mailText,
+          });
+        }
+
+        if (!autoSave) {
+          if (reqCV.status === CV_STATUS.Published.value) {
+            await addToWorkQueue({
+              type: WORKERS.WORKER_TYPES.CACHE_CV,
+              candidatId: reqCV.UserId,
+            });
+            await addToWorkQueue({
+              type: WORKERS.WORKER_TYPES.CACHE_ALL_CVS,
+            });
+            await addToWorkQueue({
+              type: WORKERS.WORKER_TYPES.CREATE_CV_SEARCH_STRING,
+              candidatId: reqCV.UserId,
             });
           }
-        } catch (e) {
-          console.log(e);
+
+          await addToWorkQueue({
+            type: WORKERS.WORKER_TYPES.GENERATE_CV_PREVIEW,
+            candidatId: reqCV.UserId,
+            oldImg,
+            file: req.file,
+          });
+
+          const { firstName, lastName } = cv.user.candidat;
+
+          const token = getTokenFromHeaders(req);
+          const paths = getPDFPaths(reqCV.UserId, `${firstName}_${lastName}`);
+          await addToWorkQueue({
+            type: WORKERS.WORKER_TYPES.GENERATE_CV_PDF,
+            candidatId: reqCV.UserId,
+            token,
+            paths,
+          });
         }
-        return cv;
-      };
 
-      const promises = [processImage, createCVAndSendMail];
-
-      Promise.all(promises.map(async (promise) => promise()))
-        .then(async (results) => {
-          if (reqCV.status === CV_STATUS.Published.value) {
-            try {
-              await RedisManager.delAsync(
-                REDIS_KEYS.CV_PREFIX + reqCV.user.url
-              );
-              await RedisManager.delAsync(REDIS_KEYS.CV_LIST);
-              await CVController.createSearchString(results[1]);
-
-            } catch (err) {
-              console.log(err);
-            }
-          }
-          if (!autoSave) {
-            const { firstName, lastName } = results[1].user.candidat;
-            await S3.deleteFile(
-              `${process.env.AWSS3_FILE_DIRECTORY}${firstName}_${lastName}_${results[1].UserId.substring(0, 8)}.pdf`
-            );
-          }
-          return res.status(200).json(results[1]);
-        })
-        .catch((e) => {
-          console.log(e);
-          return res.status(401).send(`Une erreur est survenue`);
-        });
+        return res.status(200).json(cv);
+      } catch (e) {
+        console.log(e);
+        return res.status(401).send(`Une erreur est survenue`);
+      }
     });
   }
 );
@@ -258,26 +147,14 @@ router.post(
  * Description : Prise d'info partageur
  */
 router.post('/share', auth(), (req, res) => {
-  return airtable('Newsletter').create(
-    [
-      {
-        fields: {
-          email: req.body.email,
-          Origine: req.body.origin || NEWSLETTER_ORIGINS.LKO,
-        },
-      },
-    ],
-    (err, records) => {
-      if (err) {
-        console.error(err);
-        return res.status(401).send(`Une erreur est survenue`);
-      }
-      records.forEach((record) => {
-        console.log(record.getId());
-      });
-      return res.status(200).json(records);
-    }
-  );
+  return addToWorkQueue({
+    type: WORKERS.WORKER_TYPES.INSERT_AIRTABLE,
+    tableName: AIRTABLE_NAMES.NEWSLETTER,
+    fields: {
+      email: req.body.email,
+      Origine: req.body.origin || NEWSLETTER_ORIGINS.LKO,
+    },
+  });
 });
 
 /**
@@ -417,15 +294,8 @@ router.get(
   async (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.params.userId, async () => {
       const { userId } = req.params;
-      const fileName = req.query.fileName
-        ? `${req.query.fileName}_${userId.substring(0, 8)}`
-        : userId;
 
-      const paths = [
-        `${userId}-page1.pdf`,
-        `${userId}-page2.pdf`,
-        `${fileName}.pdf`,
-      ];
+      const paths = getPDFPaths(userId, req.query.fileName);
 
       let pdfUrl = null;
       const s3Key = `${process.env.AWSS3_FILE_DIRECTORY}${paths[2]}`;
@@ -442,64 +312,13 @@ router.get(
       try {
         if (!pdfUrl) {
           const token = getTokenFromHeaders(req);
-
-          const browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox'],
-          });
-          const page = await browser.newPage();
-          const merger = new PDFMerger();
-
-          const options = {
-            content: '@page { size: A4 portrait; margin: 0; }',
-          };
-
-          // Fix because can't create page break
-          await page.goto(
-            `${process.env.SERVER_URL}/cv/pdf/${req.params.userId}?token=${token}&page=0`,
-            { waitUntil: 'networkidle2' }
-          );
-          await page.addStyleTag(options);
-          await page.emulateMediaType('screen');
-          await page.pdf({
-            path: paths[0],
-            preferCSSPageSize: true,
-            printBackground: true,
-          });
-          merger.add(paths[0]);
-
-          await page.goto(
-            `${process.env.SERVER_URL}/cv/pdf/${req.params.userId}?token=${token}&page=1`,
-            { waitUntil: 'networkidle2' }
-          );
-          await page.addStyleTag(options);
-          await page.emulateMediaType('screen');
-          await page.pdf({
-            path: paths[1],
-            preferCSSPageSize: true,
-            printBackground: true,
-          });
-          merger.add(paths[1]);
-
-          await browser.close();
-
-          await merger.save(paths[2]);
-
-          const pdfBuffer = fs.readFileSync(paths[2]);
-
-          await S3.upload(pdfBuffer, 'application/pdf', `${paths[2]}`, true);
-
-          pdfUrl = await S3.getSignedUrl(s3Key);
+          pdfUrl = await CVController.generatePdfFromCV(userId, token, paths);
         }
 
         res.status(200).send({ pdfUrl });
       } catch (err) {
         console.log(err);
         res.status(401).send('Une erreur est survenue');
-      } finally {
-        if (fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
-        if (fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
-        if (fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
       }
     });
   }
