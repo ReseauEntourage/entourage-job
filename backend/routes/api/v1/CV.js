@@ -103,7 +103,7 @@ router.post(
           if (reqCV.status === CV_STATUS.Published.value) {
             await addToWorkQueue({
               type: WORKERS.WORKER_TYPES.CACHE_CV,
-              url: reqCV.user.url,
+              candidatId: reqCV.UserId,
             });
             await addToWorkQueue({
               type: WORKERS.WORKER_TYPES.CACHE_ALL_CVS,

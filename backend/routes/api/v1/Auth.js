@@ -1,4 +1,3 @@
-
 const express = require('express');
 
 const router = express.Router();
@@ -8,8 +7,8 @@ const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const { USER_ROLES } = require('../../../../constants');
 const RateLimiter = require('../../../utils/RateLimiter');
-const { REDIS_KEYS, WORKER_TYPES } = require('../../../../constants');
-const {addToWorkQueue} = require("../../../workers");
+const { REDIS_KEYS, WORKERS } = require('../../../../constants');
+const { addToWorkQueue } = require('../../../workers');
 
 const authLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_AUTH, 10);
 

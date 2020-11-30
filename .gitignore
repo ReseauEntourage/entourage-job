@@ -1,6 +1,7 @@
 .env*
 .next
 node_modules
+uploads
 .idea
 .vscode
 assets/uikit

@@ -2,14 +2,13 @@ const redis = require('redis');
 
 const dev = process.env.NODE_ENV !== 'production';
 
-const promisifyOrResolve = (instance, func, args=[]) => {
+const promisifyOrResolve = (instance, func, args = []) => {
   if (instance) {
     return new Promise((resolve, reject) => {
       instance[func](...args, (error, result) => {
         if (error === null) {
           resolve(result);
-        }
-        else {
+        } else {
           resolve();
         }
       });
@@ -19,7 +18,7 @@ const promisifyOrResolve = (instance, func, args=[]) => {
 };
 
 const RedisManager = {
-  getInstance(name='default') {
+  getInstance(name = 'default') {
     if (dev) {
       return null;
     }
@@ -34,51 +33,51 @@ const RedisManager = {
   },
 
   createClient(name) {
-    const client = redis.createClient(
-      process.env.REDIS_URL,
-      {
-        // required to prevent blocking when disconnected
-        enable_offline_queue: false,
+    const client = redis.createClient(process.env.REDIS_URL, {
+      // required to prevent blocking when disconnected
+      enable_offline_queue: false,
 
-        // exponential backoff
-        retry_strategy: (retry_params) => {
-          let delay = (retry_params.attempt - 1) * 2; // seconds
-          if (delay > 60) {
-            delay = 60;
-          }
-          return delay * 1000; // milliseconds
+      // exponential backoff
+      retry_strategy: (retry_params) => {
+        let delay = (retry_params.attempt - 1) * 2; // seconds
+        if (delay > 60) {
+          delay = 60;
         }
-      }
-    );
+        return delay * 1000; // milliseconds
+      },
+    });
 
     client.name = name;
     client.lastError = null;
 
-    client.on('connect', function() {
+    client.on('connect', function () {
       // used to fix attempts count in on('end')
-      this.attemptsOnConnect = this.attempts
-    })
+      this.attemptsOnConnect = this.attempts;
+    });
 
-    client.on('ready', function() {
+    client.on('ready', function () {
       this.lastError = null;
       this.attempts = 1; // reset attempts
       this.attemptsOnConnect = null;
-      console.log(`type=redis.ready client=${this.name}`)
-    })
+      console.log(`type=redis.ready client=${this.name}`);
+    });
 
     // an error handler is required to prevent exception throwing
-    client.on('error', function(error) {
+    client.on('error', function (error) {
       if (error) {
         this.lastError = error;
       }
       // the client can't be used anymore once it is 'closed' so we delete it
       if (this.closing && RedisManager.clients[this.name] === this) {
-        console.log(`type=redis.destroy client=${this.name} reason=error last_error:`, this.lastError)
+        console.log(
+          `type=redis.destroy client=${this.name} reason=error last_error:`,
+          this.lastError
+        );
         delete RedisManager.clients[this.name];
       }
     });
 
-    client.on('end', function() {
+    client.on('end', function () {
       // fix attempts count when the connection closes before being ready
       if (!this.ready && this.attemptsOnConnect) {
         this.attempts = this.attemptsOnConnect;
@@ -86,7 +85,10 @@ const RedisManager = {
 
       // the client can't be used anymore once it is 'closed' so we delete it
       if (this.closing && RedisManager.clients[this.name] === this) {
-        console.log(`type=redis.destroy client=${this.name} reason=end last_error:`, this.lastError)
+        console.log(
+          `type=redis.destroy client=${this.name} reason=end last_error:`,
+          this.lastError
+        );
         delete RedisManager.clients[this.name];
       }
 
@@ -95,12 +97,16 @@ const RedisManager = {
       }
     });
 
-    client.on('reconnecting', function(params) {
+    client.on('reconnecting', function (params) {
       if (params.error) {
         this.lastError = params.error;
       }
-      console.log(`type=redis.reconnecting client=${this.name} attempt=${this.attempts} last_error="${this.lastError ? this.lastError.message : null}"`)
-    })
+      console.log(
+        `type=redis.reconnecting client=${this.name} attempt=${
+          this.attempts
+        } last_error="${this.lastError ? this.lastError.message : null}"`
+      );
+    });
 
     return client;
   },
@@ -114,7 +120,11 @@ const RedisManager = {
   },
 
   setWithExpireAsync(key, value, expire) {
-    return promisifyOrResolve(this.getInstance('cache'), 'setex', [key, expire, value]);
+    return promisifyOrResolve(this.getInstance('cache'), 'setex', [
+      key,
+      expire,
+      value,
+    ]);
   },
 
   delAsync(key) {
