@@ -1,9 +1,15 @@
+const { QueryTypes } = require('sequelize');
+
 const {USER_ROLES} = require("../../constants");
 
 const {
   models: {User, User_Candidat, Share, CV},
   Sequelize: {Op, fn, col, where},
+  sequelize
 } = require('../db/models');
+
+const {publishedCVQuery} = require('./CV');
+
 
 const ATTRIBUTES_USER_CANDIDAT = ['employed', 'hidden', 'note', 'url'];
 const ATTRIBUTES_USER = [
@@ -16,6 +22,14 @@ const ATTRIBUTES_USER = [
   'gender',
   'lastConnection',
 ];
+
+const ATTRIBUTES_USER_PUBLIC = [
+  'id',
+  'firstName',
+  'lastName',
+  'role',
+];
+
 const INCLUDE_USER_CANDIDAT = [
   {
     model: User_Candidat,
@@ -242,6 +256,31 @@ const searchUsers = (query, role) => {
   return User.findAll(options);
 };
 
+const searchCandidates = async (query) => {
+  const lowerCaseQuery = query.toLowerCase();
+  const publishedCVs = await sequelize.query(publishedCVQuery, {
+    type: QueryTypes.SELECT,
+  });
+  const options = {
+    attributes: ATTRIBUTES_USER_PUBLIC,
+    where: {
+      [Op.and]: [
+        { id: publishedCVs.map((publishedCV) => publishedCV.UserId) },
+        where(
+          fn(
+            'concat',
+            fn('lower', col('firstName')),
+            ' ',
+            fn('lower', col('lastName'))
+          ),
+          {[Op.like]: `%${lowerCaseQuery}%`}
+        ),
+      ],
+    },
+  };
+  return User.findAll(options);
+};
+
 const setUser = async (id, user) => {
   const [updateCount] = await User.update(user, {
     where: {id},
@@ -333,6 +372,7 @@ module.exports = {
   getUsers,
   setUser,
   searchUsers,
+  searchCandidates,
   getMembers,
   setUserCandidat,
   getUserCandidat,

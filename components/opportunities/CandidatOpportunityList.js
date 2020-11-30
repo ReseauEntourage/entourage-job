@@ -8,6 +8,7 @@ import { UserContext } from '../store/UserProvider';
 import ModalOfferAdmin from '../modals/ModalOfferAdmin';
 import { OPPORTUNITY_FILTERS_DATA } from '../../constants';
 import OpportunityError from "./OpportunityError";
+import {getUserOpportunityFromOffer} from '../../utils';
 
 const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults }) => {
   const { user } = useContext(UserContext);
@@ -17,20 +18,6 @@ const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults })
   const [filteredOffers, setFilteredOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const getUserOpportunity = (offer) => {
-    let userOpportunity;
-    if (offer.userOpportunity && offer.userOpportunity.length > 0) {
-      if (!offer.isPublic) {
-        userOpportunity = offer.userOpportunity[0];
-      } else {
-        userOpportunity = offer.userOpportunity.find((userOpp) => {
-          return userOpp.UserId === candidatId;
-        });
-      }
-    }
-    return userOpportunity;
-  };
 
   const fetchData = async (id) => {
     if (user) {
@@ -75,7 +62,7 @@ const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults })
               if (filtersObj[keys[i]].length === 0) {
                 hasFound = true;
               } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
-                const userOpportunity = getUserOpportunity(offer);
+                const userOpportunity = getUserOpportunityFromOffer(offer, candidatId);
                 hasFound = filtersObj[keys[i]].some((currentFilter) => {
                   return currentFilter.value === userOpportunity.status;
                 });
@@ -122,7 +109,7 @@ const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults })
           {filteredOffers && filteredOffers.length > 0 ? (
             <GridNoSSR childWidths={['1-4@l', '1-3@m', '1-2@s']} left top>
               {filteredOffers.map((offer, i) => {
-                const userOpportunity = getUserOpportunity(offer);
+                const userOpportunity = getUserOpportunityFromOffer(offer, candidatId);
                 return (
                   <li key={i}>
                     <a
@@ -132,7 +119,6 @@ const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults })
                       onClick={() => {
                         setCurrentOffer({
                           ...offer,
-                          currentUserOpportunity: userOpportunity,
                         });
                         UIkit.modal('#modal-offer-admin').show();
                       }}

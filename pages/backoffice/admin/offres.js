@@ -11,7 +11,7 @@ import Axios from '../../../Axios';
 import schema from '../../../components/forms/schema/formEditOpportunity';
 import { UserContext } from '../../../components/store/UserProvider';
 import ModalEdit from '../../../components/modals/ModalEdit';
-import {initializeFilters, mutateFormSchema} from "../../../utils";
+import {initializeFilters, mutateFormSchema, getUserOpportunityFromOffer} from "../../../utils";
 import {OPPORTUNITY_FILTERS_DATA} from "../../../constants";
 import CurrentFilters from "../../../components/filters/CurrentFilters";
 import FiltersSideBar from "../../../components/filters/FiltersSideBar";
@@ -96,19 +96,6 @@ const LesOpportunites = () => {
     });
   }, [user, opportunityId]);
 
-  const getUserOpportunity = (offer) => {
-    let userOpportunity;
-    if(offer.userOpportunity && offer.userOpportunity.length > 0) {
-      if(!offer.isPublic) {
-        userOpportunity = offer.userOpportunity[0];
-      }
-      else {
-        userOpportunity = offer.userOpportunity;
-      }
-    }
-
-    return userOpportunity;
-  };
 
   /* TAB FILTERS */
 
@@ -178,15 +165,11 @@ const LesOpportunites = () => {
               if (filtersObj[keys[i]].length === 0) {
                 hasFound = true;
               } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
-                const userOpportunity = getUserOpportunity(offer);
                 hasFound = filtersObj[keys[i]].some((currentFilter) => {
-                  if(userOpportunity) {
-                    if(Array.isArray(userOpportunity)) {
-                      return userOpportunity.some((userOpp) => {
+                  if(offer.userOpportunity && offer.userOpportunity.length > 0) {
+                      return offer.userOpportunity.some((userOpp) => {
                         return currentFilter.value === userOpp.status;
                       });
-                    }
-                    return currentFilter.value === userOpportunity.status;
                   }
                   else {
                     return false;
@@ -287,7 +270,6 @@ const LesOpportunites = () => {
               {filteredOffers &&
               filteredOffers.length > 0 ?
                 filteredOffers.map((offer, i) => {
-                  const userOpportunity = getUserOpportunity(offer);
                   return (
                     <li key={i}>
                       <a
@@ -296,8 +278,7 @@ const LesOpportunites = () => {
                         className="uk-link-reset"
                         onClick={() => {
                           setCurrentOffer({
-                            ...offer,
-                            currentUserOpportunity: userOpportunity,
+                            ...offer
                           });
                           UIkit.modal('#modal-offer-admin').show();
                         }}
@@ -310,7 +291,7 @@ const LesOpportunites = () => {
                           archived={offer.isArchived}
                           isPublic={offer.isPublic}
                           isValidated={offer.isValidated}
-                          userOpportunity={getUserOpportunity(offer)}
+                          userOpportunity={offer.userOpportunity}
                           isAdmin
                         />
                       </a>
