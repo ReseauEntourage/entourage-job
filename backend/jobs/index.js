@@ -19,7 +19,7 @@ const { insertAirtable, updateAirtable } = require('./Airtable');
 const workQueue = new Queue(JOBS.QUEUES.WORK, process.env.REDIS_URL);
 
 const addToWorkQueue = async (data) => {
-  if (dev) {
+  if (!dev) {
     return workQueue.add(data, {
       attempts: process.env.JOBS_NB_ATTEMPS || 10,
       backoff: {
