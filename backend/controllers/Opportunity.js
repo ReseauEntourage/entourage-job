@@ -1,8 +1,8 @@
-const { OFFER_STATUS, WORKERS, AIRTABLE_NAMES } = require('../../constants');
+const { OFFER_STATUS, JOBS, AIRTABLE_NAMES } = require('../../constants');
 
 const { findOfferStatus } = require('../../utils/Finding');
 
-const { addToWorkQueue } = require('../workers');
+const { addToWorkQueue } = require('../jobs');
 
 const offerTable = AIRTABLE_NAMES.OFFERS;
 
@@ -142,7 +142,7 @@ const updateTable = (opportunity, candidates) => {
   );
 
   return addToWorkQueue({
-    type: WORKERS.WORKER_TYPES.UPDATE_AIRTABLE,
+    type: JOBS.JOB_TYPES.UPDATE_AIRTABLE,
     tableName: offerTable,
     idToUpdate: opportunity.id,
     fields,
@@ -204,7 +204,7 @@ const createOpportunity = async (data) => {
   );
 
   await addToWorkQueue({
-    type: WORKERS.WORKER_TYPES.INSERT_AIRTABLE,
+    type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
     tableName: offerTable,
     fields,
   });
@@ -502,7 +502,7 @@ const updateOpportunity = async (opportunity) => {
     return Promise.all(
       candidates.map(async (candidat) => {
         await addToWorkQueue({
-          type: WORKERS.WORKER_TYPES.SEND_MAIL,
+          type: JOBS.JOB_TYPES.SEND_MAIL,
           toEmail: candidat.User.email,
           subject: `Vous avez reçu une nouvelle offre d'emploi`,
           text: `
@@ -518,7 +518,7 @@ const updateOpportunity = async (opportunity) => {
 
         if (coach) {
           await addToWorkQueue({
-            type: WORKERS.WORKER_TYPES.SEND_MAIL,
+            type: JOBS.JOB_TYPES.SEND_MAIL,
             toEmail: coach.email,
             subject: `${candidat.User.firstName} a reçu une nouvelle offre d'emploi`,
             text: `

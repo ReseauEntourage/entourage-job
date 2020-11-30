@@ -1,6 +1,5 @@
-const fs = require('fs');
-
 const sharp = require('sharp');
+
 const S3 = require('../controllers/Aws');
 const createPreviewImage = require('../shareImage');
 const { getUser } = require('../controllers/User');
@@ -16,7 +15,7 @@ const generatePDF = async (candidatId, token, paths) => {
   return generatePdfFromCV(candidatId, token, paths);
 };
 
-const generatePreview = async (candidatId, file, oldImg) => {
+const generatePreview = async (candidatId, base64Img, oldImg) => {
   const cv = await getCVbyUserId(candidatId);
 
   const ratio = 2.1;
@@ -26,13 +25,9 @@ const generatePreview = async (candidatId, file, oldImg) => {
   let urlImg;
 
   // uploading image and generating preview image
-  if (file) {
-    const { path } = file;
+  if (base64Img) {
     try {
-      const fileBuffer = await sharp(path)
-        .trim()
-        .jpeg({ quality: 75 })
-        .toBuffer();
+      const fileBuffer = Buffer.from(base64Img, 'base64');
 
       urlImg = await S3.upload(
         fileBuffer,
@@ -59,8 +54,6 @@ const generatePreview = async (candidatId, file, oldImg) => {
     */
     } catch (error) {
       console.error(error);
-    } finally {
-      if (fs.existsSync(path)) fs.unlinkSync(path); // remove image localy after upload to S3
     }
   } else if (oldImg) {
     try {

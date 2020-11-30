@@ -248,8 +248,8 @@ const REDIS_KEYS = {
   RL_GENERAL: 'rl-general:',
 };
 
-const WORKERS = {
-  WORKER_TYPES: {
+const JOBS = {
+  JOB_TYPES: {
     GENERATE_CV_PDF: 'generate_cv_pdf',
     GENERATE_CV_PREVIEW: 'generate_cv_preview',
     CREATE_CV_SEARCH_STRING: 'create_cv_search_string',
@@ -267,9 +267,11 @@ const WORKERS = {
 const SOCKETS = {
   CHANNEL_NAMES: {
     CV_PREVIEW: 'cv-preview-channel',
+    CV_PDF: 'cv-pdf-channel',
   },
   EVENTS: {
     CV_PREVIEW_DONE: 'cv-preview-done',
+    CV_PDF_DONE: 'cv-pdf-done',
   },
 };
 
@@ -300,7 +302,7 @@ module.exports = {
   OPPORTUNITY_FILTERS_DATA,
   NEWSLETTER_ORIGINS,
   REDIS_KEYS,
-  WORKERS,
+  JOBS,
   CONTACT_MAILS,
   INITIAL_NB_OF_CV_TO_DISPLAY,
   AIRTABLE_NAMES,

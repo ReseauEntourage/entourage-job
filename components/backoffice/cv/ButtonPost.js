@@ -34,12 +34,12 @@ ButtonPost.propTypes = {
   action: PropTypes.func,
   style: PropTypes.string,
   icon: PropTypes.string,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 };
 ButtonPost.defaultProps = {
   action: undefined,
   style: undefined,
   icon: undefined,
-  disabled: false
+  disabled: false,
 };
 export default ButtonPost;

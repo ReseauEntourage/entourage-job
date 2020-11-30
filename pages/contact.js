@@ -35,7 +35,7 @@ const Contact = () => {
           }}
         />
         <h4 className="uk-align-center uk-text-center uk-margin-large-bottom">
-          Vous êtes journaliste&nbsp;? Contactez Claire Duizabo, responsable commucation du projet&nbsp;:
+          Vous êtes journaliste&nbsp;? Contactez Claire Duizabo, responsable communication du projet&nbsp;:
           <br />
           <SimpleLink
             className="uk-link uk-margin-small-top uk-margin-small-bottom"
