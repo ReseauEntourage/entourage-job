@@ -26,13 +26,17 @@ const CVPageContent = ({ candidatId }) => {
   const [cvVersion, setCvVersion] = useState(undefined);
   const [imageUrl, setImageUrl] = useState(undefined);
   const [previewGenerating, setPreviewGenerating] = useState(false);
+  const [pdfGenerating, setPdfGenerating] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    return () => pusher.unsubscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
+    return () => {
+      pusher.unsubscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
+      pusher.unsubscribe(SOCKETS.CHANNEL_NAMES.CV_PDF);
+    }
   }, []);
 
   useEffect(() => {
@@ -107,12 +111,23 @@ const CVPageContent = ({ candidatId }) => {
   }, [previewGenerating]);
 
   const postCV = (status) => {
-    const channel = pusher.subscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
+    const channelPreview = pusher.subscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
+    const channelPDF = pusher.subscribe(SOCKETS.CHANNEL_NAMES.CV_PDF);
+
     setPreviewGenerating(true);
-    channel.bind(SOCKETS.EVENTS.CV_PREVIEW_DONE, (data) => {
+    setPdfGenerating(true);
+
+    channelPreview.bind(SOCKETS.EVENTS.CV_PREVIEW_DONE, (data) => {
       if (data.candidatId === candidatId) {
         setPreviewGenerating(false);
         pusher.unsubscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
+      }
+    });
+
+    channelPDF.bind(SOCKETS.EVENTS.CV_PDF_DONE, (data) => {
+      if (data.candidatId === candidatId) {
+        setPdfGenerating(false);
+        pusher.unsubscribe(SOCKETS.CHANNEL_NAMES.CV_PDF);
       }
     });
 
@@ -223,6 +238,7 @@ const CVPageContent = ({ candidatId }) => {
 
         <GridNoSSR row gap="small">
           <ButtonDownload
+            pdfGenerating={pdfGenerating}
             candidatId={cv.UserId}
             firstName={cv.user.candidat.firstName}
             lastName={cv.user.candidat.lastName}

@@ -1,25 +1,25 @@
 const router = require('express').Router();
 const multer = require('multer');
+const fs = require('fs');
+const sharp = require('sharp');
 
 const { auth } = require('../../../controllers/Auth');
 const CVController = require('../../../controllers/CV');
 const ShareController = require('../../../controllers/Share');
 const S3 = require('../../../controllers/Aws');
 const { getTokenFromHeaders } = require('../../../controllers/Auth');
-const { addToWorkQueue } = require('../../../workers');
+const { addToWorkQueue } = require('../../../jobs');
 
 const {
   USER_ROLES,
   CV_STATUS,
-  WORKERS,
+  JOBS,
   NEWSLETTER_ORIGINS,
   AIRTABLE_NAMES,
 } = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
 const upload = multer({ dest: 'uploads/' });
-
-// sharp.cache(false);
 
 const isEmpty = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
@@ -92,7 +92,7 @@ router.post(
           const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
           // notification de l'admin
           await addToWorkQueue({
-            type: WORKERS.WORKER_TYPES.SEND_MAIL,
+            type: JOBS.JOB_TYPES.SEND_MAIL,
             toEmail: process.env.MAILJET_TO_EMAIL,
             subject: mailSubject,
             text: mailText,
@@ -102,31 +102,50 @@ router.post(
         if (!autoSave) {
           if (reqCV.status === CV_STATUS.Published.value) {
             await addToWorkQueue({
-              type: WORKERS.WORKER_TYPES.CACHE_CV,
+              type: JOBS.JOB_TYPES.CACHE_CV,
               candidatId: reqCV.UserId,
             });
             await addToWorkQueue({
-              type: WORKERS.WORKER_TYPES.CACHE_ALL_CVS,
+              type: JOBS.JOB_TYPES.CACHE_ALL_CVS,
             });
             await addToWorkQueue({
-              type: WORKERS.WORKER_TYPES.CREATE_CV_SEARCH_STRING,
+              type: JOBS.JOB_TYPES.CREATE_CV_SEARCH_STRING,
               candidatId: reqCV.UserId,
             });
           }
 
-          await addToWorkQueue({
-            type: WORKERS.WORKER_TYPES.GENERATE_CV_PREVIEW,
-            candidatId: reqCV.UserId,
-            oldImg,
-            file: req.file,
-          });
+          if (req.file) {
+            const { path } = req.file;
+
+            try {
+              const fileBuffer = await sharp(path)
+                .trim()
+                .jpeg({ quality: 75 })
+                .toBuffer();
+
+              const base64Img = Buffer.from(fileBuffer).toString('base64');
+
+              await addToWorkQueue({
+                type: JOBS.JOB_TYPES.GENERATE_CV_PREVIEW,
+                candidatId: reqCV.UserId,
+                oldImg,
+                base64Img,
+              });
+            } catch (error) {
+              console.error(error);
+            } finally {
+              if (fs.existsSync(path)) {
+                fs.unlinkSync(path); // remove image locally after upload to S3
+              }
+            }
+          }
 
           const { firstName, lastName } = cv.user.candidat;
 
           const token = getTokenFromHeaders(req);
           const paths = getPDFPaths(reqCV.UserId, `${firstName}_${lastName}`);
           await addToWorkQueue({
-            type: WORKERS.WORKER_TYPES.GENERATE_CV_PDF,
+            type: JOBS.JOB_TYPES.GENERATE_CV_PDF,
             candidatId: reqCV.UserId,
             token,
             paths,
@@ -148,7 +167,7 @@ router.post(
  */
 router.post('/share', auth(), (req, res) => {
   return addToWorkQueue({
-    type: WORKERS.WORKER_TYPES.INSERT_AIRTABLE,
+    type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
     tableName: AIRTABLE_NAMES.NEWSLETTER,
     fields: {
       email: req.body.email,

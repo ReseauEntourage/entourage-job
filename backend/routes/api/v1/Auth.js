@@ -7,8 +7,8 @@ const AuthController = require('../../../controllers/Auth');
 const UserController = require('../../../controllers/User');
 const { USER_ROLES } = require('../../../../constants');
 const RateLimiter = require('../../../utils/RateLimiter');
-const { REDIS_KEYS, WORKERS } = require('../../../../constants');
-const { addToWorkQueue } = require('../../../workers');
+const { REDIS_KEYS, JOBS } = require('../../../../constants');
+const { addToWorkQueue } = require('../../../jobs');
 
 const authLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_AUTH, 10);
 
@@ -117,7 +117,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       console.log('sending email');
       // Envoi du mail
       await addToWorkQueue({
-        type: WORKERS.WORKER_TYPES.SEND_MAIL,
+        type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail: user.email,
         subject: 'Réinitialisation mot de passe',
         text:

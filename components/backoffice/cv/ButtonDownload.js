@@ -4,13 +4,22 @@ import Api from '../../../Axios';
 import ButtonPost from './ButtonPost';
 import { event } from '../../../lib/gtag';
 
-const ButtonDownload = ({ disabled, candidatId, firstName, lastName, tag }) => {
+const ButtonDownload = ({
+  disabled,
+  candidatId,
+  firstName,
+  lastName,
+  tag,
+  pdfGenerating,
+}) => {
   return (
     <ButtonPost
-      disabled={disabled}
+      disabled={disabled || pdfGenerating}
       style="default"
-      text="Télécharger le CV"
-      icon="download"
+      text={
+        pdfGenerating ? 'Génération du fichier PDF ...' : 'Télécharger le CV'
+      }
+      icon={pdfGenerating ? null : 'download'}
       action={() => {
         if (tag) event(tag);
         return Api.get(
@@ -39,9 +48,11 @@ ButtonDownload.propTypes = {
   firstName: PropTypes.string.isRequired,
   lastName: PropTypes.string.isRequired,
   tag: PropTypes.string,
+  pdfGenerating: PropTypes.bool,
 };
 ButtonDownload.defaultProps = {
   disabled: false,
   tag: undefined,
+  pdfGenerating: false,
 };
 export default ButtonDownload;

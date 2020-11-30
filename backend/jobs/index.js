@@ -10,16 +10,16 @@ const {
 
 const dev = process.env.NODE_ENV !== 'production';
 
-const { WORKERS } = require('../../constants');
+const { JOBS } = require('../../constants');
 
 const { sendMailBackground } = require('./Mail');
 
 const { insertAirtable, updateAirtable } = require('./Airtable');
 
-const workQueue = new Queue(WORKERS.QUEUES.WORK, process.env.REDIS_URL);
+const workQueue = new Queue(JOBS.QUEUES.WORK, process.env.REDIS_URL);
 
 const addToWorkQueue = async (data) => {
-  if (!dev) {
+  if (dev) {
     return workQueue.add(data, {
       attempts: process.env.JOBS_NB_ATTEMPS || 10,
       backoff: {
