@@ -1,6 +1,8 @@
 const throng = require('throng');
 const Queue = require('bull');
-const { WORKER_TYPES } = require('../constants');
+const Pusher = require('pusher');
+
+const { WORKERS, SOCKETS } = require('../constants');
 const {
   generatePDF,
   generatePreview,
@@ -16,8 +18,16 @@ const workers = process.env.WEB_CONCURRENCY || 1;
 
 const maxJobsPerWorker = process.env.JOBS_MAX_PER_WORKER || 50;
 
+const pusher = new Pusher({
+  appId: process.env.PUSHER_APP_ID,
+  key: process.env.PUSHER_API_KEY,
+  secret: process.env.PUSHER_API_SECRET,
+  cluster: 'eu',
+  useTLS: true,
+});
+
 const start = () => {
-  const workQueue = new Queue('work', process.env.REDIS_URL);
+  const workQueue = new Queue(WORKERS.QUEUES.WORK, process.env.REDIS_URL);
 
   workQueue.on('completed', (job, result) => {
     console.log(
@@ -49,19 +59,26 @@ const start = () => {
   workQueue.process(maxJobsPerWorker, async (job) => {
     const { data } = job;
     switch (data.type) {
-      case WORKER_TYPES.GENERATE_CV_PDF:
+      case WORKERS.WORKER_TYPES.GENERATE_CV_PDF:
         await generatePDF(data.candidatId, data.token, data.paths);
         return `PDF generated for User ${data.candidatId} : ${data.paths[2]}`;
 
-      case WORKER_TYPES.GENERATE_CV_PREVIEW:
+      case WORKERS.WORKER_TYPES.GENERATE_CV_PREVIEW:
         const previewImageName = await generatePreview(
           data.candidatId,
           data.file,
-          data.oldImg,
+          data.oldImg
+        );
+        await pusher.trigger(
+          SOCKETS.CHANNEL_NAMES.CV_PREVIEW,
+          SOCKETS.EVENTS.CV_PREVIEW_DONE,
+          {
+            candidatId: data.candidatId,
+          }
         );
         return `Preview generated for User ${data.candidatId} : ${previewImageName}`;
 
-      case WORKER_TYPES.CACHE_CV:
+      case WORKERS.WORKER_TYPES.CACHE_CV:
         const cv = await cacheCV(data.url, data.id);
         return cv
           ? `CV cached for User ${cv.UserId} and CV ${cv.id}${
@@ -69,25 +86,25 @@ const start = () => {
             }`
           : `CV not cached`;
 
-      case WORKER_TYPES.CACHE_ALL_CVS:
+      case WORKERS.WORKER_TYPES.CACHE_ALL_CVS:
         const cvs = await cacheAllCVs();
         return cvs && cvs.length > 0
           ? `All published CVs cached`
           : `No CVs cached`;
 
-      case WORKER_TYPES.CREATE_CV_SEARCH_STRING:
+      case WORKERS.WORKER_TYPES.CREATE_CV_SEARCH_STRING:
         await createCVSearchString(data.candidatId);
         return `CV search string created for User ${data.candidatId}`;
 
-      case WORKER_TYPES.SEND_MAIL:
+      case WORKERS.WORKER_TYPES.SEND_MAIL:
         await sendMailBackground(data);
         return `Mail sent to '${data.toEmail}' and subject '${data.subject}'`;
 
-      case WORKER_TYPES.INSERT_AIRTABLE:
+      case WORKERS.WORKER_TYPES.INSERT_AIRTABLE:
         await insertAirtable(data.tableName, data.fields);
         return `Airtable : insertion in '${data.tableName}'`;
 
-      case WORKER_TYPES.UPDATE_AIRTABLE:
+      case WORKERS.WORKER_TYPES.UPDATE_AIRTABLE:
         await updateAirtable(data.tableName, data.idToUpdate, data.fields);
         return `Airtable : update of id ${data.idToUpdate} in '${data.tableName}'`;
 

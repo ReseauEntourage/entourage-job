@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/aria-role */
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {GridNoSSR} from '../utils/Grid';
+import { GridNoSSR } from '../utils/Grid';
 import {
   ExperiencesProfileCard,
   InfoProfileCard,
@@ -9,27 +9,41 @@ import {
   SkillsCard,
   StoryProfileCard,
 } from '../cards';
-import {CVEditCatchphrase, CVEditPicture, CVEditReviews} from '.';
+import { CVEditCatchphrase, CVEditPicture, CVEditReviews } from '.';
 import CVEditBusinessLines from './CVEditBusinessLines';
 import CVEditCareerPath from './CVEditCareerPath';
-import {ImgNoSSR} from '../utils';
-import {CV_STATUS} from '../../constants';
+import { ImgNoSSR } from '../utils';
+import { CV_STATUS } from '../../constants';
 
-const CVFicheEdition = ({cv, gender, onChange, disablePicture}) => {
+const CVFicheEdition = ({
+  cv,
+  gender,
+  onChange,
+  disablePicture,
+  previewGenerating,
+}) => {
   const [previewUrl, setPreviewUrl] = useState(undefined);
   const [imageUrl, setImageUrl] = useState(undefined);
+
+  const updateImage = () => {
+    // Use hash to reload image if an update is done
+    const previewHash = Date.now();
+    const baseUrl = `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${cv.UserId}.${cv.status}`;
+    setPreviewUrl(`${baseUrl}.preview.jpg?${previewHash}`);
+    setImageUrl(`${baseUrl}.jpg?${previewHash}`);
+  };
+
   useEffect(() => {
     if (cv.status !== CV_STATUS.Draft.value) {
-      // Use hash to reload image if an update is done
-      const previewHash = Date.now();
-      setPreviewUrl(
-        `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${cv.UserId}.${cv.status}.preview.jpg?${previewHash}`
-      );
-      setImageUrl(
-        `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${cv.UserId}.${cv.status}.jpg?${previewHash}`
-      );
+      updateImage();
     }
   }, [cv]);
+
+  useEffect(() => {
+    if (!previewGenerating && cv) {
+      updateImage();
+    }
+  }, [previewGenerating]);
 
   return (
     <GridNoSSR childWidths={['1-1']}>
@@ -49,6 +63,7 @@ const CVFicheEdition = ({cv, gender, onChange, disablePicture}) => {
         </GridNoSSR>
         <GridNoSSR childWidths={['1-1']} match>
           <CVEditPicture
+            imageUploading={previewGenerating}
             urlImg={`${imageUrl}` || undefined}
             onChange={onChange}
             disablePicture={disablePicture}
@@ -67,7 +82,8 @@ const CVFicheEdition = ({cv, gender, onChange, disablePicture}) => {
                     src={previewUrl}
                     alt="Preview"
                   />
-                  {cv.status === CV_STATUS.Draft.value && (
+                  {(cv.status === CV_STATUS.Draft.value ||
+                    previewGenerating) && (
                     <>
                       <div
                         className="uk-position-cover"
@@ -76,7 +92,17 @@ const CVFicheEdition = ({cv, gender, onChange, disablePicture}) => {
                         }}
                       />
                       <div className="uk-overlay uk-position-center uk-light">
-                        <p>Veuillez sauvegarder ou publier le CV</p>
+                        {previewGenerating ? (
+                          <div>
+                            Génération de la prévisualisation en cours&nbsp;
+                            <div
+                              className="uk-margin-small-left"
+                              uk-spinner="ratio: 0.6"
+                            />
+                          </div>
+                        ) : (
+                          <p>Veuillez sauvegarder ou publier le CV</p>
+                        )}
                       </div>
                     </>
                   )}
@@ -110,7 +136,6 @@ const CVFicheEdition = ({cv, gender, onChange, disablePicture}) => {
             experiences={cv.experiences}
             onChange={onChange}
           />
-
         </GridNoSSR>
       </GridNoSSR>
     </GridNoSSR>
@@ -140,6 +165,7 @@ CVFicheEdition.propTypes = {
   onChange: PropTypes.func,
   disablePicture: PropTypes.bool,
   gender: PropTypes.number.isRequired,
+  previewGenerating: PropTypes.bool.isRequired,
 };
 
 CVFicheEdition.defaultProps = {

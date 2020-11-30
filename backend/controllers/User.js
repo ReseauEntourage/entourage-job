@@ -1,6 +1,6 @@
 const { QueryTypes } = require('sequelize');
 
-const {USER_ROLES, REDIS_KEYS, WORKER_TYPES} = require("../../constants");
+const {USER_ROLES, REDIS_KEYS, WORKERS} = require("../../constants");
 
 const RedisManager = require('../utils/RedisManager');
 
@@ -305,12 +305,12 @@ const setUserCandidat = async (candidatId, candidat) => {
     await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + candidat.url);
   } else {
     await addToWorkQueue({
-      type: WORKER_TYPES.CACHE_CV,
+      type: WORKERS.WORKER_TYPES.CACHE_CV,
       id: candidatId,
     });
   }
   await addToWorkQueue({
-    type: WORKER_TYPES.CACHE_ALL_CVS,
+    type: WORKERS.WORKER_TYPES.CACHE_ALL_CVS,
   });
   return userCandidat;
 };

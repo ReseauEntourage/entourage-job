@@ -118,7 +118,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       console.log('sending email');
       // Envoi du mail
       await addToWorkQueue({
-        type: WORKER_TYPES.SEND_MAIL,
+        type: WORKERS.WORKER_TYPES.SEND_MAIL,
         toEmail: user.email,
         subject: 'Réinitialisation mot de passe',
         text:

@@ -8,11 +8,13 @@ const {
   createCVSearchString,
 } = require('./CV');
 
+const { WORKERS } = require('../../constants');
+
 const { sendMailBackground } = require('./Mail');
 
 const { insertAirtable, updateAirtable } = require('./Airtable');
 
-const workQueue = new Queue('work', process.env.REDIS_URL);
+const workQueue = new Queue(WORKERS.QUEUES.WORK, process.env.REDIS_URL);
 
 const addToWorkQueue = async (data) => {
   return workQueue.add(data, {

@@ -11,8 +11,9 @@ const { addToWorkQueue } = require('../../../workers');
 const {
   USER_ROLES,
   CV_STATUS,
-  WORKER_TYPES,
+  WORKERS,
   NEWSLETTER_ORIGINS,
+  AIRTABLE_NAMES,
 } = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
@@ -91,7 +92,7 @@ router.post(
           const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
           // notification de l'admin
           await addToWorkQueue({
-            type: WORKER_TYPES.SEND_MAIL,
+            type: WORKERS.WORKER_TYPES.SEND_MAIL,
             toEmail: process.env.MAILJET_TO_EMAIL,
             subject: mailSubject,
             text: mailText,
@@ -101,20 +102,20 @@ router.post(
         if (!autoSave) {
           if (reqCV.status === CV_STATUS.Published.value) {
             await addToWorkQueue({
-              type: WORKER_TYPES.CACHE_CV,
+              type: WORKERS.WORKER_TYPES.CACHE_CV,
               url: reqCV.user.url,
             });
             await addToWorkQueue({
-              type: WORKER_TYPES.CACHE_ALL_CVS,
+              type: WORKERS.WORKER_TYPES.CACHE_ALL_CVS,
             });
             await addToWorkQueue({
-              type: WORKER_TYPES.CREATE_CV_SEARCH_STRING,
+              type: WORKERS.WORKER_TYPES.CREATE_CV_SEARCH_STRING,
               candidatId: reqCV.UserId,
             });
           }
 
           await addToWorkQueue({
-            type: WORKER_TYPES.GENERATE_CV_PREVIEW,
+            type: WORKERS.WORKER_TYPES.GENERATE_CV_PREVIEW,
             candidatId: reqCV.UserId,
             oldImg,
             file: req.file,
@@ -125,7 +126,7 @@ router.post(
           const token = getTokenFromHeaders(req);
           const paths = getPDFPaths(reqCV.UserId, `${firstName}_${lastName}`);
           await addToWorkQueue({
-            type: WORKER_TYPES.GENERATE_CV_PDF,
+            type: WORKERS.WORKER_TYPES.GENERATE_CV_PDF,
             candidatId: reqCV.UserId,
             token,
             paths,
@@ -147,8 +148,8 @@ router.post(
  */
 router.post('/share', auth(), (req, res) => {
   return addToWorkQueue({
-    type: WORKER_TYPES.INSERT_AIRTABLE,
-    tableName: 'Newsletter',
+    type: WORKERS.WORKER_TYPES.INSERT_AIRTABLE,
+    tableName: AIRTABLE_NAMES.NEWSLETTER,
     fields: {
       email: req.body.email,
       Origine: req.body.origin || NEWSLETTER_ORIGINS.LKO,
