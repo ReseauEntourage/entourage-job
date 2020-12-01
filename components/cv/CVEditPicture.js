@@ -13,10 +13,8 @@ const CVEditPicture = ({
   const [url, setUrl] = useState(urlImg);
 
   useEffect(() => {
-    if (!imageUploading) {
-      setUrl(urlImg);
-    }
-  }, [urlImg, imageUploading]);
+    setUrl(urlImg);
+  }, [urlImg]);
 
   const resizeFile = (file) =>
     new Promise((resolve) => {

@@ -74,7 +74,7 @@ const start = () => {
       case JOBS.JOB_TYPES.GENERATE_CV_PREVIEW:
         const previewImageName = await generatePreview(
           data.candidatId,
-          data.base64Img,
+          data.uploadedImg,
           data.oldImg
         );
         await pusher.trigger(
@@ -87,7 +87,7 @@ const start = () => {
         return `Preview generated for User ${data.candidatId} : ${previewImageName}`;
 
       case JOBS.JOB_TYPES.CACHE_CV:
-        const cv = await cacheCV(data.url, data.id);
+        const cv = await cacheCV(data.url, data.candidatId);
         return cv
           ? `CV cached for User ${cv.UserId} and CV ${cv.id}${
               data.url ? ` and URL ${data.url}` : ''

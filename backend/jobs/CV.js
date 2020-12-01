@@ -15,7 +15,7 @@ const generatePDF = async (candidatId, token, paths) => {
   return generatePdfFromCV(candidatId, token, paths);
 };
 
-const generatePreview = async (candidatId, base64Img, oldImg) => {
+const generatePreview = async (candidatId, uploadedImg, oldImg) => {
   const cv = await getCVbyUserId(candidatId);
 
   const ratio = 2.1;
@@ -25,36 +25,8 @@ const generatePreview = async (candidatId, base64Img, oldImg) => {
   let urlImg;
 
   // uploading image and generating preview image
-  if (base64Img) {
-    try {
-      const fileBuffer = Buffer.from(base64Img, 'base64');
-
-      urlImg = await S3.upload(
-        fileBuffer,
-        'image/jpeg',
-        `${cv.UserId}.${cv.status}.jpg`
-      );
-
-      /*
-       TO KEEP If ever we want to pre-resize the preview background image
-
-       const previewBuffer = await sharp(fileBuffer)
-          .trim()
-          .resize(imageWidth, imageHeight, {
-            fit: 'cover',
-          })
-          .jpeg({quality: 75})
-          .toBuffer();
-
-        await S3.upload(
-          previewBuffer,
-          'image/jpeg',
-          `${cv.UserId}.${cv.status}.small.jpg`
-        );
-    */
-    } catch (error) {
-      console.error(error);
-    }
+  if (uploadedImg) {
+    urlImg = uploadedImg;
   } else if (oldImg) {
     try {
       const { Body } = await S3.download(oldImg);

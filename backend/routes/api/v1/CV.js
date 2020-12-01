@@ -114,6 +114,8 @@ router.post(
             });
           }
 
+          let uploadedImg;
+
           if (req.file) {
             const { path } = req.file;
 
@@ -123,14 +125,29 @@ router.post(
                 .jpeg({ quality: 75 })
                 .toBuffer();
 
-              const base64Img = Buffer.from(fileBuffer).toString('base64');
+              uploadedImg = await S3.upload(
+                fileBuffer,
+                'image/jpeg',
+                `${cv.UserId}.${cv.status}.jpg`
+              );
 
-              await addToWorkQueue({
-                type: JOBS.JOB_TYPES.GENERATE_CV_PREVIEW,
-                candidatId: reqCV.UserId,
-                oldImg,
-                base64Img,
-              });
+              /*
+               TO KEEP If ever we want to pre-resize the preview background image
+
+               const previewBuffer = await sharp(fileBuffer)
+                  .trim()
+                  .resize(imageWidth, imageHeight, {
+                    fit: 'cover',
+                  })
+                  .jpeg({quality: 75})
+                  .toBuffer();
+
+                await S3.upload(
+                  previewBuffer,
+                  'image/jpeg',
+                  `${cv.UserId}.${cv.status}.small.jpg`
+                );
+              */
             } catch (error) {
               console.error(error);
             } finally {
@@ -139,6 +156,13 @@ router.post(
               }
             }
           }
+
+          await addToWorkQueue({
+            type: JOBS.JOB_TYPES.GENERATE_CV_PREVIEW,
+            candidatId: reqCV.UserId,
+            oldImg,
+            uploadedImg,
+          });
 
           const { firstName, lastName } = cv.user.candidat;
 
