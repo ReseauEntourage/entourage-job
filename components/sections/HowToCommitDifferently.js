@@ -1,5 +1,6 @@
 import React from 'react';
 import { Section } from '../utils';
+import { CONTACT_MAILS } from '../../constants';
 import Button from '../utils/Button';
 import MultipleCTA from '../partials/MultipleCTA';
 
@@ -87,7 +88,7 @@ const HowToCommitDifferently = () => {
                   label: 'Nous contacter',
                   size: 'small',
                   external: true,
-                  href: 'mailto:entreprises@linkedout.fr',
+                  href: `mailto:${CONTACT_MAILS.CORPORATE_CONTACT}`,
                 },
               },
             ]}
