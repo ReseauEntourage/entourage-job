@@ -211,5 +211,8 @@ module.exports = (sequelize, DataTypes) => {
       }
     });
   };
+
+  User.Revisions = User.hasPaperTrail();
+
   return User;
 };

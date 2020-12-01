@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+const SequelizePaperTrail = require('sequelize-paper-trail');
 const loadEnvironementVariables = require('../../utils/env');
 
 loadEnvironementVariables();
@@ -11,6 +12,11 @@ const basename = path.basename(__filename);
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   logging: process.env.DEBUG_MODE ? console.log : false,
 });
+
+const options = {};
+
+const PaperTrail = SequelizePaperTrail.init(sequelize, options || {});
+PaperTrail.defineModels();
 
 fs.readdirSync(__dirname)
   .filter((file) => {
