@@ -1,5 +1,5 @@
 import axios from '../../../Axios';
-import {USER_ROLES} from "../../../constants";
+import { USER_ROLES } from '../../../constants';
 
 export default {
   id: 'form-edit-user',
@@ -36,8 +36,16 @@ export default {
       name: 'email',
       type: 'email',
       component: 'input',
-      placeholder: 'Tapez votre adresse mail',
+      placeholder: "Tapez l'adresse mail",
       title: 'Adresse mail*',
+    },
+    {
+      id: 'phone',
+      name: 'phone',
+      component: 'input',
+      type: 'phone',
+      placeholder: 'Tapez le numéro de téléphone',
+      title: 'Numéro de téléphone',
     },
     {
       id: 'role',
@@ -58,10 +66,14 @@ export default {
       component: 'select-request-async',
       cacheOptions: false,
       disable: (getValue) =>
-        getValue('role') !== USER_ROLES.CANDIDAT && getValue('role') !== USER_ROLES.COACH,
+        getValue('role') !== USER_ROLES.CANDIDAT &&
+        getValue('role') !== USER_ROLES.COACH,
       loadOptions: (inputValue, callback, getValue) => {
         if (inputValue.length > 0) {
-          const role = getValue('role') === USER_ROLES.COACH ? USER_ROLES.CANDIDAT : USER_ROLES.COACH;
+          const role =
+            getValue('role') === USER_ROLES.COACH
+              ? USER_ROLES.CANDIDAT
+              : USER_ROLES.COACH;
           axios
             .get('api/v1/user/search', {
               params: {
@@ -138,6 +150,17 @@ export default {
       method: 'isEmail',
       validWhen: true,
       message: 'Adresse e-mail invalide',
+    },
+    {
+      field: 'phone',
+      method: 'isLength',
+      args: [
+        {
+          max: 30,
+        },
+      ],
+      validWhen: true,
+      message: '30 caractères maximum',
     },
   ],
 };
