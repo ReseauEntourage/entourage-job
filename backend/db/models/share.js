@@ -37,5 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  Share.Revisions = Share.hasPaperTrail();
+
   return Share;
 };
