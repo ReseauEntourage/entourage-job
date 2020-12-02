@@ -1,13 +1,8 @@
 /* global UIkit */
-import React, {useContext, useState, useEffect} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import LayoutBackOffice from '../../components/backoffice/LayoutBackOffice';
 import { UserContext } from '../../components/store/UserProvider';
-import {
-  Section,
-  GridNoSSR,
-  IconNoSSR,
-  Card,
-} from '../../components/utils';
+import { Section, GridNoSSR, IconNoSSR, Card } from '../../components/utils';
 import HeaderBackoffice from '../../components/headers/HeaderBackoffice';
 import ModalEdit from '../../components/modals/ModalEdit';
 import ButtonIcon from '../../components/utils/ButtonIcon';
@@ -16,10 +11,10 @@ import FormWithValidation from '../../components/forms/FormWithValidation';
 import schemaPersonalData from '../../components/forms/schema/formPersonalData.json';
 import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
-import {USER_ROLES} from "../../constants";
-import {useResetForm} from "../../hooks";
-import UserInformationCard from "../../components/cards/UserInformationCard";
-import {mutateFormSchema} from "../../utils";
+import { USER_ROLES } from '../../constants';
+import { useResetForm } from '../../hooks';
+import UserInformationCard from '../../components/cards/UserInformationCard';
+import { mutateFormSchema } from '../../utils';
 
 const Parametres = () => {
   const { user } = useContext(UserContext);
@@ -41,48 +36,113 @@ const Parametres = () => {
 
   let mutatedSchema = schemaPersonalData;
 
-  if(userData && userData.role !== USER_ROLES.ADMIN) {
-    mutatedSchema = mutateFormSchema(schemaPersonalData, [
-      {
-        fieldId: 'firstName',
-        props: [
-          {
-            propName: 'disabled',
-            value: true
-          },
-          {
-            propName: 'hidden',
-            value: true
-          }
-        ]
-      },
-      {
-        fieldId: 'lastName',
-        props: [
-          {
-            propName: 'disabled',
-            value: true
-          },
-          {
-            propName: 'hidden',
-            value: true
-          }
-        ]
-      },
+  if (userData) {
+    mutatedSchema = mutateFormSchema(mutatedSchema, [
       {
         fieldId: 'gender',
         props: [
           {
             propName: 'disabled',
-            value: true
+            value: true,
           },
           {
             propName: 'hidden',
-            value: true
-          }
-        ]
+            value: true,
+          },
+        ],
       },
     ]);
+    if (userData.role !== USER_ROLES.ADMIN) {
+      mutatedSchema = mutateFormSchema(mutatedSchema, [
+        {
+          fieldId: 'firstName',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+        {
+          fieldId: 'lastName',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+      ]);
+    }
+
+    if (userData.role !== USER_ROLES.CANDIDAT) {
+      mutatedSchema = mutateFormSchema(mutatedSchema, [
+        {
+          fieldId: 'address',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+        {
+          fieldId: 'addressLabel',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+      ]);
+    }
+    if (userData.role === USER_ROLES.ADMIN) {
+      mutatedSchema = mutateFormSchema(mutatedSchema, [
+        {
+          fieldId: 'phone',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+        {
+          fieldId: 'phoneLabel',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+      ]);
+    }
   }
 
   if (!user) return null;
@@ -114,31 +174,30 @@ const Parametres = () => {
                           ...userData,
                           candidat: {
                             ...userData.candidat,
-                            employed
-                          }
+                            employed,
+                          },
                         });
                         UIkit.notification(
                           'Votre profil a été mis à jour !',
                           'success'
-                        )
+                        );
                       })
                       .catch(() =>
                         UIkit.notification('Une erreur est survenue', 'danger')
-                      )
-                  }
+                      )}
                 />
                 <ToggleWithConfirmationModal
                   id="hidden"
                   title="Masquer mon CV"
                   modalTitle="Changer la visibilité du CV en ligne ?"
-                  modalDescription={
+                  modalDescription={(
                     <>
                       En masquant votre CV de LinkedOut, il ne sera plus visible
                       par les utilisateurs du site.
                       <br />
                       Vous pourrez le remettre en ligne à tout moment.
                     </>
-                  }
+                  )}
                   modalConfirmation="Oui, masquer mon CV"
                   defaultValue={userData.candidat.hidden}
                   onToggle={(hidden) =>
@@ -150,23 +209,22 @@ const Parametres = () => {
                           ...userData,
                           candidat: {
                             ...userData.candidat,
-                            hidden
-                          }
+                            hidden,
+                          },
                         });
                         UIkit.notification(
                           hidden
                             ? 'Votre CV est désormais masqué'
                             : 'Votre CV est désormais visible',
                           'success'
-                        )
+                        );
                       })
                       .catch(() =>
                         UIkit.notification(
                           'Une erreur est survenue lors du masquage de votre profil',
                           'danger'
                         )
-                      )
-                  }
+                      )}
                 />
               </Card>
             )}
@@ -186,33 +244,52 @@ const Parametres = () => {
               {userData ? (
                 <GridNoSSR column gap="small">
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="user" style={{width: 20}} />
+                    <IconNoSSR name="user" style={{ width: 20 }} />
                     <span>{`${userData.firstName} ${userData.lastName}`}</span>
                   </GridNoSSR>
+                  {
+                    userData.role !== USER_ROLES.ADMIN &&
+                    <GridNoSSR row gap="small">
+                      <IconNoSSR name="gender" style={{ width: 20 }} />
+                      <span>
+                      {`${userData.gender === 0 ? 'Homme' : 'Femme'}`}
+                    </span>
+                    </GridNoSSR>
+                  }
                   <GridNoSSR row gap="small">
-                    <IconNoSSR name="gender" style={{width: 20}} />
-                    <span>{`${userData.gender === 0 ? 'Homme' : 'Femme'}`}</span>
-                  </GridNoSSR>
-                  <GridNoSSR row gap="small">
-                    <IconNoSSR name="mail" style={{width: 20}} />
+                    <IconNoSSR name="mail" style={{ width: 20 }} />
                     <span>{userData.email}</span>
                   </GridNoSSR>
-                  <GridNoSSR row gap="small">
-                    <IconNoSSR name="phone" style={{width: 20}} />
-                    {userData.phone ? (
-                      <span>{userData.phone}</span>
-                    ) : (
-                      <span className="uk-text-italic">
+                  {
+                    userData.role !== USER_ROLES.ADMIN &&
+                    <GridNoSSR row gap="small">
+                      <IconNoSSR name="phone" style={{ width: 20 }} />
+                      {userData.phone ? (
+                        <span>{userData.phone}</span>
+                      ) : (
+                        <span className="uk-text-italic">
                         Numéro de téléphone non renseigné
                       </span>
-                    )}
-                  </GridNoSSR>
+                      )}
+                    </GridNoSSR>
+                  }
+                  {userData.role === USER_ROLES.CANDIDAT && (
+                    <GridNoSSR row gap="small">
+                      <IconNoSSR name="home" style={{ width: 20 }} />
+                      {userData.address ? (
+                        <span>{userData.address}</span>
+                      ) : (
+                        <span className="uk-text-italic">
+                          Adresse postale non renseignée
+                        </span>
+                      )}
+                    </GridNoSSR>
+                  )}
                 </GridNoSSR>
-              ) : (
-                undefined
-              )}
+              ) : undefined}
             </div>
-            {(userData.role === USER_ROLES.CANDIDAT || userData.role === USER_ROLES.COACH) && (
+            {(userData.role === USER_ROLES.CANDIDAT ||
+              userData.role === USER_ROLES.COACH) && (
               <UserInformationCard
                 user={userData}
                 onChange={(data) => {
@@ -271,15 +348,29 @@ const Parametres = () => {
           <ModalEdit
             submitText="Envoyer"
             id="modal-personal-data"
-            title="Édition - Informations personelles"
+            title="Édition - Informations personnelles"
             defaultValues={{
               firstName: userData.firstName,
               lastName: userData.lastName,
               gender: userData && userData.gender.toString(),
-              phone: userData.phone
+              phone: userData.phone,
+              address: userData.address,
             }}
             formSchema={mutatedSchema}
-            onSubmit={({ firstName, lastName, gender, phone, oldEmail, newEmail0, newEmail1 }, closeModal, setError) => {
+            onSubmit={(
+              {
+                firstName,
+                lastName,
+                gender,
+                phone,
+                address,
+                oldEmail,
+                newEmail0,
+                newEmail1,
+              },
+              closeModal,
+              setError
+            ) => {
               const updateUser = (newUserData) => {
                 setLoadingPersonal(true);
                 Api.put(`/api/v1/user/${userData.id}`, newUserData)
@@ -302,34 +393,39 @@ const Parametres = () => {
               };
 
               let newUserData = {};
-              if(userData.role === USER_ROLES.ADMIN) {
-                newUserData = {firstName, lastName, gender};
+              if (userData.role === USER_ROLES.ADMIN) {
+                newUserData = { firstName, lastName, gender };
                 if (phone !== userData.phone) {
                   newUserData.phone = phone;
+                }
+                if (address !== userData.address) {
+                  newUserData.address = address;
                 }
                 if (userData.email === oldEmail && newEmail0 === newEmail1) {
                   newUserData.email = newEmail0.toLowerCase();
                 }
                 updateUser(newUserData);
-              }
-              else {
+              } else {
                 if (phone !== userData.phone) {
                   newUserData.phone = phone;
                 }
-                if(oldEmail || newEmail0 || newEmail1) {
+                if (address !== userData.address) {
+                  newUserData.address = address;
+                }
+                if (oldEmail || newEmail0 || newEmail1) {
                   if (userData.email !== oldEmail.toLowerCase()) {
                     setError("L'ancienne adresse email n'est pas valide");
-                  }
-                  else if(newEmail0.length === 0 || newEmail0 !== newEmail1) {
-                    setError("Les deux adresses email ne sont pas indentiques");
-                  }
-                  else {
+                  } else if (
+                    newEmail0.length === 0 ||
+                    newEmail0 !== newEmail1
+                  ) {
+                    setError('Les deux adresses email ne sont pas indentiques');
+                  } else {
                     newUserData.email = newEmail0.toLowerCase();
                     updateUser(newUserData);
-                    setError("");
+                    setError('');
                   }
-                }
-                else {
+                } else {
                   updateUser(newUserData);
                 }
               }

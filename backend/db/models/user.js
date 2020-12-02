@@ -74,6 +74,10 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      address: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       lastConnection: DataTypes.DATE,
       hashReset: {
         type: DataTypes.TEXT,

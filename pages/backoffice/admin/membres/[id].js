@@ -41,7 +41,7 @@ const CVPage = () => {
     }
   }, [id]);
 
-  const mutatedSchema = mutateFormSchema(schemaEditUser, [
+  let mutatedSchema = mutateFormSchema(schemaEditUser, [
     {
       fieldId: 'userToCoach',
       props: [
@@ -66,6 +66,70 @@ const CVPage = () => {
       ]
     },
   ]);
+
+  if (user) {
+    if (user.role !== USER_ROLES.CANDIDAT) {
+      mutatedSchema = mutateFormSchema(mutatedSchema, [
+        {
+          fieldId: 'address',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+        {
+          fieldId: 'addressLabel',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+      ]);
+    }
+    if (user.role === USER_ROLES.ADMIN) {
+      mutatedSchema = mutateFormSchema(mutatedSchema, [
+        {
+          fieldId: 'phone',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+        {
+          fieldId: 'phoneLabel',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+      ]);
+    }
+  }
+
 
   const isCandidat = user && user.candidat && user.role === USER_ROLES.CANDIDAT;
 
@@ -304,6 +368,19 @@ const CVPage = () => {
                             </span>
                           )}
                         </GridNoSSR>
+                        {
+                          user.role === USER_ROLES.CANDIDAT &&
+                          <GridNoSSR row gap="small">
+                            <IconNoSSR name="home" style={{width: 20}} />
+                            {user.address ? (
+                              <span>{user.address}</span>
+                            ) : (
+                              <span className="uk-text-italic">
+                              Adresse postale non renseignée
+                            </span>
+                            )}
+                          </GridNoSSR>
+                        }
                       </GridNoSSR>
                     ) : undefined}
                   </div>

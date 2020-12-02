@@ -39,12 +39,12 @@ const INCLUDE_ALL_USERS_PRIVATE = {
     {
       model: models.User,
       as: 'coach',
-      attributes: ['id', 'firstName', 'lastName', 'gender', 'email', 'phone'],
+      attributes: ['id', 'firstName', 'lastName', 'gender', 'email'],
     },
     {
       model: models.User,
       as: 'candidat',
-      attributes: ['id', 'firstName', 'lastName', 'gender', 'email', 'phone'],
+      attributes: ['id', 'firstName', 'lastName', 'gender', 'email', 'phone', 'address'],
     },
   ],
 };
