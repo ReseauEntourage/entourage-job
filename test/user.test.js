@@ -340,6 +340,7 @@ describe('User', () => {
               .set('authorization', `Token ${loggedInCandidat.token}`)
               .send({
                 phone: updates.phone,
+                address: updates.phone,
               });
             expect(response.status).toBe(200);
             expect(response.body.phone).toEqual(updates.phone);

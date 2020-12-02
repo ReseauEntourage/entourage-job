@@ -295,7 +295,7 @@ router.put('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN
     };
 
     const keys = Object.keys(req.body);
-    const authorizedKeys = ['email', 'phone'];
+    const authorizedKeys = ['email', 'phone', 'address'];
 
     if (req.payload.role === USER_ROLES.ADMIN) {
       setUser();

@@ -31,6 +31,7 @@ const generateUser = async (props = {}) => {
     gender: props.gender || faker.random.arrayElement([0, 1]),
     salt,
     phone: props.phone || faker.phone.phoneNumber(),
+    address: props.address || faker.address.streetAddress(),
     lastConnection: props.lastConnection || `${faker.date.past()}`,
   };
 }

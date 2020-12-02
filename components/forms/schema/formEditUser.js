@@ -48,6 +48,14 @@ export default {
       title: 'Numéro de téléphone',
     },
     {
+      id: 'address',
+      name: 'address',
+      component: 'input',
+      type: 'text',
+      placeholder: "Tapez l'adresse postale",
+      title: 'Adresse postale',
+    },
+    {
       id: 'role',
       title: 'Role*',
       name: 'role',
