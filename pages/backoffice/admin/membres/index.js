@@ -13,6 +13,7 @@ import schemaCreateUser from '../../../../components/forms/schema/formEditUser';
 import ImgProfile from '../../../../components/headers/ImgProfile';
 import {CV_STATUS, USER_ROLES} from "../../../../constants";
 import Button from "../../../../components/utils/Button";
+import {mutateFormSchema} from "../../../../utils";
 
 let debounceTimeoutId;
 
@@ -35,6 +36,19 @@ const MembersAdmin = ({ query: { role } }) => {
   const [offset, setOffset] = useState(0);
   const LIMIT = 50;
   const router = useRouter();
+
+  const mutatedSchema = mutateFormSchema(schemaCreateUser, [
+    {
+      fieldId: 'role',
+      props: [
+        {
+          propName: 'hidden',
+          value: false,
+          option: USER_ROLES.ADMIN,
+        }
+      ]
+    },
+  ]);
 
   const fetchData = async (doReset, query) => {
     setLoading(true);
@@ -100,7 +114,7 @@ const MembersAdmin = ({ query: { role } }) => {
           </Button>
           <ModalEdit
             id="add-user"
-            formSchema={schemaCreateUser}
+            formSchema={mutatedSchema}
             title="Création de membre"
             description="Merci de renseigner quelques informations afin de créer le membre"
             submitText="Créer le membre"

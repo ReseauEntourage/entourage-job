@@ -253,7 +253,7 @@ const VALUES = {
 };
 
 const CONTACT_MAILS = {
-  CORPORATE_CONTACT: 'entreprises@entourage.social',
+  CORPORATE_CONTACT: 'entreprises@linkedout.fr',
 };
 
 const INITIAL_NB_OF_CV_TO_DISPLAY = 9;

@@ -34,29 +34,41 @@
       "name": "oldEmail",
       "component": "input",
       "type": "email",
-      "title": "Tapez votre ancien email "
+      "title": "Ancien email",
+      "placeholder": "Tapez votre ancien email"
     },
     {
       "id": "newEmail0",
       "name": "newEmail0",
       "component": "input",
       "type": "email",
-      "title": "Tapez votre nouvel email "
+      "placeholder": "Tapez votre nouvel email",
+      "title": "Nouvel email"
     },
     {
       "id": "newEmail1",
       "name": "newEmail1",
       "component": "input",
       "type": "email",
-      "title": "Verifiez votre nouvel email "
+      "placeholder": "Vérifiez votre nouvel email",
+      "title": "Confirmation nouvel email"
     },
-    { "title": "Modifier le numéro de téléphone", "component": "text" },
+    { "id": "phoneLabel", "title": "Modifier le numéro de téléphone", "component": "text" },
     {
       "id": "phone",
       "name": "phone",
       "component": "input",
       "type": "phone",
-      "title": "Tapez votre numero de telephone "
+      "title": "Tapez votre numéro de telephone",
+      "placeholder": "Numéro de telephone"
+    },
+    { "id": "addressLabel", "title": "Modifier l'adresse postale", "component": "text" },
+    {
+      "id": "address",
+      "name": "address",
+      "component": "input",
+      "type": "text",
+      "title": "Tapez votre adresse postale"
     }
   ],
   "rules": [

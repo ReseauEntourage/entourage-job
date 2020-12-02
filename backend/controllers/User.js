@@ -18,6 +18,7 @@ const ATTRIBUTES_USER = [
   'lastName',
   'email',
   'phone',
+  'address',
   'role',
   'gender',
   'lastConnection',

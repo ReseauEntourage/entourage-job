@@ -84,6 +84,23 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
           </span>
         </GridNoSSR>
       )}
+      {
+        user.role === USER_ROLES.COACH &&
+        (linkedUser.address ? (
+            <GridNoSSR row gap="small">
+              <IconNoSSR name="home" />
+              <span>{linkedUser.address}</span>
+            </GridNoSSR>
+          ) : (
+            <GridNoSSR row gap="small">
+              <IconNoSSR name="home" />
+              <span className="uk-text-italic">
+            Adresse postale non renseignée
+          </span>
+            </GridNoSSR>
+          )
+        )
+      }
       {user.role === USER_ROLES.COACH && userCandidat && (
         <SimpleLink
           className="uk-link-muted"

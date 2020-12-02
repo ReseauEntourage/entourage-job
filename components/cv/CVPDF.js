@@ -183,6 +183,12 @@ const CVPDF = ({cv, page}) => {
                     <h5 className="uk-margin-small-bottom">Mes infos pratiques</h5>
                     <hr className="uk-divider-small uk-margin-remove-top" />
                     <ul className="uk-list uk-margin-remove-bottom uk-text-small">
+                      {cv.user.candidat.address && cv.user.candidat.address.length > 0 && (
+                        <li className="uk-flex uk-flex-middle">
+                          <IconNoSSR className="uk-text-primary uk-margin-small-right" name="home" style={{width: 20}} />{' '}
+                          <span className="uk-flex-1">{cv.user.candidat.address}</span>
+                        </li>
+                      )}
                       {cv.user.candidat.email && cv.user.candidat.email.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
                           <IconNoSSR className="uk-text-primary uk-margin-small-right" name="mail" style={{width: 20}} />{' '}
