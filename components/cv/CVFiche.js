@@ -519,15 +519,24 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                 description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
                 submitText="Envoyer"
                 defaultValues={{
-                  isPublic: false
+                  isPublic: false,
                 }}
                 formSchema={mutatedSchema}
                 onSubmit={async (fields, closeModal) => {
-                  const candidatesId = fields.candidatesId.map((candidateId) => typeof candidateId === 'object' ? candidateId.value : candidateId);
-                  if(!candidatesId.includes(cv.UserId)) candidatesId.push(cv.UserId);
-                  await postOpportunity({
+                  const candidatesId = fields.candidatesId
+                    ? fields.candidatesId.map((candidateId) =>
+                        typeof candidateId === 'object'
+                          ? candidateId.value
+                          : candidateId
+                      )
+                    : [];
+                  if (!candidatesId.includes(cv.UserId)) {
+                    candidatesId.push(cv.UserId);
+                  }
+                  await postOpportunity(
+                    {
                       ...fields,
-                      candidatesId: candidatesId,
+                      candidatesId,
                       date: Date.now(),
                     },
                     closeModal
