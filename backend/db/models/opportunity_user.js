@@ -130,5 +130,8 @@ module.exports = (sequelize, DataTypes) => {
       }
     });
   };
+
+  Opportunity_User.Revisions = Opportunity_User.hasPaperTrail();
+
   return Opportunity_User;
 };

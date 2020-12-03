@@ -21,10 +21,14 @@ const workQueue = new Queue(JOBS.QUEUES.WORK, process.env.REDIS_URL);
 const addToWorkQueue = async (data) => {
   if (!dev) {
     return workQueue.add(data, {
-      attempts: process.env.JOBS_NB_ATTEMPS || 10,
+      attempts: process.env.JOBS_NB_ATTEMPS
+        ? parseInt(process.env.JOBS_NB_ATTEMPS, 10)
+        : 10,
       backoff: {
         type: 'exponential',
-        delay: process.env.JOBS_BACKOFF_DELAY || 60000,
+        delay: process.env.JOBS_BACKOFF_DELAY
+          ? parseInt(process.env.JOBS_BACKOFF_DELAY, 10)
+          : 60000,
       },
     });
   }

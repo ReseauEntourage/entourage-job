@@ -365,11 +365,26 @@ const getAllUserOpportunities = async (userId) => {
   return finalOpportunities;
 };
 
-const addUserToOpportunity = (opportunityId, userId) =>
-  Opportunity_User.create({
+const updateOpportunityAirtable = async (opportunityId) => {
+  const finalOpportunity = await getOpportunity(opportunityId);
+
+  try {
+    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
+  } catch (e) {
+    console.log('Failed to update table with modified offer.');
+  }
+};
+
+const addUserToOpportunity = async (opportunityId, userId, seen) => {
+  const modelOpportunityUser = await Opportunity_User.create({
     OpportunityId: opportunityId,
     UserId: userId, // to rename in userId
+    seen: !!seen,
   });
+
+  await updateOpportunityAirtable(opportunityId);
+  return modelOpportunityUser;
+};
 
 const updateOpportunityUser = async (opportunityUser) => {
   const modelOpportunityUser = await Opportunity_User.update(opportunityUser, {
@@ -387,15 +402,7 @@ const updateOpportunityUser = async (opportunityUser) => {
     ],
   }).then((model) => model && model.length > 1 && model[1][0]);
 
-  const finalOpportunity = await getOpportunity(
-    modelOpportunityUser.OpportunityId
-  );
-
-  try {
-    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
-  } catch (e) {
-    console.log('Failed to update table with modified offer.');
-  }
+  await updateOpportunityAirtable(modelOpportunityUser.OpportunityId);
 
   return modelOpportunityUser;
 };

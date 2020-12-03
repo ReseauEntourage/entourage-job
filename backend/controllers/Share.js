@@ -14,7 +14,13 @@ const updateShareCount = async (candidatId, type) => {
       where: { CandidatId: candidatId },
     });
     if (candidatShares) {
-      await candidatShares.increment(type, { by: 1 });
+      const updatedCandidatShares = {
+        ...candidatShares,
+        [type]: candidatShares[type] + 1,
+      };
+      await candidatShares.update(updatedCandidatShares, {
+        where: { CandidatId: candidatId },
+      });
     } else {
       await Share.create({
         CandidatId: candidatId,

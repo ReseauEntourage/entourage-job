@@ -14,9 +14,13 @@ const {
   updateAirtable,
 } = require('./jobs');
 
-const workers = process.env.WEB_CONCURRENCY || 1;
+const workers = process.env.WEB_CONCURRENCY
+  ? parseInt(process.env.WEB_CONCURRENCY, 10)
+  : 1;
 
-const maxJobsPerWorker = process.env.JOBS_MAX_PER_WORKER || 50;
+const maxJobsPerWorker = process.env.JOBS_MAX_PER_WORKER
+  ? parseInt(process.env.JOBS_MAX_PER_WORKER, 10)
+  : 50;
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID,
