@@ -16,7 +16,8 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 const options = {
   enableRevisionChangeModel: true,
   enableMigration: true,
-  enableCompression: false,
+  // Doesn't seem to work
+  // enableCompression: true,
   UUID: true,
   // debug: true,
 };
