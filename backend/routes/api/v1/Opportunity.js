@@ -136,7 +136,8 @@ router.post('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADM
   checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
     OpportunityController.addUserToOpportunity(
       req.body.opportunityId,
-      req.body.userId
+      req.body.userId,
+      req.body.seen,
     )
       .then((opportunity) => res.status(200).json(opportunity))
       .catch((err) => {

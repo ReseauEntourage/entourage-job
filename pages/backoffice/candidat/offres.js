@@ -7,7 +7,7 @@ import { Section } from '../../../components/utils';
 import OfferCard from '../../../components/cards/OfferCard';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOffer from '../../../components/modals/ModalOffer';
-import axios from '../../../Axios';
+import Api from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
 import {USER_ROLES} from "../../../constants";
 import OpportunityError from "../../../components/opportunities/OpportunityError";
@@ -80,7 +80,7 @@ const Opportunites = () => {
     if (user) {
       setLoading(true);
       try {
-        const { data } = await axios.get(
+        const { data } = await Api.get(
           `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${userId}`
         );
 
@@ -98,29 +98,16 @@ const Opportunites = () => {
   const onClickOpportunityCard = async (offer) => {
     const opportunity = offer;
     // si jamais ouvert
-    if (!offer.userOpportunity || !opportunity.userOpportunity.seen) {
-      if (!offer.userOpportunity) {
-        const { data } = await axios.post(
-          `${process.env.SERVER_URL}/api/v1/opportunity/join`,
-          {
-            opportunityId: offer.id,
-            userId: candidatId,
-            seen: true,
-          }
-        );
-        opportunity.userOpportunity = data;
-      }
-      // si pas vue
-      if (!opportunity.userOpportunity.seen) {
-        const { data } = await axios.put(
-          `${process.env.SERVER_URL}/api/v1/opportunity/join`,
-          {
-            ...opportunity.userOpportunity,
-            seen: true,
-          }
-        );
-        opportunity.userOpportunity = data;
-      }
+    if (!opportunity.userOpportunity || !opportunity.userOpportunity.seen) {
+      const { data } = await Api.post(
+        `${process.env.SERVER_URL}/api/v1/opportunity/join`,
+        {
+          opportunityId: offer.id,
+          userId: candidatId,
+          seen: true,
+        }
+      );
+      opportunity.userOpportunity = data;
       fetchData(candidatId);
     }
     setCurrentOffer({...opportunity});
@@ -150,7 +137,7 @@ const Opportunites = () => {
         fetchAndAct(user.id);
       }
       if (user.role === USER_ROLES.COACH) {
-        axios
+        Api
           .get(`/api/v1/user/candidat/`, {
             params: {
               coachId: user.id,
