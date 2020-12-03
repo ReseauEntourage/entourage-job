@@ -25,23 +25,6 @@ const options = {
 const PaperTrail = SequelizePaperTrail.init(sequelize, options || {});
 PaperTrail.defineModels(db.models);
 
-// Fix to sync the database with the newly created Models by SequelizePaperTrail
-db.models.Revision.sync()
-  .then(() => {
-    console.log('Revision Model synced');
-  })
-  .catch((err) => {
-    console.error('Revision Model failed to sync : ', err);
-  });
-
-db.models.RevisionChange.sync()
-  .then(() => {
-    console.log('RevisionChange Model synced');
-  })
-  .catch((err) => {
-    console.error('RevisionChange Model failed to sync : ', err);
-  });
-
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
