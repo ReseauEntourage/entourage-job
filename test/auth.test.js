@@ -49,7 +49,7 @@ describe('Auth', () => {
         delete candidatResponse.salt;
         delete candidatResponse.saltReset;
         delete candidatResponse.updatedAt;
-
+        delete candidatResponse.revision;
     });
     afterAll(async () => {
         await resetTestDB();

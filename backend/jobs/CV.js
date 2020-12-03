@@ -1,5 +1,3 @@
-const sharp = require('sharp');
-
 const S3 = require('../controllers/Aws');
 const createPreviewImage = require('../shareImage');
 const { getUser } = require('../controllers/User');
