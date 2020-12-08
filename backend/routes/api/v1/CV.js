@@ -190,14 +190,21 @@ router.post(
  * Description : Prise d'info partageur
  */
 router.post('/share', auth(), (req, res) => {
-  return addToWorkQueue({
+  addToWorkQueue({
     type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
     tableName: AIRTABLE_NAMES.NEWSLETTER,
     fields: {
       email: req.body.email,
       Origine: req.body.origin || NEWSLETTER_ORIGINS.LKO,
     },
-  });
+  })
+    .then(() => {
+      res.status(200).json();
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(401).send('Une erreur est survenue');
+    });
 });
 
 /**
