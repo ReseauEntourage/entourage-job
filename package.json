@@ -17,12 +17,9 @@
     "build": "next build",
     "migrate": "sequelize db:migrate",
     "start": "NODE_ENV=production node -r dotenv/config ./backend/serveur-next.js",
-    "uikit-install": "cd ./assets/ && git clone git://github.com/uikit/uikit.git && cd uikit && git checkout master && npm i",
-    "uikit-update": "cd ./assets/uikit/ && git pull && npm i",
-    "uikit-compile": "cp -r ./assets/custom/ ./assets/uikit/custom/ && cd ./assets/uikit/ && npm run compile && cd ../../ && cp -r ./assets/uikit/dist/ ./static/dist",
-    "uikit-install-windows": "cd .\\assets\\ && git clone git://github.com/uikit/uikit.git && cd uikit && git checkout master && npm i",
-    "uikit-update-windows": "cd .\\assets\\uikit\\ && git pull && npm i",
-    "uikit-compile-windows": "xcopy /Y /S /I .\\assets\\custom .\\assets\\uikit\\custom && cd .\\assets\\uikit && npm run-script compile && cd ..\\.. && xcopy /Y /S .\\assets\\uikit\\dist .\\static\\dist"
+    "uikit-install": "cd ./node_modules/uikit && npm i",
+    "uikit-update": "cd ./node_modules/uikit/ && git pull && npm i",
+    "uikit-compile": "cp -r ./assets/custom/ ./node_modules/uikit/custom/ && cd ./node_modules/uikit && npm run compile && cd ../../ && cp -r ./node_modules/uikit/dist/ ./static/dist"
   },
   "repository": {
     "type": "git",
@@ -69,7 +66,6 @@
     "less": "^3.11.1",
     "moment": "^2.24.0",
     "multer": "^1.4.2",
-    "newrelic": "^6.13.1",
     "next": "^9.2.2",
     "node-mailjet": "^3.3.1",
     "passport": "^0.4.1",
