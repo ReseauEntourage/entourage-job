@@ -9,18 +9,12 @@ const logger = () => (req, res, next) => {
     res.locals.logger = {
       error: (error) =>
         console.error(
-          infoString(
-            req.headers['X-Request-ID'],
-            req.payload && req.payload.id
-          ),
+          infoString(req.header('X-Request-ID'), req.payload && req.payload.id),
           error
         ),
       log: (log) =>
         console.log(
-          infoString(
-            req.headers['X-Request-ID'],
-            req.payload && req.payload.id
-          ),
+          infoString(req.header('X-Request-ID'), req.payload && req.payload.id),
           log
         ),
     };
