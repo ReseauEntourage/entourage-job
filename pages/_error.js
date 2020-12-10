@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import NextErrorComponent from 'next/error';
 import * as Sentry from '@sentry/node';
 
-const Error = ({ statusCode, hasGetInitialPropsRun, err }) => {
+const CustomError = ({ statusCode, hasGetInitialPropsRun, err }) => {
   const router = useRouter();
 
   if (!hasGetInitialPropsRun && err) {
@@ -24,7 +24,7 @@ const Error = ({ statusCode, hasGetInitialPropsRun, err }) => {
   return <NextErrorComponent statusCode={statusCode} />;
 };
 
-Error.getInitialProps = async ({ res, err, asPath }) => {
+CustomError.getInitialProps = async ({ res, err, asPath }) => {
   const errorInitialProps = await NextErrorComponent.getInitialProps({
     res,
     err,
@@ -68,14 +68,14 @@ Error.getInitialProps = async ({ res, err, asPath }) => {
   return errorInitialProps;
 };
 
-Error.propTypes = {
+CustomError.propTypes = {
   statusCode: PropTypes.number.isRequired,
   hasGetInitialPropsRun: PropTypes.bool.isRequired,
   err: PropTypes.shape(),
 };
 
-Error.defaultProps = {
+CustomError.defaultProps = {
   err: undefined,
 };
 
-export default Error;
+export default CustomError;
