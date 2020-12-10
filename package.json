@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@sentry/node": "^5.27.3",
+    "@sentry/react": "^5.29.0",
     "@sentry/tracing": "^5.27.3",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-less": "^1.0.1",

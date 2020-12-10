@@ -7,8 +7,11 @@ const dev = process.env.NODE_ENV !== 'production';
 
 module.exports = withLess(
   withCSS({
-    /* config options here */
-    webpack: (config) => {
+    webpack: (config, options) => {
+      if (!options.isServer) {
+        config.resolve.alias['@sentry/node'] = '@sentry/browser';
+      }
+
       config.plugins.push(new webpack.EnvironmentPlugin(process.env));
       return config;
     },
