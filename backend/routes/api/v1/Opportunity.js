@@ -1,10 +1,10 @@
 const express = require('express');
 
 const router = express.Router();
-const {auth} = require('../../../controllers/Auth');
+const { auth } = require('../../../controllers/Auth');
 const OpportunityController = require('../../../controllers/Opportunity');
-const {USER_ROLES} = require('../../../../constants');
-const {checkCandidatOrCoachAuthorization} = require('../../../utils');
+const { USER_ROLES } = require('../../../../constants');
+const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
 /**
  * Route : POST /api/<VERSION>/opportunity
@@ -17,7 +17,7 @@ router.post('/', auth(), (req, res) => {
   OpportunityController.createOpportunity(req.body)
     .then((opportunity) => res.status(200).json(opportunity))
     .catch((err) => {
-      console.error(err);
+      res.locals.logger.error(err);
       res.status(401).send(`Une erreur est survenue`);
     });
 });
@@ -36,13 +36,13 @@ router.post('/', auth(), (req, res) => {
 router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.getOpportunities(req.query.query)
     .then((listeOpportunities) => {
-      console.log(
+      res.locals.logger.log(
         `Opportunités récupérés (Total : ${listeOpportunities.length})`
       );
       res.status(200).json(listeOpportunities);
     })
     .catch((err) => {
-      console.error(err);
+      res.locals.logger.error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -57,18 +57,22 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
  * -  200 + a list of the user's opportunities
  * -  401
  */
-router.get('/user/private/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
-    OpportunityController.getPrivateUserOpportunities(req.params.id)
-      .then((listeOpportunities) => {
-        res.status(200).json(listeOpportunities);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(401).send('Une erreur est survenue');
-      });
-  });
-});
+router.get(
+  '/user/private/:id',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
+      OpportunityController.getPrivateUserOpportunities(req.params.id)
+        .then((listeOpportunities) => {
+          res.status(200).json(listeOpportunities);
+        })
+        .catch((err) => {
+          res.locals.logger.error(err);
+          res.status(401).send('Une erreur est survenue');
+        });
+    });
+  }
+);
 
 /**
  * Route : GET /api/<VERSION>/user/private/<ID>
@@ -90,11 +94,12 @@ router.get(
           res.status(200).json(listeOpportunities);
         })
         .catch((err) => {
-          console.error(err);
+          res.locals.logger.error(err);
           res.status(401).send('Une erreur est survenue');
         });
     });
-  });
+  }
+);
 
 /**
  * Route : GET /api/<VERSION>/opportunity/<ID>
@@ -106,15 +111,15 @@ router.get(
     OpportunityController.getOpportunity(req.params.id)
     .then((opportunity) => {
       if (opportunity) {
-        console.log(`Opportunité trouvé`);
+        res.locals.logger.log(`Opportunité trouvé`);
         res.status(200).json(opportunity);
       } else {
-        console.log(`Aucune Opportunité trouvé`);
+        res.locals.logger.log(`Aucune Opportunité trouvé`);
         res.status(204).json(opportunity);
       }
     })
     .catch((err) => {
-      console.error(err);
+      res.locals.logger.error(err);
       res.status(401).send(err);
     });
   });
@@ -132,20 +137,24 @@ router.get(
  * - 200 + created opportunity_user
  * - 401
  */
-router.post('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
-    OpportunityController.addUserToOpportunity(
-      req.body.opportunityId,
-      req.body.userId,
-      req.body.seen,
-    )
-      .then((opportunity) => res.status(200).json(opportunity))
-      .catch((err) => {
-        console.error(err);
-        res.status(401).send(`Une erreur est survenue`);
-      });
-  });
-});
+router.post(
+  '/join',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
+      OpportunityController.addUserToOpportunity(
+        req.body.opportunityId,
+        req.body.userId,
+        req.body.seen
+      )
+        .then((opportunity) => res.status(200).json(opportunity))
+        .catch((err) => {
+          res.locals.logger.error(err);
+          res.status(401).send(`Une erreur est survenue`);
+        });
+    });
+  }
+);
 
 /**
  * Route: PUT /api/<VERSION>/opportunity
@@ -162,7 +171,7 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(200).json(opp);
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       res.status(401).send(`Une erreur est survenue`);
     });
 });
@@ -180,18 +189,22 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
  *          seen: boolean
  * }
  */
-router.put('/join', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-  checkCandidatOrCoachAuthorization(req, res, req.body.UserId, () => {
-    OpportunityController.updateOpportunityUser(req.body)
-      .then((oppUs) => {
-        res.status(200).json(oppUs);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(401).send(`Une erreur est survenue`);
-      });
-  });
-});
+router.put(
+  '/join',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    checkCandidatOrCoachAuthorization(req, res, req.body.UserId, () => {
+      OpportunityController.updateOpportunityUser(req.body)
+        .then((oppUs) => {
+          res.status(200).json(oppUs);
+        })
+        .catch((err) => {
+          res.locals.logger.error(err);
+          res.status(401).send(`Une erreur est survenue`);
+        });
+    });
+  }
+);
 
 /**
  * Route : DELETE /api/<VERSION>/opportunity/<ID>
@@ -208,7 +221,7 @@ router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(200).json(result);
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });

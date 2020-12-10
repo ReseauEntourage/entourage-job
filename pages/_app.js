@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading,no-restricted-globals,react/prop-types */
 import '../static/dist/css/uikit.entourage.min.css';
 import '../static/css/styles.less';
 import '../static/css/Forms.less';
@@ -6,6 +5,7 @@ import '../static/css/Toggle.less';
 
 import React, { useContext, useEffect, useState } from 'react';
 import Router, { useRouter } from 'next/router';
+import * as Sentry from '@sentry/react';
 import UserProvider from '../components/store/UserProvider';
 import SessionProvider, {
   SessionContext,
@@ -15,7 +15,12 @@ import SharesCountProvider from '../components/store/SharesCountProvider';
 import * as gtag from '../lib/gtag';
 import SplashScreen from '../components/SplashScreen';
 
-const Container = ({ Component, pageProps }) => {
+Sentry.init({
+  enabled: process.env.NODE_ENV === 'production',
+  dsn: process.env.SENTRY_DSN,
+});
+
+const Container = ({ Component, pageProps, err }) => {
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -55,7 +60,7 @@ const Container = ({ Component, pageProps }) => {
       style={{ height: loading ? '100vh' : 'inherit' }}
       className="uk-inline uk-width-expand uk-overflow-hidden"
     >
-      <Component {...pageProps} />
+      <Component {...pageProps} err={err} />
       {!router.asPath.includes('/pdf/') && (
         <div
           style={{ height: '100vh', zIndex: 9999 }}
@@ -70,15 +75,17 @@ const Container = ({ Component, pageProps }) => {
   );
 };
 
-const EntourageApp = ({ Component, pageProps }) => {
+const EntourageApp = ({ Component, pageProps, err }) => {
   return (
-    <SessionProvider>
-      <SharesCountProvider>
-        <UserProvider>
-          <Container Component={Component} pageProps={pageProps} />
-        </UserProvider>
-      </SharesCountProvider>
-    </SessionProvider>
+    <Sentry.ErrorBoundary fallback="An error has occurred">
+      <SessionProvider>
+        <SharesCountProvider>
+          <UserProvider>
+            <Container Component={Component} pageProps={pageProps} err={err} />
+          </UserProvider>
+        </SharesCountProvider>
+      </SessionProvider>
+    </Sentry.ErrorBoundary>
   );
 };
 

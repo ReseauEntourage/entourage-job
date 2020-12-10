@@ -1,6 +1,6 @@
 const { QueryTypes } = require('sequelize');
 const fs = require('fs');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 const PDFMerger = require('pdf-merger-js');
 const S3 = require('./Aws');
 
@@ -641,6 +641,7 @@ const generatePdfFromCV = async (userId, token, paths) => {
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox'],
+    executablePath: process.env.CHROME_PATH,
   });
   const page = await browser.newPage();
   const merger = new PDFMerger();

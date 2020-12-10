@@ -1,9 +1,9 @@
-/*! UIkit 3.5.8 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
+/*! UIkit 3.5.4 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
     typeof define === 'function' && define.amd ? define('uikittooltip', ['uikit-util'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.UIkitTooltip = factory(global.UIkit.util));
+    (global = global || self, global.UIkitTooltip = factory(global.UIkit.util));
 }(this, (function (uikitUtil) { 'use strict';
 
     var Container = {
@@ -153,8 +153,8 @@
                     changed = uikitUtil.includes(this.cls, ' ') || toggled !== uikitUtil.hasClass(el, this.cls);
                     changed && uikitUtil.toggleClass(el, this.cls, uikitUtil.includes(this.cls, ' ') ? undefined : toggled);
                 } else {
-                    changed = toggled === el.hidden;
-                    changed && (el.hidden = !toggled);
+                    changed = toggled === uikitUtil.hasAttr(el, 'hidden');
+                    changed && uikitUtil.attr(el, 'hidden', !toggled ? '' : null);
                 }
 
                 uikitUtil.$$('[autofocus]', el).some(function (el) { return uikitUtil.isVisible(el) ? el.focus() || true : el.blur(); });

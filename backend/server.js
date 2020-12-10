@@ -1,3 +1,6 @@
+const Sentry = require('@sentry/node');
+const Tracing = require('@sentry/tracing');
+
 const express = require('express');
 const enforce = require('express-sslify');
 const cors = require('cors');
@@ -11,16 +14,30 @@ const routeMail = require('./routes/api/v1/Mail');
 const routeOpportunity = require('./routes/api/v1/Opportunity');
 
 const RateLimiter = require('./utils/RateLimiter');
+const logger = require('./utils/Logger');
 const { REDIS_KEYS } = require('../constants');
 
 const app = express();
 const dev = process.env.NODE_ENV !== 'production';
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Tracing.Integrations.Express({ app }),
+  ],
+
+  tracesSampleRate: 1.0,
+});
 
 let server;
 
 const apiLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_GENERAL, 100);
 
 module.exports.prepare = () => {
+  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.tracingHandler());
+
   // enable ssl redirect
   if (!dev) app.use(enforce.HTTPS({ trustProtoHeader: true }));
   app.use(
@@ -30,6 +47,8 @@ module.exports.prepare = () => {
   );
 
   app.set('trust proxy', 1);
+
+  app.use(logger());
 
   app.use(express.json());
 
@@ -64,9 +83,14 @@ module.exports.prepare = () => {
   app.use('/api/v1/opportunity', apiLimiter, routeOpportunity);
   app.use('/api/v1/user', apiLimiter, routeUser);
 
+  app.use(Sentry.Handlers.errorHandler());
+
   app.use((err, req, res, next) => {
     if (err) {
-      return res.status(err.status || 500).send({ message: err.message });
+      return res.status(err.status || 500).send({
+        message: err.message,
+        errorId: res.sentry,
+      });
     }
     next();
   });

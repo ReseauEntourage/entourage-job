@@ -1,4 +1,4 @@
-require ('newrelic');
+const tracer = require('dd-trace').init();
 const next = require('next');
 const server = require('./server');
 
