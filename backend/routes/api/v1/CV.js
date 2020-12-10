@@ -149,7 +149,7 @@ router.post(
                 );
               */
             } catch (error) {
-              console.error(error);
+              res.locals.logger.error(error);
             } finally {
               if (fs.existsSync(path)) {
                 fs.unlinkSync(path); // remove image locally after upload to S3
@@ -178,7 +178,7 @@ router.post(
 
         return res.status(200).json(cv);
       } catch (e) {
-        console.log(e);
+        res.locals.logger.error(e);
         return res.status(401).send(`Une erreur est survenue`);
       }
     });
@@ -202,7 +202,7 @@ router.post('/share', auth(), (req, res) => {
       res.status(200).json();
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -217,7 +217,7 @@ router.post('/count', auth(), (req, res) => {
       res.status(200).json();
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -232,7 +232,7 @@ router.get('/shares', auth(), (req, res) => {
       res.status(200).json({ total });
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -246,15 +246,15 @@ router.get('/', auth(), (req, res) => {
   CVController.getCVbyUserId(userId)
     .then((cv) => {
       if (cv && !isEmpty(cv)) {
-        console.log(`CV trouvé`);
+        res.locals.logger.log(`CV trouvé`);
         res.status(200).json(cv);
       } else {
-        console.log(`Aucun CV trouvé`);
+        res.locals.logger.log(`Aucun CV trouvé`);
         res.status(204).send(null);
       }
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -274,20 +274,20 @@ router.get('/', auth(), (req, res) => {
         userId = req.payload.candidatId;
       }
       if (!userId) {
-        console.log(`Aucun userId trouvé, aucun CV ne peut être récupéré`);
+        res.locals.logger.error(`Aucun userId trouvé, aucun CV ne peut être récupéré`);
         res.status(401).send('Aucun userId trouvé, aucun CV ne peut être récupéré');
       } else {
         CVController.getCVbyUserId(userId)
           .then((cv) => {
             if (cv !== null) {
-              console.log(`CV trouvé`);
+              res.locals.logger.log(`CV trouvé`);
             } else {
-              console.log(`Aucun CV trouvé`);
+              res.locals.logger.log(`Aucun CV trouvé`);
             }
             res.status(200).json(cv);
           })
           .catch((err) => {
-            console.log(err);
+            res.locals.logger.error(err);
             res.status(401).send(`Aucun CV trouvé`);
           });
       }
@@ -308,7 +308,7 @@ router.get('/cards/random', auth(), (req, res) => {
       res.status(200).json(listeCVs);
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -321,15 +321,15 @@ router.get('/:url', auth(), (req, res) => {
   CVController.getCVbyUrl(req.params.url)
     .then((cv) => {
       if (cv && !isEmpty(cv)) {
-        console.log(`CV trouvé`);
+        res.locals.logger.log(`CV trouvé`);
         res.status(200).json(cv);
       } else {
-        console.log(`Aucun CV trouvé`);
+        res.locals.logger.log(`Aucun CV trouvé`);
         res.status(204).send(null);
       }
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -356,7 +356,7 @@ router.get(
           pdfUrl = await S3.getSignedUrl(s3Key);
         }
       } catch (e) {
-        console.log("PDF version doesn't exist.");
+        res.locals.logger.log("PDF version doesn't exist.");
       }
 
       try {
@@ -367,7 +367,7 @@ router.get(
 
         res.status(200).send({ pdfUrl });
       } catch (err) {
-        console.log(err);
+        res.locals.logger.error(err);
         res.status(401).send('Une erreur est survenue');
       }
     });
@@ -384,11 +384,11 @@ router.get(
     checkUserAuthorization(req, res, req.body.UserId, () => {
       CVController.setCV(req.params.id, req.body)
       .then((cv) => {
-        console.log(`CV modifié`);
+        res.locals.logger.log(`CV modifié`);
         res.status(200).json(cv);
       })
       .catch((err) => {
-        console.log(`Une erreur est survenue`);
+        res.locals.logger.error(`Une erreur est survenue`);
         res.status(400).send(err);
       });
     });
@@ -400,7 +400,7 @@ router.get(
     CVController.uploadToBucket(req.body.file, req.payload.id)
       .then((data) => res.status(200).json(data))
       .catch((err) => {
-        console.error(err);
+        res.locals.logger.error(err);
         res.status(401).send('Une erreur est survenue');
       });
   });
@@ -419,7 +419,7 @@ router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(200).json(result);
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });

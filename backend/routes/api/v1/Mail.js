@@ -20,11 +20,11 @@ router.post('/contact-us', auth(), (req, res) => {
       }\nMessage : ${message}`,
     })
       .then((value) => {
-        console.log('mail: contact us sent');
+        res.locals.logger.log('mail: contact us sent');
         res.status(200).send('mail sent');
       })
       .catch((err) => {
-        console.log(err);
+        res.locals.logger.error(err);
         res.status(500).send(err);
       });
   } else {

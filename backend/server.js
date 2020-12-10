@@ -11,6 +11,7 @@ const routeMail = require('./routes/api/v1/Mail');
 const routeOpportunity = require('./routes/api/v1/Opportunity');
 
 const RateLimiter = require('./utils/RateLimiter');
+const logger = require('./utils/Logger');
 const { REDIS_KEYS } = require('../constants');
 
 const app = express();
@@ -30,6 +31,8 @@ module.exports.prepare = () => {
   );
 
   app.set('trust proxy', 1);
+
+  app.use(logger());
 
   app.use(express.json());
 

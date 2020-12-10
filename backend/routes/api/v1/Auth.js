@@ -42,7 +42,7 @@ router.post('/login', authLimiter, auth(), (req, res, next) => {
     },
     (err, passportUser, info) => {
       if (err) {
-        console.log('error while auth');
+        res.locals.logger.error('error while auth');
         return next(err);
       }
 
@@ -78,7 +78,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
   let token = null;
   let user = null;
   const { email } = req.body;
-  console.log(
+  res.locals.logger.log(
     `Demande de réinitialisation du mot de passe du compte : ${email}`
   );
   if (!email) {
@@ -93,11 +93,11 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       user = userFound;
 
       if (!user) {
-        console.log(`Aucun user rattaché à l'adresse mail suivante : ${email}`);
+        res.locals.logger.log(`Aucun user rattaché à l'adresse mail suivante : ${email}`);
         return false;
       }
 
-      console.log(
+      res.locals.logger.log(
         `Demande de réinitialisation du mot de passe : user.id = ${user.id}`
       );
 
@@ -114,7 +114,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       if (!updatedUser) {
         return res.status(404).send(`Utilisateur inexistant`);
       }
-      console.log('sending email');
+      res.locals.logger.log('sending email');
       // Envoi du mail
       await addToWorkQueue({
         type: JOBS.JOB_TYPES.SEND_MAIL,
@@ -131,7 +131,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       return res.status(200).send('Demande envoyée');
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       return res.status(401).send(`Une erreur est survenue`);
     });
 });
@@ -146,29 +146,29 @@ router.get('/reset/:userId/:token', authLimiter, auth(), (
   const infoLog = 'GET /reset/:userId/:token -';
 
   const { userId, token } = req.params;
-  console.log(
+  res.locals.logger.log(
     `${infoLog} Vérification du lien de réinitialisation de mot de passe`
   );
-  console.log(`${infoLog} userId : ${userId} , token : ${token}`);
+  res.locals.logger.log(`${infoLog} userId : ${userId} , token : ${token}`);
 
   UserController.getCompleteUser(userId)
     .then((userFound) => {
       const user = userFound;
 
       if (!user) {
-        console.log(
+        res.locals.logger.log(
           `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
         );
         return res.status(403).send({
           error: 'Lien non valide',
         });
       }
-      /* console.log(`${infoLog} DEBUG :`);
-      console.log(user); */
+      /* res.locals.logger.log(`${infoLog} DEBUG :`);
+      res.locals.logger.log(user); */
       if (
         !AuthController.validatePassword(token, user.hashReset, user.saltReset)
       ) {
-        console.log(` ${infoLog} Token invalide`);
+        res.locals.logger.error(` ${infoLog} Token invalide`);
         return res.status(403).send({
           error: 'Lien non valide',
         });
@@ -176,7 +176,7 @@ router.get('/reset/:userId/:token', authLimiter, auth(), (
       return res.status(200).send('Lien valide');
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.log(err);
       return res.status(401).send(`Une erreur est survenue`);
     });
 });
@@ -191,45 +191,45 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (
   const infoLog = 'POST /reset/:userId/:token -';
   const { userId, token } = req.params;
   const { newPassword, confirmPassword } = req.body;
-  console.log(
+  res.locals.logger.log(
     `${infoLog} Vérification du lien de réinitialisation de mot de passe`
   );
-  console.log(`${infoLog} userId : ${userId} , token : ${token}`);
+  res.locals.logger.log(`${infoLog} userId : ${userId} , token : ${token}`);
 
   UserController.getCompleteUser(userId)
     .then((userFound) => {
       const user = userFound;
       if (!user) {
-        console.log(
+        res.locals.logger.error(
           `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
         );
         return res.status(403).send({
           error: 'Lien non valide',
         });
       }
-      /* console.log(`${infoLog} DEBUG :`);
-      console.log(user); */
+      /* res.locals.logger.log(`${infoLog} DEBUG :`);
+      res.locals.logger.log(user); */
       if (
         !AuthController.validatePassword(token, user.hashReset, user.saltReset)
       ) {
-        console.log(`${infoLog} Token invalide`);
+        res.locals.logger.error(`${infoLog} Token invalide`);
         return res.status(403).send({
           error: 'Lien non valide',
         });
       }
-      console.log(`${infoLog} Lien valide`);
+      res.locals.logger.log(`${infoLog} Lien valide`);
       if (newPassword !== confirmPassword) {
-        console.log(
+        res.locals.logger.error(
           `${infoLog} La confirmation de mot de passe est incorrecte`
         );
         return res.status(400).send({
           error: `La confirmation du mot de passe est incorrecte`,
         });
       }
-      console.log(`${infoLog} Les 2 mots de passe sont valides`);
-      console.log(`${infoLog} Chiffrement du nouveau mot de passe`);
+      res.locals.logger.log(`${infoLog} Les 2 mots de passe sont valides`);
+      res.locals.logger.log(`${infoLog} Chiffrement du nouveau mot de passe`);
       const { hash, salt } = AuthController.encryptPassword(newPassword);
-      console.log(`${infoLog} Mise à jour du mot de passe de l'utilisateur`);
+      res.locals.logger.log(`${infoLog} Mise à jour du mot de passe de l'utilisateur`);
       return UserController.setUser(user.id, {
         password: hash,
         salt,
@@ -237,14 +237,15 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (
         saltReset: null,
       }).then((userUpdated) => {
         if (userUpdated) {
-          console.log(`${infoLog} Mise à jour réussie`);
+          res.locals.logger.log(`${infoLog} Mise à jour réussie`);
           return res.status(200).json(userUpdated);
         }
+        res.locals.logger.error(`${infoLog} Erreur de réinitialisation`);
         return res.status(401).send(`Une erreur inconnue est survenue`);
       });
     })
     .catch((err) => {
-      console.log(err);
+      res.locals.logger.error(err);
       return res.status(401).send(`Une erreur est survenue`);
     });
 });
@@ -271,6 +272,7 @@ router.get(
         return res.json({ user: AuthController.toAuthJSON(user) });
       })
       .catch((err) => {
+        res.locals.logger.error(err);
         return res.status(401).send(`Une erreur est survenue`);
       });
   }
