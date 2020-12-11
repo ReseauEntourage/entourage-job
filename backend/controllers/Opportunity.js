@@ -394,11 +394,32 @@ const updateOpportunityAirtable = async (opportunityId) => {
 };
 
 const addUserToOpportunity = async (opportunityId, userId, seen) => {
-  const modelOpportunityUser = await Opportunity_User.create({
-    OpportunityId: opportunityId,
-    UserId: userId, // to rename in userId
-    seen: !!seen,
+  let modelOpportunityUser = await Opportunity_User.findOne({
+    where: {
+      OpportunityId: opportunityId,
+      UserId: userId,
+    },
   });
+
+  if (modelOpportunityUser) {
+    modelOpportunityUser = await Opportunity_User.update(
+      {
+        seen: !!seen,
+      },
+      {
+        where: {
+          OpportunityId: opportunityId,
+          UserId: userId,
+        },
+      }
+    );
+  } else {
+    modelOpportunityUser = await Opportunity_User.create({
+      OpportunityId: opportunityId,
+      UserId: userId,
+      seen: !!seen,
+    });
+  }
 
   await updateOpportunityAirtable(opportunityId);
   return modelOpportunityUser;
@@ -455,11 +476,11 @@ const updateOpportunity = async (opportunity) => {
 
   if (opportunity.isPublic) {
     // TODO do we want to delete the relations after changing from public to private ?
-   /* await Opportunity_User.destroy({
+    /* await Opportunity_User.destroy({
       where: {
         OpportunityId: modelOpportunity.id,
       },
-    });*/
+    }); */
   } else if (opportunity.candidatesId) {
     const opportunitiesUser = await Promise.all(
       opportunity.candidatesId.map((candidatId) =>

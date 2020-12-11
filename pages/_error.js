@@ -69,12 +69,14 @@ CustomError.getInitialProps = async ({ res, err, asPath }) => {
 };
 
 CustomError.propTypes = {
-  statusCode: PropTypes.number.isRequired,
-  hasGetInitialPropsRun: PropTypes.bool.isRequired,
+  statusCode: PropTypes.number,
+  hasGetInitialPropsRun: PropTypes.bool,
   err: PropTypes.shape(),
 };
 
 CustomError.defaultProps = {
+  statusCode: undefined,
+  hasGetInitialPropsRun: undefined,
   err: undefined,
 };
 

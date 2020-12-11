@@ -536,7 +536,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   await postOpportunity(
                     {
                       ...fields,
-                      candidatesId,
+                      candidatesId: fields.isPublic ? null : candidatesId,
                       date: Date.now(),
                     },
                     closeModal

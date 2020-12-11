@@ -65,7 +65,6 @@ export function translateCategory(isPublic) {
   return 'Offre inconnue';
 }
 const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
-
   if (!currentOffer) {
     currentOffer = { userOpportunity: {}, businessLines: [] };
   }
@@ -150,7 +149,6 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       onChange={(event) => {
                         setLoadingStatus(true);
                         const { userOpportunity } = currentOffer;
-                        console.log(event.target.value);
                         userOpportunity.status = Number(event.target.value);
                         updateOpportunityUser(userOpportunity);
                         setLoadingStatus(false);
