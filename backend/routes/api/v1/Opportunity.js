@@ -6,6 +6,18 @@ const OpportunityController = require('../../../controllers/Opportunity');
 const { USER_ROLES } = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 
+// Temp route to update the opportunities on Airtable
+router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
+  checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
+    OpportunityController.refreshAirtableOpportunities()
+      .then((opportunity) => res.status(200).json(opportunity))
+      .catch((err) => {
+        res.locals.logger.error(err);
+        res.status(401).send(`Une erreur est survenue`);
+      });
+  });
+});
+
 /**
  * Route : POST /api/<VERSION>/opportunity
  * Description : Create an opportunity

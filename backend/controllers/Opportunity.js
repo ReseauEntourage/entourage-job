@@ -393,6 +393,14 @@ const updateOpportunityAirtable = async (opportunityId) => {
   }
 };
 
+const refreshAirtableOpportunities = async () => {
+  const opportunities = await Opportunity.findAll({
+    attributes: ['id'],
+  });
+
+  await Promise.all(opportunities.map((opportunity) => updateOpportunityAirtable(opportunity.id)));
+};
+
 const addUserToOpportunity = async (opportunityId, userId, seen) => {
   let modelOpportunityUser = await Opportunity_User.findOne({
     where: {
@@ -616,4 +624,5 @@ module.exports = {
   updateOpportunity,
 
   addUserToOpportunity,
+  refreshAirtableOpportunities,
 };
