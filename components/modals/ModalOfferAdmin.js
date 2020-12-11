@@ -85,11 +85,11 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               const tmpOpportunity = {
                 ...currentOffer,
                 ...fields,
-                candidatesId: fields.candidatesId.map((candidateId) =>
+                candidatesId: !fields.isPublic && fields.candidatesId ? fields.candidatesId.map((candidateId) =>
                   typeof candidateId === 'object'
                     ? candidateId.value
                     : candidateId
-                ),
+                ) : null,
               };
               updateOpportunity(tmpOpportunity);
               setIsEditing(false);

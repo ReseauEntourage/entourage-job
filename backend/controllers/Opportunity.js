@@ -20,24 +20,26 @@ const {
 
 const { cleanOpportunity } = require('../utils');
 
-const INCLUDE_OPPORTUNITY_CANDIDATE = [{
-  model: User,
-  attributes: ['id', 'email', 'firstName', 'lastName', 'gender'],
-  include: [
-    {
-      model: User_Candidat,
-      as: 'candidat',
-      attributes: ['employed', 'hidden', 'note', 'url'],
-      include: [
-        {
-          model: User,
-          as: 'coach',
-          attributes: ['id', 'email', 'firstName', 'lastName'],
-        },
-      ],
-    },
-  ],
-}];
+const INCLUDE_OPPORTUNITY_CANDIDATE = [
+  {
+    model: User,
+    attributes: ['id', 'email', 'firstName', 'lastName', 'gender'],
+    include: [
+      {
+        model: User_Candidat,
+        as: 'candidat',
+        attributes: ['employed', 'hidden', 'note', 'url'],
+        include: [
+          {
+            model: User,
+            as: 'coach',
+            attributes: ['id', 'email', 'firstName', 'lastName'],
+          },
+        ],
+      },
+    ],
+  },
+];
 
 const INCLUDE_OPPORTUNITY_COMPLETE = [
   {
@@ -58,7 +60,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
       'archived',
       'note',
     ],
-    include: INCLUDE_OPPORTUNITY_CANDIDATE
+    include: INCLUDE_OPPORTUNITY_CANDIDATE,
   },
 ];
 
@@ -106,9 +108,13 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
   },
 ];
 
-const getAirtableOpportunityFields = (opportunity, candidates, businessLines) => {
-  return {
-    Id: opportunity.id,
+const getAirtableOpportunityFields = (
+  opportunity,
+  candidates,
+  businessLines
+) => {
+  const commonFields = {
+    OpportunityId: opportunity.id,
     Titre: opportunity.title,
     Nom: opportunity.recruiterName,
     Mail: opportunity.recruiterMail,
@@ -119,19 +125,25 @@ const getAirtableOpportunityFields = (opportunity, candidates, businessLines) =>
     'Pré-requis': opportunity.prerequisites,
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
-    Candidat:
-      !opportunity.isPublic && candidates && candidates.length > 0 ?
-          candidates.map((candidate) => `${candidate.User.firstName} ${candidate.User.lastName}`).join(' / ')
-        : null,
-    Statut:
-      !opportunity.isPublic &&
-      candidates &&
-      candidates.length === 1
-        ? findOfferStatus(candidates[0].status).label
-        : null,
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
+    'Date de création': opportunity.createdAt,
   };
+
+  return candidates && candidates.length > 0
+    ? [
+        ...candidates.map((candidate) => {
+          return {
+            ...commonFields,
+            OpportunityUserId: candidate.id,
+            Candidat: `${candidate.User.firstName} ${candidate.User.lastName}`,
+            Statut: findOfferStatus(candidate.status).label,
+            Commentaire: candidate.note,
+          };
+        }),
+        commonFields,
+      ]
+    : commonFields;
 };
 
 const updateTable = (opportunity, candidates) => {
@@ -144,7 +156,6 @@ const updateTable = (opportunity, candidates) => {
   return addToWorkQueue({
     type: JOBS.JOB_TYPES.UPDATE_AIRTABLE,
     tableName: offerTable,
-    idToUpdate: opportunity.id,
     fields,
   });
 };
@@ -169,21 +180,22 @@ const createOpportunity = async (data) => {
 
   let candidates = [];
   if (data.candidatesId && data.candidatesId.length > 0) {
-    console.log(`Etape 4 - Détermine le(s) User(s) à qui l'opportunité s'adresse`);
+    console.log(
+      `Etape 4 - Détermine le(s) User(s) à qui l'opportunité s'adresse`
+    );
     candidates = await Promise.all(
       data.candidatesId.map((candidatId) =>
-        Opportunity_User.create(
-          {
-            OpportunityId: modelOpportunity.id,
-            UserId: candidatId, // to rename in userId
-          }
-        ).then((model) => model[0])
-    ));
+        Opportunity_User.create({
+          OpportunityId: modelOpportunity.id,
+          UserId: candidatId, // to rename in userId
+        }).then((model) => model[0])
+      )
+    );
 
     candidates = await Opportunity_User.findAll({
       where: {
         UserId: data.candidatesId,
-        OpportunityId:  modelOpportunity.id,
+        OpportunityId: modelOpportunity.id,
       },
       include: INCLUDE_OPPORTUNITY_CANDIDATE,
     });
@@ -332,10 +344,16 @@ const getAllUserOpportunities = async (userId) => {
             ) {
               return b.userOpportunity.status - a.userOpportunity.status;
             }
-            if (a.userOpportunity.status >= OFFER_STATUS[4].value && b.userOpportunity.status < OFFER_STATUS[4].value) {
+            if (
+              a.userOpportunity.status >= OFFER_STATUS[4].value &&
+              b.userOpportunity.status < OFFER_STATUS[4].value
+            ) {
               return 1;
             }
-            if (a.userOpportunity.status < OFFER_STATUS[4].value && b.userOpportunity.status >= OFFER_STATUS[4].value) {
+            if (
+              a.userOpportunity.status < OFFER_STATUS[4].value &&
+              b.userOpportunity.status >= OFFER_STATUS[4].value
+            ) {
               return -1;
             }
 
@@ -375,12 +393,41 @@ const updateOpportunityAirtable = async (opportunityId) => {
   }
 };
 
-const addUserToOpportunity = async (opportunityId, userId, seen) => {
-  const modelOpportunityUser = await Opportunity_User.create({
-    OpportunityId: opportunityId,
-    UserId: userId, // to rename in userId
-    seen: !!seen,
+const refreshAirtableOpportunities = async () => {
+  const opportunities = await Opportunity.findAll({
+    attributes: ['id'],
   });
+
+  await Promise.all(opportunities.map((opportunity) => updateOpportunityAirtable(opportunity.id)));
+};
+
+const addUserToOpportunity = async (opportunityId, userId, seen) => {
+  let modelOpportunityUser = await Opportunity_User.findOne({
+    where: {
+      OpportunityId: opportunityId,
+      UserId: userId,
+    },
+  });
+
+  if (modelOpportunityUser) {
+    modelOpportunityUser = await Opportunity_User.update(
+      {
+        seen: !!seen,
+      },
+      {
+        where: {
+          OpportunityId: opportunityId,
+          UserId: userId,
+        },
+      }
+    );
+  } else {
+    modelOpportunityUser = await Opportunity_User.create({
+      OpportunityId: opportunityId,
+      UserId: userId,
+      seen: !!seen,
+    });
+  }
 
   await updateOpportunityAirtable(opportunityId);
   return modelOpportunityUser;
@@ -436,26 +483,32 @@ const updateOpportunity = async (opportunity) => {
   let newCandidatesIdsToSendMailTo;
 
   if (opportunity.isPublic) {
-    await Opportunity_User.destroy({
+    // TODO do we want to delete the relations after changing from public to private ?
+    /* await Opportunity_User.destroy({
       where: {
         OpportunityId: modelOpportunity.id,
       },
-    });
+    }); */
   } else if (opportunity.candidatesId) {
     const opportunitiesUser = await Promise.all(
-      opportunity.candidatesId.map((candidatId) => (
+      opportunity.candidatesId.map((candidatId) =>
         Opportunity_User.findOrCreate({
           where: {
             OpportunityId: modelOpportunity.id,
             UserId: candidatId, // to rename in userId
           },
         }).then((model) => model[0])
-    )));
+      )
+    );
 
     await Opportunity_User.destroy({
       where: {
         OpportunityId: modelOpportunity.id,
-        UserId: { [Op.not]: opportunitiesUser.map((opportunityUser) => opportunityUser.UserId) },
+        UserId: {
+          [Op.not]: opportunitiesUser.map(
+            (opportunityUser) => opportunityUser.UserId
+          ),
+        },
       },
     });
 
@@ -483,24 +536,22 @@ const updateOpportunity = async (opportunity) => {
 
   let candidatesToSendMailTo;
 
-  if(!finalOpportunity.isPublic && oldOpportunity) {
-    // Case where the opportunity is was not validated and has been validated, we send the mail to everybody
-    if (
-      !oldOpportunity.isValidated &&
-      finalOpportunity.isValidated
-    ) {
+  if (!finalOpportunity.isPublic && oldOpportunity) {
+    // Case where the opportunity was not validated and has been validated, we send the mail to everybody
+    if (!oldOpportunity.isValidated && finalOpportunity.isValidated) {
       candidatesToSendMailTo =
         finalOpportunity.userOpportunity &&
         finalOpportunity.userOpportunity.length > 0
           ? finalOpportunity.userOpportunity
           : null;
-    }
-    else if (newCandidatesIdsToSendMailTo) {
+    } else if (newCandidatesIdsToSendMailTo) {
       // Case where the opportunity was already validated, and we just added new candidates to whom we have to send the mail
       candidatesToSendMailTo =
         finalOpportunity.userOpportunity &&
         finalOpportunity.userOpportunity.length > 0
-          ? finalOpportunity.userOpportunity.filter((userOpp) => newCandidatesIdsToSendMailTo.includes(userOpp.User.id))
+          ? finalOpportunity.userOpportunity.filter((userOpp) =>
+              newCandidatesIdsToSendMailTo.includes(userOpp.User.id)
+            )
           : null;
     }
   }
@@ -519,7 +570,9 @@ const updateOpportunity = async (opportunity) => {
         });
 
         const coach =
-          candidat.User && candidat.User.candidat && candidat.User.candidat.coach
+          candidat.User &&
+          candidat.User.candidat &&
+          candidat.User.candidat.coach
             ? candidat.User.candidat.coach
             : null;
 
@@ -540,7 +593,9 @@ const updateOpportunity = async (opportunity) => {
 
   try {
     await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
-    if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) await sendJobOfferMails(candidatesToSendMailTo);
+    if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) {
+      await sendJobOfferMails(candidatesToSendMailTo);
+    }
     console.log(
       'Updated table with modified offer and sent mail to candidate and coach.'
     );
@@ -569,4 +624,5 @@ module.exports = {
   updateOpportunity,
 
   addUserToOpportunity,
+  refreshAirtableOpportunities,
 };

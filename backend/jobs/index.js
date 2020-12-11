@@ -14,7 +14,7 @@ const { JOBS } = require('../../constants');
 
 const { sendMailBackground } = require('./Mail');
 
-const { insertAirtable, updateAirtable } = require('./Airtable');
+const { insertAirtable, updateOpportunityAirtable } = require('./Airtable');
 
 const workQueue = new Queue(JOBS.QUEUES.WORK, process.env.REDIS_URL);
 
@@ -44,5 +44,5 @@ module.exports = {
   createCVSearchString,
   sendMailBackground,
   insertAirtable,
-  updateAirtable,
+  updateOpportunityAirtable,
 };

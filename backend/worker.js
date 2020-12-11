@@ -11,7 +11,7 @@ const {
   createCVSearchString,
   sendMailBackground,
   insertAirtable,
-  updateAirtable,
+  updateOpportunityAirtable,
 } = require('./jobs');
 
 const workers = process.env.WEB_CONCURRENCY
@@ -117,8 +117,8 @@ const start = () => {
         return `Airtable : insertion in '${data.tableName}'`;
 
       case JOBS.JOB_TYPES.UPDATE_AIRTABLE:
-        await updateAirtable(data.tableName, data.idToUpdate, data.fields);
-        return `Airtable : update of id ${data.idToUpdate} in '${data.tableName}'`;
+        await updateOpportunityAirtable(data.tableName, data.fields);
+        return `Airtable : update in '${data.tableName}'`;
 
       default:
         return `No process method for this job ${job.id} of type ${job.data.type}`;
