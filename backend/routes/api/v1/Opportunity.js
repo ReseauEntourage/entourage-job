@@ -10,7 +10,7 @@ const { checkCandidatOrCoachAuthorization } = require('../../../utils');
 router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
   checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
     OpportunityController.refreshAirtableOpportunities()
-      .then((opportunity) => res.status(200).json(opportunity))
+      .then(() => res.status(200))
       .catch((err) => {
         res.locals.logger.error(err);
         res.status(401).send(`Une erreur est survenue`);
