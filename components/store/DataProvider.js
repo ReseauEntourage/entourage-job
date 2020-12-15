@@ -7,7 +7,7 @@ const DataProvider = ({ children }) => {
   const [data, setData] = useState(true);
 
   const storeData = (key, value, storeInStorage) => {
-    if (storeInStorage) localStorage.setItem(key, value);
+    if (storeInStorage) localStorage.setItem(key, JSON.stringify(value));
     setData({
       ...data,
       [key]: value,
@@ -18,8 +18,9 @@ const DataProvider = ({ children }) => {
     if (data[key]) {
       return data[key];
     }
-    const item = localStorage.getItem(key);
+    let item = localStorage.getItem(key);
     if (item) {
+      item = JSON.parse(item);
       setData({
         ...data,
         [key]: item,
