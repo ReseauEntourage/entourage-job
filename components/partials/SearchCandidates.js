@@ -1,22 +1,26 @@
 /* global UIkit */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import CVList from '../cv/CVList';
 import { GridNoSSR, Section } from '../utils';
 import FiltersSideBar from '../filters/FiltersSideBar';
 import CurrentFilters from '../filters/CurrentFilters';
-import { CV_FILTERS_DATA } from '../../constants';
+import { CV_FILTERS_DATA, STORAGE_KEYS } from '../../constants';
 import Icon from '../utils/Icon';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
 import { initializeFilters } from '../../utils';
+import { DataContext } from '../store/DataProvider';
 
 let debounceTimeoutId;
 
 const SearchCandidates = ({ defaultHideEmployed }) => {
   const [search, setSearch] = useState();
   const [searchBuffer, setSearchBuffer] = useState();
+
+  const { getData, storeData } = useContext(DataContext);
+
   const [filters, setFilters] = useState(
     initializeFilters(CV_FILTERS_DATA, defaultHideEmployed ? [2] : null)
   );
@@ -36,11 +40,31 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
   };
 
   useEffect(() => {
-    if(process.env.DISABLE_SEARCH_ON_THE_FLY !== 'true') {
+    if (process.env.DISABLE_SEARCH_ON_THE_FLY !== 'true') {
       clearTimeout(debounceTimeoutId);
       debounceTimeoutId = setTimeout(() => startSearch(searchBuffer), 1000);
     }
   }, [searchBuffer]);
+
+  useEffect(() => {
+    const storageItem = getData(
+      defaultHideEmployed
+        ? STORAGE_KEYS.CV_FILTERS_COMPANY
+        : STORAGE_KEYS.CV_FILTERS_PUBLIC
+    );
+    if (storageItem) {
+      setFilters(storageItem);
+    }
+  }, []);
+
+  useEffect(() => {
+    storeData(
+      defaultHideEmployed
+        ? STORAGE_KEYS.CV_FILTERS_COMPANY
+        : STORAGE_KEYS.CV_FILTERS_PUBLIC,
+      filters
+    );
+  }, [filters]);
 
   return (
     <Section style="default">
@@ -88,7 +112,8 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
               onClick={() => {
                 clearTimeout(debounceTimeoutId);
                 startSearch(searchBuffer);
-              }}>
+              }}
+            >
               <Icon name="search" className="uk-text-secondary" />
             </a>
           </div>

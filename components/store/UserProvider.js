@@ -6,7 +6,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Api from '../../Axios';
-import {USER_ROLES} from "../../constants";
+import { USER_ROLES, STORAGE_KEYS } from '../../constants';
 
 /**
  * On ajoute la propriété `setName` à notre contexte
@@ -19,16 +19,17 @@ const UserProvider = ({ children }) => {
   const [isAuthentificated, setIsAuthentificated] = useState(false);
 
   const resetAndRedirect = () => {
-    localStorage.removeItem('access-token');
+    localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     setIsAuthentificated(false);
     setUser(null);
     Router.push('/login');
-  } ;
+  };
 
   // la restriction devrait etre faite des le serveur !
   const restrictAccessByRole = (role) => {
     if (
-      (Router.pathname.includes('/backoffice/admin') && role !== USER_ROLES.ADMIN) ||
+      (Router.pathname.includes('/backoffice/admin') &&
+        role !== USER_ROLES.ADMIN) ||
       (Router.pathname.includes('/backoffice/candidat') &&
         role !== USER_ROLES.CANDIDAT &&
         role !== USER_ROLES.COACH)
@@ -51,7 +52,7 @@ const UserProvider = ({ children }) => {
       email: email.toLowerCase(),
       password,
     });
-    localStorage.setItem('access-token', data.user.token);
+    localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.user.token);
     console.log('login successful', data.user);
 
     setIsAuthentificated(true);
@@ -59,11 +60,11 @@ const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('access-token');
+    const accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
     if (accessToken) {
       Api.get('/api/v1/auth/current')
         .then(({ data }) => {
-          localStorage.setItem('access-token', data.user.token);
+          localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.user.token);
           setIsAuthentificated(true);
           setUser(data.user);
           restrictAccessByRole(data.user.role);
