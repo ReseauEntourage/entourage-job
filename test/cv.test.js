@@ -106,7 +106,8 @@ describe('CV', () => {
                     .set('authorization', `Token ${loggedInCoach.token}`)
                     .field('cv', JSON.stringify(cv))
                     .attach('profileImage', path);
-                expect(response.status).toBe(200);
+                expect(response.status).toBe(404);
+                // BROKE TEST ON PURPOSE
                 expect(response.body.status).toMatch(CV_STATUS.Progress.value);
             });
             it('Should return 200 and CV with cv status set as pending if CV submitted, if logged in user is coach of cv\'s owner', async () => {
