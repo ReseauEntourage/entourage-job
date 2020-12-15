@@ -57,6 +57,17 @@ const Sinformer = () => {
           d’après, qui apporte sa pierre dans la résolution des défis sociaux,
           et qui remet l’économie à l’endroit, au service de l’humain.
         </p>
+        <iframe
+          src="https://www.youtube.com/embed/u3d3stVn1h0"
+          width="1280"
+          height="720"
+          frameBorder="0"
+          allowFullScreen
+          data-uk-responsive
+          data-uk-video="automute: true; autoplay: inview"
+          title="linkedout"
+          className="uk-margin-medium-top"
+        />
       </Section>
       <CandidateTestimonies />
       <HowToBeInclusive />
