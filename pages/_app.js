@@ -7,6 +7,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Router, { useRouter } from 'next/router';
 import * as Sentry from '@sentry/react';
 import UserProvider from '../components/store/UserProvider';
+import DataProvider from '../components/store/DataProvider';
 import SessionProvider, {
   SessionContext,
 } from '../components/store/SessionProvider';
@@ -80,9 +81,11 @@ const EntourageApp = ({ Component, pageProps, err }) => {
     <Sentry.ErrorBoundary fallback="An error has occurred">
       <SessionProvider>
         <SharesCountProvider>
-          <UserProvider>
-            <Container Component={Component} pageProps={pageProps} err={err} />
-          </UserProvider>
+          <DataProvider>
+            <UserProvider>
+              <Container Component={Component} pageProps={pageProps} err={err} />
+           </UserProvider>
+          </DataProvider>
         </SharesCountProvider>
       </SessionProvider>
     </Sentry.ErrorBoundary>

@@ -248,6 +248,12 @@ const REDIS_KEYS = {
   RL_GENERAL: 'rl-general:',
 };
 
+const STORAGE_KEYS = {
+  CV_FILTERS_PUBLIC: 'cv-filters-public',
+  CV_FILTERS_COMPANY: 'cv-filters-company',
+  ACCESS_TOKEN: 'access-token',
+};
+
 const JOBS = {
   JOB_TYPES: {
     GENERATE_CV_PDF: 'generate_cv_pdf',
@@ -307,4 +313,5 @@ module.exports = {
   INITIAL_NB_OF_CV_TO_DISPLAY,
   AIRTABLE_NAMES,
   SOCKETS,
+  STORAGE_KEYS,
 };
