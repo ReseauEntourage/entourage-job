@@ -1,27 +1,48 @@
-name: CI
+name: LinkedOut Test
 
 on:
   push:
-    branches: [ master, develop ]
   pull_request:
     branches: [ master, develop ]
-
   workflow_dispatch:
 
 jobs:
-   build:
+   test:
     runs-on: ubuntu-latest
+    environment: entourage-job-test
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    env:
+      CI: true
+      NODE_ENV: test
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SERVER_URL: ${{ secrets.SERVER_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      AWSS3_BUCKET_NAME: ${{ secrets.AWSS3_BUCKET_NAME }}
+      AWSS3_ID: ${{ secrets.AWSS3_ID }}
+      AWSS3_SECRET: ${{ secrets.AWSS3_SECRET }}
+      AWSS3_FILE_DIRECTORY: ${{ secrets.AWSS3_FILE_DIRECTORY }}
+      AWSS3_IMAGE_DIRECTORY: ${{ secrets.AWSS3_IMAGE_DIRECTORY }}
+      AWSS3_URL: ${{ secrets.AWSS3_URL }}
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v1
+    - uses: actions/setup-node@v1
       with:
         node-version: '10.x'
     - run: npm install
-    - run: export NODE_ENV=test
     - run: npm run db-create
     - run: npm run db-migrate
     - run: npm test
-      env:
-        CI: true

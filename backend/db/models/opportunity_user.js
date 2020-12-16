@@ -1,7 +1,27 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-underscore-dangle */
 
-const {sendMail} = require('../../controllers/Mail');
+const { sendMail } = require('../../controllers/Mail');
+
+const sendMailEmbauche = async (
+  toEmail,
+  firstName,
+  title,
+  opportunityId,
+  roleMin
+) => {
+  // Fix because of bug where the addToWorkQueue function cannot be imported
+  if (!process.env.NODE_ENV.includes('test')) {
+    await sendMail({
+      toEmail,
+      subject: `${firstName} a retrouvé un emploi`,
+      text: `
+          ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
+          Vous pouvez maintenant l'archiver en cliquant ici :
+          ${process.env.SERVER_URL}/backoffice/${roleMin}/offres?q=${opportunityId}.`,
+    });
+  }
+};
 
 module.exports = (sequelize, DataTypes) => {
   const Opportunity_User = sequelize.define('Opportunity_User', {
@@ -48,23 +68,6 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Opportunity_User.associate = (models) => {
-    const sendMailEmbauche = async (
-      toEmail,
-      firstName,
-      title,
-      opportunityId,
-      roleMin
-    ) => {
-      await sendMail({
-        toEmail,
-        subject: `${firstName} a retrouvé un emploi`,
-        text: `
-          ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
-          Vous pouvez maintenant l'archiver en cliquant ici :
-          ${process.env.SERVER_URL}/backoffice/${roleMin}/offres?q=${opportunityId}.`,
-      });
-    };
-
     Opportunity_User.belongsTo(models.User);
 
     Opportunity_User.beforeUpdate(async (instance, option) => {
@@ -78,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
         nextData.status === 2
       ) {
         try {
-          const [{firstName, candidat}, {title}] = await Promise.all([
+          const [{ firstName, candidat }, { title }] = await Promise.all([
             models.User.findByPk(nextData.UserId, {
               attributes: ['firstName'],
               include: [
@@ -93,7 +96,7 @@ module.exports = (sequelize, DataTypes) => {
                     },
                   ],
                 },
-              ]
+              ],
             }),
             models.Opportunity.findByPk(nextData.OpportunityId, {
               attributes: ['title'],
@@ -110,7 +113,7 @@ module.exports = (sequelize, DataTypes) => {
           );
           if (candidat && candidat.coach) {
             // mail coach
-            const email = candidat.coach.email;
+            const { email } = candidat.coach;
             await sendMailEmbauche(
               email,
               firstName,

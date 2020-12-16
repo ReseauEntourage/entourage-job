@@ -1,13 +1,5 @@
 const Queue = require('bull');
 
-const {
-  generatePDF,
-  generatePreview,
-  cacheCV,
-  cacheAllCVs,
-  createCVSearchString,
-} = require('./CV');
-
 const dev = process.env.NODE_ENV !== 'production';
 
 const { JOBS } = require('../../constants');
@@ -15,6 +7,14 @@ const { JOBS } = require('../../constants');
 const { sendMailBackground } = require('./Mail');
 
 const { insertAirtable, updateOpportunityAirtable } = require('./Airtable');
+
+const {
+  generatePDF,
+  generatePreview,
+  cacheCV,
+  cacheAllCVs,
+  createCVSearchString,
+} = require('./CV');
 
 const workQueue = new Queue(JOBS.QUEUES.WORK, process.env.REDIS_URL);
 
