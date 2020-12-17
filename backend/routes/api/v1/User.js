@@ -1,12 +1,12 @@
 const validator = require('validator');
 const express = require('express');
+const { addToWorkQueue } = require('../../../jobs');
 const {
   checkCandidatOrCoachAuthorization,
   checkUserAuthorization,
 } = require('../../../utils');
-const { USER_ROLES } = require('../../../../constants');
+const { USER_ROLES, JOBS } = require('../../../../constants');
 const { auth } = require('../../../controllers/Auth');
-const { sendMail } = require('../../../controllers/Mail');
 
 const router = express.Router();
 const UserController = require('../../../controllers/User');
@@ -37,7 +37,8 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
         `login : ${req.body.email}`,
         `password: ${userPassword}`
       );
-      await sendMail({
+      await addToWorkQueue({
+        type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail: req.body.email,
         subject: 'Bienvenue chez LinkedOut',
         text:
