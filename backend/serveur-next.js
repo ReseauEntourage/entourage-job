@@ -2,7 +2,7 @@ const loadEnvironementVariables = require('./utils/env');
 
 loadEnvironementVariables();
 
-const tracer = process.env.ENABLE_DATADOG ? require('dd-trace').init() : null;
+const tracer = process.env.ENABLE_DATADOG_TRACER === 'true' ? require('dd-trace').init() : null;
 const next = require('next');
 
 const server = require('./server');
