@@ -2,7 +2,12 @@ const loadEnvironementVariables = require('./utils/env');
 
 loadEnvironementVariables();
 
-const tracer = process.env.ENABLE_DATADOG_TRACER === 'true' ? require('dd-trace').init() : null;
+const tracer =
+  process.env.ENABLE_DATADOG_TRACER === 'true'
+    ? require('dd-trace').init({
+        version: process.env.HEROKU_RELEASE_VERSION,
+      })
+    : null;
 const next = require('next');
 
 const server = require('./server');
