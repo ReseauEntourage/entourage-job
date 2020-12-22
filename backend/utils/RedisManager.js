@@ -60,15 +60,6 @@ const RedisManager = {
       this.attempts = 1; // reset attempts
       this.attemptsOnConnect = null;
       console.log(`type=redis.ready client=${this.name}`);
-      this.client(
-        'SETNAME',
-        `${process.env.DYNO || 'app'}/${this.name}`,
-        (err, res) => {
-          if (err) {
-            console.log(`type=redis.error client=${this.name} setname:`, err);
-          }
-        }
-      );
     });
 
     // an error handler is required to prevent exception throwing
