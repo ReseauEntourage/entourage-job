@@ -59,6 +59,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
       'bookmarked',
       'archived',
       'note',
+      'updatedAt',
     ],
     include: INCLUDE_OPPORTUNITY_CANDIDATE,
   },
@@ -320,6 +321,14 @@ const getAllUserOpportunities = async (userId) => {
 
   const finalOpportunities = opportunities.map((model) => {
     const opportunity = cleanOpportunity(model);
+    if (
+      opportunityUsers.userOpportunity &&
+      opportunityUsers.userOpportunity.length > 0
+    ) {
+      opportunityUsers.userOpportunity.sort(
+        (a, b) => b.updatedAt - a.updatedAt
+      );
+    }
     opportunity.userOpportunity = opportunity.userOpportunity.find(
       (uo) => uo.UserId === userId
     );
@@ -398,7 +407,11 @@ const refreshAirtableOpportunities = async () => {
     attributes: ['id'],
   });
 
-  await Promise.all(opportunities.map((opportunity) => updateOpportunityAirtable(opportunity.id)));
+  await Promise.all(
+    opportunities.map((opportunity) =>
+      updateOpportunityAirtable(opportunity.id)
+    )
+  );
 };
 
 const addUserToOpportunity = async (opportunityId, userId, seen) => {
@@ -484,11 +497,11 @@ const updateOpportunity = async (opportunity) => {
 
   if (opportunity.isPublic) {
     // TODO do we want to delete the relations after changing from public to private ?
-    /* await Opportunity_User.destroy({
+    await Opportunity_User.destroy({
       where: {
         OpportunityId: modelOpportunity.id,
       },
-    }); */
+    });
   } else if (opportunity.candidatesId) {
     const opportunitiesUser = await Promise.all(
       opportunity.candidatesId.map((candidatId) =>
