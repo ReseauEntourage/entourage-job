@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/order
 const loadEnvironementVariables = require('./utils/env');
 
 loadEnvironementVariables();
@@ -8,6 +9,7 @@ const tracer =
         version: process.env.HEROKU_RELEASE_VERSION,
       })
     : null;
+
 const next = require('next');
 
 const server = require('./server');
