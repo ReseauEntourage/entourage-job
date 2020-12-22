@@ -63,11 +63,9 @@ const RedisManager = {
       this.client(
         'SETNAME',
         `${process.env.DYNO || 'app'}/${this.name}`,
-        (err, resolve) => {
+        (err, res) => {
           if (err) {
-            console.error('redis error on setname = ', err);
-          } else {
-            console.log(resolve);
+            console.log(`type=redis.error client=${this.name} setname:`, err);
           }
         }
       );
