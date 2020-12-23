@@ -1,11 +1,23 @@
-const tracer = require('dd-trace').init();
+// eslint-disable-next-line import/order
+const loadEnvironementVariables = require('./utils/env');
+
+loadEnvironementVariables();
+
+const tracer =
+  process.env.ENABLE_DATADOG_TRACER === 'true'
+    ? require('dd-trace').init({
+        version: process.env.HEROKU_RELEASE_VERSION,
+      })
+    : null;
+
 const next = require('next');
+
 const server = require('./server');
 
 const PORT = process.env.PORT || 3001;
 const dev = process.env.NODE_ENV !== 'production';
 
-const app = next({dev});
+const app = next({ dev });
 const handle = app.getRequestHandler();
 
 app

@@ -2,9 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 const SequelizePaperTrail = require('sequelize-paper-trail');
-const loadEnvironementVariables = require('../../utils/env');
-
-loadEnvironementVariables();
 
 const db = { models: {} };
 const basename = path.basename(__filename);

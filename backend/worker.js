@@ -1,3 +1,8 @@
+// eslint-disable-next-line import/order
+const loadEnvironementVariables = require('./utils/env');
+
+loadEnvironementVariables();
+
 const throng = require('throng');
 const Queue = require('bull');
 const Pusher = require('pusher');

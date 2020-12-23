@@ -1,19 +1,18 @@
 const { QueryTypes } = require('sequelize');
 
-const {USER_ROLES, REDIS_KEYS, JOBS} = require("../../constants");
+const { USER_ROLES, REDIS_KEYS, JOBS } = require('../../constants');
 
 const RedisManager = require('../utils/RedisManager');
 
 const { addToWorkQueue } = require('../jobs');
 
 const {
-  models: {User, User_Candidat, Share, CV},
-  Sequelize: {Op, fn, col, where},
-  sequelize
+  models: { User, User_Candidat, Share, CV },
+  Sequelize: { Op, fn, col, where },
+  sequelize,
 } = require('../db/models');
 
-const {publishedCVQuery} = require('./CV');
-
+const { publishedCVQuery } = require('./CV');
 
 const ATTRIBUTES_USER_CANDIDAT = ['employed', 'hidden', 'note', 'url'];
 const ATTRIBUTES_USER = [
@@ -28,12 +27,7 @@ const ATTRIBUTES_USER = [
   'lastConnection',
 ];
 
-const ATTRIBUTES_USER_PUBLIC = [
-  'id',
-  'firstName',
-  'lastName',
-  'role',
-];
+const ATTRIBUTES_USER_PUBLIC = ['id', 'firstName', 'lastName', 'role'];
 
 const INCLUDE_USER_CANDIDAT = [
   {
@@ -63,7 +57,8 @@ const INCLUDE_USER_CANDIDAT = [
 ];
 
 const capitalizeName = (name) => {
-  let capitalizedName = name.toLowerCase()
+  let capitalizedName = name
+    .toLowerCase()
     .split(' ')
     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
     .join(' ');
@@ -80,7 +75,7 @@ const createUser = async (newUser) => {
   const infoLog = 'createUser -';
   console.log(`${infoLog} Création du User`);
 
-  const userToCreate = {...newUser};
+  const userToCreate = { ...newUser };
   userToCreate.role = newUser.role || USER_ROLES.CANDIDAT;
   userToCreate.firstName = capitalizeName(userToCreate.firstName);
   userToCreate.lastName = capitalizeName(userToCreate.lastName);
@@ -88,17 +83,17 @@ const createUser = async (newUser) => {
   return User.create(userToCreate).then(async (res) => {
     if (userToCreate.userToCoach && res.role === USER_ROLES.COACH) {
       await User_Candidat.update(
-        {candidatId: userToCreate.userToCoach, coachId: res.id},
+        { candidatId: userToCreate.userToCoach, coachId: res.id },
         {
-          where: {candidatId: userToCreate.userToCoach},
+          where: { candidatId: userToCreate.userToCoach },
         }
       );
     }
     if (userToCreate.userToCoach && res.role === USER_ROLES.CANDIDAT) {
       await User_Candidat.update(
-        {candidatId: res.id, coachId: userToCreate.userToCoach},
+        { candidatId: res.id, coachId: userToCreate.userToCoach },
         {
-          where: {candidatId: res.id},
+          where: { candidatId: res.id },
         }
       );
     }
@@ -111,7 +106,7 @@ const deleteUser = (id) => {
     const infoLog = 'deleteUser -';
     console.log(`${infoLog} Suppression d'un User à partir de son id`);
     User.destroy({
-      where: {id},
+      where: { id },
     })
       .then((result) => resolve(result))
       .catch((err) => reject(err));
@@ -143,7 +138,7 @@ const getCompleteUser = (id) => {
 
 const getUserByEmail = async (email) => {
   const user = await User.findOne({
-    where: {email: email.toLowerCase()},
+    where: { email: email.toLowerCase() },
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
     include: INCLUDE_USER_CANDIDAT,
   });
@@ -167,7 +162,7 @@ const getMembers = (limit, offset, order, role, query) => {
     limit,
     order,
     where: {
-      role: {[Op.not]: USER_ROLES.ADMIN},
+      role: { [Op.not]: USER_ROLES.ADMIN },
     },
     attributes: ATTRIBUTES_USER,
     include: INCLUDE_USER_CANDIDAT,
@@ -178,7 +173,7 @@ const getMembers = (limit, offset, order, role, query) => {
     options.where = {
       ...options.where,
       [Op.or]: [
-        {email: {[Op.like]: `%${lowerCaseQuery}%`}},
+        { email: { [Op.like]: `%${lowerCaseQuery}%` } },
         where(
           fn(
             'concat',
@@ -186,7 +181,7 @@ const getMembers = (limit, offset, order, role, query) => {
             ' ',
             fn('lower', col('User.lastName'))
           ),
-          {[Op.like]: `%${lowerCaseQuery}%`}
+          { [Op.like]: `%${lowerCaseQuery}%` }
         ),
       ],
     };
@@ -230,7 +225,7 @@ const getMembers = (limit, offset, order, role, query) => {
           attributes: ATTRIBUTES_USER,
         },
       ],
-    }
+    },
   ];
 
   return User.findAll(options);
@@ -242,7 +237,7 @@ const searchUsers = (query, role) => {
     attributes: ATTRIBUTES_USER,
     where: {
       [Op.or]: [
-        {email: {[Op.like]: `%${lowerCaseQuery}%`}},
+        { email: { [Op.like]: `%${lowerCaseQuery}%` } },
         where(
           fn(
             'concat',
@@ -250,7 +245,7 @@ const searchUsers = (query, role) => {
             ' ',
             fn('lower', col('lastName'))
           ),
-          {[Op.like]: `%${lowerCaseQuery}%`}
+          { [Op.like]: `%${lowerCaseQuery}%` }
         ),
       ],
     },
@@ -278,7 +273,7 @@ const searchCandidates = async (query) => {
             ' ',
             fn('lower', col('lastName'))
           ),
-          {[Op.like]: `%${lowerCaseQuery}%`}
+          { [Op.like]: `%${lowerCaseQuery}%` }
         ),
       ],
     },
@@ -288,8 +283,8 @@ const searchCandidates = async (query) => {
 
 const setUser = async (id, user) => {
   const [updateCount] = await User.update(user, {
-    where: {id},
-    individualHooks: true
+    where: { id },
+    individualHooks: true,
   });
 
   if (updateCount === 0) return null;
@@ -307,7 +302,7 @@ const setUserCandidat = async (candidatId, candidat) => {
   } else {
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.CACHE_CV,
-      id: candidatId,
+      candidatId,
     });
   }
   await addToWorkQueue({
@@ -318,7 +313,7 @@ const setUserCandidat = async (candidatId, candidat) => {
 
 const getUserCandidat = (candidatId) => {
   return User_Candidat.findOne({
-    where: {candidatId},
+    where: { candidatId },
     attributes: ATTRIBUTES_USER_CANDIDAT,
     include: [
       {
@@ -335,7 +330,7 @@ const getUserCandidat = (candidatId) => {
   });
 };
 
-const getUserCandidatOpt = async ({candidatId, coachId}) => {
+const getUserCandidatOpt = async ({ candidatId, coachId }) => {
   // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: Error: WHERE parameter "coachId" has invalid "undefined" value
   const findWhere = {};
   if (candidatId) {

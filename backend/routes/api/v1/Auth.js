@@ -93,7 +93,9 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       user = userFound;
 
       if (!user) {
-        res.locals.logger.log(`Aucun user rattaché à l'adresse mail suivante : ${email}`);
+        res.locals.logger.log(
+          `Aucun user rattaché à l'adresse mail suivante : ${email}`
+        );
         return false;
       }
 
@@ -210,7 +212,11 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (
       /* res.locals.logger.log(`${infoLog} DEBUG :`);
       res.locals.logger.log(user); */
       if (
-        !AuthController.validatePassword(token, user.hashReset, user.saltReset)
+        !(
+          user.hashReset &&
+          user.saltReset &&
+          AuthController.validatePassword(token, user.hashReset, user.saltReset)
+        )
       ) {
         res.locals.logger.error(`${infoLog} Token invalide`);
         return res.status(403).send({
@@ -229,7 +235,9 @@ router.post('/reset/:userId/:token', authLimiter, auth(), (
       res.locals.logger.log(`${infoLog} Les 2 mots de passe sont valides`);
       res.locals.logger.log(`${infoLog} Chiffrement du nouveau mot de passe`);
       const { hash, salt } = AuthController.encryptPassword(newPassword);
-      res.locals.logger.log(`${infoLog} Mise à jour du mot de passe de l'utilisateur`);
+      res.locals.logger.log(
+        `${infoLog} Mise à jour du mot de passe de l'utilisateur`
+      );
       return UserController.setUser(user.id, {
         password: hash,
         salt,

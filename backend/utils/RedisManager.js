@@ -1,4 +1,4 @@
-const redis = require('redis');
+const Redis = require('ioredis');
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -33,18 +33,20 @@ const RedisManager = {
   },
 
   createClient(name) {
-    const client = redis.createClient(process.env.REDIS_URL, {
+    const client = new Redis(process.env.REDIS_URL, {
       // required to prevent blocking when disconnected
-      enable_offline_queue: false,
+      enableOfflineQueue: false,
 
       // exponential backoff
-      retry_strategy: (retry_params) => {
-        let delay = (retry_params.attempt - 1) * 2; // seconds
+      retryStrategy: (retryParams) => {
+        let delay = (retryParams.attempt - 1) * 2; // seconds
         if (delay > 60) {
           delay = 60;
         }
         return delay * 1000; // milliseconds
       },
+
+      connectionName: name,
     });
 
     client.name = name;
@@ -60,7 +62,6 @@ const RedisManager = {
       this.attempts = 1; // reset attempts
       this.attemptsOnConnect = null;
       console.log(`type=redis.ready client=${this.name}`);
-      this.client('SETNAME', `${process.env.DYNO || 'app'}/${this.name}`);
     });
 
     // an error handler is required to prevent exception throwing
