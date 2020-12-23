@@ -46,7 +46,7 @@ const start = () => {
 
   workQueue.on('failed', (job, err) => {
     // TODO send error to socket to stop loading if preview or PDF
-    console.log(
+    console.error(
       `Job ${job.id} of type ${job.data.type} failed with error : "${err}"`
     );
   });
@@ -63,7 +63,7 @@ const start = () => {
   });
 
   workQueue.on('error', (error) => {
-    console.log(`An error occured on the work queue : "${error}"`);
+    console.error(`An error occured on the work queue : "${error}"`);
   });
 
   workQueue.process(maxJobsPerWorker, async (job) => {
