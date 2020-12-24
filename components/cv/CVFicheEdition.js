@@ -21,6 +21,9 @@ const CVFicheEdition = ({
   onChange,
   disablePicture,
   previewGenerating,
+  email,
+  phone,
+  address,
 }) => {
   const [previewUrl, setPreviewUrl] = useState(undefined);
   const [imageUrl, setImageUrl] = useState(undefined);
@@ -119,6 +122,9 @@ const CVFicheEdition = ({
           availability={cv.availability}
           languages={cv.languages}
           transport={cv.transport}
+          email={email}
+          phone={phone}
+          address={address}
           onChange={onChange}
         />
         <GridNoSSR childWidths={['1-2@m']} match>
@@ -165,12 +171,17 @@ CVFicheEdition.propTypes = {
   onChange: PropTypes.func,
   disablePicture: PropTypes.bool,
   gender: PropTypes.number.isRequired,
+  email: PropTypes.string.isRequired,
+  phone: PropTypes.string,
+  address: PropTypes.string,
   previewGenerating: PropTypes.bool.isRequired,
 };
 
 CVFicheEdition.defaultProps = {
   onChange: console.log('Aucune fonction de modification associé'),
   disablePicture: false,
+  phone: undefined,
+  address: undefined,
 };
 
 export default CVFicheEdition;

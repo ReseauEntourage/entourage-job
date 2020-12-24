@@ -299,7 +299,13 @@ router.put(
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
     checkUserAuthorization(req, res, req.params.id, () => {
-      const setUser = () => {
+      const keys = Object.keys(req.body);
+      const authorizedKeys = ['email', 'phone', 'address'];
+
+      if (
+        req.payload.role === USER_ROLES.ADMIN ||
+        !keys.some((key) => !authorizedKeys.includes(key))
+      ) {
         UserController.setUser(req.params.id, req.body)
           .then((updatedUser) => {
             if (!updatedUser) {
@@ -312,17 +318,8 @@ router.put(
             logger(res).error(`Une erreur est survenue`);
             res.status(401).send(err);
           });
-      };
-
-      const keys = Object.keys(req.body);
-      const authorizedKeys = ['email', 'phone', 'address'];
-
-      if (req.payload.role === USER_ROLES.ADMIN) {
-        setUser();
-      } else if (keys.some((key) => !authorizedKeys.includes(key))) {
-        res.status(401).send({ message: 'Unauthorized' });
       } else {
-        setUser();
+        res.status(401).send({ message: 'Unauthorized' });
       }
     });
   }
