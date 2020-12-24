@@ -9,6 +9,7 @@ const ShareController = require('../../../controllers/Share');
 const S3 = require('../../../controllers/Aws');
 const { getTokenFromHeaders } = require('../../../controllers/Auth');
 const { addToWorkQueue } = require('../../../jobs');
+const { logger } = require('../../../utils/Logger');
 
 const {
   USER_ROLES,
@@ -149,7 +150,7 @@ router.post(
                 );
               */
             } catch (error) {
-              res.locals.logger.error(error);
+              logger(res).error(error);
             } finally {
               if (fs.existsSync(path)) {
                 fs.unlinkSync(path); // remove image locally after upload to S3
@@ -178,7 +179,7 @@ router.post(
 
         return res.status(200).json(cv);
       } catch (e) {
-        res.locals.logger.error(e);
+        logger(res).error(e);
         return res.status(401).send(`Une erreur est survenue`);
       }
     });
@@ -202,7 +203,7 @@ router.post('/share', auth(), (req, res) => {
       res.status(200).json();
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -217,7 +218,7 @@ router.post('/count', auth(), (req, res) => {
       res.status(200).json();
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -232,7 +233,7 @@ router.get('/shares', auth(), (req, res) => {
       res.status(200).json({ total });
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -246,15 +247,15 @@ router.get('/', auth(), (req, res) => {
   CVController.getCVbyUserId(userId)
     .then((cv) => {
       if (cv && !isEmpty(cv)) {
-        res.locals.logger.log(`CV trouvé`);
+        logger(res).log(`CV trouvé`);
         res.status(200).json(cv);
       } else {
-        res.locals.logger.log(`Aucun CV trouvé`);
+        logger(res).log(`Aucun CV trouvé`);
         res.status(204).send(null);
       }
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -274,20 +275,20 @@ router.get('/', auth(), (req, res) => {
         userId = req.payload.candidatId;
       }
       if (!userId) {
-        res.locals.logger.error(`Aucun userId trouvé, aucun CV ne peut être récupéré`);
+        logger(res).error(`Aucun userId trouvé, aucun CV ne peut être récupéré`);
         res.status(401).send('Aucun userId trouvé, aucun CV ne peut être récupéré');
       } else {
         CVController.getCVbyUserId(userId)
           .then((cv) => {
             if (cv !== null) {
-              res.locals.logger.log(`CV trouvé`);
+              logger(res).log(`CV trouvé`);
             } else {
-              res.locals.logger.log(`Aucun CV trouvé`);
+              logger(res).log(`Aucun CV trouvé`);
             }
             res.status(200).json(cv);
           })
           .catch((err) => {
-            res.locals.logger.error(err);
+            logger(res).error(err);
             res.status(401).send(`Aucun CV trouvé`);
           });
       }
@@ -308,7 +309,7 @@ router.get('/cards/random', auth(), (req, res) => {
       res.status(200).json(listeCVs);
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -321,15 +322,15 @@ router.get('/:url', auth(), (req, res) => {
   CVController.getCVbyUrl(req.params.url)
     .then((cv) => {
       if (cv && !isEmpty(cv)) {
-        res.locals.logger.log(`CV trouvé`);
+        logger(res).log(`CV trouvé`);
         res.status(200).json(cv);
       } else {
-        res.locals.logger.log(`Aucun CV trouvé`);
+        logger(res).log(`Aucun CV trouvé`);
         res.status(204).send(null);
       }
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -356,7 +357,7 @@ router.get(
           pdfUrl = await S3.getSignedUrl(s3Key);
         }
       } catch (e) {
-        res.locals.logger.log("PDF version doesn't exist.");
+        logger(res).log("PDF version doesn't exist.");
       }
 
       try {
@@ -367,7 +368,7 @@ router.get(
 
         res.status(200).send({ pdfUrl });
       } catch (err) {
-        res.locals.logger.error(err);
+        logger(res).error(err);
         res.status(401).send('Une erreur est survenue');
       }
     });
@@ -384,11 +385,11 @@ router.get(
     checkUserAuthorization(req, res, req.body.UserId, () => {
       CVController.setCV(req.params.id, req.body)
       .then((cv) => {
-        res.locals.logger.log(`CV modifié`);
+        logger(res).log(`CV modifié`);
         res.status(200).json(cv);
       })
       .catch((err) => {
-        res.locals.logger.error(`Une erreur est survenue`);
+        logger(res).error(`Une erreur est survenue`);
         res.status(400).send(err);
       });
     });
@@ -400,7 +401,7 @@ router.get(
     CVController.uploadToBucket(req.body.file, req.payload.id)
       .then((data) => res.status(200).json(data))
       .catch((err) => {
-        res.locals.logger.error(err);
+        logger(res).error(err);
         res.status(401).send('Une erreur est survenue');
       });
   });
@@ -419,7 +420,7 @@ router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(200).json(result);
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });

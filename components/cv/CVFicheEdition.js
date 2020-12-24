@@ -64,7 +64,7 @@ const CVFicheEdition = ({
         <GridNoSSR childWidths={['1-1']} match>
           <CVEditPicture
             imageUploading={previewGenerating}
-            urlImg={`${imageUrl}` || undefined}
+            urlImg={imageUrl || '/static/img/arthur-background.jpg'}
             onChange={onChange}
             disablePicture={disablePicture}
           />

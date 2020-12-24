@@ -1,4 +1,4 @@
-const logger = () => (req, res, next) => {
+const loggerMiddleware = () => (req, res, next) => {
   const infoString = (requestId, userId, requestOrigin) => {
     return `[ request_path=${req.originalUrl} | request_id=${
       requestId || 'unknown'
@@ -24,4 +24,8 @@ const logger = () => (req, res, next) => {
   next();
 };
 
-module.exports = logger;
+const logger = (res) => {
+  return res.locals.logger;
+};
+
+module.exports = { logger, loggerMiddleware };

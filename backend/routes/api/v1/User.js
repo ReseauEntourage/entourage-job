@@ -7,6 +7,7 @@ const {
 } = require('../../../utils');
 const { USER_ROLES, JOBS } = require('../../../../constants');
 const { auth } = require('../../../controllers/Auth');
+const { logger } = require('../../../utils/Logger');
 
 const router = express.Router();
 const UserController = require('../../../controllers/User');
@@ -32,7 +33,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
     salt,
   })
     .then(async (users) => {
-      res.locals.logger.log(
+      logger(res).log(
         '# User créé',
         `login : ${req.body.email}`,
         `password: ${userPassword}`
@@ -53,7 +54,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(200).json(users);
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       if (err.name === 'SequelizeUniqueConstraintError') {
         res.status(409).send('Adresse email déjà existante');
       } else {
@@ -73,11 +74,11 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
     const order = [['firstName', 'ASC']];
     UserController.getUsers(req.query.limit, req.query.offset, order)
       .then((users) => {
-        res.locals.logger.log(`Users récupérés (Total : ${users.length})`);
+        logger(res).log(`Users récupérés (Total : ${users.length})`);
         res.status(200).json(users);
       })
       .catch((err) => {
-        res.locals.logger.error(err);
+        logger(res).error(err);
         res.status(401).send('Une erreur est survenue');
       });
   });
@@ -97,7 +98,7 @@ router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
     req.query.query
   )
     .then((users) => {
-      res.locals.logger.log(`Users récupérés (Total : ${users.length})`);
+      logger(res).log(`Users récupérés (Total : ${users.length})`);
       res.status(200).json(
         users.map((u) => {
           const user = u.toJSON();
@@ -112,7 +113,7 @@ router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
       );
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -135,11 +136,11 @@ router.get('/search', auth(), (req, res) => {
 
   method
     .then((users) => {
-      res.locals.logger.log(`Users récupérés (Total : ${users.length})`);
+      logger(res).log(`Users récupérés (Total : ${users.length})`);
       res.status(200).json(users);
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -162,7 +163,7 @@ router.get(
           res.status(200).json(user);
         })
         .catch((err) => {
-          res.locals.logger.error(err);
+          logger(res).error(err);
           res.status(401).send('Une erreur est survenue');
         });
     } else {
@@ -186,7 +187,7 @@ router.get(
           res.status(200).json(user);
         })
         .catch((err) => {
-          res.locals.logger.error(err);
+          logger(res).error(err);
           res.status(401).send('Une erreur est survenue');
         });
     }
@@ -210,11 +211,11 @@ router.get(
         : UserController.getUser(req.params.id)
       )
         .then((user) => {
-          res.locals.logger.log(`User trouvé`);
+          logger(res).log(`User trouvé`);
           res.status(200).json(user);
         })
         .catch((err) => {
-          res.locals.logger.error(`Aucun User trouvé`);
+          logger(res).error(`Aucun User trouvé`);
           res.status(404).send(err);
         });
     });
@@ -249,11 +250,11 @@ router.put(
               if (!user) {
                 res.status(401).send(`Utilisateur inexistant`);
               }
-              res.locals.logger.log(`User modifié`);
+              logger(res).log(`User modifié`);
               res.status(200).json(user);
             })
             .catch((err) => {
-              res.locals.logger.error(err);
+              logger(res).error(err);
               res.status(401).send(`Une erreur est survenue`);
             });
         } else {
@@ -277,14 +278,12 @@ router.put(
     checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
       UserController.setUserCandidat(req.params.id, req.body)
         .then((user) => {
-          res.locals.logger.log('Visibilité CV candidat - mise à jour réussie');
+          logger(res).log('Visibilité CV candidat - mise à jour réussie');
           res.status(200).json(user);
         })
         .catch((err) => {
-          res.locals.logger.log(
-            'Visibilité CV candidat - Erreur mise à jour :'
-          );
-          res.locals.logger.error(err);
+          logger(res).log('Visibilité CV candidat - Erreur mise à jour :');
+          logger(res).error(err);
           res.status(400).send('Une erreur est survenue');
         });
     });
@@ -306,11 +305,11 @@ router.put(
             if (!updatedUser) {
               res.status(401).send(`Utilisateur inexistant`);
             }
-            res.locals.logger.log(`User modifié`);
+            logger(res).log(`User modifié`);
             res.status(200).json(updatedUser);
           })
           .catch((err) => {
-            res.locals.logger.error(`Une erreur est survenue`);
+            logger(res).error(`Une erreur est survenue`);
             res.status(401).send(err);
           });
       };
@@ -342,7 +341,7 @@ router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(200).json(result);
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });

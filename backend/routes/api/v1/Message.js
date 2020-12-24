@@ -6,6 +6,7 @@ const {
   models: { Message },
 } = require('../../../db/models');
 const { USER_ROLES } = require('../../../../constants');
+const { logger } = require('../../../utils/Logger');
 
 // Find all messages
 router.get(
@@ -14,14 +15,14 @@ router.get(
   (req, res) => {
     Message.findAll()
       .then((listeMessages) => {
-        res.locals.logger.log(
+        logger(res).log(
           'All Messages : ',
           JSON.stringify(listeMessages, null, 4)
         );
         res.status(200).send(JSON.stringify(listeMessages, null, 4));
       })
       .catch((err) => {
-        res.locals.logger.error(err);
+        logger(res).error(err);
         res.sendStatus(401);
       });
   }
@@ -44,11 +45,11 @@ router.post(
       message: req.body.message.message,
     })
       .then((message) => {
-        res.locals.logger.log('Message créé : ', message);
+        logger(res).log('Message créé : ', message);
         res.status(200).send(message);
       })
       .catch((err) => {
-        res.locals.logger.error(err);
+        logger(res).error(err);
         if (err.name === 'SequelizeValidationError') {
           const errMessage = err.errors[0].message;
           res.status(403).send(errMessage);
@@ -68,14 +69,14 @@ router.get(
       where: { id: req.params.id },
     })
       .then((message) => {
-        res.locals.logger.log(
+        logger(res).log(
           'Message found : ',
           JSON.stringify(message, null, 4)
         );
         res.status(200).send(JSON.stringify(message, null, 4));
       })
       .catch((err) => {
-        res.locals.logger.error(err);
+        logger(res).error(err);
         res.sendStatus(401);
       });
   }
@@ -87,11 +88,11 @@ router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
     where: { id: req.params.id },
   })
     .then(() => {
-      res.locals.logger.log('Message destroy');
+      logger(res).log('Message destroy');
       res.status(200);
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.sendStatus(401);
     });
 });
