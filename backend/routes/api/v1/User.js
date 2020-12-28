@@ -310,9 +310,10 @@ router.put(
           .then((updatedUser) => {
             if (!updatedUser) {
               res.status(401).send(`Utilisateur inexistant`);
+            } else {
+              logger(res).log(`User modifié`);
+              res.status(200).json(updatedUser);
             }
-            logger(res).log(`User modifié`);
-            res.status(200).json(updatedUser);
           })
           .catch((err) => {
             logger(res).error(`Une erreur est survenue`);
