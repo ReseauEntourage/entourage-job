@@ -49,7 +49,15 @@ const INCLUDE_ALL_USERS_PRIVATE = {
     {
       model: models.User,
       as: 'candidat',
-      attributes: ['id', 'firstName', 'lastName', 'gender', 'email', 'phone', 'address'],
+      attributes: [
+        'id',
+        'firstName',
+        'lastName',
+        'gender',
+        'email',
+        'phone',
+        'address',
+      ],
     },
   ],
 };
@@ -389,11 +397,13 @@ const createCV = async (data) => {
   // renvoie du cv complet
   console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
 
-  return dividedCompleteCVQuery(async (include) =>
-    models.CV.findByPk(modelCV.id, {
-      exclude: ['UserId'],
-      include: [include],
-    })
+  return dividedCompleteCVQuery(
+    async (include) =>
+      models.CV.findByPk(modelCV.id, {
+        exclude: ['UserId'],
+        include: [include],
+      }),
+    true
   );
 };
 
@@ -410,7 +420,7 @@ const getAndCacheCV = async (url, candidatId) => {
   if (!urlToUse && candidatId) {
     const userCandidat = await models.User_Candidat.findOne({
       where: {
-        candidatId: candidatId,
+        candidatId,
       },
       attributes: ['url'],
     });
@@ -534,10 +544,10 @@ const getAndCacheAllCVs = async (dbQuery, cache) => {
 
   const cleanedCVList = cvList.map(cleanCV);
 
-  if(cache) {
+  if (cache) {
     await RedisManager.setAsync(
       REDIS_KEYS.CV_LIST,
-      JSON.stringify(cleanedCVList),
+      JSON.stringify(cleanedCVList)
     );
   }
 

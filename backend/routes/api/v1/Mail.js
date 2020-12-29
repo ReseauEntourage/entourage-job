@@ -4,6 +4,7 @@ const router = express.Router();
 const { auth } = require('../../../controllers/Auth');
 const { addToWorkQueue } = require('../../../jobs');
 const { JOBS } = require('../../../../constants');
+const { logger } = require('../../../utils/Logger');
 
 router.post('/contact-us', auth(), (req, res) => {
   // todo verification de champs
@@ -20,11 +21,11 @@ router.post('/contact-us', auth(), (req, res) => {
       }\nMessage : ${message}`,
     })
       .then((value) => {
-        res.locals.logger.log('mail: contact us sent');
+        logger(res).log('mail: contact us sent');
         res.status(200).send('mail sent');
       })
       .catch((err) => {
-        res.locals.logger.error(err);
+        logger(res).error(err);
         res.status(500).send(err);
       });
   } else {

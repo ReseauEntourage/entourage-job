@@ -5,6 +5,7 @@ const { auth } = require('../../../controllers/Auth');
 const OpportunityController = require('../../../controllers/Opportunity');
 const { USER_ROLES } = require('../../../../constants');
 const { checkCandidatOrCoachAuthorization } = require('../../../utils');
+const { logger } = require('../../../utils/Logger');
 
 // Temp route to update the opportunities on Airtable
 router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
@@ -12,7 +13,7 @@ router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
     OpportunityController.refreshAirtableOpportunities()
       .then(() => res.status(200))
       .catch((err) => {
-        res.locals.logger.error(err);
+        logger(res).error(err);
         res.status(401).send(`Une erreur est survenue`);
       });
   });
@@ -29,7 +30,7 @@ router.post('/', auth(), (req, res) => {
   OpportunityController.createOpportunity(req.body)
     .then((opportunity) => res.status(200).json(opportunity))
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send(`Une erreur est survenue`);
     });
 });
@@ -48,13 +49,13 @@ router.post('/', auth(), (req, res) => {
 router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
   OpportunityController.getOpportunities(req.query.query)
     .then((listeOpportunities) => {
-      res.locals.logger.log(
+      logger(res).log(
         `Opportunités récupérés (Total : ${listeOpportunities.length})`
       );
       res.status(200).json(listeOpportunities);
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });
@@ -79,7 +80,7 @@ router.get(
           res.status(200).json(listeOpportunities);
         })
         .catch((err) => {
-          res.locals.logger.error(err);
+          logger(res).error(err);
           res.status(401).send('Une erreur est survenue');
         });
     });
@@ -106,7 +107,7 @@ router.get(
           res.status(200).json(listeOpportunities);
         })
         .catch((err) => {
-          res.locals.logger.error(err);
+          logger(res).error(err);
           res.status(401).send('Une erreur est survenue');
         });
     });
@@ -123,15 +124,15 @@ router.get(
     OpportunityController.getOpportunity(req.params.id)
     .then((opportunity) => {
       if (opportunity) {
-        res.locals.logger.log(`Opportunité trouvé`);
+        logger(res).log(`Opportunité trouvé`);
         res.status(200).json(opportunity);
       } else {
-        res.locals.logger.log(`Aucune Opportunité trouvé`);
+        logger(res).log(`Aucune Opportunité trouvé`);
         res.status(204).json(opportunity);
       }
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send(err);
     });
   });
@@ -161,7 +162,7 @@ router.post(
       )
         .then((opportunity) => res.status(200).json(opportunity))
         .catch((err) => {
-          res.locals.logger.error(err);
+          logger(res).error(err);
           res.status(401).send(`Une erreur est survenue`);
         });
     });
@@ -183,7 +184,7 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(200).json(opp);
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send(`Une erreur est survenue`);
     });
 });
@@ -211,7 +212,7 @@ router.put(
           res.status(200).json(oppUs);
         })
         .catch((err) => {
-          res.locals.logger.error(err);
+          logger(res).error(err);
           res.status(401).send(`Une erreur est survenue`);
         });
     });
@@ -233,7 +234,7 @@ router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(200).json(result);
     })
     .catch((err) => {
-      res.locals.logger.error(err);
+      logger(res).error(err);
       res.status(401).send('Une erreur est survenue');
     });
 });

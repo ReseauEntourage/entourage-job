@@ -36,7 +36,7 @@ const CVPageContent = ({ candidatId }) => {
     return () => {
       pusher.unsubscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
       pusher.unsubscribe(SOCKETS.CHANNEL_NAMES.CV_PDF);
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -110,6 +110,32 @@ const CVPageContent = ({ candidatId }) => {
     }
   }, [previewGenerating]);
 
+  const saveUserData = (modifiedCv) =>
+    new Promise((res, rej) => {
+      if (
+        (modifiedCv.email || modifiedCv.phone || modifiedCv.address) &&
+        (modifiedCv.email !== cv.user.candidat.email ||
+          modifiedCv.phone !== cv.user.candidat.phone ||
+          modifiedCv.address !== cv.user.candidat.address)
+      ) {
+        const userData = {
+          email: modifiedCv.email,
+          address: modifiedCv.address,
+          phone: modifiedCv.phone,
+        };
+
+        Api.put(`/api/v1/user/${candidatId}`, userData)
+          .then(({ newUserData }) => {
+            res(newUserData);
+          })
+          .catch((err) => {
+            rej(err);
+          });
+      } else {
+        res();
+      }
+    });
+
   const postCV = (status) => {
     const channelPreview = pusher.subscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
     const channelPDF = pusher.subscribe(SOCKETS.CHANNEL_NAMES.CV_PDF);
@@ -139,6 +165,7 @@ const CVPageContent = ({ candidatId }) => {
       profileImage: undefined,
     };
     delete obj.id;
+
     formData.append('cv', JSON.stringify(obj));
     formData.append('profileImage', cv.profileImage);
     // post
@@ -175,11 +202,14 @@ const CVPageContent = ({ candidatId }) => {
     formData.append('cv', JSON.stringify(obj));
     formData.append('autoSave', true);
     // post
-    return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
+    return saveUserData(obj)
+      .then((userData) => {
+        return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+      })
       .then(({ data }) => {
         console.log('Auto-save succeeded.');
         setCvVersion(data.version);
@@ -248,20 +278,20 @@ const CVPageContent = ({ candidatId }) => {
           </Button>
           <ButtonPost
             style="primary"
-            action={() => postCV(CV_STATUS.Progress.value)}
+            action={async () => postCV(CV_STATUS.Progress.value)}
             text="Sauvegarder"
           />
           {user.role === USER_ROLES.COACH && (
             <ButtonPost
               style="primary"
-              action={() => postCV(CV_STATUS.Pending.value)}
+              action={async () => postCV(CV_STATUS.Pending.value)}
               text="Soumettre"
             />
           )}
           {user.role === USER_ROLES.ADMIN && (
             <ButtonPost
               style="primary"
-              action={() => postCV(CV_STATUS.Published.value)}
+              action={async () => postCV(CV_STATUS.Published.value)}
               text="Publier"
             />
           )}
@@ -269,13 +299,16 @@ const CVPageContent = ({ candidatId }) => {
       </GridNoSSR>
       <CVFicheEdition
         gender={cv.user.candidat.gender}
+        email={cv.email || cv.user.candidat.email}
+        phone={cv.phone || cv.user.candidat.phone}
+        address={cv.address || cv.user.candidat.address}
         cv={cv}
         previewGenerating={previewGenerating}
         disablePicture={
           user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH
         }
-        onChange={(fields) => {
-          autoSaveCV({ ...cv, ...fields });
+        onChange={async (fields) => {
+          await autoSaveCV({ ...cv, ...fields });
           setCV({ ...cv, ...fields, status: CV_STATUS.Draft.value });
         }}
       />
