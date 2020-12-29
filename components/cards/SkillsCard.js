@@ -55,7 +55,6 @@ const SkillCard = ({ list, onChange }) => {
                 return typeof val === 'string' && val !== '';
               }),
             };
-            console.log(fields);
             onChange(fieldsTransform);
           }}
         />

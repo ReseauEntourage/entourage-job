@@ -31,15 +31,25 @@ const CVPage = () => {
     query: { id },
   } = useRouter();
 
+  const getUser = () => {
+    Api.get(`/api/v1/user/${id}`).then(({ data }) => {
+      setUser(data);
+      setLoading(false);
+    });
+  };
+
   useEffect(() => {
     if (id) {
       setLoading(true);
-      Api.get(`/api/v1/user/${id}`).then(({ data }) => {
-        setUser(data);
-        setLoading(false);
-      });
+      getUser();
     }
   }, [id]);
+
+  useEffect(() => {
+    if (onglet === 'settings') {
+      getUser();
+    }
+  }, [onglet]);
 
   let mutatedSchema = mutateFormSchema(schemaEditUser, [
     {

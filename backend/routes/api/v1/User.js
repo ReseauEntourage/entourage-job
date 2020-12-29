@@ -298,7 +298,7 @@ router.put(
   '/:id',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
-    checkUserAuthorization(req, res, req.params.id, () => {
+    checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
       const keys = Object.keys(req.body);
       const authorizedKeys = ['email', 'phone', 'address'];
 
