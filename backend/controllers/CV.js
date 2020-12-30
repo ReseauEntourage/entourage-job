@@ -157,6 +157,7 @@ const publishedCVQuery = `
         "CVs"
       where
         "CVs".status = '${CV_STATUS.Published.value}'
+        and "CVs"."deletedAt" IS NULL
         and "User_Candidats"."candidatId" = "CVs"."UserId"
         and "User_Candidats".hidden = false
       group by
@@ -198,6 +199,7 @@ const queryConditionCV = (attribute, value, allowHidden) => `
   on cvs."UserId" = groupCVs."UserId"
   and cvs.version =  groupCVs.version
   and cvs.status = '${CV_STATUS.Published.value}'
+  and cvs."deletedAt" IS NULL
   inner join (
     select distinct "candidatId"
     from "User_Candidats"

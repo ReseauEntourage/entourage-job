@@ -39,6 +39,7 @@ const INCLUDE_USER_CANDIDAT = [
         model: User,
         as: 'coach',
         attributes: ATTRIBUTES_USER,
+        paranoid: false,
       },
     ],
   },
@@ -51,6 +52,7 @@ const INCLUDE_USER_CANDIDAT = [
         model: User,
         as: 'candidat',
         attributes: ATTRIBUTES_USER,
+        paranoid: false,
       },
     ],
   },
@@ -101,16 +103,25 @@ const createUser = async (newUser) => {
   });
 };
 
-const deleteUser = (id) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'deleteUser -';
-    console.log(`${infoLog} Suppression d'un User à partir de son id`);
-    User.destroy({
-      where: { id },
-    })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+const deleteUser = async (id) => {
+  const infoLog = 'deleteUser -';
+  console.log(`${infoLog} Suppression d'un User à partir de son id`);
+  const userDeleted = await User.destroy({
+    where: { id },
   });
+  console.log(`${infoLog} Suppression des CV associés`);
+  const cvDeleted = await CV.destroy({
+    where: { UserId: id },
+    individualHooks: true,
+  });
+
+  //await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + candidat.url);
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.CACHE_ALL_CVS,
+  });
+
+  return { userDeleted, cvDeleted };
 };
 
 // avec mot de passe
@@ -137,13 +148,11 @@ const getCompleteUser = (id) => {
 };
 
 const getUserByEmail = async (email) => {
-  const user = await User.findOne({
+  return User.findOne({
     where: { email: email.toLowerCase() },
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
     include: INCLUDE_USER_CANDIDAT,
   });
-
-  return user;
 };
 
 const getUsers = (limit, offset, order) => {

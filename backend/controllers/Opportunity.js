@@ -95,6 +95,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
       {
         model: User,
         attributes: ['id', 'email', 'firstName', 'lastName', 'gender', 'email'],
+        paranoid: false,
       },
     ],
     attributes: [
@@ -244,6 +245,7 @@ const getOpportunity = async (id) => {
 const getOpportunities = async (search) => {
   const options = {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
+    paranoid: false,
   };
   if (search) {
     const lowerCaseSearch = search.toLowerCase();
