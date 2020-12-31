@@ -154,5 +154,5 @@ module.exports = {
   download,
   copy,
   getSignedUrl,
-  getHead
+  getHead,
 };

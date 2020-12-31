@@ -1,13 +1,22 @@
 const { QueryTypes } = require('sequelize');
 
+const uuid = require('uuid/v4');
 const { USER_ROLES, REDIS_KEYS, JOBS } = require('../../constants');
 
 const RedisManager = require('../utils/RedisManager');
+const S3 = require('./Aws');
 
 const { addToWorkQueue } = require('../jobs');
 
 const {
-  models: { User, User_Candidat, Share, CV },
+  models: {
+    User,
+    User_Candidat,
+    CV,
+    Opportunity_User,
+    Revision,
+    Revision_Change,
+  },
   Sequelize: { Op, fn, col, where },
   sequelize,
 } = require('../db/models');
@@ -101,27 +110,6 @@ const createUser = async (newUser) => {
     }
     return res;
   });
-};
-
-const deleteUser = async (id) => {
-  const infoLog = 'deleteUser -';
-  console.log(`${infoLog} Suppression d'un User à partir de son id`);
-  const userDeleted = await User.destroy({
-    where: { id },
-  });
-  console.log(`${infoLog} Suppression des CV associés`);
-  const cvDeleted = await CV.destroy({
-    where: { UserId: id },
-    individualHooks: true,
-  });
-
-  //await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + candidat.url);
-
-  await addToWorkQueue({
-    type: JOBS.JOB_TYPES.CACHE_ALL_CVS,
-  });
-
-  return { userDeleted, cvDeleted };
 };
 
 // avec mot de passe
@@ -364,6 +352,105 @@ const getUserCandidatOpt = async ({ candidatId, coachId }) => {
       },
     ],
   });
+};
+
+const deleteUser = async (id) => {
+  const infoLog = 'deleteUser -';
+  console.log(`${infoLog} Suppression d'un User à partir de son id`);
+
+  const user = await getUser(id);
+
+  console.log('Deleting image and PDF for user ', id);
+  await S3.deleteFile(`${process.env.AWSS3_IMAGE_DIRECTORY}${id}.jpg`);
+  const pdfFileName = `${user.firstName}_${user.lastName}_${id.substring(
+    0,
+    8
+  )}.pdf`;
+  await S3.deleteFile(`${process.env.AWSS3_FILE_DIRECTORY}${pdfFileName}`);
+
+  console.log('Deleting cache for user ', id);
+  await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + user.candidat.url);
+
+  // TODO NOT WORKING : Error: You attempted to save an instance with no primary key, this is not allowed since it would result in a global update
+  /*
+    const deletedUserCandidat = await user.candidat.update({
+      note: null,
+      url: null,
+    });
+  */
+  const deletedUser = await user.update({
+    firstName: 'Utilisateur',
+    lastName: 'supprimé',
+    email: `${Date.now()}@${uuid()}.deleted`,
+    phone: null,
+    address: null,
+  });
+
+  const userOpportunities = await Opportunity_User.findAll({
+    where: {
+      UserId: id,
+    },
+  });
+
+  const deletedUserOpportunities = await userOpportunities.update({
+    note: null,
+  });
+
+  const cvs = CV.findAll({
+    where: {
+      UserId: id,
+    },
+  });
+
+  const deletedCvs = await cvs.update({
+    story: null,
+    transport: null,
+    availability: null,
+    urlImg: null,
+    catchphrase: null,
+  });
+
+  const revisions = await Revision.findAll({
+    where: {
+      [Op.or]: [
+        { documentId: id },
+        { documentId: userOpportunities.map((userOpp) => userOpp.id) },
+      ],
+    },
+  });
+
+  const revisionChangesRemoved = await Revision_Change.update(
+    {
+      document: null,
+      diff: null,
+    },
+    {
+      where: {
+        revisionId: revisions.map((revision) => revision.id),
+      },
+    }
+  );
+
+  const revisionsRemoved = await revisions.update({
+    document: null,
+  });
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.CACHE_ALL_CVS,
+  });
+  /* const usersDeleted = await User.destroy({
+    where: { id },
+  });
+  console.log(`${infoLog} Suppression des CV associés`);
+  const cvsDeleted = await CV.destroy({
+    where: { UserId: id },
+    individualHooks: true,
+  });
+
+  return { usersDeleted, cvsDeleted };
+  */
+
+  return {};
 };
 
 const getUserCandidats = () => {
