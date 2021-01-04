@@ -49,6 +49,7 @@ describe('Auth', () => {
         delete candidatResponse.salt;
         delete candidatResponse.saltReset;
         delete candidatResponse.updatedAt;
+        delete candidatResponse.deletedAt;
         delete candidatResponse.revision;
     });
     afterAll(async () => {
