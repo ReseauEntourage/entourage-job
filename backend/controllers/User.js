@@ -1,7 +1,7 @@
 const { QueryTypes } = require('sequelize');
 
 const uuid = require('uuid/v4');
-const { USER_ROLES, REDIS_KEYS, JOBS } = require('../../constants');
+const { USER_ROLES, REDIS_KEYS, JOBS, CV_STATUS } = require('../../constants');
 
 const RedisManager = require('../utils/RedisManager');
 const S3 = require('./Aws');
@@ -347,6 +347,16 @@ const getUserCandidatOpt = async ({ candidatId, coachId }) => {
   });
 };
 
+const generateImageNamesToDelete = (prefix) => {
+  const imageNames = Object.keys(CV_STATUS).map((status) => {
+    return [`${prefix}.${status}.jpg`, `${prefix}.${status}.preview.jpg`];
+  });
+
+  return imageNames.reduce((acc, curr) => {
+    return [...acc, ...curr];
+  }, []);
+};
+
 const deleteUser = async (id) => {
   const infoLog = 'deleteUser -';
 
@@ -357,12 +367,15 @@ const deleteUser = async (id) => {
   }
 
   console.log(`${infoLog} Deleting image and PDF for user `, id);
-  await S3.deleteFile(`${process.env.AWSS3_IMAGE_DIRECTORY}${id}.jpg`);
+
+  await S3.deleteFiles(
+    generateImageNamesToDelete(`${process.env.AWSS3_IMAGE_DIRECTORY}${id}`)
+  );
   const pdfFileName = `${user.firstName}_${user.lastName}_${id.substring(
     0,
     8
   )}.pdf`;
-  await S3.deleteFile(`${process.env.AWSS3_FILE_DIRECTORY}${pdfFileName}`);
+  await S3.deleteFiles(`${process.env.AWSS3_FILE_DIRECTORY}${pdfFileName}`);
 
   console.log(`${infoLog} Deleting cache for user `, id);
   await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + user.candidat.url);

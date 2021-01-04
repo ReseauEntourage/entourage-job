@@ -206,13 +206,18 @@ router.get(
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
     checkUserAuthorization(req, res, req.params.id, () => {
-      (validator.isEmail(req.params.id)
-        ? UserController.getUserByEmail(req.params.id)
-        : UserController.getUser(req.params.id)
-      )
+      const functionToCall = validator.isEmail(req.params.id)
+        ? UserController.getUserByEmail
+        : UserController.getUser;
+
+      functionToCall(req.params.id)
         .then((user) => {
-          logger(res).log(`User trouvé`);
-          res.status(200).json(user);
+          if (!user) {
+            res.status(401).send(`Utilisateur inexistant`);
+          } else {
+            logger(res).log(`User trouvé`);
+            res.status(200).json(user);
+          }
         })
         .catch((err) => {
           logger(res).error(`Aucun User trouvé`);

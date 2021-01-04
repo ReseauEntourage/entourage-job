@@ -14,6 +14,7 @@ const { USER_ROLES, CV_STATUS } = require('../constants');
 const cvFactory = require('./factories/cvFactory');
 
 const route = '/api/v1/user';
+const cvRoute = '/api/v1/cv';
 let serverTest;
 const fakeId = '9bc0065e-b889-4f05-97v8-73i45f49976a';
 let loggedInAdmin;
@@ -504,9 +505,9 @@ describe('User', () => {
       });
       it("Should return 401 if try to get user's CV after deletion", async () => {
         const response = await request(serverTest)
-          .get(`api/v1/cv/${otherCandidat.user.id}`)
+          .get(`${cvRoute}${otherCandidat.user.id}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
-        expect(response.status).toBe(401);
+        expect(response.status).toBe(404);
       });
     });
   });

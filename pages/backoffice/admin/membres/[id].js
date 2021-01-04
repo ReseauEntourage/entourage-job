@@ -11,16 +11,18 @@ import {
   Card,
 } from '../../../../components/utils';
 import schemaEditUser from '../../../../components/forms/schema/formEditUser';
+import schemaDeleteUser from '../../../../components/forms/schema/formDeleteUser.json';
 import CVPageContent from '../../../../components/backoffice/cv/CVPageContent';
 import CandidatHeader from '../../../../components/backoffice/cv/CandidatHeader';
 import UserInformationCard from '../../../../components/cards/UserInformationCard';
 import ButtonIcon from '../../../../components/utils/ButtonIcon';
 import ModalEdit from '../../../../components/modals/ModalEdit';
-import {USER_ROLES} from "../../../../constants";
-import ToggleWithConfirmationModal
-  from "../../../../components/backoffice/ToggleWithConfirmationModal";
-import {mutateFormSchema} from "../../../../utils";
-import CandidatOpportunities from "../../../../components/opportunities/CandidatOpportunities";
+import { USER_ROLES } from '../../../../constants';
+import ToggleWithConfirmationModal from '../../../../components/backoffice/ToggleWithConfirmationModal';
+import { mutateFormSchema } from '../../../../utils';
+import CandidatOpportunities from '../../../../components/opportunities/CandidatOpportunities';
+import Button from '../../../../components/utils/Button';
+import Icon from '../../../../components/utils/Icon';
 
 const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
@@ -29,6 +31,7 @@ const CVPage = () => {
 
   const {
     query: { id },
+    push,
   } = useRouter();
 
   const getUser = () => {
@@ -57,13 +60,13 @@ const CVPage = () => {
       props: [
         {
           propName: 'disabled',
-          value: true
+          value: true,
         },
         {
           propName: 'hidden',
-          value: true
-        }
-      ]
+          value: true,
+        },
+      ],
     },
     {
       fieldId: 'role',
@@ -71,11 +74,26 @@ const CVPage = () => {
         {
           propName: 'hidden',
           value: true,
-          option: USER_ROLES.ADMIN
-        }
-      ]
+          option: USER_ROLES.ADMIN,
+        },
+      ],
     },
   ]);
+
+  const deleteUser = async (fields, closeModal) => {
+    try {
+      if (fields.confirmation === 'SUPPRIMER') {
+        await Api.delete(`/api/v1/user/${id}`);
+        closeModal();
+        UIkit.notification("L'utilisateur a bien été supprimé", 'success');
+        push('/backoffice/admin/membres');
+      } else {
+        throw new Error();
+      }
+    } catch {
+      UIkit.notification('Une erreur est survenue', 'danger');
+    }
+  };
 
   if (user) {
     if (user.role !== USER_ROLES.CANDIDAT) {
@@ -139,7 +157,6 @@ const CVPage = () => {
       ]);
     }
   }
-
 
   const isCandidat = user && user.candidat && user.role === USER_ROLES.CANDIDAT;
 
@@ -238,40 +255,48 @@ const CVPage = () => {
               </a>
             </li>
           </ul>
-          {
-            onglet !== 'settings' && user.role === USER_ROLES.COACH && (
-              user.coach ?
-                <div>
-                  {onglet === 'cv' && <CVPageContent candidatId={user.coach.candidat.id} />}
-                  {onglet === 'opportunities' && <CandidatOpportunities candidatId={user.coach.candidat.id} />}
-                </div> :
-                <div>
-                  <h2 className="uk-text-bold">
-                    <span className="uk-text-primary">Aucun candidat</span>{' '}
-                    n&apos;est rattaché à ce compte coach.
-                  </h2>
-                  <p>
-                    Il peut y avoir plusieurs raisons à ce sujet. Contacte
-                    l&apos;équipe LinkedOut pour en savoir plus.
-                  </p>
-                </div>
-            )
-          }
-          {
-            onglet !== 'settings' && user.role === USER_ROLES.CANDIDAT && (
+          {onglet !== 'settings' &&
+            user.role === USER_ROLES.COACH &&
+            (user.coach ? (
               <div>
-                {onglet === 'cv' && <CVPageContent candidatId={user.id} />}
-                {onglet === 'opportunities' && <CandidatOpportunities candidatId={user.id} />}
+                {onglet === 'cv' && (
+                  <CVPageContent candidatId={user.coach.candidat.id} />
+                )}
+                {onglet === 'opportunities' && (
+                  <CandidatOpportunities candidatId={user.coach.candidat.id} />
+                )}
               </div>
-            )
-          }
+            ) : (
+              <div>
+                <h2 className="uk-text-bold">
+                  <span className="uk-text-primary">Aucun candidat</span>{' '}
+                  n&apos;est rattaché à ce compte coach.
+                </h2>
+                <p>
+                  Il peut y avoir plusieurs raisons à ce sujet. Contacte
+                  l&apos;équipe LinkedOut pour en savoir plus.
+                </p>
+              </div>
+            ))}
+          {onglet !== 'settings' && user.role === USER_ROLES.CANDIDAT && (
+            <div>
+              {onglet === 'cv' && <CVPageContent candidatId={user.id} />}
+              {onglet === 'opportunities' && (
+                <CandidatOpportunities candidatId={user.id} />
+              )}
+            </div>
+          )}
           {onglet === 'settings' && (
             <GridNoSSR childWidths={['1-2@m']}>
-              {(user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
-                <GridNoSSR gap={isCandidat ? 'medium' : 'collapse'} childWidths={['1-1']}>
+              {(user.role === USER_ROLES.CANDIDAT ||
+                user.role === USER_ROLES.COACH) && (
+                /* TODO CHECK IF BUG COMES FROM HERE */
+                <GridNoSSR
+                  gap={isCandidat ? 'medium' : 'collapse'}
+                  childWidths={['1-1']}
+                >
                   <div>
-                    {
-                      isCandidat &&
+                    {isCandidat && (
                       <Card title="Préférences du CV">
                         <ToggleWithConfirmationModal
                           id="employed"
@@ -288,16 +313,19 @@ const CVPage = () => {
                                   ...user,
                                   candidat: {
                                     ...user.candidat,
-                                    employed
-                                  }
+                                    employed,
+                                  },
                                 });
                                 UIkit.notification(
                                   'Le profil du candidat a été mis à jour !',
                                   'success'
-                                )
+                                );
                               })
                               .catch(() =>
-                                UIkit.notification('Une erreur est survenue', 'danger')
+                                UIkit.notification(
+                                  'Une erreur est survenue',
+                                  'danger'
+                                )
                               )
                           }
                         />
@@ -316,17 +344,16 @@ const CVPage = () => {
                                   ...user,
                                   candidat: {
                                     ...user.candidat,
-                                    hidden
-                                  }
+                                    hidden,
+                                  },
                                 });
                                 UIkit.notification(
                                   hidden
                                     ? 'Le CV est désormais masqué'
                                     : 'Le CV est désormais visible',
                                   'success'
-                                )
-                              }
-                              )
+                                );
+                              })
                               .catch(() =>
                                 UIkit.notification(
                                   'Une erreur est survenue lors du masquage du profil',
@@ -336,7 +363,7 @@ const CVPage = () => {
                           }
                         />
                       </Card>
-                    }
+                    )}
                   </div>
                   <div className="uk-card uk-card-default uk-card-body">
                     <GridNoSSR
@@ -349,27 +376,27 @@ const CVPage = () => {
                       </h3>
                       <ButtonIcon
                         name="pencil"
-                        onClick={() =>
-                          UIkit.modal(`#edit-user`).show()
-                        }
+                        onClick={() => UIkit.modal(`#edit-user`).show()}
                       />
                     </GridNoSSR>
                     {user ? (
                       <GridNoSSR column gap="small">
                         <GridNoSSR row gap="small">
-                          <IconNoSSR name="user" style={{width: 20}} />
+                          <IconNoSSR name="user" style={{ width: 20 }} />
                           <span>{`${user.firstName} ${user.lastName}`}</span>
                         </GridNoSSR>
                         <GridNoSSR row gap="small">
-                          <IconNoSSR name="gender" style={{width: 20}} />
-                          <span>{`${user.gender === 0 ? 'Homme' : 'Femme'}`}</span>
+                          <IconNoSSR name="gender" style={{ width: 20 }} />
+                          <span>
+                            {`${user.gender === 0 ? 'Homme' : 'Femme'}`}
+                          </span>
                         </GridNoSSR>
                         <GridNoSSR row gap="small">
-                          <IconNoSSR name="mail" style={{width: 20}} />
+                          <IconNoSSR name="mail" style={{ width: 20 }} />
                           <span>{user.email}</span>
                         </GridNoSSR>
                         <GridNoSSR row gap="small">
-                          <IconNoSSR name="phone" style={{width: 20}} />
+                          <IconNoSSR name="phone" style={{ width: 20 }} />
                           {user.phone ? (
                             <span>{user.phone}</span>
                           ) : (
@@ -378,19 +405,18 @@ const CVPage = () => {
                             </span>
                           )}
                         </GridNoSSR>
-                        {
-                          user.role === USER_ROLES.CANDIDAT &&
+                        {user.role === USER_ROLES.CANDIDAT && (
                           <GridNoSSR row gap="small">
-                            <IconNoSSR name="home" style={{width: 20}} />
+                            <IconNoSSR name="home" style={{ width: 20 }} />
                             {user.address ? (
                               <span>{user.address}</span>
                             ) : (
                               <span className="uk-text-italic">
-                              Adresse postale non renseignée
-                            </span>
+                                Adresse postale non renseignée
+                              </span>
                             )}
                           </GridNoSSR>
-                        }
+                        )}
                       </GridNoSSR>
                     ) : undefined}
                   </div>
@@ -403,28 +429,34 @@ const CVPage = () => {
                       submitText="Modifier le membre"
                       defaultValues={{
                         ...user,
-                        gender: user.gender.toString()
+                        gender: user.gender.toString(),
                       }}
                       onSubmit={async (fields, closeModal) => {
                         const updateUser = async (onError) => {
                           try {
-                            const {data} = await Api.put(`api/v1/user/${user.id}`, {
-                              ...fields,
-                              email: fields.email.toLowerCase()
-                            });
+                            const { data } = await Api.put(
+                              `api/v1/user/${user.id}`,
+                              {
+                                ...fields,
+                                email: fields.email.toLowerCase(),
+                              }
+                            );
                             if (data) {
                               closeModal();
-                              UIkit.notification('Le membre a bien été modifié', 'success');
+                              UIkit.notification(
+                                'Le membre a bien été modifié',
+                                'success'
+                              );
                               setUser(data);
                             } else {
                               throw new Error('réponse de la requete vide');
                             }
                           } catch (error) {
                             console.error(error);
-                            if(onError) onError();
+                            if (onError) onError();
                             if (error.response.status === 409) {
                               UIkit.notification(
-                                "Cette adresse email est déjà utilisée",
+                                'Cette adresse email est déjà utilisée',
                                 'danger'
                               );
                             } else {
@@ -436,21 +468,28 @@ const CVPage = () => {
                           }
                         };
 
-                        if(fields.role !== user.role) {
-                          UIkit.modal.confirm("Attention, si vous modifiez le rôle d'un candidat, tout son suivi sera perdu et son CV sera dépublié. Êtes-vous sûr de vouloir continuer ?",
-                            {
-                              labels: {
-                                ok: 'Valider',
-                                cancel: 'Annuler'
+                        if (fields.role !== user.role) {
+                          UIkit.modal
+                            .confirm(
+                              "Attention, si vous modifiez le rôle d'un candidat, tout son suivi sera perdu et son CV sera dépublié. Êtes-vous sûr de vouloir continuer ?",
+                              {
+                                labels: {
+                                  ok: 'Valider',
+                                  cancel: 'Annuler',
+                                },
                               }
-                            })
-                            .then(async () => {
-                              await updateUser(() => UIkit.modal(`#edit-user`).show());
-                            }, () => {
-                              UIkit.modal(`#edit-user`).show()
-                            });
-                        }
-                        else {
+                            )
+                            .then(
+                              async () => {
+                                await updateUser(() =>
+                                  UIkit.modal(`#edit-user`).show()
+                                );
+                              },
+                              () => {
+                                UIkit.modal(`#edit-user`).show();
+                              }
+                            );
+                        } else {
                           await updateUser();
                         }
                       }}
@@ -458,16 +497,38 @@ const CVPage = () => {
                   </div>
                 </GridNoSSR>
               )}
-              {
-                (user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) && (
-                <UserInformationCard
-                  isAdmin
-                  user={user}
-                  onChange={(data) => {
-                    setUser(data);
-                  }}
-                />
-              )}
+              <GridNoSSR childWidths={['1-1']}>
+                {(user.role === USER_ROLES.CANDIDAT ||
+                  user.role === USER_ROLES.COACH) && (
+                  <UserInformationCard
+                    isAdmin
+                    user={user}
+                    onChange={(data) => {
+                      setUser(data);
+                    }}
+                  />
+                )}
+                <div className="uk-flex uk-flex-center">
+                  <Button
+                    style="danger"
+                    size="large"
+                    onClick={() => UIkit.modal('#delete-user').show()}
+                  >
+                    <span className="uk-margin-small-right">
+                      Supprimer l&apos;utilisateur
+                    </span>
+                    <Icon name="trash" />
+                  </Button>
+                  <ModalEdit
+                    id="delete-user"
+                    title="Supprimer un membre"
+                    description="Attention, si vous supprimer ce membre, toutes les données qui lui sont associées seront définitivement perdues. Êtes-vous sûr de vouloir continuer ?"
+                    submitText="Supprimer le membre"
+                    formSchema={schemaDeleteUser}
+                    onSubmit={deleteUser}
+                  />
+                </div>
+              </GridNoSSR>
             </GridNoSSR>
           )}
         </GridNoSSR>
