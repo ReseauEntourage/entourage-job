@@ -1,5 +1,6 @@
 const uuid = require('uuid/v4');
-const {CV_STATUS} = require('../../../constants');
+const { CV_STATUS } = require('../../../constants');
+const { paranoidDeleteCascade } = require('../../utils/Sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   const CV = sequelize.define(
@@ -75,50 +76,62 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     },
-    {}
+    {
+      paranoid: true,
+    }
   );
   CV.beforeCreate((fields, _) => {
     const data = fields;
     data.id = uuid();
     return data;
   });
+
   CV.associate = (models) => {
     // link and rename for association
     CV.belongsToMany(models.Ambition, {
       through: 'CV_Ambitions',
       as: 'ambitions',
+      onDelete: 'CASCADE',
     });
     CV.belongsToMany(models.Contract, {
       through: 'CV_Contracts',
       as: 'contracts',
+      onDelete: 'CASCADE',
     });
     CV.belongsToMany(models.Language, {
       through: 'CV_Language',
       as: 'languages',
+      onDelete: 'CASCADE',
     });
     CV.belongsToMany(models.Passion, {
       through: 'CV_Passions',
       as: 'passions',
+      onDelete: 'CASCADE',
     });
     CV.belongsToMany(models.BusinessLine, {
       through: 'CV_BusinessLines',
       as: 'businessLines',
+      onDelete: 'CASCADE',
     });
     CV.belongsToMany(models.Skill, {
       through: 'CV_Skills',
       as: 'skills',
+      onDelete: 'CASCADE',
     });
 
     CV.belongsToMany(models.Location, {
       through: 'CV_Locations',
       as: 'locations',
+      onDelete: 'CASCADE',
     });
 
     CV.hasMany(models.Experience, {
       as: 'experiences',
+      onDelete: 'CASCADE',
     });
     CV.hasMany(models.Review, {
       as: 'reviews',
+      onDelete: 'CASCADE',
     });
 
     CV.belongsTo(models.User_Candidat, {
@@ -131,7 +144,10 @@ module.exports = (sequelize, DataTypes) => {
       as: 'cvSearch',
       foreignKey: 'CVId',
       sourceKey: 'id',
+      onDelete: 'CASCADE',
     });
+
+    CV.afterDestroy(paranoidDeleteCascade(models));
   };
   return CV;
 };

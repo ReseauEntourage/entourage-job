@@ -88,7 +88,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
     },
-    {}
+    {
+      paranoid: true,
+    }
   );
 
   const generateUrl = (user) =>

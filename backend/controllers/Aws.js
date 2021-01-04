@@ -57,19 +57,25 @@ const copy = (originalPath, outputPath) => {
   });
 };
 
-const deleteFile = (key) => {
+const deleteFiles = (keys) => {
+  if (!Array.isArray(keys)) {
+    keys = [keys];
+  }
+
   return new Promise((resolve, reject) => {
     // Deleting files
-    s3.deleteObject(
+    s3.deleteObjects(
       {
         Bucket: process.env.AWSS3_BUCKET_NAME,
-        Key: key,
+        Delete: {
+          Objects: keys.map((key) => ({ Key: key })),
+        },
       },
       (err, data) => {
         if (err) {
           reject(err);
         } else {
-          console.log('============ AWS Delete ============', key);
+          console.log('============ AWS Delete ============', keys);
           resolve(data);
         }
       }
@@ -150,9 +156,9 @@ const getSignedUrl = (key) => {
 module.exports = {
   upload,
   uploadFile,
-  deleteFile,
+  deleteFiles,
   download,
   copy,
   getSignedUrl,
-  getHead
+  getHead,
 };

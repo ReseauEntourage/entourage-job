@@ -26,7 +26,7 @@ const CVPDFPage = ({ cv, page, router }) => {
       title={`${cv.user.candidat.firstName} - LinkedOut`}
       metaTitle={`Aidez ${cv.user.candidat.firstName} en partageant son CV.`}
       metaUrl={`${process.env.SERVER_URL}${router.asPath}`}
-      metaDescription={cv.intro}
+      metaDescription={cv.story}
       metaImage={
         cv.urlImg
           ? `${process.env.AWSS3_URL}${cv.urlImg.replace(

@@ -1,13 +1,15 @@
 const { QueryTypes } = require('sequelize');
 
-const { USER_ROLES, REDIS_KEYS, JOBS } = require('../../constants');
+const uuid = require('uuid/v4');
+const { USER_ROLES, REDIS_KEYS, JOBS, CV_STATUS } = require('../../constants');
 
 const RedisManager = require('../utils/RedisManager');
+const S3 = require('./Aws');
 
 const { addToWorkQueue } = require('../jobs');
 
 const {
-  models: { User, User_Candidat, Share, CV },
+  models: { User, User_Candidat, CV, Opportunity_User, Revision },
   Sequelize: { Op, fn, col, where },
   sequelize,
 } = require('../db/models');
@@ -39,6 +41,7 @@ const INCLUDE_USER_CANDIDAT = [
         model: User,
         as: 'coach',
         attributes: ATTRIBUTES_USER,
+        paranoid: false,
       },
     ],
   },
@@ -51,6 +54,7 @@ const INCLUDE_USER_CANDIDAT = [
         model: User,
         as: 'candidat',
         attributes: ATTRIBUTES_USER,
+        paranoid: false,
       },
     ],
   },
@@ -101,18 +105,6 @@ const createUser = async (newUser) => {
   });
 };
 
-const deleteUser = (id) => {
-  return new Promise((resolve, reject) => {
-    const infoLog = 'deleteUser -';
-    console.log(`${infoLog} Suppression d'un User à partir de son id`);
-    User.destroy({
-      where: { id },
-    })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
-  });
-};
-
 // avec mot de passe
 // Je narrive pas a recuperer candidat depuis l'id dun utilisateur coach
 const getUser = async (id) => {
@@ -137,13 +129,11 @@ const getCompleteUser = (id) => {
 };
 
 const getUserByEmail = async (email) => {
-  const user = await User.findOne({
+  return User.findOne({
     where: { email: email.toLowerCase() },
     attributes: [...ATTRIBUTES_USER, 'salt', 'password'],
     include: INCLUDE_USER_CANDIDAT,
   });
-
-  return user;
 };
 
 const getUsers = (limit, offset, order) => {
@@ -355,6 +345,142 @@ const getUserCandidatOpt = async ({ candidatId, coachId }) => {
       },
     ],
   });
+};
+
+const generateImageNamesToDelete = (prefix) => {
+  const imageNames = Object.keys(CV_STATUS).map((status) => {
+    return [`${prefix}.${status}.jpg`, `${prefix}.${status}.preview.jpg`];
+  });
+
+  return imageNames.reduce((acc, curr) => {
+    return [...acc, ...curr];
+  }, []);
+};
+
+const deleteUser = async (id) => {
+  const infoLog = 'deleteUser -';
+
+  const user = await getUser(id);
+
+  if (!user) {
+    return;
+  }
+
+  console.log(`${infoLog} Deleting image and PDF for user `, id);
+
+  await S3.deleteFiles(
+    generateImageNamesToDelete(`${process.env.AWSS3_IMAGE_DIRECTORY}${id}`)
+  );
+  const pdfFileName = `${user.firstName}_${user.lastName}_${id.substring(
+    0,
+    8
+  )}.pdf`;
+  await S3.deleteFiles(`${process.env.AWSS3_FILE_DIRECTORY}${pdfFileName}`);
+
+  console.log(`${infoLog} Deleting cache for user `, id);
+  await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + user.candidat.url);
+
+  console.log(`${infoLog} Anonymization of user's data `, id);
+
+  await User_Candidat.update(
+    {
+      note: null,
+      url: `deleted-${id.substring(0, 8)}`,
+    },
+    {
+      where: {
+        candidatId: id,
+      },
+    }
+  );
+
+  await user.update({
+    firstName: 'Utilisateur',
+    lastName: 'supprimé',
+    email: `${Date.now()}@${uuid()}.deleted`,
+    phone: null,
+    address: null,
+  });
+
+  const userOpportunitiesQuery = {
+    where: {
+      UserId: id,
+    },
+  };
+
+  const userOpportunities = await Opportunity_User.findAll(
+    userOpportunitiesQuery
+  );
+
+  await Opportunity_User.update(
+    {
+      note: null,
+    },
+    userOpportunitiesQuery
+  );
+
+  await CV.update(
+    {
+      intro: null,
+      story: null,
+      transport: null,
+      availability: null,
+      urlImg: null,
+      catchphrase: null,
+    },
+    {
+      where: {
+        UserId: id,
+      },
+    }
+  );
+
+  const revisionsQuery = {
+    where: {
+      [Op.or]: [
+        { documentId: id },
+        { documentId: userOpportunities.map((userOpp) => userOpp.id) },
+      ],
+    },
+  };
+
+  const revisions = await Revision.findAll(revisionsQuery);
+
+  // Have to use raw query because Revision_Change is not declared as a model
+  await sequelize.query(
+    `
+    UPDATE "RevisionChanges"
+    SET "document" = '{}'::jsonb, "diff" = '[{}]'::jsonb
+    WHERE "revisionId" IN (${revisions.map((revision) => `'${revision.id}'`)});
+  `,
+    {
+      type: QueryTypes.UPDATE,
+    }
+  );
+
+  await Revision.update(
+    {
+      document: {},
+    },
+    revisionsQuery
+  );
+
+  console.log(`${infoLog} Soft deletion of associated CVs`, id);
+  const cvsDeleted = await CV.destroy({
+    where: { UserId: id },
+    individualHooks: true,
+  });
+
+  console.log(`${infoLog} Soft deletion of user`, id);
+  const usersDeleted = await User.destroy({
+    where: { id },
+  });
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.CACHE_ALL_CVS,
+  });
+
+  return { usersDeleted, cvsDeleted };
 };
 
 const getUserCandidats = () => {

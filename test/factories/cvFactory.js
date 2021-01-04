@@ -23,7 +23,6 @@ const getCvStatusValues = (cvStatus) => {
  * @param {string} props.UserId UserId corresponding to a user_candidat
  * must be provided.
  * @param {string} props.urlImg
- * @param {string} props.intro
  * @param {string} props.story
  * @param {string} props.location
  * @param {string} props.availability
@@ -36,7 +35,6 @@ const getCvStatusValues = (cvStatus) => {
 const generateCv = async (props = {}) => {
   const fakeData = {
     urlImg: `images/${props.UserId}.Progress.jpg`,
-    intro: fakerStatic.lorem.sentence(),
     story: fakerStatic.lorem.text(),
     location: fakerStatic.address.city(),
     availability: fakerStatic.lorem.sentence(),
@@ -59,7 +57,6 @@ const generateCv = async (props = {}) => {
  * @param {string} props.UserId UserId corresponding to a user_candidat
  * must be provided.
  * @param {string} props.urlImg
- * @param {string} props.intro
  * @param {string} props.story
  * @param {string} props.location
  * @param {string} props.availability

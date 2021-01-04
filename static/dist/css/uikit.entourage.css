@@ -1,4 +1,4 @@
-/*! UIkit 3.5.4 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
+/*! UIkit 3.5.4 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
 /* ========================================================================
    Component: Base
  ========================================================================== */
@@ -2154,6 +2154,7 @@ select.uk-form-width-xsmall {
   padding: 0 40px;
   line-height: 53px;
   font-size: 0.875rem;
+  font-size: 17px;
 }
 /* Text modifiers
  ========================================================================== */

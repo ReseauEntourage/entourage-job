@@ -109,7 +109,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
               <List className="uk-iconnav uk-grid-medium uk-flex-middle">
                 {loadingIcon && <div data-uk-spinner="" />}
                 <ButtonIcon
-                  name="pull"
+                  name="archive"
                   className={archived ? 'ent-color-amber' : undefined}
                   onClick={() => {
                     setLoadingIcon(true);
