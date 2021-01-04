@@ -336,7 +336,11 @@ router.put(
 router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
   UserController.deleteUser(req.params.id)
     .then((result) => {
-      res.status(200).json(result);
+      if (!result) {
+        res.status(401).send(`Utilisateur inexistant`);
+      } else {
+        res.status(200).json(result);
+      }
     })
     .catch((err) => {
       logger(res).error(err);

@@ -9,14 +9,7 @@ const S3 = require('./Aws');
 const { addToWorkQueue } = require('../jobs');
 
 const {
-  models: {
-    User,
-    User_Candidat,
-    CV,
-    Opportunity_User,
-    Revision,
-    Revision_Change,
-  },
+  models: { User, User_Candidat, CV, Opportunity_User, Revision },
   Sequelize: { Op, fn, col, where },
   sequelize,
 } = require('../db/models');
@@ -356,11 +349,14 @@ const getUserCandidatOpt = async ({ candidatId, coachId }) => {
 
 const deleteUser = async (id) => {
   const infoLog = 'deleteUser -';
-  console.log(`${infoLog} Suppression d'un User à partir de son id`);
 
   const user = await getUser(id);
 
-  console.log('Deleting image and PDF for user ', id);
+  if (!user) {
+    return;
+  }
+
+  console.log(`${infoLog} Deleting image and PDF for user `, id);
   await S3.deleteFile(`${process.env.AWSS3_IMAGE_DIRECTORY}${id}.jpg`);
   const pdfFileName = `${user.firstName}_${user.lastName}_${id.substring(
     0,
@@ -368,17 +364,24 @@ const deleteUser = async (id) => {
   )}.pdf`;
   await S3.deleteFile(`${process.env.AWSS3_FILE_DIRECTORY}${pdfFileName}`);
 
-  console.log('Deleting cache for user ', id);
+  console.log(`${infoLog} Deleting cache for user `, id);
   await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + user.candidat.url);
 
-  // TODO NOT WORKING : Error: You attempted to save an instance with no primary key, this is not allowed since it would result in a global update
-  /*
-    const deletedUserCandidat = await user.candidat.update({
+  console.log(`${infoLog} Anonymization of user's data `, id);
+
+  await User_Candidat.update(
+    {
       note: null,
-      url: null,
-    });
-  */
-  const deletedUser = await user.update({
+      url: `deleted-${id.substring(0, 8)}`,
+    },
+    {
+      where: {
+        candidatId: id,
+      },
+    }
+  );
+
+  await user.update({
     firstName: 'Utilisateur',
     lastName: 'supprimé',
     email: `${Date.now()}@${uuid()}.deleted`,
@@ -386,71 +389,85 @@ const deleteUser = async (id) => {
     address: null,
   });
 
-  const userOpportunities = await Opportunity_User.findAll({
+  const userOpportunitiesQuery = {
     where: {
       UserId: id,
     },
-  });
+  };
 
-  const deletedUserOpportunities = await userOpportunities.update({
-    note: null,
-  });
+  const userOpportunities = await Opportunity_User.findAll(
+    userOpportunitiesQuery
+  );
 
-  const cvs = CV.findAll({
-    where: {
-      UserId: id,
+  await Opportunity_User.update(
+    {
+      note: null,
     },
-  });
+    userOpportunitiesQuery
+  );
 
-  const deletedCvs = await cvs.update({
-    story: null,
-    transport: null,
-    availability: null,
-    urlImg: null,
-    catchphrase: null,
-  });
+  await CV.update(
+    {
+      intro: null,
+      story: null,
+      transport: null,
+      availability: null,
+      urlImg: null,
+      catchphrase: null,
+    },
+    {
+      where: {
+        UserId: id,
+      },
+    }
+  );
 
-  const revisions = await Revision.findAll({
+  const revisionsQuery = {
     where: {
       [Op.or]: [
         { documentId: id },
         { documentId: userOpportunities.map((userOpp) => userOpp.id) },
       ],
     },
-  });
+  };
 
-  const revisionChangesRemoved = await Revision_Change.update(
+  const revisions = await Revision.findAll(revisionsQuery);
+
+  // Have to use raw query because Revision_Change is not declared as a model
+  await sequelize.query(
+    `
+    UPDATE "RevisionChanges"
+    SET "document" = '{}'::jsonb, "diff" = '[{}]'::jsonb
+    WHERE "revisionId" IN (${revisions.map((revision) => `'${revision.id}'`)});
+  `,
     {
-      document: null,
-      diff: null,
-    },
-    {
-      where: {
-        revisionId: revisions.map((revision) => revision.id),
-      },
+      type: QueryTypes.UPDATE,
     }
   );
 
-  const revisionsRemoved = await revisions.update({
-    document: null,
-  });
+  await Revision.update(
+    {
+      document: {},
+    },
+    revisionsQuery
+  );
 
-  await addToWorkQueue({
-    type: JOBS.JOB_TYPES.CACHE_ALL_CVS,
-  });
-  /* const usersDeleted = await User.destroy({
-    where: { id },
-  });
-  console.log(`${infoLog} Suppression des CV associés`);
+  console.log(`${infoLog} Soft deletion of associated CVs`, id);
   const cvsDeleted = await CV.destroy({
     where: { UserId: id },
     individualHooks: true,
   });
 
-  return { usersDeleted, cvsDeleted };
-  */
+  console.log(`${infoLog} Soft deletion of user`, id);
+  const usersDeleted = await User.destroy({
+    where: { id },
+  });
 
-  return {};
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.CACHE_ALL_CVS,
+  });
+
+  return { usersDeleted, cvsDeleted };
 };
 
 const getUserCandidats = () => {
