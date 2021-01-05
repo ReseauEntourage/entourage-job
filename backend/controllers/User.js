@@ -378,7 +378,9 @@ const deleteUser = async (id) => {
   await S3.deleteFiles(`${process.env.AWSS3_FILE_DIRECTORY}${pdfFileName}`);
 
   console.log(`${infoLog} Deleting cache for user `, id);
-  await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + user.candidat.url);
+  if (user.role === USER_ROLES.CANDIDAT) {
+    await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + user.candidat.url);
+  }
 
   console.log(`${infoLog} Anonymization of user's data `, id);
 
