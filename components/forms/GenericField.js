@@ -69,6 +69,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
         valid={getValid(data.name)}
         onChange={onChange}
         disabled={data.disabled}
+        autocomplete={data.autocomplete}
       />
     );
   }

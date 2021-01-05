@@ -16,7 +16,7 @@ const datas = [
   },
   {
     button: {
-      href: '/recruter',
+      href: '/entreprises',
       label: "S'engager dans l'inclusion",
     },
     title: 'Vous êtes une entreprise',

@@ -497,7 +497,7 @@ const CVPage = () => {
                   </div>
                 </GridNoSSR>
               )}
-              <GridNoSSR childWidths={['1-1']}>
+              <GridNoSSR childWidths={['1-1']} gap="medium">
                 {(user.role === USER_ROLES.CANDIDAT ||
                   user.role === USER_ROLES.COACH) && (
                   <UserInformationCard
