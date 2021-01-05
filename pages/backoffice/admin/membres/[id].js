@@ -173,7 +173,7 @@ const CVPage = () => {
               Retour à la liste
             </SimpleLink>
             <div>
-              <div uk-spinner="" />
+              <div data-uk-spinner="" />
               <hr className="ent-divier-backoffice uk-margin-large-top " />
             </div>
           </GridNoSSR>
