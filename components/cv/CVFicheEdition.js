@@ -100,7 +100,7 @@ const CVFicheEdition = ({
                             Génération de la prévisualisation en cours&nbsp;
                             <div
                               className="uk-margin-small-left"
-                              uk-spinner="ratio: 0.6"
+                              data-uk-spinner="ratio: 0.6"
                             />
                           </div>
                         ) : (

@@ -57,7 +57,7 @@ const StepsToJoin = () => {
           className="uk-link-text uk-text-primary"
           target='_blank'
           rel="noopener"
-          href={`tel:${'0176420535'}`}
+          href={`tel:${'0188247070'}`}
         >
           01&nbsp;76&nbsp;42&nbsp;05&nbsp;35
         </a>

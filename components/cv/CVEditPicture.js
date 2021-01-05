@@ -38,7 +38,7 @@ const CVEditPicture = ({
       style={{ backgroundImage: `url(${addPrefix(url)})`, minHeight: '300px' }}
     >
       {!disablePicture && (
-        <div className=" uk-position-center " data-uk-form-custom>
+        <div className=" uk-position-center ">
           <div
             className="uk-overlay uk-overlay-default uk-box-shadow-hover-small"
             style={{ cursor: 'pointer' }}
@@ -48,11 +48,12 @@ const CVEditPicture = ({
                 Chargement de l&apos;image&nbsp;
                 <div
                   className="uk-margin-small-left"
-                  uk-spinner="ratio: 0.6"
+                  data-uk-spinner="ratio: 0.6"
                 />
               </div>
             ) : (
-              <label className="uk-text-uppercase" htmlFor="image-upload">
+              <div data-uk-form-custom>
+                <label className="uk-text-uppercase" htmlFor="image-upload">
                 <input
                   id="image-upload"
                   type="file"
@@ -80,6 +81,7 @@ const CVEditPicture = ({
                 />
                 Mettre à jour
               </label>
+              </div>
             )}
           </div>
         </div>
