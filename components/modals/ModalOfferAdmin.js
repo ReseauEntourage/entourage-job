@@ -11,6 +11,8 @@ import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
 import { useRemoveModal, useResetForm } from '../../hooks';
 import { findOfferStatus, formatParagraph } from '../../utils';
+import Select from '../forms/fields/Select';
+import { OFFER_STATUS } from '../../constants';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
@@ -36,6 +38,14 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const updateOpportunityUser = async (opportunityUser) => {
+    await Api.put(
+      `${process.env.SERVER_URL}/api/v1/opportunity/join`,
+      opportunityUser
+    );
+    setCurrentOffer({ ...currentOffer });
   };
 
   useEffect(() => {
@@ -85,11 +95,14 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               const tmpOpportunity = {
                 ...currentOffer,
                 ...fields,
-                candidatesId: !fields.isPublic && fields.candidatesId ? fields.candidatesId.map((candidateId) =>
-                  typeof candidateId === 'object'
-                    ? candidateId.value
-                    : candidateId
-                ) : null,
+                candidatesId:
+                  !fields.isPublic && fields.candidatesId
+                    ? fields.candidatesId.map((candidateId) =>
+                        typeof candidateId === 'object'
+                          ? candidateId.value
+                          : candidateId
+                      )
+                    : null,
               };
               updateOpportunity(tmpOpportunity);
               setIsEditing(false);
@@ -180,34 +193,61 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 }`}
               >
                 <div className="uk-height-max-medium uk-overflow-auto">
-                  {currentOffer.userOpportunity.map(
-                    ({ status, User: { firstName, lastName, id } }) => (
-                      <div
-                        className="uk-flex uk-flex-column"
-                        style={{ marginTop: 5 }}
+                  {currentOffer.userOpportunity.map((userOpp) => (
+                    <div
+                      className="uk-flex uk-flex-column"
+                      style={{ marginTop: 5 }}
+                    >
+                      <SimpleLink
+                        as={`/backoffice/admin/membres/${userOpp.User.id}`}
+                        href="/backoffice/admin/membres/[id]"
+                        className="uk-link-muted"
+                        target="_blank"
                       >
-                        <SimpleLink
-                          as={`/backoffice/admin/membres/${id}`}
-                          href="/backoffice/admin/membres/[id]"
-                          className="uk-link-muted"
-                          target="_blank"
-                        >
-                          <span>
-                            {`${firstName} ${lastName}`}
-                            &nbsp;
-                          </span>
-                          <IconNoSSR name="link" ratio={0.8} />
-                        </SimpleLink>
-                        <span
-                          className={`uk-text-meta uk-text-${
-                            findOfferStatus(status).color
-                          }`}
-                        >
-                          {findOfferStatus(status).label}
+                        <span>
+                          {`${userOpp.User.firstName} ${userOpp.User.lastName}`}
+                          &nbsp;
                         </span>
+                        <IconNoSSR name="link" ratio={0.8} />
+                      </SimpleLink>
+                      <div uk-form-custom="target: true">
+                        <select
+                          className="uk-select"
+                          onChange={(event) => {
+                            setLoading(true);
+                            const userOpportunity = userOpp;
+                            userOpportunity.status = Number(event.target.value);
+                            updateOpportunityUser(userOpportunity);
+                            setLoading(false);
+                          }}
+                          value={userOpp.status}
+                          style={{
+                            height: 'auto',
+                          }}
+                        >
+                          {OFFER_STATUS.map((item, i) => (
+                            <option value={item.value} key={i}>
+                              {item.label}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="uk-flex uk-flex-middle">
+                          <span
+                            className={`uk-text-meta uk-text-${
+                              findOfferStatus(userOpp.status).color
+                            }`}
+                          >
+                            {findOfferStatus(userOpp.status).label}
+                          </span>
+                          <IconNoSSR
+                            ratio={0.8}
+                            className="uk-margin-small-left uk-text-muted"
+                            name="triangle-down"
+                          />
+                        </div>
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               </OfferInfoContainer>
             )}
