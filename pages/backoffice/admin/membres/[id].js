@@ -35,10 +35,15 @@ const CVPage = () => {
   } = useRouter();
 
   const getUser = () => {
-    Api.get(`/api/v1/user/${id}`).then(({ data }) => {
-      setUser(data);
-      setLoading(false);
-    });
+    Api.get(`/api/v1/user/${id}`)
+      .then(({ data }) => {
+        setUser(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {

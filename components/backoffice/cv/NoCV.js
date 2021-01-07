@@ -9,7 +9,7 @@ const NoCV = ({ candidatId, user, setCV }) => {
     <GridNoSSR column middle>
       <div>
         {user.role === USER_ROLES.COACH &&
-          (!user.candidat || (user.candidat && !user.candidat.deletedAt)) && (
+          (!user.candidat || (user.candidat && user.candidat.deletedAt)) && (
             <>
               <h2 className="uk-text-bold">
                 <span className="uk-text-primary">Aucun candidat</span>
@@ -27,7 +27,7 @@ const NoCV = ({ candidatId, user, setCV }) => {
           <>
             <h2 className="uk-text-bold">
               <span className="uk-text-primary">Aucun CV</span>
-              n&apos;est rattaché à ce compte.
+              &nbsp;n&apos;est rattaché à ce compte.
             </h2>
             <div className="uk-flex uk-flex-center">
               <Button
