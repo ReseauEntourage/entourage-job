@@ -504,7 +504,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
               <Button
                 disabled={actionDisabled}
                 style="secondary"
-                onClick={() => event(TAGS.PAGE_CV_ENVOYER_OFFRE_CLIC)}
+                onClick={() => event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC)}
                 toggle="target: #modal-send-opportunity"
               >
                 Contactez-moi
@@ -533,6 +533,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   if (!candidatesId.includes(cv.UserId)) {
                     candidatesId.push(cv.UserId);
                   }
+                  event(TAGS.PAGE_CV_ENVOYER_OFFRE_CLIC);
                   await postOpportunity(
                     {
                       ...fields,

@@ -27,6 +27,7 @@ const ATTRIBUTES_USER = [
   'role',
   'gender',
   'lastConnection',
+  'deletedAt',
 ];
 
 const ATTRIBUTES_USER_PUBLIC = ['id', 'firstName', 'lastName', 'role'];
@@ -384,6 +385,14 @@ const deleteUser = async (id) => {
 
   console.log(`${infoLog} Anonymization of user's data `, id);
 
+  await user.update({
+    firstName: 'Utilisateur',
+    lastName: 'supprimé',
+    email: `${Date.now()}@${uuid()}.deleted`,
+    phone: null,
+    address: null,
+  });
+
   await User_Candidat.update(
     {
       note: null,
@@ -395,14 +404,6 @@ const deleteUser = async (id) => {
       },
     }
   );
-
-  await user.update({
-    firstName: 'Utilisateur',
-    lastName: 'supprimé',
-    email: `${Date.now()}@${uuid()}.deleted`,
-    phone: null,
-    address: null,
-  });
 
   const userOpportunitiesQuery = {
     where: {
