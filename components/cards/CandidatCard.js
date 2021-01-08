@@ -99,7 +99,16 @@ const CandidatCard = ({
   return (
     <div className="uk-card uk-card-small uk-card-body uk-card-default uk-card-hover uk-text-small uk-text-left">
       {/* Contenue de la carte */}
-      <SimpleLink as={linksToCV.as} href={linksToCV.href} className="uk-link-toggle">
+      <SimpleLink
+        as={linksToCV.as}
+        href={linksToCV.href}
+        className="uk-link-toggle"
+        onClick={() => {
+          event(
+            isCandidatsPage ? TAGS.PAGE_GALERIE_CV_CLIC : TAGS.HOME_CV_CLIC
+          );
+        }}
+      >
         <div
           className="uk-cover-container uk-margin-bottom"
           style={{

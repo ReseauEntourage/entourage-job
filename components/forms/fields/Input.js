@@ -12,6 +12,7 @@ const Input = ({
   value,
   onChange,
   disabled,
+  autocomplete,
 }) => {
   const [labelClass, setLabelClass] = useState('');
 
@@ -21,9 +22,7 @@ const Input = ({
   };
 
   useEffect(() => {
-    setLabelClass(
-      (value && value.length > 0 && ' stay-small') || ''
-    );
+    setLabelClass((value && value.length > 0 && ' stay-small') || '');
   }, [value]);
 
   return (
@@ -42,6 +41,7 @@ const Input = ({
           valid !== undefined && valid.isInvalid ? 'uk-form-danger' : ''
         }`}
         disabled={disabled}
+        autoComplete={autocomplete}
       />
       <FormValidatorErrorMessage validObj={valid} />
     </div>
@@ -61,6 +61,7 @@ Input.propTypes = {
   }),
   value: PropTypes.string,
   disabled: PropTypes.bool,
+  autocomplete: PropTypes.string,
 };
 
 Input.defaultProps = {
@@ -68,5 +69,6 @@ Input.defaultProps = {
   valid: undefined,
   value: '',
   disabled: false,
+  autocomplete: 'on',
 };
 export default Input;

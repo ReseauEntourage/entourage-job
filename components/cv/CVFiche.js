@@ -48,7 +48,6 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
     ? `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`
     : '';
 
-
   // Modification du texte sur le champ des candidats
   const mutatedSchema = mutateFormSchema(schema, [
     {
@@ -504,12 +503,10 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
               <Button
                 disabled={actionDisabled}
                 style="secondary"
-                onClick={() => event(TAGS.PAGE_CV_ENVOYER_OFFRE_CLIC)}
+                onClick={() => event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC)}
                 toggle="target: #modal-send-opportunity"
               >
-                Contactez-moi
-                {' '}
-                <IconNoSSR name="chevron-right" />
+                Contactez-moi <IconNoSSR name="chevron-right" />
               </Button>
             </div>
             <div>
@@ -533,6 +530,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   if (!candidatesId.includes(cv.UserId)) {
                     candidatesId.push(cv.UserId);
                   }
+                  event(TAGS.PAGE_CV_ENVOYER_OFFRE_CLIC);
                   await postOpportunity(
                     {
                       ...fields,

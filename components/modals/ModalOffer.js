@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { GridNoSSR, Button, IconNoSSR, SimpleLink } from '../utils';
@@ -8,9 +8,9 @@ import Select from '../forms/fields/Select';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import Api from '../../Axios';
-import {OFFER_STATUS} from "../../constants";
-import {formatParagraph} from "../../utils";
-import {useRemoveModal} from "../../hooks";
+import { OFFER_STATUS } from '../../constants';
+import { formatParagraph } from '../../utils';
+import { useRemoveModal } from '../../hooks';
 
 export const List = ({ className, children }) => (
   <ul className={`uk-nav ${className}`}>
@@ -28,13 +28,11 @@ List.defaultProps = {
 };
 
 export const OfferInfoContainer = ({ icon, title, children }) => {
-  if(!children) {
+  if (!children) {
     children = [];
-  }
-  else if (!children.map) {
+  } else if (!children.map) {
     children = [children];
   }
-
 
   return (
     <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
@@ -93,13 +91,22 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">
       <div
-        className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${archived &&
-          'uk-light uk-background-secondary'}`}
+        className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
+          archived && 'uk-light uk-background-secondary'
+        }`}
       >
-        <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetNoteBuffer} />
+        <CloseButtonNoSSR
+          className="uk-modal-close-default"
+          onClick={resetNoteBuffer}
+        />
         {!currentOffer ? null : (
           <div className="uk-modal-body">
-            <GridNoSSR gap="small" between middle eachWidths={['expand', 'auto']}>
+            <GridNoSSR
+              gap="small"
+              between
+              middle
+              eachWidths={['expand', 'auto']}
+            >
               <div className="uk-flex uk-flex-column">
                 <h3 className="uk-flex-1 uk-text-bold uk-margin-remove-bottom">
                   {currentOffer.title}
@@ -109,7 +116,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
               <List className="uk-iconnav uk-grid-medium uk-flex-middle">
                 {loadingIcon && <div data-uk-spinner="" />}
                 <ButtonIcon
-                  name="pull"
+                  name="archive"
                   className={archived ? 'ent-color-amber' : undefined}
                   onClick={() => {
                     setLoadingIcon(true);
@@ -197,18 +204,13 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                 </GridNoSSR>,
                 <GridNoSSR gap="medium" childWidths={['1-1']}>
                   <OfferInfoContainer icon="comment" title="Message">
-                    <div>
-                      {formatParagraph(currentOffer.description)}
-                    </div>
+                    <div>{formatParagraph(currentOffer.description)}</div>
                   </OfferInfoContainer>
-                  {
-                    currentOffer.prerequisites &&
+                  {currentOffer.prerequisites && (
                     <OfferInfoContainer icon="check" title="Pré-requis">
-                      <div>
-                        {formatParagraph(currentOffer.prerequisites)}
-                      </div>
+                      <div>{formatParagraph(currentOffer.prerequisites)}</div>
                     </OfferInfoContainer>
-                  }
+                  )}
                   {currentOffer.businessLines && (
                     <GridNoSSR gap="small">
                       {currentOffer.businessLines.map((businessLine, index) => (

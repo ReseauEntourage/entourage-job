@@ -6,7 +6,7 @@ import { Section } from '../../../components/utils';
 import CVEditWelcome from '../../../components/cv/CVEditWelcome';
 import { UserContext } from '../../../components/store/UserProvider';
 import CVPageContent from '../../../components/backoffice/cv/CVPageContent';
-import {USER_ROLES} from "../../../constants";
+import { USER_ROLES } from '../../../constants';
 
 const Edit = () => {
   const { user } = useContext(UserContext);
@@ -38,7 +38,7 @@ const Edit = () => {
                 />
               ) : (
                 <>
-                  <h2 className="uk-text-bold">
+                  <h2 className="uk-text-bold uk-text-center">
                     <span className="uk-text-primary">
                       {user.role === USER_ROLES.COACH
                         ? 'Aucun candidat'
@@ -46,7 +46,7 @@ const Edit = () => {
                     </span>{' '}
                     n&apos;est rattaché à ce compte.
                   </h2>
-                  <p>
+                  <p className="uk-text-center">
                     Il peut y avoir plusieurs raisons à ce sujet. Contacte
                     l&apos;équipe LinkedOut pour en savoir plus.
                   </p>
