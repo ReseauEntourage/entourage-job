@@ -7,25 +7,24 @@ import Api from '../../../Axios';
 const NoCV = ({ candidatId, user, setCV }) => {
   return (
     <GridNoSSR column middle>
-      <div>
-        {user.role === USER_ROLES.COACH &&
-          (!user.candidat || (user.candidat && user.candidat.deletedAt)) && (
-            <>
-              <h2 className="uk-text-bold">
-                <span className="uk-text-primary">Aucun candidat</span>
-                n&apos;est rattaché à ce compte coach.
-              </h2>
-              <p>
-                Il peut y avoir plusieurs raisons à ce sujet. Contactez
-                l&apos;équipe LinkedOut pour en savoir plus.
-              </p>
-            </>
-          )}
-        {(user.role === USER_ROLES.ADMIN ||
+      {user.role === USER_ROLES.COACH &&
+      (!user.candidat || (user.candidat && user.candidat.deletedAt)) ? (
+        <div className="uk-flex uk-flex-column uk-flex-middle">
+          <h2 className="uk-text-bold uk-text-center">
+            <span className="uk-text-primary">Aucun candidat</span>
+            &nbsp;n&apos;est rattaché à ce compte coach.
+          </h2>
+          <p className="uk-text-center">
+            Il peut y avoir plusieurs raisons à ce sujet. Contactez
+            l&apos;équipe LinkedOut pour en savoir plus.
+          </p>
+        </div>
+      ) : (
+        (user.role === USER_ROLES.ADMIN ||
           user.role === USER_ROLES.CANDIDAT ||
-          (user.role === USER_ROLES.COACH && user.candidat)) && (
-          <>
-            <h2 className="uk-text-bold">
+          user.role === USER_ROLES.COACH) && (
+          <div className="uk-flex uk-flex-column uk-flex-middle">
+            <h2 className="uk-text-bold uk-text-center">
               <span className="uk-text-primary">Aucun CV</span>
               &nbsp;n&apos;est rattaché à ce compte.
             </h2>
@@ -41,9 +40,9 @@ const NoCV = ({ candidatId, user, setCV }) => {
                 Créer le CV
               </Button>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        )
+      )}
     </GridNoSSR>
   );
 };

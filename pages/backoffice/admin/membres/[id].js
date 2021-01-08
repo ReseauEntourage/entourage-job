@@ -273,11 +273,11 @@ const CVPage = () => {
               </div>
             ) : (
               <div>
-                <h2 className="uk-text-bold">
+                <h2 className="uk-text-bold uk-text-center">
                   <span className="uk-text-primary">Aucun candidat</span>{' '}
                   n&apos;est rattaché à ce compte coach.
                 </h2>
-                <p>
+                <p className="uk-text-center">
                   Il peut y avoir plusieurs raisons à ce sujet. Contacte
                   l&apos;équipe LinkedOut pour en savoir plus.
                 </p>
