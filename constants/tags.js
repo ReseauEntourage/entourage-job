@@ -11,6 +11,9 @@ const TAGS = {
   HOME_PARTAGE_CV_TWITTER_CLIC: {
     action: 'Home_Partage_CV_Twitter_Clic',
   },
+  PAGE_ENTREPRISES_GALERIE_CV_CLIC: {
+    action: 'Page_Entreprises_Galerie_CV_Clic',
+  },
   PAGE_GALERIE_CV_CLIC: {
     action: 'Page_Galerie_CV_Clic',
   },

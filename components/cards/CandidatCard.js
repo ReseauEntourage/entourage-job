@@ -33,6 +33,15 @@ const CandidatCard = ({
   const router = useRouter();
 
   const isCandidatsPage = router.asPath.includes('/candidats');
+  const isCompaniesCvsPage = router.asPath.includes('/entreprises/cvs');
+
+  let onCvClickEvent = TAGS.HOME_CV_CLIC;
+  if (isCandidatsPage) {
+    onCvClickEvent = TAGS.PAGE_GALERIE_CV_CLIC;
+  } else if (isCompaniesCvsPage) {
+    onCvClickEvent = TAGS.PAGE_ENTREPRISES_GALERIE_CV_CLIC;
+  }
+
   const showShareOptions = !router.asPath.includes('/entreprises');
 
   const link = encodeURI(`${process.env.SERVER_URL}/cv/${url}`);
@@ -104,11 +113,7 @@ const CandidatCard = ({
         href={linksToCV.href}
         className="uk-link-toggle"
         onClick={() => {
-          event(
-            isCandidatsPage
-              ? TAGS.PAGE_GALERIE_CV_CLIC
-              : TAGS.HOME_CV_CLIC
-          );
+          event(onCvClickEvent);
         }}
       >
         <div
