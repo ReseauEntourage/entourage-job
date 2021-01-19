@@ -30,6 +30,8 @@ const addToWorkQueue = async (data) => {
           ? parseInt(process.env.JOBS_BACKOFF_DELAY, 10)
           : 60000,
       },
+      removeOnFail: true,
+      removeOnComplete: true,
     });
   }
   return Promise.resolve();
