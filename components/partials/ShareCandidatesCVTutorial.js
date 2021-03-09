@@ -1,5 +1,3 @@
-/* global UIkit */
-
 import React from 'react';
 import { Section } from '../utils';
 import MultipleCTA from './MultipleCTA';
@@ -22,7 +20,8 @@ const datas = [
 const ShareCandidatesCVTutorial = () => (
   <Section style="muted" id="tutorial">
     <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-      LinkedOut en <span className="uk-text-primary">trois</span> étapes
+      LinkedOut en <span className="uk-text-primary">trois</span>
+      &nbsp;étapes
     </h2>
     <MultipleCTA data={datas} showHorizontalDividers showNumbers />
   </Section>

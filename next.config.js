@@ -13,6 +13,11 @@ module.exports = withLess(
       }
 
       config.plugins.push(new webpack.EnvironmentPlugin(process.env));
+
+      config.module.rules.push({
+        test: require.resolve('uikit'),
+        loader: 'expose-loader?UIkit',
+      });
       return config;
     },
     assetPrefix: !dev ? process.env.CDN_URL || '' : '',

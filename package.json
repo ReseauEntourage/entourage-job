@@ -1,6 +1,6 @@
 {
   "name": "linkedout",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -116,6 +116,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.18.3",
+    "expose-loader": "^2.0.0",
     "faker": "^4.1.0",
     "husky": "^4.3.0",
     "jest": "^26.4.1",

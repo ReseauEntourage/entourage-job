@@ -1,4 +1,5 @@
 /* global UIkit */
+
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import '../../static/css/Toggle.less';
@@ -379,9 +380,13 @@ const CandidatCard = ({
           </SimpleLink>
         </div>
       )}
-      {showModal && (
-        <ModalShareCV id={`info-share-${id}`} firstName={firstName} />
-      )}
+      <div>
+        {showModal && (
+          <div>
+            <ModalShareCV id={`info-share-${id}`} firstName={firstName} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

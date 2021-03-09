@@ -127,11 +127,6 @@ export default {
       */
       link: 'https://neoxia.com/',
     },
-    {
-      key: 'freespee',
-      title: 'Freespee',
-      link: 'https://www.freespee.com/',
-    },
   ],
   associations: [
     {
