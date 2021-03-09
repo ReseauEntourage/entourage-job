@@ -3,6 +3,9 @@
   "version": "1.7.2",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "worker": "node ./backend/worker.js",
     "dev": "nodemon -r dotenv/config ./backend/serveur-next.js",
