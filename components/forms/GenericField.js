@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactSelect, {components} from 'react-select';
+import ReactSelect, { components } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
@@ -9,14 +9,20 @@ import Select from './fields/Select';
 import Textarea from './fields/Textarea';
 import Checkbox from './fields/Checkbox';
 import Input from './fields/Input';
-import FormValidatorErrorMessage from "./FormValidatorErrorMessage";
-import {SimpleLink} from "../utils";
-import {EXTERNAL_LINKS} from "../../constants";
+import FormValidatorErrorMessage from './FormValidatorErrorMessage';
+import { SimpleLink } from '../utils';
+import { EXTERNAL_LINKS } from '../../constants';
 
 let debounceTimeoutId;
 
-const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
-
+const GenericField = ({
+  data,
+  formId,
+  value,
+  onChange,
+  getValid,
+  getValue,
+}) => {
   const parseValueToUseSelect = () => {
     let valueToUse = null;
     if (data.isMulti && Array.isArray(value) && value.length > 0) {
@@ -48,7 +54,7 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
   };
 
   if (data.component === 'fieldgroup') {
-    const {fields, title, id} = data;
+    const { fields, title, id } = data;
     return (
       <FieldGroup
         id={`${formId}-${id}`}
@@ -91,23 +97,23 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
     );
   }
   if (data.component === 'select') {
-    let {options} = data;
+    let { options } = data;
     if (data.generate) {
-      const {max, min, type, placeholder} = data.generate;
+      const { max, min, type, placeholder } = data.generate;
       if (type === 'inc') {
         options = Array(max - min)
           .fill(min)
           .map((_, i) => {
-            if (i === 0) return {value: null, text: placeholder};
-            return {value: min + i, text: min + i};
+            if (i === 0) return { value: null, text: placeholder };
+            return { value: min + i, text: min + i };
           });
       }
       if (type === 'dec') {
         options = Array(max - min)
           .fill(max)
           .map((_, i) => {
-            if (i === 0) return {value: null, text: placeholder};
-            return {value: max - i, text: max - i};
+            if (i === 0) return { value: null, text: placeholder };
+            return { value: max - i, text: max - i };
           });
       }
     }
@@ -172,8 +178,8 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
               target="_blank"
               href={EXTERNAL_LINKS.LEGAL_MENTIONS}
             >
-            CGU
-          </SimpleLink>
+              CGU
+            </SimpleLink>
           </span>
         }
         value={value}
@@ -187,10 +193,11 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
     let valueToUse = null;
     if (value) {
       if (data.isMulti) {
-        valueToUse = value.every((v) => typeof v === 'object') ? value : getValue(value);
-      }
-      else {
-        valueToUse = (typeof value === 'string') ? getValue(value) : value;
+        valueToUse = value.every((v) => typeof v === 'object')
+          ? value
+          : getValue(value);
+      } else {
+        valueToUse = typeof value === 'string' ? getValue(value) : value;
       }
     }
 
@@ -217,7 +224,10 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
           }
           loadOptions={(inputValue, callback) => {
             clearTimeout(debounceTimeoutId);
-            debounceTimeoutId = setTimeout(() => data.loadOptions(inputValue, callback, getValue), 1000);
+            debounceTimeoutId = setTimeout(
+              () => data.loadOptions(inputValue, callback, getValue),
+              1000
+            );
           }}
           isDisabled={data.disable ? data.disable(getValue) : false}
           onChange={parseValueToReturnSelect}
@@ -252,17 +262,14 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
     );
   }
   if (data.component === 'select-request-creatable') {
-
     const hasOptions = data.options && data.options.length > 0;
 
-    const DropdownIndicator = props => {
-      return (
-        <components.DropdownIndicator {...props} />
-      );
+    const DropdownIndicator = (props) => {
+      return <components.DropdownIndicator {...props} />;
     };
 
     const customComponents = {
-      DropdownIndicator: hasOptions ? DropdownIndicator : null
+      DropdownIndicator: hasOptions ? DropdownIndicator : null,
     };
 
     return (
@@ -275,16 +282,20 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
         <CreatableSelect
           id={`${formId}-${data.id}`}
           components={customComponents}
-          formatCreateLabel={userInput => `Créer "${userInput}"`}
+          formatCreateLabel={(userInput) => `Créer "${userInput}"`}
           isMulti={data.isMulti}
           name={data.name}
           value={parseValueToUseSelect()}
           options={data.options}
           className="basic-multi-select"
           classNamePrefix="select"
-          placeholder={data.placeholder || (hasOptions ? 'Sélectionnez...' : 'Saisissez...')}
+          placeholder={
+            data.placeholder ||
+            (hasOptions ? 'Sélectionnez...' : 'Saisissez...')
+          }
           noOptionsMessage={
-            data.noOptionsMessage || ((item) => hasOptions ? `Aucun résultat` : 'Saisissez un élement')
+            data.noOptionsMessage ||
+            ((item) => (hasOptions ? `Aucun résultat` : 'Saisissez un élement'))
           }
           onChange={parseValueToReturnSelect}
         />
@@ -306,7 +317,12 @@ const GenericField = ({data, formId, value, onChange, getValid, getValue}) => {
 GenericField.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
   formId: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string, PropTypes.number, PropTypes.arrayOf(PropTypes.string)]),
+  value: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
   onChange: PropTypes.func.isRequired,
   getValid: PropTypes.func.isRequired,
   getValue: PropTypes.func.isRequired,

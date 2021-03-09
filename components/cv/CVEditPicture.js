@@ -54,33 +54,35 @@ const CVEditPicture = ({
             ) : (
               <div data-uk-form-custom>
                 <label className="uk-text-uppercase" htmlFor="image-upload">
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={async ({ target }) => {
-                    const file = target.files[0];
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={async ({ target }) => {
+                      const file = target.files[0];
 
-                    if (file) {
-                      if (!file.type.includes('image/')) {
-                        UIkit.notification(
-                          'Le fichier doit être une image',
-                          'danger'
+                      if (file) {
+                        if (!file.type.includes('image/')) {
+                          UIkit.notification(
+                            'Le fichier doit être une image',
+                            'danger'
+                          );
+                        }
+
+                        const image = await resizeFile(file);
+                        const profileImageObjectUrl = URL.createObjectURL(
+                          image
                         );
+                        onChange({
+                          profileImage: image,
+                          profileImageObjectUrl,
+                        });
+                        setUrl(profileImageObjectUrl);
                       }
-
-                      const image = await resizeFile(file);
-                      const profileImageObjectUrl = URL.createObjectURL(image);
-                      onChange({
-                        profileImage: image,
-                        profileImageObjectUrl,
-                      });
-                      setUrl(profileImageObjectUrl);
-                    }
-                  }}
-                />
-                Mettre à jour
-              </label>
+                    }}
+                  />
+                  Mettre à jour
+                </label>
               </div>
             )}
           </div>

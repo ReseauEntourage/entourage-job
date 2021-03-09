@@ -15,9 +15,7 @@
     {
       "field": "confirmation",
       "method": "equals",
-      "args": [
-        "SUPPRIMER"
-      ],
+      "args": ["SUPPRIMER"],
       "validWhen": true,
       "message": "Obligatoire"
     }

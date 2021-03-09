@@ -22,9 +22,7 @@ const Input = ({
   };
 
   useEffect(() => {
-    setLabelClass(
-      (value && value.length > 0 && ' stay-small') || ''
-    );
+    setLabelClass((value && value.length > 0 && ' stay-small') || '');
   }, [value]);
 
   return (
