@@ -85,7 +85,7 @@ const cacheCV = async (url, candidatId) => {
 };
 
 const cacheAllCVs = async () => {
-  return getAndCacheAllCVs();
+  return getAndCacheAllCVs(undefined, true);
 };
 
 const createCVSearchString = async (candidatId) => {
