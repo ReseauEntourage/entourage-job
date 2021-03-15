@@ -2,11 +2,11 @@
 
 const paranoidDeleteCascade = (models) => async (instance, options) => {
   // Only operate on paranoid models
-  if (!instance._modelOptions.paranoid) {
+  if (!instance.constructor.options.paranoid) {
     return Promise.resolve();
   }
 
-  const modelName = instance._modelOptions.name.singular;
+  const modelName = instance.constructor.options.name.singular;
 
   const { associations } = models[modelName];
 
