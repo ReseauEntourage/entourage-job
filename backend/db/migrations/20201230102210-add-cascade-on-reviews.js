@@ -5,7 +5,8 @@ module.exports = {
         queryInterface.removeConstraint('Reviews', 'Reviews_CVId_fkey', {
           transaction: t,
         }),
-        queryInterface.addConstraint('Reviews', ['CVId'], {
+        queryInterface.addConstraint('Reviews', {
+          fields: ['CVId'],
           type: 'foreign key',
           name: 'Reviews_CVId_fkey',
           references: {
@@ -26,7 +27,8 @@ module.exports = {
         queryInterface.removeConstraint('Reviews', 'Reviews_CVId_fkey', {
           transaction: t,
         }),
-        queryInterface.addConstraint('Reviews', ['CVId'], {
+        queryInterface.addConstraint('Reviews', {
+          fields: ['CVId'],
           type: 'foreign key',
           name: 'Reviews_CVId_fkey',
           references: {

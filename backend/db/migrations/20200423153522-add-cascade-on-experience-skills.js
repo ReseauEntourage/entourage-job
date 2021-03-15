@@ -16,7 +16,8 @@ module.exports = {
             transaction: t,
           }
         ),
-        queryInterface.addConstraint('Experience_Skills', ['ExperienceId'], {
+        queryInterface.addConstraint('Experience_Skills', {
+          fields: ['ExperienceId'],
           type: 'foreign key',
           name: 'Experience_Skills_ExperienceId_fkey',
           references: {
@@ -27,7 +28,8 @@ module.exports = {
           onUpdate: 'cascade',
           transaction: t,
         }),
-        queryInterface.addConstraint('Experience_Skills', ['SkillId'], {
+        queryInterface.addConstraint('Experience_Skills', {
+          fields: ['SkillId'],
           type: 'foreign key',
           name: 'Experience_Skills_SkillId_fkey',
           references: {
@@ -59,7 +61,8 @@ module.exports = {
             transaction: t,
           }
         ),
-        queryInterface.addConstraint('Experience_Skills', ['ExperienceId'], {
+        queryInterface.addConstraint('Experience_Skills', {
+          fields: ['ExperienceId'],
           type: 'foreign key',
           name: 'Experience_Skills_ExperienceId_fkey',
           references: {
@@ -68,7 +71,8 @@ module.exports = {
           },
           transaction: t,
         }),
-        queryInterface.addConstraint('Experience_Skills', ['SkillId'], {
+        queryInterface.addConstraint('Experience_Skills', {
+          fields: ['SkillId'],
           type: 'foreign key',
           name: 'Experience_Skills_SkillId_fkey',
           references: {
