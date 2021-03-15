@@ -12,14 +12,6 @@ module.exports = {
     use_env_variable: 'DATABASE_URL',
     seederStorage: 'sequelize',
     dialect: 'postgres',
-    native: true,
-    dialectOptions: {
-      native: true,
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
   },
   'dev-test': {
     use_env_variable: 'DATABASE_URL',
