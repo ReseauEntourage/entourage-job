@@ -17,6 +17,7 @@ const Layout = ({
   metaUrl,
   metaType,
   router,
+  noIndex,
 }) => {
   const shouldShowAuthHeader =
     router.asPath.includes('/aider') &&
@@ -46,6 +47,7 @@ const Layout = ({
             media="print"
           />
         )}
+        {noIndex && <meta name="robots" content="noindex" />}
         <meta property="og:site_name" content="LinkedOut" />
         <meta property="og:description" content={metaDescription} />
         <meta name="description" content={metaDescription} />
@@ -92,6 +94,7 @@ Layout.propTypes = {
   router: PropTypes.shape({
     asPath: PropTypes.string,
   }).isRequired,
+  noIndex: PropTypes.bool,
 };
 
 Layout.defaultProps = {
@@ -102,5 +105,6 @@ Layout.defaultProps = {
     "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer.",
   metaUrl: process.env.SERVER_URL,
   metaType: 'website',
+  noIndex: false,
 };
 export default withRouter(Layout);

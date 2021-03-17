@@ -39,7 +39,7 @@ const CVPage = ({ cv, router, hideShareOptions }) => {
 
   if (!cv) {
     return (
-      <Layout title="Page introuvable - LinkedOut">
+      <Layout title="Page introuvable - LinkedOut" noIndex>
         <Section className="uk-text-center" size="large">
           <h2>Ce profil n’est pas disponible</h2>
           <p>
