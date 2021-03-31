@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Background, IconNoSSR, Section } from '../utils';
 import Grid from '../utils/Grid';
 import PARTNERS from '../../constants/partners';
@@ -8,7 +9,7 @@ import TAGS from '../../constants/tags';
 import Button from '../utils/Button';
 import { addPrefix } from '../../utils';
 
-const Partners = () => {
+const Partners = ({ showOrientationPartners }) => {
   const logoList = (data) => {
     return (
       <Grid
@@ -54,21 +55,42 @@ const Partners = () => {
   };
 
   return (
-    <Background blend={{ colorHex: '#484848' }}>
+    <Background
+      blend={{ colorHex: showOrientationPartners ? 'white' : '#484848' }}
+    >
       <Section container="large">
         <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
-          <h2
-            style={{ color: '#fff' }}
-            className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top"
+          {showOrientationPartners ? (
+            <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-remove-top">
+              Ils nous ont{' '}
+              <span className="uk-text-primary">orientés des candidats</span>
+            </h2>
+          ) : (
+            <h2
+              style={{ color: '#fff' }}
+              className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top"
+            >
+              <span className="uk-text-primary">Les partenaires</span> du projet
+              LinkedOut
+            </h2>
+          )}
+          <div
+            className={`uk-padding-large ${
+              showOrientationPartners
+                ? 'uk-padding-remove-vertical'
+                : 'uk-background-muted'
+            }`}
           >
-            <span className="uk-text-primary">Les partenaires</span> du projet
-            LinkedOut
-          </h2>
-          <div className="uk-background-muted uk-padding-large">
-            <h4 className="uk-text-primary uk-text-bold">
-              Ce projet est développé en partenariat avec
-            </h4>
-            {logoList(PARTNERS.strategy)}
+            {showOrientationPartners ? (
+              logoList(PARTNERS.orientation)
+            ) : (
+              <>
+                <h4 className="uk-text-primary uk-text-bold">
+                  Ce projet est développé en partenariat avec
+                </h4>
+                {logoList(PARTNERS.strategy)}
+              </>
+            )}
             <h4 className="uk-text-primary uk-text-bold uk-margin-large-top">
               Avec le soutien précieux de
             </h4>
@@ -84,6 +106,14 @@ const Partners = () => {
       </Section>
     </Background>
   );
+};
+
+Partners.propTypes = {
+  showOrientationPartners: PropTypes.bool,
+};
+
+Partners.defaultProps = {
+  showOrientationPartners: false,
 };
 
 export default Partners;

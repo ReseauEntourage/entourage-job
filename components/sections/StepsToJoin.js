@@ -1,5 +1,6 @@
 import React from 'react';
-import { IconNoSSR, Section } from '../utils';
+import { CONTACT_INFO } from '../../constants';
+import { IconNoSSR, Section, SimpleLink } from '../utils';
 import Button from '../utils/Button';
 import MultipleCTA from '../partials/MultipleCTA';
 import { event } from '../../lib/gtag';
@@ -69,23 +70,25 @@ const StepsToJoin = () => {
       </div>
       <p className="uk-text-center">
         Si vous avez des questions, écrivez-nous à <br />
-        <a
+        <SimpleLink
+          isExternal
           className="uk-link-text uk-text-primary"
           target="_blank"
           rel="noopener"
           href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
         >
           {process.env.MAILJET_CONTACT_EMAIL}
-        </a>{' '}
+        </SimpleLink>{' '}
         ou appelez nous au{' '}
-        <a
+        <SimpleLink
+          isExternal
           className="uk-link-text uk-text-primary"
           target="_blank"
           rel="noopener"
-          href={`tel:${'0188247070'}`}
+          href={`tel:${CONTACT_INFO.MAIN_PHONE_NUMBER}`}
         >
-          01&nbsp;76&nbsp;42&nbsp;05&nbsp;35
-        </a>
+          {CONTACT_INFO.MAIN_PHONE_NUMBER}
+        </SimpleLink>
       </p>
     </Section>
   );
