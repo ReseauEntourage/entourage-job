@@ -3,7 +3,7 @@
 import React from 'react';
 import Partners from '../components/partials/Partners';
 import CandidateTestimoniesOrientation from '../components/sections/CandidateTestimoniesOrientation';
-import { CONTACT_INFO } from '../constants';
+import { CONTACT_INFO, EXTERNAL_LINKS } from '../constants';
 import WhoFor from '../components/sections/WhoFor';
 import WhatItBringsToCandidates from '../components/sections/WhatItBringsToCandidates';
 import Layout from '../components/Layout';
@@ -86,22 +86,37 @@ const Orienter = () => {
         }
         fontSize="small"
         text={
-          <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
+          <span className="uk-text-center">
             Nous lançons une prochaine promotion en mai 2021{' '}
             <span className="uk-text-bold">
               dédiées aux jeunes (18 à 25 ans issus de l&apos;Aide Sociale à
               l&apos;Enfance ou en situation de précarite) résidants dans le 75,
               93 et 92.
+            </span>{' '}
+            Cette promotion se lance en collaboration avec l&apos;association{' '}
+            <span className="uk-text-bold">
+              <SimpleLink
+                isExternal
+                target="_blank"
+                href={EXTERNAL_LINKS.REPAIRS_75}
+              >
+                Repairs! - le réseau d’entraide après l’ASE
+              </SimpleLink>
             </span>
-            Cette promotion se lance en collaboration avec Repair 75 spécialisée
-            dans l’accompagnement des jeunes issus de l’ASE.
+            , spécialisée dans l’accompagnement des jeunes issus de l’aide
+            sociale à l&apos;enfance.
+            <br />
+            <br />
+            <span className="uk-text-primary uk-text-bold">
+              Les inscriptions sont ouvertes&nbsp;!
+            </span>
             <br />
             <br />
             <span className="uk-text-bold">
               Vous accompagnez un jeune qui rentre dans ces critères, motivé
               pour travailler et disponible pour participer au programme&nbsp;?
             </span>
-          </div>
+          </span>
         }
         button={{
           label: ' Orienter un candidat',

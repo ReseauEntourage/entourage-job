@@ -108,12 +108,8 @@ const Partners = ({ showOrientationPartners }) => {
   );
 };
 
-Partners.propTypes = {
-  showOrientationPartners: PropTypes.bool,
-};
+Partners.propTypes = { showOrientationPartners: PropTypes.bool };
 
-Partners.defaultProps = {
-  showOrientationPartners: false,
-};
+Partners.defaultProps = { showOrientationPartners: false };
 
 export default Partners;

@@ -18,19 +18,6 @@ const WhatItBringsToCandidates = () => {
     {
       description: (
         <div>
-          <span className="uk-text-bold">
-            Le site internet <SimpleLink href="/">www.linkedout.fr</SimpleLink>
-          </span>{' '}
-          qui permet de partager ces CV à grande échelle sur les réseaux sociaux
-          pour générer des opportunités d’emploi et de permettre aux entreprises
-          d’envoyer leurs offres
-        </div>
-      ),
-      img: '/static/img/orientation_2.jpg',
-    },
-    {
-      description: (
-        <div>
           <span className="uk-text-bold">Une nouvelle forme de CV</span> qui met
           l’accent sur l’humain et qui valorise le parcours et les qualités de
           la personne.
@@ -42,10 +29,23 @@ const WhatItBringsToCandidates = () => {
       description: (
         <div>
           <span className="uk-text-bold">
+            Le site internet <SimpleLink href="/">www.linkedout.fr</SimpleLink>
+          </span>{' '}
+          qui permet de partager ces CV à grande échelle sur les réseaux sociaux
+          pour générer des opportunités d’emploi et permettre aux entreprises
+          d’envoyer leurs offres
+        </div>
+      ),
+      img: '/static/img/orientation_2.jpg',
+    },
+    {
+      description: (
+        <div>
+          <span className="uk-text-bold">
             Des événements de convivialité et de remobilisation collectifs
           </span>
-          , qui s’appuient sur la communauté Entourage. Mais aussi des
-          formations courtes à la carte en lien avec nos partenaires.
+          , qui s’appuient sur la communauté Entourage et des formations courtes
+          à la carte en lien avec nos partenaires.
         </div>
       ),
       img: '/static/img/orientation_4.jpg',

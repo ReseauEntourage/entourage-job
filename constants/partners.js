@@ -149,6 +149,14 @@ export default {
   ],
   orientation: [
     {
+      key: 'ares',
+      link: 'http://www.groupeares.fr/',
+    },
+    {
+      key: 'repairs',
+      link: 'https://www.repairs75.org/',
+    },
+    {
       key: 'aurore',
       link: 'https://aurore.asso.fr',
     },

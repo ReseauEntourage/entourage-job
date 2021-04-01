@@ -61,12 +61,8 @@ const HowItWorks = ({ style }) => {
   );
 };
 
-HowItWorks.propTypes = {
-  style: PropTypes.string,
-};
+HowItWorks.propTypes = { style: PropTypes.string };
 
-HowItWorks.defaultProps = {
-  style: 'muted',
-};
+HowItWorks.defaultProps = { style: 'muted' };
 
 export default HowItWorks;

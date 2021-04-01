@@ -233,6 +233,7 @@ const EXTERNAL_LINKS = {
   CAMPUS_INCLUSION: 'https://campus-inclusion.fr',
   FRANCE_UNE_CHANCE:
     'https://lafrance-unechance.fr/carte-des-clubs-la-france-une-chance/',
+  REPAIRS_75: 'https://www.repairs75.org/',
 };
 
 const NEWSLETTER_ORIGINS = {
@@ -265,9 +266,7 @@ const JOBS = {
     INSERT_AIRTABLE: 'insert_airtable',
     UPDATE_AIRTABLE: 'update_airtable',
   },
-  QUEUES: {
-    WORK: 'work',
-  },
+  QUEUES: { WORK: 'work' },
 };
 
 const SOCKETS = {
@@ -286,9 +285,7 @@ const AIRTABLE_NAMES = {
   OFFERS: "Offres d'emploi v2",
 };
 
-const VALUES = {
-  SHARES: 120000,
-};
+const VALUES = { SHARES: 120000 };
 
 const CONTACT_INFO = {
   CORPORATE_CONTACT: 'entreprises@linkedout.fr',

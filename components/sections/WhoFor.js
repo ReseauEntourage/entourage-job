@@ -32,7 +32,7 @@ const WhoFor = () => {
             Être éligibles à un contrat de travail en France{' '}
           </span>
           (pièce d’identité / autorisation de travail, domiciliation, compte
-          bancaire, attestation de Sécurité sociale)
+          bancaire, attestation de Sécurité Sociale)
         </div>
       ),
     },
@@ -55,7 +55,7 @@ const WhoFor = () => {
       fontSize="small"
       title={
         <>
-          <span className="uk-text-primary">À qui</span> s&apos;addresse
+          <span className="uk-text-primary">À qui</span> s&apos;adresse
           LinkedOut&nbsp;?
         </>
       }
@@ -71,7 +71,7 @@ const WhoFor = () => {
             trouver du travail par leurs propres moyens.
           </div>
           <Img
-            src="../static/img/candidats.jpg"
+            src="../static/img/new_candidates.jpg"
             alt="Candidats LinkedOut"
             className="uk-padding-large uk-padding-remove-vertical uk-margin-medium-top"
           />
@@ -81,7 +81,7 @@ const WhoFor = () => {
     >
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
         <h3 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-          Quelques critères essentiels pour intégrer le dispositif ?
+          Quelques critères essentiels pour intégrer le dispositif&nbsp;:
         </h3>
         <MultipleCTA
           data={content}

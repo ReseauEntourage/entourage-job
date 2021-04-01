@@ -8,7 +8,7 @@ const testimonies = [
     image: '/static/img/temoignage-candidat-jordan.jpg',
     author: 'Jordan',
     quote:
-      "C'est une équipe joyeuse, qui donne de la joie, l'envie de se battre jusqu'au bout. Les personnes que j'ai rencontré ne m'ont pas fait ressentir qu’on était différent, une impression de proximité.",
+      "C'est une équipe joyeuse, qui donne de la joie, l'envie de se battre jusqu'au bout. Les personnes que j'ai rencontré ne m'ont pas fait ressentir qu’on était différent.",
   },
   {
     image: '/static/img/temoignage-candidat-danny.jpg',
@@ -20,7 +20,7 @@ const testimonies = [
     image: '/static/img/temoignage-candidat-amelie.jpg',
     author: 'Amélie',
     quote:
-      "C'est vraiment un bon dispositif. On est pas tout seul. Avec ma bénévole coach, on ne parle pas simplement du travail, elle me donne des conseils. Je n’ai pas de famille ici, c'est des choses dont j'avais besoin. J'ai parcouru beaucoup les missions locales et d'autres dispositif et là c'est différent, vous êtes là.",
+      "C'est vraiment un bon dispositif. Nous ne sommes pas tout seul. Avec ma Coach, on ne parle pas simplement du travail, elle me donne des conseils. Je n’ai pas de famille ici, c'est des choses dont j'avais besoin. J'ai parcouru beaucoup les missions locales et d'autres dispositif et là c'est différent, vous êtes là.",
   },
   {
     image: '/static/img/temoignage-candidat-lamin.jpg',
