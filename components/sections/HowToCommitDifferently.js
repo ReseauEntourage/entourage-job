@@ -1,6 +1,6 @@
 import React from 'react';
 import { Section } from '../utils';
-import { CONTACT_MAILS } from '../../constants';
+import { CONTACT_INFO } from '../../constants';
 import Button from '../utils/Button';
 import MultipleCTA from '../partials/MultipleCTA';
 
@@ -88,7 +88,7 @@ const HowToCommitDifferently = () => {
                   label: 'Nous contacter',
                   size: 'small',
                   external: true,
-                  href: `mailto:${CONTACT_MAILS.CORPORATE_CONTACT}`,
+                  href: `mailto:${CONTACT_INFO.CORPORATE_CONTACT}`,
                 },
               },
             ]}
@@ -149,7 +149,9 @@ const HowToCommitDifferently = () => {
                   ),
                   text: (
                     <p>
-                      Soyez contactés ponctuellement par un candidat LinkedOut pour répondre à des questions sur un métier ou un secteur que vous connaissez bien.
+                      Soyez contactés ponctuellement par un candidat LinkedOut
+                      pour répondre à des questions sur un métier ou un secteur
+                      que vous connaissez bien.
                     </p>
                   ),
                   button: {

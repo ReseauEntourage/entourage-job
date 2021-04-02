@@ -153,12 +153,24 @@ export default {
       link: 'http://www.groupeares.fr/',
     },
     {
+      key: 'repairs',
+      link: 'https://www.repairs75.org/',
+    },
+    {
+      key: 'aurore',
+      link: 'https://aurore.asso.fr',
+    },
+    {
+      key: 'coallia',
+      link: 'https://coallia.org/',
+    },
+    {
       key: 'vitaminet',
       link: 'http://www.groupevitaminet.com/',
     },
     {
-      key: 'fads',
-      link: 'https://www.armeedusalut.fr/',
+      key: 'croixrouge',
+      link: 'https://www.croix-rouge.fr',
     },
     {
       key: 'rejoue',
@@ -169,24 +181,16 @@ export default {
       link: 'https://logos-solidarite.fr/',
     },
     {
-      key: 'apa',
-      link: 'https://associationpourlamitie.com/',
+      key: 'sos',
+      link: 'https://www.groupe-sos.org/',
     },
     {
-      key: 'coallia',
-      link: 'https://coallia.org/',
+      key: 'emmausdefi',
+      link: 'https://emmaus-defi.org',
     },
     {
-      key: 'captifs',
-      link: 'https://www.captifs.fr/',
-    },
-    {
-      key: 'emmaus',
-      link: 'https://www.emmaus-solidarite.org/',
-    },
-    {
-      key: 'jrs',
-      link: 'https://www.jrsfrance.org/',
+      key: 'enfantsducanal',
+      link: 'https://www.lesenfantsducanal.fr/',
     },
   ],
 };

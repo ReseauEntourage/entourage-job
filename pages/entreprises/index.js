@@ -1,8 +1,8 @@
 import React from 'react';
+import WhatItBringsToCompanies from '../../components/sections/WhatItBringsToCompanies';
 import Layout from '../../components/Layout';
 import { Section } from '../../components/utils';
 import ImageTitle from '../../components/sections/ImageTitle';
-import WhatItBrings from '../../components/sections/WhatItBrings';
 import HireCTA from '../../components/partials/HireCTA';
 import Reviews from '../../components/sections/Reviews';
 import HowToCommitDifferently from '../../components/sections/HowToCommitDifferently';
@@ -27,7 +27,7 @@ const Entreprises = () => {
           précaires. Recrutez un candidat, ou découvrez plus bas d’autres
           manières de vous engager.
         </h4>
-        <WhatItBrings />
+        <WhatItBringsToCompanies />
       </Section>
       <HireCTA />
       <Reviews />
