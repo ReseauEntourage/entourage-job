@@ -33,7 +33,7 @@ const RedisManager = {
   },
 
   createClient(name) {
-    const client = new Redis(process.env.REDIS_URL, {
+    const client = new Redis(process.env.REDIS_TLS_URL, {
       // required to prevent blocking when disconnected
       enableOfflineQueue: false,
 
@@ -47,6 +47,10 @@ const RedisManager = {
       },
 
       connectionName: name,
+
+      tls: {
+        rejectUnauthorized: false,
+      },
     });
 
     client.name = name;
