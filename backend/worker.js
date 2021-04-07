@@ -1,11 +1,13 @@
 // eslint-disable-next-line import/order
+
 const loadEnvironementVariables = require('./utils/env');
 
 loadEnvironementVariables();
 
 const throng = require('throng');
-const Queue = require('bull');
 const Pusher = require('pusher');
+
+const { getWorkQueue } = require('./utils/WorkQueue');
 
 const { JOBS, SOCKETS } = require('../constants');
 const {
@@ -36,7 +38,7 @@ const pusher = new Pusher({
 });
 
 const start = () => {
-  const workQueue = new Queue(JOBS.QUEUES.WORK, process.env.REDIS_URL);
+  const workQueue = getWorkQueue();
 
   workQueue.on('completed', (job, result) => {
     console.log(

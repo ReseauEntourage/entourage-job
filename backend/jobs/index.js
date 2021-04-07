@@ -1,8 +1,6 @@
-const Queue = require('bull');
+const { getWorkQueue } = require('../utils/WorkQueue');
 
 const dev = process.env.NODE_ENV !== 'production';
-
-const { JOBS } = require('../../constants');
 
 const { sendMailBackground } = require('./Mail');
 
@@ -16,7 +14,7 @@ const {
   createCVSearchString,
 } = require('./CV');
 
-const workQueue = new Queue(JOBS.QUEUES.WORK, process.env.REDIS_URL);
+const workQueue = getWorkQueue();
 
 const addToWorkQueue = async (data) => {
   if (!dev) {
