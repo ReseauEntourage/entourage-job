@@ -15,12 +15,12 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.TEXT,
       order: {
         type: DataTypes.INTEGER,
-        defaultValue: -1
-      }
+        defaultValue: -1,
+      },
     },
     {}
   );
-  Experience.beforeCreate((fields, _) => {
+  Experience.beforeCreate((fields) => {
     const data = fields;
     data.id = uuid();
     return data;

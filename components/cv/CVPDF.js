@@ -1,12 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {GridNoSSR} from '../utils/Grid';
-import {IconNoSSR, SimpleLink} from "../utils";
-import {addPrefix, formatParagraph, sortExperiences, sortReviews} from "../../utils";
+import { GridNoSSR } from '../utils/Grid';
+import { IconNoSSR, SimpleLink } from '../utils';
+import {
+  addPrefix,
+  formatParagraph,
+  sortExperiences,
+  sortReviews,
+} from '../../utils';
 
-const CVPDF = ({cv, page}) => {
-  const experiences = cv.experiences && cv.experiences.length > 0 ? sortExperiences(cv.experiences) : [];
+const CVPDF = ({ cv, page }) => {
+  const experiences =
+    cv.experiences && cv.experiences.length > 0
+      ? sortExperiences(cv.experiences)
+      : [];
 
   // Function to estimate where to divide the experiences between both pages
   const averageCharsPerLine = 59;
@@ -21,7 +29,10 @@ const CVPDF = ({cv, page}) => {
     }, 0);
     numberOfLines += Math.floor(curr.skills.length / averageSkillsPerLine) + 1;
 
-    if((acc + numberOfLines) > estimatedMaxLinesOnTheFirstPage && index < indexToSplitAt) {
+    if (
+      acc + numberOfLines > estimatedMaxLinesOnTheFirstPage &&
+      index < indexToSplitAt
+    ) {
       indexToSplitAt = index > 0 ? index : 1;
     }
     return acc + numberOfLines;
@@ -32,29 +43,37 @@ const CVPDF = ({cv, page}) => {
 
   const pages = [
     // First Page
-    <div style={{
-      height: 1122,
-      width: 794,
-    }} className="uk-background-muted uk-flex uk-flex-column">
-      {
-        cv.urlImg &&
+    <div
+      style={{
+        height: 1122,
+        width: 794,
+      }}
+      className="uk-background-muted uk-flex uk-flex-column"
+    >
+      {cv.urlImg && (
         <div
           style={{
             position: 'relative',
-            height: 150
-          }}>
+            height: 150,
+          }}
+        >
           <div
             className="uk-background-cover uk-background-center uk-flex uk-flex-middle uk-flex-center"
-            style={{height: 150}}>
+            style={{ height: 150 }}
+          >
             {/* Can't use <Img /> component because doesn't work for PDF */}
             <img
-              style={{marginTop: 75}}
+              style={{ marginTop: 75 }}
               className="uk-box-shadow-small uk-width-expand"
-              src={process.env.AWSS3_URL + cv.urlImg || addPrefix('/static/img/arthur-background.jpg')}
-              alt="" />
+              src={
+                process.env.AWSS3_URL + cv.urlImg ||
+                addPrefix('/static/img/arthur-background.jpg')
+              }
+              alt=""
+            />
           </div>
         </div>
-      }
+      )}
       <div className="uk-flex-1 uk-flex uk-padding uk-position-relative">
         <div className="uk-flex-1 uk-flex uk-flex-column uk-card uk-card-default uk-padding uk-background-default">
           <GridNoSSR childWidths={['1-1']} gap="small">
@@ -63,17 +82,17 @@ const CVPDF = ({cv, page}) => {
                 {cv.user.candidat.firstName} {cv.user.candidat.lastName}
               </h1>
               {cv.catchphrase && (
-                <div
-                  className="uk-width-xlarge uk-text-center uk-flex uk-flex-center uk-flex-middle">
-                  <p
-                    className="uk-text-small uk-position-relative">
+                <div className="uk-width-xlarge uk-text-center uk-flex uk-flex-center uk-flex-middle">
+                  <p className="uk-text-small uk-position-relative">
                     <IconNoSSR
                       className="uk-text-primary ent-quote-after"
                       name="quote-right"
                       ratio={1}
                       flip
                     />
-                    <span className="uk-margin-small-left uk-margin-small-right">{cv.catchphrase}</span>
+                    <span className="uk-margin-small-left uk-margin-small-right">
+                      {cv.catchphrase}
+                    </span>
                     <IconNoSSR
                       className="uk-text-primary ent-quote-before"
                       name="quote-right"
@@ -83,8 +102,7 @@ const CVPDF = ({cv, page}) => {
                 </div>
               )}
               {/* uk-text-emphasis uk-text-bold */}
-              {
-                cv.ambitions && cv.ambitions.length > 0 &&
+              {cv.ambitions && cv.ambitions.length > 0 && (
                 <p className="uk-text-bold uk-width-xxlarge uk-text-center uk-margin-small-bottom uk-margin-remove-top">
                   J&apos;aimerais beaucoup travailler dans{' '}
                   <span
@@ -93,8 +111,9 @@ const CVPDF = ({cv, page}) => {
                       lineHeight: 'unset',
                       verticalAlign: 'bottom',
                       fontSize: 'inherit',
-                    }}>
-                      {cv.ambitions[0]}
+                    }}
+                  >
+                    {cv.ambitions[0]}
                   </span>
                   {cv.ambitions.length > 1 ? (
                     <>
@@ -108,132 +127,197 @@ const CVPDF = ({cv, page}) => {
                           fontSize: 'inherit',
                         }}
                       >
-                    {cv.ambitions[1]}
-                  </span>
+                        {cv.ambitions[1]}
+                      </span>
                     </>
                   ) : (
                     ''
                   )}
                   {cv.careerPathOpen ? (
                     <>
-                      {
-                        ` mais reste ${
-                          cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
-                        } à toutes autres propositions.`}
+                      {` mais reste ${
+                        cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
+                      } à toutes autres propositions.`}
                     </>
                   ) : (
                     '.'
                   )}
                 </p>
-              }
+              )}
             </div>
             <GridNoSSR className="uk-flex" eachWidths={['2-3', '1-3']}>
-              <GridNoSSR column gap='medium'>
+              <GridNoSSR column gap="medium">
                 {firstExperiences && firstExperiences.length > 0 && (
                   <div className="">
-                    <h5 className="uk-margin-small-bottom">Mes expériences et compétences</h5>
+                    <h5 className="uk-margin-small-bottom">
+                      Mes expériences et compétences
+                    </h5>
                     <hr className="uk-divider-small uk-margin-remove-top" />
                     <dl className="uk-description-list uk-margin-remove">
-                      {firstExperiences.map((exp, i) => (
-                        <>
-                          {exp.skills && (
-                            <dt key={i} style={{display: 'block'}}>
-                              {exp.skills.map((name, key) => (
-                                <span
-                                  key={key}
-                                  className="uk-label uk-text-lowercase uk-margin-small-right">
-                                  {name}
-                                </span>
-                              ))}
-                            </dt>
-                          )}
-                          <dd className="uk-text-small uk-margin-small-top">
-                            {formatParagraph(exp.description, true)}
-                          </dd>
-                        </>
-                      ))}
+                      {firstExperiences.map((exp, i) => {
+                        return (
+                          <>
+                            {exp.skills && (
+                              <dt key={i} style={{ display: 'block' }}>
+                                {exp.skills.map((name, key) => {
+                                  return (
+                                    <span
+                                      key={key}
+                                      className="uk-label uk-text-lowercase uk-margin-small-right"
+                                    >
+                                      {name}
+                                    </span>
+                                  );
+                                })}
+                              </dt>
+                            )}
+                            <dd className="uk-text-small uk-margin-small-top">
+                              {formatParagraph(exp.description, true)}
+                            </dd>
+                          </>
+                        );
+                      })}
                     </dl>
                   </div>
                 )}
               </GridNoSSR>
-              <GridNoSSR column gap='medium'>
+              <GridNoSSR column gap="medium">
                 {cv.businessLines && cv.businessLines.length > 0 && (
                   <div className="">
-                    <h5 className="uk-margin-small-bottom">Mes secteurs d&apos;activité</h5>
+                    <h5 className="uk-margin-small-bottom">
+                      Mes secteurs d&apos;activité
+                    </h5>
                     <hr className="uk-divider-small uk-margin-remove-top" />
                     <div className="uk-flex uk-flex-left uk-flex-wrap uk-flex-1">
-                      {
-                        cv.businessLines.map((line, index) =>
+                      {cv.businessLines.map((line, index) => {
+                        return (
                           <div
-                            key={index} className="uk-flex uk-flex-center uk-flex-middle" style={{
-                            paddingRight: 5,
-                            paddingTop: 5,
-                            paddingBottom: 5
-                          }}>
-                            <span className="uk-badge uk-text-small">{line}</span>
+                            key={index}
+                            className="uk-flex uk-flex-center uk-flex-middle"
+                            style={{
+                              paddingRight: 5,
+                              paddingTop: 5,
+                              paddingBottom: 5,
+                            }}
+                          >
+                            <span className="uk-badge uk-text-small">
+                              {line}
+                            </span>
                           </div>
-                        )
-                      }
+                        );
+                      })}
                     </div>
                   </div>
                 )}
-                {
-                  (cv.contracts || cv.locations || cv.availability || cv.languages || cv.transport) &&
+                {(cv.contracts ||
+                  cv.locations ||
+                  cv.availability ||
+                  cv.languages ||
+                  cv.transport) && (
                   <div className="">
-                    <h5 className="uk-margin-small-bottom">Mes infos pratiques</h5>
+                    <h5 className="uk-margin-small-bottom">
+                      Mes infos pratiques
+                    </h5>
                     <hr className="uk-divider-small uk-margin-remove-top" />
                     <ul className="uk-list uk-margin-remove-bottom uk-text-small">
-                      {cv.user.candidat.address && cv.user.candidat.address.length > 0 && (
-                        <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR className="uk-text-primary uk-margin-small-right" name="home" style={{width: 20}} />{' '}
-                          <span className="uk-flex-1">{cv.user.candidat.address}</span>
-                        </li>
-                      )}
-                      {cv.user.candidat.email && cv.user.candidat.email.length > 0 && (
-                        <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR className="uk-text-primary uk-margin-small-right" name="mail" style={{width: 20}} />{' '}
-                          <span className="uk-flex-1">{cv.user.candidat.email}</span>
-                        </li>
-                      )}
-                      {cv.user.candidat.phone && cv.user.candidat.phone.length > 0 && (
-                        <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR className="uk-text-primary uk-margin-small-right" name="phone" style={{width: 20}} />{' '}
-                          <span className="uk-flex-1">{cv.user.candidat.phone}</span>
-                        </li>
-                      )}
+                      {cv.user.candidat.address &&
+                        cv.user.candidat.address.length > 0 && (
+                          <li className="uk-flex uk-flex-middle">
+                            <IconNoSSR
+                              className="uk-text-primary uk-margin-small-right"
+                              name="home"
+                              style={{ width: 20 }}
+                            />{' '}
+                            <span className="uk-flex-1">
+                              {cv.user.candidat.address}
+                            </span>
+                          </li>
+                        )}
+                      {cv.user.candidat.email &&
+                        cv.user.candidat.email.length > 0 && (
+                          <li className="uk-flex uk-flex-middle">
+                            <IconNoSSR
+                              className="uk-text-primary uk-margin-small-right"
+                              name="mail"
+                              style={{ width: 20 }}
+                            />{' '}
+                            <span className="uk-flex-1">
+                              {cv.user.candidat.email}
+                            </span>
+                          </li>
+                        )}
+                      {cv.user.candidat.phone &&
+                        cv.user.candidat.phone.length > 0 && (
+                          <li className="uk-flex uk-flex-middle">
+                            <IconNoSSR
+                              className="uk-text-primary uk-margin-small-right"
+                              name="phone"
+                              style={{ width: 20 }}
+                            />{' '}
+                            <span className="uk-flex-1">
+                              {cv.user.candidat.phone}
+                            </span>
+                          </li>
+                        )}
                       {cv.contracts && cv.contracts.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR className="uk-text-primary uk-margin-small-right" name="file-text" style={{width: 20}} />{' '}
-                          <span className="uk-flex-1">{cv.contracts.join(' / ')}</span>
+                          <IconNoSSR
+                            className="uk-text-primary uk-margin-small-right"
+                            name="file-text"
+                            style={{ width: 20 }}
+                          />{' '}
+                          <span className="uk-flex-1">
+                            {cv.contracts.join(' / ')}
+                          </span>
                         </li>
                       )}
                       {cv.locations && cv.locations.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR className="uk-text-primary uk-margin-small-right" name="location" style={{width: 20}} />{' '}
-                          <span className="uk-flex-1">{cv.locations.join(' / ')}</span>
+                          <IconNoSSR
+                            className="uk-text-primary uk-margin-small-right"
+                            name="location"
+                            style={{ width: 20 }}
+                          />{' '}
+                          <span className="uk-flex-1">
+                            {cv.locations.join(' / ')}
+                          </span>
                         </li>
                       )}
                       {cv.availability && cv.availability.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR className="uk-text-primary uk-margin-small-right" name="calendar" style={{width: 20}}/>{' '}
+                          <IconNoSSR
+                            className="uk-text-primary uk-margin-small-right"
+                            name="calendar"
+                            style={{ width: 20 }}
+                          />{' '}
                           <span className="uk-flex-1">{cv.availability}</span>
                         </li>
                       )}
                       {cv.languages && cv.languages.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR className="uk-text-primary uk-margin-small-right" name="users" style={{width: 20}}/>{' '}
-                          <span className="uk-flex-1">{cv.languages.join(' / ')}</span>
+                          <IconNoSSR
+                            className="uk-text-primary uk-margin-small-right"
+                            name="users"
+                            style={{ width: 20 }}
+                          />{' '}
+                          <span className="uk-flex-1">
+                            {cv.languages.join(' / ')}
+                          </span>
                         </li>
                       )}
                       {cv.transport && cv.transport.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR className="uk-text-primary uk-margin-small-right" name="car" style={{width: 20}}/>{' '}
+                          <IconNoSSR
+                            className="uk-text-primary uk-margin-small-right"
+                            name="car"
+                            style={{ width: 20 }}
+                          />{' '}
                           <span className="uk-flex-1">{cv.transport}</span>
                         </li>
                       )}
                     </ul>
                   </div>
-                }
+                )}
               </GridNoSSR>
             </GridNoSSR>
           </GridNoSSR>
@@ -242,40 +326,47 @@ const CVPDF = ({cv, page}) => {
     </div>,
 
     // Second Page
-    <div style={{
-      height: 1122,
-      width: 794,
-    }} className="uk-background-muted uk-flex">
+    <div
+      style={{
+        height: 1122,
+        width: 794,
+      }}
+      className="uk-background-muted uk-flex"
+    >
       <div className="uk-flex-1 uk-flex cv-fiche uk-padding uk-position-relative">
         <div className="uk-flex-1 uk-flex uk-flex-column uk-card uk-card-default uk-padding uk-background-default">
-          <GridNoSSR childWidths={['1-1']} gap="small" style={{scale: 0.9}}>
+          <GridNoSSR childWidths={['1-1']} gap="small" style={{ scale: 0.9 }}>
             <GridNoSSR className="uk-flex" eachWidths={['2-3', '1-3']}>
-              <GridNoSSR column gap='medium'>
-                {
-                  restOfExperiences && restOfExperiences.length > 0 &&
+              <GridNoSSR column gap="medium">
+                {restOfExperiences && restOfExperiences.length > 0 && (
                   <div className="">
                     <dl className="uk-description-list uk-margin-remove">
-                      {restOfExperiences.map((exp, i) => (
-                        <>
-                          {exp.skills && (
-                            <dt key={i} style={{display: 'block'}}>
-                              {exp.skills.map((name, key) => (
-                                <span
-                                  key={key}
-                                  className="uk-label uk-text-lowercase uk-margin-small-right">
-                              {name}
-                            </span>
-                              ))}
-                            </dt>
-                          )}
-                          <dd className="uk-text-small uk-margin-small-top">
-                            {formatParagraph(exp.description, true)}
-                          </dd>
-                        </>
-                      ))}
+                      {restOfExperiences.map((exp, i) => {
+                        return (
+                          <>
+                            {exp.skills && (
+                              <dt key={i} style={{ display: 'block' }}>
+                                {exp.skills.map((name, key) => {
+                                  return (
+                                    <span
+                                      key={key}
+                                      className="uk-label uk-text-lowercase uk-margin-small-right"
+                                    >
+                                      {name}
+                                    </span>
+                                  );
+                                })}
+                              </dt>
+                            )}
+                            <dd className="uk-text-small uk-margin-small-top">
+                              {formatParagraph(exp.description, true)}
+                            </dd>
+                          </>
+                        );
+                      })}
                     </dl>
                   </div>
-                }
+                )}
                 {cv.story && (
                   <div className="">
                     <h5 className="uk-margin-small-bottom">Mon histoire</h5>
@@ -293,49 +384,56 @@ const CVPDF = ({cv, page}) => {
                     </h5>
                     <hr className="uk-divider-small uk-margin-remove-top" />
                     <ul className="uk-list uk-margin-remove-bottom">
-                      {sortReviews(cv.reviews).map((review, i) => (
-                        <li key={i}>
-                          <IconNoSSR
-                            flip
-                            className="uk-text-primary uk-margin-small-bottom"
-                            name="quote-right"
-                            ratio={1}
-                          />
-                          <p className="uk-text-small uk-margin-remove">{formatParagraph(review.text, true)}</p>
-                          <GridNoSSR
-                            className="uk-margin-small-top"
-                            eachWidths={['expand', 'auto']}
-                            between
-                            row
-                          >
-                            <p className="uk-text-small uk-text-meta uk-margin-remove-top">
-                                  <span className="uk-text-bold">
-                                    {review.name}
-                                  </span>
-                              , {review.status}
-                            </p>
+                      {sortReviews(cv.reviews).map((review, i) => {
+                        return (
+                          <li key={i}>
                             <IconNoSSR
-                              className="uk-text-muted uk-width-1-1 uk-text-right"
+                              flip
+                              className="uk-text-primary uk-margin-small-bottom"
                               name="quote-right"
-                              ratio={0.8} />
-                          </GridNoSSR>
-                        </li>
-                      ))}
+                              ratio={1}
+                            />
+                            <p className="uk-text-small uk-margin-remove">
+                              {formatParagraph(review.text, true)}
+                            </p>
+                            <GridNoSSR
+                              className="uk-margin-small-top"
+                              eachWidths={['expand', 'auto']}
+                              between
+                              row
+                            >
+                              <p className="uk-text-small uk-text-meta uk-margin-remove-top">
+                                <span className="uk-text-bold">
+                                  {review.name}
+                                </span>
+                                , {review.status}
+                              </p>
+                              <IconNoSSR
+                                className="uk-text-muted uk-width-1-1 uk-text-right"
+                                name="quote-right"
+                                ratio={0.8}
+                              />
+                            </GridNoSSR>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}
               </GridNoSSR>
-              <GridNoSSR column gap='medium'>
+              <GridNoSSR column gap="medium">
                 {cv.skills && cv.skills.length > 0 && (
                   <div className="">
                     <h5 className="uk-margin-small-bottom">Mes atouts</h5>
                     <hr className="uk-divider-small uk-margin-remove-top" />
                     <ul className="uk-list uk-margin-remove-bottom uk-text-small">
-                      {cv.skills.map((item, i) => (
-                        <li id={i} key={i}>
-                          {item}
-                        </li>
-                      ))}
+                      {cv.skills.map((item, i) => {
+                        return (
+                          <li id={i} key={i}>
+                            {item}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}
@@ -344,11 +442,13 @@ const CVPDF = ({cv, page}) => {
                     <h5 className="uk-margin-small-bottom">Mes passions</h5>
                     <hr className="uk-divider-small uk-margin-remove-top" />
                     <ul className="uk-list uk-margin-remove-bottom uk-text-small">
-                      {cv.passions.map((item, i) => (
-                        <li id={i} key={i}>
-                          {item}
-                        </li>
-                      ))}
+                      {cv.passions.map((item, i) => {
+                        return (
+                          <li id={i} key={i}>
+                            {item}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}
@@ -356,8 +456,8 @@ const CVPDF = ({cv, page}) => {
             </GridNoSSR>
           </GridNoSSR>
           <div className="uk-flex-1 uk-flex uk-flex-column uk-flex-right">
-            <hr className="uk-margin-small-bottom"/>
-            <GridNoSSR column middle gap='small'>
+            <hr className="uk-margin-small-bottom" />
+            <GridNoSSR column middle gap="small">
               <p className="uk-text-small uk-text-center uk-text-meta uk-width-xlarge@m uk-margin-remove">
                 Je suis accompagné(e) dans ma recherche d&apos;emploi et mon
                 intégration en entreprise par le projet LinkedOut. Pour plus
@@ -381,28 +481,27 @@ const CVPDF = ({cv, page}) => {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
   ];
 
   return (
     <div className="uk-flex uk-flex-middle uk-flex-column">
-      {
-        page && page >= 0 && page < 2 ?
-          pages[Math.floor(page)]
-          :
-          pages.map((p) => p)
-      }
+      {page && page >= 0 && page < 2
+        ? pages[Math.floor(page)]
+        : pages.map((p) => {
+            return p;
+          })}
     </div>
   );
 };
 
 CVPDF.propTypes = {
   cv: PropTypes.shape().isRequired,
-  page: PropTypes.number
+  page: PropTypes.number,
 };
 
 CVPDF.defaultProps = {
-  page: null
+  page: null,
 };
 
 export default CVPDF;

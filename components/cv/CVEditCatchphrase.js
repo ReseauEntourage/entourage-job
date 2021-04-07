@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ModalEdit from '../modals/ModalEdit';
-import schemaCatchphrase from '../forms/schema/formEditCatchphrase';
+import schemaCatchphrase from '../forms/schema/formEditCatchphrase.json';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
 
@@ -39,7 +39,7 @@ const CVEditCatchphrase = ({ catchphrase, onChange }) => {
             onSubmit={(fields, closeModal) => {
               closeModal();
               onChange({
-                ...fields
+                ...fields,
               });
             }}
           />

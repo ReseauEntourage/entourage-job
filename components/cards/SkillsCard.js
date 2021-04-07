@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from '../utils/Icon';
 import ModalEdit from '../modals/ModalEdit';
-import schemaformEditSkills from '../forms/schema/formEditSkills';
+import schemaformEditSkills from '../forms/schema/formEditSkills.json';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
 
@@ -30,11 +30,13 @@ const SkillCard = ({ list, onChange }) => {
       </GridNoSSR>
       <ul className="uk-list">
         {list.length !== 0 ? (
-          list.map((item, i) => (
-            <li id={i} key={i}>
-              {item}
-            </li>
-          ))
+          list.map((item, i) => {
+            return (
+              <li id={i} key={i}>
+                {item}
+              </li>
+            );
+          })
         ) : (
           <li>Aucun atout renseigné</li>
         )}

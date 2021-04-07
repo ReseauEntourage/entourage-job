@@ -3,26 +3,28 @@ import PropTypes from 'prop-types';
 import { Button, GridNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import Api from '../../Axios';
-import {CV_FILTERS_DATA, INITIAL_NB_OF_CV_TO_DISPLAY} from '../../constants';
+import { CV_FILTERS_DATA, INITIAL_NB_OF_CV_TO_DISPLAY } from '../../constants';
 import { hasAsChild } from '../../utils';
 import PostJobAdModal from '../modals/PostJobAdModal';
 import SimpleLink from '../utils/SimpleLink';
 
-const NoCVInThisArea = () => (
-  <p className="uk-text-center uk-text-italic">
-    LinkedOut se déploie d’ici mars 2023 dans les régions de Paris, de Lille et
-    de Lyon. Vous ne trouvez pas de candidats LinkedOut dans votre région&nbsp;?
-    Contactez-nous à{' '}
-    <SimpleLink
-      isExternal
-      newTab
-      className="uk-link-text uk-text-primary"
-      href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
-    >
-      {process.env.MAILJET_CONTACT_EMAIL}
-    </SimpleLink>
-  </p>
-);
+const NoCVInThisArea = () => {
+  return (
+    <p className="uk-text-center uk-text-italic">
+      LinkedOut se déploie d’ici mars 2023 dans les régions de Paris, de Lille
+      et de Lyon. Vous ne trouvez pas de candidats LinkedOut dans votre
+      région&nbsp;? Contactez-nous à{' '}
+      <SimpleLink
+        isExternal
+        newTab
+        className="uk-link-text uk-text-primary"
+        href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
+      >
+        {process.env.MAILJET_CONTACT_EMAIL}
+      </SimpleLink>
+    </p>
+  );
+};
 
 const CVList = ({
   nb,
@@ -38,8 +40,9 @@ const CVList = ({
     INITIAL_NB_OF_CV_TO_DISPLAY
   );
 
-  const displayMoreCVs = () =>
-    setNbOfCVToDisplay(nbOfCVToDisplay + INITIAL_NB_OF_CV_TO_DISPLAY);
+  const displayMoreCVs = () => {
+    return setNbOfCVToDisplay(nbOfCVToDisplay + INITIAL_NB_OF_CV_TO_DISPLAY);
+  };
 
   useEffect(() => {
     setCVs(undefined);
@@ -50,7 +53,9 @@ const CVList = ({
         nb,
       },
     })
-      .then(({ data }) => setCVs(data))
+      .then(({ data }) => {
+        return setCVs(data);
+      })
       .catch((err) => {
         console.error(err);
         setError('Impossible de récupérer les CVs.');
@@ -72,9 +77,9 @@ const CVList = ({
           filteredList = cvs.filter((cv) => {
             const resultForEachFilter = [];
             for (let i = 0; i < keys.length; i += 1) {
-              const currentFilterConstants = CV_FILTERS_DATA.find(
-                (data) => data.key === keys[i]
-              ).constants;
+              const currentFilterConstants = CV_FILTERS_DATA.find((data) => {
+                return data.key === keys[i];
+              }).constants;
 
               let hasFound = false;
               if (filtersObj[keys[i]].length === 0) {
@@ -101,7 +106,9 @@ const CVList = ({
               resultForEachFilter.push(hasFound);
             }
 
-            return resultForEachFilter.every((value) => value);
+            return resultForEachFilter.every((value) => {
+              return value;
+            });
           });
         }
       }

@@ -85,7 +85,9 @@ export default {
       title: "Si non, renseignez le(s) candidat(s) à qui l'adresser",
       placeholder: 'Tapez un candidat',
       component: 'select-request-async',
-      disable: (getValue) => getValue('isPublic') === true,
+      disable: (getValue) => {
+        return getValue('isPublic') === true;
+      },
       loadOptions: (inputValue, callback) => {
         axios
           .get('api/v1/user/search', {
@@ -94,12 +96,14 @@ export default {
               role: USER_ROLES.CANDIDAT,
             },
           })
-          .then(({ data }) =>
-            data.map((u) => ({
-              value: u.id,
-              label: `${u.firstName} ${u.lastName}`,
-            }))
-          )
+          .then(({ data }) => {
+            return data.map((u) => {
+              return {
+                value: u.id,
+                label: `${u.firstName} ${u.lastName}`,
+              };
+            });
+          })
           .then(callback);
       },
     },

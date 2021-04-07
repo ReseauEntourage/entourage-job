@@ -31,11 +31,13 @@ const NoCV = ({ candidatId, user, setCV }) => {
             <div className="uk-flex uk-flex-center">
               <Button
                 style="primary"
-                onClick={() =>
-                  Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
+                onClick={() => {
+                  return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, {
                     cv: { UserId: candidatId, status: CV_STATUS.New.value },
-                  }).then(({ data }) => setCV(data))
-                }
+                  }).then(({ data }) => {
+                    return setCV(data);
+                  });
+                }}
               >
                 Créer le CV
               </Button>

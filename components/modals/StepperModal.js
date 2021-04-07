@@ -29,7 +29,9 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
   useEffect(() => {
     if (composers) {
       setWrappedComponents(
-        composers.map((composer) => composer(close, next, previous))
+        composers.map((composer) => {
+          return composer(close, next, previous);
+        })
       );
     }
   }, [composers]);
@@ -40,7 +42,10 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
   return (
     <div id={id} className="uk-flex-top" data-uk-modal="bg-close:false">
       <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-2-3@m uk-width-1-2@l">
-        <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm}/>
+        <CloseButtonNoSSR
+          className="uk-modal-close-default"
+          onClick={resetForm}
+        />
         <div className="uk-modal-body uk-padding-large">
           <HeaderModal>{title}</HeaderModal>
           {wrappedComponents && wrappedComponents[index]}
@@ -52,16 +57,13 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
 
 StepperModal.propTypes = {
   id: PropTypes.string.isRequired,
-  title: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.string,
-  ]).isRequired,
+  title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   composers: PropTypes.arrayOf(PropTypes.func).isRequired,
-  resetForm: PropTypes.func
+  resetForm: PropTypes.func,
 };
 
 StepperModal.defaultProps = {
-  resetForm: () => {}
+  resetForm: () => {},
 };
 
 export default StepperModal;

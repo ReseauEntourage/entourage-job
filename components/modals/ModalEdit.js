@@ -6,7 +6,7 @@ import HeaderModal from './HeaderModal';
 import FormWithValidation from '../forms/FormWithValidation';
 
 import { CloseButtonNoSSR } from '../utils';
-import {useResetForm} from "../../hooks";
+import { useResetForm } from '../../hooks';
 
 const ModalEdit = ({
   id,
@@ -21,35 +21,40 @@ const ModalEdit = ({
 
   return (
     <ModalGeneric id={id} resetForm={resetForm}>
-      {(closeModal) => (
-        <>
-          <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetForm}/>
-          <HeaderModal>{title}</HeaderModal>
-          {description ? (
-            <p
-              className="uk-text-lead"
-              style={{
-                lineHeight: '1.2',
-                fontSize: '1.2rem',
-                fontWeight: '500',
-              }}
-            >
-              {description}
-            </p>
-          ) : null}
+      {(closeModal) => {
+        return (
+          <>
+            <CloseButtonNoSSR
+              className="uk-modal-close-default"
+              onClick={resetForm}
+            />
+            <HeaderModal>{title}</HeaderModal>
+            {description ? (
+              <p
+                className="uk-text-lead"
+                style={{
+                  lineHeight: '1.2',
+                  fontSize: '1.2rem',
+                  fontWeight: '500',
+                }}
+              >
+                {description}
+              </p>
+            ) : null}
 
-          <FormWithValidation
-            ref={form}
-            submitText={submitText}
-            formSchema={formSchema}
-            defaultValues={defaultValues}
-            onCancel={closeModal}
-            onSubmit={(fields, setError) => {
-              onSubmit(fields, closeModal, setError);
-            }}
-          />
-        </>
-      )}
+            <FormWithValidation
+              ref={form}
+              submitText={submitText}
+              formSchema={formSchema}
+              defaultValues={defaultValues}
+              onCancel={closeModal}
+              onSubmit={(fields, setError) => {
+                onSubmit(fields, closeModal, setError);
+              }}
+            />
+          </>
+        );
+      }}
     </ModalGeneric>
   );
 };

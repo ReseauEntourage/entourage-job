@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  BusinessLine.beforeCreate((businessLine, _) => {
+  BusinessLine.beforeCreate((businessLine) => {
     const bl = businessLine;
     bl.id = uuid();
     return bl;
   });
-  BusinessLine.associate = function (models) {
+  BusinessLine.associate = (models) => {
     BusinessLine.belongsToMany(models.Opportunity, {
       through: 'Opportunity_BusinessLine',
       as: 'Opportunities',

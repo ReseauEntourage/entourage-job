@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.addConstraint('Opportunity_Users', {
@@ -18,7 +18,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.removeConstraint(

@@ -62,7 +62,9 @@ const CVPageContent = ({ candidatId }) => {
           console.error(err);
           setError('Une erreur est survenue durant le chargement du CV.');
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          return setLoading(false);
+        });
     } else {
       setCV(null);
       setLoading(false);
@@ -74,11 +76,13 @@ const CVPageContent = ({ candidatId }) => {
     const message =
       "Voulez-vous quitter l'édition du CV? \nLes modifications que vous avez apportées ne seront peut-être pas enregistrées.";
     const routeChangeStart = (url) => {
+      // eslint-disable-next-line no-alert
       if (Router.asPath !== url && unsavedChanges && !window.confirm(message)) {
         Router.events.emit('routeChangeError');
         Router.replace(Router, Router.asPath);
 
         // Keep this string error to stop Next.js from navigating
+        // eslint-disable-next-line no-throw-literal
         throw 'Abort route change. Please ignore this error.';
       }
     };
@@ -110,8 +114,8 @@ const CVPageContent = ({ candidatId }) => {
     }
   }, [previewGenerating]);
 
-  const saveUserData = (modifiedCv) =>
-    new Promise((res, rej) => {
+  const saveUserData = (modifiedCv) => {
+    return new Promise((res, rej) => {
       if (
         (modifiedCv.email || modifiedCv.phone || modifiedCv.address) &&
         (modifiedCv.email !== cv.user.candidat.email ||
@@ -135,6 +139,7 @@ const CVPageContent = ({ candidatId }) => {
         res();
       }
     });
+  };
 
   const postCV = (status) => {
     const channelPreview = pusher.subscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
@@ -203,7 +208,7 @@ const CVPageContent = ({ candidatId }) => {
     formData.append('autoSave', true);
     // post
     return saveUserData(obj)
-      .then((userData) => {
+      .then(() => {
         return Api.post(`${process.env.SERVER_URL}/api/v1/cv`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -278,20 +283,26 @@ const CVPageContent = ({ candidatId }) => {
           </Button>
           <ButtonPost
             style="primary"
-            action={async () => postCV(CV_STATUS.Progress.value)}
+            action={async () => {
+              return postCV(CV_STATUS.Progress.value);
+            }}
             text="Sauvegarder"
           />
           {user.role === USER_ROLES.COACH && (
             <ButtonPost
               style="primary"
-              action={async () => postCV(CV_STATUS.Pending.value)}
+              action={async () => {
+                return postCV(CV_STATUS.Pending.value);
+              }}
               text="Soumettre"
             />
           )}
           {user.role === USER_ROLES.ADMIN && (
             <ButtonPost
               style="primary"
-              action={async () => postCV(CV_STATUS.Published.value)}
+              action={async () => {
+                return postCV(CV_STATUS.Published.value);
+              }}
               text="Publier"
             />
           )}

@@ -1,11 +1,16 @@
 /* global UIkit */
-/* eslint-disable no-undef */
-import React, {useEffect} from 'react';
+
+import React from 'react';
 import PropTypes from 'prop-types';
-import {useRemoveModal} from "../../hooks";
+import { useRemoveModal } from '../../hooks';
 
-const ModalGeneric = ({ children, classNameSize: className, id, param, resetForm }) => {
-
+const ModalGeneric = ({
+  children,
+  classNameSize: className,
+  id,
+  param,
+  resetForm,
+}) => {
   // Fix because of bug where multiple modals with the same id are created
   useRemoveModal(id);
 
@@ -21,19 +26,19 @@ const ModalGeneric = ({ children, classNameSize: className, id, param, resetForm
       </div>
     </div>
   );
-}
+};
 ModalGeneric.propTypes = {
   children: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,
   param: PropTypes.string,
   classNameSize: PropTypes.string,
-  resetForm: PropTypes.func
+  resetForm: PropTypes.func,
 };
 
 ModalGeneric.defaultProps = {
   param: 'bg-close:false',
   classNameSize: 'uk-width-1-1 uk-width-2-3@l uk-width-1-2@xl',
-  resetForm: () => {}
+  resetForm: () => {},
 };
 
 export default ModalGeneric;

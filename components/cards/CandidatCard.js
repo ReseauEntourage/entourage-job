@@ -86,10 +86,12 @@ const CandidatCard = ({
         }
       }
 
-      indexesToRemove = indexesToRemove.filter(
-        (index, idx) => indexesToRemove.indexOf(index) === idx
-      );
-      indexesToRemove.sort((a, b) => b - a);
+      indexesToRemove = indexesToRemove.filter((index, idx) => {
+        return indexesToRemove.indexOf(index) === idx;
+      });
+      indexesToRemove.sort((a, b) => {
+        return b - a;
+      });
 
       for (let i = indexesToRemove.length - 1; i >= 0; i -= 1) {
         reducedLocations.splice(indexesToRemove[i], 1);
@@ -196,11 +198,13 @@ const CandidatCard = ({
                   gap="collapse"
                   childWidths={['1-1']}
                   className="uk-text-lowercase uk-text-bold uk-text-primary "
-                  items={skills.slice(0, 2).map((a, index) => (
-                    <span key={index} className="ent-line-clamp-1">
-                      {a}
-                    </span>
-                  ))}
+                  items={skills.slice(0, 2).map((a, index) => {
+                    return (
+                      <span key={index} className="ent-line-clamp-1">
+                        {a}
+                      </span>
+                    );
+                  })}
                 />
               )}
               {ambitions && ambitions.length > 0 && (
@@ -219,14 +223,16 @@ const CandidatCard = ({
                     travailler dans&nbsp;:
                   </p>
                   <GridNoSSR column gap="collapse" childWidths={['1-1']}>
-                    {ambitions.slice(0, 2).map((text, index) => (
-                      <span
-                        key={index}
-                        className="uk-label uk-text-lowercase ent-card-ambition"
-                      >
-                        {text}
-                      </span>
-                    ))}
+                    {ambitions.slice(0, 2).map((text, index) => {
+                      return (
+                        <span
+                          key={index}
+                          className="uk-label uk-text-lowercase ent-card-ambition"
+                        >
+                          {text}
+                        </span>
+                      );
+                    })}
                   </GridNoSSR>
                 </div>
               )}
@@ -260,20 +266,25 @@ const CandidatCard = ({
                   childWidths={['1-1']}
                   style={{ marginTop: 10 }}
                 >
-                  {reducedLocations.slice(0, 2).map((text, index) => (
-                    <div key={text + index} className="uk-flex uk-flex-middle">
-                      <IconNoSSR name="location" ratio={0.6} />
-                      &nbsp;
-                      <span
-                        className="uk-text-meta uk-flex-1"
-                        style={{
-                          fontSize: '0.775rem',
-                        }}
+                  {reducedLocations.slice(0, 2).map((text, index) => {
+                    return (
+                      <div
+                        key={text + index}
+                        className="uk-flex uk-flex-middle"
                       >
-                        {text}
-                      </span>
-                    </div>
-                  ))}
+                        <IconNoSSR name="location" ratio={0.6} />
+                        &nbsp;
+                        <span
+                          className="uk-text-meta uk-flex-1"
+                          style={{
+                            fontSize: '0.775rem',
+                          }}
+                        >
+                          {text}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </GridNoSSR>
               )}
             </GridNoSSR>

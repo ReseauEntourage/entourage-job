@@ -120,7 +120,9 @@ const Footer = () => {
                 href={EXTERNAL_LINKS.DONATION}
                 isExternal
                 newTab
-                onClick={() => event(TAGS.FOOTER_DON_CLIC)}
+                onClick={() => {
+                  return event(TAGS.FOOTER_DON_CLIC);
+                }}
                 style="primary"
               >
                 Soutenir LinkedOut <IconNoSSR name="chevron-right" />
@@ -143,7 +145,9 @@ const Footer = () => {
                 <SimpleLink
                   href={EXTERNAL_LINKS.ENTOURAGE}
                   isExternal
-                  onClick={() => event(TAGS.FOOTER_SITE_ENTOURAGE_CLIC)}
+                  onClick={() => {
+                    return event(TAGS.FOOTER_SITE_ENTOURAGE_CLIC);
+                  }}
                   target="_blank"
                 >
                   Association Entourage
@@ -158,7 +162,9 @@ const Footer = () => {
                 <SimpleLink
                   href={EXTERNAL_LINKS.LKO_BLOG}
                   isExternal
-                  onClick={() => event(TAGS.FOOTER_BLOG_LINKEDOUT_CLIC)}
+                  onClick={() => {
+                    return event(TAGS.FOOTER_BLOG_LINKEDOUT_CLIC);
+                  }}
                   target="_blank"
                 >
                   Actualités

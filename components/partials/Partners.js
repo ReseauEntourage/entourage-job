@@ -24,7 +24,9 @@ const Partners = ({ showOrientationPartners }) => {
               className="uk-flex uk-flex-center"
               isExternal
               target="_blank"
-              onClick={() => event(TAGS.FOOTER_PARTENAIRE_CLIC)}
+              onClick={() => {
+                return event(TAGS.FOOTER_PARTENAIRE_CLIC);
+              }}
               href={link}
             >
               <div

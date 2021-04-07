@@ -7,13 +7,18 @@ const UserController = require('../controllers/User');
 const AuthController = require('../controllers/Auth');
 
 // configuring Passport
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
+passport.serializeUser((user, done) => {
+  return done(null, user);
+});
+passport.deserializeUser((user, done) => {
+  return done(null, user);
+});
 
 module.exports = {
   initialize() {
     passport.use(
-      new LocalStrategy({
+      new LocalStrategy(
+        {
           usernameField: 'email',
           passwordField: 'password',
         },
@@ -36,11 +41,11 @@ module.exports = {
             })
             .catch((err) => {
               console.log('ERR', err);
-              done(err)
+              done(err);
             });
         }
       )
     );
     return passport.initialize();
-  }
+  },
 };

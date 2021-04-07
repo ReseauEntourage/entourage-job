@@ -2,30 +2,49 @@ const cleanCV = (model) => {
   if (!model) return null;
   const tmpCV = model.toJSON();
   if (tmpCV.skills) {
-    tmpCV.skills = tmpCV.skills.map((o) => o.name);
+    tmpCV.skills = tmpCV.skills.map((o) => {
+      return o.name;
+    });
   }
   if (tmpCV.contracts) {
-    tmpCV.contracts = tmpCV.contracts.map((o) => o.name);
+    tmpCV.contracts = tmpCV.contracts.map((o) => {
+      return o.name;
+    });
   }
   if (tmpCV.languages) {
-    tmpCV.languages = tmpCV.languages.map((o) => o.name);
+    tmpCV.languages = tmpCV.languages.map((o) => {
+      return o.name;
+    });
   }
   if (tmpCV.passions) {
-    tmpCV.passions = tmpCV.passions.map((o) => o.name);
+    tmpCV.passions = tmpCV.passions.map((o) => {
+      return o.name;
+    });
   }
   if (tmpCV.ambitions) {
-    tmpCV.ambitions = tmpCV.ambitions.map((o) => o.name);
+    tmpCV.ambitions = tmpCV.ambitions.map((o) => {
+      return o.name;
+    });
   }
   if (tmpCV.businessLines) {
-    tmpCV.businessLines = tmpCV.businessLines.map((o) => o.name);
+    tmpCV.businessLines = tmpCV.businessLines.map((o) => {
+      return o.name;
+    });
   }
   if (tmpCV.locations) {
-    tmpCV.locations = tmpCV.locations.map((o) => o.name);
+    tmpCV.locations = tmpCV.locations.map((o) => {
+      return o.name;
+    });
   }
   if (tmpCV.experiences) {
     tmpCV.experiences = tmpCV.experiences.map((e) => {
       if (e.skills) {
-        return { ...e, skills: e.skills.map(({ name }) => name) };
+        return {
+          ...e,
+          skills: e.skills.map(({ name }) => {
+            return name;
+          }),
+        };
       }
       return e;
     });
@@ -37,13 +56,16 @@ const cleanOpportunity = (model) => {
   if (!model) return null;
   const tmpCV = model.toJSON();
   if (tmpCV.businessLines) {
-    tmpCV.businessLines = tmpCV.businessLines.map((o) => o.name);
+    tmpCV.businessLines = tmpCV.businessLines.map((o) => {
+      return o.name;
+    });
   }
   return tmpCV;
 };
 
-const controlText = (text) =>
-  text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+const controlText = (text) => {
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+};
 
 module.exports = {
   cleanCV,

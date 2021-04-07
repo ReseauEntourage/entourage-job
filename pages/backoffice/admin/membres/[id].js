@@ -309,8 +309,8 @@ const CVPage = () => {
                           modalTitle="Le candidat a retrouvé un emploi ?"
                           modalConfirmation="Oui, il a retrouvé un emploi"
                           defaultValue={user.candidat.employed}
-                          onToggle={(employed) =>
-                            Api.put(`/api/v1/user/candidat/${user.id}`, {
+                          onToggle={(employed) => {
+                            return Api.put(`/api/v1/user/candidat/${user.id}`, {
                               employed,
                             })
                               .then(() => {
@@ -326,13 +326,13 @@ const CVPage = () => {
                                   'success'
                                 );
                               })
-                              .catch(() =>
-                                UIkit.notification(
+                              .catch(() => {
+                                return UIkit.notification(
                                   'Une erreur est survenue',
                                   'danger'
-                                )
-                              )
-                          }
+                                );
+                              });
+                          }}
                         />
                         <ToggleWithConfirmationModal
                           id="hidden"
@@ -340,8 +340,8 @@ const CVPage = () => {
                           modalTitle="Changer la visibilité du CV en ligne ?"
                           modalConfirmation="Oui, masquer le CV"
                           defaultValue={user.candidat.hidden}
-                          onToggle={(hidden) =>
-                            Api.put(`/api/v1/user/candidat/${user.id}`, {
+                          onToggle={(hidden) => {
+                            return Api.put(`/api/v1/user/candidat/${user.id}`, {
                               hidden,
                             })
                               .then(() => {
@@ -359,13 +359,13 @@ const CVPage = () => {
                                   'success'
                                 );
                               })
-                              .catch(() =>
-                                UIkit.notification(
+                              .catch(() => {
+                                return UIkit.notification(
                                   'Une erreur est survenue lors du masquage du profil',
                                   'danger'
-                                )
-                              )
-                          }
+                                );
+                              });
+                          }}
                         />
                       </Card>
                     )}
@@ -381,7 +381,9 @@ const CVPage = () => {
                       </h3>
                       <ButtonIcon
                         name="pencil"
-                        onClick={() => UIkit.modal(`#edit-user`).show()}
+                        onClick={() => {
+                          return UIkit.modal(`#edit-user`).show();
+                        }}
                       />
                     </GridNoSSR>
                     {user ? (
@@ -486,9 +488,9 @@ const CVPage = () => {
                             )
                             .then(
                               async () => {
-                                await updateUser(() =>
-                                  UIkit.modal(`#edit-user`).show()
-                                );
+                                await updateUser(() => {
+                                  return UIkit.modal(`#edit-user`).show();
+                                });
                               },
                               () => {
                                 UIkit.modal(`#edit-user`).show();
@@ -517,7 +519,9 @@ const CVPage = () => {
                   <Button
                     style="danger"
                     size="large"
-                    onClick={() => UIkit.modal('#delete-user').show()}
+                    onClick={() => {
+                      return UIkit.modal('#delete-user').show();
+                    }}
                   >
                     <span className="uk-margin-small-right">
                       Supprimer l&apos;utilisateur

@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR, Section, IconNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
-import SimpleLink from '../utils/SimpleLink';
 import Api from '../../Axios';
-import Button from "../utils/Button";
+import Button from '../utils/Button';
 
-const DiscoverPartial = ({style}) => {
+const DiscoverPartial = ({ style }) => {
   const [cvs, setCVs] = useState(undefined);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     Api.get('/api/v1/cv/cards/random?nb=3')
-      .then(({ data }) => setCVs(data))
+      .then(({ data }) => {
+        return setCVs(data);
+      })
       .catch((err) => {
         console.error(err);
         setError('Impossible de récupérer les CVs.');
@@ -26,23 +27,25 @@ const DiscoverPartial = ({style}) => {
       <GridNoSSR
         childWidths={['1-3@m']}
         gap="small"
-        items={cvs.map((cv) => (
-          <CandidatCard
-            url={cv.user && cv.user.url}
-            imgSrc={
-              (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) || undefined
-            }
-            imgAlt={cv.user && cv.user.candidat.firstName}
-            firstName={cv.user && cv.user.candidat.firstName}
-            gender={cv.user && cv.user.candidat.gender}
-            ambitions={cv.ambitions}
-            skills={cv.skills}
-            catchphrase={cv.catchphrase}
-            employed={cv.user.employed}
-            id={cv.user.candidat.id}
-            locations={cv.locations}
-          />
-        ))}
+        items={cvs.map((cv) => {
+          return (
+            <CandidatCard
+              url={cv.user && cv.user.url}
+              imgSrc={
+                (cv.urlImg && process.env.AWSS3_URL + cv.urlImg) || undefined
+              }
+              imgAlt={cv.user && cv.user.candidat.firstName}
+              firstName={cv.user && cv.user.candidat.firstName}
+              gender={cv.user && cv.user.candidat.gender}
+              ambitions={cv.ambitions}
+              skills={cv.skills}
+              catchphrase={cv.catchphrase}
+              employed={cv.user.employed}
+              id={cv.user.candidat.id}
+              locations={cv.locations}
+            />
+          );
+        })}
       />
     );
   };
@@ -53,8 +56,12 @@ const DiscoverPartial = ({style}) => {
       </h2>
       <Content />
       <div className="uk-flex uk-flex-center">
-        <Button style="primary" href="/candidats" className="uk-margin-large-top">
-          Voir tous les candidats{' '}<IconNoSSR name="arrow-right" />
+        <Button
+          style="primary"
+          href="/candidats"
+          className="uk-margin-large-top"
+        >
+          Voir tous les candidats <IconNoSSR name="arrow-right" />
         </Button>
       </div>
     </Section>
@@ -62,11 +69,11 @@ const DiscoverPartial = ({style}) => {
 };
 
 DiscoverPartial.propTypes = {
-  style: PropTypes.string
+  style: PropTypes.string,
 };
 
 DiscoverPartial.defaultProps = {
-  style: 'default'
+  style: 'default',
 };
 
 export default DiscoverPartial;

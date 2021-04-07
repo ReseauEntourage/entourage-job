@@ -48,7 +48,9 @@ const HireSteps = () => {
         <a
           style={{ textDecoration: 'underline' }}
           data-uk-toggle={`#${modalId}`}
-          onClick={() => event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC)}
+          onClick={() => {
+            return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
+          }}
         >
           Publiez-la ici !
         </a>

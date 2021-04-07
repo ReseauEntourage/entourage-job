@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 const Slider = ({ grid, items, childWidths, finite, autoplay }) => {
   let classBuffer2 = 'uk-slider-items';
   if (grid) classBuffer2 += ` uk-grid-small`;
-  childWidths.forEach((size) => (classBuffer2 += ` uk-child-width-${size}`));
+  childWidths.forEach((size) => {
+    return (classBuffer2 += ` uk-child-width-${size}`);
+  });
   return (
     <div
       className="uk-position-relative uk-visible-toggle uk-padding"
@@ -12,9 +14,9 @@ const Slider = ({ grid, items, childWidths, finite, autoplay }) => {
       data-uk-slider={`finite: ${finite}; autoplay: ${autoplay}`}
     >
       <ul className={classBuffer2} data-uk-grid>
-        {items.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
+        {items.map((item, index) => {
+          return <li key={index}>{item}</li>;
+        })}
       </ul>
       <a
         className="uk-position-center-left uk-position-small uk-hidden-hover"

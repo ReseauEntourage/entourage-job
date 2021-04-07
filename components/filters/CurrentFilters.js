@@ -20,12 +20,12 @@ const CurrentFilters = ({ numberOfResults, filters, resetFilters }) => {
     const modalInterval = setInterval(() => {
       if (UIkit) {
         clearInterval(modalInterval);
-        UIkit.util.on(document, 'show', '#toggle-filter-menu', () =>
-          onFilterMenuToggle(true)
-        );
-        UIkit.util.on(document, 'hide', '#toggle-filter-menu', () =>
-          onFilterMenuToggle(false)
-        );
+        UIkit.util.on(document, 'show', '#toggle-filter-menu', () => {
+          return onFilterMenuToggle(true);
+        });
+        UIkit.util.on(document, 'hide', '#toggle-filter-menu', () => {
+          return onFilterMenuToggle(false);
+        });
       }
     }, 1000);
 
@@ -77,19 +77,21 @@ const CurrentFilters = ({ numberOfResults, filters, resetFilters }) => {
               .reduce((acc, curr) => {
                 return acc.concat(curr);
               }, [])
-              .map((filter, index) => (
-                <div
-                  key={filter.label + index}
-                  className="uk-flex uk-flex-center uk-flex-middle"
-                  style={{
-                    paddingRight: 5,
-                    paddingTop: 5,
-                    paddingBottom: 5,
-                  }}
-                >
-                  <span className="uk-badge">{filter.label}</span>
-                </div>
-              ))}
+              .map((filter, index) => {
+                return (
+                  <div
+                    key={filter.label + index}
+                    className="uk-flex uk-flex-center uk-flex-middle"
+                    style={{
+                      paddingRight: 5,
+                      paddingTop: 5,
+                      paddingBottom: 5,
+                    }}
+                  >
+                    <span className="uk-badge">{filter.label}</span>
+                  </div>
+                );
+              })}
           </div>
           <div className="uk-flex">
             {' '}

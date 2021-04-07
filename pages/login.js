@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { Section } from '../components/utils';
@@ -7,10 +7,10 @@ import schemaLostPwd from '../components/forms/schema/formLostPwd.json';
 import FormWithValidation from '../components/forms/FormWithValidation';
 import { UserContext } from '../components/store/UserProvider';
 import Api from '../Axios';
-import {USER_ROLES} from "../constants";
-import StepperModal from "../components/modals/StepperModal";
-import SuccessModalContent from "../components/modals/SuccessModalContent";
-import {useResetForm} from "../hooks";
+import { USER_ROLES } from '../constants';
+import StepperModal from '../components/modals/StepperModal';
+import SuccessModalContent from '../components/modals/SuccessModalContent';
+import { useResetForm } from '../hooks';
 
 const Login = () => {
   const { login, user } = useContext(UserContext);
@@ -28,7 +28,8 @@ const Login = () => {
     }
   }, [user]);
 
-  const rateLimitErrorMessage = 'Trop de tentatives infructueuses.\nVeuillez ressayer dans 1 minute.';
+  const rateLimitErrorMessage =
+    'Trop de tentatives infructueuses.\nVeuillez ressayer dans 1 minute.';
 
   return (
     <Layout title="Connexion - LinkedOut">
@@ -42,7 +43,10 @@ const Login = () => {
               enterToSubmit
               onSubmit={({ email, password }, setError) => {
                 login(email, password).catch((err) => {
-                  const errorMessage = err && err.response && err.response.status === 429 ? rateLimitErrorMessage :  'Erreur de connexion. Identifiant ou mot de passe invalide.';
+                  const errorMessage =
+                    err && err.response && err.response.status === 429
+                      ? rateLimitErrorMessage
+                      : 'Erreur de connexion. Identifiant ou mot de passe invalide.';
                   setError(errorMessage);
                 });
               }}
@@ -63,28 +67,39 @@ const Login = () => {
           title="Mot de passe oublié ?"
           resetForm={resetForm}
           composers={[
-            (closeModal, nextStep) => (
-              <FormWithValidation
-                ref={form}
-                submitText="Envoyer"
-                formSchema={schemaLostPwd}
-                onCancel={closeModal}
-                onSubmit={({email}, setError) => {
-                  Api.post('/api/v1/auth/forgot', {email: email.toLowerCase()})
-                    .then(() => nextStep())
-                    .catch((err) => {
-                      const errorMessage = err && err.response && err.response.status === 429 ? rateLimitErrorMessage : "L'adresse mail ne correspond à aucun utilisateur";
-                      setError(errorMessage)
-                    });
-                }}
-              />
-            ),
-            (closeModal) => (
-              <SuccessModalContent
-                closeModal={closeModal}
-                text="Un e-mail vient d'être envoyé à l'adresse indiquée."
-              />
-            ),
+            (closeModal, nextStep) => {
+              return (
+                <FormWithValidation
+                  ref={form}
+                  submitText="Envoyer"
+                  formSchema={schemaLostPwd}
+                  onCancel={closeModal}
+                  onSubmit={({ email }, setError) => {
+                    Api.post('/api/v1/auth/forgot', {
+                      email: email.toLowerCase(),
+                    })
+                      .then(() => {
+                        return nextStep();
+                      })
+                      .catch((err) => {
+                        const errorMessage =
+                          err && err.response && err.response.status === 429
+                            ? rateLimitErrorMessage
+                            : "L'adresse mail ne correspond à aucun utilisateur";
+                        setError(errorMessage);
+                      });
+                  }}
+                />
+              );
+            },
+            (closeModal) => {
+              return (
+                <SuccessModalContent
+                  closeModal={closeModal}
+                  text="Un e-mail vient d'être envoyé à l'adresse indiquée."
+                />
+              );
+            },
           ]}
         />
       </div>

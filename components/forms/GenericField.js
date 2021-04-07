@@ -26,10 +26,12 @@ const GenericField = ({
   const parseValueToUseSelect = () => {
     let valueToUse = null;
     if (data.isMulti && Array.isArray(value) && value.length > 0) {
-      valueToUse = value.map((item) => ({
-        value: item,
-        label: item,
-      }));
+      valueToUse = value.map((item) => {
+        return {
+          value: item,
+          label: item,
+        };
+      });
     } else if (value) {
       valueToUse = value;
     }
@@ -39,7 +41,9 @@ const GenericField = ({
   const parseValueToReturnSelect = (event) => {
     let valueToReturn = null;
     if (data.isMulti && Array.isArray(event) && event.length > 0) {
-      valueToReturn = event.map((item) => item.value);
+      valueToReturn = event.map((item) => {
+        return item.value;
+      });
     } else if (event && event.value) {
       valueToReturn = event.value;
     }
@@ -59,7 +63,9 @@ const GenericField = ({
       <FieldGroup
         id={`${formId}-${id}`}
         title={title}
-        fields={fields.map((field) => this.generate(field))}
+        fields={fields.map((field) => {
+          return this.generate(field);
+        })}
       />
     );
   }
@@ -193,7 +199,9 @@ const GenericField = ({
     let valueToUse = null;
     if (value) {
       if (data.isMulti) {
-        valueToUse = value.every((v) => typeof v === 'object')
+        valueToUse = value.every((v) => {
+          return typeof v === 'object';
+        })
           ? value
           : getValue(value);
       } else {
@@ -220,14 +228,16 @@ const GenericField = ({
           openMenuOnClick={false}
           placeholder={data.placeholder || 'Sélectionnez...'}
           noOptionsMessage={
-            data.noOptionsMessage || ((val) => `Aucun résultat`)
+            data.noOptionsMessage ||
+            (() => {
+              return `Aucun résultat`;
+            })
           }
           loadOptions={(inputValue, callback) => {
             clearTimeout(debounceTimeoutId);
-            debounceTimeoutId = setTimeout(
-              () => data.loadOptions(inputValue, callback, getValue),
-              1000
-            );
+            debounceTimeoutId = setTimeout(() => {
+              return data.loadOptions(inputValue, callback, getValue);
+            }, 1000);
           }}
           isDisabled={data.disable ? data.disable(getValue) : false}
           onChange={parseValueToReturnSelect}
@@ -253,7 +263,10 @@ const GenericField = ({
           classNamePrefix="select"
           placeholder={data.placeholder || 'Sélectionnez...'}
           noOptionsMessage={
-            data.noOptionsMessage || ((item) => `Aucun résultat`)
+            data.noOptionsMessage ||
+            (() => {
+              return `Aucun résultat`;
+            })
           }
           onChange={parseValueToReturnSelect}
         />
@@ -282,7 +295,9 @@ const GenericField = ({
         <CreatableSelect
           id={`${formId}-${data.id}`}
           components={customComponents}
-          formatCreateLabel={(userInput) => `Créer "${userInput}"`}
+          formatCreateLabel={(userInput) => {
+            return `Créer "${userInput}"`;
+          }}
           isMulti={data.isMulti}
           name={data.name}
           value={parseValueToUseSelect()}
@@ -295,7 +310,9 @@ const GenericField = ({
           }
           noOptionsMessage={
             data.noOptionsMessage ||
-            ((item) => (hasOptions ? `Aucun résultat` : 'Saisissez un élement'))
+            (() => {
+              return hasOptions ? `Aucun résultat` : 'Saisissez un élement';
+            })
           }
           onChange={parseValueToReturnSelect}
         />

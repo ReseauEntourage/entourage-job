@@ -93,8 +93,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  const generateUrl = (user) =>
-    `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`;
+  const generateUrl = (user) => {
+    return `${user.firstName.toLowerCase()}-${user.id.substring(0, 8)}`;
+  };
 
   User.associate = (models) => {
     User.belongsToMany(models.Opportunity, {
@@ -136,7 +137,7 @@ module.exports = (sequelize, DataTypes) => {
       return user;
     });
 
-    User.beforeUpdate(async (instance, option) => {
+    User.beforeUpdate(async (instance) => {
       const nextData = instance.dataValues;
       const previousData = instance._previousDataValues;
       if (nextData && previousData) {

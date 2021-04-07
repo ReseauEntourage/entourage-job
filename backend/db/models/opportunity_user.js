@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
   Opportunity_User.associate = (models) => {
     Opportunity_User.belongsTo(models.User);
 
-    Opportunity_User.beforeUpdate(async (instance, option) => {
+    Opportunity_User.beforeUpdate(async (instance) => {
       const nextData = instance.dataValues;
       const previousData = instance._previousDataValues;
       // si Embauche, envoyer email a admin et coach

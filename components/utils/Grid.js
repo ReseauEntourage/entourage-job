@@ -22,14 +22,16 @@ const Grid = ({
   row,
   masonry,
   style,
-  reverse
+  reverse,
 }) => {
   let classBuffer = '';
   let gridBuffer = '';
   if (parallax) gridBuffer += `parallax: ${parallax};`;
   if (masonry) gridBuffer += 'masonry: true';
   classBuffer += childWidths
-    .map((childWidth) => ` uk-child-width-${childWidth}`)
+    .map((childWidth) => {
+      return ` uk-child-width-${childWidth}`;
+    })
     .join(' ');
   if (gap) classBuffer += ` uk-grid-${gap}`;
   if (match) classBuffer += ' uk-grid-match';
@@ -58,20 +60,24 @@ const Grid = ({
   return (
     <div className={classBuffer} data-uk-grid={gridBuffer} style={style}>
       {content
-        .filter((_) => _)
-        .map((item, index) => (
-          <div
-            // todo optimize
-            className={
-              index < eachWidths.length
-                ? `uk-width-${eachWidths[index]}`
-                : undefined
-            }
-            key={index}
-          >
-            {item}
-          </div>
-        ))}
+        .filter((_) => {
+          return _;
+        })
+        .map((item, index) => {
+          return (
+            <div
+              // todo optimize
+              className={
+                index < eachWidths.length
+                  ? `uk-width-${eachWidths[index]}`
+                  : undefined
+              }
+              key={index}
+            >
+              {item}
+            </div>
+          );
+        })}
     </div>
   );
 };
@@ -87,9 +93,10 @@ Grid.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.element, PropTypes.bool])
   ),
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.element, PropTypes.bool])
-  )]),
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.element, PropTypes.bool])),
+  ]),
   className: PropTypes.string,
   around: PropTypes.bool,
   top: PropTypes.bool,
@@ -99,7 +106,7 @@ Grid.propTypes = {
   row: PropTypes.bool,
   masonry: PropTypes.bool,
   style: PropTypes.shape(),
-  reverse: PropTypes.bool
+  reverse: PropTypes.bool,
 };
 Grid.defaultProps = {
   match: false,
@@ -121,9 +128,14 @@ Grid.defaultProps = {
   row: false,
   masonry: false,
   style: undefined,
-  reverse: false
+  reverse: false,
 };
 
-export const GridNoSSR = dynamic(() => import('./Grid'), { ssr: false });
+export const GridNoSSR = dynamic(
+  () => {
+    return import('./Grid');
+  },
+  { ssr: false }
+);
 
 export default Grid;

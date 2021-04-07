@@ -1,7 +1,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction((t) =>
-      Promise.all([
+    return queryInterface.sequelize.transaction((t) => {
+      return Promise.all([
         queryInterface.createTable(
           'Experience_Skills',
           {
@@ -49,8 +49,8 @@ module.exports = {
         queryInterface.removeColumn('Experiences', 'title', {
           transaction: t,
         }),
-      ])
-    );
+      ]);
+    });
   },
 
   down: (queryInterface, Sequelize) => {

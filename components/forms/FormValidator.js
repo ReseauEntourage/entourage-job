@@ -45,9 +45,9 @@ export default class FormValidator {
   valid() {
     const validation = {};
 
-    this.validations.map(
-      (rule) => (validation[rule.field] = { isInvalid: false, message: '' })
-    );
+    this.validations.map((rule) => {
+      return (validation[rule.field] = { isInvalid: false, message: '' });
+    });
     return { isValid: true, ...validation };
   }
 }

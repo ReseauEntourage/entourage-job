@@ -1,5 +1,4 @@
 // eslint-disable-next-line import/order
-
 const loadEnvironementVariables = require('./utils/env');
 
 loadEnvironementVariables();
@@ -57,7 +56,7 @@ const start = () => {
     console.log(`Job ${jobId} is waiting to be processed`);
   });
 
-  workQueue.on('active', (job, jobPromise) => {
+  workQueue.on('active', (job) => {
     const timeInQueue = job.processedOn - job.timestamp;
     console.log(
       `Job ${job.id} of type ${job.data.type} has started after waiting for ${timeInQueue} ms`

@@ -62,7 +62,9 @@ const StepsToJoin = () => {
           style="secondary"
           className="uk-margin-small-top"
           isExternal
-          onClick={() => event(TAGS.PAGE_TRAVAILLER_DEPOSER_CANDIDATURE_CLIC)}
+          onClick={() => {
+            return event(TAGS.PAGE_TRAVAILLER_DEPOSER_CANDIDATURE_CLIC);
+          }}
           href={process.env.AIRTABLE_LINK_JOIN_LINKEDOUT}
         >
           Rejoindre LinkedOut <IconNoSSR name="chevron-right" />

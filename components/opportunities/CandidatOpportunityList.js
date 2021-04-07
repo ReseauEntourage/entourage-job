@@ -1,16 +1,20 @@
 /* global UIkit */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { GridNoSSR, Section } from '../utils';
+import { GridNoSSR } from '../utils';
 import OfferCard from '../cards/OfferCard';
 import Axios from '../../Axios';
 import { UserContext } from '../store/UserProvider';
 import ModalOfferAdmin from '../modals/ModalOfferAdmin';
 import { OPPORTUNITY_FILTERS_DATA } from '../../constants';
-import OpportunityError from "./OpportunityError";
-import {getUserOpportunityFromOffer} from '../../utils';
+import OpportunityError from './OpportunityError';
+import { getUserOpportunityFromOffer } from '../../utils';
 
-const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults }) => {
+const CandidatOpportunityList = ({
+  candidatId,
+  filters,
+  updateNumberOfResults,
+}) => {
   const { user } = useContext(UserContext);
 
   const [currentOffer, setCurrentOffer] = useState(null);
@@ -26,7 +30,11 @@ const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults })
         const { data } = await Axios.get(
           `${process.env.SERVER_URL}/api/v1/opportunity/user/private/${id}`
         );
-        setOffers(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
+        setOffers(
+          data.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+          })
+        );
         setLoading(false);
         return data;
       } catch (err) {
@@ -62,7 +70,10 @@ const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults })
               if (filtersObj[keys[i]].length === 0) {
                 hasFound = true;
               } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
-                const userOpportunity = getUserOpportunityFromOffer(offer, candidatId);
+                const userOpportunity = getUserOpportunityFromOffer(
+                  offer,
+                  candidatId
+                );
                 hasFound = filtersObj[keys[i]].some((currentFilter) => {
                   return currentFilter.value === userOpportunity.status;
                 });
@@ -72,7 +83,9 @@ const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults })
               resultForEachFilter.push(hasFound);
             }
 
-            return resultForEachFilter.every((value) => value);
+            return resultForEachFilter.every((value) => {
+              return value;
+            });
           });
         }
       }
@@ -109,7 +122,10 @@ const CandidatOpportunityList = ({ candidatId, filters, updateNumberOfResults })
           {filteredOffers && filteredOffers.length > 0 ? (
             <GridNoSSR childWidths={['1-4@l', '1-3@m', '1-2@s']} left top>
               {filteredOffers.map((offer, i) => {
-                const userOpportunity = getUserOpportunityFromOffer(offer, candidatId);
+                const userOpportunity = getUserOpportunityFromOffer(
+                  offer,
+                  candidatId
+                );
                 return (
                   <li key={i}>
                     <a

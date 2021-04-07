@@ -171,11 +171,13 @@ const createOpportunity = async (data) => {
   if (data.businessLines) {
     console.log(`Etape 2 - BusinessLine`);
     const businessLines = await Promise.all(
-      data.businessLines.map((name) =>
-        BusinessLine.findOrCreate({
+      data.businessLines.map((name) => {
+        return BusinessLine.findOrCreate({
           where: { name },
-        }).then((model) => model[0])
-      )
+        }).then((model) => {
+          return model[0];
+        });
+      })
     );
     await modelOpportunity.addBusinessLines(businessLines);
   }
@@ -186,12 +188,14 @@ const createOpportunity = async (data) => {
       `Etape 4 - Détermine le(s) User(s) à qui l'opportunité s'adresse`
     );
     candidates = await Promise.all(
-      data.candidatesId.map((candidatId) =>
-        Opportunity_User.create({
+      data.candidatesId.map((candidatId) => {
+        return Opportunity_User.create({
           OpportunityId: modelOpportunity.id,
           UserId: candidatId, // to rename in userId
-        }).then((model) => model[0])
-      )
+        }).then((model) => {
+          return model[0];
+        });
+      })
     );
 
     candidates = await Opportunity_User.findAll({
@@ -268,7 +272,9 @@ const getOpportunities = async (search) => {
   }
   const opportunities = await Opportunity.findAll(options);
 
-  return opportunities.map((model) => cleanOpportunity(model));
+  return opportunities.map((model) => {
+    return cleanOpportunity(model);
+  });
 };
 
 const getPublicOpportunities = async () => {
@@ -280,7 +286,9 @@ const getPublicOpportunities = async () => {
     },
   });
 
-  return opportunities.map((model) => cleanOpportunity(model));
+  return opportunities.map((model) => {
+    return cleanOpportunity(model);
+  });
 };
 
 const getPrivateUserOpportunities = async (userId) => {
@@ -293,11 +301,15 @@ const getPrivateUserOpportunities = async (userId) => {
   const opportunities = await Opportunity.findAll({
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     where: {
-      id: opportunityUsers.map((model) => model.OpportunityId),
+      id: opportunityUsers.map((model) => {
+        return model.OpportunityId;
+      }),
     },
   });
 
-  return opportunities.map((model) => cleanOpportunity(model));
+  return opportunities.map((model) => {
+    return cleanOpportunity(model);
+  });
 };
 
 const getAllUserOpportunities = async (userId) => {
@@ -313,7 +325,9 @@ const getAllUserOpportunities = async (userId) => {
       [Op.or]: [
         { isPublic: true, isValidated: true },
         {
-          id: opportunityUsers.map((model) => model.OpportunityId),
+          id: opportunityUsers.map((model) => {
+            return model.OpportunityId;
+          }),
           isPublic: false,
           isValidated: true,
         },
@@ -327,13 +341,13 @@ const getAllUserOpportunities = async (userId) => {
       opportunityUsers.userOpportunity &&
       opportunityUsers.userOpportunity.length > 0
     ) {
-      opportunityUsers.userOpportunity.sort(
-        (a, b) => b.updatedAt - a.updatedAt
-      );
+      opportunityUsers.userOpportunity.sort((a, b) => {
+        return b.updatedAt - a.updatedAt;
+      });
     }
-    opportunity.userOpportunity = opportunity.userOpportunity.find(
-      (uo) => uo.UserId === userId
-    );
+    opportunity.userOpportunity = opportunity.userOpportunity.find((uo) => {
+      return uo.UserId === userId;
+    });
     if (!opportunity.userOpportunity) {
       delete opportunity.userOpportunity;
     }
@@ -410,9 +424,9 @@ const refreshAirtableOpportunities = async () => {
   });
 
   await Promise.all(
-    opportunities.map((opportunity) =>
-      updateOpportunityAirtable(opportunity.id)
-    )
+    opportunities.map((opportunity) => {
+      return updateOpportunityAirtable(opportunity.id);
+    })
   );
 };
 
@@ -462,7 +476,9 @@ const updateOpportunityUser = async (opportunityUser) => {
       'note',
       'seen',
     ],
-  }).then((model) => model && model.length > 1 && model[1][0]);
+  }).then((model) => {
+    return model && model.length > 1 && model[1][0];
+  });
 
   await updateOpportunityAirtable(modelOpportunityUser.OpportunityId);
 
@@ -476,21 +492,29 @@ const updateOpportunity = async (opportunity) => {
     where: { id: opportunity.id },
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     individualHooks: true,
-  }).then((model) => model && model.length > 1 && model[1][0]);
+  }).then((model) => {
+    return model && model.length > 1 && model[1][0];
+  });
 
   if (opportunity.businessLines) {
     const businessLines = await Promise.all(
-      opportunity.businessLines.map((name) =>
-        BusinessLine.findOrCreate({
+      opportunity.businessLines.map((name) => {
+        return BusinessLine.findOrCreate({
           where: { name },
-        }).then((model) => model[0])
-      )
+        }).then((model) => {
+          return model[0];
+        });
+      })
     );
     await modelOpportunity.addBusinessLines(businessLines);
     await Opportunity_BusinessLine.destroy({
       where: {
         OpportunityId: opportunity.id,
-        BusinessLineId: { [Op.not]: businessLines.map((bl) => bl.id) },
+        BusinessLineId: {
+          [Op.not]: businessLines.map((bl) => {
+            return bl.id;
+          }),
+        },
       },
     });
   }
@@ -506,23 +530,25 @@ const updateOpportunity = async (opportunity) => {
     });
   } else if (opportunity.candidatesId) {
     const opportunitiesUser = await Promise.all(
-      opportunity.candidatesId.map((candidatId) =>
-        Opportunity_User.findOrCreate({
+      opportunity.candidatesId.map((candidatId) => {
+        return Opportunity_User.findOrCreate({
           where: {
             OpportunityId: modelOpportunity.id,
             UserId: candidatId, // to rename in userId
           },
-        }).then((model) => model[0])
-      )
+        }).then((model) => {
+          return model[0];
+        });
+      })
     );
 
     await Opportunity_User.destroy({
       where: {
         OpportunityId: modelOpportunity.id,
         UserId: {
-          [Op.not]: opportunitiesUser.map(
-            (opportunityUser) => opportunityUser.UserId
-          ),
+          [Op.not]: opportunitiesUser.map((opportunityUser) => {
+            return opportunityUser.UserId;
+          }),
         },
       },
     });
@@ -531,12 +557,11 @@ const updateOpportunity = async (opportunity) => {
     const newCandidates =
       opportunity.candidatesId &&
       opportunity.candidatesId.length > 0 &&
-      opportunity.candidatesId.filter(
-        (candidateId) =>
-          !oldOpportunity.userOpportunity.some(
-            (oldUserOpp) => candidateId === oldUserOpp.User.id
-          )
-      );
+      opportunity.candidatesId.filter((candidateId) => {
+        return !oldOpportunity.userOpportunity.some((oldUserOpp) => {
+          return candidateId === oldUserOpp.User.id;
+        });
+      });
 
     if (
       newCandidates &&
@@ -564,9 +589,9 @@ const updateOpportunity = async (opportunity) => {
       candidatesToSendMailTo =
         finalOpportunity.userOpportunity &&
         finalOpportunity.userOpportunity.length > 0
-          ? finalOpportunity.userOpportunity.filter((userOpp) =>
-              newCandidatesIdsToSendMailTo.includes(userOpp.User.id)
-            )
+          ? finalOpportunity.userOpportunity.filter((userOpp) => {
+              return newCandidatesIdsToSendMailTo.includes(userOpp.User.id);
+            })
           : null;
     }
   }

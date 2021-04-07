@@ -41,13 +41,14 @@ module.exports = (sequelize, DataTypes) => {
 
   UserCandidat.associate = (models) => {
     // lie un coach un utilisateur à son nouveau coach et délie un coach à son ancien user
-    const clearCoachBindings = (coachId) =>
-      UserCandidat.update(
-        {coachId: null},
+    const clearCoachBindings = (coachId) => {
+      return UserCandidat.update(
+        { coachId: null },
         {
-          where: {coachId},
+          where: { coachId },
         }
       );
+    };
 
     UserCandidat.belongsTo(models.User, {
       as: 'candidat',
@@ -82,7 +83,7 @@ module.exports = (sequelize, DataTypes) => {
       return userCandidat;
     });
 
-    UserCandidat.beforeUpdate(async (instance, option) => {
+    UserCandidat.beforeUpdate(async (instance) => {
       const nextData = instance.dataValues;
       const previousData = instance._previousDataValues;
       if (

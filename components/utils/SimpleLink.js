@@ -12,7 +12,7 @@ const SimpleLink = ({
   target,
   scroll,
   isExternal,
-  onClick
+  onClick,
 }) => {
   let classBuffer = '';
   if (visible) classBuffer += ` uk-visible@${visible}`;
@@ -53,7 +53,7 @@ SimpleLink.propTypes = {
   target: PropTypes.string,
   isExternal: PropTypes.bool,
   scroll: PropTypes.bool,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 };
 SimpleLink.defaultProps = {
   as: undefined,
@@ -62,6 +62,6 @@ SimpleLink.defaultProps = {
   target: undefined,
   isExternal: false,
   scroll: undefined,
-  onClick: () => {}
+  onClick: () => {},
 };
 export default SimpleLink;

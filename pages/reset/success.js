@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
-import {Section, IconNoSSR, Button} from '../../components/utils';
+import { Section, IconNoSSR, Button } from '../../components/utils';
 
 const ResetSuccessPage = () => {
   const router = useRouter();
@@ -17,8 +17,10 @@ const ResetSuccessPage = () => {
             </p>
             <div className="uk-flex uk-flex-center">
               <Button
-                style='primary'
-                onClick={() => router.push('/login')}
+                style="primary"
+                onClick={() => {
+                  return router.push('/login');
+                }}
               >
                 Se connecter
               </Button>

@@ -5,7 +5,7 @@ module.exports = {
       type: Sequelize.UUID,
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.removeColumn('RevisionChanges', 'RevisionId');
   },
 };

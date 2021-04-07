@@ -20,7 +20,7 @@ router.post('/contact-us', auth(), (req, res) => {
         structure || ''
       }\nMessage : ${message}`,
     })
-      .then((value) => {
+      .then(() => {
         logger(res).log('mail: contact us sent');
         res.status(200).send('mail sent');
       })

@@ -31,6 +31,8 @@ Axios.interceptors.request.use(
     // console.log("Interceptor is called !");
     return configModified;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 export default Axios;

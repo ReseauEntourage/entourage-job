@@ -1,5 +1,5 @@
 import axios from '../../../Axios';
-import {USER_ROLES} from "../../../constants";
+import { USER_ROLES } from '../../../constants';
 
 export default {
   id: 'form-edit-linked-user',
@@ -34,12 +34,14 @@ export default {
                 role, // un certain role
               },
             })
-            .then(({ data }) =>
-              data.map((u) => ({
-                value: u.id,
-                label: `${u.firstName} ${u.lastName}`,
-              }))
-            )
+            .then(({ data }) => {
+              return data.map((u) => {
+                return {
+                  value: u.id,
+                  label: `${u.firstName} ${u.lastName}`,
+                };
+              });
+            })
             .then((m) => {
               console.log(m);
               return m;

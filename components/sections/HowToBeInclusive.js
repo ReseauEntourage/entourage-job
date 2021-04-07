@@ -38,7 +38,7 @@ const tips = [
     text: (
       <p>
         Par du mécénat financier, de moyens ou de compétences, soutenez des
-        projets comme LinkedOut ou d'autres qui accompagnent des personnes
+        projets comme LinkedOut ou d&apos;autres qui accompagnent des personnes
         fragiles.
       </p>
     ),
@@ -63,17 +63,22 @@ const TipsGrid = () => {
         match
         className="uk-margin-top"
         gap="large"
-        items={tips.map((item, index) => (
-          <div key={index.toString()}>
-            <h4
-              className="uk-text-bold"
-              style={{ paddingLeft: '0.7rem', borderLeft: '2px solid #F55F24' }}
-            >
-              {item.title}
-            </h4>
-            {item.text && <div className="uk-text-small">{item.text}</div>}
-          </div>
-        ))}
+        items={tips.map((item, index) => {
+          return (
+            <div key={index.toString()}>
+              <h4
+                className="uk-text-bold"
+                style={{
+                  paddingLeft: '0.7rem',
+                  borderLeft: '2px solid #F55F24',
+                }}
+              >
+                {item.title}
+              </h4>
+              {item.text && <div className="uk-text-small">{item.text}</div>}
+            </div>
+          );
+        })}
       />
     </div>
   );

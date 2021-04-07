@@ -1,29 +1,30 @@
 /* eslint-disable no-underscore-dangle */
 
-const paranoidDeleteCascade = (models) => async (instance, options) => {
-  // Only operate on paranoid models
-  if (!instance.constructor.options.paranoid) {
-    return Promise.resolve();
-  }
+const paranoidDeleteCascade = (models) => {
+  return async (instance) => {
+    // Only operate on paranoid models
+    if (!instance.constructor.options.paranoid) {
+      return Promise.resolve();
+    }
 
-  const modelName = instance.constructor.options.name.singular;
+    const modelName = instance.constructor.options.name.singular;
 
-  const { associations } = models[modelName];
+    const { associations } = models[modelName];
 
-  await Promise.all(
-    // Go over all associations of the instance model, and delete if needed
-    Object.keys(associations).map(async (associationKey) => {
-      try {
-        // Only delete if cascade is set up correctly
-        if (associations[associationKey].options.onDelete !== 'CASCADE') {
-          return Promise.resolve();
-        }
+    await Promise.all(
+      // Go over all associations of the instance model, and delete if needed
+      Object.keys(associations).map(async (associationKey) => {
+        try {
+          // Only delete if cascade is set up correctly
+          if (associations[associationKey].options.onDelete !== 'CASCADE') {
+            return Promise.resolve();
+          }
 
-        const getOptions = {};
+          const getOptions = {};
 
-        // Handle "through" cases
+          // Handle "through" cases
 
-        /*
+          /*
           Remove for now because the Many-to-Many associations are not configured correctly
 
           let relationModel = associations[associationKey].target;
@@ -40,39 +41,44 @@ const paranoidDeleteCascade = (models) => async (instance, options) => {
           }
         */
 
-        const modelAs = associations[associationKey].as;
+          const modelAs = associations[associationKey].as;
 
-        // Load id(s) of association
-        const instances = await instance[
-          `get${modelAs.charAt(0).toUpperCase() + modelAs.substring(1)}`
-        ](getOptions);
+          // Load id(s) of association
+          const instances = await instance[
+            `get${modelAs.charAt(0).toUpperCase() + modelAs.substring(1)}`
+          ](getOptions);
 
-        if (Array.isArray(instances)) {
-          // Association has no results so nothing to delete
-          if (instances.length === 0) {
+          if (Array.isArray(instances)) {
+            // Association has no results so nothing to delete
+            if (instances.length === 0) {
+              return Promise.resolve();
+            }
+
+            // Delete all individually as bulk delete doesn't cascade in sequelize
+            return await Promise.all(
+              instances.map((i) => {
+                return i.destroy();
+              })
+            );
+          }
+
+          // Association is not set, so nothing to delete
+          if (!instances) {
             return Promise.resolve();
           }
 
-          // Delete all individually as bulk delete doesn't cascade in sequelize
-          return await Promise.all(instances.map((i) => i.destroy()));
-        }
-
-        // Association is not set, so nothing to delete
-        if (!instances) {
+          return await instances.destroy();
+        } catch (error) {
+          // If we had issues deleting, we have bigger problems
+          console.error(
+            "Failed to delete models associated to the user's CV",
+            error
+          );
           return Promise.resolve();
         }
-
-        return await instances.destroy();
-      } catch (error) {
-        // If we had issues deleting, we have bigger problems
-        console.error(
-          "Failed to delete models associated to the user's CV",
-          error
-        );
-        return Promise.resolve();
-      }
-    })
-  );
+      })
+    );
+  };
 };
 
 module.exports = {

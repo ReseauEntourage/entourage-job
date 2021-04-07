@@ -4,7 +4,7 @@ const dev = process.env.NODE_ENV !== 'production';
 
 const promisifyOrResolve = (instance, func, args = []) => {
   if (instance) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       instance[func](...args, (error, result) => {
         if (error === null) {
           resolve(result);
@@ -56,12 +56,12 @@ const RedisManager = {
     client.name = name;
     client.lastError = null;
 
-    client.on('connect', function () {
+    client.on('connect', () => {
       // used to fix attempts count in on('end')
       this.attemptsOnConnect = this.attempts;
     });
 
-    client.on('ready', function () {
+    client.on('ready', () => {
       this.lastError = null;
       this.attempts = 1; // reset attempts
       this.attemptsOnConnect = null;
@@ -69,7 +69,7 @@ const RedisManager = {
     });
 
     // an error handler is required to prevent exception throwing
-    client.on('error', function (error) {
+    client.on('error', (error) => {
       if (error) {
         this.lastError = error;
       }
@@ -83,7 +83,7 @@ const RedisManager = {
       }
     });
 
-    client.on('end', function () {
+    client.on('end', () => {
       // fix attempts count when the connection closes before being ready
       if (!this.ready && this.attemptsOnConnect) {
         this.attempts = this.attemptsOnConnect;
@@ -103,7 +103,7 @@ const RedisManager = {
       }
     });
 
-    client.on('reconnecting', function (params) {
+    client.on('reconnecting', (params) => {
       if (params.error) {
         this.lastError = params.error;
       }

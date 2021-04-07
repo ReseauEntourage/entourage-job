@@ -1,6 +1,6 @@
 module.exports = {
-  up: (queryInterface, Sequelize) =>
-    Promise.all([
+  up: (queryInterface, Sequelize) => {
+    return Promise.all([
       queryInterface.addColumn('Opportunities', 'isValidated', {
         type: Sequelize.BOOLEAN,
         allowNull: false,
@@ -11,10 +11,12 @@ module.exports = {
         allowNull: false,
         defaultValue: false,
       }),
-    ]),
-  down: (queryInterface, Sequelize) =>
-    Promise.all([
+    ]);
+  },
+  down: (queryInterface) => {
+    return Promise.all([
       queryInterface.removeColumn('Opportunities', 'isValidated'),
       queryInterface.removeColumn('Opportunities', 'isArchived'),
-    ]),
+    ]);
+  },
 };
