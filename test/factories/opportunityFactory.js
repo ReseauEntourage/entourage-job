@@ -1,9 +1,7 @@
 const faker = require('faker');
 
 const {
-    models: {
-        Opportunity,
-    }
+  models: { Opportunity },
 } = require('../../backend/db/models');
 
 /**
@@ -26,26 +24,26 @@ const {
  * @param {string} props.createdAt
  */
 const generateOpportunity = async (props) => {
-    const data = {
-        title: faker.lorem.words(2),
-        isPublic: faker.random.boolean(),
-        isValidated: faker.random.boolean(),
-        isArchived: faker.random.boolean(),
-        company: faker.company.companyName(2),
-        recruiterName: faker.name.findName(),
-        recruiterMail: faker.internet.email(),
-        recruiterPhone: faker.phone.phoneNumber(),
-        date: faker.date.past(),
-        location: faker.address.city(),
-        description: faker.lorem.paragraphs(3),
-        prerequisites: faker.lorem.paragraphs(3),
-        createdAt: faker.date.past(),
-    };
-    return {
-        ...data,
-        ...props,
-    }
-}
+  const data = {
+    title: faker.lorem.words(2),
+    isPublic: faker.random.boolean(),
+    isValidated: faker.random.boolean(),
+    isArchived: faker.random.boolean(),
+    company: faker.company.companyName(2),
+    recruiterName: faker.name.findName(),
+    recruiterMail: faker.internet.email(),
+    recruiterPhone: faker.phone.phoneNumber(),
+    date: faker.date.past(),
+    location: faker.address.city(),
+    description: faker.lorem.paragraphs(3),
+    prerequisites: faker.lorem.paragraphs(3),
+    createdAt: faker.date.past(),
+  };
+  return {
+    ...data,
+    ...props,
+  };
+};
 /**
  * Create an opportunity and insert it in DB if desired
  *
@@ -55,13 +53,13 @@ const generateOpportunity = async (props) => {
  * @opional if no DB insertion returns the generated data (no id).
  */
 const opportunityFactory = async (props = {}, insertInDB = true) => {
-    let opportunityData = await generateOpportunity(props);
+  let opportunityData = await generateOpportunity(props);
 
-    if (insertInDB) {
-        const answer = await Opportunity.create(opportunityData);
-        opportunityData = answer.dataValues;
-    }
-    return opportunityData;
-}
+  if (insertInDB) {
+    const answer = await Opportunity.create(opportunityData);
+    opportunityData = answer.dataValues;
+  }
+  return opportunityData;
+};
 
 module.exports = opportunityFactory;

@@ -1,5 +1,5 @@
-const createLoggedInUser = require("./user.helpers");
-const cvFactory = require("../factories/cvFactory");
+const createLoggedInUser = require('./user.helpers');
+const cvFactory = require('../factories/cvFactory');
 
 /**
  * Create a cv and associated entities
@@ -21,24 +21,24 @@ const cvFactory = require("../factories/cvFactory");
 * @optional with associated user
 */
 const createCvWithAssociations = async (props = {}) => {
-    let fullCv = {};
-    const associationsId = {};
+  let fullCv = {};
+  const associationsId = {};
 
-    if (props.userId != null) {
-        const newUser = await createLoggedInUser();
-        fullCv.UserId = newUser.user.id;
-    }
+  if (props.userId != null) {
+    const newUser = await createLoggedInUser();
+    fullCv.UserId = newUser.user.id;
+  }
 
-    fullCv = {
-        ...fullCv,
-        ...props,
-    }
-    const cv = await cvFactory(fullCv, associationsId, true);
+  fullCv = {
+    ...fullCv,
+    ...props,
+  };
+  const cv = await cvFactory(fullCv, associationsId, true);
 
-    return {
-        userId: fullCv.UserId,
-        cv
-    }
-}
+  return {
+    userId: fullCv.UserId,
+    cv,
+  };
+};
 
-module.exports = createCvWithAssociations
+module.exports = createCvWithAssociations;
