@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-const loadEnvironnementVariables = require('../../backend/utils/env');
 
 const server = require('../../backend/server');
 
@@ -12,7 +11,6 @@ const PORT = process.env.PORT || 3001;
  * Start a server according to .env variables
  */
 const startTestServer = async () => {
-  loadEnvironnementVariables();
   app = server.prepare();
   await server.start(PORT);
   return app;
@@ -32,7 +30,6 @@ const stopTestServer = async () => {
  * @returns the db connection
  */
 const recreateTestDB = async () => {
-  loadEnvironnementVariables();
   db = new Sequelize(process.env.DATABASE_URL, {
     logging: process.env.DEBUG_MODE ? console.log : false,
   });

@@ -1,9 +1,11 @@
 const withCSS = require('@zeit/next-css');
 const withLess = require('@zeit/next-less');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-
-require('dotenv').config();
 const webpack = require('webpack');
+
+const loadEnvironementVariables = require('./backend/utils/env');
+
+loadEnvironementVariables();
 
 const dev = process.env.NODE_ENV !== 'production';
 

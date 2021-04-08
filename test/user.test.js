@@ -416,7 +416,7 @@ describe('User', () => {
             });
           expect(response.status).toBe(401);
         });
-        it('Should return 2OO and updated user', async () => {
+        it('Should return 200 and updated user', async () => {
           const response = await request(serverTest)
             .put(`${route}/change-pwd`)
             .set('authorization', `Token ${loggedInCandidat.token}`)

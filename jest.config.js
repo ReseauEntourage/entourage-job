@@ -1,5 +1,8 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
+const loadEnvironementVariables = require('./backend/utils/env');
+
+loadEnvironementVariables();
 
 module.exports = {
   roots: ['<rootDir>/test'],

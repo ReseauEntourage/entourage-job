@@ -1,9 +1,5 @@
-/* eslint-disable no-await-in-loop */
 const {
-  models: {
-    // eslint-disable-next-line camelcase
-    Opportunity_User,
-  },
+  models: { Opportunity_User },
 } = require('../../backend/db/models');
 
 /**
@@ -31,13 +27,14 @@ const associateOpportunityUser = async (opportunityId, userId) => {
 /**
  * Associate many opportunities to a user
  *
- * @param {Array<srting>} opportunitiesId id of the opportunities to
+ * @param {Array<string>} opportunitiesId id of the opportunities to
  * associate to a user
  * @param {string} userId id of the user
  */
 const associateManyOpportunitiesUser = async (opportunitiesId, userId) => {
   const opportunitiesUser = [];
   for (let i = 0; i < opportunitiesId.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
     const opp = await associateOpportunityUser(opportunitiesId[i], userId);
     opportunitiesUser.push(opp);
   }
