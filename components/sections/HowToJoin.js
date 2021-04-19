@@ -1,89 +1,76 @@
 import React from 'react';
-import { IconNoSSR, Section } from '../utils';
-import Grid from '../utils/Grid';
+import MultipleCTA from '../partials/MultipleCTA';
+import { Section } from '../utils';
 import Img from '../utils/Img';
 
 const HowToJoin = () => {
   const content = [
     {
-      img: '/static/img/id_card.png',
-      description: (
+      text: (
         <div>
-          <span className="uk-text-bold">Carte Nationale d&apos;Identité</span>{' '}
-          (ou carte résident avec autorisation de travail / titre de séjour)
+          Être{' '}
+          <span className="uk-text-bold">
+            disponible pour vous investir dans votre recherche d’emploi
+          </span>{' '}
+          (1 rencontre par semaine avec le Coach, entraînements aux entretiens…)
         </div>
       ),
     },
     {
-      img: '/static/img/domiciliation.png',
-      description: (
+      text: (
         <div>
-          <span className="uk-text-bold">Domiciliation</span>
+          Être{' '}
+          <span className="uk-text-bold">prêt à travailler immédiatement</span>{' '}
+          dès que des opportunités d’emplois se présentent à vous
         </div>
       ),
     },
     {
-      img: '/static/img/bank.png',
-      description: (
+      text: (
         <div>
-          <span className="uk-text-bold">Compte bancaire</span>
+          Être{' '}
+          <span className="uk-text-bold">
+            éligible à un contrat de travail en France
+          </span>{' '}
+          (pièce d’identité / autorisation de travail, domiciliation, compte
+          bancaire, attestation de Sécurité Sociale)
         </div>
       ),
     },
     {
-      img: '/static/img/social_security.png',
-      description: (
+      text: (
         <div>
-          <span className="uk-text-bold">Attestation de Sécurité Sociale</span>
+          Avoir{' '}
+          <span className="uk-text-bold">un niveau de français suffisant</span>{' '}
+          permettant un entretien d’embauche
         </div>
       ),
     },
   ];
 
   return (
-    <Section id="howToJoin" container="small" style="default">
+    <Section id="howToJoin" container="small" style="muted">
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
-        Comment rejoindre{' '}
-        <span className="uk-text-primary">LinkedOut&nbsp;?</span>
+        Que faut-il{' '}
+        <span className="uk-text-primary">pour rejoindre LinkedOut&nbsp;?</span>
       </h2>
-      <h3 className="uk-align-center uk-text-center">
-        Vous êtes en démarche d’insertion professionnelle et motivé(e) pour être
-        acteur de votre recherche&nbsp;!
-      </h3>
-      <p className="uk-width-large uk-margin-large-bottom uk-margin-large-top">
-        Vous rassemblez les éléments suivants, nécessaires à l’obtention d’un
-        contrat de travail&nbsp;:
+      <p className="uk-margin-medium-bottom uk-margin-large-top">
+        Pour rejoindre le dispositif, vous devez remplir les conditions
+        suivantes&nbsp;:
       </p>
-      <Grid
-        childWidths={[`1-${content.length}@m`]}
-        match
-        gap="medium"
-        items={content.map(({ img, description }, index) => {
-          return (
-            <div
-              key={index.toString()}
-              className="uk-flex uk-flex-column uk-flex-middle"
-            >
-              <div className="uk-height-small uk-flex uk-flex-bottom uk-flex-center uk-margin-small-bottom uk-padding-small">
-                <Img
-                  src={img}
-                  width=""
-                  height=""
-                  alt=""
-                  className="uk-height-max-small"
-                />
-              </div>
-              <div className="uk-flex uk-flex-top">
-                <div className="uk-text-primary">
-                  <IconNoSSR name="triangle-right" />
-                  &nbsp;
-                </div>
-                <div className="uk-flex-1">{description}</div>
-              </div>
-            </div>
-          );
-        })}
+      <MultipleCTA
+        data={content}
+        showVerticalDividers
+        spacing="small"
+        className="uk-margin-large-bottom uk-container-small"
       />
+      <div className="uk-flex uk-flex-center">
+        <Img
+          src="/static/img/cover-linkedout.jpg"
+          alt="Binôme"
+          className="uk-height-max-large"
+        />
+      </div>
     </Section>
   );
 };

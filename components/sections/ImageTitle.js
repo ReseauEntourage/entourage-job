@@ -41,9 +41,9 @@ const ImageTitle = ({ id, title, text, img }) => {
           {title}
         </h1>
         {text && (
-          <h3 className="uk-text-center uk-align-center uk-margin-remove-bottom">
+          <h4 className="uk-text-center uk-align-center uk-margin-remove-bottom">
             {text}
-          </h3>
+          </h4>
         )}
       </div>
     </div>

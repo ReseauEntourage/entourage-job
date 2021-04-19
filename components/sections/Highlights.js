@@ -1,85 +1,62 @@
 import React from 'react';
-import { Section } from '../utils';
 import Carousel from '../utils/Carousel';
 import CarouselItem from '../partials/CarouselItem';
+import { Section, SimpleLink } from '../utils';
 
 const Highlights = () => {
   const highlights = [
     {
       description: (
         <div>
-          Des personnes{' '}
-          <span className="uk-text-bold">
-            partagent votre CV sur leurs réseaux sociaux
-          </span>{' '}
-          pour que vous receviez des opportunités d’emploi
+          <span className="uk-text-bold">Un coach LinkedOut</span> qui vous
+          soutient à chaque étape de votre recherche d’emploi et pendant votre
+          intégration en entreprise (1 rencontre&nbsp;/&nbsp;semaine)
         </div>
       ),
-      img: '/static/img/highlight_1.jpg',
+      img: '/static/img/header_pic_guide.jpg',
+    },
+    {
+      description: (
+        <div>
+          <span className="uk-text-bold">Une nouvelle forme de CV</span> qui met
+          l’accent sur l’humain, qui valorise votre parcours et vos qualités.
+        </div>
+      ),
+      img: '/static/img/orientation_3.jpg',
     },
     {
       description: (
         <div>
           <span className="uk-text-bold">
-            Vous êtes soutenu(e) par un bénévole-coach
+            Un site internet <SimpleLink href="/">www.linkedout.fr</SimpleLink>
           </span>{' '}
-          sur la durée, pendant la recherche et après la reprise d&apos;un
-          emploi
+          qui permet de partager votre CV à grande échelle sur les réseaux
+          sociaux pour rendre visible votre profil.
         </div>
       ),
-      img: '/static/img/highlight_2.jpg',
+      img: '/static/img/orientation_2.jpg',
     },
     {
       description: (
         <div>
-          Vous choisissez{' '}
           <span className="uk-text-bold">
-            des formations courtes selon vos besoins
+            Des moments partagés avec les autres candidats
           </span>{' '}
-          <span className="uk-text-italic">
-            (numérique, préparation à l’entretien d&apos;embauche, connaissance
-            de l’entreprise...)
-          </span>
+          pour prendre confiance en soi, se motiver à plusieurs et vivre des
+          expériences marquantes.
         </div>
       ),
-      img: '/static/img/highlight_3.jpg',
-    },
-    {
-      description: (
-        <div>
-          Au sein de la communauté Entourage{' '}
-          <span className="uk-text-bold">
-            vous pouvez participer à des événements
-          </span>{' '}
-          de convivialité pour vous ressourcer et faire de nouvelles rencontres
-          (soirées jeux, apéro, pétanque,…)
-        </div>
-      ),
-      img: '/static/img/highlight_4.jpg',
-    },
-    {
-      description: (
-        <div>
-          Vous bénéficiez{' '}
-          <span className="uk-text-bold">d&apos;un réseau d&apos;anciens</span>{' '}
-          pour des contacts ou des conseils si vous le souhaitez
-        </div>
-      ),
-      img: '/static/img/highlight_5.jpg',
+      img: '/static/img/orientation_4.jpg',
     },
   ];
 
   return (
-    <Section id="highlights" style="muted" container="small">
+    <Section id="highlights" style="default" container="small">
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
           Que vous apporte{' '}
           <span className="uk-text-primary">LinkedOut&nbsp;?</span>
         </h2>
-        <h3 className="uk-align-center uk-text-center uk-margin-large-bottom">
-          LinkedOut vous aide à trouver un travail et à vous intégrer dans votre
-          nouvelle entreprise
-        </h3>
         <div className="uk-width-expand">
           <Carousel containerClasses="uk-child-width-1-1">
             {highlights.map(({ img, description }, index) => {
@@ -95,6 +72,17 @@ const Highlights = () => {
           </Carousel>
         </div>
       </div>
+      <iframe
+        src="https://www.youtube.com/embed/9TK4wOfF-HU?start=61"
+        width="1280"
+        height="720"
+        frameBorder="0"
+        allowFullScreen
+        data-uk-responsive
+        data-uk-video="automute: false; autoplay: false"
+        title="linkedout"
+        className="uk-margin-medium-top"
+      />
     </Section>
   );
 };

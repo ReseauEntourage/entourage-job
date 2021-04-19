@@ -162,7 +162,7 @@ const Orienter = () => {
           </p>
         </div>
       </SimpleSection>
-      <CandidateTestimoniesOrientation />
+      <CandidateTestimoniesOrientation style="muted" />
       <Partners showOrientationPartners />
     </Layout>
   );
