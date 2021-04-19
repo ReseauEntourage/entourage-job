@@ -1,11 +1,7 @@
 const faker = require('faker');
+const { USER_ROLES } = require('../../constants');
 const {
-  USER_ROLES
-} = require('../../constants');
-const {
-  models: {
-    User,
-  },
+  models: { User },
 } = require('../../backend/db/models');
 const Auth = require('../../backend/controllers/Auth');
 
@@ -16,10 +12,9 @@ const Auth = require('../../backend/controllers/Auth');
  * @return An object to build the user from.
  */
 const generateUser = async (props = {}) => {
-  const {
-    salt,
-    hash
-  } = Auth.encryptPassword(props.password ? props.password : faker.internet.password());
+  const { salt, hash } = Auth.encryptPassword(
+    props.password ? props.password : faker.internet.password()
+  );
 
   return {
     id: faker.random.uuid(),
@@ -34,8 +29,7 @@ const generateUser = async (props = {}) => {
     address: props.address || faker.address.streetAddress(),
     lastConnection: props.lastConnection || `${faker.date.past()}`,
   };
-}
-
+};
 
 /**
  * Generate an oject which contains the data necessary
@@ -44,6 +38,7 @@ const generateUser = async (props = {}) => {
  * @param {string} candidatId The userId to link to
  * @return An object to build the user from.
  */
+// eslint-disable-next-line no-unused-vars
 const generateUserCandidat = async (candidatId, props = {}) => {
   return {
     candidatId,
@@ -52,8 +47,7 @@ const generateUserCandidat = async (candidatId, props = {}) => {
     hidden: props.hidden || faker.random.boolean(),
     url: 'test - url',
   };
-}
-
+};
 
 /**
  * Create a User in DB.

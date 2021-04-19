@@ -18,26 +18,37 @@ const Layout = ({
   metaType,
   router,
 }) => {
+  const shouldShowAuthHeader =
+    router.asPath.includes('/aider') &&
+    router.asPath.includes('/travailler') &&
+    router.asPath.includes('/recruter') &&
+    router.asPath.includes('/candidats') &&
+    router.asPath.includes('/partenaires') &&
+    router.asPath.includes('/contact');
+
   const isPDF = router.asPath.includes('/pdf/');
 
   return (
     <>
       <Head>
         <title>{title}</title>
-        <link rel="icon" type="image/png" href={addPrefix('/static/img/fav.png')} />
+        <link
+          rel="icon"
+          type="image/png"
+          href={addPrefix('/static/img/fav.png')}
+        />
         <link rel="canonical" href="https://www.linkedout.fr/" />
-        {
-          isPDF && <link rel="stylesheet" type="text/css" href="/static/dist/css/uikit.entourage.print.min.css" media="print" />
-        }
+        {isPDF && (
+          <link
+            rel="stylesheet"
+            type="text/css"
+            href="/static/dist/css/uikit.entourage.print.min.css"
+            media="print"
+          />
+        )}
         <meta property="og:site_name" content="LinkedOut" />
-        <meta
-          property="og:description"
-          content={metaDescription}
-        />
-        <meta
-          name="description"
-          content={metaDescription}
-        />
+        <meta property="og:description" content={metaDescription} />
+        <meta name="description" content={metaDescription} />
         <meta property="og:image" content={metaImage} />
         <meta name="image" content={metaImage} />
         <meta property="og:type" content={metaType} />
@@ -50,29 +61,19 @@ const Layout = ({
         <meta name="twitter:image" content={metaImage} />
         {/* <meta name="fb:app_id" content="" /> */}
       </Head>
-      {
-        !isPDF &&
+      {!isPDF && (
         <UserContext.Consumer>
-          {({ isAuthentificated }) =>
-            isAuthentificated &&
-            router.asPath.includes('/aider') &&
-            router.asPath.includes('/travailler') &&
-            router.asPath.includes('/recruter') &&
-            router.asPath.includes('/candidats') &&
-            router.asPath.includes('/partenaires') &&
-            router.asPath.includes('/contact') ? (
+          {({ isAuthentificated }) => {
+            return isAuthentificated && shouldShowAuthHeader ? (
               <HeaderConnected />
             ) : (
               router.asPath !== '/' && <Header isHome={false} />
-            )
-          }
+            );
+          }}
         </UserContext.Consumer>
-      }
+      )}
       {children}
-      {
-        !isPDF &&
-        <Footer />
-      }
+      {!isPDF && <Footer />}
     </>
   );
 };
@@ -95,8 +96,7 @@ Layout.propTypes = {
 
 Layout.defaultProps = {
   title: 'LinkedOut\xa0: partagez votre réseau avec ceux qui n’en ont pas',
-  metaTitle:
-    'LinkedOut\xa0: partagez votre réseau avec ceux qui n’en ont pas',
+  metaTitle: 'LinkedOut\xa0: partagez votre réseau avec ceux qui n’en ont pas',
   metaImage: `${process.env.SERVER_URL}/static/img/linkedout-preview-new.jpg`,
   metaDescription:
     "Lorsque l'on est exclu, les chances de trouver du travail sont proches de zéro. Avec LinkedOut, faites don de votre visibilité. Un partage peut tout changer.",

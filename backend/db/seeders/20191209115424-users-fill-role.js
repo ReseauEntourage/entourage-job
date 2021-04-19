@@ -1,4 +1,4 @@
-const {USER_ROLES} = require("../../../constants");
+const { USER_ROLES } = require('../../../constants');
 
 module.exports = {
   up: (queryInterface) => {

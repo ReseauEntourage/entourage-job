@@ -1,6 +1,6 @@
 module.exports = {
-  up: (queryInterface, Sequelize) =>
-    Promise.all([
+  up: (queryInterface, Sequelize) => {
+    return Promise.all([
       queryInterface.createTable('User_Candidats', {
         candidatId: {
           type: Sequelize.UUID,
@@ -49,9 +49,10 @@ module.exports = {
       queryInterface.removeColumn('Users', 'hidden'),
       queryInterface.removeColumn('Users', 'url'),
       queryInterface.removeColumn('Users', 'userToCoach'),
-    ]),
-  down: (queryInterface, Sequelize) =>
-    Promise.all([
+    ]);
+  },
+  down: (queryInterface, Sequelize) => {
+    return Promise.all([
       queryInterface.dropTable('User_Candidats'),
       queryInterface.addColumn('Users', 'employed', {
         type: Sequelize.BOOLEAN,
@@ -76,5 +77,6 @@ module.exports = {
           key: 'id',
         },
       }),
-    ]),
+    ]);
+  },
 };

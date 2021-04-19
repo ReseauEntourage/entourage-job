@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Language.beforeCreate((language, _) => {
+  Language.beforeCreate((language) => {
     return (language.id = uuid());
   });
-  Language.associate = function (models) {
+  Language.associate = (models) => {
     Language.belongsToMany(models.CV, {
       through: 'CV_Language',
       as: 'CVs',

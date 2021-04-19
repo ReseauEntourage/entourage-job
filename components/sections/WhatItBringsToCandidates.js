@@ -61,14 +61,16 @@ const WhatItBringsToCandidates = () => {
         </h2>
         <div className="uk-width-expand">
           <Carousel containerClasses="uk-child-width-1-1">
-            {content.map(({ img, description }, index) => (
-              <CarouselItem
-                key={index}
-                index={index}
-                img={img}
-                description={description}
-              />
-            ))}
+            {content.map(({ img, description }, index) => {
+              return (
+                <CarouselItem
+                  key={index}
+                  index={index}
+                  img={img}
+                  description={description}
+                />
+              );
+            })}
           </Carousel>
         </div>
       </div>

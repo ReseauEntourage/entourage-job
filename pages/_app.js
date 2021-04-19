@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import '../static/dist/css/uikit.entourage.min.css';
 import '../static/css/styles.less';
 import '../static/css/Forms.less';
@@ -69,7 +70,7 @@ const Container = ({ Component, pageProps, err }) => {
             fading ? 'uk-animation-fade uk-animation-reverse' : ''
           } uk-position-cover uk-background-default`}
         >
-          <SplashScreen fading={fading} />
+          <SplashScreen />
         </div>
       )}
     </div>
@@ -83,8 +84,12 @@ const EntourageApp = ({ Component, pageProps, err }) => {
         <SharesCountProvider>
           <DataProvider>
             <UserProvider>
-              <Container Component={Component} pageProps={pageProps} err={err} />
-           </UserProvider>
+              <Container
+                Component={Component}
+                pageProps={pageProps}
+                err={err}
+              />
+            </UserProvider>
           </DataProvider>
         </SharesCountProvider>
       </SessionProvider>

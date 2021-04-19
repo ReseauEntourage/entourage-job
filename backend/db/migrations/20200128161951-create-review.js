@@ -29,17 +29,21 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: () => moment(new Date()),
+        defaultValue: () => {
+          return moment(new Date());
+        },
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: () => moment(new Date()),
+        defaultValue: () => {
+          return moment(new Date());
+        },
       },
     });
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable('Reviews');
   },
 };

@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  CV_Search.beforeCreate((fields, _) => {
+  CV_Search.beforeCreate((fields) => {
     const data = fields;
     data.id = uuid();
     return data;

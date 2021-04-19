@@ -108,7 +108,7 @@ const FiltersSideBar = ({ filterData, filters, setFilters }) => {
 FiltersSideBar.propTypes = {
   filters: PropTypes.shape().isRequired,
   setFilters: PropTypes.func.isRequired,
-  filterData: PropTypes.arrayOf(PropTypes.shape()),
+  filterData: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default FiltersSideBar;

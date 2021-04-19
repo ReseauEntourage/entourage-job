@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Contract.beforeCreate((contract, _) => {
+  Contract.beforeCreate((contract) => {
     return (contract.id = uuid());
   });
-  Contract.associate = function (models) {
+  Contract.associate = (models) => {
     Contract.belongsToMany(models.CV, {
       through: 'CV_Contract',
       as: 'CVs',

@@ -2,22 +2,24 @@ import React from 'react';
 import PropTypess from 'prop-types';
 import { GridNoSSR } from '../utils';
 
-const HeaderBackoffice = ({ title, description, children, childrenBottom }) => (
-  <div className="uk-margin-large-bottom">
-    <GridNoSSR
-      gap="small"
-      column={childrenBottom}
-      eachWidths={['expand@s', 'auto']}
-    >
-      <div>
-        <h2 className="uk-text-bold">{title}</h2>
-        <p className="uk-text-lead uk-width-2-3@m">{description}</p>
-      </div>
-      {children}
-    </GridNoSSR>
-    <hr className="ent-divier-backoffice uk-margin-large-top " />
-  </div>
-);
+const HeaderBackoffice = ({ title, description, children, childrenBottom }) => {
+  return (
+    <div className="uk-margin-large-bottom">
+      <GridNoSSR
+        gap="small"
+        column={childrenBottom}
+        eachWidths={['expand@s', 'auto']}
+      >
+        <div>
+          <h2 className="uk-text-bold">{title}</h2>
+          <p className="uk-text-lead uk-width-2-3@m">{description}</p>
+        </div>
+        {children}
+      </GridNoSSR>
+      <hr className="ent-divier-backoffice uk-margin-large-top " />
+    </div>
+  );
+};
 HeaderBackoffice.propTypes = {
   title: PropTypess.string.isRequired,
   description: PropTypess.string.isRequired,

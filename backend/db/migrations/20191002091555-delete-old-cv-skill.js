@@ -10,7 +10,9 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: () => uuid(),
+        defaultValue: () => {
+          return uuid();
+        },
       },
       CVid: {
         allowNull: false,

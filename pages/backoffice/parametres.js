@@ -30,7 +30,9 @@ const Parametres = () => {
         .then(({ data }) => {
           setUserData(data);
         })
-        .finally(() => setLoadingPersonal(false));
+        .finally(() => {
+          return setLoadingPersonal(false);
+        });
     }
   }, [user]);
 
@@ -165,8 +167,8 @@ const Parametres = () => {
                   modalTitle="Vous avez retrouvé un emploi ?"
                   modalConfirmation="Oui, j'ai retrouvé un emploi"
                   defaultValue={userData.candidat.employed}
-                  onToggle={(employed) =>
-                    Api.put(`/api/v1/user/candidat/${userData.id}`, {
+                  onToggle={(employed) => {
+                    return Api.put(`/api/v1/user/candidat/${userData.id}`, {
                       employed,
                     })
                       .then(() => {
@@ -182,26 +184,30 @@ const Parametres = () => {
                           'success'
                         );
                       })
-                      .catch(() =>
-                        UIkit.notification('Une erreur est survenue', 'danger')
-                      )}
+                      .catch(() => {
+                        return UIkit.notification(
+                          'Une erreur est survenue',
+                          'danger'
+                        );
+                      });
+                  }}
                 />
                 <ToggleWithConfirmationModal
                   id="hidden"
                   title="Masquer mon CV"
                   modalTitle="Changer la visibilité du CV en ligne ?"
-                  modalDescription={(
+                  modalDescription={
                     <>
                       En masquant votre CV de LinkedOut, il ne sera plus visible
                       par les utilisateurs du site.
                       <br />
                       Vous pourrez le remettre en ligne à tout moment.
                     </>
-                  )}
+                  }
                   modalConfirmation="Oui, masquer mon CV"
                   defaultValue={userData.candidat.hidden}
-                  onToggle={(hidden) =>
-                    Api.put(`/api/v1/user/candidat/${userData.id}`, {
+                  onToggle={(hidden) => {
+                    return Api.put(`/api/v1/user/candidat/${userData.id}`, {
                       hidden,
                     })
                       .then(() => {
@@ -219,12 +225,13 @@ const Parametres = () => {
                           'success'
                         );
                       })
-                      .catch(() =>
-                        UIkit.notification(
+                      .catch(() => {
+                        return UIkit.notification(
                           'Une erreur est survenue lors du masquage de votre profil',
                           'danger'
-                        )
-                      )}
+                        );
+                      });
+                  }}
                 />
               </Card>
             )}
@@ -237,7 +244,9 @@ const Parametres = () => {
                 ) : (
                   <ButtonIcon
                     name="pencil"
-                    onClick={() => UIkit.modal(`#modal-personal-data`).show()}
+                    onClick={() => {
+                      return UIkit.modal(`#modal-personal-data`).show();
+                    }}
                   />
                 )}
               </GridNoSSR>
@@ -247,32 +256,30 @@ const Parametres = () => {
                     <IconNoSSR name="user" style={{ width: 20 }} />
                     <span>{`${userData.firstName} ${userData.lastName}`}</span>
                   </GridNoSSR>
-                  {
-                    userData.role !== USER_ROLES.ADMIN &&
+                  {userData.role !== USER_ROLES.ADMIN && (
                     <GridNoSSR row gap="small">
                       <IconNoSSR name="gender" style={{ width: 20 }} />
                       <span>
-                      {`${userData.gender === 0 ? 'Homme' : 'Femme'}`}
-                    </span>
+                        {`${userData.gender === 0 ? 'Homme' : 'Femme'}`}
+                      </span>
                     </GridNoSSR>
-                  }
+                  )}
                   <GridNoSSR row gap="small">
                     <IconNoSSR name="mail" style={{ width: 20 }} />
                     <span>{userData.email}</span>
                   </GridNoSSR>
-                  {
-                    userData.role !== USER_ROLES.ADMIN &&
+                  {userData.role !== USER_ROLES.ADMIN && (
                     <GridNoSSR row gap="small">
                       <IconNoSSR name="phone" style={{ width: 20 }} />
                       {userData.phone ? (
                         <span>{userData.phone}</span>
                       ) : (
                         <span className="uk-text-italic">
-                        Numéro de téléphone non renseigné
-                      </span>
+                          Numéro de téléphone non renseigné
+                        </span>
                       )}
                     </GridNoSSR>
-                  }
+                  )}
                   {userData.role === USER_ROLES.CANDIDAT && (
                     <GridNoSSR row gap="small">
                       <IconNoSSR name="home" style={{ width: 20 }} />
@@ -389,7 +396,9 @@ const Parametres = () => {
                       'danger'
                     );
                   })
-                  .finally(() => setLoadingPersonal(false));
+                  .finally(() => {
+                    return setLoadingPersonal(false);
+                  });
               };
 
               let newUserData = {};

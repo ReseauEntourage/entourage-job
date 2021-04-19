@@ -80,7 +80,7 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true,
     }
   );
-  CV.beforeCreate((fields, _) => {
+  CV.beforeCreate((fields) => {
     const data = fields;
     data.id = uuid();
     return data;

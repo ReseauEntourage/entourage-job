@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Passion.beforeCreate((passion, _) => {
+  Passion.beforeCreate((passion) => {
     return (passion.id = uuid());
   });
-  Passion.associate = function (models) {
+  Passion.associate = (models) => {
     Passion.belongsToMany(models.CV, {
       through: 'CV_Passion',
       // as: 'Passions',

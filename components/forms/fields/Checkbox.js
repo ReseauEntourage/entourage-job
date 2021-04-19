@@ -2,16 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
 
-const Checkbox = ({
-  id,
-  name,
-  value,
-  onChange,
-  title,
-  valid,
-  disabled,
-}) => {
-
+const Checkbox = ({ id, name, value, onChange, title, valid, disabled }) => {
   return (
     <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
       <label htmlFor={id}>
@@ -24,7 +15,9 @@ const Checkbox = ({
             valid !== undefined && valid.isInvalid ? ' uk-form-danger' : ''
           }`}
           checked={value}
-          onChange={(event) => onChange(event)}
+          onChange={(event) => {
+            return onChange(event);
+          }}
         />
         <span style={{ paddingLeft: '10px' }}>{title}</span>
       </label>
@@ -48,7 +41,7 @@ Checkbox.propTypes = {
 Checkbox.defaultProps = {
   valid: undefined,
   value: false,
-  disabled: false
+  disabled: false,
 };
 
 export default Checkbox;

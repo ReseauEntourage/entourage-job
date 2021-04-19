@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Section, GridNoSSR } from '../utils';
-import { SharePartial } from './index';
+import SharePartial from './SharePartial';
 import NewsletterPartial from './NewsletterPartial';
 import MultipleCTA from './MultipleCTA';
 import TAGS from '../../constants/tags';
@@ -36,29 +36,31 @@ const datas = [
     title: 'Vous cherchez du travail',
   },
 ];
-const ActionPartial = ({ style }) => (
-  <Section style={style} id="actions">
-    <GridNoSSR gap="large" column>
-      <div className="uk-text-center">
-        <h2 className="uk-text-bold">
-          <span className="uk-text-primary">Agissez</span> avec LinkedOut
-        </h2>
-        <p>
-          Depuis son lancement en juin 2019, de belles rencontres ont emergé
-          grâce aux multiples partages.
-        </p>
-      </div>
+const ActionPartial = ({ style }) => {
+  return (
+    <Section style={style} id="actions">
+      <GridNoSSR gap="large" column>
+        <div className="uk-text-center">
+          <h2 className="uk-text-bold">
+            <span className="uk-text-primary">Agissez</span> avec LinkedOut
+          </h2>
+          <p>
+            Depuis son lancement en juin 2019, de belles rencontres ont emergé
+            grâce aux multiples partages.
+          </p>
+        </div>
 
-      <MultipleCTA
-        data={datas}
-        spacing="small"
-        className="uk-margin-large-bottom"
-      />
-      <NewsletterPartial tag={TAGS.HOME_INSCRIPTION_NEWSLETTER_CLIC} />
-      <SharePartial />
-    </GridNoSSR>
-  </Section>
-);
+        <MultipleCTA
+          data={datas}
+          spacing="small"
+          className="uk-margin-large-bottom"
+        />
+        <NewsletterPartial tag={TAGS.HOME_INSCRIPTION_NEWSLETTER_CLIC} />
+        <SharePartial />
+      </GridNoSSR>
+    </Section>
+  );
+};
 
 ActionPartial.propTypes = {
   style: PropTypes.string,

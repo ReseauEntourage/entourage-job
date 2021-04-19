@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return queryInterface.removeColumn('CVs', 'devise');
   },
   down: (queryInterface, Sequelize) => {
@@ -8,6 +8,5 @@ module.exports = {
       allowNull: true,
       defaultValue: null,
     });
-  }
-
+  },
 };

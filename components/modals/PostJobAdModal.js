@@ -54,52 +54,56 @@ const PostJobAdModal = () => {
       title="Proposer une opportunité"
       resetForm={resetForm}
       composers={[
-        (closeModal, nextStep) => (
-          <div>
-            <p>
-              Cet espace est dédié aux potentiels recruteurs qui souhaitent
-              proposer une opportunité visible par tous les candidats.
-            </p>
-            <FormWithValidation
-              ref={form}
-              submitText="Envoyer"
-              formSchema={mutatedSchema}
-              onCancel={closeModal}
-              onSubmit={(opportunity) => {
-                Api.post('/api/v1/opportunity/', {
-                  ...opportunity,
-                  date: Date.now(),
-                })
-                  .then(nextStep)
-                  .catch((error) => {
-                    console.error(error);
-                    UIkit.notification(
-                      "Une erreur s'est produite lors de l'envoi de l'offre",
-                      { pos: 'bottom-center', status: 'danger' }
-                    );
-                  });
-              }}
-              defaultValues={{
-                isPublic: true,
-              }}
-            />
-          </div>
-        ),
-        (closeModal) => (
-          <div className="uk-flex uk-flex-center uk-margin-large">
-            <div className="uk-card uk-card-body uk-text-center">
-              <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
-              <p className="uk-text-lead">
-                Merci pour votre offre, nous reviendrons bientôt vers vous.
+        (closeModal, nextStep) => {
+          return (
+            <div>
+              <p>
+                Cet espace est dédié aux potentiels recruteurs qui souhaitent
+                proposer une opportunité visible par tous les candidats.
               </p>
-              <div className="uk-flex uk-flex-center">
-                <Button style="secondary" onClick={closeModal}>
-                  Fermer
-                </Button>
+              <FormWithValidation
+                ref={form}
+                submitText="Envoyer"
+                formSchema={mutatedSchema}
+                onCancel={closeModal}
+                onSubmit={(opportunity) => {
+                  Api.post('/api/v1/opportunity/', {
+                    ...opportunity,
+                    date: Date.now(),
+                  })
+                    .then(nextStep)
+                    .catch((error) => {
+                      console.error(error);
+                      UIkit.notification(
+                        "Une erreur s'est produite lors de l'envoi de l'offre",
+                        { pos: 'bottom-center', status: 'danger' }
+                      );
+                    });
+                }}
+                defaultValues={{
+                  isPublic: true,
+                }}
+              />
+            </div>
+          );
+        },
+        (closeModal) => {
+          return (
+            <div className="uk-flex uk-flex-center uk-margin-large">
+              <div className="uk-card uk-card-body uk-text-center">
+                <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
+                <p className="uk-text-lead">
+                  Merci pour votre offre, nous reviendrons bientôt vers vous.
+                </p>
+                <div className="uk-flex uk-flex-center">
+                  <Button style="secondary" onClick={closeModal}>
+                    Fermer
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        ),
+          );
+        },
       ]}
     />
   );

@@ -24,12 +24,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Experience_Skill.beforeCreate((fields, _) => {
+  Experience_Skill.beforeCreate((fields) => {
     const data = fields;
     data.id = uuid();
     return data;
   });
-  Experience_Skill.associate = (models) => {
+  Experience_Skill.associate = () => {
     // associations can be defined here
   };
   return Experience_Skill;

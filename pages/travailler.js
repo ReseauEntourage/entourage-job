@@ -1,22 +1,28 @@
 import React from 'react';
 import Layout from '../components/Layout';
-import ImageTitle from "../components/sections/ImageTitle";
-import HowToJoin from "../components/sections/HowToJoin";
-import StepsToJoin from "../components/sections/StepsToJoin";
-import Highlights from "../components/sections/Highlights";
+import ImageTitle from '../components/sections/ImageTitle';
+import HowToJoin from '../components/sections/HowToJoin';
+import StepsToJoin from '../components/sections/StepsToJoin';
+import Highlights from '../components/sections/Highlights';
 
-const Travailler = () => (
-  <Layout title="Travailler - LinkedOut">
-    <ImageTitle
-      img='static/img/header_pic_work.jpg'
-      id="work-title"
-      title={<>Vous cherchez <span className="uk-text-primary">du travail ?</span></>}
-      text="LinkedOut s’adresse à toute personne en situation d’exclusion ou de précarité, dans une démarche d’insertion professionnelle, motivée et en capacité de travailler." />
-    <Highlights />
-    <HowToJoin />
-    <StepsToJoin />
-  </Layout>
-);
-
+const Travailler = () => {
+  return (
+    <Layout title="Travailler - LinkedOut">
+      <ImageTitle
+        img="static/img/header_pic_work.jpg"
+        id="work-title"
+        title={
+          <>
+            Vous cherchez <span className="uk-text-primary">du travail ?</span>
+          </>
+        }
+        text="LinkedOut s’adresse à toute personne en situation d’exclusion ou de précarité, dans une démarche d’insertion professionnelle, motivée et en capacité de travailler."
+      />
+      <Highlights />
+      <HowToJoin />
+      <StepsToJoin />
+    </Layout>
+  );
+};
 
 export default Travailler;

@@ -16,8 +16,8 @@ const CVEditPicture = ({
     setUrl(urlImg);
   }, [urlImg]);
 
-  const resizeFile = (file) =>
-    new Promise((resolve) => {
+  const resizeFile = (file) => {
+    return new Promise((resolve) => {
       Resizer.imageFileResizer(
         file,
         2000,
@@ -31,6 +31,7 @@ const CVEditPicture = ({
         'blob'
       );
     });
+  };
 
   return (
     <div

@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return queryInterface.addConstraint('Experiences', {
       fields: ['CVId'],
       type: 'foreign key',
@@ -13,7 +13,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.removeConstraint(
       'Experiences',
       'Experiences_CVId_fkey'

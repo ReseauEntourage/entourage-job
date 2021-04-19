@@ -9,18 +9,28 @@ const textToSVGBold = TextToSVG.loadSync('./static/fonts/Roboto-Black.ttf');
 // TOOLS
 const buildLines = async (lines, font, option) => {
   const sharpDatas = await Promise.all(
-    lines.map((line) => sharp(Buffer.from(font.getSVG(line, option))))
+    lines.map((line) => {
+      return sharp(Buffer.from(font.getSVG(line, option)));
+    })
   );
   const buffers = await Promise.all(
-    sharpDatas.map((sharpData) => sharpData.toBuffer())
+    sharpDatas.map((sharpData) => {
+      return sharpData.toBuffer();
+    })
   );
   const metadatas = await Promise.all(
-    sharpDatas.map((sharpData) =>
-      sharpData.metadata().then((metadata) => metadata)
-    )
+    sharpDatas.map((sharpData) => {
+      return sharpData.metadata().then((metadata) => {
+        return metadata;
+      });
+    })
   );
-  const widths = metadatas.map(({width}) => width);
-  const heights = metadatas.map(({height}) => height);
+  const widths = metadatas.map(({ width }) => {
+    return width;
+  });
+  const heights = metadatas.map(({ height }) => {
+    return height;
+  });
   return {
     buffers,
     heights,
@@ -30,7 +40,7 @@ const buildLines = async (lines, font, option) => {
 const buildLine = async (line, font, option) => {
   const sharpData = sharp(Buffer.from(font.getSVG(line, option))).png();
   const buffer = await sharpData.toBuffer();
-  const {width, height} = await sharpData.metadata();
+  const { width, height } = await sharpData.metadata();
   return {
     buffer,
     height,
@@ -38,13 +48,15 @@ const buildLine = async (line, font, option) => {
   };
 };
 // créé les options svg par defaut. possibilité de changer la taille de la police
-const createSVGOption = (fontSize, color) => ({
-  fontSize,
-  anchor: 'top',
-  attributes: {
-    fill: color,
-  },
-});
+const createSVGOption = (fontSize, color) => {
+  return {
+    fontSize,
+    anchor: 'top',
+    attributes: {
+      fill: color,
+    },
+  };
+};
 
 const ellipsisByWord = (text, getWidth, maxWidth, maxLine) => {
   const lines = [];
@@ -57,10 +69,8 @@ const ellipsisByWord = (text, getWidth, maxWidth, maxLine) => {
     if (word === '\n') {
       lines.push(line.join(' '));
       line = [];
-      continue;
-    }
-    // j'ajoute le mot ou cree une nouvelle ligne selon si on depasse la taille max
-    if (getWidth([...line, word].join(' ')) >= maxWidth) {
+    } else if (getWidth([...line, word].join(' ')) >= maxWidth) {
+      // j'ajoute le mot ou cree une nouvelle ligne selon si on depasse la taille max
       if (lines.length >= maxLine) {
         do {
           line = [...line.slice(0, line.length - 1), `...`];
@@ -110,7 +120,7 @@ const createCandidatPreviewV2 = async (
   ambitions,
   skills,
   locations,
-  gender,
+  gender
 ) => {
   const getCadran = async (cadranWidth, cadranHeight, cadranMargin) => {
     const fontRatio = cadranWidth * 2;
@@ -124,10 +134,12 @@ const createCandidatPreviewV2 = async (
     ];
 
     // Name
-    const {buffer: nameBuffer, height: nameHeight} = await buildLine(
+    const { buffer: nameBuffer, height: nameHeight } = await buildLine(
       ellipsisByChar(
         name.toUpperCase(),
-        (line) => textToSVG.getMetrics(line, options[0]).width,
+        (line) => {
+          return textToSVG.getMetrics(line, options[0]).width;
+        },
         cadranWidth
       ),
       textToSVGBold,
@@ -145,7 +157,9 @@ const createCandidatPreviewV2 = async (
         description && description.length > 0
           ? description
           : "Je cherche un job pour m'en sortir.",
-        (tmp) => textToSVG.getMetrics(tmp, options[1]).width,
+        (tmp) => {
+          return textToSVG.getMetrics(tmp, options[1]).width;
+        },
         cadranWidth - cadranMargin,
         3
       ),
@@ -156,16 +170,16 @@ const createCandidatPreviewV2 = async (
     // Skills
     const skillMargins = 10;
     const skillSpaces = 2;
-    const {buffers: skillBuffers, heights: skillHeights} = await buildLines(
-      skills
-        .slice(0, 2)
-        .map((text) =>
-          ellipsisByChar(
-            text.toLowerCase(),
-            (line) => textToSVGBold.getMetrics(line, options[2]).width,
-            cadranWidth
-          )
-        ),
+    const { buffers: skillBuffers, heights: skillHeights } = await buildLines(
+      skills.slice(0, 2).map((text) => {
+        return ellipsisByChar(
+          text.toLowerCase(),
+          (line) => {
+            return textToSVGBold.getMetrics(line, options[2]).width;
+          },
+          cadranWidth
+        );
+      }),
       textToSVGBold,
       options[2]
     );
@@ -180,9 +194,11 @@ const createCandidatPreviewV2 = async (
         ambitions && ambitions.length > 0
           ? `Je souhaite \n travailler dans :`
           : `Je reste ${
-            gender === 0 ? 'ouvert' : 'ouverte'
-          } à toutes propositions.`,
-        (tmp) => textToSVG.getMetrics(tmp, options[1]).width,
+              gender === 0 ? 'ouvert' : 'ouverte'
+            } à toutes propositions.`,
+        (tmp) => {
+          return textToSVG.getMetrics(tmp, options[1]).width;
+        },
         cadranWidth,
         3
       ),
@@ -199,15 +215,15 @@ const createCandidatPreviewV2 = async (
       heights: ambitionHeights,
       widths: ambitionWidths,
     } = await buildLines(
-      ambitions
-        .slice(0, 2)
-        .map((text) =>
-          ellipsisByChar(
-            text.toLowerCase(),
-            (line) => textToSVGBold.getMetrics(line, options[4]).width,
-            cadranWidth - ambitionPaddingLeftRight
-          )
-        ),
+      ambitions.slice(0, 2).map((text) => {
+        return ellipsisByChar(
+          text.toLowerCase(),
+          (line) => {
+            return textToSVGBold.getMetrics(line, options[4]).width;
+          },
+          cadranWidth - ambitionPaddingLeftRight
+        );
+      }),
       textToSVGBold,
       options[4]
     );
@@ -218,17 +234,16 @@ const createCandidatPreviewV2 = async (
     const {
       buffers: locationBuffers,
       heights: locationHeights,
-      widths: locationWidths,
     } = await buildLines(
-      locations
-        .slice(0, 2)
-        .map((text) =>
-          ellipsisByChar(
-            `- ${text}`,
-            (line) => textToSVGBold.getMetrics(line, options[3]).width,
-            cadranWidth
-          )
-        ),
+      locations.slice(0, 2).map((text) => {
+        return ellipsisByChar(
+          `- ${text}`,
+          (line) => {
+            return textToSVGBold.getMetrics(line, options[3]).width;
+          },
+          cadranWidth
+        );
+      }),
       textToSVG,
       options[3]
     );
@@ -249,113 +264,132 @@ const createCandidatPreviewV2 = async (
           top: cadranMargin,
           left: 0,
         },
-        ...descriptionBuffer.map((input, index) => ({
-          input,
-          top:
-            cadranMargin +
-            nameHeight +
-            descriptionMargin +
-            descriptionHeight.reduce((acc, cur, ih) => {
-              if (index <= ih) {
-                return acc;
-              }
-              return acc + cur + descriptionSpaces;
-            }, 0),
-          left: 0,
-        })),
-        ...skillBuffers.map((input, index) => ({
-          input,
-          top:
-            cadranMargin +
-            nameHeight +
-            descriptionMargin +
-            descriptionSpaces +
-            skillMargins +
-            skillHeights.reduce((acc, cur, ih) => {
-              if (index <= ih) {
-                return acc;
-              }
-              return acc + cur + skillSpaces;
-            }, 0) +
-            descriptionHeight.reduce((acc, val) => acc + val, 0),
-          left: 0,
-        })),
+        ...descriptionBuffer.map((input, index) => {
+          return {
+            input,
+            top:
+              cadranMargin +
+              nameHeight +
+              descriptionMargin +
+              descriptionHeight.reduce((acc, cur, ih) => {
+                if (index <= ih) {
+                  return acc;
+                }
+                return acc + cur + descriptionSpaces;
+              }, 0),
+            left: 0,
+          };
+        }),
+        ...skillBuffers.map((input, index) => {
+          return {
+            input,
+            top:
+              cadranMargin +
+              nameHeight +
+              descriptionMargin +
+              descriptionSpaces +
+              skillMargins +
+              skillHeights.reduce((acc, cur, ih) => {
+                if (index <= ih) {
+                  return acc;
+                }
+                return acc + cur + skillSpaces;
+              }, 0) +
+              descriptionHeight.reduce((acc, val) => {
+                return acc + val;
+              }, 0),
+            left: 0,
+          };
+        }),
         // inverse, on commence du bas vers le haut
         // Caption
-        ...captionBuffers.map((input, index) => ({
-          input,
-          top:
-            cadranHeight -
-            captionHeights.reduce((acc, cur, ih) => {
-              if (index <= ih) {
-                return acc + cur + descriptionSpaces;
-              }
-              return acc;
-            }, 0) -
-            ambitionHeights.reduce(
-              (acc, cur) => acc + cur + ambitionSpaces,
-              0
-            ) -
-            cadranMargin -
-            captionMargin -
-            locationHeights.reduce((acc, cur) => acc + cur + locationSpaces, 0) -
-            locationMargin,
-          left: 0,
-        })),
-        // ambition background
-        ...ambitionHeights.map((ambitionHeight, index) => ({
-          input: {
-            create: {
-              width: ambitionWidths[index] + ambitionPaddingLeftRight,
-              height: ambitionHeight + ambitionPaddingTopBottom,
-              channels: 3,
-              background: '#f55f24',
-            },
-          },
-          top:
-            cadranHeight -
-            ambitionHeights.reduce((acc, cur, ih) => {
-              if (index <= ih) {
+        ...captionBuffers.map((input, index) => {
+          return {
+            input,
+            top:
+              cadranHeight -
+              captionHeights.reduce((acc, cur, ih) => {
+                if (index <= ih) {
+                  return acc + cur + descriptionSpaces;
+                }
+                return acc;
+              }, 0) -
+              ambitionHeights.reduce((acc, cur) => {
                 return acc + cur + ambitionSpaces;
-              }
-              return acc;
-            }, 0) -
-            cadranMargin -
-            ambitionPaddingTopBottom / 2 -
-            locationHeights.reduce((acc, cur) => acc + cur + locationSpaces, 0) -
-            locationMargin,
-          left: 0,
-        })),
-        // ambition text
-        ...ambitionBuffers.map((input, index) => ({
-          input,
-          top:
-            cadranHeight -
-            ambitionHeights.reduce((acc, cur, ih) => {
-              if (index <= ih) {
-                return acc + cur + ambitionSpaces;
-              }
-              return acc;
-            }, 0) -
-            cadranMargin -
-            locationHeights.reduce((acc, cur) => acc + cur + locationSpaces, 0) -
-            locationMargin,
-          left: ambitionPaddingLeftRight / 2,
-        })),
-        // location text
-        ...locationBuffers.map((input, index) => ({
-          input,
-          top:
-            cadranHeight -
-            locationHeights.reduce((acc, cur, ih) => {
-              if (index <= ih) {
+              }, 0) -
+              cadranMargin -
+              captionMargin -
+              locationHeights.reduce((acc, cur) => {
                 return acc + cur + locationSpaces;
-              }
-              return acc;
-            }, 0) -
-            cadranMargin,
-          left: 0,
-        })),
+              }, 0) -
+              locationMargin,
+            left: 0,
+          };
+        }),
+        // ambition background
+        ...ambitionHeights.map((ambitionHeight, index) => {
+          return {
+            input: {
+              create: {
+                width: ambitionWidths[index] + ambitionPaddingLeftRight,
+                height: ambitionHeight + ambitionPaddingTopBottom,
+                channels: 3,
+                background: '#f55f24',
+              },
+            },
+            top:
+              cadranHeight -
+              ambitionHeights.reduce((acc, cur, ih) => {
+                if (index <= ih) {
+                  return acc + cur + ambitionSpaces;
+                }
+                return acc;
+              }, 0) -
+              cadranMargin -
+              ambitionPaddingTopBottom / 2 -
+              locationHeights.reduce((acc, cur) => {
+                return acc + cur + locationSpaces;
+              }, 0) -
+              locationMargin,
+            left: 0,
+          };
+        }),
+        // ambition text
+        ...ambitionBuffers.map((input, index) => {
+          return {
+            input,
+            top:
+              cadranHeight -
+              ambitionHeights.reduce((acc, cur, ih) => {
+                if (index <= ih) {
+                  return acc + cur + ambitionSpaces;
+                }
+                return acc;
+              }, 0) -
+              cadranMargin -
+              locationHeights.reduce((acc, cur) => {
+                return acc + cur + locationSpaces;
+              }, 0) -
+              locationMargin,
+            left: ambitionPaddingLeftRight / 2,
+          };
+        }),
+        // location text
+        ...locationBuffers.map((input, index) => {
+          return {
+            input,
+            top:
+              cadranHeight -
+              locationHeights.reduce((acc, cur, ih) => {
+                if (index <= ih) {
+                  return acc + cur + locationSpaces;
+                }
+                return acc;
+              }, 0) -
+              cadranMargin,
+            left: 0,
+          };
+        }),
       ])
       .png()
       .toBuffer();
@@ -365,21 +399,19 @@ const createCandidatPreviewV2 = async (
     const footerHeight = cardPadding * 4;
     const cardHeight = cardCote + footerHeight;
     const cardWidth = cardCote + cardPadding * 2;
-    const cadranHeight = Math.trunc(cardCote * 0.80);
+    const cadranHeight = Math.trunc(cardCote * 0.8);
     const cadranWidth = Math.trunc(cardWidth / 2);
     const cadranMargin = 10;
     const logoHeight = footerHeight * 0.8;
 
     // recuperation du logo
     const logo = sharp('./static/img/linkedout_logo_orange.png')
-      .resize({height: logoHeight})
+      .resize({ height: logoHeight })
       .png();
     const logoBuffer = await logo.toBuffer();
-    const logoWidth = await logo
-      .metadata()
-      .then((logoMeta) =>
-        Math.trunc((logoHeight * logoMeta.width) / logoMeta.height)
-      );
+    const logoWidth = await logo.metadata().then((logoMeta) => {
+      return Math.trunc((logoHeight * logoMeta.width) / logoMeta.height);
+    });
     const cadranBuffer = await getCadran(
       cadranWidth,
       cadranHeight,
@@ -392,7 +424,7 @@ const createCandidatPreviewV2 = async (
         width: cardWidth,
         height: cardHeight,
         channels: 4,
-        background: {r: 0, g: 0, b: 0, alpha: 0},
+        background: { r: 0, g: 0, b: 0, alpha: 0 },
       },
     })
       .composite([

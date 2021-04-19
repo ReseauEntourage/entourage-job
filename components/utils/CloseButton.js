@@ -2,26 +2,33 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-const CloseButton = ({ className, onClick }) => (
-  <button
-    className={className || 'uk-offcanvas-close'}
-    type="button"
-    data-uk-close
-    aria-label="close"
-    onClick={onClick}
-  />
-);
+const CloseButton = ({ className, onClick }) => {
+  return (
+    <button
+      className={className || 'uk-offcanvas-close'}
+      type="button"
+      data-uk-close
+      aria-label="close"
+      onClick={onClick}
+    />
+  );
+};
 
 CloseButton.propTypes = {
   className: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 };
 CloseButton.defaultProps = {
   className: undefined,
-  onClick: () => {}
+  onClick: () => {},
 };
-export const CloseButtonNoSSR = dynamic(() => import('./CloseButton'), {
-  ssr: false,
-});
+export const CloseButtonNoSSR = dynamic(
+  () => {
+    return import('./CloseButton');
+  },
+  {
+    ssr: false,
+  }
+);
 
 export default CloseButton;

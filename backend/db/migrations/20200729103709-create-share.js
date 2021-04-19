@@ -7,32 +7,34 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: () => uuid(),
+        defaultValue: () => {
+          return uuid();
+        },
       },
       CandidatId: {
         allowNull: false,
         type: Sequelize.UUID,
-        unique: true
+        unique: true,
       },
       facebook: {
         allowNull: false,
         defaultValue: 0,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       linkedin: {
         allowNull: false,
         defaultValue: 0,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       twitter: {
         allowNull: false,
         defaultValue: 0,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       whatsapp: {
         allowNull: false,
         defaultValue: 0,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
@@ -44,7 +46,7 @@ module.exports = {
       },
     });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Shares')
-  }
+  down: (queryInterface) => {
+    return queryInterface.dropTable('Shares');
+  },
 };

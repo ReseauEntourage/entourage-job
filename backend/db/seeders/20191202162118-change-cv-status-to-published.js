@@ -1,4 +1,4 @@
-const {CV_STATUS} = require('../../../constants');
+const { CV_STATUS } = require('../../../constants');
 
 module.exports = {
   up: (queryInterface) => {

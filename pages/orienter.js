@@ -1,5 +1,3 @@
-/* global UIkit */
-
 import React from 'react';
 import Partners from '../components/partials/Partners';
 import CandidateTestimoniesOrientation from '../components/sections/CandidateTestimoniesOrientation';

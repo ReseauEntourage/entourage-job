@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR } from '../../utils';
@@ -73,13 +74,7 @@ export default class DatePicker extends Component {
   }
 
   render() {
-    const {
-      id,
-      title,
-      valid,
-      min,
-      max,
-    } = this.props;
+    const { id, title, valid, min, max } = this.props;
 
     return (
       <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
@@ -96,7 +91,9 @@ export default class DatePicker extends Component {
             <div className="uk-margin">
               <select
                 className="uk-select"
-                onChange={(event) => this.handleChange(event)}
+                onChange={(event) => {
+                  return this.handleChange(event);
+                }}
                 name={`${id}-mounth`}
               >
                 <option />
@@ -108,25 +105,31 @@ export default class DatePicker extends Component {
                   'mai',
                   'juin',
                   'juillet',
-                ].map((month, index) => (
-                  <option key={index} value={month}>
-                    {month.charAt(0).toUpperCase() + month.slice(1)}
-                  </option>
-                ))}
+                ].map((month, index) => {
+                  return (
+                    <option key={index} value={month}>
+                      {month.charAt(0).toUpperCase() + month.slice(1)}
+                    </option>
+                  );
+                })}
               </select>
             </div>,
             <div className="uk-margin">
               <select
                 className="uk-select"
-                onChange={(event) => this.handleChange(event)}
+                onChange={(event) => {
+                  return this.handleChange(event);
+                }}
                 name={`${id}-year`}
               >
                 <option>Selectionnez l&apos;année...</option>
                 {Array(max - min)
                   .fill(min)
-                  .map((val, i) => (
-                    <option value={Number(val) + i}>{Number(val) + i}</option>
-                  ))}
+                  .map((val, i) => {
+                    return (
+                      <option value={Number(val) + i}>{Number(val) + i}</option>
+                    );
+                  })}
               </select>
             </div>,
           ]}

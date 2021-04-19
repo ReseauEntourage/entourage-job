@@ -8,15 +8,15 @@ const HowToCommitDifferently = () => {
   return (
     <Section container="small" id="sengager">
       <h2 className="uk-text-center uk-text-bold">
-        <span className="uk-text-primary">S'engager</span>&nbsp;autrement avec
-        LinkedOut
+        <span className="uk-text-primary"> S&apos;engager</span>&nbsp;autrement
+        avec LinkedOut
       </h2>
       <p className="uk-text-center uk-margin-medium-top">
-        Vous n'avez pas la possibilité de recruter ?
+        Vous n&apos;avez pas la possibilité de recruter ?
       </p>
       <p className="uk-text-center">
-        Il existe d'autres manières de rendre votre entreprise plus inclusive
-        avec LinkedOut.
+        Il existe d&apos;autres manières de rendre votre entreprise plus
+        inclusive avec LinkedOut.
       </p>
       <p className="uk-text-center">
         Vous ne savez pas par où commencer ?{' '}
@@ -36,7 +36,7 @@ const HowToCommitDifferently = () => {
       >
         <li>
           <a href="#">
-            <h3 className="uk-text-bold">S'informer</h3>
+            <h3 className="uk-text-bold"> S&apos;informer</h3>
           </a>
         </li>
         <li>
@@ -81,7 +81,7 @@ const HowToCommitDifferently = () => {
                 text: (
                   <p>
                     Nous vous proposons des ateliers pour aborder le sujet de
-                    l'inclusion avec vos collaborateurs. Intéressés&nbsp;?
+                    l&apos;inclusion avec vos collaborateurs. Intéressés&nbsp;?
                   </p>
                 ),
                 button: {

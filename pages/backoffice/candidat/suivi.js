@@ -13,19 +13,18 @@ import {
 } from '../../../components/utils';
 import { UserContext } from '../../../components/store/UserProvider';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
-import {USER_ROLES} from "../../../constants";
+import { USER_ROLES } from '../../../constants';
 
-const Wrapper = ({ title, description, children }) => (
-  <LayoutBackOffice title={title}>
-    <Section>
-      <HeaderBackoffice
-        title={title}
-        description={description}
-      />
-      {children}
-    </Section>
-  </LayoutBackOffice>
-);
+const Wrapper = ({ title, description, children }) => {
+  return (
+    <LayoutBackOffice title={title}>
+      <Section>
+        <HeaderBackoffice title={title} description={description} />
+        {children}
+      </Section>
+    </LayoutBackOffice>
+  );
+};
 
 Wrapper.propTypes = {
   children: PropTypes.element.isRequired,
@@ -40,11 +39,14 @@ const Suivi = () => {
   const [loading, setLoading] = useState(true);
   const [value, setValue] = useState();
 
-  const title = user && user.role === USER_ROLES.CANDIDAT ? "Suivez votre progression" : "Suivi du candidat";
-  const description = user && user.role === USER_ROLES.CANDIDAT ?
-    "Ici, vous pouvez prendre des notes sur la progression de vos recherches, noter vos différents rendez-vous, etc. et échanger avec votre coach. Profitez de cet espace d'écriture libre qui vous est dédié !"
-    :
-    "Ici, vous pouvez suivre la progression de votre candidat.e grâce à ses notes, et échanger avec lui/elle. Profitez de cet espace d'échange libre qui vous est dédié !";
+  const title =
+    user && user.role === USER_ROLES.CANDIDAT
+      ? 'Suivez votre progression'
+      : 'Suivi du candidat';
+  const description =
+    user && user.role === USER_ROLES.CANDIDAT
+      ? "Ici, vous pouvez prendre des notes sur la progression de vos recherches, noter vos différents rendez-vous, etc. et échanger avec votre coach. Profitez de cet espace d'écriture libre qui vous est dédié !"
+      : "Ici, vous pouvez suivre la progression de votre candidat.e grâce à ses notes, et échanger avec lui/elle. Profitez de cet espace d'échange libre qui vous est dédié !";
 
   const updateValue = (text) => {
     setLabelClass(text && text.length > 0 && ' stay-small');
@@ -88,7 +90,9 @@ const Suivi = () => {
         .catch(() => {
           UIkit.notification('Erreur lors du chargement du suivi', 'danger');
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          return setLoading(false);
+        });
     }
   }, [user]);
 
@@ -109,7 +113,9 @@ const Suivi = () => {
       <Wrapper title={title} description={description}>
         <h2 className="uk-text-bold">
           <span className="uk-text-primary">
-            {user.role === USER_ROLES.COACH ? 'Aucun candidat' : 'Aucun bénévole coach'}
+            {user.role === USER_ROLES.COACH
+              ? 'Aucun candidat'
+              : 'Aucun bénévole coach'}
           </span>{' '}
           n&apos;est rattaché à ce compte.
         </h2>
@@ -122,40 +128,46 @@ const Suivi = () => {
   }
   return (
     <Wrapper title={title} description={description}>
-        <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
-          <label
-            className={`uk-form-label ${labelClass}`}
-            htmlFor="textarea-suivi"
-          >
-           {title}
-          </label>
-          <textarea
-            id="textarea-suivi"
-            name="text"
-            rows={10}
-            placeholder="Tapez votre texte"
-            // maxLength={maxLength}
-            value={value}
-            onChange={(event) => updateValue(event.target.value)}
-            className="uk-textarea uk-form-large"
-          />
-        </div>
-        <GridNoSSR match className="uk-flex-right">
-          <Button
-            style="default"
-            onClick={() => updateValue(userCandidat.note)}
-            disabled={value === userCandidat.note}
-          >
-            <IconNoSSR name="history" />
-          </Button>
-          <Button
-            style="default"
-            onClick={() => updateSuivi(value)}
-            disabled={value === userCandidat.note}
-          >
-            Sauvegarder
-          </Button>
-        </GridNoSSR>
+      <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+        <label
+          className={`uk-form-label ${labelClass}`}
+          htmlFor="textarea-suivi"
+        >
+          {title}
+        </label>
+        <textarea
+          id="textarea-suivi"
+          name="text"
+          rows={10}
+          placeholder="Tapez votre texte"
+          // maxLength={maxLength}
+          value={value}
+          onChange={(event) => {
+            return updateValue(event.target.value);
+          }}
+          className="uk-textarea uk-form-large"
+        />
+      </div>
+      <GridNoSSR match className="uk-flex-right">
+        <Button
+          style="default"
+          onClick={() => {
+            return updateValue(userCandidat.note);
+          }}
+          disabled={value === userCandidat.note}
+        >
+          <IconNoSSR name="history" />
+        </Button>
+        <Button
+          style="default"
+          onClick={() => {
+            return updateSuivi(value);
+          }}
+          disabled={value === userCandidat.note}
+        >
+          Sauvegarder
+        </Button>
+      </GridNoSSR>
     </Wrapper>
   );
 };

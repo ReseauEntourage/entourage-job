@@ -1,6 +1,5 @@
 const uuid = require('uuid/v4');
 
-'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('CV_Skills', {
@@ -8,30 +7,32 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: () => uuid()
+        defaultValue: () => {
+          return uuid();
+        },
       },
       CVid: {
         allowNull: false,
         references: {
           model: 'CVs',
-          key: 'id'
+          key: 'id',
         },
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable('CV_Skills');
-  }
+  },
 };

@@ -1,4 +1,3 @@
-/* global UIkit */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -12,13 +11,17 @@ import { OFFER_STATUS } from '../../constants';
 import { formatParagraph } from '../../utils';
 import { useRemoveModal } from '../../hooks';
 
-export const List = ({ className, children }) => (
-  <ul className={`uk-nav ${className}`}>
-    {Array.isArray(children)
-      ? children.map((item, i) => <li key={i}>{item}</li>)
-      : children}
-  </ul>
-);
+export const List = ({ className, children }) => {
+  return (
+    <ul className={`uk-nav ${className}`}>
+      {Array.isArray(children)
+        ? children.map((item, i) => {
+            return <li key={i}>{item}</li>;
+          })
+        : children}
+    </ul>
+  );
+};
 List.propTypes = {
   className: PropTypes.string,
   children: PropTypes.arrayOf(PropTypes.element).isRequired,
@@ -84,7 +87,9 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
     setCurrentOffer({ ...currentOffer, opportunityUser });
   };
 
-  const resetNoteBuffer = () => setNoteBuffer(note);
+  const resetNoteBuffer = () => {
+    return setNoteBuffer(note);
+  };
 
   useEffect(resetNoteBuffer, [currentOffer]);
 
@@ -213,11 +218,15 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                   )}
                   {currentOffer.businessLines && (
                     <GridNoSSR gap="small">
-                      {currentOffer.businessLines.map((businessLine, index) => (
-                        <Button key={index} disabled>
-                          <span style={{ color: '#666' }}>{businessLine}</span>
-                        </Button>
-                      ))}
+                      {currentOffer.businessLines.map((businessLine, index) => {
+                        return (
+                          <Button key={index} disabled>
+                            <span style={{ color: '#666' }}>
+                              {businessLine}
+                            </span>
+                          </Button>
+                        );
+                      })}
                     </GridNoSSR>
                   )}
                 </GridNoSSR>,
@@ -230,7 +239,9 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                 title="Ecrivez un commentaire à propos de cette opportunité..."
                 type="text"
                 value={noteBuffer}
-                onChange={(e) => setNoteBuffer(e.target.value)}
+                onChange={(e) => {
+                  return setNoteBuffer(e.target.value);
+                }}
               />
               {noteBuffer === note || (note === null && noteBuffer === '') ? (
                 <Button style="default" disabled>

@@ -24,8 +24,13 @@ Hamburger.propTypes = {
 };
 Hamburger.defaultProps = { hidden: undefined, visible: undefined };
 
-export const HamburgerNoSSR = dynamic(() => import('./Hamburger'), {
-  ssr: false,
-});
+export const HamburgerNoSSR = dynamic(
+  () => {
+    return import('./Hamburger');
+  },
+  {
+    ssr: false,
+  }
+);
 
 export default Hamburger;

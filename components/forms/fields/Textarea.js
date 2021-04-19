@@ -34,9 +34,7 @@ const Textarea = ({
   }
 
   useEffect(() => {
-    setLabelClass(
-      (value && value.length > 0 && ' stay-small') || ''
-    );
+    setLabelClass((value && value.length > 0 && ' stay-small') || '');
     onChange({ target: { name, value: value || '', type: 'textarea' } });
   }, [value]);
 

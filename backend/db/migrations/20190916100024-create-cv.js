@@ -1,6 +1,5 @@
-const moment = require("moment");
+const moment = require('moment');
 
-'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('CVs', {
@@ -8,47 +7,51 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4
+        defaultValue: Sequelize.UUIDV4,
       },
       firstname: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       lastname: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       intro: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       contract: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       location: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       story: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       transport: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: () => moment(new Date())
+        defaultValue: () => {
+          return moment(new Date());
+        },
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: () => moment(new Date())
-      }
+        defaultValue: () => {
+          return moment(new Date());
+        },
+      },
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable('CVs');
-  }
+  },
 };

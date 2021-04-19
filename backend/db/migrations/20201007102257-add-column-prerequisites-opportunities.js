@@ -5,7 +5,7 @@ module.exports = {
       type: Sequelize.TEXT,
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.removeColumn('Opportunities', 'prerequisites');
-  }
+  },
 };

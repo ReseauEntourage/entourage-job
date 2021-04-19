@@ -7,7 +7,9 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: () => uuid(),
+        defaultValue: () => {
+          return uuid();
+        },
       },
       path: {
         type: Sequelize.TEXT,
@@ -31,7 +33,7 @@ module.exports = {
       },
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable('RevisionChanges');
   },
 };
