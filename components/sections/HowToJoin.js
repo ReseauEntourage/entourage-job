@@ -51,13 +51,13 @@ const HowToJoin = () => {
   return (
     <Section id="howToJoin" container="small" style="muted">
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">
-        Que faut-il{' '}
-        <span className="uk-text-primary">pour rejoindre LinkedOut&nbsp;?</span>
+        Que faut-il pour{' '}
+        <span className="uk-text-primary">rejoindre LinkedOut&nbsp;?</span>
       </h2>
-      <p className="uk-margin-medium-bottom uk-margin-large-top">
+      <h4 className="uk-text-center uk-margin-medium-bottom uk-text-bold">
         Pour rejoindre le dispositif, vous devez remplir les conditions
         suivantes&nbsp;:
-      </p>
+      </h4>
       <MultipleCTA
         data={content}
         showVerticalDividers

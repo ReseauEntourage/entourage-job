@@ -16,10 +16,29 @@ const Travailler = () => {
         id="work-title"
         title={
           <>
-            Vous cherchez <span className="uk-text-primary">du travail ?</span>
+            Vous cherchez{' '}
+            <span className="uk-text-primary">du travail&nbsp;?</span>
           </>
         }
-        text="Vous êtes dans une situation de précarité ou d’exclusion ? Vous avez un projet professionnel mais vous n’avez pas de réseau ? Vous êtes motivé pour travailler mais il vous manque des opportunités ? Rejoignez le programme LinkedOut."
+        text={
+          <>
+            <span>
+              Vous êtes dans une situation de précarité ou d’exclusion&nbsp;?
+            </span>
+            <br />
+            <span>
+              Vous avez un projet professionnel mais vous n’avez pas de
+              réseau&nbsp;?
+            </span>
+            <br />
+            <span>
+              Vous êtes motivé pour travailler mais il vous manque des
+              opportunités&nbsp;?
+            </span>
+            <br />
+            <span>Rejoignez le programme LinkedOut.</span>
+          </>
+        }
       />
       <Section id="introWork" container="small" style="muted">
         <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
@@ -40,7 +59,9 @@ const Travailler = () => {
               Vous avez entre <span className="uk-text-bold">18 et 25 ans</span>{' '}
               et vous résidez à{' '}
               <span className="uk-text-bold">Paris, dans le 92 ou le 93</span>
-              &nbsp;? Rejoignez le programme dès maintenant&nbsp;!
+              &nbsp;?
+              <br />
+              Rejoignez le programme dès maintenant&nbsp;!
             </span>
             <br />
             <br />
@@ -48,6 +69,7 @@ const Travailler = () => {
               Vous avez <span className="uk-text-bold">plus de 25 ans</span> et
               vous résidez à{' '}
               <span className="uk-text-bold">Paris, Lille ou Lyon</span>&nbsp;?
+              <br />
               Vous pourrez rejoindre la promotion de Septembre 2021.
             </span>
           </h4>
@@ -75,9 +97,9 @@ const Travailler = () => {
             className="uk-link-text uk-text-primary"
             target="_blank"
             rel="noopener"
-            href={`tel:${CONTACT_INFO.MAIN_PHONE_NUMBER}`}
+            href={`tel:${CONTACT_INFO.MOBILE_PHONE_NUMBER}`}
           >
-            {CONTACT_INFO.MAIN_PHONE_NUMBER}
+            {CONTACT_INFO.MOBILE_PHONE_NUMBER}
           </SimpleLink>
         </h4>
       </Section>

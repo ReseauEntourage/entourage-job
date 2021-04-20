@@ -35,7 +35,7 @@ const StepsToJoin = () => {
       <p className="uk-text-center uk-text-italic">
         Nous étudierons votre candidature. Si votre profil correspond nous vous
         proposerons une rencontre pour valider votre participation au programme
-        LinkedOut
+        LinkedOut&nbsp;!
       </p>
       <h4 className="uk-text-center uk-text-bold">
         Une prochaine promotion ouverte à tous aura lieu en septembre 2021 à{' '}

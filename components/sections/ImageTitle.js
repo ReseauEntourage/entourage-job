@@ -53,7 +53,7 @@ const ImageTitle = ({ id, title, text, img }) => {
 ImageTitle.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.element.isRequired,
-  text: PropTypes.string,
+  text: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   img: PropTypes.string.isRequired,
 };
 
