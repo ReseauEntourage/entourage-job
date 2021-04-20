@@ -1,7 +1,9 @@
+const webpack = require('webpack');
+
 const withCSS = require('@zeit/next-css');
 const withLess = require('@zeit/next-less');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-const webpack = require('webpack');
+const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 const loadEnvironementVariables = require('./backend/utils/env');
 
@@ -13,7 +15,7 @@ module.exports = withLess(
   withCSS({
     webpack: (config, options) => {
       if (!options.isServer) {
-        config.resolve.alias['@sentry/node'] = '@sentry/browser';
+        config.resolve.alias['@sentry/node'] = '@sentry/react';
       }
 
       config.plugins.push(new webpack.EnvironmentPlugin(process.env));
@@ -31,6 +33,26 @@ module.exports = withLess(
           cwd: process.cwd(),
         })
       );
+
+      if (!dev && process.env.HEROKU_APP_ID) {
+        config.plugins.push(
+          new SentryWebpackPlugin({
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: process.env.HEROKU_APP_NAME,
+            project: process.env.HEROKU_APP_NAME,
+
+            include: '.',
+            ignore: [
+              'node_modules',
+              'next.config.js',
+              'jest.config.js',
+              'assets',
+              'static',
+              'coverage',
+            ],
+          })
+        );
+      }
 
       config.module.rules.push({
         test: require.resolve('uikit'),

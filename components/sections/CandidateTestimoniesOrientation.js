@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ImgNoSSR, Section } from '../utils';
 import Carousel from '../utils/Carousel';
 import CarouselItem from '../partials/CarouselItem';
@@ -30,9 +31,9 @@ const testimonies = [
   },
 ];
 
-const CandidateTestimoniesOrientation = () => {
+const CandidateTestimoniesOrientation = ({ style }) => {
   return (
-    <Section style="muted" container="small">
+    <Section style={style} container="small">
       <h2 className="uk-text-bold uk-text-center">
         Les candidats <span className="uk-text-primary">témoignent</span>
       </h2>
@@ -81,6 +82,10 @@ const CandidateTestimoniesOrientation = () => {
       </div>
     </Section>
   );
+};
+
+CandidateTestimoniesOrientation.propTypes = {
+  style: PropTypes.oneOf(['muted', 'default']).isRequired,
 };
 
 export default CandidateTestimoniesOrientation;

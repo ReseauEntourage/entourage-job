@@ -29,7 +29,7 @@ const WhoFor = () => {
       text: (
         <div>
           <span className="uk-text-bold">
-            Être éligibles à un contrat de travail en France{' '}
+            Être éligible à un contrat de travail en France{' '}
           </span>
           (pièce d’identité / autorisation de travail, domiciliation, compte
           bancaire, attestation de Sécurité Sociale)

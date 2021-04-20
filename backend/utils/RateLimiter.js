@@ -14,7 +14,7 @@ const RateLimiter = {
     // change behavior to fail open on errors
     store._incr = store.incr;
     store.incr = (key, cb) => {
-      this._incr(key, (err, current, resetTime) => {
+      store._incr(key, (err, current, resetTime) => {
         if (err) {
           err = null;
           current = 0;
