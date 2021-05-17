@@ -20,7 +20,7 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
   const { getData, storeData } = useContext(DataContext);
 
   const [filters, setFilters] = useState(
-    initializeFilters(CV_FILTERS_DATA, defaultHideEmployed ? [2] : null)
+    initializeFilters(CV_FILTERS_DATA, defaultHideEmployed ? [0] : null)
   );
   const [numberOfResults, setNumberOfResults] = useState(0);
 
