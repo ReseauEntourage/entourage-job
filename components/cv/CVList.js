@@ -187,16 +187,16 @@ const CVList = ({
     if (filteredCvs.length <= 0) {
       if (
         filters &&
-        filters[CV_FILTERS_DATA[1].key] &&
-        filters[CV_FILTERS_DATA[1].key].length > 0
+        filters[CV_FILTERS_DATA[2].key] &&
+        filters[CV_FILTERS_DATA[2].key].length > 0
       ) {
         if (
-          filters[CV_FILTERS_DATA[0].key] &&
-          filters[CV_FILTERS_DATA[0].key].length > 0
+          filters[CV_FILTERS_DATA[1].key] &&
+          filters[CV_FILTERS_DATA[1].key].length > 0
         ) {
           const filteredOtherCvs = filterCvs({
             ...filters,
-            [CV_FILTERS_DATA[0].key]: [],
+            [CV_FILTERS_DATA[1].key]: [],
           });
 
           if (filteredOtherCvs && filteredOtherCvs.length > 0) {
