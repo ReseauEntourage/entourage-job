@@ -1,17 +1,21 @@
 const uuid = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
-  const Location = sequelize.define('Location', {
-    name: DataTypes.STRING
-  }, {});
+  const Location = sequelize.define(
+    'Location',
+    {
+      name: DataTypes.STRING,
+    },
+    {}
+  );
 
-  Location.beforeCreate((businessLine, _) => {
+  Location.beforeCreate((businessLine) => {
     const bl = businessLine;
     bl.id = uuid();
     return bl;
   });
 
-  Location.associate = function (models) {
+  Location.associate = (models) => {
     Location.belongsToMany(models.CV, {
       through: 'CV_Location',
       as: 'CVs',

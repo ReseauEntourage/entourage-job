@@ -92,7 +92,9 @@ export default class Input extends Component {
             id={id}
             defaultValue={defaultValue}
             placeholder={placeholder || 'Tapez votre texte'}
-            onChange={(event) => this.handleChange(event)}
+            onChange={(event) => {
+              return this.handleChange(event);
+            }}
             className={`uk-input uk-form-large ${addClasses}`}
           />
         </div>

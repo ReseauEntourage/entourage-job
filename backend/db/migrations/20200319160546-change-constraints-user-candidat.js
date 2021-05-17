@@ -16,7 +16,8 @@ module.exports = {
             transaction: t,
           }
         ),
-        queryInterface.addConstraint('User_Candidats', ['candidatId'], {
+        queryInterface.addConstraint('User_Candidats', {
+          fields: ['candidatId'],
           type: 'foreign key',
           name: 'User_Candidats_candidatId_fkey',
           references: {
@@ -27,7 +28,8 @@ module.exports = {
           onUpdate: 'cascade',
           transaction: t,
         }),
-        queryInterface.addConstraint('User_Candidats', ['coachId'], {
+        queryInterface.addConstraint('User_Candidats', {
+          fields: ['coachId'],
           type: 'foreign key',
           name: 'User_Candidats_coachId_fkey',
           references: {
@@ -59,7 +61,8 @@ module.exports = {
             transaction: t,
           }
         ),
-        queryInterface.addConstraint('User_Candidats', ['candidatId'], {
+        queryInterface.addConstraint('User_Candidats', {
+          fields: ['candidatId'],
           type: 'foreign key',
           name: 'User_Candidats_candidatId_fkey',
           references: {
@@ -68,7 +71,8 @@ module.exports = {
           },
           transaction: t,
         }),
-        queryInterface.addConstraint('User_Candidats', ['coachId'], {
+        queryInterface.addConstraint('User_Candidats', {
+          fields: ['coachId'],
           type: 'foreign key',
           name: 'User_Candidats_coachId_fkey',
           references: {

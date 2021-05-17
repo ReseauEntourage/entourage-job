@@ -24,12 +24,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Review.beforeCreate((review, _) => {
+  Review.beforeCreate((review) => {
     const r = review;
     r.id = uuid();
     return r;
   });
-  Review.associate = function (models) {
+  Review.associate = (models) => {
     Review.belongsTo(models.CV);
   };
   return Review;

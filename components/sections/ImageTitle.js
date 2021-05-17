@@ -41,9 +41,9 @@ const ImageTitle = ({ id, title, text, img }) => {
           {title}
         </h1>
         {text && (
-          <h3 className="uk-text-center uk-align-center uk-margin-remove-bottom">
+          <h4 className="uk-text-center uk-align-center uk-margin-remove-bottom">
             {text}
-          </h3>
+          </h4>
         )}
       </div>
     </div>
@@ -53,7 +53,7 @@ const ImageTitle = ({ id, title, text, img }) => {
 ImageTitle.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.element.isRequired,
-  text: PropTypes.string,
+  text: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   img: PropTypes.string.isRequired,
 };
 

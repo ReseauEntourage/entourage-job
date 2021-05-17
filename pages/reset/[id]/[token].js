@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/Layout';
-import {Section, IconNoSSR, Button} from '../../../components/utils';
+import { Section, IconNoSSR, Button } from '../../../components/utils';
 import schema from '../../../components/forms/schema/formResetPassword.json';
 import FormWithValidation from '../../../components/forms/FormWithValidation';
 import Api from '../../../Axios';
@@ -64,7 +64,9 @@ const ResetPasswordPage = () => {
               <div className="uk-flex uk-flex-center">
                 <Button
                   style="primary"
-                  onClick={() => router.push('/')}
+                  onClick={() => {
+                    return router.push('/');
+                  }}
                 >
                   Retourner à l&apos;accueil
                 </Button>

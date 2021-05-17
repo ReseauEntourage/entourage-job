@@ -2,9 +2,9 @@
 import React, { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Api from '../../Axios';
-import {VALUES} from '../../constants';
+import { VALUES } from '../../constants';
 
-export const SharesCountContext = createContext({totalShares: 0});
+export const SharesCountContext = createContext({ totalShares: 0 });
 
 const SharesCountProvider = ({ children }) => {
   const [totalShares, setTotalShares] = useState(0);
@@ -14,18 +14,18 @@ const SharesCountProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    Api.get('api/v1/cv/shares').then(({data}) => {
-      setTotalShares(data.total);
-    }).catch((e) => {
-      console.log(e);
-      setTotalShares(VALUES.SHARES);
-    })
+    Api.get('api/v1/cv/shares')
+      .then(({ data }) => {
+        setTotalShares(data.total);
+      })
+      .catch((e) => {
+        console.log(e);
+        setTotalShares(VALUES.SHARES);
+      });
   }, []);
 
   return (
-    <SharesCountContext.Provider
-      value={{ totalShares, incrementSharesCount }}
-    >
+    <SharesCountContext.Provider value={{ totalShares, incrementSharesCount }}>
       {children}
     </SharesCountContext.Provider>
   );

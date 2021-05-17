@@ -84,40 +84,42 @@ const CandidateTestimonies = () => {
           style="default"
           containerClasses="uk-container-small uk-child-width-1-1"
         >
-          {testimonies.map(({ author, image, quote }, index) => (
-            <CarouselItem
-              key={index}
-              index={index}
-              img={image}
-              description={
-                <div>
-                  <ImgNoSSR
-                    alt="guillemets"
-                    width="27"
-                    height="21"
-                    src="/static/img/guillemets.png"
-                  />
-                  <p className="uk-text-small uk-margin-small uk-text-italic">
-                    {quote}
-                  </p>
-                  <div
-                    className="uk-text-bottom"
-                    style={{ display: 'flex', justifyContent: 'flex-end' }}
-                  >
+          {testimonies.map(({ author, image, quote }, index) => {
+            return (
+              <CarouselItem
+                key={index}
+                index={index}
+                img={image}
+                description={
+                  <div>
                     <ImgNoSSR
-                      alt="guillemets-petits"
-                      width="15"
-                      height="12"
-                      src="/static/img/guillemetsPetits.png"
+                      alt="guillemets"
+                      width="27"
+                      height="21"
+                      src="/static/img/guillemets.png"
                     />
+                    <p className="uk-text-small uk-margin-small uk-text-italic">
+                      {quote}
+                    </p>
+                    <div
+                      className="uk-text-bottom"
+                      style={{ display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                      <ImgNoSSR
+                        alt="guillemets-petits"
+                        width="15"
+                        height="12"
+                        src="/static/img/guillemetsPetits.png"
+                      />
+                    </div>
+                    <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
+                      {author}
+                    </p>
                   </div>
-                  <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
-                    {author}
-                  </p>
-                </div>
-              }
-            />
-          ))}
+                }
+              />
+            );
+          })}
         </Carousel>
       </div>
       <p className="uk-text-center">
@@ -128,7 +130,7 @@ const CandidateTestimonies = () => {
         </span>{' '}
         : il leur rend leur dignité, apporte du lien social, permet de se
         projeter et de se sentir utile à la société. L’emploi est une clé
-        essentielle pour l'accomplissement de soi.
+        essentielle pour l&apos;accomplissement de soi.
       </p>
     </Section>
   );

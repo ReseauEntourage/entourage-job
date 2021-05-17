@@ -2,7 +2,8 @@ module.exports = {
   up: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.addConstraint('CV_Ambitions', ['AmbitionId'], {
+        queryInterface.addConstraint('CV_Ambitions', {
+          fields: ['AmbitionId'],
           type: 'foreign key',
           name: 'CV_Ambitions_AmbitionId_fkey',
           references: {
@@ -13,7 +14,8 @@ module.exports = {
           onUpdate: 'cascade',
           transaction: t,
         }),
-        queryInterface.addConstraint('CV_Contracts', ['ContractId'], {
+        queryInterface.addConstraint('CV_Contracts', {
+          fields: ['ContractId'],
           type: 'foreign key',
           name: 'CV_Contracts_ContractId_fkey',
           references: {
@@ -24,7 +26,8 @@ module.exports = {
           onUpdate: 'cascade',
           transaction: t,
         }),
-        queryInterface.addConstraint('CV_Languages', ['LanguageId'], {
+        queryInterface.addConstraint('CV_Languages', {
+          fields: ['LanguageId'],
           type: 'foreign key',
           name: 'CV_Languages_LanguageId_fkey',
           references: {
@@ -35,7 +38,8 @@ module.exports = {
           onUpdate: 'cascade',
           transaction: t,
         }),
-        queryInterface.addConstraint('CV_Passions', ['PassionId'], {
+        queryInterface.addConstraint('CV_Passions', {
+          fields: ['PassionId'],
           type: 'foreign key',
           name: 'CV_Passions_PassionId_fkey',
           references: {
@@ -46,7 +50,8 @@ module.exports = {
           onUpdate: 'cascade',
           transaction: t,
         }),
-        queryInterface.addConstraint('CV_Skills', ['SkillId'], {
+        queryInterface.addConstraint('CV_Skills', {
+          fields: ['SkillId'],
           type: 'foreign key',
           name: 'CV_Skills_SkillId_fkey',
           references: {

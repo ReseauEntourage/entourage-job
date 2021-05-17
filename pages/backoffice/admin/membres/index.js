@@ -5,26 +5,21 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
-import {Section, GridNoSSR, IconNoSSR} from '../../../../components/utils';
+import { Section, GridNoSSR, IconNoSSR } from '../../../../components/utils';
 import HeaderBackoffice from '../../../../components/headers/HeaderBackoffice';
 import axios from '../../../../Axios';
 import ModalEdit from '../../../../components/modals/ModalEdit';
 import schemaCreateUser from '../../../../components/forms/schema/formEditUser';
 import ImgProfile from '../../../../components/headers/ImgProfile';
-import {CV_STATUS, USER_ROLES} from "../../../../constants";
-import Button from "../../../../components/utils/Button";
-import {mutateFormSchema} from "../../../../utils";
+import { CV_STATUS, USER_ROLES } from '../../../../constants';
+import Button from '../../../../components/utils/Button';
+import { mutateFormSchema } from '../../../../utils';
 
 let debounceTimeoutId;
 
 function translateStatusCV(status) {
   const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unknown;
-  return (
-    <span className={`uk-text-${cvStatus.style}`}>
-      {cvStatus.label}
-    </span>
-  );
-
+  return <span className={`uk-text-${cvStatus.style}`}>{cvStatus.label}</span>;
 }
 
 const MembersAdmin = ({ query: { role } }) => {
@@ -45,8 +40,8 @@ const MembersAdmin = ({ query: { role } }) => {
           propName: 'hidden',
           value: false,
           option: USER_ROLES.ADMIN,
-        }
-      ]
+        },
+      ],
     },
   ]);
 
@@ -130,13 +125,12 @@ const MembersAdmin = ({ query: { role } }) => {
                 }
               } catch (error) {
                 console.error(error);
-                if(error.response.status === 409) {
+                if (error.response.status === 409) {
                   UIkit.notification(
-                    "Cette adresse email est déjà utilisée",
+                    'Cette adresse email est déjà utilisée',
                     'danger'
                   );
-                }
-                else {
+                } else {
                   UIkit.notification(
                     "Une erreur s'est produite lors de la création du membre",
                     'danger'
@@ -169,17 +163,19 @@ const MembersAdmin = ({ query: { role } }) => {
               <ul className="uk-subnav ent-subnav">
                 <li
                   className={
-                    role !== USER_ROLES.CANDIDAT && role !== USER_ROLES.COACH ? 'uk-active' : ''
+                    role !== USER_ROLES.CANDIDAT && role !== USER_ROLES.COACH
+                      ? 'uk-active'
+                      : ''
                   }
                 >
                   <a
                     aria-hidden="true"
-                    onClick={() =>
-                      router.push({
+                    onClick={() => {
+                      return router.push({
                         pathname: '/backoffice/admin/membres',
                         query: { role: 'All' },
-                      })
-                    }
+                      });
+                    }}
                   >
                     Tous les membres
                   </a>
@@ -187,12 +183,12 @@ const MembersAdmin = ({ query: { role } }) => {
                 <li className={role === USER_ROLES.CANDIDAT ? 'uk-active' : ''}>
                   <a
                     aria-hidden="true"
-                    onClick={() =>
-                      router.push({
+                    onClick={() => {
+                      return router.push({
                         pathname: '/backoffice/admin/membres',
                         query: { role: USER_ROLES.CANDIDAT },
-                      })
-                    }
+                      });
+                    }}
                   >
                     Candidats
                   </a>
@@ -200,12 +196,12 @@ const MembersAdmin = ({ query: { role } }) => {
                 <li className={role === USER_ROLES.COACH ? 'uk-active' : ''}>
                   <a
                     aria-hidden="true"
-                    onClick={() =>
-                      router.push({
+                    onClick={() => {
+                      return router.push({
                         pathname: '/backoffice/admin/membres',
                         query: { role: USER_ROLES.COACH },
-                      })
-                    }
+                      });
+                    }}
                   >
                     Coachs
                   </a>
@@ -219,14 +215,16 @@ const MembersAdmin = ({ query: { role } }) => {
                     type="search"
                     placeholder="Rechercher..."
                     onKeyDown={(ev) => {
-                      if (ev.key === "Enter") {
+                      if (ev.key === 'Enter') {
                         ev.preventDefault();
                       }
                     }}
                     onChange={(event) => {
                       clearTimeout(debounceTimeoutId);
                       event.persist();
-                      debounceTimeoutId = setTimeout(() => setSearchQuery(event.target.value), 1000);
+                      debounceTimeoutId = setTimeout(() => {
+                        return setSearchQuery(event.target.value);
+                      }, 1000);
                     }}
                   />
                 </form>
@@ -254,109 +252,116 @@ const MembersAdmin = ({ query: { role } }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {members.map((member, key) => (
-                    <tr key={key}>
-                      <Link
-                        as={`/backoffice/admin/membres/${member.id}`}
-                        href="/backoffice/admin/membres/[id]">
-                        <a
-                          className="uk-link-reset"
-                          style={{
-                            display: 'contents',
-                            height: '100%',
-                            width: '100%',
-                          }}
+                  {members.map((member, key) => {
+                    return (
+                      <tr key={key}>
+                        <Link
+                          as={`/backoffice/admin/membres/${member.id}`}
+                          href="/backoffice/admin/membres/[id]"
                         >
-                          <td>
-                            <GridNoSSR row gap="small" middle>
-                              <ImgProfile user={member} size={48} />
-                              <GridNoSSR column gap="collapse">
-                                <span className="uk-text-bold">
-                                  {member.firstName} {member.lastName}
-                                </span>
-                                <span>{member.email}</span>
+                          <a
+                            className="uk-link-reset"
+                            style={{
+                              display: 'contents',
+                              height: '100%',
+                              width: '100%',
+                            }}
+                          >
+                            <td>
+                              <GridNoSSR row gap="small" middle>
+                                <ImgProfile user={member} size={48} />
+                                <GridNoSSR column gap="collapse">
+                                  <span className="uk-text-bold">
+                                    {member.firstName} {member.lastName}
+                                  </span>
+                                  <span>{member.email}</span>
+                                </GridNoSSR>
                               </GridNoSSR>
-                            </GridNoSSR>
-                          </td>
-                          {role === 'All' && <td>{member.role}</td>}
-                          {role === USER_ROLES.CANDIDAT && member.candidat && (
-                            <>
+                            </td>
+                            {role === 'All' && <td>{member.role}</td>}
+                            {role === USER_ROLES.CANDIDAT && member.candidat && (
+                              <>
+                                <td>
+                                  <span className="uk-hidden@m">
+                                    {member.candidat.employed
+                                      ? 'A trouvé un emploi'
+                                      : "En recherche d'emploi"}
+                                  </span>
+                                  {member.candidat.employed && (
+                                    <IconNoSSR
+                                      name="check"
+                                      ratio={1.2}
+                                      className="uk-text-primary uk-visible@m"
+                                    />
+                                  )}
+                                </td>
+                                <td>
+                                  {member.candidat &&
+                                  member.candidat.cvs &&
+                                  member.candidat.cvs.length > 0 ? (
+                                    translateStatusCV(
+                                      member.candidat.cvs[0].status
+                                    )
+                                  ) : (
+                                    <span className="uk-text-italic uk-text-info">
+                                      Aucun CV
+                                    </span>
+                                  )}
+                                </td>
+                                <td>
+                                  <span className="uk-hidden@m">
+                                    {member.candidat.hidden
+                                      ? 'Masqué'
+                                      : 'Visible'}
+                                  </span>
+                                  {member.candidat.hidden && (
+                                    <IconNoSSR
+                                      name="check"
+                                      ratio={1.2}
+                                      className="uk-text-primary uk-visible@m"
+                                    />
+                                  )}
+                                </td>
+                              </>
+                            )}
+                            {member.role === USER_ROLES.CANDIDAT && (
                               <td>
-                                <span className="uk-hidden@m">
-                                  {member.candidat.employed
-                                    ? 'A trouvé un emploi'
-                                    : "En recherche d'emploi"}
-                                </span>
-                                {
-                                  member.candidat.employed &&
-                                  <IconNoSSR
-                                    name='check'
-                                    ratio={1.2}
-                                    className="uk-text-primary uk-visible@m"
-                                  />
-                                }
-                              </td>
-                              <td>
-                                {member.candidat &&
-                                member.candidat.cvs &&
-                                member.candidat.cvs.length > 0 ? (
-                                  translateStatusCV(
-                                    member.candidat.cvs[0].status
-                                  )
+                                {member.candidat && member.candidat.coach ? (
+                                  `${member.candidat.coach.firstName} ${member.candidat.coach.lastName}`
                                 ) : (
-                                  <span className="uk-text-italic uk-text-info">
-                                    Aucun CV
+                                  <span className="uk-text-italic">
+                                    Non lié
                                   </span>
                                 )}
                               </td>
-                              <td>
-                                <span className="uk-hidden@m">
-                                  {member.candidat.hidden
-                                    ? 'Masqué'
-                                    : 'Visible'}
-                                </span>
-                                {
-                                  member.candidat.hidden &&
-                                  <IconNoSSR
-                                    name='check'
-                                    ratio={1.2}
-                                    className="uk-text-primary uk-visible@m"
-                                  />
-                                }
-                              </td>
-                            </>
-                          )}
-                          {member.role === USER_ROLES.CANDIDAT && (
-                            <td>
-                              {member.candidat && member.candidat.coach ? (
-                                `${member.candidat.coach.firstName} ${member.candidat.coach.lastName}`
-                              ) : (
-                                <span className="uk-text-italic">Non lié</span>
-                              )}
-                            </td>
-                          )}
-                          {member.role === USER_ROLES.COACH && (
-                            <td>
-                              {member.coach && member.coach.candidat ? (
-                                `${member.coach.candidat.firstName} ${member.coach.candidat.lastName}`
-                              ) : (
-                                <span className="uk-text-italic">Non lié</span>
-                              )}
-                            </td>
-                          )}
-                          <td>
-                            {member.lastConnection ? (
-                              moment(member.lastConnection).format('DD/MM/YYYY')
-                            ) : (
-                              <span className="uk-text-italic">
-                                Aucune connexion
-                              </span>
                             )}
-                          </td>
-                        </a>
-                      </Link>
-                    </tr>
-                  ))}
+                            {member.role === USER_ROLES.COACH && (
+                              <td>
+                                {member.coach && member.coach.candidat ? (
+                                  `${member.coach.candidat.firstName} ${member.coach.candidat.lastName}`
+                                ) : (
+                                  <span className="uk-text-italic">
+                                    Non lié
+                                  </span>
+                                )}
+                              </td>
+                            )}
+                            <td>
+                              {member.lastConnection ? (
+                                moment(member.lastConnection).format(
+                                  'DD/MM/YYYY'
+                                )
+                              ) : (
+                                <span className="uk-text-italic">
+                                  Aucune connexion
+                                </span>
+                              )}
+                            </td>
+                          </a>
+                        </Link>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -372,7 +377,9 @@ const MembersAdmin = ({ query: { role } }) => {
               >
                 <Button
                   style="text"
-                  onClick={() => fetchData()}
+                  onClick={() => {
+                    return fetchData();
+                  }}
                 >
                   Voir plus...
                 </Button>

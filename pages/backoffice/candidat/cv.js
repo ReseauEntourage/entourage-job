@@ -15,7 +15,9 @@ const Edit = () => {
   useEffect(() => {
     if (user) {
       Api.get(`/api/v1/user/${user.id}`)
-        .then(({ data }) => setUserCompleteData(data))
+        .then(({ data }) => {
+          return setUserCompleteData(data);
+        })
         .catch(() => {
           UIkit.notification('Erreur lors du chargement du suivi', 'danger');
         });

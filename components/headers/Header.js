@@ -46,7 +46,9 @@ const Header = ({ isHome }) => {
                 href={EXTERNAL_LINKS.DONATION}
                 isExternal
                 newTab
-                onClick={() => event(TAGS.FOOTER_DON_CLIC)}
+                onClick={() => {
+                  return event(TAGS.FOOTER_DON_CLIC);
+                }}
                 style="default"
               >
                 Faire un don&nbsp;
@@ -114,8 +116,10 @@ const Header = ({ isHome }) => {
             </a>
           </li>
           {[
-            LINKS.filter(({ href }) => href !== '#').map(
-              ({ href, name }, index) => (
+            LINKS.filter(({ href }) => {
+              return href !== '#';
+            }).map(({ href, name }, index) => {
+              return (
                 <li key={index}>
                   <a
                     aria-hidden="true"
@@ -127,13 +131,15 @@ const Header = ({ isHome }) => {
                     {name}
                   </a>
                 </li>
-              )
-            ),
+              );
+            }),
           ]}
           <li className="uk-margin-small-top">
             <Button
               href="/candidats"
-              onClick={() => UIkit.offcanvas('#offcanvas-guest').hide()}
+              onClick={() => {
+                return UIkit.offcanvas('#offcanvas-guest').hide();
+              }}
               style="primary"
             >
               Découvrir les CV&nbsp;
@@ -147,7 +153,7 @@ const Header = ({ isHome }) => {
               newTab
               onClick={() => {
                 UIkit.offcanvas('#offcanvas-guest').hide();
-                event(TAGS.FOOTER_DON_CLIC)
+                event(TAGS.FOOTER_DON_CLIC);
               }}
               style="default"
             >

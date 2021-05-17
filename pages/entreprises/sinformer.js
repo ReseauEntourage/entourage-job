@@ -72,7 +72,11 @@ const Sinformer = () => {
       <CandidateTestimonies />
       <HowToBeInclusive />
       <CompanyTestimonies />
-      <Section style="muted" container="small" className="uk-padding-remove-top">
+      <Section
+        style="muted"
+        container="small"
+        className="uk-padding-remove-top"
+      >
         <h2 className="uk-text-bold uk-text-center uk-margin-large-bottom">
           <span className="uk-text-primary">Des ressources</span>&nbsp;pour vous
           lancer

@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-const loadEnvironnementVariables = require('../../backend/utils/env');
 
 const server = require('../../backend/server');
 
@@ -12,35 +11,31 @@ const PORT = process.env.PORT || 3001;
  * Start a server according to .env variables
  */
 const startTestServer = async () => {
-  loadEnvironnementVariables();
   app = server.prepare();
   await server.start(PORT);
   return app;
-}
+};
 
 /**
  * stop the server
  */
 const stopTestServer = async () => {
-  await server.close()
+  await server.close();
   await db.close();
-}
+};
 
 /**
  * Create a test database according to env variables
- * 
+ *
  * @returns the db connection
  */
 const recreateTestDB = async () => {
-  loadEnvironnementVariables();
-  db = new Sequelize(
-    process.env.DATABASE_URL, {
+  db = new Sequelize(process.env.DATABASE_URL, {
     logging: process.env.DEBUG_MODE ? console.log : false,
-  }
-  );
+  });
 
   try {
-    await db.authenticate()
+    await db.authenticate();
   } catch (error) {
     console.error('Impossible de se connecter à la base de données : ', error);
   }
@@ -62,7 +57,7 @@ const resetTestDB = async () => {
   // await sequelize.truncate({
   //   force: true
   // });
-}
+};
 
 /**
  * Create many entities using a factory
@@ -72,13 +67,20 @@ const resetTestDB = async () => {
  * @returns
  */
 const createEntities = async (factory, n, props = {}, ...args) => {
-  return Promise.all(Array(n).fill(0).map(() => factory(props, ...args)))
-    .catch((e) => console.error(e));
-}
+  return Promise.all(
+    Array(n)
+      .fill(0)
+      .map(() => {
+        return factory(props, ...args);
+      })
+  ).catch((e) => {
+    return console.error(e);
+  });
+};
 
 const getApp = () => {
   return app;
-}
+};
 
 module.exports = {
   startTestServer,
@@ -87,4 +89,4 @@ module.exports = {
   resetTestDB,
   createEntities,
   getApp,
-}
+};

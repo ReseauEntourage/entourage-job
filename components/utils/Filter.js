@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR } from './Grid';
 
@@ -12,7 +12,12 @@ const Filter = ({
   setFilters,
   otherFilterComponent,
 }) => {
-  if (filters.length > 0 && !filters.some(({ active }) => active)) {
+  if (
+    filters.length > 0 &&
+    !filters.some(({ active }) => {
+      return active;
+    })
+  ) {
     filters[0].active = true;
   }
 
@@ -20,17 +25,18 @@ const Filter = ({
     <div>
       <GridNoSSR eachWidths={['expand', 'auto']}>
         <ul className="uk-subnav ent-subnav">
-          {filters.map(({ title, tag, active }, i) => (
+          {filters.map(({ title, tag, active }, i) => {
+            return (
               <li key={`filter-${i}`} className={active ? 'uk-active' : ''}>
                 <a
                   onClick={() => {
                     const updatedFilters = [...filters];
-                    const filterToDeActivate = updatedFilters.find(
-                      (filter) => filter.active
-                    );
-                    const filterToActivate = updatedFilters.find(
-                      (filter) => filter.tag === tag
-                    );
+                    const filterToDeActivate = updatedFilters.find((filter) => {
+                      return filter.active;
+                    });
+                    const filterToActivate = updatedFilters.find((filter) => {
+                      return filter.tag === tag;
+                    });
                     filterToDeActivate.active = false;
                     filterToActivate.active = true;
                     setFilters(updatedFilters);
@@ -39,7 +45,8 @@ const Filter = ({
                   {title}
                 </a>
               </li>
-            ))}
+            );
+          })}
         </ul>
         <div className="uk-margin">
           <div className="uk-search uk-search-default">
@@ -56,7 +63,9 @@ const Filter = ({
               onChange={(event) => {
                 clearTimeout(debounceTimeoutId);
                 event.persist();
-                debounceTimeoutId = setTimeout(() => search(event), 1000);
+                debounceTimeoutId = setTimeout(() => {
+                  return search(event);
+                }, 1000);
               }}
             />
           </div>

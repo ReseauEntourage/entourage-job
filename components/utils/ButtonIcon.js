@@ -2,11 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR } from './Icon';
 
-const ButtonIcon = ({ name, onClick, className, href, ratio }) => (
-  <a className="uk-text-emphasis uk-flex uk-flex-middle" href={href} onClick={() => onClick()}>
-    <IconNoSSR name={name} className={className} ratio={ratio} />
-  </a>
-);
+const ButtonIcon = ({ name, onClick, className, href, ratio }) => {
+  return (
+    <a
+      className="uk-text-emphasis uk-flex uk-flex-middle"
+      href={href}
+      onClick={() => {
+        return onClick();
+      }}
+    >
+      <IconNoSSR name={name} className={className} ratio={ratio} />
+    </a>
+  );
+};
 ButtonIcon.propTypes = {
   name: PropTypes.string.isRequired,
   onClick: PropTypes.func,

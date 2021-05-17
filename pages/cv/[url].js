@@ -10,19 +10,19 @@ import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
 import { Section } from '../../components/utils';
-import { SharesCountContext } from '../../components/store/SharesCountProvider';
 import { SessionContext } from '../../components/store/SessionProvider';
 import TAGS from '../../constants/tags';
 
 const CVPage = ({ cv, router, hideShareOptions }) => {
-
   const hostname = process.env.SERVER_URL;
   const link = `${hostname}${router.asPath}`;
   const candidateExists = cv && cv.user && cv.user.candidat;
-  const sharedDescription = candidateExists ?
-    `La précarité n'exclut pas les compétences\xa0! Avec LinkedOut, aidons ${cv.user.candidat.firstName} à retrouver un emploi en lui proposant un job ou en diffusant son CV\xa0!` : '';
-  const title = candidateExists ? `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi` : '';
-
+  const sharedDescription = candidateExists
+    ? `La précarité n'exclut pas les compétences\xa0! Avec LinkedOut, aidons ${cv.user.candidat.firstName} à retrouver un emploi en lui proposant un job ou en diffusant son CV\xa0!`
+    : '';
+  const title = candidateExists
+    ? `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`
+    : '';
 
   const { isFirstLoad } = useContext(SessionContext);
 

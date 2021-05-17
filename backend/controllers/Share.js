@@ -5,7 +5,6 @@ const { VALUES, REDIS_KEYS } = require('../../constants');
 
 const {
   models: { Share },
-  Sequelize: { Op, fn, col, where },
 } = require('../db/models');
 
 const updateShareCount = async (candidatId, type) => {
@@ -50,9 +49,15 @@ const getTotalShares = async () => {
         ],
       });
       const shareCounts = Object.values(shares[0].dataValues);
-      if (shareCounts.every((shareCount) => !!shareCount)) {
+      if (
+        shareCounts.every((shareCount) => {
+          return !!shareCount;
+        })
+      ) {
         totalShares += Object.keys(shares[0].dataValues).reduce(
-          (previous, key) => previous + parseInt(shares[0].dataValues[key], 10),
+          (previous, key) => {
+            return previous + parseInt(shares[0].dataValues[key], 10);
+          },
           0
         );
       }

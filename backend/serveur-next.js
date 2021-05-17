@@ -3,6 +3,7 @@ const loadEnvironementVariables = require('./utils/env');
 
 loadEnvironementVariables();
 
+// eslint-disable-next-line no-unused-vars
 const tracer =
   process.env.ENABLE_DATADOG_TRACER === 'true'
     ? require('dd-trace').init({

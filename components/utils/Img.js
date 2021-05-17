@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { addPrefix } from '../../utils';
 
 const Img = ({ src, alt, width, height, className, cover }) => {
-  if(cover) {
+  if (cover) {
     return (
       <img
         alt={alt}
@@ -44,6 +44,11 @@ Img.defaultProps = {
   cover: false,
 };
 
-export const ImgNoSSR = dynamic(() => import('./Img'), { ssr: false });
+export const ImgNoSSR = dynamic(
+  () => {
+    return import('./Img');
+  },
+  { ssr: false }
+);
 
 export default Img;

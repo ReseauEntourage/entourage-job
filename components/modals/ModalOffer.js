@@ -1,5 +1,4 @@
-/* global UIkit */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { GridNoSSR, Button, IconNoSSR, SimpleLink } from '../utils';
@@ -8,17 +7,21 @@ import Select from '../forms/fields/Select';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import Api from '../../Axios';
-import {OFFER_STATUS} from "../../constants";
-import {formatParagraph} from "../../utils";
-import {useRemoveModal} from "../../hooks";
+import { OFFER_STATUS } from '../../constants';
+import { formatParagraph } from '../../utils';
+import { useRemoveModal } from '../../hooks';
 
-export const List = ({ className, children }) => (
-  <ul className={`uk-nav ${className}`}>
-    {Array.isArray(children)
-      ? children.map((item, i) => <li key={i}>{item}</li>)
-      : children}
-  </ul>
-);
+export const List = ({ className, children }) => {
+  return (
+    <ul className={`uk-nav ${className}`}>
+      {Array.isArray(children)
+        ? children.map((item, i) => {
+            return <li key={i}>{item}</li>;
+          })
+        : children}
+    </ul>
+  );
+};
 List.propTypes = {
   className: PropTypes.string,
   children: PropTypes.arrayOf(PropTypes.element).isRequired,
@@ -28,13 +31,11 @@ List.defaultProps = {
 };
 
 export const OfferInfoContainer = ({ icon, title, children }) => {
-  if(!children) {
+  if (!children) {
     children = [];
-  }
-  else if (!children.map) {
+  } else if (!children.map) {
     children = [children];
   }
-
 
   return (
     <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
@@ -86,20 +87,31 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
     setCurrentOffer({ ...currentOffer, opportunityUser });
   };
 
-  const resetNoteBuffer = () => setNoteBuffer(note);
+  const resetNoteBuffer = () => {
+    return setNoteBuffer(note);
+  };
 
   useEffect(resetNoteBuffer, [currentOffer]);
 
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">
       <div
-        className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${archived &&
-          'uk-light uk-background-secondary'}`}
+        className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
+          archived && 'uk-light uk-background-secondary'
+        }`}
       >
-        <CloseButtonNoSSR className="uk-modal-close-default" onClick={resetNoteBuffer} />
+        <CloseButtonNoSSR
+          className="uk-modal-close-default"
+          onClick={resetNoteBuffer}
+        />
         {!currentOffer ? null : (
           <div className="uk-modal-body">
-            <GridNoSSR gap="small" between middle eachWidths={['expand', 'auto']}>
+            <GridNoSSR
+              gap="small"
+              between
+              middle
+              eachWidths={['expand', 'auto']}
+            >
               <div className="uk-flex uk-flex-column">
                 <h3 className="uk-flex-1 uk-text-bold uk-margin-remove-bottom">
                   {currentOffer.title}
@@ -197,25 +209,24 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                 </GridNoSSR>,
                 <GridNoSSR gap="medium" childWidths={['1-1']}>
                   <OfferInfoContainer icon="comment" title="Message">
-                    <div>
-                      {formatParagraph(currentOffer.description)}
-                    </div>
+                    <div>{formatParagraph(currentOffer.description)}</div>
                   </OfferInfoContainer>
-                  {
-                    currentOffer.prerequisites &&
+                  {currentOffer.prerequisites && (
                     <OfferInfoContainer icon="check" title="Pré-requis">
-                      <div>
-                        {formatParagraph(currentOffer.prerequisites)}
-                      </div>
+                      <div>{formatParagraph(currentOffer.prerequisites)}</div>
                     </OfferInfoContainer>
-                  }
+                  )}
                   {currentOffer.businessLines && (
                     <GridNoSSR gap="small">
-                      {currentOffer.businessLines.map((businessLine, index) => (
-                        <Button key={index} disabled>
-                          <span style={{ color: '#666' }}>{businessLine}</span>
-                        </Button>
-                      ))}
+                      {currentOffer.businessLines.map((businessLine, index) => {
+                        return (
+                          <Button key={index} disabled>
+                            <span style={{ color: '#666' }}>
+                              {businessLine}
+                            </span>
+                          </Button>
+                        );
+                      })}
                     </GridNoSSR>
                   )}
                 </GridNoSSR>,
@@ -228,7 +239,9 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                 title="Ecrivez un commentaire à propos de cette opportunité..."
                 type="text"
                 value={noteBuffer}
-                onChange={(e) => setNoteBuffer(e.target.value)}
+                onChange={(e) => {
+                  return setNoteBuffer(e.target.value);
+                }}
               />
               {noteBuffer === note || (note === null && noteBuffer === '') ? (
                 <Button style="default" disabled>

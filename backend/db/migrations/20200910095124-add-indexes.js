@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return Promise.all([
       queryInterface.addIndex('CV_Ambitions', ['CVId']),
       queryInterface.addIndex('CV_BusinessLines', ['CVId']),
@@ -14,10 +14,10 @@ module.exports = {
       queryInterface.addIndex('Experience_Skills', ['ExperienceId']),
 
       queryInterface.addIndex('User_Candidats', ['candidatId']),
-    ])
+    ]);
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return Promise.all([
       queryInterface.removeIndex('CV_Ambitions', ['CVId']),
       queryInterface.removeIndex('CV_BusinessLines', ['CVId']),
@@ -32,6 +32,6 @@ module.exports = {
       queryInterface.removeIndex('Experience_Skills', ['ExperienceId']),
 
       queryInterface.removeIndex('User_Candidats', ['candidatId']),
-    ])
-  }
+    ]);
+  },
 };

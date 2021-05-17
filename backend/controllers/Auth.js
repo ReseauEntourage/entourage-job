@@ -11,7 +11,7 @@ function encryptPassword(password) {
 
   return {
     salt,
-    hash
+    hash,
   };
 }
 
@@ -51,7 +51,7 @@ function generateJWT(user, expiration) {
       role: user.role,
       exp: parseInt((expiration || expirationDate.getTime()) / 1000, 10),
       candidatId,
-      coachId
+      coachId,
     },
     process.env.JWT_SECRET
   );
@@ -85,9 +85,7 @@ function toAuthJSON(user) {
 
 const getTokenFromHeaders = (req) => {
   const {
-    headers: {
-      authorization
-    },
+    headers: { authorization },
   } = req;
   // console.log('auth :', authorization);
 
@@ -109,11 +107,11 @@ const auth = (roles = []) => {
     (req, res, next) => {
       if (roles.length > 0 && !roles.includes(req.payload.role)) {
         return res.status(401).json({
-          message: 'Unauthorized'
+          message: 'Unauthorized',
         });
       }
       return next();
-    }
+    },
   ];
 };
 

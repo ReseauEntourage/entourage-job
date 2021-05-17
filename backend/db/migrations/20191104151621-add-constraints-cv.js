@@ -1,8 +1,9 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.addConstraint('CV_Ambitions', ['CVId'], {
+        queryInterface.addConstraint('CV_Ambitions', {
+          fields: ['CVId'],
           type: 'foreign key',
           name: 'CV_Ambitions_CVId_fkey',
           references: {
@@ -13,7 +14,8 @@ module.exports = {
           onUpdate: 'cascade',
           transaction: t,
         }),
-        queryInterface.addConstraint('CV_Contracts', ['CVId'], {
+        queryInterface.addConstraint('CV_Contracts', {
+          fields: ['CVId'],
           type: 'foreign key',
           name: 'CV_Contracts_CVId_fkey',
           references: {
@@ -24,7 +26,8 @@ module.exports = {
           onUpdate: 'cascade',
           transaction: t,
         }),
-        queryInterface.addConstraint('CV_Languages', ['CVId'], {
+        queryInterface.addConstraint('CV_Languages', {
+          fields: ['CVId'],
           type: 'foreign key',
           name: 'CV_Languages_CVId_fkey',
           references: {
@@ -35,7 +38,8 @@ module.exports = {
           onUpdate: 'cascade',
           transaction: t,
         }),
-        queryInterface.addConstraint('CV_Passions', ['CVId'], {
+        queryInterface.addConstraint('CV_Passions', {
+          fields: ['CVId'],
           type: 'foreign key',
           name: 'CV_Passions_CVId_fkey',
           references: {
@@ -46,7 +50,8 @@ module.exports = {
           onUpdate: 'cascade',
           transaction: t,
         }),
-        queryInterface.addConstraint('CV_Skills', ['CVId'], {
+        queryInterface.addConstraint('CV_Skills', {
+          fields: ['CVId'],
           type: 'foreign key',
           name: 'CV_Skills_CVId_fkey',
           references: {
@@ -61,7 +66,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.removeConstraint(

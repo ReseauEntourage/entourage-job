@@ -1,15 +1,12 @@
 const {
-    models: {
-        User,
-        User_Candidat,
-    }
+  models: { User, User_Candidat },
 } = require('../../backend/db/models/');
 
 const { getTokenAndId } = require('./user.helpers');
 
 /**
  * Associate a coach to a candidat
- * 
+ *
  * @param {Object} coach the coach credentials
  * @param {string} coach.email the coach email
  * @param {string} coach.password the coach in unhashed
@@ -18,56 +15,55 @@ const { getTokenAndId } = require('./user.helpers');
  * @param {string} candidat.password the candidat in unhashed
  */
 const associateCoachAndCandidat = async (coach, candidat) => {
-    const coachCredentials = await getTokenAndId({ ...coach });
-    const candidatCredentials = await getTokenAndId({ ...candidat });
+  const coachCredentials = await getTokenAndId({ ...coach });
+  const candidatCredentials = await getTokenAndId({ ...candidat });
 
-    await User_Candidat.update(
-        {
-            candidatId: candidatCredentials.id,
-            coachId: coachCredentials.id
-        },
-        {
-            where: { candidatId: candidatCredentials.id }
-        });
+  await User_Candidat.update(
+    {
+      candidatId: candidatCredentials.id,
+      coachId: coachCredentials.id,
+    },
+    {
+      where: { candidatId: candidatCredentials.id },
+    }
+  );
 
-    await User.update(
-        {
-            coachId: coachCredentials.id,
-            candidatId: candidatCredentials.id
-        },
-        {
-            where: { id: coachCredentials.id }
-        }
-    );
-}
+  await User.update(
+    {
+      coachId: coachCredentials.id,
+      candidatId: candidatCredentials.id,
+    },
+    {
+      where: { id: coachCredentials.id },
+    }
+  );
+};
 
 const getCandidatAndCoach = async (id) => {
-    return User_Candidat.findOne(
-        {
-            where: {
-                candidatId: id,
-            }
-        }
-    );
-}
+  return User_Candidat.findOne({
+    where: {
+      candidatId: id,
+    },
+  });
+};
 
 /**
  * Get a candidat url from the table user_candidat
- * 
+ *
  * @param {string} id of a user candidat
  * @returns {string} candidat's url
  */
 const getCandidatUrl = async (id) => {
-    const data = await User_Candidat.findOne({
-        where: { candidatId: id },
-        attributes: ['url']
-    });
-    const { url } = data.dataValues;
-    return url;
-}
+  const data = await User_Candidat.findOne({
+    where: { candidatId: id },
+    attributes: ['url'],
+  });
+  const { url } = data.dataValues;
+  return url;
+};
 
 module.exports = {
-    associateCoachAndCandidat,
-    getCandidatAndCoach,
-    getCandidatUrl,
+  associateCoachAndCandidat,
+  getCandidatAndCoach,
+  getCandidatUrl,
 };

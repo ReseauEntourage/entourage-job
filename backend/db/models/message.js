@@ -106,10 +106,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Message.beforeCreate((message, _) => {
+  Message.beforeCreate((message) => {
     return (message.id = uuid());
   });
-  Message.associate = function (models) {
+  Message.associate = () => {
     // associations can be defined here
   };
   return Message;

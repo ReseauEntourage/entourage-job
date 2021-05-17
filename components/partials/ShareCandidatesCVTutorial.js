@@ -17,13 +17,15 @@ const datas = [
   },
 ];
 
-const ShareCandidatesCVTutorial = () => (
-  <Section style="muted" id="tutorial">
-    <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
-      LinkedOut en <span className="uk-text-primary">trois</span>
-      &nbsp;étapes
-    </h2>
-    <MultipleCTA data={datas} showHorizontalDividers showNumbers />
-  </Section>
-);
+const ShareCandidatesCVTutorial = () => {
+  return (
+    <Section style="muted" id="tutorial">
+      <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
+        LinkedOut en <span className="uk-text-primary">trois</span>
+        &nbsp;étapes
+      </h2>
+      <MultipleCTA data={datas} showHorizontalDividers showNumbers />
+    </Section>
+  );
+};
 export default ShareCandidatesCVTutorial;

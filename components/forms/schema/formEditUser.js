@@ -73,9 +73,12 @@ export default {
       type: 'text',
       component: 'select-request-async',
       cacheOptions: false,
-      disable: (getValue) =>
-        getValue('role') !== USER_ROLES.CANDIDAT &&
-        getValue('role') !== USER_ROLES.COACH,
+      disable: (getValue) => {
+        return (
+          getValue('role') !== USER_ROLES.CANDIDAT &&
+          getValue('role') !== USER_ROLES.COACH
+        );
+      },
       loadOptions: (inputValue, callback, getValue) => {
         if (inputValue.length > 0) {
           const role =
@@ -89,12 +92,14 @@ export default {
                 role, // un certain role
               },
             })
-            .then(({ data }) =>
-              data.map((u) => ({
-                value: u.id,
-                label: `${u.firstName} ${u.lastName}`,
-              }))
-            )
+            .then(({ data }) => {
+              return data.map((u) => {
+                return {
+                  value: u.id,
+                  label: `${u.firstName} ${u.lastName}`,
+                };
+              });
+            })
             .then((m) => {
               console.log(m);
               return m;

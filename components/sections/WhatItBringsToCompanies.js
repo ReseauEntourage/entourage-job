@@ -1,7 +1,7 @@
 import React from 'react';
 import MultipleCTA from '../partials/MultipleCTA';
 
-const WhatItBrings = () => {
+const WhatItBringsToCompanies = () => {
   const whatItBrings = [
     {
       text: (
@@ -20,7 +20,7 @@ const WhatItBrings = () => {
           <span className="uk-text-bold">
             Un accompagnement par l&apos;équipe LinkedOut&nbsp;
           </span>
-          dans votre démarche de recrutement inclusif (kit d'intégration,
+          dans votre démarche de recrutement inclusif (kit d&apos;intégration,
           interlocuteur privilégié...).
         </div>
       ),
@@ -28,8 +28,12 @@ const WhatItBrings = () => {
     {
       text: (
         <div>
-          Tous les candidats ont <span className="uk-text-bold">un logement stable ou temporaire</span>, bénéficient
-          d’<span className="uk-text-bold">un accompagnement social</span> et ont tous <span className="uk-text-bold">une autorisation de travail</span>.
+          Tous les candidats ont{' '}
+          <span className="uk-text-bold">un logement stable ou temporaire</span>
+          , bénéficient d&apos;
+          <span className="uk-text-bold">un accompagnement social</span> et ont
+          tous <span className="uk-text-bold">une autorisation de travail</span>
+          .
         </div>
       ),
     },
@@ -52,8 +56,8 @@ const WhatItBrings = () => {
   );
 };
 
-WhatItBrings.propTypes = {};
+WhatItBringsToCompanies.propTypes = {};
 
-WhatItBrings.defaultProps = {};
+WhatItBringsToCompanies.defaultProps = {};
 
-export default WhatItBrings;
+export default WhatItBringsToCompanies;

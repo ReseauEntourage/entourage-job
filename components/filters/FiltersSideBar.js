@@ -65,7 +65,7 @@ const FiltersSideBar = ({ filterData, filters, setFilters }) => {
               <div key={key}>
                 <label
                   htmlFor="hide-employed"
-                  className="uk-text-bold uk-flex uk-flex-middle"
+                  className="uk-text-bold uk-flex uk-flex-middle uk-margin-medium-bottom"
                 >
                   <div className="uk-flex-1">{title}</div>
                   <input
@@ -108,7 +108,7 @@ const FiltersSideBar = ({ filterData, filters, setFilters }) => {
 FiltersSideBar.propTypes = {
   filters: PropTypes.shape().isRequired,
   setFilters: PropTypes.func.isRequired,
-  filterData: PropTypes.arrayOf(PropTypes.shape()),
+  filterData: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default FiltersSideBar;

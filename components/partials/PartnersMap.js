@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
-import SimpleLink from "../utils/SimpleLink";
+import SimpleLink from '../utils/SimpleLink';
 
 const partnersPlaces = [
   {
@@ -305,8 +305,12 @@ const partnersPlaces = [
   },
 ];
 
-const buildGMapsLink = (address) => `https://maps.google.com/?q=${address}`;
-const buildEmailLink = (email) => `mailto:${email}`;
+const buildGMapsLink = (address) => {
+  return `https://maps.google.com/?q=${address}`;
+};
+const buildEmailLink = (email) => {
+  return `mailto:${email}`;
+};
 
 const FRANCE_CENTER_COORDINATES = { lat: 46.71109, lng: 1.7191036 };
 
@@ -333,23 +337,33 @@ const PartnersMap = ({ google }) => {
       streetViewControl={false}
       noClear
     >
-      {partnersPlaces.map((partner, index) => (
-        <Marker
-          title={partner.title}
-          id={index}
-          key={index}
-          position={{ lat: partner.lat, lng: partner.lng }}
-          onClick={(_, marker) => setClickedMarker(marker)}
-        />
-      ))}
+      {partnersPlaces.map((partner, index) => {
+        return (
+          <Marker
+            title={partner.title}
+            id={index}
+            key={index}
+            position={{ lat: partner.lat, lng: partner.lng }}
+            onClick={(_, marker) => {
+              return setClickedMarker(marker);
+            }}
+          />
+        );
+      })}
       <InfoWindow
         visible={clickedMarker}
         marker={clickedMarker}
-        onClose={() => setClickedMarker(null)}
+        onClose={() => {
+          return setClickedMarker(null);
+        }}
       >
         <div>
           <h4 className="uk-text-primary uk-text-bold uk-text-center">
-            <SimpleLink href={getPartnerPlaceInfo('link')} isExternal target='_blank'>
+            <SimpleLink
+              href={getPartnerPlaceInfo('link')}
+              isExternal
+              target="_blank"
+            >
               {getPartnerPlaceInfo('title')}
             </SimpleLink>
           </h4>
@@ -393,13 +407,18 @@ const PartnersMap = ({ google }) => {
 };
 
 PartnersMap.propTypes = {
-  google: PropTypes.object.isRequired,
+  google: PropTypes.shape().isRequired,
 };
 
 export default GoogleApiWrapper({
   apiKey: process.env.GOOGLE_MAPS_API_KEY,
 })(PartnersMap);
 
-export const PartnersMapNoSSR = dynamic(() => import('./PartnersMap'), {
-  ssr: false,
-});
+export const PartnersMapNoSSR = dynamic(
+  () => {
+    return import('./PartnersMap');
+  },
+  {
+    ssr: false,
+  }
+);

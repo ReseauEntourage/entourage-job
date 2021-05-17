@@ -2,7 +2,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import {
   NavbarNoSSR,
   HamburgerNoSSR,
@@ -59,7 +58,7 @@ const HeaderConnected = ({ isHome }) => {
       {
         href: '/backoffice/candidat/cv',
         name: 'Mon CV',
-        icon: 'user'
+        icon: 'user',
       },
     ],
     coach: [
@@ -76,7 +75,7 @@ const HeaderConnected = ({ isHome }) => {
       {
         href: '/backoffice/candidat/cv',
         name: 'CV',
-        icon: 'user'
+        icon: 'user',
       },
     ],
   };
@@ -102,19 +101,41 @@ const HeaderConnected = ({ isHome }) => {
               className="uk-navbar-nav"
               style={{ borderLeft: '1px solid lightgray' }}
             >
-              {
-                LINKS_CONNECTED[user.role.toLowerCase()].map((link, index) => (
-                <li key={index} style={{ borderRight: '1px solid lightgray' }}>
-                  <SimpleLink
-                    href={link.href}
-                    className="uk-visible@m uk-flex uk-flex-middle">
-                      <span className="uk-margin-small-right" style={{...router.asPath.includes(link.href) ? {color: 'black'} : {}}}>
+              {LINKS_CONNECTED[user.role.toLowerCase()].map((link, index) => {
+                return (
+                  <li
+                    key={index}
+                    style={{ borderRight: '1px solid lightgray' }}
+                  >
+                    <SimpleLink
+                      href={link.href}
+                      className="uk-visible@m uk-flex uk-flex-middle"
+                    >
+                      <span
+                        className="uk-margin-small-right"
+                        style={{
+                          ...(router.asPath.includes(link.href)
+                            ? { color: 'black' }
+                            : {}),
+                        }}
+                      >
                         <IconNoSSR name={link.icon} />
                       </span>
-                      <span style={{textTransform: 'none', fontSize: '1rem', ...router.asPath.includes(link.href) ? {color: 'black', fontWeight: 500} : {}}}>{link.name}</span>
-                  </SimpleLink>
-                </li>
-              ))}
+                      <span
+                        style={{
+                          textTransform: 'none',
+                          fontSize: '1rem',
+                          ...(router.asPath.includes(link.href)
+                            ? { color: 'black', fontWeight: 500 }
+                            : {}),
+                        }}
+                      >
+                        {link.name}
+                      </span>
+                    </SimpleLink>
+                  </li>
+                );
+              })}
             </ul>
           </>
         }
@@ -145,22 +166,24 @@ const HeaderConnected = ({ isHome }) => {
                 boundaryId="nav-profile"
               >
                 {LINKS_CONNECTED.dropdown.map(
-                  ({ href, name, onClick }, index) => (
-                    <a
-                      key={index}
-                      aria-hidden="true"
-                      onClick={() => {
-                        if (href) {
-                          router.push(href);
-                        }
-                        if (onClick) {
-                          onClick();
-                        }
-                      }}
-                    >
-                      {name}
-                    </a>
-                  )
+                  ({ href, name, onClick }, index) => {
+                    return (
+                      <a
+                        key={index}
+                        aria-hidden="true"
+                        onClick={() => {
+                          if (href) {
+                            router.push(href);
+                          }
+                          if (onClick) {
+                            onClick();
+                          }
+                        }}
+                      >
+                        {name}
+                      </a>
+                    );
+                  }
                 )}
               </Dropdown>
             </li>
@@ -194,53 +217,58 @@ const HeaderConnected = ({ isHome }) => {
               Accueil
             </SimpleLink>
           </li>
-          {
-            LINKS_CONNECTED[user.role.toLowerCase()]
-            .filter(({ href }) => href !== '#')
-            .map(({ href, icon, name }, index) => (
-              <li key={index}>
-                <a
-                  aria-hidden="true"
-                  onClick={() => {
-                    router.push(href);
-                    UIkit.offcanvas('#offcanvas-logged').hide();
-                  }}
-                >
-                  <span
-                    className="uk-margin-small-right"
-                    data-uk-icon={`icon: ${icon}`}
-                  />
-                  {name}
-                </a>
-              </li>
-            ))}
+          {LINKS_CONNECTED[user.role.toLowerCase()]
+            .filter(({ href }) => {
+              return href !== '#';
+            })
+            .map(({ href, icon, name }, index) => {
+              return (
+                <li key={index}>
+                  <a
+                    aria-hidden="true"
+                    onClick={() => {
+                      router.push(href);
+                      UIkit.offcanvas('#offcanvas-logged').hide();
+                    }}
+                  >
+                    <span
+                      className="uk-margin-small-right"
+                      data-uk-icon={`icon: ${icon}`}
+                    />
+                    {name}
+                  </a>
+                </li>
+              );
+            })}
           <li className="uk-nav-header uk-flex uk-flex-middle">
             <ImgProfile />
             <span className="uk-margin-small-left">Salut {user.firstName}</span>
           </li>
           {LINKS_CONNECTED.dropdown.map(
-            ({ href, icon, name, onClick }, index) => (
-              <li key={index}>
-                <a
-                  aria-hidden="true"
-                  onClick={() => {
-                    if (href) {
-                      router.push(href);
-                    }
-                    if (onClick) {
-                      onClick();
-                    }
-                    UIkit.offcanvas('#offcanvas-logged').hide();
-                  }}
-                >
-                  <span
-                    className="uk-margin-small-right"
-                    data-uk-icon={`icon: ${icon}`}
-                  />
-                  {name}
-                </a>
-              </li>
-            )
+            ({ href, icon, name, onClick }, index) => {
+              return (
+                <li key={index}>
+                  <a
+                    aria-hidden="true"
+                    onClick={() => {
+                      if (href) {
+                        router.push(href);
+                      }
+                      if (onClick) {
+                        onClick();
+                      }
+                      UIkit.offcanvas('#offcanvas-logged').hide();
+                    }}
+                  >
+                    <span
+                      className="uk-margin-small-right"
+                      data-uk-icon={`icon: ${icon}`}
+                    />
+                    {name}
+                  </a>
+                </li>
+              );
+            }
           )}
         </ul>
       </OffcanvasNoSSR>

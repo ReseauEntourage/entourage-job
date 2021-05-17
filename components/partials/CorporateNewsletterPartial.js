@@ -58,7 +58,9 @@ const CorporateNewsletter = () => {
                 borderRadius: '2px 0 0 2px',
                 paddingTop: 0,
               }}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                return setEmail(e.target.value);
+              }}
               value={email}
             />
           </div>

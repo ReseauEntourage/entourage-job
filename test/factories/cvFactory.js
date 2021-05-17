@@ -13,7 +13,9 @@ const {
  * @retrn array of status values
  */
 const getCvStatusValues = (cvStatus) => {
-  return Object.keys(cvStatus).map((status) => cvStatus[status].value);
+  return Object.keys(cvStatus).map((status) => {
+    return cvStatus[status].value;
+  });
 };
 
 /**

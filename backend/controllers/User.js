@@ -65,12 +65,16 @@ const capitalizeName = (name) => {
   let capitalizedName = name
     .toLowerCase()
     .split(' ')
-    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .map((s) => {
+      return s.charAt(0).toUpperCase() + s.substring(1);
+    })
     .join(' ');
 
   capitalizedName = capitalizedName
     .split('-')
-    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .map((s) => {
+      return s.charAt(0).toUpperCase() + s.substring(1);
+    })
     .join('-');
 
   return capitalizedName;
@@ -124,8 +128,12 @@ const getCompleteUser = (id) => {
     User.findByPk(id, {
       include: INCLUDE_USER_CANDIDAT,
     })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+      .then((result) => {
+        return resolve(result);
+      })
+      .catch((err) => {
+        return reject(err);
+      });
   });
 };
 
@@ -256,7 +264,11 @@ const searchCandidates = async (query) => {
     attributes: ATTRIBUTES_USER_PUBLIC,
     where: {
       [Op.and]: [
-        { id: publishedCVs.map((publishedCV) => publishedCV.UserId) },
+        {
+          id: publishedCVs.map((publishedCV) => {
+            return publishedCV.UserId;
+          }),
+        },
         where(
           fn(
             'concat',
@@ -287,7 +299,9 @@ const setUserCandidat = async (candidatId, candidat) => {
   const userCandidat = await User_Candidat.update(candidat, {
     where: { candidatId },
     individualHooks: true,
-  }).then((model) => model && model.length > 1 && model[1][0]);
+  }).then((model) => {
+    return model && model.length > 1 && model[1][0];
+  });
   if (candidat.hidden) {
     await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + candidat.url);
   } else {
@@ -442,7 +456,11 @@ const deleteUser = async (id) => {
     where: {
       [Op.or]: [
         { documentId: id },
-        { documentId: userOpportunities.map((userOpp) => userOpp.id) },
+        {
+          documentId: userOpportunities.map((userOpp) => {
+            return userOpp.id;
+          }),
+        },
       ],
     },
   };
@@ -454,7 +472,9 @@ const deleteUser = async (id) => {
     `
     UPDATE "RevisionChanges"
     SET "document" = '{}'::jsonb, "diff" = '[{}]'::jsonb
-    WHERE "revisionId" IN (${revisions.map((revision) => `'${revision.id}'`)});
+    WHERE "revisionId" IN (${revisions.map((revision) => {
+      return `'${revision.id}'`;
+    })});
   `,
     {
       type: QueryTypes.UPDATE,
