@@ -1,9 +1,11 @@
+const _ = require('lodash');
+
 const { QueryTypes } = require('sequelize');
 const fs = require('fs');
 const puppeteer = require('puppeteer-core');
 const PDFMerger = require('pdf-merger-js');
+const moment = require('moment');
 const S3 = require('./Aws');
-
 const RedisManager = require('../utils/RedisManager');
 
 const { INITIAL_NB_OF_CV_TO_DISPLAY } = require('../../constants');
@@ -538,7 +540,7 @@ const getAndCacheAllCVs = async (dbQuery, cache) => {
         return cv.id;
       }),
     },
-    attributes: ['id', 'catchphrase', 'urlImg'],
+    attributes: ['id', 'catchphrase', 'urlImg', 'updatedAt'],
     include: [
       {
         model: models.Ambition,
@@ -614,7 +616,7 @@ const getRandomShortCVs = async (nb, query) => {
 
   const totalSharesPerUser = await sequelize.query(
     `
-      select shares."CandidatId", (SUM(facebook) + SUM(linkedin) + SUM(twitter) + SUM(whatsapp)) as totalshares
+      select shares."CandidatId", (SUM(facebook) + SUM(linkedin) + SUM(twitter) + SUM(whatsapp) + SUM(other)) as totalshares
       from "Shares" shares
       GROUP BY shares."CandidatId";
     `,
@@ -627,7 +629,7 @@ const getRandomShortCVs = async (nb, query) => {
     return acc + parseInt(curr.totalshares, 10);
   }, 0);
 
-  let finalCVList = modelCVs.map((modelCV) => {
+  const finalCVList = modelCVs.map((modelCV) => {
     const cv = modelCV;
     const totalSharesForUser = totalSharesPerUser.find((shares) => {
       return shares.CandidatId === cv.user.candidat.id;
@@ -636,31 +638,34 @@ const getRandomShortCVs = async (nb, query) => {
     if (totalSharesForUser) {
       cv.ranking = totalSharesForUser.totalshares / totalShares;
     }
-    if (cv.user.employed) {
-      cv.ranking = 1;
-    }
     return cv;
   });
 
-  finalCVList = finalCVList
-    .sort(() => {
-      return Math.random() - 0.5;
-    })
-    .slice(0, nb) // shuffle and take the nb first
-    .sort((a, b) => {
-      return a.ranking - b.ranking;
-    }); // then order reverse by ranking
+  const sortedCVListByDate = finalCVList.sort((cv1, cv2) => {
+    return cv2.updatedAt - cv1.updatedAt;
+  });
 
-  if (!nb || nb > INITIAL_NB_OF_CV_TO_DISPLAY) {
-    finalCVList = [
-      ...finalCVList.slice(0, INITIAL_NB_OF_CV_TO_DISPLAY),
-      ...finalCVList.slice(INITIAL_NB_OF_CV_TO_DISPLAY, nb).sort(() => {
+  const groupedCVsByMonth = _.groupBy(sortedCVListByDate, (cv) => {
+    return moment(cv.updatedAt).startOf('month').format('YYYY/MM');
+  });
+
+  _.values(groupedCVsByMonth).forEach((arr) => {
+    return arr
+      .sort(() => {
         return Math.random() - 0.5;
-      }),
-    ];
-  }
+      })
+      .sort((a, b) => {
+        return a.ranking - b.ranking; // then order reverse by ranking
+      });
+  });
 
-  return finalCVList;
+  return _.reduce(
+    groupedCVsByMonth,
+    (acc, curr) => {
+      return [...acc, ...curr];
+    },
+    []
+  ).slice(0, nb);
 };
 
 const setCV = (id, cv) => {
