@@ -24,12 +24,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  CV_Skill.beforeCreate((fields, _) => {
+  CV_Skill.beforeCreate((fields) => {
     const data = fields;
     data.id = uuid();
     return data;
   });
-  CV_Skill.associate = function (models) {
+  CV_Skill.associate = () => {
     // associations can be defined here
   };
   return CV_Skill;

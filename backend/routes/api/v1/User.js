@@ -103,10 +103,14 @@ router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
         users.map((u) => {
           const user = u.toJSON();
           // sort by version desc
-          if (user.role === USER_ROLES.CANDIDAT && user.candidat.cvs) {
-            user.candidat.cvs = user.candidat.cvs.sort(
-              (a, b) => b.version - a.version
-            );
+          if (
+            user.role === USER_ROLES.CANDIDAT &&
+            user.candidat &&
+            user.candidat.cvs
+          ) {
+            user.candidat.cvs = user.candidat.cvs.sort((a, b) => {
+              return b.version - a.version;
+            });
           }
           return user;
         })
@@ -309,7 +313,9 @@ router.put(
 
       if (
         req.payload.role === USER_ROLES.ADMIN ||
-        !keys.some((key) => !authorizedKeys.includes(key))
+        !keys.some((key) => {
+          return !authorizedKeys.includes(key);
+        })
       ) {
         UserController.setUser(req.params.id, req.body)
           .then((updatedUser) => {

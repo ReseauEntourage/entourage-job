@@ -13,7 +13,6 @@ const Select = ({
   disabled,
   hidden,
 }) => {
-
   return (
     <>
       <div
@@ -42,7 +41,9 @@ const Select = ({
         ) : null}
         <select
           className="uk-select"
-          onChange={(event) => onChange(event)}
+          onChange={(event) => {
+            return onChange(event);
+          }}
           name={name}
           id={id}
           value={value}
@@ -53,18 +54,13 @@ const Select = ({
           }}
           disabled={disabled}
         >
-          {
-            options.map((item, i) => {
-              return (
-                !item.hidden ?
-                  <option value={item.value} key={i}>
-                    {item.label}
-                  </option>
-                  :
-                  undefined
-              );
-            }
-          )}
+          {options.map((item, i) => {
+            return !item.hidden ? (
+              <option value={item.value} key={i}>
+                {item.label}
+              </option>
+            ) : undefined;
+          })}
         </select>
       </div>
       <FormValidatorErrorMessage validObj={valid} />

@@ -1,6 +1,5 @@
-const moment = require("moment");
+const moment = require('moment');
 
-'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Messages', {
@@ -8,57 +7,61 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4
+        defaultValue: Sequelize.UUIDV4,
       },
       firstName: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       lastName: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       email: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       phone: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       job: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       businessLine: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       company: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       localization: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       message: {
         allowNull: false,
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: () => moment(new Date())
+        defaultValue: () => {
+          return moment(new Date());
+        },
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: () => moment(new Date())
-      }
+        defaultValue: () => {
+          return moment(new Date());
+        },
+      },
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable('Messages');
-  }
+  },
 };

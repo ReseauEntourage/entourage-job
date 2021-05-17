@@ -8,12 +8,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Skill.beforeCreate((skill, _) => {
+  Skill.beforeCreate((skill) => {
     const s = skill;
     s.id = uuid();
     return s;
   });
-  Skill.associate = function (models) {
-  };
+  Skill.associate = () => {};
   return Skill;
 };

@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/aria-role */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR } from '../utils/Grid';
@@ -9,7 +8,9 @@ import {
   SkillsCard,
   StoryProfileCard,
 } from '../cards';
-import { CVEditCatchphrase, CVEditPicture, CVEditReviews } from '.';
+import CVEditCatchphrase from './CVEditCatchphrase';
+import CVEditReviews from './CVEditReviews';
+import CVEditPicture from './CVEditPicture';
 import CVEditBusinessLines from './CVEditBusinessLines';
 import CVEditCareerPath from './CVEditCareerPath';
 import { ImgNoSSR } from '../utils';

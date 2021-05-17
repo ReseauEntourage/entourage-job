@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 /**
- * load envionement vairables located in ./.env or ./env.test depending on NODE_ENV
+ * load environement variables located in ./.env or ./env.test depending on NODE_ENV
  */
 const loadEnvironnementVariables = () => {
   const envPath =

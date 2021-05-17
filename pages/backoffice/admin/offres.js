@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
-import {Button, Section} from '../../../components/utils';
+import { Button, Section } from '../../../components/utils';
 import OfferCard from '../../../components/cards/OfferCard';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOfferAdmin from '../../../components/modals/ModalOfferAdmin';
@@ -11,11 +11,11 @@ import Axios from '../../../Axios';
 import schema from '../../../components/forms/schema/formEditOpportunity';
 import { UserContext } from '../../../components/store/UserProvider';
 import ModalEdit from '../../../components/modals/ModalEdit';
-import {initializeFilters, mutateFormSchema, getUserOpportunityFromOffer} from "../../../utils";
-import {OPPORTUNITY_FILTERS_DATA} from "../../../constants";
-import CurrentFilters from "../../../components/filters/CurrentFilters";
-import FiltersSideBar from "../../../components/filters/FiltersSideBar";
-import OpportunityError from "../../../components/opportunities/OpportunityError";
+import { initializeFilters, mutateFormSchema } from '../../../utils';
+import { OPPORTUNITY_FILTERS_DATA } from '../../../constants';
+import CurrentFilters from '../../../components/filters/CurrentFilters';
+import FiltersSideBar from '../../../components/filters/FiltersSideBar';
+import OpportunityError from '../../../components/opportunities/OpportunityError';
 
 const tabFiltersConst = [
   { tag: 'all', title: 'Toutes les offres' },
@@ -62,7 +62,11 @@ const LesOpportunites = () => {
             },
           }
         );
-        setOffers(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
+        setOffers(
+          data.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+          })
+        );
         return data;
       } catch (err) {
         console.error(err);
@@ -87,15 +91,16 @@ const LesOpportunites = () => {
   useEffect(() => {
     fetchData().then((data) => {
       if (data) {
-        const offer = data.find((o) => o.id === opportunityId);
+        const offer = data.find((o) => {
+          return o.id === opportunityId;
+        });
         if (offer) {
-          setCurrentOffer({...offer});
+          setCurrentOffer({ ...offer });
           UIkit.modal('#modal-offer-admin').show();
         }
       }
     });
   }, [user, opportunityId]);
-
 
   /* TAB FILTERS */
 
@@ -105,7 +110,9 @@ const LesOpportunites = () => {
   const tabFilterOffers = () => {
     let filteredList = offers;
     if (offers) {
-      const activeFilter = tabFilters.find((filter) => filter.active);
+      const activeFilter = tabFilters.find((filter) => {
+        return filter.active;
+      });
       filteredList = filteredList.filter((offer) => {
         switch (activeFilter.tag) {
           case tabFiltersConst[0].tag:
@@ -166,14 +173,16 @@ const LesOpportunites = () => {
                 hasFound = true;
               } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
                 hasFound = filtersObj[keys[i]].some((currentFilter) => {
-                  if(offer.userOpportunity && offer.userOpportunity.length > 0) {
-                      return offer.userOpportunity.some((userOpp) => {
-                        return currentFilter.value === userOpp.status;
-                      });
+                  if (
+                    offer.userOpportunity &&
+                    offer.userOpportunity.length > 0
+                  ) {
+                    return offer.userOpportunity.some((userOpp) => {
+                      return currentFilter.value === userOpp.status;
+                    });
                   }
-                  else {
-                    return false;
-                  }
+
+                  return false;
                 });
               } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[1].key) {
                 hasFound = offer.isPublic;
@@ -181,7 +190,9 @@ const LesOpportunites = () => {
               resultForEachFilter.push(hasFound);
             }
 
-            return resultForEachFilter.every((value) => value);
+            return resultForEachFilter.every((value) => {
+              return value;
+            });
           });
         }
       }
@@ -205,7 +216,6 @@ const LesOpportunites = () => {
 
   /* END STATUS FILTER */
 
-
   if (!user) return null;
 
   return (
@@ -215,9 +225,7 @@ const LesOpportunites = () => {
           title="Modération des offres d'emploi"
           description="Ici vous pouvez accéder à toutes les opportunités et valider les offres envoyées par les recruteurs !"
         >
-          <Button
-            style="primary"
-            toggle="target: #add-opportunity">
+          <Button style="primary" toggle="target: #add-opportunity">
             <span
               uk-icon="icon: plus; ratio:0.8"
               className="uk-margin-small-right"
@@ -230,17 +238,22 @@ const LesOpportunites = () => {
             submitText="Envoyer"
             formSchema={mutatedSchema}
             defaultValues={{
-              isPublic: true
+              isPublic: true,
             }}
             onSubmit={(fields, closeModal) => {
-              postOpportunity({
-                ...fields,
-                date: Date.now(),
-              }, closeModal)
+              postOpportunity(
+                {
+                  ...fields,
+                  date: Date.now(),
+                },
+                closeModal
+              );
             }}
           />
         </HeaderBackoffice>
-        {hasError ? <OpportunityError /> : (
+        {hasError ? (
+          <OpportunityError />
+        ) : (
           <>
             <Filter
               loading={loading}
@@ -267,8 +280,7 @@ const LesOpportunites = () => {
                 </div>
               }
             >
-              {filteredOffers &&
-              filteredOffers.length > 0 ?
+              {filteredOffers && filteredOffers.length > 0 ? (
                 filteredOffers.map((offer, i) => {
                   return (
                     <li key={i}>
@@ -278,7 +290,7 @@ const LesOpportunites = () => {
                         className="uk-link-reset"
                         onClick={() => {
                           setCurrentOffer({
-                            ...offer
+                            ...offer,
                           });
                           UIkit.modal('#modal-offer-admin').show();
                         }}
@@ -298,23 +310,23 @@ const LesOpportunites = () => {
                     </li>
                   );
                 })
-                :
+              ) : (
                 <div className="uk-text-center uk-flex uk-flex-center uk-flex-1">
                   <p className="uk-text-italic">
                     {Object.values(filters).reduce((acc, curr) => {
                       return acc + curr.length;
                     }, 0) > 0
                       ? 'Aucun résultat.'
-                      : 'Aucune offre d\'emploi.'}
+                      : "Aucune offre d'emploi."}
                   </p>
                 </div>
-              }
+              )}
             </Filter>
             <div>
               <ModalOfferAdmin
                 currentOffer={currentOffer}
                 setCurrentOffer={(offer) => {
-                  setCurrentOffer({...offer});
+                  setCurrentOffer({ ...offer });
                   fetchData();
                 }}
               />

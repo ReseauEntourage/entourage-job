@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return Promise.all([
       queryInterface.addIndex('Revisions', ['documentId']),
       queryInterface.addIndex('Revisions', ['model', 'documentId']),
@@ -10,7 +10,7 @@ module.exports = {
     ]);
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return Promise.all([
       queryInterface.removeIndex('Revisions', ['documentId']),
       queryInterface.removeIndex('Revisions', ['model', 'documentId']),

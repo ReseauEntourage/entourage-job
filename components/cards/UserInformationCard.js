@@ -152,8 +152,8 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
               modalTitle="Le candidat a retrouvé un emploi ?"
               modalConfirmation="Oui, il a retrouvé un emploi"
               defaultValue={userCandidat.employed}
-              onToggle={(employed) =>
-                Api.put(`/api/v1/user/candidat/${linkedUser.id}`, {
+              onToggle={(employed) => {
+                return Api.put(`/api/v1/user/candidat/${linkedUser.id}`, {
                   employed,
                 })
                   .then(() => {
@@ -166,10 +166,13 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
                       'success'
                     );
                   })
-                  .catch(() =>
-                    UIkit.notification('Une erreur est survenue', 'danger')
-                  )
-              }
+                  .catch(() => {
+                    return UIkit.notification(
+                      'Une erreur est survenue',
+                      'danger'
+                    );
+                  });
+              }}
             />
             <ToggleWithConfirmationModal
               id="hiddenLinked"
@@ -177,8 +180,8 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
               modalTitle="Changer la visibilité du CV en ligne ?"
               modalConfirmation="Oui, masquer le CV"
               defaultValue={userCandidat.hidden}
-              onToggle={(hidden) =>
-                Api.put(`/api/v1/user/candidat/${linkedUser.id}`, {
+              onToggle={(hidden) => {
+                return Api.put(`/api/v1/user/candidat/${linkedUser.id}`, {
                   hidden,
                 })
                   .then(() => {
@@ -193,13 +196,13 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
                       'success'
                     );
                   })
-                  .catch(() =>
-                    UIkit.notification(
+                  .catch(() => {
+                    return UIkit.notification(
                       'Une erreur est survenue lors du masquage du profil',
                       'danger'
-                    )
-                  )
-              }
+                    );
+                  });
+              }}
             />
           </Card>
         )}
@@ -216,7 +219,9 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
             return (
               <ButtonIcon
                 name="pencil"
-                onClick={() => UIkit.modal(`#modal-edit-linked-user`).show()}
+                onClick={() => {
+                  return UIkit.modal(`#modal-edit-linked-user`).show();
+                }}
               />
             );
           }
@@ -270,7 +275,9 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
           }
           if (promise) {
             promise
-              .then(() => Api.get(`/api/v1/user/${user.id}`))
+              .then(() => {
+                return Api.get(`/api/v1/user/${user.id}`);
+              })
               .then(({ data }) => {
                 closeModal();
                 assignUser(data);
@@ -284,7 +291,9 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
                   'danger'
                 );
               })
-              .finally(() => setLoading(false));
+              .finally(() => {
+                return setLoading(false);
+              });
           }
         }}
       />

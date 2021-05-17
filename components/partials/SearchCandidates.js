@@ -20,7 +20,7 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
   const { getData, storeData } = useContext(DataContext);
 
   const [filters, setFilters] = useState(
-    initializeFilters(CV_FILTERS_DATA, defaultHideEmployed ? [2] : null)
+    initializeFilters(CV_FILTERS_DATA, defaultHideEmployed ? [0] : null)
   );
   const [numberOfResults, setNumberOfResults] = useState(0);
 
@@ -40,7 +40,9 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
   useEffect(() => {
     if (process.env.DISABLE_SEARCH_ON_THE_FLY !== 'true') {
       clearTimeout(debounceTimeoutId);
-      debounceTimeoutId = setTimeout(() => startSearch(searchBuffer), 1000);
+      debounceTimeoutId = setTimeout(() => {
+        return startSearch(searchBuffer);
+      }, 1000);
     }
   }, [searchBuffer]);
 

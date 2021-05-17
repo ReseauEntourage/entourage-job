@@ -9,8 +9,8 @@ import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOffer from '../../../components/modals/ModalOffer';
 import Api from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
-import {USER_ROLES} from "../../../constants";
-import OpportunityError from "../../../components/opportunities/OpportunityError";
+import { USER_ROLES } from '../../../constants';
+import OpportunityError from '../../../components/opportunities/OpportunityError';
 
 const tabFiltersConst = [
   { tag: 'all', title: 'Toutes les offres' },
@@ -32,7 +32,6 @@ const Opportunites = () => {
   const [loading, setLoading] = useState(true);
   const [candidatId, setCandidatId] = useState();
 
-
   /* TAB FILTERS */
 
   const [tabFilters, setTabFilters] = useState(tabFiltersConst);
@@ -41,9 +40,12 @@ const Opportunites = () => {
   const tabFilterOffers = () => {
     let filteredList = offers;
     if (offers) {
-      const activeFilter = tabFilters.find((filter) => filter.active);
+      const activeFilter = tabFilters.find((filter) => {
+        return filter.active;
+      });
       filteredList = filteredList.filter((offer) => {
-        const isArchived = offer.userOpportunity && offer.userOpportunity.archived;
+        const isArchived =
+          offer.userOpportunity && offer.userOpportunity.archived;
         switch (activeFilter.tag) {
           case tabFiltersConst[0].tag:
             return true;
@@ -69,7 +71,7 @@ const Opportunites = () => {
   }, [offers, tabFilters]);
 
   useEffect(() => {
-    if(tabFilteredOffers) {
+    if (tabFilteredOffers) {
       setLoading(false);
     }
   }, [tabFilteredOffers]);
@@ -110,26 +112,30 @@ const Opportunites = () => {
       opportunity.userOpportunity = data;
       fetchData(candidatId);
     }
-    setCurrentOffer({...opportunity});
+    setCurrentOffer({ ...opportunity });
     UIkit.modal('#modal-offer').show();
   };
 
   useEffect(() => {
     // récupére les offres et si id en url ouvre loffre en question
-    const fetchAndAct = (id) =>
-      fetchData(id).then((data) => {
+    const fetchAndAct = (id) => {
+      return fetchData(id).then((data) => {
         if (data) {
-          const offer = data.find((o) => o.id === opportunityId);
+          const offer = data.find((o) => {
+            return o.id === opportunityId;
+          });
           if (offer) {
-            setCurrentOffer({...offer});
+            setCurrentOffer({ ...offer });
             UIkit.modal('#modal-offer').show();
           }
         }
       });
+    };
 
     if (user) {
       const updatedFilterConsts = [...tabFiltersConst];
-      updatedFilterConsts[1].title = user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat';
+      updatedFilterConsts[1].title =
+        user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat';
       setTabFilters(updatedFilterConsts);
 
       if (user.role === USER_ROLES.CANDIDAT) {
@@ -137,12 +143,11 @@ const Opportunites = () => {
         fetchAndAct(user.id);
       }
       if (user.role === USER_ROLES.COACH) {
-        Api
-          .get(`/api/v1/user/candidat/`, {
-            params: {
-              coachId: user.id,
-            },
-          })
+        Api.get(`/api/v1/user/candidat/`, {
+          params: {
+            coachId: user.id,
+          },
+        })
           .then(({ data }) => {
             if (data) {
               setCandidatId(data.candidat.id);
@@ -151,7 +156,9 @@ const Opportunites = () => {
               setHasError(true);
             }
           })
-          .catch(() => setHasError(true));
+          .catch(() => {
+            return setHasError(true);
+          });
       }
     }
   }, [user, opportunityId]);
@@ -159,21 +166,36 @@ const Opportunites = () => {
   if (!user) return null;
 
   return (
-    <LayoutBackOffice title={user.role === USER_ROLES.CANDIDAT ? "Mes opportunités" : "Opportunités du candidat"}>
+    <LayoutBackOffice
+      title={
+        user.role === USER_ROLES.CANDIDAT
+          ? 'Mes opportunités'
+          : 'Opportunités du candidat'
+      }
+    >
       <Section>
         <HeaderBackoffice
-          title={user.role === USER_ROLES.CANDIDAT ? "Consultez toutes les opportunités de travail" : "Consultez les opportunités de travail du candidat"}
-          description={user.role === USER_ROLES.CANDIDAT ? "Parcourez les offres qui vous sont directement adressées ainsi que celles communes aux différents candidats du parcours LinkedOut." : "Parcourez les offres qui ont été adressées à votre candidat ainsi que celles communes aux différents candidats du parcours LinkedOut."}
+          title={
+            user.role === USER_ROLES.CANDIDAT
+              ? 'Consultez toutes les opportunités de travail'
+              : 'Consultez les opportunités de travail du candidat'
+          }
+          description={
+            user.role === USER_ROLES.CANDIDAT
+              ? 'Parcourez les offres qui vous sont directement adressées ainsi que celles communes aux différents candidats du parcours LinkedOut.'
+              : 'Parcourez les offres qui ont été adressées à votre candidat ainsi que celles communes aux différents candidats du parcours LinkedOut.'
+          }
         />
-        {hasError ? <OpportunityError /> : (
+        {hasError ? (
+          <OpportunityError />
+        ) : (
           <>
             <Filter
               loading={loading}
               filters={tabFilters}
               setFilters={setTabFilters}
             >
-              {tabFilteredOffers &&
-                tabFilteredOffers.length > 0 ?
+              {tabFilteredOffers && tabFilteredOffers.length > 0 ? (
                 tabFilteredOffers.map((offer, i) => {
                   return (
                     <li key={i}>
@@ -181,7 +203,9 @@ const Opportunites = () => {
                         aria-hidden
                         role="button"
                         className="uk-link-reset"
-                        onClick={() => onClickOpportunityCard(offer)}
+                        onClick={() => {
+                          return onClickOpportunityCard(offer);
+                        }}
                       >
                         <OfferCard
                           title={offer.title}
@@ -208,19 +232,19 @@ const Opportunites = () => {
                     </li>
                   );
                 })
-                :
+              ) : (
                 <div className="uk-text-center uk-flex uk-flex-center uk-flex-1">
                   <p className="uk-text-italic">
                     Aucune offre d&apos;emploi dans cette catégorie.
                   </p>
                 </div>
-              }
+              )}
             </Filter>
             <div>
               <ModalOffer
                 currentOffer={currentOffer}
                 setCurrentOffer={(offer) => {
-                  setCurrentOffer({...offer});
+                  setCurrentOffer({ ...offer });
                   fetchData(candidatId);
                 }}
               />

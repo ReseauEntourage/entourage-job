@@ -1,13 +1,15 @@
 module.exports = {
-  up: (queryInterface, Sequelize) =>
-    Promise.all([
+  up: (queryInterface, Sequelize) => {
+    return Promise.all([
       queryInterface.addColumn('Users', 'employed', {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false,
       }),
-    ]),
+    ]);
+  },
 
-  down: (queryInterface, Sequelize) =>
-    Promise.all([queryInterface.removeColumn('Users', 'employed')]),
+  down: (queryInterface) => {
+    return Promise.all([queryInterface.removeColumn('Users', 'employed')]);
+  },
 };

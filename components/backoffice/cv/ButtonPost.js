@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '../../utils';
-import Icon from "../../utils/Icon";
+import Icon from '../../utils/Icon';
 
 const ButtonPost = ({ text, icon, action, style, disabled }) => {
   const [loading, setLoading] = useState(false);
@@ -12,19 +12,19 @@ const ButtonPost = ({ text, icon, action, style, disabled }) => {
       onClick={() => {
         if (!loading) {
           setLoading(true);
-          action().finally(() => setLoading(false));
+          action().finally(() => {
+            return setLoading(false);
+          });
         }
       }}
     >
       <div className="uk-flex uk-flex-middle">
         {text}
-        {
-          loading ? (
-            <div className="uk-margin-small-left" data-uk-spinner="ratio: .5" />
-          ) : (
-            icon && <Icon className="uk-margin-small-left" name={icon} />
-          )
-        }
+        {loading ? (
+          <div className="uk-margin-small-left" data-uk-spinner="ratio: .5" />
+        ) : (
+          icon && <Icon className="uk-margin-small-left" name={icon} />
+        )}
       </div>
     </Button>
   );

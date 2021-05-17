@@ -1,13 +1,12 @@
-/* eslint-disable jsx-a11y/aria-role */
 /* global UIkit */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { IconNoSSR, GridNoSSR } from '../utils';
 import ModalEdit from '../modals/ModalEdit';
-import schemaTestimonial from '../forms/schema/formEditTestimonial';
+import schemaTestimonial from '../forms/schema/formEditTestimonial.json';
 import ButtonIcon from '../utils/ButtonIcon';
 import ModalConfirm from '../modals/ModalConfirm';
-import {formatParagraph, sortReviews} from "../../utils";
+import { formatParagraph, sortReviews } from '../../utils';
 
 const CVEditReviews = ({ reviews, onChange }) => {
   const MAX_REVIEWS = 3;
@@ -37,41 +36,46 @@ const CVEditReviews = ({ reviews, onChange }) => {
         {/* NotFoundError: Failed to execute 'insertBefore' on 'Node':
         The node before which the new node is to be inserted is not a child of this node. */}
         {sortedReviews.length > 0 ? (
-          sortedReviews.map((review, i) => (
-            <li id={i} key={i} className="">
-              <GridNoSSR
-                eachWidths={['auto', 'expand']}
-                className="uk-padding-small uk-padding-remove-horizontal">
-                <IconNoSSR name="quote-right" />
-                <>
-                  <p className="uk-text-small uk-margin-small">{formatParagraph(review.text)}</p>
-                  <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
-                    {review.name}
-                  </p>
-                  <p className="uk-margin-remove">{review.status}</p>
-                </>
-                <span className="uk-text-muted uk-margin-small">
-                  <div className="uk-flex uk-flex-column">
-                    <ButtonIcon
-                      name="pencil"
-                      onClick={() => {
-                        setCurrentIndex(i);
-                        setCurrentDefaultValue(review);
-                        UIkit.modal(`#modal-testimonial-edit`).show();
-                      }}
-                    />
-                    <ButtonIcon
-                      name="trash"
-                      onClick={() => {
-                        setCurrentIndex(i);
-                        UIkit.modal(`#modal-testimonial-remove`).show();
-                      }}
-                    />
-                  </div>
-                </span>
-              </GridNoSSR>
-            </li>
-          ))
+          sortedReviews.map((review, i) => {
+            return (
+              <li id={i} key={i} className="">
+                <GridNoSSR
+                  eachWidths={['auto', 'expand']}
+                  className="uk-padding-small uk-padding-remove-horizontal"
+                >
+                  <IconNoSSR name="quote-right" />
+                  <>
+                    <p className="uk-text-small uk-margin-small">
+                      {formatParagraph(review.text)}
+                    </p>
+                    <p className="uk-text-bold uk-margin-small uk-margin-remove-bottom">
+                      {review.name}
+                    </p>
+                    <p className="uk-margin-remove">{review.status}</p>
+                  </>
+                  <span className="uk-text-muted uk-margin-small">
+                    <div className="uk-flex uk-flex-column">
+                      <ButtonIcon
+                        name="pencil"
+                        onClick={() => {
+                          setCurrentIndex(i);
+                          setCurrentDefaultValue(review);
+                          UIkit.modal(`#modal-testimonial-edit`).show();
+                        }}
+                      />
+                      <ButtonIcon
+                        name="trash"
+                        onClick={() => {
+                          setCurrentIndex(i);
+                          UIkit.modal(`#modal-testimonial-remove`).show();
+                        }}
+                      />
+                    </div>
+                  </span>
+                </GridNoSSR>
+              </li>
+            );
+          })
         ) : (
           <li className="uk-text-italic">
             Aucune recommandation n&apos;a encore été ajoutée
@@ -86,7 +90,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
           closeModal();
           onChange({
             reviews: [...reviews, fields],
-          })
+          });
         }}
       />
       <ModalEdit

@@ -74,8 +74,9 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
     }
   };
 
-  const openNewsletterModal = () =>
-    UIkit.modal(`#info-share-${cv.UserId}`).show();
+  const openNewsletterModal = () => {
+    return UIkit.modal(`#info-share-${cv.UserId}`).show();
+  };
 
   const updateShareCount = (candidatId, type) => {
     Api.post('api/v1/cv/count', {
@@ -300,25 +301,29 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   </h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <dl className="uk-description-list">
-                    {experiences.map((exp, i) => (
-                      <>
-                        {exp.skills && (
-                          <dt key={i} style={{ display: 'block' }}>
-                            {exp.skills.map((name, key) => (
-                              <span
-                                key={key}
-                                className="uk-label uk-text-lowercase uk-margin-small-right"
-                              >
-                                {name}
-                              </span>
-                            ))}
-                          </dt>
-                        )}
-                        <dd className="uk-margin-small-top">
-                          {formatParagraph(exp.description)}
-                        </dd>
-                      </>
-                    ))}
+                    {experiences.map((exp, i) => {
+                      return (
+                        <>
+                          {exp.skills && (
+                            <dt key={i} style={{ display: 'block' }}>
+                              {exp.skills.map((name, key) => {
+                                return (
+                                  <span
+                                    key={key}
+                                    className="uk-label uk-text-lowercase uk-margin-small-right"
+                                  >
+                                    {name}
+                                  </span>
+                                );
+                              })}
+                            </dt>
+                          )}
+                          <dd className="uk-margin-small-top">
+                            {formatParagraph(exp.description)}
+                          </dd>
+                        </>
+                      );
+                    })}
                   </dl>
                 </div>
               )}
@@ -337,41 +342,43 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   </h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <GridNoSSR gap="small" column>
-                    {sortReviews(cv.reviews).map((review, i) => (
-                      <div key={i}>
-                        <GridNoSSR gap="small" column>
-                          <div>
-                            <IconNoSSR
-                              flip
-                              className="uk-text-primary uk-margin-small-bottom"
-                              name="quote-right"
-                              ratio={1.4}
-                            />
-                            <p className="uk-margin-remove">
-                              {formatParagraph(review.text)}
-                            </p>
-                            <GridNoSSR
-                              className="uk-margin-small-top"
-                              eachWidths={['expand', 'auto']}
-                              between
-                              row
-                            >
-                              <p className="uk-text-meta uk-margin-remove-top">
-                                <span className="uk-text-bold">
-                                  {review.name}
-                                </span>
-                                , {review.status}
-                              </p>
+                    {sortReviews(cv.reviews).map((review, i) => {
+                      return (
+                        <div key={i}>
+                          <GridNoSSR gap="small" column>
+                            <div>
                               <IconNoSSR
-                                className="uk-text-muted uk-width-1-1 uk-text-right"
+                                flip
+                                className="uk-text-primary uk-margin-small-bottom"
                                 name="quote-right"
-                                ratio={0.8}
+                                ratio={1.4}
                               />
-                            </GridNoSSR>
-                          </div>
-                        </GridNoSSR>
-                      </div>
-                    ))}
+                              <p className="uk-margin-remove">
+                                {formatParagraph(review.text)}
+                              </p>
+                              <GridNoSSR
+                                className="uk-margin-small-top"
+                                eachWidths={['expand', 'auto']}
+                                between
+                                row
+                              >
+                                <p className="uk-text-meta uk-margin-remove-top">
+                                  <span className="uk-text-bold">
+                                    {review.name}
+                                  </span>
+                                  , {review.status}
+                                </p>
+                                <IconNoSSR
+                                  className="uk-text-muted uk-width-1-1 uk-text-right"
+                                  name="quote-right"
+                                  ratio={0.8}
+                                />
+                              </GridNoSSR>
+                            </div>
+                          </GridNoSSR>
+                        </div>
+                      );
+                    })}
                   </GridNoSSR>
                 </div>
               )}
@@ -384,19 +391,21 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   </h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <div className="uk-flex uk-flex-left uk-flex-wrap uk-flex-1">
-                    {cv.businessLines.map((line, index) => (
-                      <div
-                        key={index}
-                        className="uk-flex uk-flex-center uk-flex-middle"
-                        style={{
-                          paddingRight: 5,
-                          paddingTop: 5,
-                          paddingBottom: 5,
-                        }}
-                      >
-                        <span className="uk-badge uk-text-small">{line}</span>
-                      </div>
-                    ))}
+                    {cv.businessLines.map((line, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="uk-flex uk-flex-center uk-flex-middle"
+                          style={{
+                            paddingRight: 5,
+                            paddingTop: 5,
+                            paddingBottom: 5,
+                          }}
+                        >
+                          <span className="uk-badge uk-text-small">{line}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -467,11 +476,13 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   <h3 className="uk-margin-small-bottom">Mes atouts</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <ul className="uk-list">
-                    {cv.skills.map((item, i) => (
-                      <li id={i} key={i}>
-                        {item}
-                      </li>
-                    ))}
+                    {cv.skills.map((item, i) => {
+                      return (
+                        <li id={i} key={i}>
+                          {item}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
@@ -480,11 +491,13 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   <h3 className="uk-margin-small-bottom">Mes passions</h3>
                   <hr className="uk-divider-small uk-margin-remove-top" />
                   <ul className="uk-list">
-                    {cv.passions.map((item, i) => (
-                      <li id={i} key={i}>
-                        {item}
-                      </li>
-                    ))}
+                    {cv.passions.map((item, i) => {
+                      return (
+                        <li id={i} key={i}>
+                          {item}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
@@ -503,7 +516,9 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
               <Button
                 disabled={actionDisabled}
                 style="secondary"
-                onClick={() => event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC)}
+                onClick={() => {
+                  return event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC);
+                }}
                 toggle="target: #modal-send-opportunity"
               >
                 Contactez-moi <IconNoSSR name="chevron-right" />
@@ -521,11 +536,11 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                 formSchema={mutatedSchema}
                 onSubmit={async (fields, closeModal) => {
                   const candidatesId = fields.candidatesId
-                    ? fields.candidatesId.map((candidateId) =>
-                        typeof candidateId === 'object'
+                    ? fields.candidatesId.map((candidateId) => {
+                        return typeof candidateId === 'object'
                           ? candidateId.value
-                          : candidateId
-                      )
+                          : candidateId;
+                      })
                     : [];
                   if (!candidatesId.includes(cv.UserId)) {
                     candidatesId.push(cv.UserId);

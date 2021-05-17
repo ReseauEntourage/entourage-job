@@ -11,7 +11,9 @@ const { logger } = require('../../../utils/Logger');
 router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
   checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
     OpportunityController.refreshAirtableOpportunities()
-      .then(() => res.status(200))
+      .then(() => {
+        return res.status(200);
+      })
       .catch((err) => {
         logger(res).error(err);
         res.status(401).send(`Une erreur est survenue`);
@@ -28,7 +30,9 @@ router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
  */
 router.post('/', auth(), (req, res) => {
   OpportunityController.createOpportunity(req.body)
-    .then((opportunity) => res.status(200).json(opportunity))
+    .then((opportunity) => {
+      return res.status(200).json(opportunity);
+    })
     .catch((err) => {
       logger(res).error(err);
       res.status(401).send(`Une erreur est survenue`);
@@ -160,7 +164,9 @@ router.post(
         req.body.userId,
         req.body.seen
       )
-        .then((opportunity) => res.status(200).json(opportunity))
+        .then((opportunity) => {
+          return res.status(200).json(opportunity);
+        })
         .catch((err) => {
           logger(res).error(err);
           res.status(401).send(`Une erreur est survenue`);

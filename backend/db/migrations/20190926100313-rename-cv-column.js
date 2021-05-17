@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.renameColumn('CVs', 'firstname', 'firstName', {
@@ -12,7 +12,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.renameColumn('CVs', 'firstName', 'firstname', {

@@ -21,8 +21,6 @@ let loggedInAdmin;
 let loggedInCoach;
 let loggedInCandidat;
 let otherCandidat;
-let cvLoggedInCandidat;
-let cvOtherCandidat;
 
 describe('User', () => {
   beforeAll(async () => {
@@ -52,10 +50,10 @@ describe('User', () => {
       password: 'user',
     });
 
-    cvLoggedInCandidat = await createCvWithAssociations({
+    await createCvWithAssociations({
       UserId: loggedInCandidat.user.id,
     });
-    cvOtherCandidat = await createCvWithAssociations({
+    await createCvWithAssociations({
       UserId: otherCandidat.user.id,
     });
 
@@ -254,7 +252,7 @@ describe('User', () => {
             password: 'candidat',
           });
 
-          const cv = await cvFactory({
+          await cvFactory({
             UserId: candidat.id,
             status: CV_STATUS.Published.value,
           });
@@ -310,7 +308,7 @@ describe('User', () => {
           expect(response.body[0].role).toEqual(loggedInCoach.user.role);
         });
         it('Should return 200 and the 4th and 5th candidats users', async () => {
-          const response = await request(serverTest)
+          await request(serverTest)
             .get(
               `${route}/mambers?limit=2&offset=2&role=${USER_ROLES.CANDIDAT}`
             )
@@ -418,7 +416,7 @@ describe('User', () => {
             });
           expect(response.status).toBe(401);
         });
-        it('Should return 2OO and updated user', async () => {
+        it('Should return 200 and updated user', async () => {
           const response = await request(serverTest)
             .put(`${route}/change-pwd`)
             .set('authorization', `Token ${loggedInCandidat.token}`)

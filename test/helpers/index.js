@@ -1,56 +1,51 @@
 const {
-    startTestServer,
-    stopTestServer,
-    recreateTestDB,
-    resetTestDB,
-    createEntities,
-    getApp,
+  startTestServer,
+  stopTestServer,
+  recreateTestDB,
+  resetTestDB,
+  createEntities,
+  getApp,
 } = require('./helpers');
 
 const createCvWithAssociations = require('./cv.helpers');
 
-const {
-    createLoggedInUser,
-    getTokenAndId,
-} = require('./user.helpers');
+const { createLoggedInUser, getTokenAndId } = require('./user.helpers');
 
 const {
-    associateCoachAndCandidat,
-    getCandidatAndCoach,
-    getCandidatUrl,
+  associateCoachAndCandidat,
+  getCandidatAndCoach,
+  getCandidatUrl,
 } = require('./user_candidat.helpers');
 
 const {
-    associateOpportunityUser,
-    associateManyOpportunitiesUser,
+  associateOpportunityUser,
+  associateManyOpportunitiesUser,
 } = require('./opportunity_user.helpers');
 
 const getResetLinkAndUser = require('./auth.helpers');
 
-const {
-    getTestImagePath
-} = require('./cvImage.helpers');
+const { getTestImagePath } = require('./cvImage.helpers');
 
 module.exports = {
-    startTestServer,
-    stopTestServer,
-    recreateTestDB,
-    resetTestDB,
-    createEntities,
-    getApp,
+  startTestServer,
+  stopTestServer,
+  recreateTestDB,
+  resetTestDB,
+  createEntities,
+  getApp,
 
-    createCvWithAssociations,
-    createLoggedInUser,
-    getTokenAndId,
+  createCvWithAssociations,
+  createLoggedInUser,
+  getTokenAndId,
 
-    associateCoachAndCandidat,
-    getCandidatAndCoach,
-    getCandidatUrl,
+  associateCoachAndCandidat,
+  getCandidatAndCoach,
+  getCandidatUrl,
 
-    associateOpportunityUser,
-    associateManyOpportunitiesUser,
+  associateOpportunityUser,
+  associateManyOpportunitiesUser,
 
-    getResetLinkAndUser,
+  getResetLinkAndUser,
 
-    getTestImagePath
-}
+  getTestImagePath,
+};

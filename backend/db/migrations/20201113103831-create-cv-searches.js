@@ -7,7 +7,9 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: () => uuid(),
+        defaultValue: () => {
+          return uuid();
+        },
       },
       CVId: {
         type: Sequelize.UUID,
@@ -34,7 +36,7 @@ module.exports = {
       },
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable('CV_Searches');
   },
 };

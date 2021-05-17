@@ -36,7 +36,9 @@ const Input = ({
         id={id}
         value={value || ''}
         placeholder={placeholder || 'Tapez votre texte'}
-        onChange={(event) => update(event)}
+        onChange={(event) => {
+          return update(event);
+        }}
         className={`uk-input uk-form-large ${
           valid !== undefined && valid.isInvalid ? 'uk-form-danger' : ''
         }`}

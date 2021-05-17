@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Ambition.beforeCreate((ambition, _) => {
+  Ambition.beforeCreate((ambition) => {
     return (ambition.id = uuid());
   });
-  Ambition.associate = function (models) {
+  Ambition.associate = (models) => {
     // associations can be defined here
     Ambition.belongsToMany(models.CV, {
       through: 'CV_Ambition',

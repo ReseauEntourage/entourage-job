@@ -29,14 +29,13 @@ const insertAirtable = async (tableName, fields) => {
     : [{ fields }];
 
   return Promise.all(
-    valuesToInsert.map(
-      (values) =>
-        new Promise((res, rej) =>
-          airtable(tableName).create([values], (error, records) =>
-            manageResponse(tableName, error, records, res, rej)
-          )
-        )
-    )
+    valuesToInsert.map((values) => {
+      return new Promise((res, rej) => {
+        return airtable(tableName).create([values], (error, records) => {
+          return manageResponse(tableName, error, records, res, rej);
+        });
+      });
+    })
   );
 };
 
@@ -64,8 +63,8 @@ const updateOpportunityAirtable = async (tableName, fields) => {
         ? `{OpportunityId}='${values.fields.OpportunityId}'`
         : `AND({OpportunityUserId}='${opportunityUserId}', {OpportunityId}='${values.fields.OpportunityId}')`;
 
-      return new Promise((res, rej) =>
-        airtable(tableName)
+      return new Promise((res, rej) => {
+        return airtable(tableName)
           .select({
             filterByFormula: formula,
           })
@@ -75,42 +74,42 @@ const updateOpportunityAirtable = async (tableName, fields) => {
             }
 
             if (results.length === 0) {
-              airtable(tableName).create([values], (error, records) =>
-                manageResponse(tableName, error, records, res, rej)
-              );
+              airtable(tableName).create([values], (error, records) => {
+                return manageResponse(tableName, error, records, res, rej);
+              });
             } else {
               Promise.all(
-                results.map(
-                  (record) =>
-                    new Promise((resolve, reject) => {
-                      airtable(tableName).update(
-                        [
-                          {
-                            id: record.id,
-                            ...values,
-                          },
-                        ],
-                        (error, records) =>
-                          manageResponse(
-                            tableName,
-                            error,
-                            records,
-                            resolve,
-                            reject
-                          )
-                      );
-                    })
-                )
+                results.map((record) => {
+                  return new Promise((resolve, reject) => {
+                    airtable(tableName).update(
+                      [
+                        {
+                          id: record.id,
+                          ...values,
+                        },
+                      ],
+                      (error, records) => {
+                        return manageResponse(
+                          tableName,
+                          error,
+                          records,
+                          resolve,
+                          reject
+                        );
+                      }
+                    );
+                  });
+                })
               )
-                .then((records) =>
-                  manageResponse(tableName, null, records, res, rej)
-                )
-                .catch((error) =>
-                  manageResponse(tableName, error, null, res, rej)
-                );
+                .then((records) => {
+                  return manageResponse(tableName, null, records, res, rej);
+                })
+                .catch((error) => {
+                  return manageResponse(tableName, error, null, res, rej);
+                });
             }
-          })
-      );
+          });
+      });
     })
   );
 };

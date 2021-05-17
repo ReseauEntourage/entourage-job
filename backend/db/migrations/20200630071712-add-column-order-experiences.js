@@ -6,7 +6,7 @@ module.exports = {
       defaultValue: -1,
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.removeColumn('Experiences', 'order');
-  }
+  },
 };

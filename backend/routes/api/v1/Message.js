@@ -69,10 +69,7 @@ router.get(
       where: { id: req.params.id },
     })
       .then((message) => {
-        logger(res).log(
-          'Message found : ',
-          JSON.stringify(message, null, 4)
-        );
+        logger(res).log('Message found : ', JSON.stringify(message, null, 4));
         res.status(200).send(JSON.stringify(message, null, 4));
       })
       .catch((err) => {

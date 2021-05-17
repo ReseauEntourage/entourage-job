@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR, SimpleLink, IconNoSSR } from '../../utils';
 import ImgProfile from '../../headers/ImgProfile';
-import {USER_ROLES} from "../../../constants";
+import { USER_ROLES } from '../../../constants';
 
 const CandidatHeader = ({ user }) => {
   if (!user) return null;
@@ -39,7 +39,10 @@ const CandidatHeader = ({ user }) => {
           >
             <span>
               {process.env.SERVER_URL}/cv/
-              {user[user.role === USER_ROLES.CANDIDAT ? 'candidat' : 'coach'].url}
+              {
+                user[user.role === USER_ROLES.CANDIDAT ? 'candidat' : 'coach']
+                  .url
+              }
             </span>
             <IconNoSSR name="link" />
           </SimpleLink>

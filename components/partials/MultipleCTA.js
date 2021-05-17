@@ -12,11 +12,12 @@ const MultipleCTA = ({
   spacing,
   className,
   animate,
+  numberLines,
 }) => {
   return (
     <div uk-height-match="target : h3" className={className}>
       <Grid
-        childWidths={[`1-${data.length}@m`]}
+        childWidths={[`1-${data.length / numberLines}@m`]}
         match
         gap={spacing}
         divider={showVerticalDividers}
@@ -137,6 +138,7 @@ MultipleCTA.propTypes = {
     })
   ).isRequired,
   animate: PropTypes.bool,
+  numberLines: PropTypes.number,
 };
 
 MultipleCTA.defaultProps = {
@@ -146,6 +148,7 @@ MultipleCTA.defaultProps = {
   spacing: 'large',
   className: '',
   animate: false,
+  numberLines: 1,
 };
 
 export default MultipleCTA;

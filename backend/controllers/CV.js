@@ -1,9 +1,11 @@
+const _ = require('lodash');
+
 const { QueryTypes } = require('sequelize');
 const fs = require('fs');
 const puppeteer = require('puppeteer-core');
 const PDFMerger = require('pdf-merger-js');
+const moment = require('moment');
 const S3 = require('./Aws');
-
 const RedisManager = require('../utils/RedisManager');
 
 const { INITIAL_NB_OF_CV_TO_DISPLAY } = require('../../constants');
@@ -175,7 +177,9 @@ const dividedCompleteCVQuery = async (query, privateUser) => {
     : INCLUDES_COMPLETE_CV_WITH_ALL_USER;
 
   const results = await Promise.all(
-    completeIncludes.map(async (include) => query(include))
+    completeIncludes.map(async (include) => {
+      return query(include);
+    })
   );
 
   return results.reduce((acc, curr) => {
@@ -188,7 +192,8 @@ const dividedCompleteCVQuery = async (query, privateUser) => {
 };
 
 // permet de recuperer les id de cv recherchés pour ensuite fetch ses données
-const queryConditionCV = (attribute, value, allowHidden) => `
+const queryConditionCV = (attribute, value, allowHidden) => {
+  return `
   SELECT cvs.id
   FROM "CVs" cvs
   inner join (
@@ -207,6 +212,7 @@ const queryConditionCV = (attribute, value, allowHidden) => `
     ${attribute && value && !allowHidden ? ' and ' : ''}
     ${attribute && value ? ` ${attribute} = '${value}'` : ''}) groupUsers
   on cvs."UserId" = groupUsers."candidatId"`;
+};
 
 const createCV = async (data) => {
   console.log(`createCV - Création du CV`);
@@ -245,7 +251,9 @@ const createCV = async (data) => {
               where: { name },
             })
               // on recupere de model retourné
-              .then((model) => model[0])
+              .then((model) => {
+                return model[0];
+              })
           );
         })
       );
@@ -265,7 +273,9 @@ const createCV = async (data) => {
           return models.Language.findOrCreate({
             where: { name },
             // on recupere de model retourné
-          }).then((model) => model[0]);
+          }).then((model) => {
+            return model[0];
+          });
         })
       );
       // on ajoute toutes les competences
@@ -281,7 +291,9 @@ const createCV = async (data) => {
         cvData.contracts.map((name) => {
           return models.Contract.findOrCreate({
             where: { name },
-          }).then((model) => model[0]);
+          }).then((model) => {
+            return model[0];
+          });
         })
       );
       await modelCV.addContracts(contracts);
@@ -296,7 +308,9 @@ const createCV = async (data) => {
         cvData.passions.map((name) => {
           return models.Passion.findOrCreate({
             where: { name },
-          }).then((model) => model[0]);
+          }).then((model) => {
+            return model[0];
+          });
         })
       );
       await modelCV.addPassions(passions);
@@ -311,7 +325,9 @@ const createCV = async (data) => {
         cvData.ambitions.map((name) => {
           return models.Ambition.findOrCreate({
             where: { name }, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
-          }).then((model) => model[0]);
+          }).then((model) => {
+            return model[0];
+          });
         })
       );
       await modelCV.addAmbitions(ambitions);
@@ -326,7 +342,9 @@ const createCV = async (data) => {
         cvData.businessLines.map((name) => {
           return models.BusinessLine.findOrCreate({
             where: { name },
-          }).then((model) => model[0]);
+          }).then((model) => {
+            return model[0];
+          });
         })
       );
       await modelCV.addBusinessLines(businessLines);
@@ -341,7 +359,9 @@ const createCV = async (data) => {
         cvData.locations.map((name) => {
           return models.Location.findOrCreate({
             where: { name },
-          }).then((model) => model[0]);
+          }).then((model) => {
+            return model[0];
+          });
         })
       );
       await modelCV.addLocations(locations);
@@ -352,7 +372,7 @@ const createCV = async (data) => {
   if (cvData.experiences) {
     promises.push(async () => {
       console.log(`createCV - Expériences`);
-      const experiences = await Promise.all(
+      await Promise.all(
         cvData.experiences.map(async (experience) => {
           const modelExperience = await models.Experience.create({
             CVId: modelCV.id,
@@ -366,7 +386,9 @@ const createCV = async (data) => {
               experience.skills.map((name) => {
                 return models.Skill.findOrCreate({
                   where: { name },
-                }).then((model) => model[0]);
+                }).then((model) => {
+                  return model[0];
+                });
               })
             );
             await modelExperience.addSkills(skills);
@@ -381,32 +403,34 @@ const createCV = async (data) => {
   if (cvData.reviews) {
     promises.push(async () => {
       console.log(`createCV - Reviews`);
-      const reviews = await Promise.all(
-        cvData.reviews.map(async (review) =>
-          models.Review.create({
+      await Promise.all(
+        cvData.reviews.map(async (review) => {
+          return models.Review.create({
             CVId: modelCV.id,
             text: review.text,
             status: review.status,
             name: review.name,
-          })
-        )
+          });
+        })
       );
     });
   }
 
-  await Promise.all(promises.map(async (promise) => promise()));
+  await Promise.all(
+    promises.map(async (promise) => {
+      return promise();
+    })
+  );
 
   // renvoie du cv complet
   console.log(`createCV - Etape finale - Reprendre le CV complet à retourner`);
 
-  return dividedCompleteCVQuery(
-    async (include) =>
-      models.CV.findByPk(modelCV.id, {
-        exclude: ['UserId'],
-        include: [include],
-      }),
-    true
-  );
+  return dividedCompleteCVQuery(async (include) => {
+    return models.CV.findByPk(modelCV.id, {
+      exclude: ['UserId'],
+      include: [include],
+    });
+  }, true);
 };
 
 const deleteCV = (id) => {
@@ -441,11 +465,11 @@ const getAndCacheCV = async (url, candidatId) => {
   );
 
   if (cvs && cvs.length > 0) {
-    cv = await dividedCompleteCVQuery(async (include) =>
-      models.CV.findByPk(cvs[0].id, {
+    cv = await dividedCompleteCVQuery(async (include) => {
+      return models.CV.findByPk(cvs[0].id, {
         include: [include],
-      })
-    );
+      });
+    });
 
     await RedisManager.setAsync(redisKey, JSON.stringify(cv));
   }
@@ -476,17 +500,15 @@ const getCVbyUserId = async (userId) => {
   const user = await models.User.findByPk(userId);
 
   if (user) {
-    return dividedCompleteCVQuery(
-      async (include) =>
-        models.CV.findOne({
-          include: [include],
-          where: {
-            UserId: userId,
-          },
-          order: [['version', 'DESC']],
-        }),
-      true
-    );
+    return dividedCompleteCVQuery(async (include) => {
+      return models.CV.findOne({
+        include: [include],
+        where: {
+          UserId: userId,
+        },
+        order: [['version', 'DESC']],
+      });
+    }, true);
   }
 
   return null;
@@ -502,7 +524,9 @@ const getCVs = async () => {
     },
     include: INCLUDES_COMPLETE_CV_WITH_NOT_HIDDEN_USER,
   });
-  return modelCVs.map((modelCV) => cleanCV(modelCV));
+  return modelCVs.map((modelCV) => {
+    return cleanCV(modelCV);
+  });
 };
 
 const getAndCacheAllCVs = async (dbQuery, cache) => {
@@ -512,9 +536,11 @@ const getAndCacheAllCVs = async (dbQuery, cache) => {
 
   const cvList = await models.CV.findAll({
     where: {
-      id: cvs.map((cv) => cv.id),
+      id: cvs.map((cv) => {
+        return cv.id;
+      }),
     },
-    attributes: ['id', 'catchphrase', 'urlImg'],
+    attributes: ['id', 'catchphrase', 'urlImg', 'updatedAt'],
     include: [
       {
         model: models.Ambition,
@@ -590,7 +616,7 @@ const getRandomShortCVs = async (nb, query) => {
 
   const totalSharesPerUser = await sequelize.query(
     `
-      select shares."CandidatId", (SUM(facebook) + SUM(linkedin) + SUM(twitter) + SUM(whatsapp)) as totalshares
+      select shares."CandidatId", (SUM(facebook) + SUM(linkedin) + SUM(twitter) + SUM(whatsapp) + SUM(other)) as totalshares
       from "Shares" shares
       GROUP BY shares."CandidatId";
     `,
@@ -603,36 +629,43 @@ const getRandomShortCVs = async (nb, query) => {
     return acc + parseInt(curr.totalshares, 10);
   }, 0);
 
-  let finalCVList = modelCVs.map((modelCV) => {
+  const finalCVList = modelCVs.map((modelCV) => {
     const cv = modelCV;
-    const totalSharesForUser = totalSharesPerUser.find(
-      (shares) => shares.CandidatId === cv.user.candidat.id
-    );
+    const totalSharesForUser = totalSharesPerUser.find((shares) => {
+      return shares.CandidatId === cv.user.candidat.id;
+    });
     cv.ranking = 0;
     if (totalSharesForUser) {
       cv.ranking = totalSharesForUser.totalshares / totalShares;
     }
-    if (cv.user.employed) {
-      cv.ranking = 1;
-    }
     return cv;
   });
 
-  finalCVList = finalCVList
-    .sort(() => Math.random() - 0.5)
-    .slice(0, nb) // shuffle and take the nb first
-    .sort((a, b) => a.ranking - b.ranking); // then order reverse by ranking
+  const sortedCVListByDate = finalCVList.sort((cv1, cv2) => {
+    return cv2.updatedAt - cv1.updatedAt;
+  });
 
-  if (!nb || nb > INITIAL_NB_OF_CV_TO_DISPLAY) {
-    finalCVList = [
-      ...finalCVList.slice(0, INITIAL_NB_OF_CV_TO_DISPLAY),
-      ...finalCVList
-        .slice(INITIAL_NB_OF_CV_TO_DISPLAY, nb)
-        .sort(() => Math.random() - 0.5),
-    ];
-  }
+  const groupedCVsByMonth = _.groupBy(sortedCVListByDate, (cv) => {
+    return moment(cv.updatedAt).startOf('month').format('YYYY/MM');
+  });
 
-  return finalCVList;
+  _.values(groupedCVsByMonth).forEach((arr) => {
+    return arr
+      .sort(() => {
+        return Math.random() - 0.5;
+      })
+      .sort((a, b) => {
+        return a.ranking - b.ranking; // then order reverse by ranking
+      });
+  });
+
+  return _.reduce(
+    groupedCVsByMonth,
+    (acc, curr) => {
+      return [...acc, ...curr];
+    },
+    []
+  ).slice(0, nb);
 };
 
 const setCV = (id, cv) => {
@@ -642,8 +675,12 @@ const setCV = (id, cv) => {
     models.CV.update(cv, {
       where: { id },
     })
-      .then((result) => resolve(result))
-      .catch((err) => reject(err));
+      .then((result) => {
+        return resolve(result);
+      })
+      .catch((err) => {
+        return reject(err);
+      });
   });
 };
 
@@ -721,10 +758,14 @@ const createSearchString = async (userId) => {
     cv.user.candidat.firstName,
     cv.user.candidat.lastName,
     cv.experiences
-      .map((exp) => [exp.description, exp.skills.join(' ')].join(' '))
+      .map((exp) => {
+        return [exp.description, exp.skills.join(' ')].join(' ');
+      })
       .join(' '),
     cv.reviews
-      .map((reviews) => [reviews.text, reviews.status, reviews.name].join(' '))
+      .map((reviews) => {
+        return [reviews.text, reviews.status, reviews.name].join(' ');
+      })
       .join(' '),
   ].join(' ');
 

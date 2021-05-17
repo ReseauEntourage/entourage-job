@@ -198,8 +198,8 @@ const Partenaires = () => {
         true
       )}
       {PARTNERS.strategy.map(
-        ({ title, desc, question, answer, author, key, bis, link }, index) =>
-          renderPartner(
+        ({ title, desc, question, answer, author, key, bis, link }, index) => {
+          return renderPartner(
             title,
             desc,
             question,
@@ -209,7 +209,8 @@ const Partenaires = () => {
             bis,
             link,
             index
-          )
+          );
+        }
       )}
       <div
         className="uk-inline uk-cover-container uk-flex uk-flex-center uk-flex-middle"
@@ -272,14 +273,13 @@ const Partenaires = () => {
       </div>
       {renderTitle(
         <>
-          Ils se mobilisent{' '}
-          <span className="uk-text-primary">à nos côtés</span>
+          Ils se mobilisent <span className="uk-text-primary">à nos côtés</span>
         </>,
         'primary'
       )}
       {PARTNERS.associations.map(
-        ({ title, desc, question, answer, author, key, bis, link }, index) =>
-          renderPartner(
+        ({ title, desc, question, answer, author, key, bis, link }, index) => {
+          return renderPartner(
             title,
             desc,
             question,
@@ -289,13 +289,13 @@ const Partenaires = () => {
             bis,
             link,
             index
-          )
+          );
+        }
       )}
       <SimpleSection
         title={
           <>
-            Rejoignez{' '}
-            <span className="uk-text-primary">LinkedOut&nbsp;!</span>
+            Rejoignez <span className="uk-text-primary">LinkedOut&nbsp;!</span>
           </>
         }
         text="Vous êtes intéressé(e) par l’approche de LinkedOut et souhaitez coopérer avec nous ? Contactez-nous pour devenir partenaire !"
@@ -304,7 +304,9 @@ const Partenaires = () => {
         button={{
           label: 'Nous écrire',
           modal: 'target: #modal-interest-linkedOut',
-          onClick: () => event(TAGS.PAGE_PARTENAIRES_NOUS_ECRIRE_CLIC),
+          onClick: () => {
+            return event(TAGS.PAGE_PARTENAIRES_NOUS_ECRIRE_CLIC);
+          },
         }}
       />
       <ModalInterestLinkedOut />

@@ -3,30 +3,22 @@ import { useRouter } from 'next/router';
 import { GridNoSSR, IconNoSSR, Section, SimpleLink } from './utils';
 import AssociationEntourage from './partials/AssociationEntourage';
 import Partners from './partials/Partners';
-import Button from "./utils/Button";
-import {EXTERNAL_LINKS} from '../constants';
-import {event} from "../lib/gtag";
-import TAGS from "../constants/tags";
+import Button from './utils/Button';
+import { EXTERNAL_LINKS } from '../constants';
+import { event } from '../lib/gtag';
+import TAGS from '../constants/tags';
 
 const Footer = () => {
   const { asPath } = useRouter();
 
-  const showAssociationEntourage = !asPath.includes("/entreprises")
+  const showAssociationEntourage = !asPath.includes('/entreprises');
 
   return (
     <footer id="footer">
-      {
-        asPath === '/' && <Partners />
-      }
+      {asPath === '/' && <Partners />}
       {showAssociationEntourage && <AssociationEntourage />}
-      <Section style="secondary" size="small" container='large' preserveColor>
-        <GridNoSSR
-          middle
-          center
-          column
-          childWidths={['1-1']}
-          gap="medium"
-        >
+      <Section style="secondary" size="small" container="large" preserveColor>
+        <GridNoSSR middle center column childWidths={['1-1']} gap="medium">
           {asPath === '/' && (
             <div className="uk-text-center uk-light">
               <a
@@ -40,7 +32,7 @@ const Footer = () => {
                     fontWeight: 700,
                     color: 'white',
                     fontSize: '16px',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   Linked
@@ -64,7 +56,7 @@ const Footer = () => {
                   fontWeight: 700,
                   color: 'white',
                   fontSize: '16px',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
                 }}
               >
                 Linked
@@ -82,32 +74,37 @@ const Footer = () => {
                 </span>
               </span>
               {
-                ' porté par l’association Entourage, qui permet le retour à l’emploi des plus précaires. '}
+                ' porté par l’association Entourage, qui permet le retour à l’emploi des plus précaires. '
+              }
               <span
                 style={{
                   fontWeight: 700,
                   color: 'white',
                   fontSize: '16px',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
                 }}
               >
-                  Linked
-                  <span
-                    style={{
-                      background: '#0077b5',
-                      borderRadius: '2px',
-                      display: 'inline-block',
-                      lineHeight: '17px',
-                      marginLeft: '2px',
-                      padding: '0 2px',
-                    }}
-                  >
-                    in
-                  </span>
+                Linked
+                <span
+                  style={{
+                    background: '#0077b5',
+                    borderRadius: '2px',
+                    display: 'inline-block',
+                    lineHeight: '17px',
+                    marginLeft: '2px',
+                    padding: '0 2px',
+                  }}
+                >
+                  in
                 </span>
-                {' soutient les valeurs véhiculées par le dispositif, et se félicite de pouvoir contribuer à son succès en lui faisant bénéficier de la renommée de ses marques.'}
+              </span>
+              {
+                ' soutient les valeurs véhiculées par le dispositif, et se félicite de pouvoir contribuer à son succès en lui faisant bénéficier de la renommée de ses marques.'
+              }
               <p>
-                L&apos;usage des marques LinkedOut est autorisé dans le cadre d&apos;une licence consentie par la société LinkedIn Ireland Unlimited.
+                L&apos;usage des marques LinkedOut est autorisé dans le cadre
+                d&apos;une licence consentie par la société LinkedIn Ireland
+                Unlimited.
               </p>
             </div>
           )}
@@ -123,9 +120,12 @@ const Footer = () => {
                 href={EXTERNAL_LINKS.DONATION}
                 isExternal
                 newTab
-                onClick={() => event(TAGS.FOOTER_DON_CLIC)}
-                style='primary'>
-                Soutenir LinkedOut{' '}<IconNoSSR name="chevron-right" />
+                onClick={() => {
+                  return event(TAGS.FOOTER_DON_CLIC);
+                }}
+                style="primary"
+              >
+                Soutenir LinkedOut <IconNoSSR name="chevron-right" />
               </Button>
             </div>
             <ul className="uk-padding-small uk-subnav uk-subnav-divider uk-flex-center uk-light">
@@ -145,29 +145,35 @@ const Footer = () => {
                 <SimpleLink
                   href={EXTERNAL_LINKS.ENTOURAGE}
                   isExternal
-                  onClick={() => event(TAGS.FOOTER_SITE_ENTOURAGE_CLIC)}
-                  target="_blank">
+                  onClick={() => {
+                    return event(TAGS.FOOTER_SITE_ENTOURAGE_CLIC);
+                  }}
+                  target="_blank"
+                >
                   Association Entourage
                 </SimpleLink>
               </li>
               <li className="uk-text-capitalize">
-                <SimpleLink href="/linkedout">Pourquoi LinkedOut&nbsp;?</SimpleLink>
+                <SimpleLink href="/linkedout">
+                  Pourquoi LinkedOut&nbsp;?
+                </SimpleLink>
               </li>
               <li className="uk-text-capitalize">
                 <SimpleLink
                   href={EXTERNAL_LINKS.LKO_BLOG}
                   isExternal
-                  onClick={() => event(TAGS.FOOTER_BLOG_LINKEDOUT_CLIC)}
-                  target="_blank">
+                  onClick={() => {
+                    return event(TAGS.FOOTER_BLOG_LINKEDOUT_CLIC);
+                  }}
+                  target="_blank"
+                >
                   Actualités
                 </SimpleLink>
               </li>
             </ul>
             <div className="uk-flex uk-flex-center">
-              <Button
-                href="/login"
-                style='primary'>
-                Espace candidat{' '}<IconNoSSR name="chevron-right" />
+              <Button href="/login" style="primary">
+                Espace candidat <IconNoSSR name="chevron-right" />
               </Button>
             </div>
           </GridNoSSR>

@@ -11,8 +11,8 @@ const send = mailjet.post('send');
  * Fonction permettant d'envoyer un mail
  * il est optionnel de remplir à la fois text et html
  */
-const sendMail = ({ toEmail, subject, text, html }) =>
-  new Promise((res, rej) => {
+const sendMail = ({ toEmail, subject, text, html }) => {
+  return new Promise((res, rej) => {
     send
       .request({
         FromEmail: process.env.MAILJET_FROM_EMAIL,
@@ -29,6 +29,7 @@ const sendMail = ({ toEmail, subject, text, html }) =>
         rej(err);
       });
   });
+};
 
 module.exports = {
   sendMail,

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '../utils/Grid';
-import {addPrefix} from "../../utils";
+import { addPrefix } from '../../utils';
 
 const CarouselItem = ({ index, img, description }) => {
   return (
@@ -16,11 +16,11 @@ const CarouselItem = ({ index, img, description }) => {
         className="uk-flex-wrap uk-flex-wrap-middle"
       >
         <div
-          className="uk-flex-1 uk-background-position-center-center uk-background-cover uk-height-medium"
+          className="uk-flex-1 uk-background-position-center-center uk-background-cover uk-height-large"
           style={{ backgroundImage: `url(${addPrefix(img)})` }}
         />
         <div className="uk-flex uk-flex-1 uk-flex-center uk-flex-middle uk-padding-large">
-          <div className="uk-flex uk-flex-center uk-flex-middle uk-height-medium">
+          <div className="uk-flex uk-flex-center uk-flex-middle uk-height-medium ">
             {description}
           </div>
         </div>

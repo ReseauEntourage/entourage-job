@@ -68,7 +68,9 @@ const deleteFiles = (keys) => {
       {
         Bucket: process.env.AWSS3_BUCKET_NAME,
         Delete: {
-          Objects: keys.map((key) => ({ Key: key })),
+          Objects: keys.map((key) => {
+            return { Key: key };
+          }),
         },
       },
       (err, data) => {
