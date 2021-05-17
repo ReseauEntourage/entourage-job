@@ -149,6 +149,12 @@ const LOCATIONS = [
 
 const CV_FILTERS_DATA = [
   {
+    key: 'hideEmployed',
+    type: 'checkbox',
+    constants: [{ label: 'Masquer les candidats employés', value: true }],
+    title: 'Masquer les candidats ayant retrouvé un emploi',
+  },
+  {
     key: 'businessLines',
     constants: BUSINESS_LINES,
     title: "Secteurs d'activité",
@@ -159,12 +165,6 @@ const CV_FILTERS_DATA = [
     constants: LOCATIONS,
     title: 'Secteurs géographiques',
     tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
-  },
-  {
-    key: 'hideEmployed',
-    type: 'checkbox',
-    constants: [{ label: 'Masquer les candidats employés', value: true }],
-    title: 'Masquer les candidats ayant retrouvé un emploi',
   },
 ];
 
