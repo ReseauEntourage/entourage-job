@@ -179,7 +179,7 @@ const CVPage = () => {
             </SimpleLink>
             <div>
               <div data-uk-spinner="" />
-              <hr className="ent-divier-backoffice uk-margin-large-top " />
+              <hr className="ent-divier-backoffice" />
             </div>
           </GridNoSSR>
         </Section>
@@ -200,7 +200,7 @@ const CVPage = () => {
               Retour à la liste
             </SimpleLink>
             <div>
-              <hr className="ent-divier-backoffice uk-margin-large-top " />
+              <hr className="ent-divier-backoffice" />
               <h2>Ce profil n’est pas disponible</h2>
               <p>
                 Le lien que vous avez suivi est peut-être rompu, ou la page a
@@ -226,7 +226,7 @@ const CVPage = () => {
           </SimpleLink>
           <div>
             <CandidatHeader user={user} />
-            <hr className="ent-divier-backoffice uk-margin-large-top " />
+            <hr className="ent-divier-backoffice" />
           </div>
           <ul className="uk-subnav">
             <li className={onglet === 'cv' ? 'uk-active' : ''}>

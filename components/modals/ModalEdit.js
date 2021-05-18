@@ -29,18 +29,7 @@ const ModalEdit = ({
               onClick={resetForm}
             />
             <HeaderModal>{title}</HeaderModal>
-            {description ? (
-              <p
-                className="uk-text-lead"
-                style={{
-                  lineHeight: '1.2',
-                  fontSize: '1.2rem',
-                  fontWeight: '500',
-                }}
-              >
-                {description}
-              </p>
-            ) : null}
+            {description ? <p className="uk-text-lead">{description}</p> : null}
 
             <FormWithValidation
               ref={form}

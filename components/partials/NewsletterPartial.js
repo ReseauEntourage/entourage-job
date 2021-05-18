@@ -43,7 +43,7 @@ const NewsletterPartial = ({ padding, tag }) => {
         </h4>
       </div>
       {/* input */}
-      <div className="uk-flex uk-flex-center">
+      <div className="uk-flex uk-flex-center uk-flex-column">
         <GridNoSSR
           eachWidths={['expand', 'auto']}
           className="uk-width-1-2@s"

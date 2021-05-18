@@ -90,7 +90,7 @@ const CVPDF = ({ cv, page }) => {
                       ratio={1}
                       flip
                     />
-                    <span className="uk-margin-small-left uk-margin-small-right">
+                    <span className="uk-margin-small-left uk-margin-small-right uk-text-italic">
                       {cv.catchphrase}
                     </span>
                     <IconNoSSR

@@ -180,20 +180,13 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
       <div className="uk-card uk-card-default uk-card-body uk-card-large uk-margin-medium ">
         <GridNoSSR childWidths={['1-1']}>
           <div className="uk-text-center">
-            <h1 className="uk-text-bold uk-heading-medium uk-text-primary">
+            <h1 className="uk-text-bold uk-heading-small uk-text-primary">
               {cv.user.candidat.firstName} {cv.user.candidat.lastName}
             </h1>
             {cv.catchphrase && (
-              <div
-                className="uk-width-xlarge uk-margin-auto"
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  display: 'flex',
-                }}
-              >
+              <div className="uk-flex uk-flex-center uk-margin-medium-top">
                 <h4
-                  className="uk-position-relative"
+                  className="uk-position-relative uk-text-italic"
                   style={{
                     width: 'fit-content',
                     marginBottom: '8px',
@@ -202,7 +195,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   <IconNoSSR
                     className="uk-text-primary ent-quote-after"
                     name="quote-right"
-                    ratio={1.4}
+                    ratio={1.2}
                     flip
                   />
                   <span className="uk-margin-small-left uk-margin-small-right">
@@ -218,7 +211,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
             )}
             {/* uk-text-emphasis uk-text-bold */}
             {cv.ambitions && cv.ambitions.length > 0 && (
-              <h3
+              <h4
                 className="uk-width-xxlarge uk-margin-auto"
                 style={{ fontWeight: 500 }}
               >
@@ -260,7 +253,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                 ) : (
                   '.'
                 )}
-              </h3>
+              </h4>
             )}
             <div className="uk-position-relative uk-margin-medium-top">
               <div
@@ -351,7 +344,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                                 flip
                                 className="uk-text-primary uk-margin-small-bottom"
                                 name="quote-right"
-                                ratio={1.4}
+                                ratio={1.2}
                               />
                               <p className="uk-margin-remove">
                                 {formatParagraph(review.text)}
