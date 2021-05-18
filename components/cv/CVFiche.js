@@ -384,31 +384,6 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
               )}
             </GridNoSSR>
             <GridNoSSR column gap="medium">
-              {cv.businessLines && cv.businessLines.length > 0 && (
-                <div className="">
-                  <h3 className="uk-margin-small-bottom">
-                    Mes secteurs d&apos;activité
-                  </h3>
-                  <hr className="uk-divider-small uk-margin-remove-top" />
-                  <div className="uk-flex uk-flex-left uk-flex-wrap uk-flex-1">
-                    {cv.businessLines.map((line, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="uk-flex uk-flex-center uk-flex-middle"
-                          style={{
-                            paddingRight: 5,
-                            paddingTop: 5,
-                            paddingBottom: 5,
-                          }}
-                        >
-                          <span className="uk-badge uk-text-small">{line}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
               <div className="">
                 <h3 className="uk-margin-small-bottom">Mes infos pratiques</h3>
                 <hr className="uk-divider-small uk-margin-remove-top" />
