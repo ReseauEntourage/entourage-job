@@ -16,7 +16,7 @@ const HeaderBackoffice = ({ title, description, children, childrenBottom }) => {
         </div>
         {children}
       </GridNoSSR>
-      <hr className="ent-divier-backoffice uk-margin-large-top " />
+      <hr className="ent-divier-backoffice" />
     </div>
   );
 };
