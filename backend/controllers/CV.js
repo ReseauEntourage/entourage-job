@@ -641,15 +641,11 @@ const getRandomShortCVs = async (nb, query) => {
     return cv;
   });
 
-  const sortedCVListByDate = finalCVList.sort((cv1, cv2) => {
-    return cv2.updatedAt - cv1.updatedAt;
-  });
-
-  const groupedCVsByMonth = _.groupBy(sortedCVListByDate, (cv) => {
+  const groupedCVsByMonth = _.groupBy(finalCVList, (cv) => {
     return moment(cv.updatedAt).startOf('month').format('YYYY/MM');
   });
 
-  _.values(groupedCVsByMonth).forEach((arr) => {
+  const sortedGroupedCvsByMonth = _.mapValues(groupedCVsByMonth, (arr) => {
     return arr
       .sort(() => {
         return Math.random() - 0.5;
@@ -659,13 +655,17 @@ const getRandomShortCVs = async (nb, query) => {
       });
   });
 
-  return _.reduce(
-    groupedCVsByMonth,
-    (acc, curr) => {
-      return [...acc, ...curr];
-    },
-    []
-  ).slice(0, nb);
+  const sortedKeys = Object.keys(sortedGroupedCvsByMonth).sort(
+    (date1, date2) => {
+      return moment(date2).diff(date1);
+    }
+  );
+
+  return sortedKeys
+    .reduce((acc, curr) => {
+      return [...acc, ...sortedGroupedCvsByMonth[curr]];
+    }, [])
+    .slice(0, nb);
 };
 
 const setCV = (id, cv) => {
