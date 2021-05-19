@@ -11,10 +11,10 @@ const CandidatListPartial = ({ nbShares }) => {
     <Section style="muted" id="candidat">
       <GridNoSSR column middle eachWidths={['2-3@m', '1-1']}>
         <div className="uk-text-center">
-          <h2 className="uk-text-bold uk-margin-remove-bottom">
+          <h1 className="uk-text-bold uk-margin-remove-bottom">
             Ils sont <span className="uk-text-primary">motivés</span> pour
             travailler
-          </h2>
+          </h1>
           <h3 className="uk-text-bold uk-margin-remove-top">
             Votre partage peut tout{' '}
             <span className="uk-text-primary">changer</span>

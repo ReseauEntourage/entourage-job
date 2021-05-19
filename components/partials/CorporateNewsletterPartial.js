@@ -38,7 +38,7 @@ const CorporateNewsletter = () => {
         promotions de candidats et recevoir du contenu et des conseils sur
         l&apos;inclusion
       </h4>
-      <div className="uk-flex uk-flex-center">
+      <div className="uk-flex uk-flex-center uk-flex-middle uk-flex-column">
         <GridNoSSR
           eachWidths={['expand', 'auto']}
           className="uk-width-1-2@s"
