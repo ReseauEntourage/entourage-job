@@ -11,13 +11,10 @@ import {
 } from '../components/partials';
 
 import Header from '../components/headers/Header';
-import { SharesCountContext } from '../components/store/SharesCountProvider';
 import VendeeGlobePartial from '../components/partials/VendeeGlobePartial';
 import HowItWorks from '../components/sections/HowItWorks';
 
 const Index = ({ query }) => {
-  const { totalShares } = useContext(SharesCountContext);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -31,10 +28,10 @@ const Index = ({ query }) => {
     <Layout>
       <LandingPagePartial />
       <Header isHome />
-      <CandidatListPartial nbShares={totalShares} />
+      <CandidatListPartial />
       <VendeeGlobePartial />
       <HowItWorks style="default" />
-      <NumberPartial nbShares={totalShares} />
+      <NumberPartial />
       <ActionPartial style="default" />
     </Layout>
   );

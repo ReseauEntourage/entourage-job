@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import CountUp from 'react-countup';
-import PropTypes from 'prop-types';
 import { GridNoSSR, IconNoSSR, Section } from '../utils';
 import CVList from '../cv/CVList';
 import Button from '../utils/Button';
 import { INITIAL_NB_OF_CV_TO_DISPLAY } from '../../constants';
+import { SharesCountContext } from '../store/SharesCountProvider';
 
-const CandidatListPartial = ({ nbShares }) => {
+const CandidatListPartial = () => {
+  const { totalShares } = useContext(SharesCountContext);
+
   return (
     <Section style="muted" id="candidat">
       <GridNoSSR column middle eachWidths={['2-3@m', '1-1']}>
@@ -30,11 +32,11 @@ const CandidatListPartial = ({ nbShares }) => {
               className="uk-text-primary uk-text-normal"
               style={{ fontSize: 38, fontWeight: 500 }}
             >
-              {nbShares > 0 ? (
+              {totalShares > 0 ? (
                 <CountUp
                   duration={5}
                   delay={3}
-                  end={nbShares}
+                  end={totalShares}
                   preserveValue
                   formattingFn={(number) => {
                     let stringNumber = number.toString();
@@ -76,13 +78,4 @@ const CandidatListPartial = ({ nbShares }) => {
     </Section>
   );
 };
-
-CandidatListPartial.propTypes = {
-  nbShares: PropTypes.number,
-};
-
-CandidatListPartial.defaultProps = {
-  nbShares: 0,
-};
-
 export default CandidatListPartial;
