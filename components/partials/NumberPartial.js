@@ -1,31 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { GridNoSSR, Section } from '../utils';
 import { NumberCard } from '../cards';
-import { VALUES } from '../../constants';
 
 const staticNumbers = [
-  { value: '73%', description: 'Des candidats ont retrouvé un job' },
-  { value: '120k', description: 'Partages sur les réseaux de leur CV' },
-  { value: '300', description: "Offres d'emploi reçues" },
+  { value: '45', description: 'Candidats recrutés sur la promo #2' },
+  {
+    value: '71%',
+    description: 'De sorties positives',
+    subDescription: 'calculé sur les candidats étant allé au bout du parcours',
+  },
+  { value: '32', description: 'Entreprises ont recruté' },
+  { value: '263', description: "Offres d'emploi reçues" },
+  {
+    value: (
+      <div>
+        Administration
+        <br />
+        Logistique
+        <br />
+        Distribution
+        <br />
+        BTP
+      </div>
+    ),
+    description: 'Sont les secteurs qui ont le plus recruté',
+  },
 ];
 
-const NumberPartial = ({ nbShares }) => {
-  const [numbers, setNumbers] = useState(staticNumbers);
-
-  useEffect(() => {
-    const updatedNumbers = numbers;
-
-    const stringNumber = nbShares.toString();
-
-    updatedNumbers[1].value = `${stringNumber.substring(
-      0,
-      stringNumber.length - 3
-    )}k`;
-
-    setNumbers([...updatedNumbers]);
-  }, [nbShares]);
-
+const NumberPartial = () => {
   return (
     <Section style="muted" id="profiles">
       <h2 className="uk-text-bold uk-text-center">
@@ -38,12 +40,13 @@ const NumberPartial = ({ nbShares }) => {
       <GridNoSSR
         center
         childWidths={['1-1', '1-2@s', '1-3@l']}
-        items={numbers.map((content) => {
+        items={staticNumbers.map((content) => {
           return (
             <div className="uk-flex uk-flex-center">
               <NumberCard
                 value={content.value}
                 description={content.description}
+                subDescription={content.subDescription}
               />
             </div>
           );
@@ -63,14 +66,6 @@ const NumberPartial = ({ nbShares }) => {
       />
     </Section>
   );
-};
-
-NumberPartial.propTypes = {
-  nbShares: PropTypes.number,
-};
-
-NumberPartial.defaultProps = {
-  nbShares: VALUES.SHARES,
 };
 
 export default NumberPartial;
