@@ -129,7 +129,7 @@ const Orienter = () => {
         <div>
           {steps.map((step, index, array) => {
             return (
-              <>
+              <div key={step.toString()}>
                 <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle uk-padding">
                   <div className="uk-flex uk-flex-middle uk-flex-center">
                     <div
@@ -153,7 +153,7 @@ const Orienter = () => {
                   </Button>
                 </div>
                 {index < array.length - 1 && <hr />}
-              </>
+              </div>
             );
           })}
         </div>
