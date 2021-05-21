@@ -91,7 +91,7 @@ const WhoFor = () => {
           animate
         />
         <p className="uk-text-muted uk-text-center uk-container uk-container-small">
-          Le dispositif LinkedOut fonctionne par promotions de 6 mois (30 à 50
+          Le dispositif LinkedOut fonctionne par promotions de 6 mois (30 à 60
           candidats). Les candidats qui rejoignent le dispositif doivent être
           prêts à vivre des rencontres collectives, à être rendus visibles sur
           les réseaux sociaux et à être accompagnés par un coach LinkedOut.

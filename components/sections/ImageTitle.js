@@ -33,10 +33,7 @@ const ImageTitle = ({ id, title, text, img }) => {
           }}
         />
       </div>
-      <div
-        className="uk-flex uk-flex-column uk-flex-center uk-position-relative uk-width-1-2@m uk-align-center uk-background-default uk-padding uk-box-shadow-medium"
-        style={{ minHeight: 250 }}
-      >
+      <div className="uk-flex uk-flex-column uk-flex-center uk-position-relative uk-width-1-2@m uk-align-center uk-background-default uk-padding uk-box-shadow-medium">
         <h1 className="uk-text-center uk-align-center uk-text-bold uk-margin-remove-vertical">
           {title}
         </h1>

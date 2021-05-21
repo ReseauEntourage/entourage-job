@@ -9,6 +9,40 @@ import { SharesCountContext } from '../store/SharesCountProvider';
 const CandidatListPartial = () => {
   const { totalShares } = useContext(SharesCountContext);
 
+  const counter =
+    totalShares > 0 ? (
+      <CountUp
+        duration={5}
+        delay={2}
+        end={totalShares}
+        preserveValue
+        formattingFn={(number) => {
+          let stringNumber = number.toString();
+          if (stringNumber.length > 4) {
+            stringNumber = `${stringNumber.slice(
+              0,
+              -3
+            )}\xa0${stringNumber.slice(-3)}`;
+          }
+          if (stringNumber.length > 7) {
+            stringNumber = `${stringNumber.slice(
+              0,
+              -7
+            )}\xa0${stringNumber.slice(-7)}`;
+          }
+          if (stringNumber.length > 10) {
+            stringNumber = `${stringNumber.slice(
+              0,
+              -11
+            )}\xa0${stringNumber.slice(-11)}`;
+          }
+          return stringNumber;
+        }}
+      />
+    ) : (
+      0
+    );
+
   return (
     <Section style="muted" id="candidat">
       <GridNoSSR column middle eachWidths={['2-3@m', '1-1']}>
@@ -28,42 +62,17 @@ const CandidatListPartial = () => {
           </p>
           <h4 className="uk-text-bold">
             Grâce à vous, ce sont déjà &nbsp;
-            <span
-              className="uk-text-primary uk-text-normal"
+            <div
+              className="uk-hidden@m uk-text-primary uk-text-normal uk-flex uk-flex-center uk-flex-middle"
               style={{ fontSize: 38, fontWeight: 500 }}
             >
-              {totalShares > 0 ? (
-                <CountUp
-                  duration={5}
-                  delay={3}
-                  end={totalShares}
-                  preserveValue
-                  formattingFn={(number) => {
-                    let stringNumber = number.toString();
-                    if (stringNumber.length > 4) {
-                      stringNumber = `${stringNumber.slice(
-                        0,
-                        -3
-                      )}\xa0${stringNumber.slice(-3)}`;
-                    }
-                    if (stringNumber.length > 7) {
-                      stringNumber = `${stringNumber.slice(
-                        0,
-                        -7
-                      )}\xa0${stringNumber.slice(-7)}`;
-                    }
-                    if (stringNumber.length > 10) {
-                      stringNumber = `${stringNumber.slice(
-                        0,
-                        -11
-                      )}\xa0${stringNumber.slice(-11)}`;
-                    }
-                    return stringNumber;
-                  }}
-                />
-              ) : (
-                0
-              )}
+              {counter}
+            </div>
+            <span
+              className="uk-text-primary uk-text-normal uk-visible@m"
+              style={{ fontSize: 38, fontWeight: 500 }}
+            >
+              {counter}
             </span>
             &nbsp; partages de CV&nbsp;!
           </h4>

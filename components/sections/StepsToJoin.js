@@ -12,11 +12,12 @@ const StepsToJoin = () => {
         Comment <span className="uk-text-primary">s&apos;inscrire&nbsp;?</span>
       </h2>
       <h4 className="uk-text-bold uk-text-center uk-margin-large-top">
-        Prochaine promotion en Mai 2021 dédiée aux jeunes&nbsp;!
+        Vous répondez aux critères ci dessus, résidez à Paris, dans le 92, 93, à
+        Lille ou à Lyon&nbsp;?
         <br />
         <br />
-        Vous avez entre 18 et 25 ans, habitez sur Paris, 92 ou 93 et remplissez
-        toutes les conditions précédentes&nbsp;?
+        Les prochaines promotions auront lieu en septembre 2021. Envoyez-nous
+        votre candidature&nbsp;!
       </h4>
       <div className="uk-flex uk-flex-top uk-flex-center uk-padding-small">
         <Button
@@ -37,14 +38,11 @@ const StepsToJoin = () => {
         proposerons une rencontre pour valider votre participation au programme
         LinkedOut&nbsp;!
       </p>
-      <h4 className="uk-text-center uk-text-bold">
-        Une prochaine promotion ouverte à tous aura lieu en septembre 2021 à{' '}
-        <u>Paris</u>, <u>Lille</u> et <u>Lyon</u>.
-      </h4>
       <p className="uk-text-center uk-margin-medium-top">
         <span className="uk-text-bold">
           <u>
-            Hors de ces territoires LinkedOut ne pourra pas vous accompagner.
+            Attention, hors de Paris, Lille, Lyon, Seine-Saint-Denis et
+            Haut-de-Seine, nous ne pourrons vous accompagner.
           </u>
         </span>
         <br />

@@ -35,7 +35,7 @@ const NumberPartial = () => {
         <span className="uk-text-primary">ça marche</span> !
       </h2>
       <p className="uk-text-center uk-margin-medium-bottom">
-        Miah, Abdul, Laith,... ont retrouvé un emploi grâce à LinkedOut
+        Miah, Abdul, Laith... ont retrouvé un emploi grâce à LinkedOut
       </p>
       <GridNoSSR
         center
