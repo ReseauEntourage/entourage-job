@@ -8,10 +8,10 @@ import {
   CandidatListPartial,
   LandingPagePartial,
   NumberPartial,
+  TeasingPartial,
 } from '../components/partials';
 
 import Header from '../components/headers/Header';
-import VendeeGlobePartial from '../components/partials/VendeeGlobePartial';
 import HowItWorks from '../components/sections/HowItWorks';
 
 const Index = ({ query }) => {
@@ -29,7 +29,7 @@ const Index = ({ query }) => {
       <LandingPagePartial />
       <Header isHome />
       <CandidatListPartial />
-      <VendeeGlobePartial />
+      <TeasingPartial />
       <HowItWorks style="default" />
       <NumberPartial />
       <ActionPartial style="default" />
