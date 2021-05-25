@@ -149,6 +149,10 @@ const LOCATIONS = [
     value: 'Lille (59)',
     label: 'Lille (59)',
   },
+  {
+    value: 'Lyon (69)',
+    label: 'Lyon (69)',
+  },
 ];
 
 const CV_FILTERS_DATA = [
