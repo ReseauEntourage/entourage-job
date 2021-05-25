@@ -3,7 +3,7 @@ import { GridNoSSR, Section } from '../utils';
 import { NumberCard } from '../cards';
 
 const staticNumbers = [
-  { value: '45', description: 'Candidats recrutés sur la promo #2' },
+  { value: '45', description: 'Candidats recrutés' },
   {
     value: '71%',
     description: 'De sorties positives',
@@ -52,6 +52,11 @@ const NumberPartial = () => {
           );
         })}
       />
+      <div className="uk-flex uk-flex-center uk-margin-small-top">
+        <span className="uk-text-meta uk-text-center">
+          * chiffres de la promo #2
+        </span>
+      </div>
 
       <iframe
         src="https://www.youtube.com/embed/1cfmgC2IqWs"
