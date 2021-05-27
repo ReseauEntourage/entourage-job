@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import {
@@ -10,7 +10,6 @@ import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
 import { Section } from '../../components/utils';
-import { SessionContext } from '../../components/store/SessionProvider';
 import TAGS from '../../constants/tags';
 import { useUpdateSharesCount } from '../../hooks';
 
@@ -27,17 +26,8 @@ const CVPage = ({ cv, router, hideShareOptions }) => {
     ? `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`
     : '';
 
-  const { isFirstLoad } = useContext(SessionContext);
-
   useEffect(() => {
-    if (
-      isFirstLoad &&
-      ((document.referrer &&
-        !document.referrer.includes(window.location.origin)) ||
-        !document.referrer)
-    ) {
-      updateSharesCount(cv.UserId, 'other');
-    }
+    updateSharesCount(cv.UserId, 'other');
   }, []);
 
   if (!cv) {
