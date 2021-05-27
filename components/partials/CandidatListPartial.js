@@ -61,7 +61,9 @@ const CandidatListPartial = () => {
             ceux qui en ont le plus besoin.
           </p>
           <h4 className="uk-text-bold">
-            Grâce à vous, ce sont déjà &nbsp;
+            Grâce à vos partages, les CV ont été rendus visibles
+            <br className="uk-visible@m" />
+            &nbsp;plus de&nbsp;
             <div
               className="uk-hidden@m uk-text-primary uk-text-normal uk-flex uk-flex-center uk-flex-middle"
               style={{ fontSize: 38, fontWeight: 500 }}
@@ -74,7 +76,7 @@ const CandidatListPartial = () => {
             >
               {counter}
             </span>
-            &nbsp; partages de CV&nbsp;!
+            &nbsp;fois&nbsp;!
           </h4>
         </div>
         <CVList nb={INITIAL_NB_OF_CV_TO_DISPLAY} />

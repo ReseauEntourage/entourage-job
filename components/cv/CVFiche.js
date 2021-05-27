@@ -23,15 +23,14 @@ import {
   sortExperiences,
   sortReviews,
 } from '../../utils';
-import { SharesCountContext } from '../store/SharesCountProvider';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
-
+import { useUpdateSharesCount } from '../../hooks';
 /**
  * Le cv en public et en preview
  */
 const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
-  const { incrementSharesCount } = useContext(SharesCountContext);
+  const updateSharesCount = useUpdateSharesCount();
 
   const router = useRouter();
   const hostname = process.env.SERVER_URL;
@@ -78,19 +77,6 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
     return UIkit.modal(`#info-share-${cv.UserId}`).show();
   };
 
-  const updateShareCount = (candidatId, type) => {
-    Api.post('api/v1/cv/count', {
-      candidatId,
-      type,
-    })
-      .then(() => {
-        incrementSharesCount();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
   const experiences = sortExperiences(cv.experiences);
 
   const shareSection = (
@@ -103,7 +89,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
           disabled={actionDisabled}
           onShareWindowClose={() => {
             event(TAGS.PAGE_CV_PARTAGE_CV_LINKEDIN_CLIC);
-            updateShareCount(cv.UserId, 'linkedin');
+            updateSharesCount(cv.UserId, 'linkedin');
             openNewsletterModal();
           }}
           url={link}
@@ -121,7 +107,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
           disabled={actionDisabled}
           onShareWindowClose={() => {
             event(TAGS.PAGE_CV_PARTAGE_CV_FACEBOOK_CLIC);
-            updateShareCount(cv.UserId, 'facebook');
+            updateSharesCount(cv.UserId, 'facebook');
             openNewsletterModal();
           }}
           url={link}
@@ -139,7 +125,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
           disabled={actionDisabled}
           onShareWindowClose={() => {
             event(TAGS.PAGE_CV_PARTAGE_CV_TWITTER_CLIC);
-            updateShareCount(cv.UserId, 'twitter');
+            updateSharesCount(cv.UserId, 'twitter');
             openNewsletterModal();
           }}
           url={link}
@@ -158,7 +144,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
           disabled={actionDisabled}
           onShareWindowClose={() => {
             event(TAGS.PAGE_CV_PARTAGE_CV_WHATSAPP_CLIC);
-            updateShareCount(cv.UserId, 'whatsapp');
+            updateSharesCount(cv.UserId, 'whatsapp');
             openNewsletterModal();
           }}
           url={link}

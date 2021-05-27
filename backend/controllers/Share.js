@@ -41,10 +41,12 @@ const getTotalShares = async () => {
     } else {
       const shares = await Share.findAll({
         attributes: [
-          [sequelize.fn('sum', sequelize.col('facebook')), 'facebook'],
-          [sequelize.fn('sum', sequelize.col('linkedin')), 'linkedin'],
-          [sequelize.fn('sum', sequelize.col('twitter')), 'twitter'],
-          [sequelize.fn('sum', sequelize.col('whatsapp')), 'whatsapp'],
+          /*
+            [sequelize.fn('sum', sequelize.col('facebook')), 'facebook'],
+            [sequelize.fn('sum', sequelize.col('linkedin')), 'linkedin'],
+            [sequelize.fn('sum', sequelize.col('twitter')), 'twitter'],
+            [sequelize.fn('sum', sequelize.col('whatsapp')), 'whatsapp'],
+          */
           [sequelize.fn('sum', sequelize.col('other')), 'other'],
         ],
       });

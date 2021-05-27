@@ -12,8 +12,11 @@ import Api from '../../Axios';
 import { Section } from '../../components/utils';
 import { SessionContext } from '../../components/store/SessionProvider';
 import TAGS from '../../constants/tags';
+import { useUpdateSharesCount } from '../../hooks';
 
 const CVPage = ({ cv, router, hideShareOptions }) => {
+  const updateSharesCount = useUpdateSharesCount();
+
   const hostname = process.env.SERVER_URL;
   const link = `${hostname}${router.asPath}`;
   const candidateExists = cv && cv.user && cv.user.candidat;
@@ -33,7 +36,7 @@ const CVPage = ({ cv, router, hideShareOptions }) => {
         !document.referrer.includes(window.location.origin)) ||
         !document.referrer)
     ) {
-      // updateShareCount(cv.UserId, 'other');
+      updateSharesCount(cv.UserId, 'other');
     }
   }, []);
 

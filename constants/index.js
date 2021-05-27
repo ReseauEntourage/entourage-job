@@ -293,7 +293,7 @@ const AIRTABLE_NAMES = {
   OFFERS: "Offres d'emploi v2",
 };
 
-const VALUES = { SHARES: 120000 };
+const VALUES = { SHARES: 120000 + 64000 };
 
 const CONTACT_INFO = {
   CORPORATE_CONTACT: 'entreprises@linkedout.fr',
