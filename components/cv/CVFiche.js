@@ -23,15 +23,14 @@ import {
   sortExperiences,
   sortReviews,
 } from '../../utils';
-import { SharesCountContext } from '../store/SharesCountProvider';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
-
+import { useUpdateSharesCount } from '../../hooks';
 /**
  * Le cv en public et en preview
  */
 const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
-  const { incrementSharesCount } = useContext(SharesCountContext);
+  const updateSharesCount = useUpdateSharesCount();
 
   const router = useRouter();
   const hostname = process.env.SERVER_URL;
@@ -78,19 +77,6 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
     return UIkit.modal(`#info-share-${cv.UserId}`).show();
   };
 
-  const updateShareCount = (candidatId, type) => {
-    Api.post('api/v1/cv/count', {
-      candidatId,
-      type,
-    })
-      .then(() => {
-        incrementSharesCount();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
   const experiences = sortExperiences(cv.experiences);
 
   const shareSection = (
@@ -103,7 +89,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
           disabled={actionDisabled}
           onShareWindowClose={() => {
             event(TAGS.PAGE_CV_PARTAGE_CV_LINKEDIN_CLIC);
-            updateShareCount(cv.UserId, 'linkedin');
+            updateSharesCount(cv.UserId, 'linkedin');
             openNewsletterModal();
           }}
           url={link}
@@ -121,7 +107,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
           disabled={actionDisabled}
           onShareWindowClose={() => {
             event(TAGS.PAGE_CV_PARTAGE_CV_FACEBOOK_CLIC);
-            updateShareCount(cv.UserId, 'facebook');
+            updateSharesCount(cv.UserId, 'facebook');
             openNewsletterModal();
           }}
           url={link}
@@ -139,7 +125,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
           disabled={actionDisabled}
           onShareWindowClose={() => {
             event(TAGS.PAGE_CV_PARTAGE_CV_TWITTER_CLIC);
-            updateShareCount(cv.UserId, 'twitter');
+            updateSharesCount(cv.UserId, 'twitter');
             openNewsletterModal();
           }}
           url={link}
@@ -158,7 +144,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
           disabled={actionDisabled}
           onShareWindowClose={() => {
             event(TAGS.PAGE_CV_PARTAGE_CV_WHATSAPP_CLIC);
-            updateShareCount(cv.UserId, 'whatsapp');
+            updateSharesCount(cv.UserId, 'whatsapp');
             openNewsletterModal();
           }}
           url={link}
@@ -180,20 +166,13 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
       <div className="uk-card uk-card-default uk-card-body uk-card-large uk-margin-medium ">
         <GridNoSSR childWidths={['1-1']}>
           <div className="uk-text-center">
-            <h1 className="uk-text-bold uk-heading-medium uk-text-primary">
+            <h1 className="uk-text-bold uk-heading-small uk-text-primary">
               {cv.user.candidat.firstName} {cv.user.candidat.lastName}
             </h1>
             {cv.catchphrase && (
-              <div
-                className="uk-width-xlarge uk-margin-auto"
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  display: 'flex',
-                }}
-              >
+              <div className="uk-flex uk-flex-center uk-margin-medium-top">
                 <h4
-                  className="uk-position-relative"
+                  className="uk-position-relative uk-text-italic"
                   style={{
                     width: 'fit-content',
                     marginBottom: '8px',
@@ -202,7 +181,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   <IconNoSSR
                     className="uk-text-primary ent-quote-after"
                     name="quote-right"
-                    ratio={1.4}
+                    ratio={1.2}
                     flip
                   />
                   <span className="uk-margin-small-left uk-margin-small-right">
@@ -218,7 +197,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
             )}
             {/* uk-text-emphasis uk-text-bold */}
             {cv.ambitions && cv.ambitions.length > 0 && (
-              <h3
+              <h4
                 className="uk-width-xxlarge uk-margin-auto"
                 style={{ fontWeight: 500 }}
               >
@@ -260,7 +239,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                 ) : (
                   '.'
                 )}
-              </h3>
+              </h4>
             )}
             <div className="uk-position-relative uk-margin-medium-top">
               <div
@@ -351,7 +330,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                                 flip
                                 className="uk-text-primary uk-margin-small-bottom"
                                 name="quote-right"
-                                ratio={1.4}
+                                ratio={1.2}
                               />
                               <p className="uk-margin-remove">
                                 {formatParagraph(review.text)}
@@ -384,31 +363,6 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
               )}
             </GridNoSSR>
             <GridNoSSR column gap="medium">
-              {cv.businessLines && cv.businessLines.length > 0 && (
-                <div className="">
-                  <h3 className="uk-margin-small-bottom">
-                    Mes secteurs d&apos;activité
-                  </h3>
-                  <hr className="uk-divider-small uk-margin-remove-top" />
-                  <div className="uk-flex uk-flex-left uk-flex-wrap uk-flex-1">
-                    {cv.businessLines.map((line, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="uk-flex uk-flex-center uk-flex-middle"
-                          style={{
-                            paddingRight: 5,
-                            paddingTop: 5,
-                            paddingBottom: 5,
-                          }}
-                        >
-                          <span className="uk-badge uk-text-small">{line}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
               <div className="">
                 <h3 className="uk-margin-small-bottom">Mes infos pratiques</h3>
                 <hr className="uk-divider-small uk-margin-remove-top" />

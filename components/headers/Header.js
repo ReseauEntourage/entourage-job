@@ -103,7 +103,7 @@ const Header = ({ isHome }) => {
         }
       />
       <OffcanvasNoSSR id="offcanvas-guest">
-        <ul className="uk-nav uk-nav-default">
+        <ul className="uk-nav uk-nav-default uk-margin-medium-top">
           <li>
             <a
               aria-hidden="true"
@@ -134,7 +134,7 @@ const Header = ({ isHome }) => {
               );
             }),
           ]}
-          <li className="uk-margin-small-top">
+          <li className="uk-margin-small-top uk-flex uk-flex-center uk-padding-small">
             <Button
               href="/candidats"
               onClick={() => {
@@ -146,7 +146,7 @@ const Header = ({ isHome }) => {
               <IconNoSSR name="chevron-right" />
             </Button>
           </li>
-          <li className="uk-margin-small-top">
+          <li className="uk-flex uk-flex-center uk-padding-small">
             <Button
               href={EXTERNAL_LINKS.DONATION}
               isExternal

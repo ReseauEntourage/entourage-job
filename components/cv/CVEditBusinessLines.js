@@ -53,6 +53,7 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => {
             defaultValues={{
               businessLines,
             }}
+            description="Ces valeurs ne seront pas affichées sur le CV mais serviront aux recruteurs à filtrer les candidats."
             onSubmit={(fields, closeModal) => {
               closeModal();
               onChange({

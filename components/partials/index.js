@@ -6,3 +6,4 @@ export { default as ShareCandidatesCVTutorial } from './ShareCandidatesCVTutoria
 export { default as LandingPagePartial } from './LandingPagePartial';
 export { default as NumberPartial } from './NumberPartial';
 export { default as SharePartial } from './SharePartial';
+export { default as TeasingPartial } from './TeasingPartial';

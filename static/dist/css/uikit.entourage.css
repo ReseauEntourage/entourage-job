@@ -11,9 +11,9 @@
 html {
   /* 1 */
   font-family: Roboto, sans-serif;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: normal;
-  line-height: 22px;
+  line-height: 20px;
   /* 2 */
   -webkit-text-size-adjust: 100%;
   /* 3 */
@@ -295,7 +295,7 @@ h4,
 }
 h5,
 .uk-h5 {
-  font-size: 17px;
+  font-size: 15px;
   line-height: 1.4;
 }
 h6,
@@ -801,8 +801,8 @@ a.uk-link-reset,
   position: absolute;
   top: 0;
   left: 0;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%226%22%20height%3D%226%22%20viewBox%3D%220%200%206%206%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22%23363636%22%20cx%3D%223%22%20cy%3D%223%22%20r%3D%223%22%20%2F%3E%0A%3C%2Fsvg%3E");
   background-repeat: no-repeat;
   background-position: 50% 50%;
@@ -2092,7 +2092,7 @@ select.uk-form-width-xsmall {
   padding: 0 24px;
   border-radius: 3px;
   min-height: 44px;
-  font-size: 17px;
+  font-size: 15px;
 }
 /* Hover + Focus */
 .uk-button-secondary:hover,
@@ -2154,7 +2154,7 @@ select.uk-form-width-xsmall {
   padding: 0 40px;
   line-height: 53px;
   font-size: 0.875rem;
-  font-size: 17px;
+  font-size: 15px;
 }
 /* Text modifiers
  ========================================================================== */
@@ -2166,13 +2166,13 @@ select.uk-form-width-xsmall {
 .uk-button-text {
   /* 1 */
   padding: 0;
-  line-height: 22px;
+  line-height: 20px;
   background: none;
   /* 2 */
   color: #333;
   position: relative;
   border: none;
-  font-size: 17px;
+  font-size: 15px;
 }
 .uk-button-text::before {
   content: "";
@@ -2207,7 +2207,7 @@ select.uk-form-width-xsmall {
 .uk-button-link {
   /* 1 */
   padding: 0;
-  line-height: 22px;
+  line-height: 20px;
   background: none;
   /* 2 */
   color: #f55f24;
@@ -3440,7 +3440,7 @@ select.uk-form-width-xsmall {
   justify-content: center;
   align-items: center;
   height: inherit;
-  font-size: 14px;
+  font-size: 12px;
   color: #333;
   background-color: #FFF8F5;
   padding: 0 10px;
@@ -3463,7 +3463,7 @@ select.uk-form-width-xsmall {
   display: inline-block;
   padding: 0 10px;
   background: #f55f24;
-  line-height: 22px;
+  line-height: 20px;
   font-size: 0.875rem;
   color: #fff;
   vertical-align: middle;
@@ -3806,7 +3806,7 @@ select.uk-form-width-xsmall {
   line-height: 45px;
   height: 45px;
   padding: 0 25px;
-  font-size: 17px;
+  font-size: 15px;
 }
 /*
  * Icon
@@ -3912,8 +3912,8 @@ ul.uk-nav-sub {
  ========================================================================== */
 .uk-nav-parent-icon > .uk-parent > a::after {
   content: "";
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   float: right;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2014%2014%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22%23363636%22%20stroke-width%3D%221.1%22%20points%3D%2210%201%204%207%2010%2013%22%20%2F%3E%0A%3C%2Fsvg%3E");
   background-repeat: no-repeat;
@@ -3989,7 +3989,7 @@ ul.uk-nav-sub {
  */
 .uk-nav-primary > li > a {
   font-size: 1.5rem;
-  line-height: 22px;
+  line-height: 20px;
   color: #999;
 }
 /* Hover + Focus */
@@ -7265,6 +7265,7 @@ ul.uk-nav-sub {
   font-size: 1.5rem;
   line-height: 1.5;
   color: #333;
+  font-size: 1.15rem;
 }
 .uk-text-meta {
   font-size: 0.875rem;
@@ -8184,7 +8185,7 @@ iframe.uk-cover {
   display: block;
   margin-right: 10px;
   float: left;
-  font-size: 66px;
+  font-size: 60px;
   line-height: 1;
   margin-bottom: -2px;
 }
@@ -10837,7 +10838,7 @@ iframe.uk-cover {
   padding: 0 24px;
   border-radius: 3px;
   min-height: 44px;
-  font-size: 17px;
+  font-size: 15px;
   color: #F55F24;
   background-color: white;
 }
@@ -12668,7 +12669,7 @@ iframe.uk-cover {
   padding: 0 5px;
   min-height: 26px;
   line-height: 26px;
-  font-size: 15px;
+  font-size: 13px;
   cursor: pointer;
   border-color: #e5e5e5;
   background-color: white;
@@ -12680,7 +12681,7 @@ iframe.uk-cover {
   padding: 0 5px;
   min-height: 26px;
   line-height: 26px;
-  font-size: 15px;
+  font-size: 13px;
   cursor: pointer;
   background-color: #F55F24;
   border-color: #F55F24;
@@ -12724,7 +12725,7 @@ iframe.uk-cover {
   line-height: 45px;
   height: 45px;
   padding: 0 25px;
-  font-size: 17px;
+  font-size: 15px;
 }
 .uk-modal-footer > .uk-button {
   margin-left: 15px;
@@ -12797,5 +12798,10 @@ iframe.uk-cover {
 }
 .uk-list-bullet > ::before,
 [class*='uk-list'] > ::before {
-  margin-bottom: -22px;
+  margin-bottom: -20px;
+}
+.uk-nav-default > li {
+  height: 38px;
+  display: flex;
+  align-items: center;
 }

@@ -11,88 +11,92 @@ const OFFER_STATUS = [
 
 const BUSINESS_LINES = [
   {
-    value: 'Administration / Fonction publique',
-    label: 'Administration / Fonction publique',
+    label: 'Accueil / Administratif / Gestion / Comptabilité',
+    value: 'Accueil / Administratif / Gestion / Comptabilité',
   },
   {
-    value: 'Agroalimentaire',
-    label: 'Agroalimentaire',
+    label: 'Artisanat / Art',
+    value: 'Artisanat / Art',
   },
   {
-    value: "Artisanat d'art",
-    label: "Artisanat d'art",
+    label: 'Associatif',
+    value: 'Associatif',
   },
   {
-    value: 'Associations',
-    label: 'Associations',
+    label: 'Bâtiment',
+    value: 'Bâtiment',
   },
   {
-    value: 'Banques / Assurances / Services financiers',
-    label: 'Banques / Assurances / Services financiers',
-  },
-  {
-    value: 'Commerce de détail / Grande distribution',
-    label: 'Commerce de détail / Grande distribution',
-  },
-  {
-    value: 'Communication / Marketing / Information',
     label: 'Communication / Marketing / Information',
+    value: 'Communication / Marketing / Information',
   },
   {
-    value: 'Construction / Bâtiment / Travaux publics',
-    label: 'Construction / Bâtiment / Travaux publics',
+    label: 'Électronique',
+    value: 'Électronique',
   },
   {
-    value: 'Culture / Sports / Loisirs',
-    label: 'Culture / Sports / Loisirs',
+    label: 'Entretien',
+    value: 'Entretien',
   },
   {
-    value: 'Énergie',
-    label: 'Énergie',
+    label: 'Espaces Verts / Agriculture / Maraîchage',
+    value: 'Espaces Verts / Agriculture / Maraîchage',
   },
   {
-    value: "Environnement / Traitement des déchets et de l'eau",
-    label: "Environnement / Traitement des déchets et de l'eau",
+    label: 'Grande distribution',
+    value: 'Grande distribution',
   },
   {
-    value: 'Gestion / Administration des entreprises',
-    label: 'Gestion / Administration des entreprises',
+    label: 'Hôtellerie / tourisme',
+    value: 'Hôtellerie / tourisme',
   },
   {
-    value: 'Hôtellerie / Restauration / Tourisme',
-    label: 'Hôtellerie / Restauration / Tourisme',
-  },
-  {
-    value: 'Immobilier',
-    label: 'Immobilier',
-  },
-  {
-    value: 'Industrie textile',
-    label: 'Industrie textile',
-  },
-  {
-    value: 'Informatique',
     label: 'Informatique',
+    value: 'Informatique',
   },
   {
-    value: 'Logistique / Transports',
-    label: 'Logistique / Transports',
+    label: 'Logistique / Préparation de commande / Magasinier',
+    value: 'Logistique / Préparation de commande / Magasinier',
   },
   {
-    value: 'Matériel électrique / Électronique / Optique',
-    label: 'Matériel électrique / Électronique / Optique',
+    label: 'Maintenance / Manutention',
+    value: 'Maintenance / Manutention',
   },
   {
-    value: 'Mécanique / Métallurgie',
     label: 'Mécanique / Métallurgie',
+    value: 'Mécanique / Métallurgie',
   },
   {
-    value: 'Santé / Action sociale',
-    label: 'Santé / Action sociale',
+    label: 'Production',
+    value: 'Production',
   },
   {
-    value: 'Services aux particuliers / Aux collectivités / Aux entreprises',
-    label: 'Services aux particuliers / Aux collectivités / Aux entreprises',
+    label: 'Restauration',
+    value: 'Restauration',
+  },
+  {
+    label: 'Santé / Aide à la personne / Action sociale',
+    value: 'Santé / Aide à la personne / Action sociale',
+  },
+  {
+    label: 'Sécurité',
+    value: 'Sécurité',
+  },
+  {
+    label: 'Services aux particuliers / Garde d’enfants',
+    value: 'Services aux particuliers / Garde d’enfants',
+  },
+  {
+    label: 'Traitement des déchets / Eau',
+    value: 'Traitement des déchets / Eau',
+  },
+  {
+    label: 'Transports / Livraisons',
+    value: 'Transports / Livraisons',
+  },
+  {
+    label: 'Vente (conseil client, caisse …)',
+    value: 'Vente (conseil client, caisse …)',
   },
 ];
 
@@ -145,9 +149,19 @@ const LOCATIONS = [
     value: 'Lille (59)',
     label: 'Lille (59)',
   },
+  {
+    value: 'Lyon (69)',
+    label: 'Lyon (69)',
+  },
 ];
 
 const CV_FILTERS_DATA = [
+  {
+    key: 'hideEmployed',
+    type: 'checkbox',
+    constants: [{ label: 'Masquer les candidats employés', value: true }],
+    title: 'Masquer les candidats ayant retrouvé un emploi',
+  },
   {
     key: 'businessLines',
     constants: BUSINESS_LINES,
@@ -159,12 +173,6 @@ const CV_FILTERS_DATA = [
     constants: LOCATIONS,
     title: 'Secteurs géographiques',
     tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
-  },
-  {
-    key: 'hideEmployed',
-    type: 'checkbox',
-    constants: [{ label: 'Masquer les candidats employés', value: true }],
-    title: 'Masquer les candidats ayant retrouvé un emploi',
   },
 ];
 
@@ -285,12 +293,12 @@ const AIRTABLE_NAMES = {
   OFFERS: "Offres d'emploi v2",
 };
 
-const VALUES = { SHARES: 120000 };
+const VALUES = { SHARES: 120000 + 64000 };
 
 const CONTACT_INFO = {
   CORPORATE_CONTACT: 'entreprises@linkedout.fr',
   MAIN_PHONE_NUMBER: '01 88 24 70 70',
-  MOBILE_PHONE_NUMBER: '07 68 03 73 48',
+  MOBILE_PHONE_NUMBER: '07 82 44 97 39',
 };
 
 const INITIAL_NB_OF_CV_TO_DISPLAY = 9;

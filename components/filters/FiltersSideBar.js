@@ -58,14 +58,14 @@ const FiltersSideBar = ({ filterData, filters, setFilters }) => {
       className="ent-filter-menu uk-padding-medium-top"
       flip={false}
     >
-      <div className="uk-margin-small-top">
+      <div className="uk-margin-medium-top">
         {filterData.map(({ title, constants, key, tag, type }) => {
           if (type && type === 'checkbox') {
             return (
               <div key={key}>
                 <label
                   htmlFor="hide-employed"
-                  className="uk-text-bold uk-flex uk-flex-middle"
+                  className="uk-text-bold uk-flex uk-flex-middle uk-margin-medium-bottom uk-margin-small-top"
                 >
                   <div className="uk-flex-1">{title}</div>
                   <input

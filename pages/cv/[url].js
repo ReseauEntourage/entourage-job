@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import {
@@ -10,10 +10,12 @@ import { CVBackground, CVFiche } from '../../components/cv';
 import Layout from '../../components/Layout';
 import Api from '../../Axios';
 import { Section } from '../../components/utils';
-import { SessionContext } from '../../components/store/SessionProvider';
 import TAGS from '../../constants/tags';
+import { useUpdateSharesCount } from '../../hooks';
 
 const CVPage = ({ cv, router, hideShareOptions }) => {
+  const updateSharesCount = useUpdateSharesCount();
+
   const hostname = process.env.SERVER_URL;
   const link = `${hostname}${router.asPath}`;
   const candidateExists = cv && cv.user && cv.user.candidat;
@@ -24,22 +26,13 @@ const CVPage = ({ cv, router, hideShareOptions }) => {
     ? `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`
     : '';
 
-  const { isFirstLoad } = useContext(SessionContext);
-
   useEffect(() => {
-    if (
-      isFirstLoad &&
-      ((document.referrer &&
-        !document.referrer.includes(window.location.origin)) ||
-        !document.referrer)
-    ) {
-      // updateShareCount(cv.UserId, 'other');
-    }
+    updateSharesCount(cv.UserId, 'other');
   }, []);
 
   if (!cv) {
     return (
-      <Layout title="Page introuvable - LinkedOut">
+      <Layout title="Page introuvable - LinkedOut" noIndex>
         <Section className="uk-text-center" size="large">
           <h2>Ce profil n’est pas disponible</h2>
           <p>

@@ -8,7 +8,7 @@ const Candidats = () => {
   return (
     <Layout title="Les candidats - LinkedOut">
       <ShareCandidatesCVTutorial />
-      <SearchCandidates />
+      <SearchCandidates defaultHideEmployed />
     </Layout>
   );
 };

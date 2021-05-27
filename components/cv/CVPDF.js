@@ -90,7 +90,7 @@ const CVPDF = ({ cv, page }) => {
                       ratio={1}
                       flip
                     />
-                    <span className="uk-margin-small-left uk-margin-small-right">
+                    <span className="uk-margin-small-left uk-margin-small-right uk-text-italic">
                       {cv.catchphrase}
                     </span>
                     <IconNoSSR
@@ -182,33 +182,6 @@ const CVPDF = ({ cv, page }) => {
                 )}
               </GridNoSSR>
               <GridNoSSR column gap="medium">
-                {cv.businessLines && cv.businessLines.length > 0 && (
-                  <div className="">
-                    <h5 className="uk-margin-small-bottom">
-                      Mes secteurs d&apos;activité
-                    </h5>
-                    <hr className="uk-divider-small uk-margin-remove-top" />
-                    <div className="uk-flex uk-flex-left uk-flex-wrap uk-flex-1">
-                      {cv.businessLines.map((line, index) => {
-                        return (
-                          <div
-                            key={index}
-                            className="uk-flex uk-flex-center uk-flex-middle"
-                            style={{
-                              paddingRight: 5,
-                              paddingTop: 5,
-                              paddingBottom: 5,
-                            }}
-                          >
-                            <span className="uk-badge uk-text-small">
-                              {line}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
                 {(cv.contracts ||
                   cv.locations ||
                   cv.availability ||
@@ -318,6 +291,21 @@ const CVPDF = ({ cv, page }) => {
                     </ul>
                   </div>
                 )}
+                {cv.skills && cv.skills.length > 0 && (
+                  <div className="">
+                    <h5 className="uk-margin-small-bottom">Mes atouts</h5>
+                    <hr className="uk-divider-small uk-margin-remove-top" />
+                    <ul className="uk-list uk-margin-remove-bottom uk-text-small">
+                      {cv.skills.map((item, i) => {
+                        return (
+                          <li id={i} key={i}>
+                            {item}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
               </GridNoSSR>
             </GridNoSSR>
           </GridNoSSR>
@@ -422,21 +410,6 @@ const CVPDF = ({ cv, page }) => {
                 )}
               </GridNoSSR>
               <GridNoSSR column gap="medium">
-                {cv.skills && cv.skills.length > 0 && (
-                  <div className="">
-                    <h5 className="uk-margin-small-bottom">Mes atouts</h5>
-                    <hr className="uk-divider-small uk-margin-remove-top" />
-                    <ul className="uk-list uk-margin-remove-bottom uk-text-small">
-                      {cv.skills.map((item, i) => {
-                        return (
-                          <li id={i} key={i}>
-                            {item}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                )}
                 {cv.passions && cv.passions.length > 0 && (
                   <div className="">
                     <h5 className="uk-margin-small-bottom">Mes passions</h5>

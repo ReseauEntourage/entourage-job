@@ -1,7 +1,8 @@
 import React from 'react';
+import MultipleCTA from '../components/partials/MultipleCTA';
 import Partners from '../components/partials/Partners';
 import CandidateTestimoniesOrientation from '../components/sections/CandidateTestimoniesOrientation';
-import { CONTACT_INFO, EXTERNAL_LINKS } from '../constants';
+import { CONTACT_INFO } from '../constants';
 import WhoFor from '../components/sections/WhoFor';
 import WhatItBringsToCandidates from '../components/sections/WhatItBringsToCandidates';
 import Layout from '../components/Layout';
@@ -9,6 +10,28 @@ import { IconNoSSR, Section, SimpleLink } from '../components/utils';
 import SimpleSection from '../components/sections/SimpleSection';
 import Button from '../components/utils/Button';
 import ImageTitle from '../components/sections/ImageTitle';
+
+const steps = [
+  {
+    text:
+      "Participez à un webinaire d'information LinkedOut pour confirmer la pertinence du dispositif LinkedOut pour la personne que vous souhaitez orienter",
+    button: {
+      label: 'Je participe au webinaire de présentation',
+      href: `${process.env.WEBINAR_URL}`,
+      external: true,
+      newTab: true,
+    },
+  },
+  {
+    text: 'Pré-inscrivez votre candidat ci-dessous',
+    button: {
+      label: 'Pré-inscrire un candidat',
+      href: `${process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION}`,
+      external: true,
+      newTab: true,
+    },
+  },
+];
 
 const Orienter = () => {
   return (
@@ -62,12 +85,13 @@ const Orienter = () => {
           <Button
             uk-scrollspy="cls:uk-animation-slide-bottom; delay: 200;"
             className="uk-margin-medium-top"
-            href={process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION}
+            href={process.env.WEBINAR_URL}
             style="secondary"
             isExternal
             newTab
           >
-            Promo #3 spéciale jeunes&nbsp;: orienter un candidat{' '}
+            Je souhaite orienter un candidat&nbsp;: je m&apos;inscris au
+            webinaire d&apos;info&nbsp;!
             <IconNoSSR name="chevron-right" />
           </Button>
         </div>
@@ -77,53 +101,62 @@ const Orienter = () => {
       <SimpleSection
         style="default"
         container="small"
+        id="orientationCandidate"
         title={
           <>
-            Prochaines <span className="uk-text-primary">inscriptions</span>
+            Vous souhaitez orienter un candidat&nbsp;?{' '}
+            <span className="uk-text-primary">Comment faire&nbsp;?</span>
           </>
         }
         fontSize="small"
         text={
-          <span className="uk-text-center">
-            Nous lançons une prochaine promotion en mai 2021{' '}
-            <span className="uk-text-bold">
-              dédiées aux jeunes (18 à 25 ans issus de l&apos;Aide Sociale à
-              l&apos;Enfance ou en situation de précarite) résidants dans le 75,
-              93 et 92.
-            </span>{' '}
-            Cette promotion se lance en collaboration avec l&apos;association{' '}
-            <span className="uk-text-bold">
-              <SimpleLink
-                isExternal
-                target="_blank"
-                href={EXTERNAL_LINKS.REPAIRS_75}
-              >
-                Repairs! - le réseau d’entraide après l’ASE
-              </SimpleLink>
-            </span>
-            , spécialisée dans l’accompagnement des jeunes issus de l’aide
-            sociale à l&apos;enfance.
-            <br />
-            <br />
-            <span className="uk-text-primary uk-text-bold">
-              Les inscriptions sont ouvertes&nbsp;!
-            </span>
-            <br />
-            <br />
-            <span className="uk-text-bold">
-              Vous accompagnez un jeune qui rentre dans ces critères, motivé
-              pour travailler et disponible pour participer au programme&nbsp;?
-            </span>
-          </span>
+          <>
+            <div>
+              Nous accompagnons plusieurs promotions par an à Paris, dans le 92
+              et le 93, à Lille et Lyon. Les prochaines promotions débuteront en
+              septembre 2021 sur ces territoires.
+              <br />
+              <br />
+              <span className="uk-text-bold">
+                Vous accompagnez une personne qui répond aux critères ci-dessus,
+                motivée pour travailler et disponible pour participer au
+                programme&nbsp;?
+              </span>
+            </div>
+          </>
         }
-        button={{
-          label: ' Orienter un candidat',
-          href: `${process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION}`,
-          external: true,
-          newTab: true,
-        }}
-        id="nextPromotion"
       >
+        <div>
+          {steps.map((step, index, array) => {
+            return (
+              <div key={step.toString()}>
+                <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle uk-padding">
+                  <div className="uk-flex uk-flex-middle uk-flex-center">
+                    <div
+                      className="uk-flex uk-flex-top uk-text-bold uk-text-primary uk-text-large uk-margin-small-right uk-text-nowrap"
+                      style={{ fontSize: 36, lineHeight: 1 }}
+                    >
+                      {index + 1}.
+                    </div>
+                    <p className="uk-text-bold uk-margin-remove">{step.text}</p>
+                  </div>
+                  <Button
+                    className="uk-margin-medium-top"
+                    href={step.button.href}
+                    style="secondary"
+                    isExternal={step.button.external}
+                    newTab={step.button.external}
+                  >
+                    {step.button.label}
+                    &nbsp;
+                    <IconNoSSR name="chevron-right" />
+                  </Button>
+                </div>
+                {index < array.length - 1 && <hr />}
+              </div>
+            );
+          })}
+        </div>
         <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle uk-margin-large-top">
           <span className="uk-text-center">
             Les candidats inscrits disposant des pré-requis nécessaires pour
@@ -131,7 +164,7 @@ const Orienter = () => {
             <span className="uk-text-bold">
               session d’information collective
             </span>{' '}
-            en avril 2021 puis à un{' '}
+            en amont du lancement de la promotion puis à un{' '}
             <span className="uk-text-bold">
               entretien individuel obligatoire pour valider leur entrée dans le
               dispositif.

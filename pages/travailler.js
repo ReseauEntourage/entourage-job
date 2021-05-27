@@ -56,21 +56,9 @@ const Travailler = () => {
             <br />
             <br />
             <span>
-              Vous avez entre <span className="uk-text-bold">18 et 25 ans</span>{' '}
-              et vous résidez à{' '}
-              <span className="uk-text-bold">Paris, dans le 92 ou le 93</span>
-              &nbsp;?
-              <br />
-              Rejoignez le programme dès maintenant&nbsp;!
-            </span>
-            <br />
-            <br />
-            <span>
-              Vous avez <span className="uk-text-bold">plus de 25 ans</span> et
-              vous résidez à{' '}
-              <span className="uk-text-bold">Paris, Lille ou Lyon</span>&nbsp;?
-              <br />
-              Vous pourrez rejoindre la promotion de Septembre 2021.
+              Nous lançons les prochaines promotions à Paris, dans le 92 et 93,
+              à Lille et Lyon en septembre 2021&nbsp;: rejoignez le
+              programme&nbsp;!
             </span>
           </h4>
         </div>
