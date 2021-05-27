@@ -61,7 +61,9 @@ const CandidatListPartial = () => {
             ceux qui en ont le plus besoin.
           </p>
           <h4 className="uk-text-bold">
-            Grâce à vous, les CV des candidats ont déjà été consultés&nbsp;
+            Grâce à vos partages, les CV ont été rendus visibles
+            <br className="uk-visible@m" />
+            &nbsp;plus de&nbsp;
             <div
               className="uk-hidden@m uk-text-primary uk-text-normal uk-flex uk-flex-center uk-flex-middle"
               style={{ fontSize: 38, fontWeight: 500 }}
