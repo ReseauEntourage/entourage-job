@@ -47,8 +47,8 @@ const BUSINESS_LINES = [
     value: 'Grande distribution',
   },
   {
-    label: 'Hôtellerie / tourisme',
-    value: 'Hôtellerie / tourisme',
+    label: 'Hôtellerie / Tourisme',
+    value: 'Hôtellerie / Tourisme',
   },
   {
     label: 'Informatique',
