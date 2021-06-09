@@ -13,6 +13,63 @@ const Footer = () => {
 
   const showAssociationEntourage = !asPath.includes('/entreprises');
 
+  const linkedOut = (
+    <span
+      style={{
+        fontWeight: 700,
+        color: 'white',
+        fontSize: '16px',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      Linked
+      <span
+        style={{
+          background: 'rgb(245, 95, 36)',
+          borderRadius: '2px',
+          display: 'inline-block',
+          lineHeight: '17px',
+          marginLeft: '2px',
+          padding: '0 2px',
+        }}
+      >
+        out
+      </span>
+    </span>
+  );
+
+  const linkedIn = (
+    <a
+      className="ent-logo-hover"
+      href="https://www.linkedin.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span
+        style={{
+          fontWeight: 700,
+          color: 'white',
+          fontSize: '16px',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        Linked
+        <span
+          style={{
+            background: '#0077b5',
+            borderRadius: '2px',
+            display: 'inline-block',
+            lineHeight: '17px',
+            marginLeft: '2px',
+            padding: '0 2px',
+          }}
+        >
+          in
+        </span>
+      </span>
+    </a>
+  );
+
   return (
     <footer id="footer">
       {asPath === '/' && <Partners />}
@@ -21,90 +78,14 @@ const Footer = () => {
         <GridNoSSR middle center column childWidths={['1-1']} gap="medium">
           {asPath === '/' && (
             <div className="uk-text-center uk-light">
-              <a
-                className="ent-logo-hover"
-                href="https://www.linkedin.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span
-                  style={{
-                    fontWeight: 700,
-                    color: 'white',
-                    fontSize: '16px',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  Linked
-                  <span
-                    style={{
-                      background: '#0077b5',
-                      borderRadius: '2px',
-                      display: 'inline-block',
-                      lineHeight: '17px',
-                      marginLeft: '2px',
-                      padding: '0 2px',
-                    }}
-                  >
-                    in
-                  </span>
-                </span>
-              </a>
-              {' soutient le projet '}
-              <span
-                style={{
-                  fontWeight: 700,
-                  color: 'white',
-                  fontSize: '16px',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Linked
-                <span
-                  style={{
-                    background: 'rgb(245, 95, 36)',
-                    borderRadius: '2px',
-                    display: 'inline-block',
-                    lineHeight: '17px',
-                    marginLeft: '2px',
-                    padding: '0 2px',
-                  }}
-                >
-                  out
-                </span>
-              </span>
-              {
-                ' porté par l’association Entourage, qui permet le retour à l’emploi des plus précaires. '
-              }
-              <span
-                style={{
-                  fontWeight: 700,
-                  color: 'white',
-                  fontSize: '16px',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Linked
-                <span
-                  style={{
-                    background: '#0077b5',
-                    borderRadius: '2px',
-                    display: 'inline-block',
-                    lineHeight: '17px',
-                    marginLeft: '2px',
-                    padding: '0 2px',
-                  }}
-                >
-                  in
-                </span>
-              </span>
-              {
-                ' soutient les valeurs véhiculées par le dispositif, et se félicite de pouvoir contribuer à son succès en lui faisant bénéficier de la renommée de ses marques.'
-              }
               <p>
-                L&apos;usage des marques LinkedOut est autorisé dans le cadre
-                d&apos;une licence consentie par la société LinkedIn Ireland
-                Unlimited.
+                {linkedOut} est un est un projet porté par l’association
+                Entourage, qui permet l’accompagnement des personnes les plus
+                précaires ou en situation d’exclusion pour un retour à l’emploi.{' '}
+                {linkedIn} soutient la mission et les valeurs véhiculées par ce
+                dispositif, et a contribué au lancement de ce projet en ayant
+                accordé une utilisation limitée de sa marque {linkedOut} par le
+                biais d’une licence.
               </p>
             </div>
           )}
