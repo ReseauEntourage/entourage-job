@@ -316,8 +316,8 @@ const partnersPlaces = [
   },
   {
     title: 'Océan',
-    lat: 47.2249191,
-    lng: 1.6429736,
+    lat: 47.2249155,
+    lng: -1.6429736,
     address: '15, rue Gustave Eiffel, 44800 Saint-Herblain',
     contactName: 'Marion MESSAGÉ',
     contactFunction: 'Coordinatrice',
@@ -328,7 +328,7 @@ const partnersPlaces = [
   {
     title: "Trajet – Atelier Bara'Mel",
     lat: 47.2576057,
-    lng: 1.6565575,
+    lng: -1.6565575,
     address: '9, route de Brimberne, 44880 Sautron',
     contactName: 'Marion MESSAGÉ',
     contactFunction: 'Coordinatrice',
