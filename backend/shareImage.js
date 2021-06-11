@@ -1,10 +1,7 @@
 const sharp = require('sharp');
 const TextToSVG = require('text-to-svg');
 
-// sharp.cache(false);
-
-const textToSVG = TextToSVG.loadSync('./static/fonts/Roboto-Regular.ttf');
-const textToSVGBold = TextToSVG.loadSync('./static/fonts/Roboto-Black.ttf');
+sharp.cache(false);
 
 // TOOLS
 const buildLines = async (lines, font, option) => {
@@ -123,6 +120,9 @@ const createCandidatPreviewV2 = async (
   gender
 ) => {
   const getCadran = async (cadranWidth, cadranHeight, cadranMargin) => {
+    const textToSVG = TextToSVG.loadSync('./static/fonts/Roboto-Regular.ttf');
+    const textToSVGBold = TextToSVG.loadSync('./static/fonts/Roboto-Black.ttf');
+
     const fontRatio = cadranWidth * 2;
     // text
     const options = [
