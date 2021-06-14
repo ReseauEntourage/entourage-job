@@ -5,10 +5,9 @@ const fs = require('fs');
 const puppeteer = require('puppeteer-core');
 const PDFMerger = require('pdf-merger-js');
 const moment = require('moment');
+const { forceGC } = require('../utils');
 const S3 = require('./Aws');
 const RedisManager = require('../utils/RedisManager');
-
-const { INITIAL_NB_OF_CV_TO_DISPLAY } = require('../../constants');
 
 const {
   models,
@@ -737,6 +736,8 @@ const generatePdfFromCV = async (userId, token, paths) => {
   if (fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
   if (fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
   if (fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
+
+  forceGC();
 
   return S3.getSignedUrl(s3Key);
 };

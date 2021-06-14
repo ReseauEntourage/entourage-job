@@ -1,7 +1,8 @@
 const sharp = require('sharp');
 const TextToSVG = require('text-to-svg');
+const { forceGC } = require('./utils');
 
-sharp.cache(false);
+sharp.concurrency(1);
 
 // TOOLS
 const buildLines = async (lines, font, option) => {
@@ -516,6 +517,8 @@ const createCandidatPreviewV2 = async (
     height: cardHeight,
     width: cardWidth,
   } = await getCard(cardCote, cardPadding);
+
+  forceGC();
 
   return sharp(image)
     .resize(imageWidth, imageHeight)
