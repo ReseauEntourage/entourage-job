@@ -8,7 +8,7 @@ const CVController = require('../../../controllers/CV');
 const ShareController = require('../../../controllers/Share');
 const S3 = require('../../../controllers/Aws');
 const { getTokenFromHeaders } = require('../../../controllers/Auth');
-const { addToWorkQueue } = require('../../../jobs');
+const { addToWorkQueue, addToImageQueue } = require('../../../jobs');
 const { logger } = require('../../../utils/Logger');
 
 const {
@@ -158,7 +158,7 @@ router.post(
             }
           }
 
-          await addToWorkQueue({
+          await addToImageQueue({
             type: JOBS.JOB_TYPES.GENERATE_CV_PREVIEW,
             candidatId: reqCV.UserId,
             oldImg,

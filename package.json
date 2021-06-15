@@ -7,7 +7,8 @@
     "node": "12.x"
   },
   "scripts": {
-    "worker": "node --expose-gc ./backend/worker.js",
+    "mainWorker": "node --expose-gc ./backend/mainWorker.js",
+    "imageWorker": "node --expose-gc ./backend/imageWorker.js",
     "dev": "nodemon -r dotenv/config ./backend/serveur-next.js",
     "dev-server": "nodemon --watch ./backend/* -r dotenv/config ./backend/serveur-next.js",
     "dev-front": "node -r dotenv/config ./backend/serveur-next.js",
@@ -79,7 +80,7 @@
     "node-mailjet": "^3.3.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "pdf-merger-js": "^3.0.5",
+    "pdf-lib": "^1.16.0",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "prop-types": "^15.7.2",
