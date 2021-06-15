@@ -48,7 +48,7 @@ export default {
       name: 'locations',
       type: 'text',
       title: 'Lieu de travail souhaité',
-      component: 'select-request-creatable',
+      component: 'select-request',
       options: getAllFilters(LOCATIONS),
       isMulti: true,
     },
