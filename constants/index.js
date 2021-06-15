@@ -102,56 +102,62 @@ const BUSINESS_LINES = [
 
 const LOCATIONS = [
   {
-    value: 'Île-de-France',
-    label: 'Île-de-France',
+    value: 'France entière',
+    label: 'France entière',
     children: [
       {
-        value: 'Paris & proche banlieue',
-        label: 'Paris & proche banlieue',
+        value: 'Île-de-France',
+        label: 'Île-de-France',
         children: [
           {
-            value: 'Val-de-Marne (94)',
-            label: 'Val-de-Marne (94)',
+            value: 'Paris & proche banlieue',
+            label: 'Paris & proche banlieue',
+            children: [
+              {
+                value: 'Val-de-Marne (94)',
+                label: 'Val-de-Marne (94)',
+              },
+              {
+                value: 'Seine-Saint-Denis (93)',
+                label: 'Seine-Saint-Denis (93)',
+              },
+              {
+                value: 'Hauts-de-Seine (92)',
+                label: 'Hauts-de-Seine (92)',
+              },
+              {
+                value: 'Paris (75)',
+                label: 'Paris (75)',
+              },
+            ],
           },
           {
-            value: 'Seine-Saint-Denis (93)',
-            label: 'Seine-Saint-Denis (93)',
+            value: "Val-d'Oise (95)",
+            label: "Val-d'Oise (95)",
           },
           {
-            value: 'Hauts-de-Seine (92)',
-            label: 'Hauts-de-Seine (92)',
+            value: 'Essonne (91)',
+            label: 'Essonne (91)',
           },
           {
-            value: 'Paris (75)',
-            label: 'Paris (75)',
+            value: 'Yvelines (78)',
+            label: 'Yvelines (78)',
+          },
+          {
+            value: 'Seine-et-Marne (77)',
+            label: 'Seine-et-Marne (77)',
           },
         ],
       },
       {
-        value: "Val-d'Oise (95)",
-        label: "Val-d'Oise (95)",
+        value: 'Lille (59)',
+        label: 'Lille (59)',
       },
       {
-        value: 'Essonne (91)',
-        label: 'Essonne (91)',
-      },
-      {
-        value: 'Yvelines (78)',
-        label: 'Yvelines (78)',
-      },
-      {
-        value: 'Seine-et-Marne (77)',
-        label: 'Seine-et-Marne (77)',
+        value: 'Lyon (69)',
+        label: 'Lyon (69)',
       },
     ],
-  },
-  {
-    value: 'Lille (59)',
-    label: 'Lille (59)',
-  },
-  {
-    value: 'Lyon (69)',
-    label: 'Lyon (69)',
   },
 ];
 
