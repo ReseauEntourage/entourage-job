@@ -80,7 +80,7 @@
     "node-mailjet": "^3.3.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "pdf-merger-js": "^3.0.5",
+    "pdf-lib": "^1.16.0",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "prop-types": "^15.7.2",
