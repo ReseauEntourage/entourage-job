@@ -1,74 +1,35 @@
-// eslint-disable-next-line import/order
 const loadEnvironementVariables = require('./utils/env');
 
 loadEnvironementVariables();
 
+// eslint-disable-next-line import/order
 const throng = require('throng');
-const Pusher = require('pusher');
 
-const { getWorkQueue } = require('./utils/WorkQueue');
+const { getMainWorkQueue } = require('./utils/WorkQueue');
 
 const { JOBS, SOCKETS } = require('../constants');
 const {
+  attachListeners,
   generatePDF,
-  generatePreview,
   cacheCV,
   cacheAllCVs,
   createCVSearchString,
   sendMailBackground,
   insertAirtable,
   updateOpportunityAirtable,
+  workers,
+  pusher,
+  maxJobsPerWorker,
 } = require('./jobs');
 
-const workers = process.env.WEB_CONCURRENCY
-  ? parseInt(process.env.WEB_CONCURRENCY, 10)
-  : 1;
-
-const maxJobsPerWorker = process.env.JOBS_MAX_PER_WORKER
-  ? parseInt(process.env.JOBS_MAX_PER_WORKER, 10)
-  : 50;
-
-const pusher = new Pusher({
-  appId: process.env.PUSHER_APP_ID,
-  key: process.env.PUSHER_API_KEY,
-  secret: process.env.PUSHER_API_SECRET,
-  cluster: 'eu',
-  useTLS: true,
-});
-
 const start = () => {
-  const workQueue = getWorkQueue();
+  const workQueue = getMainWorkQueue();
 
-  workQueue.on('completed', (job, result) => {
-    console.log(
-      `Job ${job.id} of type ${job.data.type} completed with result : "${result}"`
-    );
-  });
-
-  workQueue.on('failed', (job, err) => {
-    // TODO send error to socket to stop loading if preview or PDF
-    console.error(
-      `Job ${job.id} of type ${job.data.type} failed with error : "${err}"`
-    );
-  });
-
-  workQueue.on('waiting', (jobId) => {
-    console.log(`Job ${jobId} is waiting to be processed`);
-  });
-
-  workQueue.on('active', (job) => {
-    const timeInQueue = job.processedOn - job.timestamp;
-    console.log(
-      `Job ${job.id} of type ${job.data.type} has started after waiting for ${timeInQueue} ms`
-    );
-  });
-
-  workQueue.on('error', (error) => {
-    console.error(`An error occured on the work queue : "${error}"`);
-  });
+  attachListeners(workQueue);
 
   workQueue.process(maxJobsPerWorker, async (job) => {
     const { data } = job;
+
     switch (data.type) {
       case JOBS.JOB_TYPES.GENERATE_CV_PDF:
         await generatePDF(data.candidatId, data.token, data.paths);
@@ -80,21 +41,6 @@ const start = () => {
           }
         );
         return `PDF generated for User ${data.candidatId} : ${data.paths[2]}`;
-
-      case JOBS.JOB_TYPES.GENERATE_CV_PREVIEW:
-        const previewImageName = await generatePreview(
-          data.candidatId,
-          data.uploadedImg,
-          data.oldImg
-        );
-        await pusher.trigger(
-          SOCKETS.CHANNEL_NAMES.CV_PREVIEW,
-          SOCKETS.EVENTS.CV_PREVIEW_DONE,
-          {
-            candidatId: data.candidatId,
-          }
-        );
-        return `Preview generated for User ${data.candidatId} : ${previewImageName}`;
 
       case JOBS.JOB_TYPES.CACHE_CV:
         const cv = await cacheCV(data.url, data.candidatId);

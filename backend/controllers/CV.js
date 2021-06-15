@@ -688,12 +688,10 @@ const generatePdfFromCV = async (userId, token, paths) => {
 
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--single-process', '--no-zygote'],
+    args: ['--no-sandbox'],
     executablePath: process.env.CHROME_PATH,
   });
-  console.log('PUPPETEER LAUNCH');
   const page = await browser.newPage();
-  console.log('PUPPETEER NEW PAGE');
   const merger = new PDFMerger();
 
   const options = {
@@ -705,7 +703,6 @@ const generatePdfFromCV = async (userId, token, paths) => {
     `${process.env.SERVER_URL}/cv/pdf/${userId}?token=${token}&page=0`,
     { waitUntil: 'networkidle2' }
   );
-  console.log('PUPPETEER GOTO');
 
   await page.addStyleTag(options);
   await page.emulateMediaType('screen');
@@ -714,7 +711,6 @@ const generatePdfFromCV = async (userId, token, paths) => {
     preferCSSPageSize: true,
     printBackground: true,
   });
-  console.log('PUPPETEER PDF');
 
   merger.add(paths[0]);
 
@@ -722,7 +718,6 @@ const generatePdfFromCV = async (userId, token, paths) => {
     `${process.env.SERVER_URL}/cv/pdf/${userId}?token=${token}&page=1`,
     { waitUntil: 'networkidle2' }
   );
-  console.log('PUPPETEER GOTO 2');
 
   await page.addStyleTag(options);
   await page.emulateMediaType('screen');
@@ -731,12 +726,10 @@ const generatePdfFromCV = async (userId, token, paths) => {
     preferCSSPageSize: true,
     printBackground: true,
   });
-  console.log('PUPPETEER PDF 2');
 
   merger.add(paths[1]);
 
   await browser.close();
-  console.log('PUPPETEER BROWSER CLOSE');
 
   await merger.save(paths[2]);
 

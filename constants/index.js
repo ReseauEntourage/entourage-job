@@ -274,7 +274,10 @@ const JOBS = {
     INSERT_AIRTABLE: 'insert_airtable',
     UPDATE_AIRTABLE: 'update_airtable',
   },
-  QUEUES: { WORK: 'work' },
+  QUEUES: {
+    WORK: 'work',
+    IMAGE: 'image',
+  },
 };
 
 const SOCKETS = {
