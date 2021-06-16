@@ -1,13 +1,14 @@
 {
   "name": "linkedout",
-  "version": "1.9.4",
+  "version": "1.9.5",
   "description": "",
   "main": "index.js",
   "engines": {
     "node": "12.x"
   },
   "scripts": {
-    "worker": "node ./backend/worker.js",
+    "mainWorker": "node --expose-gc ./backend/mainWorker.js",
+    "imageWorker": "node --expose-gc ./backend/imageWorker.js",
     "dev": "nodemon -r dotenv/config ./backend/serveur-next.js",
     "dev-server": "nodemon --watch ./backend/* -r dotenv/config ./backend/serveur-next.js",
     "dev-front": "node -r dotenv/config ./backend/serveur-next.js",
@@ -79,7 +80,7 @@
     "node-mailjet": "^3.3.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "pdf-merger-js": "^3.0.5",
+    "pdf-lib": "^1.16.0",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "prop-types": "^15.7.2",
@@ -99,7 +100,7 @@
     "sequelize-cli": "^6.2.0",
     "sequelize-paper-trail": "^3.0.1",
     "serialize-javascript": "^3.1.0",
-    "sharp": "^0.23.4",
+    "sharp": "^0.28.3",
     "text-to-svg": "^3.1.5",
     "throng": "^5.0.0",
     "uikit": "^3.5.4",

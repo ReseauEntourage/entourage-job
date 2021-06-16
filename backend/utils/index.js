@@ -4,6 +4,7 @@ const {
 } = require('./RoleManagement');
 const { escapeColumn, escapeQuery } = require('./DatabaseQueries');
 const { cleanCV, cleanOpportunity, controlText } = require('./DataFormatting');
+const { forceGC } = require('./GarbageCollector');
 
 module.exports = {
   checkUserAuthorization,
@@ -13,4 +14,5 @@ module.exports = {
   cleanCV,
   cleanOpportunity,
   controlText,
+  forceGC,
 };

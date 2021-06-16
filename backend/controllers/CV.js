@@ -3,12 +3,11 @@ const _ = require('lodash');
 const { QueryTypes } = require('sequelize');
 const fs = require('fs');
 const puppeteer = require('puppeteer-core');
-const PDFMerger = require('pdf-merger-js');
+const { PDFDocument } = require('pdf-lib');
 const moment = require('moment');
+const { forceGC } = require('../utils');
 const S3 = require('./Aws');
 const RedisManager = require('../utils/RedisManager');
-
-const { INITIAL_NB_OF_CV_TO_DISPLAY } = require('../../constants');
 
 const {
   models,
@@ -693,7 +692,6 @@ const generatePdfFromCV = async (userId, token, paths) => {
     executablePath: process.env.CHROME_PATH,
   });
   const page = await browser.newPage();
-  const merger = new PDFMerger();
 
   const options = {
     content: '@page { size: A4 portrait; margin: 0; }',
@@ -704,6 +702,7 @@ const generatePdfFromCV = async (userId, token, paths) => {
     `${process.env.SERVER_URL}/cv/pdf/${userId}?token=${token}&page=0`,
     { waitUntil: 'networkidle2' }
   );
+
   await page.addStyleTag(options);
   await page.emulateMediaType('screen');
   await page.pdf({
@@ -711,12 +710,12 @@ const generatePdfFromCV = async (userId, token, paths) => {
     preferCSSPageSize: true,
     printBackground: true,
   });
-  merger.add(paths[0]);
 
   await page.goto(
     `${process.env.SERVER_URL}/cv/pdf/${userId}?token=${token}&page=1`,
     { waitUntil: 'networkidle2' }
   );
+
   await page.addStyleTag(options);
   await page.emulateMediaType('screen');
   await page.pdf({
@@ -724,19 +723,37 @@ const generatePdfFromCV = async (userId, token, paths) => {
     preferCSSPageSize: true,
     printBackground: true,
   });
-  merger.add(paths[1]);
+
+  await page.close();
 
   await browser.close();
 
-  await merger.save(paths[2]);
+  const mergedPdf = await PDFDocument.create();
 
-  const pdfBuffer = fs.readFileSync(paths[2]);
+  const pdfA = await PDFDocument.load(fs.readFileSync(paths[0]));
+  const pdfB = await PDFDocument.load(fs.readFileSync(paths[1]));
+
+  const copiedPagesA = await mergedPdf.copyPages(pdfA, pdfA.getPageIndices());
+  copiedPagesA.forEach((pdfPage) => {
+    return mergedPdf.addPage(pdfPage);
+  });
+
+  const copiedPagesB = await mergedPdf.copyPages(pdfB, pdfB.getPageIndices());
+  copiedPagesB.forEach((pdfPage) => {
+    return mergedPdf.addPage(pdfPage);
+  });
+
+  const mergedPdfFile = await mergedPdf.save();
+
+  const pdfBuffer = Buffer.from(mergedPdfFile);
 
   await S3.upload(pdfBuffer, 'application/pdf', `${paths[2]}`, true);
 
   if (fs.existsSync(paths[0])) fs.unlinkSync(paths[0]);
   if (fs.existsSync(paths[1])) fs.unlinkSync(paths[1]);
   if (fs.existsSync(paths[2])) fs.unlinkSync(paths[2]);
+
+  forceGC();
 
   return S3.getSignedUrl(s3Key);
 };
