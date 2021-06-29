@@ -1,5 +1,6 @@
 import React from 'react';
 import MultipleCTA from '../partials/MultipleCTA';
+import Section from '../utils/Section';
 
 const WhatItBringsToCompanies = () => {
   const whatItBrings = [
@@ -25,34 +26,21 @@ const WhatItBringsToCompanies = () => {
         </div>
       ),
     },
-    {
-      text: (
-        <div>
-          Tous les candidats ont{' '}
-          <span className="uk-text-bold">un logement stable ou temporaire</span>
-          , bénéficient d&apos;
-          <span className="uk-text-bold">un accompagnement social</span> et ont
-          tous <span className="uk-text-bold">une autorisation de travail</span>
-          .
-        </div>
-      ),
-    },
   ];
 
   return (
-    <div id="whatItBrings" className="uk-margin-large-top">
+    <Section id="whatItBrings" style="muted">
       <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
         <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
           Ce que LinkedOut <span className="uk-text-primary">vous apporte</span>
         </h2>
         <MultipleCTA
           data={whatItBrings}
-          showVerticalDividers
-          spacing="medium"
-          className="uk-margin-large-bottom uk-container-small"
+          spacing="large"
+          className="uk-margin-large-bottom uk-container-small uk-text-center"
         />
       </div>
-    </div>
+    </Section>
   );
 };
 

@@ -1,42 +1,44 @@
 import React from 'react';
-import { Button, IconNoSSR, Section } from '../utils';
-import Grid from '../utils/Grid';
+import { Button, GridNoSSR, IconNoSSR, Section } from '../utils';
 
 import './HireCTA.less';
+import CVList from '../cv/CVList';
+import GlobalOffer from './GlobalOffer';
 
 const HireCTA = () => {
   return (
-    <Section container="small">
-      <h2 className="uk-text-center uk-text-bold uk-text-primary">
-        Vous souhaitez recruter&nbsp;?
-      </h2>
-      <p className="uk-margin-medium-top uk-text-center uk-text-bold">
-        Recherchez le candidat qui correspond à vos besoins et proposez-lui
-        votre offre&nbsp;:
-      </p>
-      <Grid
-        className="uk-margin-medium-top"
-        childWidths={['1-2@m', 'auto']}
-        center
-        match
-      >
+    <Section>
+      <GridNoSSR column middle>
+        <div className="uk-container-small uk-margin-medium-bottom">
+          <h2 className="uk-text-center uk-text-bold">
+            <span className="uk-text-primary">Déposez une offre</span> et
+            recrutez&nbsp;!
+          </h2>
+          <p className="uk-margin-medium-top uk-text-center">
+            Découvrez ci-dessous les profils et CV de la promo #3 et envoyez
+            votre offre au candidat dont le profil correspond à vos besoins de
+            recrutement.
+            <br />
+            <br />
+            Les candidats LinkedOut de cette promo recherchent majoritairement
+            dans les secteurs de 1ère qualification et sont situés en
+            Île-de-France.
+          </p>
+        </div>
+      </GridNoSSR>
+
+      <CVList nb={3} hideEmployed />
+      <GridNoSSR middle column gap="collapse">
         <Button
           href="/entreprises/cvs"
-          style="primary"
-          className="hireButton-xlarge"
+          style="secondary"
+          className="uk-margin-medium-top"
         >
-          <span>Recruter en Île-de-France et dans les Hauts-de-France</span>
-          <IconNoSSR className="hireButton-xlarge-icon" name="chevron-right" />
+          Découvrez tous les CV et déposez une offre{' '}
+          <IconNoSSR name="chevron-right" />
         </Button>
-        <Button
-          href="/entreprises/recruter-hors-linkedout"
-          style="primary"
-          className="hireButton-xlarge"
-        >
-          <span>Recruter ailleurs</span>
-          <IconNoSSR className="hireButton-xlarge-icon" name="chevron-right" />
-        </Button>
-      </Grid>
+      </GridNoSSR>
+      <GlobalOffer />
     </Section>
   );
 };

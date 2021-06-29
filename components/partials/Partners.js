@@ -1,61 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Background, IconNoSSR, Section } from '../utils';
-import Grid from '../utils/Grid';
 import PARTNERS from '../../constants/partners';
-import SimpleLink from '../utils/SimpleLink';
-import { event } from '../../lib/gtag';
-import TAGS from '../../constants/tags';
 import Button from '../utils/Button';
-import { addPrefix } from '../../utils';
+import LogoList from './LogoList';
 
 const Partners = ({ showOrientationPartners }) => {
-  const logoList = (data) => {
-    return (
-      <Grid
-        childWidths={[`1-${Math.floor(data.length / 2 + 1)}@m`, 'auto']}
-        match
-        middle
-        center
-        gap="small"
-        items={data.map(({ key, link, bis }) => {
-          return (
-            <SimpleLink
-              className="uk-flex uk-flex-center"
-              isExternal
-              target="_blank"
-              onClick={() => {
-                return event(TAGS.FOOTER_PARTENAIRE_CLIC);
-              }}
-              href={link}
-            >
-              <div
-                className="uk-background-center-center uk-background-contain uk-width-small uk-height-small"
-                style={{
-                  maxHeight: 100,
-                  backgroundImage: `url(${addPrefix(
-                    `/static/img/partners/${key}/logo.png)`
-                  )}`,
-                }}
-              />
-              {bis && (
-                <div
-                  className="uk-background-center-center uk-background-contain uk-width-small uk-height-small"
-                  style={{
-                    maxHeight: 100,
-                    backgroundImage: `url(${addPrefix(
-                      `/static/img/partners/${key}/logo_bis.png)`
-                    )}`,
-                  }}
-                />
-              )}
-            </SimpleLink>
-          );
-        })}
-      />
-    );
-  };
-
   return (
     <Background
       blend={{ colorHex: showOrientationPartners ? 'white' : '#484848' }}
@@ -84,19 +34,19 @@ const Partners = ({ showOrientationPartners }) => {
             }`}
           >
             {showOrientationPartners ? (
-              logoList(PARTNERS.orientation)
+              <LogoList logos={PARTNERS.orientation} />
             ) : (
               <>
                 <h4 className="uk-text-primary uk-text-bold">
                   Ce projet est développé en partenariat avec
                 </h4>
-                {logoList(PARTNERS.strategy)}
+                <LogoList logos={PARTNERS.strategy} />
               </>
             )}
             <h4 className="uk-text-primary uk-text-bold uk-margin-large-top">
               Avec le soutien précieux de
             </h4>
-            {logoList(PARTNERS.finance)}
+            <LogoList logos={PARTNERS.finance} />
             <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-large-top">
               <Button style="primary" href="/partenaires">
                 En savoir plus &nbsp;

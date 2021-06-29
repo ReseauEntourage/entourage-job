@@ -13,7 +13,7 @@ import { DataContext } from '../store/DataProvider';
 
 let debounceTimeoutId;
 
-const SearchCandidates = ({ defaultHideEmployed }) => {
+const SearchCandidates = ({ defaultHideEmployed, style }) => {
   const [search, setSearch] = useState();
   const [searchBuffer, setSearchBuffer] = useState();
 
@@ -67,7 +67,7 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
   }, [filters]);
 
   return (
-    <Section style="default">
+    <Section style={style}>
       <GridNoSSR
         gap="medium"
         column
@@ -150,10 +150,12 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
 
 SearchCandidates.propTypes = {
   defaultHideEmployed: PropTypes.bool,
+  style: PropTypes.oneOfType(['default', 'muted']),
 };
 
 SearchCandidates.defaultProps = {
   defaultHideEmployed: false,
+  style: 'default',
 };
 
 export default SearchCandidates;

@@ -1,12 +1,13 @@
 /* global UIkit */
 import React, { useState } from 'react';
 import validator from 'validator';
+import PropTypes from 'prop-types';
 import { IconNoSSR, GridNoSSR, Section } from '../utils';
 import Axios from '../../Axios';
 import Button from '../utils/Button';
 import { NEWSLETTER_ORIGINS } from '../../constants';
 
-const CorporateNewsletter = () => {
+const CorporateNewsletter = ({ style }) => {
   const [email, setEmail] = useState('');
   const [isValid, setIsValid] = useState(true);
 
@@ -32,12 +33,7 @@ const CorporateNewsletter = () => {
   };
 
   return (
-    <Section>
-      <h4 className="uk-align-center uk-text-center uk-text-bold uk-width-1-2@m">
-        Inscrivez-vous à la newsletter pour être informé·e des prochaines
-        promotions de candidats et recevoir du contenu et des conseils sur
-        l&apos;inclusion
-      </h4>
+    <Section style={style}>
       <div className="uk-flex uk-flex-center uk-flex-middle uk-flex-column">
         <GridNoSSR
           eachWidths={['expand', 'auto']}
@@ -74,6 +70,14 @@ const CorporateNewsletter = () => {
       </div>
     </Section>
   );
+};
+
+CorporateNewsletter.propTypes = {
+  style: PropTypes.oneOfType(['default', 'muted']),
+};
+
+CorporateNewsletter.defaultProps = {
+  style: 'default',
 };
 
 export default CorporateNewsletter;

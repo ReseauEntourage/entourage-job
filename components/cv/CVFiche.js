@@ -81,9 +81,9 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
 
   const shareSection = (
     <div className="uk-flex uk-flex-column uk-flex-middle">
-      <p className="uk-padding-small uk-padding-remove-bottom uk-margin-small-bottom uk-text-center uk-text-muted">
-        Partager mon CV
-      </p>
+      <h3 className="uk-margin-small-bottom uk-text-center uk-text-bold">
+        <span className="uk-text-primary">Partager</span> mon CV
+      </h3>
       <GridNoSSR row gap="small" center middle>
         <LinkedinShareButton
           disabled={actionDisabled}
@@ -158,6 +158,62 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
           />
         </WhatsappShareButton>
       </GridNoSSR>
+    </div>
+  );
+
+  const contactSection = (
+    <div className="uk-text-center">
+      <h3 className="uk-text-bold">
+        <span className="uk-text-primary">
+          Vous avez une offre d&rsquo;emploi
+        </span>{' '}
+        à me proposer ?
+      </h3>
+      <div className="uk-flex uk-flex-center">
+        <Button
+          disabled={actionDisabled}
+          style="secondary"
+          onClick={() => {
+            return event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC);
+          }}
+          toggle="target: #modal-send-opportunity"
+        >
+          Contactez-moi <IconNoSSR name="chevron-right" />
+        </Button>
+      </div>
+      <div>
+        <ModalEdit
+          id="modal-send-opportunity"
+          title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
+          description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
+          submitText="Envoyer"
+          defaultValues={{
+            isPublic: false,
+          }}
+          formSchema={mutatedSchema}
+          onSubmit={async (fields, closeModal) => {
+            const candidatesId = fields.candidatesId
+              ? fields.candidatesId.map((candidateId) => {
+                  return typeof candidateId === 'object'
+                    ? candidateId.value
+                    : candidateId;
+                })
+              : [];
+            if (!candidatesId.includes(cv.UserId)) {
+              candidatesId.push(cv.UserId);
+            }
+            event(TAGS.PAGE_CV_ENVOYER_OFFRE_CLIC);
+            await postOpportunity(
+              {
+                ...fields,
+                candidatesId: fields.isPublic ? null : candidatesId,
+                date: Date.now(),
+              },
+              closeModal
+            );
+          }}
+        />
+      </div>
     </div>
   );
 
@@ -241,15 +297,8 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                 )}
               </h4>
             )}
-            <div className="uk-position-relative uk-margin-medium-top">
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '-30px',
-                  left: 0,
-                  right: 0,
-                }}
-              >
+            <div className="uk-position-relative">
+              <div className="uk-margin-small-bottom">
                 <a
                   href="#cv-fiche"
                   data-uk-scroll="offset: 80"
@@ -264,7 +313,7 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   />
                 </a>
               </div>
-              {shareSection}
+              {hideShareOptions ? contactSection : shareSection}
               <ModalShareCV
                 id={`info-share-${cv.UserId}`}
                 firstName={cv.user.candidat.firstName}
@@ -457,61 +506,8 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
               )}
             </GridNoSSR>
           </GridNoSSR>
-          {!hideShareOptions && shareSection}
           <hr />
-          <div className="uk-text-center">
-            <h2 className="uk-text-bold">
-              <div className="uk-text-primary">
-                Vous avez une offre d&rsquo;emploi
-              </div>{' '}
-              à me proposer ?
-            </h2>
-            <div className="uk-flex uk-flex-center">
-              <Button
-                disabled={actionDisabled}
-                style="secondary"
-                onClick={() => {
-                  return event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC);
-                }}
-                toggle="target: #modal-send-opportunity"
-              >
-                Contactez-moi <IconNoSSR name="chevron-right" />
-              </Button>
-            </div>
-            <div>
-              <ModalEdit
-                id="modal-send-opportunity"
-                title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
-                description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
-                submitText="Envoyer"
-                defaultValues={{
-                  isPublic: false,
-                }}
-                formSchema={mutatedSchema}
-                onSubmit={async (fields, closeModal) => {
-                  const candidatesId = fields.candidatesId
-                    ? fields.candidatesId.map((candidateId) => {
-                        return typeof candidateId === 'object'
-                          ? candidateId.value
-                          : candidateId;
-                      })
-                    : [];
-                  if (!candidatesId.includes(cv.UserId)) {
-                    candidatesId.push(cv.UserId);
-                  }
-                  event(TAGS.PAGE_CV_ENVOYER_OFFRE_CLIC);
-                  await postOpportunity(
-                    {
-                      ...fields,
-                      candidatesId: fields.isPublic ? null : candidatesId,
-                      date: Date.now(),
-                    },
-                    closeModal
-                  );
-                }}
-              />
-            </div>
-          </div>
+          {hideShareOptions ? shareSection : contactSection}
         </GridNoSSR>
       </div>
       <GridNoSSR column middle>

@@ -19,7 +19,7 @@ const HowToCommitDifferently = () => {
         inclusive avec LinkedOut.
       </p>
       <p className="uk-text-center">
-        Vous ne savez pas par où commencer ?{' '}
+        Vous ne savez pas par où commencer&nbsp;?{' '}
         <a
           style={{ textDecoration: 'underline' }}
           href="https://entourage-asso.typeform.com/to/LsizgJxd"
@@ -29,120 +29,89 @@ const HowToCommitDifferently = () => {
           Faites votre diagnostic et laissez-vous guider
         </a>
       </p>
-      <ul
-        className="uk-margin-large-top"
-        style={{ justifyContent: 'space-evenly' }}
-        data-uk-tab=".uk-switcher"
-      >
-        <li>
-          <a href="#">
+      <ul className="uk-margin-large-top" data-uk-accordion="multiple: true">
+        <li className="uk-open">
+          <a href="#" className="uk-accordion-title">
             <h3 className="uk-text-bold"> S&apos;informer</h3>
+            <hr />
           </a>
+          <div className="uk-accordion-content">
+            <MultipleCTA
+              showHorizontalDividers
+              spacing="large"
+              className="uk-margin-medium-bottom"
+              data={[
+                {
+                  title: (
+                    <h4 className="uk-text-bold">
+                      Comment et pourquoi devenir une entreprise inclusive ?
+                    </h4>
+                  ),
+                  text: (
+                    <p>
+                      Découvrez du contenu pour démarrer et des ressources pour
+                      vous lancer.
+                    </p>
+                  ),
+                  button: {
+                    label: 'En savoir plus',
+                    size: 'small',
+                    href: '/entreprises/sinformer',
+                  },
+                },
+                {
+                  title: (
+                    <h4 className="uk-text-bold">
+                      Ateliers de sensibilisation
+                    </h4>
+                  ),
+                  text: (
+                    <p>
+                      Nous vous proposons des ateliers pour aborder le sujet de
+                      l&apos;inclusion avec vos collaborateurs.
+                      Intéressés&nbsp;?
+                    </p>
+                  ),
+                  button: {
+                    label: 'Nous contacter',
+                    size: 'small',
+                    external: true,
+                    href: `mailto:${CONTACT_INFO.CORPORATE_CONTACT}`,
+                  },
+                },
+              ]}
+            />
+          </div>
         </li>
         <li>
-          <a href="#">
+          <a href="#" className="uk-accordion-title">
             <h3 className="uk-text-bold">Engager mes collaborateurs</h3>
+            <hr />
           </a>
-        </li>
-        <li>
-          <a href="#">
-            <h3 className="uk-text-bold">Financer</h3>
-          </a>
-        </li>
-      </ul>
-      <ul className="uk-switcher uk-flex uk-flex-center uk-margin-medium-top">
-        <li className="uk-flex">
-          <MultipleCTA
-            showHorizontalDividers
-            spacing="large"
-            data={[
-              {
-                title: (
-                  <h4 className="uk-text-bold">
-                    Comment et pourquoi devenir une entreprise inclusive ?
-                  </h4>
-                ),
-                text: (
-                  <p>
-                    Découvrez du contenu pour démarrer et des ressources pour
-                    vous lancer.
-                  </p>
-                ),
-                button: {
-                  label: 'En savoir plus',
-                  size: 'small',
-                  href: '/entreprises/sinformer',
-                },
-              },
-              {
-                title: (
-                  <h4 className="uk-text-bold">Ateliers de sensibilisation</h4>
-                ),
-                text: (
-                  <p>
-                    Nous vous proposons des ateliers pour aborder le sujet de
-                    l&apos;inclusion avec vos collaborateurs. Intéressés&nbsp;?
-                  </p>
-                ),
-                button: {
-                  label: 'Nous contacter',
-                  size: 'small',
-                  external: true,
-                  href: `mailto:${CONTACT_INFO.CORPORATE_CONTACT}`,
-                },
-              },
-            ]}
-          />
-        </li>
-        <li>
-          <MultipleCTA
-            spacing="large"
-            showHorizontalDividers
-            data={[
-              {
-                title: (
-                  <h4 className="uk-text-bold">
-                    Viraliser les CV des candidats LinkedOut
-                  </h4>
-                ),
-                text: (
-                  <p>
-                    Faites connaître l’opération LinkedOut à vos salariés, et
-                    incitez-les à contribuer à la diffusion des CV.
-                  </p>
-                ),
-                button: {
-                  label: 'Partager des CV',
-                  size: 'small',
-                  href: '/candidats',
-                },
-              },
-              {
-                title: (
-                  <h4 className="uk-text-bold">Participer à Virtual Regatta</h4>
-                ),
-                text: (
-                  <p>
-                    Engagez vos collaborateurs de manière ludique en leur
-                    proposant de défier le bateau LinkedOut pendant le Vendée
-                    Globe&nbsp;! Vous voulez en savoir plus&nbsp;?
-                  </p>
-                ),
-                button: {
-                  label: 'Nous contacter',
-                  size: 'small',
-                  href: 'mailto:barnabe@entourage.social',
-                  external: true,
-                },
-              },
-            ]}
-          />
-          <div>
+          <div className="uk-accordion-content">
             <MultipleCTA
               spacing="large"
-              className="uk-margin-large-top"
               showHorizontalDividers
+              className="uk-margin-medium-bottom"
               data={[
+                {
+                  title: (
+                    <h4 className="uk-text-bold">
+                      Viraliser les CV des candidats LinkedOut
+                    </h4>
+                  ),
+                  text: (
+                    <p>
+                      Faites connaître l’opération LinkedOut à vos salariés, et
+                      incitez-les à contribuer à la diffusion des CV.
+                    </p>
+                  ),
+                  button: {
+                    label: 'Partager des CV',
+                    size: 'small',
+                    href: '/candidats',
+                  },
+                },
                 {
                   title: (
                     <h4 className="uk-text-bold">Inspirer avec son métier</h4>
@@ -183,21 +152,34 @@ const HowToCommitDifferently = () => {
             />
           </div>
         </li>
-        <li className="uk-text-center">
-          <h4 className="uk-text-bold">Faire un don</h4>
-          <p className="uk-container-small">
-            Soutenez le déploiement de LinkedOut et permettez
-            <br />à des centaines de personnes d’accéder à l’emploi.
-          </p>
-          <div className="uk-flex uk-flex-center">
-            <Button
-              href="mailto:barnabe@entourage.social"
-              isExternal
-              newTab
-              style="primary"
-            >
-              Nous contacter
-            </Button>
+        <li>
+          <a href="#" className="uk-accordion-title">
+            <h3 className="uk-text-bold">Financer</h3>
+            <hr />
+          </a>
+          <div className="uk-accordion-content">
+            <MultipleCTA
+              spacing="large"
+              showHorizontalDividers
+              className="uk-margin-medium-bottom"
+              data={[
+                {
+                  title: <h4 className="uk-text-bold">Faire un don</h4>,
+                  text: (
+                    <p>
+                      Soutenez le déploiement de LinkedOut et permettez
+                      <br />à des centaines de personnes d’accéder à l’emploi.
+                    </p>
+                  ),
+                  button: {
+                    label: 'Nous contacter',
+                    size: 'small',
+                    href: `mailto:${CONTACT_INFO.CORPORATE_CONTACT}`,
+                    external: true,
+                  },
+                },
+              ]}
+            />
           </div>
         </li>
       </ul>

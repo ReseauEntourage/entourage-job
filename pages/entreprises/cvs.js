@@ -16,23 +16,15 @@ const CVEntreprises = () => {
         id="companies-title"
         title={
           <span>
-            <span className="uk-text-primary">Comment recruter</span>{' '}
-            <span>un candidat&nbsp;?</span>
+            <span className="uk-text-primary">Je recrute</span>{' '}
+            <span>un candidat</span>
           </span>
         }
       />
+      <SearchCandidates style="muted" defaultHideEmployed />
       <HireSteps />
-      <SearchCandidates defaultHideEmployed />
-      <Section style="default">
-        <h4 className="uk-text-bold uk-text-center">
-          Vous ne trouvez pas de candidat ?&nbsp;
-          <Link href="/entreprises#sengager">
-            <a style={{ textDecoration: 'underline' }}>Agissez autrement</a>
-          </Link>
-        </h4>
-      </Section>
       <CorporateContact />
-      <CorporateNewsletter />
+      <CorporateNewsletter style="muted" />
     </Layout>
   );
 };
