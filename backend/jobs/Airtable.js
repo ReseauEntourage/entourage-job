@@ -31,9 +31,13 @@ const insertAirtable = async (tableName, fields) => {
   return Promise.all(
     valuesToInsert.map((values) => {
       return new Promise((res, rej) => {
-        return airtable(tableName).create([values], (error, records) => {
-          return manageResponse(tableName, error, records, res, rej);
-        });
+        return airtable(tableName).create(
+          [values],
+          { typecast: true },
+          (error, records) => {
+            return manageResponse(tableName, error, records, res, rej);
+          }
+        );
       });
     })
   );
