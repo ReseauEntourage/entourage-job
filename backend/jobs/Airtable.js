@@ -74,9 +74,13 @@ const updateOpportunityAirtable = async (tableName, fields) => {
             }
 
             if (results.length === 0) {
-              airtable(tableName).create([values], (error, records) => {
-                return manageResponse(tableName, error, records, res, rej);
-              });
+              airtable(tableName).create(
+                [values],
+                { typecast: true },
+                (error, records) => {
+                  return manageResponse(tableName, error, records, res, rej);
+                }
+              );
             } else {
               Promise.all(
                 results.map((record) => {
@@ -88,6 +92,7 @@ const updateOpportunityAirtable = async (tableName, fields) => {
                           ...values,
                         },
                       ],
+                      { typecast: true },
                       (error, records) => {
                         return manageResponse(
                           tableName,
