@@ -20,16 +20,15 @@ const Entreprises = () => {
     <div className="uk-flex uk-flex-column uk-flex-middle uk-flex-center">
       <div className="uk-light uk-flex uk-flex-column uk-flex-middle">
         <h2 className="uk-text-bold uk-text-center uk-margin-bottom uk-margin-remove-top">
-          Une nouvelle promotion arrive bientôt&nbsp;!
+          Une nouvelle promotion en octobre 2021&nbsp;!
         </h2>
         <h3
           className="uk-text-center uk-margin-remove-top"
           style={{ color: 'white' }}
         >
-          Dès Octobre 2021, plus de 160 candidats s&apos;apprêtent à se lancer
-          dans la recherche d&apos;une nouvelle expérience
-          professionnelle&nbsp;! Laissez-nous votre contact ou votre besoin et
-          nous revenons vers vous.
+          Plus de 160 candidats s&apos;apprêtent à se lancer dans la recherche
+          d&apos;une nouvelle expérience professionnelle&nbsp;! Laissez-nous
+          votre contact ou votre besoin et nous reviendrons vers vous.
         </h3>
       </div>
       <GridNoSSR middle column gap="collapse">

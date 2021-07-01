@@ -31,8 +31,8 @@ const HireCTA = () => {
               </div>
               <h4 className="uk-text-bold uk-margin-remove">
                 Découvrez ci-dessous les CV des candidats LinkedOut disponibles,
-                et envoyez votre offre au profil qui correspond à vos besoins de
-                recrutement
+                et envoyez votre offre au profil qui correspond à votre besoin
+                de recrutement
               </h4>
             </div>
           </div>
@@ -41,7 +41,7 @@ const HireCTA = () => {
             <div className="uk-container-small uk-flex uk-flex-center">
               <p className="uk-text-italic uk-text-muted uk-text-center uk-margin-medium-top">
                 Les candidats disponibles recherchent majoritairement dans les
-                métiers à 1er niveau de qualification et sont situés en
+                métiers à premier niveau de qualification et sont situés en
                 Île-de-France.
               </p>
             </div>
@@ -74,7 +74,7 @@ const HireCTA = () => {
                   return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
                 }}
               >
-                Déposer mon offre <IconNoSSR name="chevron-right" />
+                Déposez votre offre <IconNoSSR name="chevron-right" />
               </Button>
             </GridNoSSR>
             <PostJobAdModal />

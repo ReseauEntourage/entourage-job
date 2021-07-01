@@ -123,22 +123,27 @@ router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
 });
 
 /**
- * Route : GET /api/<VERSION>/user
- * Description : Récupère tous les Users
+ * Route : GET /api/<VERSION>/search
+ * Description : Rechercher parmis les users
  */
-router.get('/search', auth(), (req, res) => {
-  let method;
-  if (
-    req.payload &&
-    req.payload.role &&
-    req.payload.role === USER_ROLES.ADMIN
-  ) {
-    method = UserController.searchUsers(req.query.query, req.query.role);
-  } else {
-    method = UserController.searchCandidates(req.query.query);
-  }
+router.get('/search/candidates', auth(), (req, res) => {
+  UserController.searchCandidates(req.query.query)
+    .then((users) => {
+      logger(res).log(`Candidats récupérés (Total : ${users.length})`);
+      res.status(200).json(users);
+    })
+    .catch((err) => {
+      logger(res).error(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
 
-  method
+/**
+ * Route : GET /api/<VERSION>/search
+ * Description : Rechercher parmis les users
+ */
+router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
+  UserController.searchUsers(req.query.query, req.query.role)
     .then((users) => {
       logger(res).log(`Users récupérés (Total : ${users.length})`);
       res.status(200).json(users);

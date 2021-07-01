@@ -40,7 +40,7 @@ const CVEntreprises = () => {
               return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
             }}
           >
-            Déposer mon offre <IconNoSSR name="chevron-right" />
+            Déposez votre offre <IconNoSSR name="chevron-right" />
           </Button>
         </GridNoSSR>
       </Section>

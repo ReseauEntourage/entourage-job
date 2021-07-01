@@ -152,7 +152,7 @@ const publishedCVQuery = `
 
     with groupCVs as (	select
       /* pour chaque user, dernier CV publiés */
-        "UserId", MAX(version) as version
+        "UserId", MAX(version) as version, "employed"
       from
         "User_Candidats",
         "CVs"
@@ -162,9 +162,9 @@ const publishedCVQuery = `
         and "User_Candidats"."candidatId" = "CVs"."UserId"
         and "User_Candidats".hidden = false
       group by
-        "UserId")
+        "UserId", "employed")
     select
-      cvs.id, cvs."UserId"
+      cvs.id, cvs."UserId", groupCVs."employed"
     from
       "CVs" cvs
     inner join groupCVs on
