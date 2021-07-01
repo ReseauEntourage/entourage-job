@@ -44,7 +44,7 @@ const reviews = [
 
 const Reviews = () => {
   return (
-    <Section id="reviews" style="muted">
+    <Section id="reviews" style="default">
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-large-bottom uk-margin-remove-top">
         <span className="uk-text-primary">Les recruteurs</span> témoignent
       </h2>

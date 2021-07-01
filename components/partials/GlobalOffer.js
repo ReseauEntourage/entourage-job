@@ -14,7 +14,7 @@ const GlobalOffer = () => {
       <br />
       <a
         style={{ textDecoration: 'underline' }}
-        data-uk-toggle={`#${modalId}`}
+        data-uk-toggle={`target: #${modalId}`}
         onClick={() => {
           return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
         }}

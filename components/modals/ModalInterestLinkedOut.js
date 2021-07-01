@@ -13,7 +13,7 @@ const ModalInterestLinkedOut = () => {
     <div>
       <StepperModal
         id="modal-interest-linkedOut"
-        title="Vous êtes intéressés par LinkedOut ?"
+        title="Formulaire de contact"
         resetForm={resetForm}
         composers={[
           (closeModal, nextStep) => {

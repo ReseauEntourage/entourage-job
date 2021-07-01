@@ -64,16 +64,18 @@ const CorporateNewsletter = ({ style }) => {
             S&apos;abonner&nbsp;!
           </Button>
         </GridNoSSR>
-        <span className="uk-text-danger uk-padding-small">
-          {!isValid && 'Adresse mail invalide'}
-        </span>
+        {!isValid && (
+          <span className="uk-text-danger uk-padding-small">
+            {!isValid && 'Adresse mail invalide'}
+          </span>
+        )}
       </div>
     </Section>
   );
 };
 
 CorporateNewsletter.propTypes = {
-  style: PropTypes.oneOfType(['default', 'muted']),
+  style: PropTypes.oneOf(['default', 'muted']),
 };
 
 CorporateNewsletter.defaultProps = {

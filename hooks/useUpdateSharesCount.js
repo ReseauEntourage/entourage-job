@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { SharesCountContext } from '../components/store/SharesCountProvider';
 import Api from '../Axios';
 

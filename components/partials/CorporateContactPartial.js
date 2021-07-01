@@ -1,7 +1,8 @@
 import React from 'react';
-import { addPrefix } from '../../utils';
-import { CONTACT_INFO } from '../../constants';
-import { Section } from '../utils';
+import ModalInterestLinkedOut from '../modals/ModalInterestLinkedOut';
+import { event } from '../../lib/gtag';
+import TAGS from '../../constants/tags';
+import { Button, GridNoSSR, Section } from '../utils';
 
 const CorporateContact = () => {
   return (
@@ -10,34 +11,22 @@ const CorporateContact = () => {
         Une <span className="uk-text-primary">question ?</span>
       </h2>
       <p className="uk-text-center">
-        Pour tout renseignement, l&apos;équipe se tient à votre disposition :
+        Pour tout renseignement, l&apos;équipe se tient à votre
+        disposition&nbsp;!
       </p>
-      <div className="uk-flex uk-flex-center uk-flex-middle">
-        <div
-          style={{
-            borderRadius: '50%',
-            width: 80,
-            height: 80,
-            backgroundImage: `url(${addPrefix(
-              '/static/img/logo-entourage.png'
-            )})`,
-            backgroundSize: 'contain',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
+      <GridNoSSR middle column gap="collapse">
+        <Button
+          style="secondary"
+          className="uk-margin-small-top"
+          toggle="target: #modal-interest-linkedOut"
+          onClick={() => {
+            return event(TAGS.PAGE_AIDER_CONTACT_RECRUTEUR_CLIC);
           }}
-          className="uk-overflow-hidden"
-        />
-        <a
-          href={`mailto:${CONTACT_INFO.CORPORATE_CONTACT}`}
-          target="_blank"
-          className="uk-text-bold uk-margin-small-left"
-          rel="noopener noreferrer"
         >
-          <span uk-icon="mail" />
-          &nbsp;
-          {CONTACT_INFO.CORPORATE_CONTACT}
-        </a>
-      </div>
+          Nous contacter
+        </Button>
+      </GridNoSSR>
+      <ModalInterestLinkedOut />
     </Section>
   );
 };

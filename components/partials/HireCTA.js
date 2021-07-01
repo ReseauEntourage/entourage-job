@@ -3,42 +3,84 @@ import { Button, GridNoSSR, IconNoSSR, Section } from '../utils';
 
 import './HireCTA.less';
 import CVList from '../cv/CVList';
-import GlobalOffer from './GlobalOffer';
+import PostJobAdModal, { modalId } from '../modals/PostJobAdModal';
+import { event } from '../../lib/gtag';
+import TAGS from '../../constants/tags';
 
 const HireCTA = () => {
   return (
     <Section>
-      <GridNoSSR column middle>
-        <div className="uk-container-small uk-margin-medium-bottom">
-          <h2 className="uk-text-center uk-text-bold">
-            <span className="uk-text-primary">Déposez une offre</span> et
-            recrutez&nbsp;!
-          </h2>
-          <p className="uk-margin-medium-top uk-text-center">
-            Découvrez ci-dessous les profils et CV de la promo #3 et envoyez
-            votre offre au candidat dont le profil correspond à vos besoins de
-            recrutement.
-            <br />
-            <br />
-            Les candidats LinkedOut de cette promo recherchent majoritairement
-            dans les secteurs de 1ère qualification et sont situés en
-            Île-de-France.
-          </p>
+      <div className="uk-margin-medium-bottom">
+        <h2 className="uk-text-center uk-text-bold">
+          Prêts à balancer{' '}
+          <span className="uk-text-primary">votre offre&nbsp;?</span>
+        </h2>
+        <div className="uk-flex uk-flex-column">
+          <div className="uk-container-small">
+            <h4 className="uk-text-left uk-align-left uk-margin-medium-top uk-margin-large-left">
+              Deux solutions&nbsp;:
+            </h4>
+          </div>
+          <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
+            <div className="uk-flex uk-flex-middle uk-flex-center uk-padding uk-container-small">
+              <div
+                className="uk-flex uk-flex-top uk-text-bold uk-text-primary uk-text-large uk-margin-small-right uk-text-nowrap"
+                style={{ fontSize: 36, lineHeight: 1 }}
+              >
+                1.&nbsp;
+              </div>
+              <h4 className="uk-text-bold uk-margin-remove">
+                Découvrez ci-dessous les CV des candidats LinkedOut disponibles,
+                et envoyez votre offre au profil qui correspond à vos besoins de
+                recrutement
+              </h4>
+            </div>
+          </div>
+          <CVList nb={3} hideEmployed />
+          <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
+            <div className="uk-container-small uk-flex uk-flex-center">
+              <p className="uk-text-italic uk-text-muted uk-text-center uk-margin-medium-top">
+                Les candidats disponibles recherchent majoritairement dans les
+                métiers à 1er niveau de qualification et sont situés en
+                Île-de-France.
+              </p>
+            </div>
+            <GridNoSSR middle column gap="collapse">
+              <Button
+                href="/entreprises/cvs"
+                style="secondary"
+                className="uk-margin-small-top"
+              >
+                Découvrez tous les CV <IconNoSSR name="chevron-right" />
+              </Button>
+            </GridNoSSR>
+            <hr className="uk-margin-large-top uk-width-1-1" />
+            <div className="uk-flex uk-flex-middle uk-flex-center uk-padding">
+              <div
+                className="uk-flex uk-flex-top uk-text-bold uk-text-primary uk-text-large uk-margin-small-right uk-text-nowrap"
+                style={{ fontSize: 36, lineHeight: 1 }}
+              >
+                2.&nbsp;
+              </div>
+              <h4 className="uk-text-bold uk-margin-remove">
+                Votre offre peut correspondre à plusieurs profils&nbsp;?
+              </h4>
+            </div>
+            <GridNoSSR middle column gap="collapse">
+              <Button
+                style="secondary"
+                toggle={`target: #${modalId}`}
+                onClick={() => {
+                  return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
+                }}
+              >
+                Déposer mon offre <IconNoSSR name="chevron-right" />
+              </Button>
+            </GridNoSSR>
+            <PostJobAdModal />
+          </div>
         </div>
-      </GridNoSSR>
-
-      <CVList nb={3} hideEmployed />
-      <GridNoSSR middle column gap="collapse">
-        <Button
-          href="/entreprises/cvs"
-          style="secondary"
-          className="uk-margin-medium-top"
-        >
-          Découvrez tous les CV et déposez une offre{' '}
-          <IconNoSSR name="chevron-right" />
-        </Button>
-      </GridNoSSR>
-      <GlobalOffer />
+      </div>
     </Section>
   );
 };

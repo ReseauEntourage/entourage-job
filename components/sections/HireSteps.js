@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
-import GlobalOffer from '../partials/GlobalOffer';
 import { Section } from '../utils';
 import MultipleCTA from '../partials/MultipleCTA';
 
@@ -41,7 +40,6 @@ const HireSteps = () => {
   return (
     <Section id="hireSteps" style="default">
       <MultipleCTA data={content} showNumbers showHorizontalDividers animate />
-      <GlobalOffer />
     </Section>
   );
 };

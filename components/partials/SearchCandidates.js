@@ -82,7 +82,7 @@ const SearchCandidates = ({ defaultHideEmployed, style }) => {
           <div>
             80 candidats motivés, en Ile-de-France et en Hauts-de-France,
             aspirent à travailler dans la vente, la restauration, le service à
-            la personne, etc. A vos jobs !
+            la personne, etc... A vos jobs !
           </div>
         </div>
         <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-medium-top">
@@ -150,7 +150,7 @@ const SearchCandidates = ({ defaultHideEmployed, style }) => {
 
 SearchCandidates.propTypes = {
   defaultHideEmployed: PropTypes.bool,
-  style: PropTypes.oneOfType(['default', 'muted']),
+  style: PropTypes.oneOf(['default', 'muted']),
 };
 
 SearchCandidates.defaultProps = {

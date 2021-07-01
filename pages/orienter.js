@@ -1,5 +1,4 @@
 import React from 'react';
-import MultipleCTA from '../components/partials/MultipleCTA';
 import Partners from '../components/partials/Partners';
 import CandidateTestimoniesOrientation from '../components/sections/CandidateTestimoniesOrientation';
 import { CONTACT_INFO } from '../constants';

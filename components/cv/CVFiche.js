@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {
@@ -29,7 +29,7 @@ import { useUpdateSharesCount } from '../../hooks';
 /**
  * Le cv en public et en preview
  */
-const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
+const CVFiche = ({ cv, actionDisabled }) => {
   const updateSharesCount = useUpdateSharesCount();
 
   const router = useRouter();
@@ -81,9 +81,9 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
 
   const shareSection = (
     <div className="uk-flex uk-flex-column uk-flex-middle">
-      <h3 className="uk-margin-small-bottom uk-text-center uk-text-bold">
-        <span className="uk-text-primary">Partager</span> mon CV
-      </h3>
+      <p className="uk-margin-small-bottom uk-text-center uk-text-muted">
+        Partager mon CV
+      </p>
       <GridNoSSR row gap="small" center middle>
         <LinkedinShareButton
           disabled={actionDisabled}
@@ -313,7 +313,10 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
                   />
                 </a>
               </div>
-              {hideShareOptions ? contactSection : shareSection}
+              <GridNoSSR childWidths={['1-1']}>
+                {contactSection}
+                {shareSection}
+              </GridNoSSR>
               <ModalShareCV
                 id={`info-share-${cv.UserId}`}
                 firstName={cv.user.candidat.firstName}
@@ -507,7 +510,8 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
             </GridNoSSR>
           </GridNoSSR>
           <hr />
-          {hideShareOptions ? shareSection : contactSection}
+          {contactSection}
+          {shareSection}
         </GridNoSSR>
       </div>
       <GridNoSSR column middle>
@@ -540,12 +544,10 @@ const CVFiche = ({ cv, actionDisabled, hideShareOptions }) => {
 CVFiche.propTypes = {
   cv: PropTypes.shape().isRequired,
   actionDisabled: PropTypes.bool,
-  hideShareOptions: PropTypes.bool,
 };
 
 CVFiche.defaultProps = {
   actionDisabled: false,
-  hideShareOptions: false,
 };
 
 export default CVFiche;

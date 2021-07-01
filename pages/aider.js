@@ -93,7 +93,7 @@ const Aider = () => {
           </div>
         </div>
       </Section>
-      <Section style="muted">
+      <Section style="default">
         <GridNoSSR gap="large" column>
           <NewsletterPartial padding={false} />
           <SharePartial />
