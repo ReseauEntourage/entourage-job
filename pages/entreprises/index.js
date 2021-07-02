@@ -20,15 +20,16 @@ const Entreprises = () => {
     <div className="uk-flex uk-flex-column uk-flex-middle uk-flex-center">
       <div className="uk-light uk-flex uk-flex-column uk-flex-middle">
         <h2 className="uk-text-bold uk-text-center uk-margin-bottom uk-margin-remove-top">
-          Une nouvelle promotion en octobre 2021&nbsp;!
+          Une nouvelle promotion arrive à l&apos;automne 2021&nbsp;!
         </h2>
         <h3
           className="uk-text-center uk-margin-remove-top"
           style={{ color: 'white' }}
         >
           Plus de 160 candidats s&apos;apprêtent à se lancer dans la recherche
-          d&apos;une nouvelle expérience professionnelle&nbsp;! Laissez-nous
-          votre contact ou votre besoin et nous reviendrons vers vous.
+          d&apos;une nouvelle expérience professionnelle&nbsp;!
+          <br />
+          Laissez-nous votre contact pour être tenus informés.
         </h3>
       </div>
       <GridNoSSR middle column gap="collapse">
@@ -53,7 +54,8 @@ const Entreprises = () => {
         id="hire-title"
         title={
           <>
-            Entreprises,{' '}
+            Entreprises,
+            <br />
             <span className="uk-text-primary">recrutez avec LinkedOut</span>
           </>
         }
@@ -68,9 +70,13 @@ const Entreprises = () => {
           &nbsp;! Les candidats LinkedOut ont des histoires de vie difficiles.
           Ils ont tous un point commun&nbsp;:{' '}
           <span className="uk-text-bold">la capacité à travailler</span> et{' '}
-          <span className="uk-text-bold">l’envie de s’en sortir</span>. Alors
-          qu’attendez-vous pour les recruter&nbsp;? LinkedOut vous accompagne à
-          toutes les étapes.
+          <span className="uk-text-bold">l’envie de s’en sortir</span>.<br />
+          Vous pouvez <span className="uk-text-bold">changer leur vie</span> en
+          les recrutant&nbsp;: alors qu’attendez-vous&nbsp;? L&apos;équipe
+          LinkedOut{' '}
+          <span className="uk-text-bold">
+            vous accompagne à toutes les étapes.
+          </span>
         </h4>
       </Section>
       <HireCTA />
@@ -80,7 +86,7 @@ const Entreprises = () => {
           <Img
             width="1500"
             height="1000"
-            src="/static/img/header_pic_hire.jpg"
+            src="/static/img/candidats.jpg"
             alt="Visages LinkedOut"
           />
           <div
@@ -94,9 +100,7 @@ const Entreprises = () => {
         <div
           className="uk-hidden@m uk-flex uk-flex-column uk-flex-middle uk-padding-small uk-background-center-center uk-background-cover uk-background-blend-overlay"
           style={{
-            backgroundImage: `url(${addPrefix(
-              '/static/img/new_candidates.jpg'
-            )})`,
+            backgroundImage: `url(${addPrefix('/static/img/candidats.jpg')})`,
             backgroundColor: 'rgba(0,0,0,0.7)',
           }}
         >

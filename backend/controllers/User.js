@@ -260,7 +260,6 @@ const searchCandidates = async (query) => {
   const publishedCVs = await sequelize.query(publishedCVQuery, {
     type: QueryTypes.SELECT,
   });
-  console.log(publishedCVs);
   const filteredPublishedCVs = publishedCVs.filter((cv) => {
     return !cv.employed;
   });

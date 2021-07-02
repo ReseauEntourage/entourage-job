@@ -80,9 +80,9 @@ const SearchCandidates = ({ defaultHideEmployed, style }) => {
             Découvrez les <span className="uk-text-primary">candidats</span>
           </h2>
           <div>
-            80 candidats motivés, en Ile-de-France et en Hauts-de-France,
-            aspirent à travailler dans la vente, la restauration, le service à
-            la personne, etc... A vos jobs !
+            Découvrez ci-dessous les CV des candidats LinkedOut disponibles, et
+            envoyez votre offre au profil qui correspond à vos besoins de
+            recrutement.
           </div>
         </div>
         <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-medium-top">

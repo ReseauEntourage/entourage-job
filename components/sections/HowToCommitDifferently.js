@@ -1,6 +1,6 @@
 import React from 'react';
 import { Section } from '../utils';
-import { CONTACT_INFO } from '../../constants';
+import { CONTACT_INFO, EXTERNAL_LINKS } from '../../constants';
 import MultipleCTA from '../partials/MultipleCTA';
 
 const HowToCommitDifferently = () => {
@@ -35,7 +35,6 @@ const HowToCommitDifferently = () => {
             ),
             button: {
               label: 'En savoir plus',
-              size: 'small',
               href: '/entreprises/sinformer',
             },
           },
@@ -48,9 +47,8 @@ const HowToCommitDifferently = () => {
               </p>
             ),
             button: {
-              label: 'Nous contacter',
-              size: 'small',
-              href: `mailto:${CONTACT_INFO.CORPORATE_CONTACT}`,
+              label: 'Nous soutenir',
+              href: EXTERNAL_LINKS.DONATION,
               external: true,
             },
           },
