@@ -1,5 +1,6 @@
 import axios from '../../../Axios';
 import { USER_ROLES, BUSINESS_LINES } from '../../../constants';
+import { FORMATTED_DEPARTMENTS } from '../../../constants/departements';
 
 export default {
   id: 'form-offer',
@@ -54,7 +55,16 @@ export default {
       name: 'location',
       component: 'input',
       type: 'text',
-      title: 'Localisation*',
+      title: 'Addresse postale*',
+    },
+    {
+      id: 'department',
+      name: 'department',
+      title: 'Département*',
+      placeholder: 'Sélectionnez le département',
+      type: 'text',
+      component: 'select',
+      options: FORMATTED_DEPARTMENTS,
     },
     {
       id: 'description',
@@ -90,10 +100,9 @@ export default {
       },
       loadOptions: (inputValue, callback) => {
         axios
-          .get('api/v1/user/search', {
+          .get('api/v1/user/search/candidates', {
             params: {
               query: inputValue,
-              role: USER_ROLES.CANDIDAT,
             },
           })
           .then(({ data }) => {
@@ -180,6 +189,17 @@ export default {
     },
     {
       field: 'businessLines',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'department',
       method: 'isEmpty',
       args: [
         {

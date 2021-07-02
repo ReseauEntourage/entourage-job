@@ -130,6 +130,7 @@ const getAirtableOpportunityFields = (
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
     'Date de création': opportunity.createdAt,
+    Département: opportunity.department,
   };
 
   return candidates && candidates.length > 0
@@ -262,6 +263,9 @@ const getOpportunities = async (search) => {
           [Op.like]: `%${lowerCaseSearch}%`,
         }),
         where(fn('lower', col('Opportunity.location')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.department')), {
           [Op.like]: `%${lowerCaseSearch}%`,
         }),
         where(fn('lower', col('Opportunity.company')), {

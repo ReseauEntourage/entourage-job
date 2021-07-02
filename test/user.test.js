@@ -246,7 +246,54 @@ describe('User', () => {
     });
     describe('R - Many Users', () => {
       describe('Search - search a user where query string in email, first name or last name', () => {
-        it('Should return 200 and part of candidates if user is not logged in', async () => {
+        it('Should return 200 and part of candidates if user is logged in as admin', async () => {
+          const candidat = await userFactory({
+            role: USER_ROLES.CANDIDAT,
+            password: 'candidat',
+          });
+
+          await cvFactory({
+            UserId: candidat.id,
+            status: CV_STATUS.Published.value,
+          });
+
+          const privateCandidateInfo = [
+            {
+              id: candidat.id,
+              firstName: candidat.firstName,
+              lastName: candidat.lastName,
+              role: candidat.role,
+              address: candidat.address,
+              deletedAt: candidat.deletedAt,
+              email: candidat.email,
+              gender: candidat.gender,
+              lastConnection: candidat.lastConnection.toISOString(),
+              phone: candidat.phone,
+            },
+          ];
+
+          const response = await request(serverTest)
+            .get(`${route}/search?query=${candidat.firstName}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
+            .send({
+              ...loggedInAdmin.user,
+            });
+
+          expect(response.status).toBe(200);
+          expect(response.body).toStrictEqual(privateCandidateInfo);
+        });
+        it('Should return 401 if user is not logged in as admin', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/search?query=e&role=${USER_ROLES.CANDIDAT}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({
+              ...loggedInCandidat.user,
+            });
+          expect(response.status).toBe(401);
+        });
+      });
+      describe('Search - search a public candidate where query string in email, first name or last name', () => {
+        it('Should return 200 and part of candidates', async () => {
           const candidat = await userFactory({
             role: USER_ROLES.CANDIDAT,
             password: 'candidat',
@@ -267,20 +314,11 @@ describe('User', () => {
           ];
 
           const response = await request(serverTest).get(
-            `${route}/search?query=${candidat.firstName}`
+            `${route}/search/candidates?query=${candidat.firstName}`
           );
 
           expect(response.status).toBe(200);
           expect(response.body).toStrictEqual(publicCandidateInfo);
-        });
-        it('Should return 200 and users', async () => {
-          const response = await request(serverTest)
-            .get(`${route}/search?query=e&role=${USER_ROLES.CANDIDAT}`)
-            .set('authorization', `Token ${loggedInAdmin.token}`)
-            .send({
-              ...loggedInAdmin.user,
-            });
-          expect(response.status).toBe(200);
         });
       });
 
