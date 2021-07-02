@@ -260,12 +260,16 @@ const searchCandidates = async (query) => {
   const publishedCVs = await sequelize.query(publishedCVQuery, {
     type: QueryTypes.SELECT,
   });
+  console.log(publishedCVs);
+  const filteredPublishedCVs = publishedCVs.filter((cv) => {
+    return !cv.employed;
+  });
   const options = {
     attributes: ATTRIBUTES_USER_PUBLIC,
     where: {
       [Op.and]: [
         {
-          id: publishedCVs.map((publishedCV) => {
+          id: filteredPublishedCVs.map((publishedCV) => {
             return publishedCV.UserId;
           }),
         },

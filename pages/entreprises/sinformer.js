@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../../components/Layout';
 import { Section } from '../../components/utils';
 import ImageTitle from '../../components/sections/ImageTitle';
-import { EXTERNAL_LINKS } from '../../constants';
+import { EXTERNAL_LINKS, CONTACT_INFO } from '../../constants';
 import MultipleCTA from '../../components/partials/MultipleCTA';
 import HowToBeInclusive from '../../components/sections/HowToBeInclusive';
 import CorporateNewsletter from '../../components/partials/CorporateNewsletterPartial';
@@ -101,7 +101,7 @@ const Sinformer = () => {
                 'Nous proposons des ateliers pour ouvrir le dialogue autour de ce sujet dans votre entreprise et initier une démarche parmi vos collaborateurs.',
               button: {
                 label: 'Contactez-nous',
-                href: 'mailto:florent@entourage.social',
+                href: `mailto:${CONTACT_INFO.CORPORATE_CONTACT}`,
                 external: true,
                 size: 'small',
               },

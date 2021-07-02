@@ -100,10 +100,9 @@ export default {
       },
       loadOptions: (inputValue, callback) => {
         axios
-          .get('api/v1/user/search', {
+          .get('api/v1/user/search/candidates', {
             params: {
               query: inputValue,
-              role: USER_ROLES.CANDIDAT,
             },
           })
           .then(({ data }) => {

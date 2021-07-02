@@ -1,28 +1,37 @@
 import React from 'react';
 import Countdown from 'react-countdown';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import Img from '../utils/Img';
 import { Button, IconNoSSR, Section } from '../utils';
 import { addPrefix } from '../../utils';
 
-const TeasingPartial = () => {
-  const countdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
-    if (completed) {
-      return (
-        <Button href="/candidats" style="default">
-          Découvrir les candidats
-          <IconNoSSR name="chevron-right" />
-        </Button>
-      );
-    }
-    // Render a countdown
+const CountDown = ({ days, hours, minutes, seconds, completed }) => {
+  if (completed) {
     return (
-      <h1 className="uk-text-bold uk-text-secondary uk-margin-remove">
-        {days}j {hours}h {minutes}m {seconds}s
-      </h1>
+      <Button href="/candidats" style="default">
+        Découvrir les candidats
+        <IconNoSSR name="chevron-right" />
+      </Button>
     );
-  };
+  }
+  // Render a countdown
+  return (
+    <h1 className="uk-text-bold uk-text-secondary uk-margin-remove">
+      {days}j {hours}h {minutes}m {seconds}s
+    </h1>
+  );
+};
 
+CountDown.propTypes = {
+  days: PropTypes.number.isRequired,
+  hours: PropTypes.number.isRequired,
+  minutes: PropTypes.number.isRequired,
+  seconds: PropTypes.number.isRequired,
+  completed: PropTypes.func.isRequired,
+};
+
+const TeasingPartial = () => {
   const content = (
     <div className="uk-flex uk-flex-column uk-flex-middle uk-flex-center">
       <div className="uk-light uk-flex uk-flex-column uk-flex-middle">
@@ -38,7 +47,9 @@ const TeasingPartial = () => {
         </h3>
         <Countdown
           date={moment('15/10/2021', 'DD/MM/YYYY').toISOString()}
-          renderer={countdownRenderer}
+          renderer={(units) => {
+            return <CountDown {...units} />;
+          }}
         />
       </div>
     </div>

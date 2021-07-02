@@ -193,4 +193,62 @@ export default {
       link: 'https://www.lesenfantsducanal.fr/',
     },
   ],
+  hired: [
+    {
+      key: 'franprix',
+      link: 'https://www.franprix.fr/',
+    },
+    {
+      key: 'webgeo',
+      link: 'https://www.webgeoservices.com/fr/',
+    },
+    {
+      key: 'leroymerlin',
+      link: 'https://www.leroymerlin.fr/',
+    },
+    {
+      key: 'greenfactory',
+      link: 'https://www.greenfactory.fr/',
+    },
+    {
+      key: 'coallia',
+      link: 'https://coallia.org/',
+    },
+    {
+      key: 'lafourche',
+      link: 'https://lafourche.fr/',
+    },
+    {
+      key: 'saveursbieres',
+      link: 'https://www.saveur-biere.com/fr/',
+    },
+    {
+      key: 'randstad',
+      link: 'https://www.grouperandstad.fr',
+    },
+    {
+      key: 'lescopains',
+      link: 'https://www.lescopainsdebastien.fr/',
+    },
+    {
+      key: 'laruche',
+      link: 'https://laruchequiditoui.fr/fr/',
+    },
+    {
+      key: 'iledefrance',
+      link: 'https://www.iledefrance.fr/',
+    },
+    {
+      key: 'clinitex',
+      link: 'https://www.clinitex.fr/',
+    },
+    {
+      key: 'sep',
+      link: 'https://www.sep-renovation.fr/',
+    },
+    {
+      key: 'anr',
+      link: 'https://anr.fr/',
+    },
+  ],
 };

@@ -43,16 +43,16 @@ const Contact = () => {
           }}
         />
         <h4 className="uk-align-center uk-text-center uk-margin-large-bottom">
-          Vous êtes journaliste&nbsp;? Contactez Claire Duizabo, responsable
-          communication du projet&nbsp;:
+          Vous êtes journaliste&nbsp;? Contactez Marie Perier, responsable du
+          projet&nbsp;:
           <br />
           <SimpleLink
             className="uk-link uk-margin-small-top uk-margin-small-bottom"
-            href="mailto:claire@entourage.social"
+            href="mailto:marie@entourage.social"
             newTab
             isExternal
           >
-            claire@entourage.social
+            marie@entourage.social
           </SimpleLink>
           <br />
           <SimpleLink
@@ -61,7 +61,7 @@ const Contact = () => {
             newTab
             isExternal
           >
-            06 88 51 45 03
+            07 67 69 67 61
           </SimpleLink>
         </h4>
       </Section>

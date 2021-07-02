@@ -7,8 +7,8 @@ import SearchCandidates from '../components/partials/SearchCandidates';
 const Candidats = () => {
   return (
     <Layout title="Les candidats - LinkedOut">
-      <ShareCandidatesCVTutorial />
       <SearchCandidates defaultHideEmployed />
+      <ShareCandidatesCVTutorial />
     </Layout>
   );
 };
