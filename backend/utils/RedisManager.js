@@ -33,25 +33,28 @@ const RedisManager = {
   },
 
   createClient(name) {
-    const client = new Redis(process.env.REDIS_TLS_URL, {
-      // required to prevent blocking when disconnected
-      enableOfflineQueue: false,
+    const client = new Redis(
+      process.env.REDIS_TLS_URL || process.env.REDIS_URL,
+      {
+        // required to prevent blocking when disconnected
+        enableOfflineQueue: false,
 
-      // exponential backoff
-      retryStrategy: (retryParams) => {
-        let delay = (retryParams.attempt - 1) * 2; // seconds
-        if (delay > 60) {
-          delay = 60;
-        }
-        return delay * 1000; // milliseconds
-      },
+        // exponential backoff
+        retryStrategy: (retryParams) => {
+          let delay = (retryParams.attempt - 1) * 2; // seconds
+          if (delay > 60) {
+            delay = 60;
+          }
+          return delay * 1000; // milliseconds
+        },
 
-      connectionName: name,
+        connectionName: name,
 
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
+        tls: {
+          rejectUnauthorized: false,
+        },
+      }
+    );
 
     client.name = name;
     client.lastError = null;
