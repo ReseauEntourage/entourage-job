@@ -3,7 +3,7 @@ const uuid = require('uuid/v4');
 
 const { CV_STATUS } = require('../../constants');
 const {
-  models: { CV, CV_Search, User },
+  models: { CV, CV_Search },
 } = require('../../backend/db/models');
 
 /**

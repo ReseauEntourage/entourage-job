@@ -1,38 +1,60 @@
 import React from 'react';
-import Link from 'next/link';
+import { event } from '../../lib/gtag';
+import { Button, GridNoSSR, IconNoSSR, Section } from '../../components/utils';
+import PostJobAdModal, {
+  modalId,
+} from '../../components/modals/PostJobAdModal';
+import TAGS from '../../constants/tags';
 import Layout from '../../components/Layout';
 import ImageTitle from '../../components/sections/ImageTitle';
-import HireSteps from '../../components/sections/HireSteps';
 import SearchCandidates from '../../components/partials/SearchCandidates';
 import CorporateContact from '../../components/partials/CorporateContactPartial';
 import CorporateNewsletter from '../../components/partials/CorporateNewsletterPartial';
-import { Section } from '../../components/utils';
 
 const CVEntreprises = () => {
   return (
     <Layout title="CVs Entreprises - LinkedOut">
       <ImageTitle
-        img="/static/img/header_pic_hire.jpg"
+        img="/static/img/header_pic_cvs.jpg"
         id="companies-title"
         title={
           <span>
-            <span className="uk-text-primary">Comment recruter</span>{' '}
-            <span>un candidat&nbsp;?</span>
+            <span className="uk-text-primary">Ils sont prêts</span>{' '}
+            <span> à travailler&nbsp;!</span>
           </span>
         }
       />
-      <HireSteps />
-      <SearchCandidates defaultHideEmployed />
+      <SearchCandidates style="muted" defaultHideEmployed />
       <Section style="default">
-        <h4 className="uk-text-bold uk-text-center">
-          Vous ne trouvez pas de candidat ?&nbsp;
-          <Link href="/entreprises#sengager">
-            <a style={{ textDecoration: 'underline' }}>Agissez autrement</a>
-          </Link>
-        </h4>
+        <div className="uk-flex uk-flex-middle uk-flex-center uk-flex-column">
+          <h3 className="uk-text-bold uk-margin-medium-bottom">
+            Votre offre peut correspondre{' '}
+            <span className="uk-text-primary">à plusieurs profils&nbsp;?</span>
+          </h3>
+          <div className="uk-height-medium">
+            <img
+              style={{ height: '100%' }}
+              src="/static/img/new_candidates.jpg"
+              alt="Visages LinkedOut"
+            />
+          </div>
+          <GridNoSSR middle column gap="collapse">
+            <Button
+              className="uk-margin-medium-top"
+              style="secondary"
+              toggle={`target: #${modalId}`}
+              onClick={() => {
+                return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
+              }}
+            >
+              Déposez votre offre <IconNoSSR name="chevron-right" />
+            </Button>
+          </GridNoSSR>
+        </div>
       </Section>
+      <PostJobAdModal />
       <CorporateContact />
-      <CorporateNewsletter />
+      <CorporateNewsletter style="default" />
     </Layout>
   );
 };

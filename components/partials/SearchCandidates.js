@@ -13,7 +13,7 @@ import { DataContext } from '../store/DataProvider';
 
 let debounceTimeoutId;
 
-const SearchCandidates = ({ defaultHideEmployed }) => {
+const SearchCandidates = ({ defaultHideEmployed, style }) => {
   const [search, setSearch] = useState();
   const [searchBuffer, setSearchBuffer] = useState();
 
@@ -67,7 +67,7 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
   }, [filters]);
 
   return (
-    <Section style="default">
+    <Section style={style}>
       <GridNoSSR
         gap="medium"
         column
@@ -80,9 +80,9 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
             Découvrez les <span className="uk-text-primary">candidats</span>
           </h2>
           <div>
-            80 candidats motivés, en Ile-de-France et en Hauts-de-France,
-            aspirent à travailler dans la vente, la restauration, le service à
-            la personne, etc. A vos jobs !
+            Découvrez ci-dessous les CV des candidats LinkedOut disponibles, et
+            envoyez votre offre au profil qui correspond à vos besoins de
+            recrutement.
           </div>
         </div>
         <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-medium-top">
@@ -150,10 +150,12 @@ const SearchCandidates = ({ defaultHideEmployed }) => {
 
 SearchCandidates.propTypes = {
   defaultHideEmployed: PropTypes.bool,
+  style: PropTypes.oneOf(['default', 'muted']),
 };
 
 SearchCandidates.defaultProps = {
   defaultHideEmployed: false,
+  style: 'default',
 };
 
 export default SearchCandidates;

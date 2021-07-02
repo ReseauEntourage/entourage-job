@@ -305,7 +305,7 @@ const AIRTABLE_NAMES = {
 const VALUES = { SHARES: 120000 + 64000 };
 
 const CONTACT_INFO = {
-  CORPORATE_CONTACT: 'entreprises@linkedout.fr',
+  CORPORATE_CONTACT: 'barnabe@entourage.social',
   MAIN_PHONE_NUMBER: '01 88 24 70 70',
   MOBILE_PHONE_NUMBER: '07 82 44 97 39',
 };
