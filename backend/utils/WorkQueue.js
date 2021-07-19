@@ -4,7 +4,7 @@ const { JOBS } = require('../../constants');
 const dev = process.env.NODE_ENV !== 'production';
 
 const getRedisOptions = () => {
-  const redisURI = new URL(process.env.REDIS_TLS_URL);
+  const redisURI = new URL(process.env.REDIS_TLS_URL || process.env.REDIS_URL);
   return {
     port: Number(redisURI.port),
     host: redisURI.hostname,
