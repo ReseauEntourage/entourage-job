@@ -202,7 +202,15 @@ const CVFiche = ({ cv, actionDisabled }) => {
             if (!candidatesId.includes(cv.UserId)) {
               candidatesId.push(cv.UserId);
             }
-            event(TAGS.PAGE_CV_ENVOYER_OFFRE_CLIC);
+
+            if (fields.isPublic) {
+              event(TAGS.POPUP_OFFRE_ENVOYER_OFFRE_GENERALE_CLIC);
+            } else if (candidatesId.length > 1) {
+              event(TAGS.POPUP_OFFRE_ENVOYER_OFFRE_MULTIPLE_CLIC);
+            } else {
+              event(TAGS.POPUP_OFFRE_ENVOYER_OFFRE_UNIQUE_CLIC);
+            }
+
             await postOpportunity(
               {
                 ...fields,
