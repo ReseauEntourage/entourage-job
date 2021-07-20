@@ -158,6 +158,7 @@ const LOCATIONS = [
         label: 'Lyon (69)',
       },
     ],
+    admin: process.env.ADMIN_HZ,
   },
 ];
 
