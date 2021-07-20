@@ -8,11 +8,11 @@ import {
   CandidatListPartial,
   LandingPagePartial,
   NumberPartial,
-  TeasingPartial,
 } from '../components/partials';
 
 import Header from '../components/headers/Header';
 import HowItWorks from '../components/sections/HowItWorks';
+import AnnouncementPartial from '../components/partials/AnnouncementPartial';
 
 const Index = ({ query }) => {
   const router = useRouter();
@@ -29,7 +29,7 @@ const Index = ({ query }) => {
       <LandingPagePartial />
       <Header isHome />
       <CandidatListPartial />
-      <TeasingPartial />
+      <AnnouncementPartial />
       <HowItWorks style="default" />
       <NumberPartial />
       <ActionPartial style="default" />
