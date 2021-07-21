@@ -62,8 +62,14 @@ const TAGS = {
   PAGE_CV_CONTACTEZ_MOI_CLIC: {
     action: 'Page_CV_Contactez_Moi_Clic',
   },
-  PAGE_CV_ENVOYER_OFFRE_CLIC: {
-    action: 'Page_CV_Envoyer_Offre_Clic',
+  POPUP_OFFRE_ENVOYER_OFFRE_UNIQUE_CLIC: {
+    action: 'Popup_Offre_Envoyer_Offre_Unique_Clic',
+  },
+  POPUP_OFFRE_ENVOYER_OFFRE_MULTIPLE_CLIC: {
+    action: 'Popup_Offre_Envoyer_Offre_Multiple_Clic',
+  },
+  POPUP_OFFRE_ENVOYER_OFFRE_GENERALE_CLIC: {
+    action: 'Popup_Offre_Envoyer_Offre_Generale_Clic',
   },
   FOOTER_DON_CLIC: {
     action: 'Footer_Don_Clic',
