@@ -1,9 +1,10 @@
 /* global UIkit */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Api from '../../Axios';
+import ModalOffer from '../modals/ModalOffer';
 import { GridNoSSR } from '../utils';
 import OfferCard from '../cards/OfferCard';
-import Axios from '../../Axios';
 import { UserContext } from '../store/UserProvider';
 import ModalOfferAdmin from '../modals/ModalOfferAdmin';
 import { OPPORTUNITY_FILTERS_DATA } from '../../constants';
@@ -14,6 +15,7 @@ const CandidatOpportunityList = ({
   candidatId,
   filters,
   updateNumberOfResults,
+  isAdmin,
 }) => {
   const { user } = useContext(UserContext);
 
@@ -24,18 +26,27 @@ const CandidatOpportunityList = ({
   const [loading, setLoading] = useState(true);
 
   const fetchData = async (id) => {
+    console.log('FETCH DATA');
     if (user) {
       try {
-        setLoading(true);
-        const { data } = await Axios.get(
-          `${process.env.SERVER_URL}/api/v1/opportunity/user/private/${id}`
+        if (isAdmin) {
+          setLoading(true);
+          const { data } = await Api.get(
+            `${process.env.SERVER_URL}/api/v1/opportunity/user/private/${id}`
+          );
+          setOffers(
+            data.sort((a, b) => {
+              return new Date(b.date) - new Date(a.date);
+            })
+          );
+          setLoading(false);
+          return data;
+        }
+
+        const { data } = await Api.get(
+          `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${id}`
         );
-        setOffers(
-          data.sort((a, b) => {
-            return new Date(b.date) - new Date(a.date);
-          })
-        );
-        setLoading(false);
+        setOffers(data);
         return data;
       } catch (err) {
         console.error(err);
@@ -44,6 +55,25 @@ const CandidatOpportunityList = ({
       }
     }
     return null;
+  };
+
+  const onClickOpportunityCardAsUser = async (offer) => {
+    const opportunity = offer;
+    // si jamais ouvert
+    if (!opportunity.userOpportunity || !opportunity.userOpportunity.seen) {
+      const { data } = await Api.post(
+        `${process.env.SERVER_URL}/api/v1/opportunity/join`,
+        {
+          opportunityId: offer.id,
+          userId: candidatId,
+          seen: true,
+        }
+      );
+      opportunity.userOpportunity = data;
+      fetchData(candidatId);
+    }
+    setCurrentOffer({ ...opportunity });
+    UIkit.modal('#modal-offer').show();
   };
 
   useEffect(() => {
@@ -133,10 +163,14 @@ const CandidatOpportunityList = ({
                       role="button"
                       className="uk-link-reset"
                       onClick={() => {
-                        setCurrentOffer({
-                          ...offer,
-                        });
-                        UIkit.modal('#modal-offer-admin').show();
+                        if (isAdmin) {
+                          setCurrentOffer({
+                            ...offer,
+                          });
+                          UIkit.modal('#modal-offer-admin').show();
+                        } else {
+                          onClickOpportunityCardAsUser(offer);
+                        }
                       }}
                     >
                       <OfferCard
@@ -171,13 +205,23 @@ const CandidatOpportunityList = ({
         </div>
       )}
       <div>
-        <ModalOfferAdmin
-          currentOffer={currentOffer}
-          setCurrentOffer={(offer) => {
-            setCurrentOffer({ ...offer });
-            fetchData(candidatId);
-          }}
-        />
+        {isAdmin ? (
+          <ModalOfferAdmin
+            currentOffer={currentOffer}
+            setCurrentOffer={(offer) => {
+              setCurrentOffer({ ...offer });
+              fetchData(candidatId);
+            }}
+          />
+        ) : (
+          <ModalOffer
+            currentOffer={currentOffer}
+            setCurrentOffer={(offer) => {
+              setCurrentOffer({ ...offer });
+              fetchData(candidatId);
+            }}
+          />
+        )}
       </div>
     </div>
   );
@@ -187,10 +231,12 @@ CandidatOpportunityList.propTypes = {
   candidatId: PropTypes.string.isRequired,
   filters: PropTypes.shape(),
   updateNumberOfResults: PropTypes.func,
+  isAdmin: PropTypes.bool,
 };
 
 CandidatOpportunityList.defaultProps = {
   filters: undefined,
+  isAdmin: false,
   updateNumberOfResults: () => {},
 };
 

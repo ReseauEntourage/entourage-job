@@ -34,6 +34,7 @@ const CandidatOpportunities = ({ candidatId }) => {
         />
       </div>
       <CandidatOpportunityList
+        isAdmin
         candidatId={candidatId}
         filters={filters}
         updateNumberOfResults={setNumberOfResults}

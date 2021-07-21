@@ -1,6 +1,10 @@
 /* global UIkit */
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
+import CurrentFilters from '../../../components/filters/CurrentFilters';
+import FiltersSideBar from '../../../components/filters/FiltersSideBar';
+import { initializeFilters } from '../../../utils';
+import CandidatOpportunityList from '../../../components/opportunities/CandidatOpportunityList';
 import { UserContext } from '../../../components/store/UserProvider';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import { Section } from '../../../components/utils';
@@ -9,7 +13,7 @@ import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import ModalOffer from '../../../components/modals/ModalOffer';
 import Api from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
-import { USER_ROLES } from '../../../constants';
+import { OPPORTUNITY_FILTERS_DATA, USER_ROLES } from '../../../constants';
 import OpportunityError from '../../../components/opportunities/OpportunityError';
 
 const tabFiltersConst = [
@@ -21,10 +25,6 @@ const tabFiltersConst = [
 
 const Opportunites = () => {
   const { user } = useContext(UserContext);
-
-  const {
-    query: { q: opportunityId },
-  } = useRouter();
 
   const [currentOffer, setCurrentOffer] = useState(null);
   const [offers, setOffers] = useState(undefined);
@@ -64,6 +64,15 @@ const Opportunites = () => {
     return filteredList;
   };
 
+  const [filters, setFilters] = useState(
+    initializeFilters(OPPORTUNITY_FILTERS_DATA)
+  );
+  const [numberOfResults, setNumberOfResults] = useState(0);
+
+  const resetFilters = () => {
+    setFilters(initializeFilters(OPPORTUNITY_FILTERS_DATA));
+  };
+
   useEffect(() => {
     setHasError(false);
     setLoading(true);
@@ -78,46 +87,8 @@ const Opportunites = () => {
 
   /* END TAB FILTERS */
 
-  const fetchData = async (userId) => {
-    if (user) {
-      setLoading(true);
-      try {
-        const { data } = await Api.get(
-          `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${userId}`
-        );
-
-        setOffers(data);
-        return data;
-      } catch (err) {
-        console.error(err);
-        setLoading(false);
-        setHasError(true);
-      }
-    } else console.log('no user');
-    return null;
-  };
-
-  const onClickOpportunityCard = async (offer) => {
-    const opportunity = offer;
-    // si jamais ouvert
-    if (!opportunity.userOpportunity || !opportunity.userOpportunity.seen) {
-      const { data } = await Api.post(
-        `${process.env.SERVER_URL}/api/v1/opportunity/join`,
-        {
-          opportunityId: offer.id,
-          userId: candidatId,
-          seen: true,
-        }
-      );
-      opportunity.userOpportunity = data;
-      fetchData(candidatId);
-    }
-    setCurrentOffer({ ...opportunity });
-    UIkit.modal('#modal-offer').show();
-  };
-
   useEffect(() => {
-    // récupére les offres et si id en url ouvre loffre en question
+    /* // récupére les offres et si id en url ouvre loffre en question
     const fetchAndAct = (id) => {
       return fetchData(id).then((data) => {
         if (data) {
@@ -130,7 +101,7 @@ const Opportunites = () => {
           }
         }
       });
-    };
+    }; */
 
     if (user) {
       const updatedFilterConsts = [...tabFiltersConst];
@@ -140,9 +111,7 @@ const Opportunites = () => {
 
       if (user.role === USER_ROLES.CANDIDAT) {
         setCandidatId(user.id);
-        fetchAndAct(user.id);
-      }
-      if (user.role === USER_ROLES.COACH) {
+      } else if (user.role === USER_ROLES.COACH) {
         Api.get(`/api/v1/user/candidat/`, {
           params: {
             coachId: user.id,
@@ -151,7 +120,6 @@ const Opportunites = () => {
           .then(({ data }) => {
             if (data) {
               setCandidatId(data.candidat.id);
-              fetchAndAct(data.candidat.id);
             } else {
               setHasError(true);
             }
@@ -161,7 +129,7 @@ const Opportunites = () => {
           });
       }
     }
-  }, [user, opportunityId]);
+  }, [user]);
 
   if (!user) return null;
 
@@ -190,65 +158,35 @@ const Opportunites = () => {
           <OpportunityError />
         ) : (
           <>
+            <div
+              style={{ maxWidth: 1100 }}
+              className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-bottom"
+            >
+              <CurrentFilters
+                numberOfResults={numberOfResults}
+                filters={filters}
+                resetFilters={resetFilters}
+              />
+              <FiltersSideBar
+                filterData={OPPORTUNITY_FILTERS_DATA}
+                filters={filters}
+                setFilters={setFilters}
+              />
+            </div>
             <Filter
               loading={loading}
               filters={tabFilters}
               setFilters={setTabFilters}
             >
-              {tabFilteredOffers && tabFilteredOffers.length > 0 ? (
-                tabFilteredOffers.map((offer, i) => {
-                  return (
-                    <li key={i}>
-                      <a
-                        aria-hidden
-                        role="button"
-                        className="uk-link-reset"
-                        onClick={() => {
-                          return onClickOpportunityCard(offer);
-                        }}
-                      >
-                        <OfferCard
-                          title={offer.title}
-                          from={offer.recruiterName}
-                          shortDescription={offer.company}
-                          date={offer.date}
-                          isValidated={offer.isValidated}
-                          isPublic={offer.isPublic}
-                          userOpportunity={offer.userOpportunity}
-                          archived={
-                            offer.userOpportunity &&
-                            offer.userOpportunity.archived
-                          }
-                          isNew={
-                            !offer.userOpportunity ||
-                            !offer.userOpportunity.seen
-                          }
-                          isStared={
-                            offer.userOpportunity &&
-                            offer.userOpportunity.bookmarked
-                          }
-                        />
-                      </a>
-                    </li>
-                  );
-                })
-              ) : (
-                <div className="uk-text-center uk-flex uk-flex-center uk-flex-1">
-                  <p className="uk-text-italic">
-                    Aucune offre d&apos;emploi dans cette catégorie.
-                  </p>
-                </div>
+              {candidatId && (
+                <CandidatOpportunityList
+                  candidatId={candidatId}
+                  filters={filters}
+                  updateNumberOfResults={setNumberOfResults}
+                />
               )}
             </Filter>
-            <div>
-              <ModalOffer
-                currentOffer={currentOffer}
-                setCurrentOffer={(offer) => {
-                  setCurrentOffer({ ...offer });
-                  fetchData(candidatId);
-                }}
-              />
-            </div>
+            <div />
           </>
         )}
       </Section>

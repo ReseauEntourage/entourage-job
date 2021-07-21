@@ -2,7 +2,7 @@ const ADMIN_ZONES = {
   PARIS: 'PARIS',
   LYON: 'LYON',
   LILLE: 'LILLE',
-  HZ: 'HZ',
+  HZ: 'HORS ZONE',
 };
 
 const DEPARTMENTS = [

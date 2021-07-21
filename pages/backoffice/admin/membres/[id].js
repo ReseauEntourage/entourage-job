@@ -1,6 +1,7 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import _ from 'lodash';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../../Axios';
 import {
@@ -216,7 +217,7 @@ const CVPage = () => {
   return (
     <LayoutBackOffice title={`${user.firstName} - Gestion des membres`}>
       <Section>
-        <GridNoSSR column gap="large">
+        <GridNoSSR column gap="medium">
           <SimpleLink
             href={`/backoffice/admin/membres?role=${user.role}`}
             className="uk-link-reset uk-flex uk-flex-middle"
@@ -225,8 +226,8 @@ const CVPage = () => {
             Retour à la liste
           </SimpleLink>
           <div>
-            <CandidatHeader user={user} />
-            <hr className="ent-divier-backoffice" />
+            <CandidatHeader user={user} showZone />
+            <hr className="ent-divier-backoffice uk-margin-medium-top" />
           </div>
           <ul className="uk-subnav">
             <li className={onglet === 'cv' ? 'uk-active' : ''}>
@@ -388,21 +389,21 @@ const CVPage = () => {
                     </GridNoSSR>
                     {user ? (
                       <GridNoSSR column gap="small">
-                        <GridNoSSR row gap="small">
+                        <GridNoSSR row gap="small" middle>
                           <IconNoSSR name="user" style={{ width: 20 }} />
                           <span>{`${user.firstName} ${user.lastName}`}</span>
                         </GridNoSSR>
-                        <GridNoSSR row gap="small">
+                        <GridNoSSR row gap="small" middle>
                           <IconNoSSR name="gender" style={{ width: 20 }} />
                           <span>
                             {`${user.gender === 0 ? 'Homme' : 'Femme'}`}
                           </span>
                         </GridNoSSR>
-                        <GridNoSSR row gap="small">
+                        <GridNoSSR row gap="small" middle>
                           <IconNoSSR name="mail" style={{ width: 20 }} />
                           <span>{user.email}</span>
                         </GridNoSSR>
-                        <GridNoSSR row gap="small">
+                        <GridNoSSR row gap="small" middle>
                           <IconNoSSR name="phone" style={{ width: 20 }} />
                           {user.phone ? (
                             <span>{user.phone}</span>
@@ -413,7 +414,7 @@ const CVPage = () => {
                           )}
                         </GridNoSSR>
                         {user.role === USER_ROLES.CANDIDAT && (
-                          <GridNoSSR row gap="small">
+                          <GridNoSSR row gap="small" middle>
                             <IconNoSSR name="home" style={{ width: 20 }} />
                             {user.address ? (
                               <span>{user.address}</span>

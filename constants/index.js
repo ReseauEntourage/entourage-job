@@ -158,7 +158,6 @@ const LOCATIONS = [
         label: 'Lyon (69)',
       },
     ],
-    admin: process.env.ADMIN_HZ,
   },
 ];
 
@@ -184,6 +183,11 @@ const CV_FILTERS_DATA = [
 ];
 
 const OPPORTUNITY_FILTERS_DATA = [
+  {
+    key: 'locations',
+    constants: LOCATIONS,
+    title: 'Secteurs géographiques',
+  },
   {
     key: 'status',
     constants: OFFER_STATUS,
