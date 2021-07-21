@@ -249,6 +249,8 @@ const EXTERNAL_LINKS = {
   FRANCE_UNE_CHANCE:
     'https://lafrance-unechance.fr/carte-des-clubs-la-france-une-chance/',
   REPAIRS_75: 'https://www.repairs75.org/',
+  REDSTAR:
+    'https://blog.linkedout.fr/2021/07/21/apres-la-voile-le-foot-linkedout-nouveau-partenaire-maillot-du-red-star-fc-avec-le-soutien-de-randstad/',
 };
 
 const NEWSLETTER_ORIGINS = {
