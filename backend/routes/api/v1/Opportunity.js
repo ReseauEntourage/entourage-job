@@ -29,7 +29,8 @@ router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
  * -  401
  */
 router.post('/', auth(), (req, res) => {
-  OpportunityController.createOpportunity(req.body)
+  const { isAdmin, ...restBody } = req.body;
+  OpportunityController.createOpportunity(restBody, isAdmin)
     .then((opportunity) => {
       return res.status(200).json(opportunity);
     })
