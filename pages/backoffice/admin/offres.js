@@ -244,6 +244,7 @@ const LesOpportunites = () => {
               postOpportunity(
                 {
                   ...fields,
+                  isAdmin: true,
                   date: Date.now(),
                 },
                 closeModal
