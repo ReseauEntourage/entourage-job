@@ -1,6 +1,7 @@
 /* global UIkit */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { useOpportunitiesFilters } from '../../../hooks';
 import CurrentFilters from '../../../components/filters/CurrentFilters';
 import FiltersSideBar from '../../../components/filters/FiltersSideBar';
 import { initializeFilters } from '../../../utils';
@@ -37,7 +38,7 @@ const Opportunites = () => {
   const [tabFilters, setTabFilters] = useState(tabFiltersConst);
   const [tabFilteredOffers, setTabFilteredOffers] = useState(undefined);
 
-  const tabFilterOffers = () => {
+  const tabFilterOffers = useCallback(() => {
     let filteredList = offers;
     if (offers) {
       const activeFilter = tabFilters.find((filter) => {
@@ -62,22 +63,21 @@ const Opportunites = () => {
     }
 
     return filteredList;
-  };
+  }, [offers, tabFilters]);
 
-  const [filters, setFilters] = useState(
-    initializeFilters(OPPORTUNITY_FILTERS_DATA)
-  );
-  const [numberOfResults, setNumberOfResults] = useState(0);
-
-  const resetFilters = () => {
-    setFilters(initializeFilters(OPPORTUNITY_FILTERS_DATA));
-  };
+  const {
+    filters,
+    setFilters,
+    numberOfResults,
+    setNumberOfResults,
+    resetFilters,
+  } = useOpportunitiesFilters();
 
   useEffect(() => {
     setHasError(false);
     setLoading(true);
     setTabFilteredOffers(tabFilterOffers());
-  }, [offers, tabFilters]);
+  }, [offers, tabFilterOffers, tabFilters]);
 
   useEffect(() => {
     if (tabFilteredOffers) {
@@ -158,25 +158,27 @@ const Opportunites = () => {
           <OpportunityError />
         ) : (
           <>
-            <div
-              style={{ maxWidth: 1100 }}
-              className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-bottom"
-            >
-              <CurrentFilters
-                numberOfResults={numberOfResults}
-                filters={filters}
-                resetFilters={resetFilters}
-              />
-              <FiltersSideBar
-                filterData={OPPORTUNITY_FILTERS_DATA}
-                filters={filters}
-                setFilters={setFilters}
-              />
-            </div>
             <Filter
               loading={loading}
               filters={tabFilters}
               setFilters={setTabFilters}
+              otherFilterComponent={
+                <div
+                  style={{ maxWidth: 1100 }}
+                  className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-bottom"
+                >
+                  <CurrentFilters
+                    numberOfResults={numberOfResults}
+                    filters={filters}
+                    resetFilters={resetFilters}
+                  />
+                  <FiltersSideBar
+                    filterData={OPPORTUNITY_FILTERS_DATA}
+                    filters={filters}
+                    setFilters={setFilters}
+                  />
+                </div>
+              }
             >
               {candidatId && (
                 <CandidatOpportunityList

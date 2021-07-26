@@ -171,7 +171,7 @@ const LesOpportunites = () => {
               let hasFound = false;
               if (filtersObj[keys[i]].length === 0) {
                 hasFound = true;
-              } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
+              } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[1].key) {
                 hasFound = filtersObj[keys[i]].some((currentFilter) => {
                   if (
                     offer.userOpportunity &&
@@ -184,7 +184,7 @@ const LesOpportunites = () => {
 
                   return false;
                 });
-              } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[1].key) {
+              } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
                 hasFound = offer.isPublic;
               }
               resultForEachFilter.push(hasFound);

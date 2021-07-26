@@ -184,9 +184,10 @@ const CV_FILTERS_DATA = [
 
 const OPPORTUNITY_FILTERS_DATA = [
   {
-    key: 'locations',
-    constants: LOCATIONS,
-    title: 'Secteurs géographiques',
+    key: 'isPublic',
+    type: 'checkbox',
+    constants: [{ label: 'Masquer les offres privées', value: true }],
+    title: 'Masquer les offres privées',
   },
   {
     key: 'status',
@@ -194,10 +195,9 @@ const OPPORTUNITY_FILTERS_DATA = [
     title: 'Status',
   },
   {
-    key: 'isPublic',
-    type: 'checkbox',
-    constants: [{ label: 'Masquer les offres privées', value: true }],
-    title: 'Masquer les offres privées',
+    key: 'locations',
+    constants: LOCATIONS,
+    title: 'Secteurs géographiques',
   },
 ];
 

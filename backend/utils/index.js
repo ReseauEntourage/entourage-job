@@ -5,6 +5,7 @@ const {
 const { escapeColumn, escapeQuery } = require('./DatabaseQueries');
 const { cleanCV, cleanOpportunity, controlText } = require('./DataFormatting');
 const { forceGC } = require('./GarbageCollector');
+const { filterOffers, getUserOpportunityFromOffer } = require('./Filters');
 
 module.exports = {
   checkUserAuthorization,
@@ -15,4 +16,6 @@ module.exports = {
   cleanOpportunity,
   controlText,
   forceGC,
+  filterOffers,
+  getUserOpportunityFromOffer,
 };

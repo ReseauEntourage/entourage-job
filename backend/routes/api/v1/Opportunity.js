@@ -80,7 +80,10 @@ router.get(
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
-      OpportunityController.getPrivateUserOpportunities(req.params.id)
+      OpportunityController.getPrivateUserOpportunities(
+        req.params.id,
+        req.query
+      )
         .then((listeOpportunities) => {
           res.status(200).json(listeOpportunities);
         })
@@ -107,7 +110,7 @@ router.get(
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
-      OpportunityController.getAllUserOpportunities(req.params.id)
+      OpportunityController.getAllUserOpportunities(req.params.id, req.query)
         .then((listeOpportunities) => {
           res.status(200).json(listeOpportunities);
         })

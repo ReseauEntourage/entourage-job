@@ -1,5 +1,8 @@
-const { sendMail } = require('../controllers/Mail');
 const { OFFER_STATUS, JOBS, AIRTABLE_NAMES } = require('../../constants');
+const {
+  filterOffers,
+  getFiltersObjectsFromQueryParams,
+} = require('../utils/Filters');
 
 const {
   findOfferStatus,
@@ -314,7 +317,7 @@ const getPublicOpportunities = async () => {
   });
 };
 
-const getPrivateUserOpportunities = async (userId) => {
+const getPrivateUserOpportunities = async (userId, params) => {
   console.log(`getOpportunities - Récupérer les opportunités`);
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
@@ -330,13 +333,18 @@ const getPrivateUserOpportunities = async (userId) => {
     },
   });
 
-  return opportunities.map((model) => {
+  const cleanedOpportunities = opportunities.map((model) => {
     return cleanOpportunity(model);
   });
+
+  return filterOffers(
+    cleanedOpportunities,
+    getFiltersObjectsFromQueryParams(params),
+    userId
+  );
 };
 
-const getAllUserOpportunities = async (userId) => {
-  // private
+const getAllUserOpportunities = async (userId, params) => {
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
     attributes: ['OpportunityId'],
@@ -358,7 +366,7 @@ const getAllUserOpportunities = async (userId) => {
     },
   });
 
-  const finalOpportunities = opportunities.map((model) => {
+  const finalOpportunities = filterOffers(opportunities).map((model) => {
     const opportunity = cleanOpportunity(model);
     if (
       opportunityUsers.userOpportunity &&
@@ -428,7 +436,11 @@ const getAllUserOpportunities = async (userId) => {
     return new Date(b.date) - new Date(a.date);
   });
 
-  return finalOpportunities;
+  return filterOffers(
+    finalOpportunities,
+    getFiltersObjectsFromQueryParams(params),
+    userId
+  );
 };
 
 const updateOpportunityAirtable = async (opportunityId) => {

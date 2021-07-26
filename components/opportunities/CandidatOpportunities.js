@@ -3,18 +3,17 @@ import PropTypes from 'prop-types';
 import CandidatOpportunityList from './CandidatOpportunityList';
 import CurrentFilters from '../filters/CurrentFilters';
 import FiltersSideBar from '../filters/FiltersSideBar';
-import { initializeFilters } from '../../utils';
 import { OPPORTUNITY_FILTERS_DATA } from '../../constants';
+import { useOpportunitiesFilters } from '../../hooks';
 
 const CandidatOpportunities = ({ candidatId }) => {
-  const [filters, setFilters] = useState(
-    initializeFilters(OPPORTUNITY_FILTERS_DATA)
-  );
-  const [numberOfResults, setNumberOfResults] = useState(0);
-
-  const resetFilters = () => {
-    setFilters(initializeFilters(OPPORTUNITY_FILTERS_DATA));
-  };
+  const {
+    filters,
+    setFilters,
+    numberOfResults,
+    setNumberOfResults,
+    resetFilters,
+  } = useOpportunitiesFilters();
 
   return (
     <div>
