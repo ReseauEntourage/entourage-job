@@ -1,7 +1,7 @@
 /* global UIkit */
 import React, { useContext, useEffect, useCallback, useState } from 'react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { filtersToQueryParams, getUserOpportunityFromOffer } from '../../utils';
 import Api from '../../Axios';
 import ModalOffer from '../modals/ModalOffer';
 import { GridNoSSR } from '../utils';
@@ -9,17 +9,6 @@ import OfferCard from '../cards/OfferCard';
 import { UserContext } from '../store/UserProvider';
 import ModalOfferAdmin from '../modals/ModalOfferAdmin';
 import OpportunityError from './OpportunityError';
-import { getUserOpportunityFromOffer } from '../../backend/utils/Filters';
-
-const filterToQueryParams = (filters) => {
-  const params = {};
-  _.forEach(Object.keys(filters), (filter) => {
-    params[filter] = filters[filter].map((f) => {
-      return f.value;
-    });
-  });
-  return params;
-};
 
 const CandidatOpportunityList = ({
   candidatId,
@@ -42,7 +31,7 @@ const CandidatOpportunityList = ({
           const { data } = await Api.get(
             `${process.env.SERVER_URL}/api/v1/opportunity/user/private/${candidatId}`,
             {
-              params: filterToQueryParams(filters),
+              params: filtersToQueryParams(filters),
             }
           );
           setOffers(
@@ -57,7 +46,7 @@ const CandidatOpportunityList = ({
         const { data } = await Api.get(
           `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${candidatId}`,
           {
-            params: filterToQueryParams(filters),
+            params: filtersToQueryParams(filters),
           }
         );
         setOffers(data);

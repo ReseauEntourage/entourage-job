@@ -1,8 +1,8 @@
-const { OFFER_STATUS, JOBS, AIRTABLE_NAMES } = require('../../constants');
 const {
   filterOffers,
   getFiltersObjectsFromQueryParams,
-} = require('../utils/Filters');
+} = require('../../utils/Filters');
+const { OFFER_STATUS, JOBS, AIRTABLE_NAMES } = require('../../constants');
 
 const {
   findOfferStatus,
@@ -26,6 +26,8 @@ const {
 } = require('../db/models');
 
 const { cleanOpportunity } = require('../utils');
+
+const { OPPORTUNITY_FILTERS_DATA } = require('../../constants');
 
 const INCLUDE_OPPORTUNITY_CANDIDATE = [
   {
@@ -339,7 +341,7 @@ const getPrivateUserOpportunities = async (userId, params) => {
 
   return filterOffers(
     cleanedOpportunities,
-    getFiltersObjectsFromQueryParams(params),
+    getFiltersObjectsFromQueryParams(params, OPPORTUNITY_FILTERS_DATA),
     userId
   );
 };

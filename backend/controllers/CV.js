@@ -5,9 +5,15 @@ const fs = require('fs');
 const puppeteer = require('puppeteer-core');
 const { PDFDocument } = require('pdf-lib');
 const moment = require('moment');
+const {
+  filterCVs,
+  getFiltersObjectsFromQueryParams,
+} = require('../../utils/Filters');
 const { forceGC } = require('../utils');
 const S3 = require('./Aws');
 const RedisManager = require('../utils/RedisManager');
+
+const { CV_FILTERS_DATA } = require('../../constants');
 
 const {
   models,
@@ -581,7 +587,7 @@ const getAndCacheAllCVs = async (dbQuery, cache) => {
   return cleanedCVList;
 };
 
-const getRandomShortCVs = async (nb, query) => {
+const getRandomShortCVs = async (nb, query, params) => {
   const escapedQuery = escapeQuery(query);
 
   console.log(
@@ -660,11 +666,16 @@ const getRandomShortCVs = async (nb, query) => {
     }
   );
 
-  return sortedKeys
+  const sortedFinalCVsList = sortedKeys
     .reduce((acc, curr) => {
       return [...acc, ...sortedGroupedCvsByMonth[curr]];
     }, [])
     .slice(0, nb);
+
+  return filterCVs(
+    sortedFinalCVsList,
+    getFiltersObjectsFromQueryParams(params, CV_FILTERS_DATA)
+  );
 };
 
 const setCV = (id, cv) => {

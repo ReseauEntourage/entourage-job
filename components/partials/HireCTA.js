@@ -7,6 +7,7 @@ import PostJobAdModal, { modalId } from '../modals/PostJobAdModal';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
 import Img from '../utils/Img';
+import { CV_FILTERS_DATA } from '../../constants';
 
 const HireCTA = () => {
   return (
@@ -35,7 +36,12 @@ const HireCTA = () => {
               </h4>
             </div>
           </div>
-          <CVList nb={3} hideEmployed />
+          <CVList
+            nb={3}
+            filters={{
+              [CV_FILTERS_DATA[0].key]: CV_FILTERS_DATA[0].constants,
+            }}
+          />
           <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
             <div className="uk-container-small uk-flex uk-flex-center">
               <p className="uk-text-center uk-margin-medium-top">

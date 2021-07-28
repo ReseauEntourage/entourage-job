@@ -12,7 +12,7 @@ const DiscoverPartial = ({ style }) => {
   useEffect(() => {
     Api.get('/api/v1/cv/cards/random?nb=3')
       .then(({ data }) => {
-        return setCVs(data);
+        return setCVs(data.cvs);
       })
       .catch((err) => {
         console.error(err);

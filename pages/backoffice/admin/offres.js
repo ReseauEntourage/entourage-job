@@ -1,6 +1,7 @@
 /* global UIkit */
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
+import { initializeFilters, mutateFormSchema } from '../../../utils';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import { Button, Section } from '../../../components/utils';
 import OfferCard from '../../../components/cards/OfferCard';
@@ -11,7 +12,7 @@ import Axios from '../../../Axios';
 import schema from '../../../components/forms/schema/formEditOpportunity';
 import { UserContext } from '../../../components/store/UserProvider';
 import ModalEdit from '../../../components/modals/ModalEdit';
-import { initializeFilters, mutateFormSchema } from '../../../utils';
+
 import { OPPORTUNITY_FILTERS_DATA } from '../../../constants';
 import CurrentFilters from '../../../components/filters/CurrentFilters';
 import FiltersSideBar from '../../../components/filters/FiltersSideBar';

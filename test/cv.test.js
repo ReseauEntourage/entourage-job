@@ -243,7 +243,7 @@ describe('CV', () => {
             `${route}/cards/random/?nb=2`
           );
           expect(response.status).toBe(200);
-          expect(response.body.length).toBe(2);
+          expect(response.body.cvs.length).toBe(2);
         });
         it("Should return 200, and 1 cv if user's first name or other property contains the query", async () => {
           const newUser = await userFactory({
@@ -259,22 +259,382 @@ describe('CV', () => {
             `${route}/cards/random/?nb=1&q=xxxxKnownFirstNamexxxx`
           );
           expect(response.status).toBe(200);
-          expect(response.body.length).toBe(1);
-          expect(response.body[0].id).toBe(newCV.id);
+          expect(response.body.cvs.length).toBe(1);
+          expect(response.body.cvs[0].id).toBe(newCV.id);
         });
         it('Should return 200 and empty list, if no result found', async () => {
           const response = await request(serverTest).get(
             `${route}/cards/random/?nb=1&q=zzzzzzz`
           );
           expect(response.status).toBe(200);
-          expect(response.body.length).toBe(0);
+          expect(response.body.cvs.length).toBe(0);
         });
         it('Should return 200 and many cv, if no nb provided', async () => {
           const response = await request(serverTest).get(
             `${route}/cards/random/`
           );
           expect(response.status).toBe(200);
-          expect(response.body.length).toBeGreaterThan(1);
+          expect(response.body.cvs.length).toBeGreaterThan(1);
+        });
+      });
+      describe('Get a list of cvs matching specific filters', () => {
+        it('Should return 200, and all the cvs that matches the location filters', async () => {
+          const newUser1 = await userFactory({
+            role: USER_ROLES.CANDIDAT,
+          });
+          const newCV1 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser1.id,
+              firstName: newUser1.firstName,
+            },
+            {
+              locations: ['Paris (75)'],
+            }
+          );
+          const newUser2 = await userFactory({
+            role: USER_ROLES.CANDIDAT,
+          });
+          const newCV2 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser2.id,
+              firstName: newUser2.firstName,
+            },
+            {
+              locations: ['Rhône (69)'],
+            }
+          );
+          const newUser3 = await userFactory({
+            role: USER_ROLES.CANDIDAT,
+          });
+          const newCV3 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser3.id,
+              firstName: newUser3.firstName,
+            },
+            {
+              locations: ['Nord (59)'],
+            }
+          );
+          const response = await request(serverTest).get(
+            `${route}/cards/random/?locations[]=Paris (75)&locations[]=Rhône (69)`
+          );
+          expect(response.status).toBe(200);
+          expect(response.body.cvs).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: newCV1.id,
+              }),
+              expect.objectContaining({
+                id: newCV2.id,
+              }),
+            ])
+          );
+          expect(response.body.cvs).not.toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: newCV3.id,
+              }),
+            ])
+          );
+        });
+        it('Should return 200, and all the cvs that matches the employed filters', async () => {
+          const newUser1 = await userFactory(
+            {
+              role: USER_ROLES.CANDIDAT,
+            },
+            {
+              employed: false,
+            }
+          );
+          const newCV1 = await cvFactory({
+            status: CV_STATUS.Published.value,
+            UserId: newUser1.id,
+            firstName: newUser1.firstName,
+          });
+          const newUser2 = await userFactory(
+            {
+              role: USER_ROLES.CANDIDAT,
+            },
+            {
+              employed: false,
+            }
+          );
+          const newCV2 = await cvFactory({
+            status: CV_STATUS.Published.value,
+            UserId: newUser2.id,
+            firstName: newUser2.firstName,
+          });
+          const newUser3 = await userFactory(
+            {
+              role: USER_ROLES.CANDIDAT,
+            },
+            {
+              employed: true,
+            }
+          );
+          const newCV3 = await cvFactory({
+            status: CV_STATUS.Published.value,
+            UserId: newUser3.id,
+            firstName: newUser3.firstName,
+          });
+          const response = await request(serverTest).get(
+            `${route}/cards/random/?hideEmployed[]=true`
+          );
+          expect(response.status).toBe(200);
+          expect(response.body.cvs).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: newCV1.id,
+              }),
+              expect.objectContaining({
+                id: newCV2.id,
+              }),
+            ])
+          );
+          expect(response.body.cvs).not.toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: newCV3.id,
+              }),
+            ])
+          );
+        });
+        it('Should return 200, and all the cvs that matches the businessLine filters', async () => {
+          const newUser1 = await userFactory({
+            role: USER_ROLES.CANDIDAT,
+          });
+          const newCV1 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser1.id,
+              firstName: newUser1.firstName,
+            },
+            {
+              businessLines: ['Informatique'],
+            }
+          );
+          const newUser2 = await userFactory({
+            role: USER_ROLES.CANDIDAT,
+          });
+          const newCV2 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser2.id,
+              firstName: newUser2.firstName,
+            },
+            {
+              businessLines: ['BTP'],
+            }
+          );
+          const newUser3 = await userFactory({
+            role: USER_ROLES.CANDIDAT,
+          });
+          const newCV3 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser3.id,
+              firstName: newUser3.firstName,
+            },
+            {
+              businessLines: ['Associatif'],
+            }
+          );
+          const response = await request(serverTest).get(
+            `${route}/cards/random/?businessLines[]=BTP&businessLines[]=Informatique`
+          );
+          expect(response.status).toBe(200);
+          expect(response.body.cvs).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: newCV1.id,
+              }),
+              expect.objectContaining({
+                id: newCV2.id,
+              }),
+            ])
+          );
+          expect(response.body.cvs).not.toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: newCV3.id,
+              }),
+            ])
+          );
+        });
+        it('Should return 200, and all the cvs that matches multiples filters (AND between different filters, OR inside each filters)', async () => {
+          const newUser1 = await userFactory(
+            {
+              role: USER_ROLES.CANDIDAT,
+            },
+            {
+              employed: false,
+            }
+          );
+          const newCV1 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser1.id,
+              firstName: newUser1.firstName,
+            },
+            {
+              businessLines: ['Informatique'],
+              locations: ['Paris (75)'],
+            }
+          );
+          const newUser2 = await userFactory(
+            {
+              role: USER_ROLES.CANDIDAT,
+            },
+            {
+              employed: false,
+            }
+          );
+          const newCV2 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser2.id,
+              firstName: newUser2.firstName,
+            },
+            {
+              businessLines: ['BTP'],
+              locations: ['Rhône (69)'],
+            }
+          );
+          const newUser3 = await userFactory(
+            {
+              role: USER_ROLES.CANDIDAT,
+            },
+            {
+              employed: true,
+            }
+          );
+          const newCV3 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser3.id,
+              firstName: newUser3.firstName,
+            },
+            {
+              businessLines: ['Associatif'],
+              locations: ['Nord (59)'],
+            }
+          );
+          const response = await request(serverTest).get(
+            `${route}/cards/random/?businessLines[]=Associatif&businessLines[]=Informatique&hideEmployed[]=true&locations[]=Rhône (69)&locations[]=Nord (59)&locations[]=Paris (75)`
+          );
+          expect(response.status).toBe(200);
+          expect(response.body.cvs).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: newCV1.id,
+              }),
+            ])
+          );
+          expect(response.body.cvs).not.toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: newCV3.id,
+              }),
+              expect.objectContaining({
+                id: newCV2.id,
+              }),
+            ])
+          );
+        });
+        it("Should return 200, and cvs suggestions of same location if the businessLine filter doesn't match", async () => {
+          const newUser1 = await userFactory(
+            {
+              role: USER_ROLES.CANDIDAT,
+            },
+            {
+              enmployed: false,
+            }
+          );
+          const newCV1 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser1.id,
+              firstName: newUser1.firstName,
+            },
+            {
+              businessLines: ['Informatique'],
+              locations: ['Paris (75)'],
+            }
+          );
+          const newUser2 = await userFactory(
+            {
+              role: USER_ROLES.CANDIDAT,
+            },
+            {
+              employed: false,
+            }
+          );
+          const newCV2 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser2.id,
+              firstName: newUser2.firstName,
+            },
+            {
+              businessLines: ['BTP'],
+              locations: ['Paris (75)'],
+            }
+          );
+          const newUser3 = await userFactory(
+            {
+              role: USER_ROLES.CANDIDAT,
+            },
+            {
+              employed: false,
+            }
+          );
+          const newCV3 = await cvFactory(
+            {
+              status: CV_STATUS.Published.value,
+              UserId: newUser3.id,
+              firstName: newUser3.firstName,
+            },
+            {
+              businessLines: ['Associatif'],
+              locations: ['Paris (75)'],
+            }
+          );
+          const response = await request(serverTest).get(
+            `${route}/cards/random/?businessLines[]=Artisanat&hideEmployed[]=true&locations[]=Paris (75)`
+          );
+          expect(response.status).toBe(200);
+          expect(response.body.suggestions).toBe(true);
+          expect(response.body.cvs).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: newCV1.id,
+              }),
+              expect.objectContaining({
+                id: newCV2.id,
+              }),
+              expect.objectContaining({
+                id: newCV3.id,
+              }),
+            ])
+          );
+        });
+
+        it('Should return 200 and empty list, if no result found', async () => {
+          const response = await request(serverTest).get(
+            `${route}/cards/random/?locations[]=Midi-Pyrénées (31)`
+          );
+          expect(response.status).toBe(200);
+          expect(response.body.cvs.length).toBe(0);
+        });
+        it('Should return 200 and many cv, if no nb provided', async () => {
+          const response = await request(serverTest).get(
+            `${route}/cards/random/`
+          );
+          expect(response.status).toBe(200);
+          expect(response.body.cvs.length).toBeGreaterThan(1);
         });
       });
     });
