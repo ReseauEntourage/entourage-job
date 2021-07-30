@@ -1,7 +1,6 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import _ from 'lodash';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../../Axios';
 import {
@@ -52,12 +51,14 @@ const CVPage = () => {
       setLoading(true);
       getUser();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
     if (onglet === 'settings') {
       getUser();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onglet]);
 
   let mutatedSchema = mutateFormSchema(schemaEditUser, [

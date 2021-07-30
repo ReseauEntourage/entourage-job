@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import CandidatOpportunityList from './CandidatOpportunityList';
+import OpportunityList from './OpportunityList';
 import CurrentFilters from '../filters/CurrentFilters';
 import FiltersSideBar from '../filters/FiltersSideBar';
 import { OPPORTUNITY_FILTERS_DATA } from '../../constants';
-import { useOpportunitiesFilters } from '../../hooks';
+import { useFilters } from '../../hooks';
 
 const CandidatOpportunities = ({ candidatId }) => {
   const {
@@ -13,7 +13,7 @@ const CandidatOpportunities = ({ candidatId }) => {
     numberOfResults,
     setNumberOfResults,
     resetFilters,
-  } = useOpportunitiesFilters();
+  } = useFilters(OPPORTUNITY_FILTERS_DATA);
 
   return (
     <div>
@@ -32,8 +32,8 @@ const CandidatOpportunities = ({ candidatId }) => {
           setFilters={setFilters}
         />
       </div>
-      <CandidatOpportunityList
-        isAdmin
+      <OpportunityList
+        userRole="candidateAsAdmin"
         candidatId={candidatId}
         filters={filters}
         updateNumberOfResults={setNumberOfResults}

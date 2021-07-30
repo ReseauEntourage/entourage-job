@@ -1,6 +1,8 @@
 const {
   filterOffers,
   getFiltersObjectsFromQueryParams,
+  filterCandidateOffersByType,
+  filterAdminOffersByType,
 } = require('../../utils/Filters');
 const { OFFER_STATUS, JOBS, AIRTABLE_NAMES } = require('../../constants');
 
@@ -118,6 +120,31 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
     ],
   },
 ];
+
+const getOfferSearchOptions = (search) => {
+  if (search) {
+    const lowerCaseSearch = search.toLowerCase();
+    return {
+      [Op.or]: [
+        where(fn('lower', col('Opportunity.title')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.recruiterName')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.location')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.department')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.company')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+      ],
+    };
+  }
+};
 
 const getAirtableOpportunityFields = (
   opportunity,
@@ -264,45 +291,37 @@ const deleteOpportunity = (id) => {
   });
 };
 
-const getOpportunity = async (id) => {
-  const model = await Opportunity.findByPk(id, {
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
-  });
-  return cleanOpportunity(model);
-};
-
-const getOpportunities = async (search) => {
+const getOpportunities = async (params) => {
+  const { search, ...restParams } = params;
   const options = {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     paranoid: false,
   };
-  if (search) {
-    const lowerCaseSearch = search.toLowerCase();
-    options.where = {
-      [Op.or]: [
-        where(fn('lower', col('Opportunity.title')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.recruiterName')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.location')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.department')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.company')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-      ],
-    };
-  }
-  const opportunities = await Opportunity.findAll(options);
 
-  return opportunities.map((model) => {
+  const searchOptions = getOfferSearchOptions(search);
+
+  const opportunities = await Opportunity.findAll({
+    ...options,
+    where: {
+      ...searchOptions,
+    },
+  });
+
+  const { type, ...restFilters } = restParams;
+
+  const cleanedOpportunites = opportunities.map((model) => {
     return cleanOpportunity(model);
   });
+
+  const filteredTypeOpportunites = filterAdminOffersByType(
+    cleanedOpportunites,
+    type
+  );
+
+  return filterOffers(
+    filteredTypeOpportunites,
+    getFiltersObjectsFromQueryParams(restFilters, OPPORTUNITY_FILTERS_DATA)
+  );
 };
 
 const getPublicOpportunities = async () => {
@@ -320,6 +339,9 @@ const getPublicOpportunities = async () => {
 };
 
 const getPrivateUserOpportunities = async (userId, params) => {
+  const { search, ...restParams } = params;
+  const searchOptions = getOfferSearchOptions(search);
+
   console.log(`getOpportunities - Récupérer les opportunités`);
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
@@ -332,6 +354,7 @@ const getPrivateUserOpportunities = async (userId, params) => {
       id: opportunityUsers.map((model) => {
         return model.OpportunityId;
       }),
+      ...searchOptions,
     },
   });
 
@@ -341,12 +364,15 @@ const getPrivateUserOpportunities = async (userId, params) => {
 
   return filterOffers(
     cleanedOpportunities,
-    getFiltersObjectsFromQueryParams(params, OPPORTUNITY_FILTERS_DATA),
+    getFiltersObjectsFromQueryParams(restParams, OPPORTUNITY_FILTERS_DATA),
     userId
   );
 };
 
-const getAllUserOpportunities = async (userId, params) => {
+const getAllUserOpportunities = async (userId, params = {}) => {
+  const { search, ...restParams } = params;
+  const searchOptions = getOfferSearchOptions(search);
+
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
     attributes: ['OpportunityId'],
@@ -365,10 +391,11 @@ const getAllUserOpportunities = async (userId, params) => {
           isValidated: true,
         },
       ],
+      ...searchOptions,
     },
   });
 
-  const finalOpportunities = filterOffers(opportunities).map((model) => {
+  const finalOpportunities = opportunities.map((model) => {
     const opportunity = cleanOpportunity(model);
     if (
       opportunityUsers.userOpportunity &&
@@ -438,15 +465,37 @@ const getAllUserOpportunities = async (userId, params) => {
     return new Date(b.date) - new Date(a.date);
   });
 
-  return filterOffers(
+  const { type, ...restFilters } = restParams;
+
+  const filteredTypeOpportunities = filterCandidateOffersByType(
     finalOpportunities,
-    getFiltersObjectsFromQueryParams(params),
+    type
+  );
+
+  return filterOffers(
+    filteredTypeOpportunities,
+    getFiltersObjectsFromQueryParams(restFilters, OPPORTUNITY_FILTERS_DATA),
     userId
   );
 };
 
+const getOpportunity = async (opportunityId, isAdmin, candidateId) => {
+  if (isAdmin) {
+    const model = await Opportunity.findByPk(opportunityId, {
+      include: INCLUDE_OPPORTUNITY_COMPLETE,
+    });
+
+    return cleanOpportunity(model);
+  }
+
+  const userOpportunities = await getAllUserOpportunities(candidateId);
+  return userOpportunities.find((opportunity) => {
+    return opportunity.id === opportunityId;
+  });
+};
+
 const updateOpportunityAirtable = async (opportunityId) => {
-  const finalOpportunity = await getOpportunity(opportunityId);
+  const finalOpportunity = await getOpportunity(opportunityId, true);
 
   try {
     await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
@@ -523,7 +572,7 @@ const updateOpportunityUser = async (opportunityUser) => {
 };
 
 const updateOpportunity = async (opportunity) => {
-  const oldOpportunity = await getOpportunity(opportunity.id);
+  const oldOpportunity = await getOpportunity(opportunity.id, true);
 
   const modelOpportunity = await Opportunity.update(opportunity, {
     where: { id: opportunity.id },
@@ -609,7 +658,7 @@ const updateOpportunity = async (opportunity) => {
     }
   }
 
-  const finalOpportunity = await getOpportunity(opportunity.id);
+  const finalOpportunity = await getOpportunity(opportunity.id, true);
 
   let candidatesToSendMailTo;
 

@@ -1,7 +1,9 @@
+import _ from 'lodash';
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import ButtonPost from '../backoffice/cv/ButtonPost';
 import { filtersToQueryParams } from '../../utils';
-import { Button, GridNoSSR } from '../utils';
+import { GridNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import Api from '../../Axios';
 import { CV_FILTERS_DATA, INITIAL_NB_OF_CV_TO_DISPLAY } from '../../constants';
@@ -31,38 +33,54 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
   const [hasSuggestions, setHasSuggestions] = useState(false);
 
   const [error, setError] = useState(undefined);
-  const [nbOfCVToDisplay, setNbOfCVToDisplay] = useState(
-    nb || INITIAL_NB_OF_CV_TO_DISPLAY
-  );
+  const defaultNbOfCVs = nb || INITIAL_NB_OF_CV_TO_DISPLAY;
+  const [nbOfCVToDisplay, setNbOfCVToDisplay] = useState(defaultNbOfCVs);
 
   const displayMoreCVs = useCallback(() => {
     return setNbOfCVToDisplay(nbOfCVToDisplay + INITIAL_NB_OF_CV_TO_DISPLAY);
   }, [nbOfCVToDisplay]);
 
   const fetchData = useCallback(() => {
-    setCVs(undefined);
-    setError(undefined);
     Api.get(`/api/v1/cv/cards/random`, {
       params: {
         q: search,
-        nbOfCVToDisplay,
+        nb: nbOfCVToDisplay,
         ...filtersToQueryParams(filters),
       },
     })
       .then(({ data }) => {
         setHasSuggestions(data.suggestions);
+        if (cvs) {
+          return setCVs([
+            ...cvs,
+            ..._.differenceWith(data.cvs, cvs, (cv1, cv2) => {
+              return cv1.id === cv2.id;
+            }),
+          ]);
+        }
+
         return setCVs(data.cvs);
       })
       .catch((err) => {
         console.error(err);
         setError('Impossible de récupérer les CVs.');
       });
-  }, [filters, nbOfCVToDisplay, search]);
+  }, [cvs, filters, nbOfCVToDisplay, search]);
 
   useEffect(() => {
+    setCVs(undefined);
     setError(undefined);
     fetchData();
-  }, [filters, nb, search, fetchData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters, search]);
+
+  useEffect(() => {
+    if (nbOfCVToDisplay > defaultNbOfCVs) {
+      setError(undefined);
+      fetchData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nbOfCVToDisplay]);
 
   useEffect(() => {
     const hasFiltersActivated = Object.keys(filters).some((filter) => {
@@ -105,11 +123,15 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
             );
           })}
         />
-        {!nb && items.length > nbOfCVToDisplay && (
+        {!nb && (
           <div className="uk-flex uk-flex-center uk-margin-top">
-            <Button style="primary" onClick={displayMoreCVs}>
-              Voir plus
-            </Button>
+            <ButtonPost
+              text="Voir plus"
+              style="primary"
+              action={async () => {
+                displayMoreCVs();
+              }}
+            />
           </div>
         )}
       </div>

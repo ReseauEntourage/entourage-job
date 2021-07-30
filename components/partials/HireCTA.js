@@ -1,12 +1,11 @@
 import React from 'react';
-import { Button, GridNoSSR, IconNoSSR, ImgNoSSR, Section } from '../utils';
+import { Button, GridNoSSR, IconNoSSR, Section } from '../utils';
 
 import './HireCTA.less';
 import CVList from '../cv/CVList';
 import PostJobAdModal, { modalId } from '../modals/PostJobAdModal';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
-import Img from '../utils/Img';
 import { CV_FILTERS_DATA } from '../../constants';
 
 const HireCTA = () => {

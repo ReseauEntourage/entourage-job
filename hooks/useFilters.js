@@ -1,16 +1,15 @@
 import { useState, useCallback } from 'react';
 import { initializeFilters } from '../utils';
-import { OPPORTUNITY_FILTERS_DATA } from '../constants';
 
-export function useOpportunitiesFilters() {
+export function useFilters(filtersData, defaults) {
   const [filters, setFilters] = useState(
-    initializeFilters(OPPORTUNITY_FILTERS_DATA)
+    initializeFilters(filtersData, defaults)
   );
   const [numberOfResults, setNumberOfResults] = useState(0);
 
   const resetFilters = useCallback(() => {
-    setFilters(initializeFilters(OPPORTUNITY_FILTERS_DATA));
-  }, []);
+    setFilters(initializeFilters(filtersData));
+  }, [filtersData]);
 
   return {
     filters,

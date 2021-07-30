@@ -184,7 +184,9 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 {moment(currentOffer.date).format('DD/MM/YYYY')}
               </span>
             </OfferInfoContainer>
-            <OfferInfoContainer icon="location" title={currentOffer.location} />
+            <OfferInfoContainer icon="location" title={currentOffer.location}>
+              {currentOffer.department}
+            </OfferInfoContainer>
             {currentOffer.userOpportunity && (
               <OfferInfoContainer
                 icon="users"
@@ -364,6 +366,7 @@ ModalOfferAdmin.propTypes = {
     businessLines: PropTypes.arrayOf(PropTypes.string),
     date: PropTypes.string,
     location: PropTypes.string,
+    department: PropTypes.string,
     userOpportunity: PropTypes.arrayOf(
       PropTypes.shape({
         status: PropTypes.string,

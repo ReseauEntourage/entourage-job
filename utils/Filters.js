@@ -1,5 +1,56 @@
 const _ = require('lodash');
-const { OPPORTUNITY_FILTERS_DATA, CV_FILTERS_DATA } = require('../constants');
+const {
+  OPPORTUNITY_FILTERS_DATA,
+  CV_FILTERS_DATA,
+  OFFER_CANDIDATE_FILTERS_DATA,
+  OFFER_ADMIN_FILTERS_DATA,
+} = require('../constants');
+
+const filterCandidateOffersByType = (offers, type) => {
+  let filteredList = offers;
+  if (offers) {
+    filteredList = filteredList.filter((offer) => {
+      const isArchived =
+        offer.userOpportunity && offer.userOpportunity.archived;
+      switch (type) {
+        case OFFER_CANDIDATE_FILTERS_DATA[0].tag:
+          return true;
+        case OFFER_CANDIDATE_FILTERS_DATA[1].tag:
+          return !offer.isPublic && !isArchived;
+        case OFFER_CANDIDATE_FILTERS_DATA[2].tag:
+          return offer.isPublic && !isArchived;
+        case OFFER_CANDIDATE_FILTERS_DATA[3].tag:
+          return offer.userOpportunity && offer.userOpportunity.archived;
+        default:
+          return true;
+      }
+    });
+  }
+
+  return filteredList;
+};
+
+const filterAdminOffersByType = (offers, type) => {
+  let filteredList = offers;
+  if (offers) {
+    filteredList = filteredList.filter((offer) => {
+      switch (type) {
+        case OFFER_ADMIN_FILTERS_DATA[0].tag:
+          return true;
+        case OFFER_ADMIN_FILTERS_DATA[1].tag:
+          return !offer.isValidated && !offer.isArchived;
+        case OFFER_ADMIN_FILTERS_DATA[2].tag:
+          return offer.isValidated && !offer.isArchived;
+        case OFFER_ADMIN_FILTERS_DATA[3].tag:
+          return offer.isArchived;
+        default:
+          return true;
+      }
+    });
+  }
+
+  return filteredList;
+};
 
 const getChildrenFilters = (filters) => {
   return filters.reduce((acc, curr) => {
@@ -17,13 +68,14 @@ const getChildrenFilters = (filters) => {
   }, []);
 };
 
-const getAllFilters = (filters) => {
-  return filters.reduce((acc, curr) => {
+const getAllFilters = (filters, zone) => {
+  const filtersToShow = filters.reduce((acc, curr) => {
     const accToReturn = [
       ...acc,
       {
         value: curr.value,
         label: curr.label,
+        zone: curr.zone,
       },
     ];
     if (curr.children && curr.children.length > 0) {
@@ -31,6 +83,14 @@ const getAllFilters = (filters) => {
     }
     return accToReturn;
   }, []);
+
+  if (zone) {
+    return filtersToShow.filter((filter) => {
+      return !filter.zone || filter.zone === zone;
+    });
+  }
+
+  return filtersToShow;
 };
 
 const findFilter = (filters, value) => {
@@ -74,31 +134,33 @@ const hasAsChild = (filters, parent, value, notFirst) => {
 
 const getFiltersObjectsFromQueryParams = (params, filtersConst) => {
   const filters = {};
-  _.forEach(Object.keys(params), (paramKey) => {
-    if (
-      filtersConst.find((filterData) => {
-        return filterData.key === paramKey;
-      })
-    ) {
-      const valueArray = params[paramKey];
-      if (valueArray.length > 0) {
-        filters[paramKey] = valueArray.map((val) => {
-          return { value: val };
-        });
+  if (filtersConst) {
+    _.forEach(Object.keys(params), (paramKey) => {
+      if (
+        filtersConst.find((filterData) => {
+          return filterData.key === paramKey;
+        })
+      ) {
+        const valueArray = params[paramKey];
+        if (valueArray.length > 0) {
+          filters[paramKey] = valueArray.map((val) => {
+            return { value: val };
+          });
+        }
       }
-    }
-  });
+    });
+  }
   return filters;
 };
 
-const initializeFilters = (filtersConst, defaultIndexes) => {
+const initializeFilters = (filtersConst, defaults) => {
   let hasDefaults = false;
-  if (Array.isArray(defaultIndexes) && defaultIndexes.length > 0) {
+  if (defaults && Object.keys(defaults).length > 0) {
     hasDefaults = true;
   }
-  return filtersConst.reduce((acc, curr, index) => {
-    if (hasDefaults && defaultIndexes.includes(index)) {
-      acc[curr.key] = curr.constants;
+  return filtersConst.reduce((acc, curr) => {
+    if (hasDefaults && defaults[curr.key]) {
+      acc[curr.key] = defaults[curr.key];
     } else {
       acc[curr.key] = [];
     }
@@ -108,10 +170,16 @@ const initializeFilters = (filtersConst, defaultIndexes) => {
 
 const getUserOpportunityFromOffer = (offer, candidatId) => {
   let userOpportunity;
-  if (offer.userOpportunity && offer.userOpportunity.length > 0) {
+  if (
+    offer.userOpportunity &&
+    Array.isArray(offer.userOpportunity) &&
+    offer.userOpportunity.length > 0
+  ) {
     userOpportunity = offer.userOpportunity.find((userOpp) => {
       return userOpp.UserId === candidatId;
     });
+  } else {
+    userOpportunity = offer.userOpportunity;
   }
   return userOpportunity;
 };
@@ -138,15 +206,30 @@ const filterOffers = (offers, filtersObj, candidatId) => {
             } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
               hasFound = offer.isPublic;
             } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[1].key) {
-              const userOpportunity = getUserOpportunityFromOffer(
-                offer,
-                candidatId
-              );
-              hasFound = filtersObj[keys[i]].some((currentFilter) => {
-                return (
-                  currentFilter.value === userOpportunity.status.toString()
+              if (candidatId) {
+                const userOpportunity = getUserOpportunityFromOffer(
+                  offer,
+                  candidatId
                 );
-              });
+                hasFound = filtersObj[keys[i]].some((currentFilter) => {
+                  return (
+                    currentFilter.value === userOpportunity.status.toString()
+                  );
+                });
+              } else {
+                hasFound = filtersObj[keys[i]].some((currentFilter) => {
+                  if (
+                    offer.userOpportunity &&
+                    offer.userOpportunity.length > 0
+                  ) {
+                    return offer.userOpportunity.some((userOpp) => {
+                      return currentFilter.value === userOpp.status;
+                    });
+                  }
+
+                  return false;
+                });
+              }
             } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[2].key) {
               const deptFilters = filtersObj[keys[i]]
                 .map((filter) => {
@@ -275,4 +358,6 @@ module.exports = {
   hasAsChild,
   initializeFilters,
   filtersToQueryParams,
+  filterCandidateOffersByType,
+  filterAdminOffersByType,
 };

@@ -6,5 +6,5 @@ export function useRemoveModal(id) {
     if (modals.length > 1) {
       modals[1].remove();
     }
-  }, []);
+  }, [id]);
 }

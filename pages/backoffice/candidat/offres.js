@@ -1,69 +1,36 @@
-/* global UIkit */
-import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { useRouter } from 'next/router';
-import { useOpportunitiesFilters } from '../../../hooks';
+import React, { useState, useEffect, useContext } from 'react';
+import OpportunityList from '../../../components/opportunities/OpportunityList';
+import { findFilter, initializeFilters } from '../../../utils';
+import { DEPARTMENTS_FILTERS } from '../../../constants/departements';
+import { useFilters } from '../../../hooks';
 import CurrentFilters from '../../../components/filters/CurrentFilters';
 import FiltersSideBar from '../../../components/filters/FiltersSideBar';
-import { initializeFilters } from '../../../utils';
-import CandidatOpportunityList from '../../../components/opportunities/CandidatOpportunityList';
 import { UserContext } from '../../../components/store/UserProvider';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import { Section } from '../../../components/utils';
-import OfferCard from '../../../components/cards/OfferCard';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
-import ModalOffer from '../../../components/modals/ModalOffer';
 import Api from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
-import { OPPORTUNITY_FILTERS_DATA, USER_ROLES } from '../../../constants';
+import {
+  OPPORTUNITY_FILTERS_DATA,
+  USER_ROLES,
+  OFFER_CANDIDATE_FILTERS_DATA,
+  LOCATIONS,
+} from '../../../constants';
 import OpportunityError from '../../../components/opportunities/OpportunityError';
-
-const tabFiltersConst = [
-  { tag: 'all', title: 'Toutes les offres' },
-  { tag: 'private', title: 'Offres du candidat', active: true },
-  { tag: 'public', title: 'Offres générales' },
-  { tag: 'archived', title: 'Offres archivées' },
-];
 
 const Opportunites = () => {
   const { user } = useContext(UserContext);
 
-  const [currentOffer, setCurrentOffer] = useState(null);
-  const [offers, setOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState();
+
   const [candidatId, setCandidatId] = useState();
+  const [candidatZones, setCandidatZones] = useState();
 
-  /* TAB FILTERS */
-
-  const [tabFilters, setTabFilters] = useState(tabFiltersConst);
-  const [tabFilteredOffers, setTabFilteredOffers] = useState(undefined);
-
-  const tabFilterOffers = useCallback(() => {
-    let filteredList = offers;
-    if (offers) {
-      const activeFilter = tabFilters.find((filter) => {
-        return filter.active;
-      });
-      filteredList = filteredList.filter((offer) => {
-        const isArchived =
-          offer.userOpportunity && offer.userOpportunity.archived;
-        switch (activeFilter.tag) {
-          case tabFiltersConst[0].tag:
-            return true;
-          case tabFiltersConst[1].tag:
-            return !offer.isPublic && !isArchived;
-          case tabFiltersConst[2].tag:
-            return offer.isPublic && !isArchived;
-          case tabFiltersConst[3].tag:
-            return offer.userOpportunity && offer.userOpportunity.archived;
-          default:
-            return true;
-        }
-      });
-    }
-
-    return filteredList;
-  }, [offers, tabFilters]);
+  const [tabFilters, setTabFilters] = useState(OFFER_CANDIDATE_FILTERS_DATA);
+  const candidateFilters = OPPORTUNITY_FILTERS_DATA.slice(1);
 
   const {
     filters,
@@ -71,46 +38,69 @@ const Opportunites = () => {
     numberOfResults,
     setNumberOfResults,
     resetFilters,
-  } = useOpportunitiesFilters();
+  } = useFilters(candidateFilters);
 
   useEffect(() => {
-    setHasError(false);
-    setLoading(true);
-    setTabFilteredOffers(tabFilterOffers());
-  }, [offers, tabFilterOffers, tabFilters]);
-
-  useEffect(() => {
-    if (tabFilteredOffers) {
-      setLoading(false);
-    }
-  }, [tabFilteredOffers]);
-
-  /* END TAB FILTERS */
-
-  useEffect(() => {
-    /* // récupére les offres et si id en url ouvre loffre en question
-    const fetchAndAct = (id) => {
-      return fetchData(id).then((data) => {
-        if (data) {
-          const offer = data.find((o) => {
-            return o.id === opportunityId;
-          });
-          if (offer) {
-            setCurrentOffer({ ...offer });
-            UIkit.modal('#modal-offer').show();
+    if (candidatZones && candidatZones.length > 0) {
+      if (candidatZones.includes(undefined)) {
+        setFilters(initializeFilters(candidateFilters));
+      } else {
+        const defaultDepartmentsForCandidate = DEPARTMENTS_FILTERS.filter(
+          (dept) => {
+            return candidatZones.includes(dept.zone);
           }
-        }
-      });
-    }; */
+        );
 
+        setFilters(
+          initializeFilters(candidateFilters, {
+            [candidateFilters[1].key]: [...defaultDepartmentsForCandidate],
+          })
+        );
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [candidatZones]);
+
+  useEffect(() => {
+    if (candidatId) {
+      setLoading(true);
+      Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
+        params: {
+          userId: candidatId,
+        },
+      })
+        .then(({ data }) => {
+          if (data && data.locations) {
+            setCandidatZones(
+              data.locations.map((location) => {
+                return findFilter(LOCATIONS, location).zone;
+              })
+            );
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          return setLoading(false);
+        });
+    }
+  }, [candidatId]);
+
+  useEffect(() => {
     if (user) {
-      const updatedFilterConsts = [...tabFiltersConst];
+      setLoading(true);
+      const updatedFilterConsts = [...OFFER_CANDIDATE_FILTERS_DATA];
       updatedFilterConsts[1].title =
         user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat';
       setTabFilters(updatedFilterConsts);
 
       if (user.role === USER_ROLES.CANDIDAT) {
         setCandidatId(user.id);
+        setCandidatZones([user.zone]);
+        setLoading(false);
       } else if (user.role === USER_ROLES.COACH) {
         Api.get(`/api/v1/user/candidat/`, {
           params: {
@@ -120,11 +110,14 @@ const Opportunites = () => {
           .then(({ data }) => {
             if (data) {
               setCandidatId(data.candidat.id);
+              setCandidatZones([data.candidat.zone]);
             } else {
               setHasError(true);
             }
+            setLoading(false);
           })
           .catch(() => {
+            setLoading(false);
             return setHasError(true);
           });
       }
@@ -159,6 +152,9 @@ const Opportunites = () => {
         ) : (
           <>
             <Filter
+              search={(text) => {
+                return setSearch(text);
+              }}
               loading={loading}
               filters={tabFilters}
               setFilters={setTabFilters}
@@ -173,7 +169,7 @@ const Opportunites = () => {
                     resetFilters={resetFilters}
                   />
                   <FiltersSideBar
-                    filterData={OPPORTUNITY_FILTERS_DATA}
+                    filterData={candidateFilters}
                     filters={filters}
                     setFilters={setFilters}
                   />
@@ -181,14 +177,19 @@ const Opportunites = () => {
               }
             >
               {candidatId && (
-                <CandidatOpportunityList
+                <OpportunityList
+                  search={search}
                   candidatId={candidatId}
+                  tabFilter={
+                    tabFilters.find((filter) => {
+                      return filter.active;
+                    }).tag
+                  }
                   filters={filters}
                   updateNumberOfResults={setNumberOfResults}
                 />
               )}
             </Filter>
-            <div />
           </>
         )}
       </Section>

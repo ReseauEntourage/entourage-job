@@ -6,7 +6,9 @@ import ModalEdit from '../modals/ModalEdit';
 import schemaUsefulInformation from '../forms/schema/formEditUsefulInformation';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
-import { mutateFormSchema } from '../../utils';
+import { getAllFilters, mutateFormSchema } from '../../utils';
+
+import { LOCATIONS } from '../../constants';
 
 const InfoProfileCard = ({
   contracts,
@@ -18,6 +20,7 @@ const InfoProfileCard = ({
   phone,
   address,
   onChange,
+  userZone,
 }) => {
   const mutatedSchema = mutateFormSchema(schemaUsefulInformation, [
     {
@@ -26,6 +29,15 @@ const InfoProfileCard = ({
         {
           propName: 'disabled',
           value: true,
+        },
+      ],
+    },
+    {
+      fieldId: 'locations',
+      props: [
+        {
+          propName: 'options',
+          value: getAllFilters(LOCATIONS, userZone),
         },
       ],
     },
@@ -132,6 +144,7 @@ InfoProfileCard.propTypes = {
   phone: PropTypes.string,
   address: PropTypes.string,
   onChange: PropTypes.func,
+  userZone: PropTypes.string,
 };
 
 InfoProfileCard.defaultProps = {
@@ -143,6 +156,7 @@ InfoProfileCard.defaultProps = {
   phone: '',
   address: '',
   onChange: null,
+  userZone: undefined,
 };
 
 export default InfoProfileCard;

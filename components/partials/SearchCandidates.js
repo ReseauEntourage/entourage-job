@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { initializeFilters } from '../../utils';
 import CVList from '../cv/CVList';
 import { GridNoSSR, Section } from '../utils';
 import FiltersSideBar from '../filters/FiltersSideBar';
@@ -10,6 +9,7 @@ import Icon from '../utils/Icon';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
 import { DataContext } from '../store/DataProvider';
+import { useFilters } from '../../hooks';
 
 let debounceTimeoutId;
 
@@ -19,14 +19,18 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
 
   const { getData, storeData } = useContext(DataContext);
 
-  const [filters, setFilters] = useState(
-    initializeFilters(CV_FILTERS_DATA, defaultHideEmployed ? [0] : null)
+  const {
+    filters,
+    setFilters,
+    numberOfResults,
+    setNumberOfResults,
+    resetFilters,
+  } = useFilters(
+    CV_FILTERS_DATA,
+    defaultHideEmployed
+      ? { [CV_FILTERS_DATA[0].key]: CV_FILTERS_DATA[0].constants }
+      : null
   );
-  const [numberOfResults, setNumberOfResults] = useState(0);
-
-  const resetFilters = useCallback(() => {
-    setFilters(initializeFilters(CV_FILTERS_DATA));
-  }, []);
 
   const startSearch = useCallback((searchString) => {
     if (searchString) {

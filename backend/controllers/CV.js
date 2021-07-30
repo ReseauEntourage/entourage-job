@@ -64,6 +64,7 @@ const INCLUDE_ALL_USERS_PRIVATE = {
         'email',
         'phone',
         'address',
+        'zone',
       ],
     },
   ],

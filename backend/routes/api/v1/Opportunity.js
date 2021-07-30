@@ -52,7 +52,7 @@ router.post('/', auth(), (req, res) => {
  * - 401
  */
 router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
-  OpportunityController.getOpportunities(req.query.query)
+  OpportunityController.getOpportunities(req.query)
     .then((listeOpportunities) => {
       logger(res).log(
         `Opportunités récupérés (Total : ${listeOpportunities.length})`
@@ -126,25 +126,32 @@ router.get(
  * Route : GET /api/<VERSION>/opportunity/<ID>
  * Description : Récupère l'opportunité associé à l'<ID> fournit
  */
-
-/*
-  router.get('/:id', auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]), (req, res) => {
-    OpportunityController.getOpportunity(req.params.id)
-    .then((opportunity) => {
-      if (opportunity) {
-        logger(res).log(`Opportunité trouvé`);
-        res.status(200).json(opportunity);
-      } else {
-        logger(res).log(`Aucune Opportunité trouvé`);
-        res.status(204).json(opportunity);
-      }
-    })
-    .catch((err) => {
-      logger(res).error(err);
-      res.status(401).send(err);
-    });
-  });
-*/
+router.get(
+  '/:id',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    OpportunityController.getOpportunity(
+      req.params.id,
+      req.payload.role === USER_ROLES.ADMIN,
+      req.payload.role === USER_ROLES.COACH
+        ? req.payload.candidatId
+        : req.payload.id
+    )
+      .then((opportunity) => {
+        if (opportunity) {
+          logger(res).log(`Opportunité trouvé`);
+          res.status(200).json(opportunity);
+        } else {
+          logger(res).log(`Aucune Opportunité trouvé`);
+          res.status(204).json(opportunity);
+        }
+      })
+      .catch((err) => {
+        logger(res).error(err);
+        res.status(401).send(err);
+      });
+  }
+);
 
 /**
  * Route: POST /api/<VERSION>/opportunity/join

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { GridNoSSR } from '../utils/Grid';
 import {
@@ -25,29 +25,32 @@ const CVFicheEdition = ({
   email,
   phone,
   address,
+  userZone,
 }) => {
   const [previewUrl, setPreviewUrl] = useState(undefined);
   const [imageUrl, setImageUrl] = useState(undefined);
 
-  const updateImage = () => {
+  const updateImage = useCallback(() => {
     // Use hash to reload image if an update is done
     const previewHash = Date.now();
     const baseUrl = `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${cv.UserId}.${cv.status}`;
     setPreviewUrl(`${baseUrl}.preview.jpg?${previewHash}`);
     setImageUrl(`${baseUrl}.jpg?${previewHash}`);
-  };
+  }, [cv.UserId, cv.status]);
 
   useEffect(() => {
     if (cv.status !== CV_STATUS.Draft.value) {
       updateImage();
     }
-  }, [cv]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cv.status]);
 
   useEffect(() => {
     if (!previewGenerating && cv) {
       updateImage();
     }
-  }, [previewGenerating]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cv, previewGenerating]);
 
   return (
     <GridNoSSR childWidths={['1-1']}>
@@ -127,6 +130,7 @@ const CVFicheEdition = ({
           phone={phone}
           address={address}
           onChange={onChange}
+          userZone={userZone}
         />
         <GridNoSSR childWidths={['1-2@m']} match>
           <SkillsCard list={cv.skills} onChange={onChange} />
@@ -176,6 +180,7 @@ CVFicheEdition.propTypes = {
   phone: PropTypes.string,
   address: PropTypes.string,
   previewGenerating: PropTypes.bool.isRequired,
+  userZone: PropTypes.string,
 };
 
 CVFicheEdition.defaultProps = {
@@ -183,6 +188,7 @@ CVFicheEdition.defaultProps = {
   disablePicture: false,
   phone: undefined,
   address: undefined,
+  userZone: undefined,
 };
 
 export default CVFicheEdition;

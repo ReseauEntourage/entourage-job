@@ -19,7 +19,7 @@ const CustomError = ({ statusCode, hasGetInitialPropsRun, err }) => {
     if (statusCode === 404) {
       router.push('/');
     }
-  }, [statusCode]);
+  }, [router, statusCode]);
 
   return <NextErrorComponent statusCode={statusCode} />;
 };
