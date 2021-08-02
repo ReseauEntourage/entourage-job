@@ -298,6 +298,9 @@ const CandidatCard = ({
             as={linksToCV.as}
             href={linksToCV.href}
             className="uk-link-toggle"
+            onClick={() => {
+              event(onCvClickEvent);
+            }}
           >
             <u className="uk-text-link uk-text-primary">Voir le CV</u>
           </SimpleLink>
@@ -386,6 +389,9 @@ const CandidatCard = ({
             as={linksToCV.as}
             href={linksToCV.href}
             className="uk-link-toggle uk-text-center"
+            onClick={() => {
+              event(onCvClickEvent);
+            }}
           >
             <u className="uk-text-link uk-text-primary te">Voir le CV</u>
           </SimpleLink>

@@ -1,6 +1,10 @@
+const { sendMail } = require('../controllers/Mail');
 const { OFFER_STATUS, JOBS, AIRTABLE_NAMES } = require('../../constants');
 
-const { findOfferStatus } = require('../../utils/Finding');
+const {
+  findOfferStatus,
+  getAdminMailFromDepartment,
+} = require('../../utils/Finding');
 
 const { addToWorkQueue } = require('../jobs');
 
@@ -163,7 +167,7 @@ const updateTable = (opportunity, candidates) => {
   });
 };
 
-const createOpportunity = async (data) => {
+const createOpportunity = async (data, isAdmin) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
   console.log(`Etape 1 - Création de l'opportunité de base`);
@@ -227,6 +231,21 @@ const createOpportunity = async (data) => {
     tableName: offerTable,
     fields,
   });
+
+  if (!isAdmin) {
+    const adminMail = getAdminMailFromDepartment(finalOpportunity.department);
+
+    await addToWorkQueue({
+      type: JOBS.JOB_TYPES.SEND_MAIL,
+      toEmail: adminMail,
+      subject: `Nouvelle offre d'emploi`,
+      text: `
+    Une nouvelle offre d'emploi est en attente de validation : ${finalOpportunity.title} - ${finalOpportunity.company}.
+    Vous pouvez la consulter en cliquant ici :
+    ${process.env.SERVER_URL}/backoffice/admin/offres?q=${finalOpportunity.id}.
+    `,
+    });
+  }
 
   return cleanedOpportunity;
 };

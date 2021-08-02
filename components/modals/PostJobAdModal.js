@@ -1,6 +1,8 @@
 /* global UIkit */
 
 import React from 'react';
+import { event } from '../../lib/gtag';
+import TAGS from '../../constants/tags';
 import { Button, IconNoSSR } from '../utils';
 import StepperModal from './StepperModal';
 import FormWithValidation from '../forms/FormWithValidation';
@@ -88,6 +90,7 @@ const PostJobAdModal = () => {
           );
         },
         (closeModal) => {
+          event(TAGS.POPUP_OFFRE_ENVOYER_OFFRE_GENERALE_CLIC);
           return (
             <div className="uk-flex uk-flex-center uk-margin-large">
               <div className="uk-card uk-card-body uk-text-center">
