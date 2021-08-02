@@ -19,16 +19,17 @@ describe('Opportunity', () => {
   const route = '/api/v1/opportunity';
   const nbOpportunity = 10;
   const nbPrivateOpportunity = 5;
-  let totalOpp = nbOpportunity + nbPrivateOpportunity;
+  let totalOpp = nbOpportunity + nbPrivateOpportunity + 1;
   let opportunities;
   let opportunitiesId;
   let loggedInAdmin;
   let loggedInCoach;
   let loggedInCandidat;
   let otherCandidat;
+  let privateOpportunities;
   let opportunitiesCandidat;
   let opportunityOtherCandidat;
-
+  let otherOpportunity;
   beforeAll(async () => {
     serverTest = await startTestServer();
     await recreateTestDB();
@@ -37,6 +38,7 @@ describe('Opportunity', () => {
       nbOpportunity,
       {
         isValidated: true,
+        isPublic: true,
       },
       true
     );
@@ -56,13 +58,12 @@ describe('Opportunity', () => {
       role: USER_ROLES.CANDIDAT,
       password: 'candidat',
     });
-    const privateOpportunities = await createEntities(
+    privateOpportunities = await createEntities(
       opportunityFactory,
       nbPrivateOpportunity,
       {
         isValidated: true,
-        isPrivate: true,
-        isPublished: true,
+        isPublic: false,
       },
       true
     );
@@ -83,6 +84,10 @@ describe('Opportunity', () => {
     otherCandidat = await createLoggedInUser({
       role: USER_ROLES.CANDIDAT,
       password: 'user',
+    });
+    otherOpportunity = await opportunityFactory({
+      isValidated: true,
+      isPublic: false,
     });
     /*
       opportunityOtherCandidat = await opportunityFactory({
@@ -305,6 +310,42 @@ describe('Opportunity', () => {
           const response = await request(serverTest)
             .get(`${route}/user/all/${otherCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(response.status).toBe(401);
+        });
+      });
+      describe('Read one specific opportunity - /:opportunityId', () => {
+        it('should return 200, if candidat read one of his opportunity', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${privateOpportunities[0].id}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.id).toStrictEqual(privateOpportunities[0].id);
+        });
+        it('should return 200, if a coach reads his associated candidat opportunity', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${privateOpportunities[0].id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.id).toStrictEqual(privateOpportunities[0].id);
+        });
+        it('should return 204, if candidat read an opportunity not associated to him', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${otherOpportunity.id}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          expect(response.status).toBe(204);
+          expect(response.body).toStrictEqual({});
+        });
+        it('should return 200, if admin reads an opportunity', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/${opportunities[0].id}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.id).toStrictEqual(opportunities[0].id);
+        });
+        it('should return 401, if user not connected', async () => {
+          const response = await request(serverTest).get(
+            `${route}/${opportunitiesId[0]}`
+          );
           expect(response.status).toBe(401);
         });
       });

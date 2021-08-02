@@ -138,12 +138,12 @@ router.get(
         : req.payload.id
     )
       .then((opportunity) => {
-        if (opportunity) {
+        if (opportunity && Object.keys(opportunity).length > 0) {
           logger(res).log(`Opportunité trouvé`);
           res.status(200).json(opportunity);
         } else {
           logger(res).log(`Aucune Opportunité trouvé`);
-          res.status(204).json(opportunity);
+          res.status(204).send(null);
         }
       })
       .catch((err) => {

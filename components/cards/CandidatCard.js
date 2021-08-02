@@ -393,7 +393,7 @@ const CandidatCard = ({
               event(onCvClickEvent);
             }}
           >
-            <u className="uk-text-link uk-text-primary te">Voir le CV</u>
+            <u className="uk-text-link uk-text-primary">Voir le CV</u>
           </SimpleLink>
         </div>
       )}

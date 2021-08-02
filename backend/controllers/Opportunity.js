@@ -144,6 +144,7 @@ const getOfferSearchOptions = (search) => {
       ],
     };
   }
+  return {};
 };
 
 const getAirtableOpportunityFields = (
