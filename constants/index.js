@@ -211,7 +211,7 @@ const CV_FILTERS_DATA = [
 
 const OPPORTUNITY_FILTERS_DATA = [
   {
-    key: 'isPublic',
+    key: 'hidePrivate',
     type: 'checkbox',
     constants: [{ label: 'Masquer les offres privées', value: true }],
     title: 'Masquer les offres privées',

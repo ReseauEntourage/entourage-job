@@ -211,11 +211,14 @@ const filterOffers = (offers, filtersObj, candidatId) => {
                   offer,
                   candidatId
                 );
-                hasFound = filtersObj[keys[i]].some((currentFilter) => {
-                  return (
-                    currentFilter.value === userOpportunity.status.toString()
-                  );
-                });
+                hasFound = userOpportunity
+                  ? filtersObj[keys[i]].some((currentFilter) => {
+                      return (
+                        currentFilter.value ===
+                        userOpportunity.status.toString()
+                      );
+                    })
+                  : false;
               } else {
                 hasFound = filtersObj[keys[i]].some((currentFilter) => {
                   if (
@@ -223,7 +226,7 @@ const filterOffers = (offers, filtersObj, candidatId) => {
                     offer.userOpportunity.length > 0
                   ) {
                     return offer.userOpportunity.some((userOpp) => {
-                      return currentFilter.value === userOpp.status;
+                      return currentFilter.value === userOpp.status.toString();
                     });
                   }
 

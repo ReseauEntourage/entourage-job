@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const {
   models: { Opportunity_User },
 } = require('../../backend/db/models');
@@ -9,10 +10,11 @@ const {
  * @param {string} userId must exist in DB
  * @returns {Objet<Opportunity_User>} model
  */
-const associateOpportunityUser = async (opportunityId, userId) => {
+const associateOpportunityUser = async (opportunityId, userId, props = {}) => {
   await Opportunity_User.create({
     OpportunityId: opportunityId,
     UserId: userId,
+    ...props,
   });
   const res = await Opportunity_User.findOne({
     where: {
@@ -35,7 +37,9 @@ const associateManyOpportunitiesUser = async (opportunitiesId, userId) => {
   const opportunitiesUser = [];
   for (let i = 0; i < opportunitiesId.length; i += 1) {
     // eslint-disable-next-line no-await-in-loop
-    const opp = await associateOpportunityUser(opportunitiesId[i], userId);
+    const opp = await associateOpportunityUser(opportunitiesId[i], userId, {
+      status: (i % 4) - 1,
+    });
     opportunitiesUser.push(opp);
   }
 

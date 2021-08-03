@@ -464,7 +464,7 @@ describe('CV', () => {
             ])
           );
         });
-        it('Should return 200, and all the cvs that matches multiples filters (AND between different filters, OR inside each filters)', async () => {
+        it('Should return 200, and all the cvs that matches multiple filters (AND between different filters, OR inside each filters)', async () => {
           const newUser1 = await userFactory(
             {
               role: USER_ROLES.CANDIDAT,
