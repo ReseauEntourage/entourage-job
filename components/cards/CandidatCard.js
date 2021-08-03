@@ -10,11 +10,11 @@ import {
 } from 'react-share';
 import { useRouter } from 'next/router';
 
+import { hasAsChild } from '../../utils';
 import { SimpleLink, GridNoSSR, IconNoSSR, ImgNoSSR } from '../utils';
 import ModalShareCV from '../modals/ModalShareCV';
 import Api from '../../Axios';
 import { SharesCountContext } from '../store/SharesCountProvider';
-import { hasAsChild } from '../../utils';
 import { LOCATIONS } from '../../constants';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
@@ -393,7 +393,7 @@ const CandidatCard = ({
               event(onCvClickEvent);
             }}
           >
-            <u className="uk-text-link uk-text-primary te">Voir le CV</u>
+            <u className="uk-text-link uk-text-primary">Voir le CV</u>
           </SimpleLink>
         </div>
       )}

@@ -36,6 +36,7 @@ const Textarea = ({
   useEffect(() => {
     setLabelClass((value && value.length > 0 && ' stay-small') || '');
     onChange({ target: { name, value: value || '', type: 'textarea' } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (

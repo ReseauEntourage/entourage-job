@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import CVList from '../cv/CVList';
 import { GridNoSSR, Section } from '../utils';
@@ -8,34 +8,38 @@ import { CV_FILTERS_DATA, STORAGE_KEYS } from '../../constants';
 import Icon from '../utils/Icon';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
-import { initializeFilters } from '../../utils';
 import { DataContext } from '../store/DataProvider';
+import { useFilters } from '../../hooks';
 
 let debounceTimeoutId;
 
-const SearchCandidates = ({ defaultHideEmployed, style }) => {
-  const [search, setSearch] = useState();
+const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
+  const [search, setSearch] = useState(null);
   const [searchBuffer, setSearchBuffer] = useState();
 
   const { getData, storeData } = useContext(DataContext);
 
-  const [filters, setFilters] = useState(
-    initializeFilters(CV_FILTERS_DATA, defaultHideEmployed ? [0] : null)
+  const {
+    filters,
+    setFilters,
+    numberOfResults,
+    setNumberOfResults,
+    resetFilters,
+  } = useFilters(
+    CV_FILTERS_DATA,
+    defaultHideEmployed
+      ? { [CV_FILTERS_DATA[0].key]: CV_FILTERS_DATA[0].constants }
+      : null
   );
-  const [numberOfResults, setNumberOfResults] = useState(0);
 
-  const resetFilters = () => {
-    setFilters(initializeFilters(CV_FILTERS_DATA));
-  };
-
-  const startSearch = (searchString) => {
+  const startSearch = useCallback((searchString) => {
     if (searchString) {
       event(TAGS.PAGE_GALERIE_RECHERCHE);
       setSearch(searchString);
     } else {
       setSearch(null);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (process.env.DISABLE_SEARCH_ON_THE_FLY !== 'true') {
@@ -44,27 +48,29 @@ const SearchCandidates = ({ defaultHideEmployed, style }) => {
         return startSearch(searchBuffer);
       }, 1000);
     }
-  }, [searchBuffer]);
+  }, [searchBuffer, startSearch]);
 
   useEffect(() => {
     const storageItem = getData(
-      defaultHideEmployed
+      isCompany
         ? STORAGE_KEYS.CV_FILTERS_COMPANY
         : STORAGE_KEYS.CV_FILTERS_PUBLIC
     );
     if (storageItem) {
       setFilters(storageItem);
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCompany]);
 
   useEffect(() => {
     storeData(
-      defaultHideEmployed
+      isCompany
         ? STORAGE_KEYS.CV_FILTERS_COMPANY
         : STORAGE_KEYS.CV_FILTERS_PUBLIC,
       filters
     );
-  }, [filters]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCompany, filters]);
 
   return (
     <Section style={style}>
@@ -136,12 +142,8 @@ const SearchCandidates = ({ defaultHideEmployed, style }) => {
         </div>
         <CVList
           search={search}
-          filters={{
-            businessLines: filters.businessLines,
-            locations: filters.locations,
-          }}
+          filters={filters}
           updateNumberOfResults={setNumberOfResults}
-          hideEmployed={filters.hideEmployed.length > 0}
         />
       </GridNoSSR>
     </Section>
@@ -150,12 +152,14 @@ const SearchCandidates = ({ defaultHideEmployed, style }) => {
 
 SearchCandidates.propTypes = {
   defaultHideEmployed: PropTypes.bool,
+  isCompany: PropTypes.bool,
   style: PropTypes.oneOf(['default', 'muted']),
 };
 
 SearchCandidates.defaultProps = {
   defaultHideEmployed: false,
   style: 'default',
+  isCompany: false,
 };
 
 export default SearchCandidates;

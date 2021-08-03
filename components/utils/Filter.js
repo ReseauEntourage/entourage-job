@@ -64,7 +64,7 @@ const Filter = ({
                 clearTimeout(debounceTimeoutId);
                 event.persist();
                 debounceTimeoutId = setTimeout(() => {
-                  return search(event);
+                  return search(event.target.value);
                 }, 1000);
               }}
             />
@@ -77,12 +77,7 @@ const Filter = ({
           <div data-uk-spinner />
         </div>
       ) : (
-        <ul
-          className="uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l"
-          data-uk-grid=""
-        >
-          {children}
-        </ul>
+        <div className="uk-width-1-1">{children}</div>
       )}
     </div>
   );
@@ -98,7 +93,7 @@ Filter.propTypes = {
 Filter.defaultProps = {
   children: [],
   search: null,
-  loading: true,
+  loading: false,
   otherFilterComponent: undefined,
 };
 

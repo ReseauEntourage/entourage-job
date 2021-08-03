@@ -87,6 +87,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      zone: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       paranoid: true,

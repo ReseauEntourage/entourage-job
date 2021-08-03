@@ -1,5 +1,5 @@
 // store/SharesCount.js
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Api from '../../Axios';
 import { VALUES } from '../../constants';
@@ -9,9 +9,9 @@ export const SharesCountContext = createContext({ totalShares: 0 });
 const SharesCountProvider = ({ children }) => {
   const [totalShares, setTotalShares] = useState(0);
 
-  const incrementSharesCount = () => {
+  const incrementSharesCount = useCallback(() => {
     setTotalShares(totalShares + 1);
-  };
+  }, [totalShares]);
 
   useEffect(() => {
     Api.get('api/v1/cv/shares')

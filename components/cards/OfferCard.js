@@ -17,6 +17,7 @@ const OfferCard = ({
   userOpportunity,
   isValidated,
   isAdmin,
+  department,
 }) => {
   const renderStatus = (userOpp) => {
     if (userOpp.status !== undefined) {
@@ -60,6 +61,12 @@ const OfferCard = ({
           <IconNoSSR name="user" />
           <p>{from}</p>
         </GridNoSSR>
+        {department && (
+          <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
+            <IconNoSSR name="location" />
+            <p>{department}</p>
+          </GridNoSSR>
+        )}
         <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
           <IconNoSSR name="world" />
           <p>{shortDescription}</p>
@@ -152,6 +159,7 @@ OfferCard.propTypes = {
   ]),
   isValidated: PropTypes.bool.isRequired,
   isAdmin: PropTypes.bool,
+  department: PropTypes.string,
 };
 
 OfferCard.defaultProps = {
@@ -162,5 +170,6 @@ OfferCard.defaultProps = {
   date: undefined,
   userOpportunity: undefined,
   isAdmin: false,
+  department: undefined,
 };
 export default OfferCard;

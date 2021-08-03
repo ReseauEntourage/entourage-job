@@ -28,6 +28,7 @@ describe('Auth', () => {
         role: USER_ROLES,
         password: 'unknownUser',
       },
+      {},
       false
     );
     loggedInCandidat = await createLoggedInUser({

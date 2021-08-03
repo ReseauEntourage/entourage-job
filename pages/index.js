@@ -22,6 +22,7 @@ const Index = ({ query }) => {
     if (query) {
       router.replace('/');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

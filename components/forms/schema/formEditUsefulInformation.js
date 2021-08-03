@@ -1,5 +1,5 @@
-import { LOCATIONS } from '../../../constants';
 import { getAllFilters } from '../../../utils';
+import { LOCATIONS } from '../../../constants';
 
 export default {
   id: 'form-usefullinformation',

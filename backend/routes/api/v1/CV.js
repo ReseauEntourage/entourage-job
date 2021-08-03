@@ -304,9 +304,10 @@ router.get('/', auth(), (req, res) => {
  * Exemple : <server_url>/api/v1/cv/cards/random?nb=2
  */
 router.get('/cards/random', auth(), (req, res) => {
-  CVController.getRandomShortCVs(req.query.nb, req.query.q)
-    .then((listeCVs) => {
-      res.status(200).json(listeCVs);
+  const { nb, q, ...restParams } = req.query;
+  CVController.getRandomShortCVs(nb, q, restParams)
+    .then((cvsRes) => {
+      res.status(200).json(cvsRes);
     })
     .catch((err) => {
       logger(res).error(err);

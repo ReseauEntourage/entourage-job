@@ -1,5 +1,5 @@
 import axios from '../../../Axios';
-import { USER_ROLES, BUSINESS_LINES } from '../../../constants';
+import { BUSINESS_LINES } from '../../../constants';
 import { FORMATTED_DEPARTMENTS } from '../../../constants/departements';
 
 export default {

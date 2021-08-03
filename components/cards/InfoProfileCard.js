@@ -6,7 +6,9 @@ import ModalEdit from '../modals/ModalEdit';
 import schemaUsefulInformation from '../forms/schema/formEditUsefulInformation';
 import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
-import { mutateFormSchema } from '../../utils';
+import { getAllFilters, mutateFormSchema } from '../../utils';
+
+import { LOCATIONS } from '../../constants';
 
 const InfoProfileCard = ({
   contracts,
@@ -18,6 +20,7 @@ const InfoProfileCard = ({
   phone,
   address,
   onChange,
+  userZone,
 }) => {
   const mutatedSchema = mutateFormSchema(schemaUsefulInformation, [
     {
@@ -26,6 +29,15 @@ const InfoProfileCard = ({
         {
           propName: 'disabled',
           value: true,
+        },
+      ],
+    },
+    {
+      fieldId: 'locations',
+      props: [
+        {
+          propName: 'options',
+          value: getAllFilters(LOCATIONS, userZone),
         },
       ],
     },
@@ -51,50 +63,50 @@ const InfoProfileCard = ({
           />
         )}
       </GridNoSSR>
-      <ul className="uk-list">
-        <li>
-          <IconNoSSR name="mail" style={{ width: 20 }} />{' '}
+      <GridNoSSR column gap="small">
+        <GridNoSSR row gap="small" middle>
+          <IconNoSSR name="mail" style={{ width: 20 }} />
           {email || 'Adresse mail non renseigné'}
-        </li>
-        <li>
-          <IconNoSSR name="phone" style={{ width: 20 }} />{' '}
+        </GridNoSSR>
+        <GridNoSSR row gap="small" middle>
+          <IconNoSSR name="phone" style={{ width: 20 }} />
           {phone || 'Numéro de téléphone non renseigné'}
-        </li>
-        <li>
-          <IconNoSSR name="home" style={{ width: 20 }} />{' '}
+        </GridNoSSR>
+        <GridNoSSR row gap="small" middle>
+          <IconNoSSR name="home" style={{ width: 20 }} />
           {address || 'Adresse postale non renseignée'}
-        </li>
-        <li>
-          <IconNoSSR name="file-text" style={{ width: 20 }} />{' '}
+        </GridNoSSR>
+        <GridNoSSR row gap="small" middle>
+          <IconNoSSR name="file-text" style={{ width: 20 }} />
           {contracts && contracts.length > 0
             ? contracts.join(' / ')
             : 'Type de contrat recherché non renseigné'}
-        </li>
-        <li>
-          <IconNoSSR name="location" style={{ width: 20 }} />{' '}
+        </GridNoSSR>
+        <GridNoSSR row gap="small" middle>
+          <IconNoSSR name="location" style={{ width: 20 }} />
           {locations && locations.length > 0
             ? locations.join(' / ')
             : 'Localisations non renseignées'}
-        </li>
-        <li>
-          <IconNoSSR name="calendar" style={{ width: 20 }} />{' '}
+        </GridNoSSR>
+        <GridNoSSR row gap="small" middle>
+          <IconNoSSR name="calendar" style={{ width: 20 }} />
           {availability && availability !== ''
             ? availability
             : 'Disponibilités non renseignée'}
-        </li>
-        <li>
-          <IconNoSSR name="users" style={{ width: 20 }} />{' '}
+        </GridNoSSR>
+        <GridNoSSR row gap="small" middle>
+          <IconNoSSR name="users" style={{ width: 20 }} />
           {languages && languages.length > 0
             ? languages.join(' / ')
             : 'Langues apprises non renseignées'}
-        </li>
-        <li>
-          <IconNoSSR name="car" style={{ width: 20 }} />{' '}
+        </GridNoSSR>
+        <GridNoSSR row gap="small" middle>
+          <IconNoSSR name="car" style={{ width: 20 }} />
           {transport && transport !== ''
             ? transport
             : 'Moyen de transport non renseigné'}
-        </li>
-      </ul>
+        </GridNoSSR>
+      </GridNoSSR>
       {onChange && (
         <ModalEdit
           id="modal-usefulinformation"
@@ -132,6 +144,7 @@ InfoProfileCard.propTypes = {
   phone: PropTypes.string,
   address: PropTypes.string,
   onChange: PropTypes.func,
+  userZone: PropTypes.string,
 };
 
 InfoProfileCard.defaultProps = {
@@ -143,6 +156,7 @@ InfoProfileCard.defaultProps = {
   phone: '',
   address: '',
   onChange: null,
+  userZone: undefined,
 };
 
 export default InfoProfileCard;

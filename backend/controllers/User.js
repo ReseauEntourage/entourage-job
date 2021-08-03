@@ -25,6 +25,7 @@ const ATTRIBUTES_USER = [
   'phone',
   'address',
   'role',
+  'zone',
   'gender',
   'lastConnection',
   'deletedAt',

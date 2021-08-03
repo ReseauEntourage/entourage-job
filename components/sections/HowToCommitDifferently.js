@@ -1,6 +1,6 @@
 import React from 'react';
 import { Section } from '../utils';
-import { CONTACT_INFO, EXTERNAL_LINKS } from '../../constants';
+import { EXTERNAL_LINKS } from '../../constants';
 import MultipleCTA from '../partials/MultipleCTA';
 
 const HowToCommitDifferently = () => {

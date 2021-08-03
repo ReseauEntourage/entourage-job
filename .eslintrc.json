@@ -21,7 +21,7 @@
     "allowImportExportEverywhere": false,
     "codeFrame": false
   },
-  "plugins": ["react", "prettier"],
+  "plugins": ["react", "react-hooks", "prettier"],
   "root": true,
   "rules": {
     "camelcase": "off",
@@ -53,6 +53,8 @@
     "react/jsx-props-no-spreading": "off",
     "react/jsx-wrap-multilines": "off",
     "react/static-property-placement": ["warn", "static getter"],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
     "react/jsx-filename-extension": [
       "warn",
       {

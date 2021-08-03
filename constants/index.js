@@ -1,4 +1,5 @@
 const TAGS = require('./tags');
+const { DEPARTMENTS_FILTERS, ADMIN_ZONES } = require('./departements');
 
 const OFFER_STATUS = [
   { value: -1, label: 'Offre à traiter', color: 'muted' },
@@ -108,58 +109,83 @@ const LOCATIONS = [
       {
         value: 'Île-de-France',
         label: 'Île-de-France',
+        zone: ADMIN_ZONES.PARIS,
         children: [
           {
             value: 'Paris & proche banlieue',
             label: 'Paris & proche banlieue',
+            zone: ADMIN_ZONES.PARIS,
             children: [
               {
                 value: 'Val-de-Marne (94)',
                 label: 'Val-de-Marne (94)',
+                zone: ADMIN_ZONES.PARIS,
               },
               {
                 value: 'Seine-Saint-Denis (93)',
                 label: 'Seine-Saint-Denis (93)',
+                zone: ADMIN_ZONES.PARIS,
               },
               {
                 value: 'Hauts-de-Seine (92)',
                 label: 'Hauts-de-Seine (92)',
+                zone: ADMIN_ZONES.PARIS,
               },
               {
                 value: 'Paris (75)',
                 label: 'Paris (75)',
+                zone: ADMIN_ZONES.PARIS,
               },
             ],
           },
           {
             value: "Val-d'Oise (95)",
             label: "Val-d'Oise (95)",
+            zone: ADMIN_ZONES.PARIS,
           },
           {
             value: 'Essonne (91)',
             label: 'Essonne (91)',
+            zone: ADMIN_ZONES.PARIS,
           },
           {
             value: 'Yvelines (78)',
             label: 'Yvelines (78)',
+            zone: ADMIN_ZONES.PARIS,
           },
           {
             value: 'Seine-et-Marne (77)',
             label: 'Seine-et-Marne (77)',
+            zone: ADMIN_ZONES.PARIS,
           },
         ],
       },
       {
         value: 'Lille (59)',
         label: 'Lille (59)',
+        zone: ADMIN_ZONES.LILLE,
       },
       {
         value: 'Lyon (69)',
         label: 'Lyon (69)',
+        zone: ADMIN_ZONES.LYON,
       },
     ],
-    admin: process.env.ADMIN_HZ,
   },
+];
+
+const OFFER_CANDIDATE_FILTERS_DATA = [
+  { tag: 'all', title: 'Toutes les offres' },
+  { tag: 'private', title: 'Offres du candidat', active: true },
+  { tag: 'public', title: 'Offres générales' },
+  { tag: 'archived', title: 'Offres archivées' },
+];
+
+const OFFER_ADMIN_FILTERS_DATA = [
+  { tag: 'all', title: 'Toutes les offres' },
+  { tag: 'pending', title: 'Offres à valider', active: true },
+  { tag: 'validated', title: 'Offres publiées' },
+  { tag: 'archived', title: 'Offres archivées' },
 ];
 
 const CV_FILTERS_DATA = [
@@ -185,15 +211,20 @@ const CV_FILTERS_DATA = [
 
 const OPPORTUNITY_FILTERS_DATA = [
   {
+    key: 'hidePrivate',
+    type: 'checkbox',
+    constants: [{ label: 'Masquer les offres privées', value: true }],
+    title: 'Masquer les offres privées',
+  },
+  {
     key: 'status',
     constants: OFFER_STATUS,
     title: 'Status',
   },
   {
-    key: 'isPublic',
-    type: 'checkbox',
-    constants: [{ label: 'Masquer les offres privées', value: true }],
-    title: 'Masquer les offres privées',
+    key: 'locations',
+    constants: DEPARTMENTS_FILTERS,
+    title: 'Secteurs géographiques',
   },
 ];
 
@@ -325,6 +356,8 @@ module.exports = {
   LOCATIONS,
   CV_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
+  OFFER_CANDIDATE_FILTERS_DATA,
+  OFFER_ADMIN_FILTERS_DATA,
   NEWSLETTER_ORIGINS,
   REDIS_KEYS,
   JOBS,

@@ -34,6 +34,7 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
         })
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [composers]);
 
   // Fix because of bug where multiple modals with the same id are created

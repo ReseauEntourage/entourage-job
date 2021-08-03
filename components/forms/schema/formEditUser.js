@@ -1,5 +1,7 @@
+import _ from 'lodash';
 import axios from '../../../Axios';
 import { USER_ROLES } from '../../../constants';
+import { ADMIN_ZONES } from '../../../constants/departements';
 
 export default {
   id: 'form-edit-user',
@@ -112,6 +114,19 @@ export default {
       placeholder: 'Tapez le nom du coach ou candidat à lier',
       title: 'Coach ou candidat lié',
     },
+    {
+      id: 'zone',
+      title: 'Zone*',
+      name: 'zone',
+      component: 'select',
+      options: [
+        { value: -1, label: 'Choisissez une zone' },
+        { value: ADMIN_ZONES.PARIS, label: _.capitalize(ADMIN_ZONES.PARIS) },
+        { value: ADMIN_ZONES.LILLE, label: _.capitalize(ADMIN_ZONES.LILLE) },
+        { value: ADMIN_ZONES.LYON, label: _.capitalize(ADMIN_ZONES.LYON) },
+        { value: ADMIN_ZONES.HZ, label: _.capitalize(ADMIN_ZONES.HZ) },
+      ],
+    },
   ],
   rules: [
     {
@@ -174,6 +189,17 @@ export default {
       ],
       validWhen: true,
       message: '30 caractères maximum',
+    },
+    {
+      field: 'zone',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
     },
   ],
 };

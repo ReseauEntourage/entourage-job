@@ -1,10 +1,9 @@
 const fakerStatic = require('faker');
 const uuid = require('uuid/v4');
+const _ = require('lodash');
 
 const { CV_STATUS } = require('../../constants');
-const {
-  models: { CV, CV_Search },
-} = require('../../backend/db/models');
+const { models } = require('../../backend/db/models');
 
 /**
  * Extract cv status values from CV_STATUS constant
@@ -67,25 +66,60 @@ const generateCv = async (props = {}) => {
  * @param {boolean} props.careerPathOpen
  * @param {string} props.status
  * @param {number} props.version
- * @param {Object} componentsId The ids of cv components:
+ * @param {Object} components The ids of cv components:
  * - {Array<string>} ambition
  * - {Array<string>} businesslines
  * - {Array<string>} constract
  * - {Array<string>} language
  * - {Array<string>} skill
+ * - {Array<string>} locations
  * @param {boolean} insertInDB @default true
  * @return {Promise<CV>}
  */
-const cvFactory = async (props = {}, componentsId = {}, insertInDB = true) => {
+const cvFactory = async (props = {}, components = {}, insertInDB = true) => {
   const cvData = await generateCv(props);
+
   const cvFull = {
     ...cvData,
-    ...componentsId,
   };
+
   let cvDB;
   if (insertInDB) {
-    cvDB = await CV.create(cvFull);
-    await CV_Search.create({
+    cvDB = await models.CV.create(cvFull);
+
+    // TODO manage creation of attached component in a cleaner way
+    _.forEach(Object.keys(components), async (componentKey) => {
+      switch (componentKey) {
+        case 'locations':
+          const locations = await Promise.all(
+            components[componentKey].map((name) => {
+              return models.Location.findOrCreate({
+                where: { name },
+              }).then((model) => {
+                return model[0];
+              });
+            })
+          );
+          await cvDB.addLocation(locations);
+          break;
+        case 'businessLines':
+          const businessLines = await Promise.all(
+            components[componentKey].map((name) => {
+              return models.BusinessLine.findOrCreate({
+                where: { name },
+              }).then((model) => {
+                return model[0];
+              });
+            })
+          );
+          await cvDB.addBusinessLines(businessLines);
+          break;
+        default:
+          break;
+      }
+    });
+
+    await models.CV_Search.create({
       id: uuid(),
       CVId: cvDB.id,
       searchString: JSON.stringify({ ...cvFull, ...props }),

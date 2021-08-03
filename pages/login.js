@@ -26,7 +26,7 @@ const Login = () => {
         router.push('/backoffice/candidat/offres');
       }
     }
-  }, [user]);
+  }, [router, user]);
 
   const rateLimitErrorMessage =
     'Trop de tentatives infructueuses.\nVeuillez ressayer dans 1 minute.';

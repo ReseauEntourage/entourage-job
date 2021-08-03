@@ -1,7 +1,7 @@
 const faker = require('faker');
 const { USER_ROLES } = require('../../constants');
 const {
-  models: { User },
+  models: { User, User_Candidat },
 } = require('../../backend/db/models');
 const Auth = require('../../backend/controllers/Auth');
 
@@ -28,6 +28,7 @@ const generateUser = async (props = {}) => {
     phone: props.phone || faker.phone.phoneNumber(),
     address: props.address || faker.address.streetAddress(),
     lastConnection: props.lastConnection || `${faker.date.past()}`,
+    zone: props.zone || faker.address.county(),
   };
 };
 
@@ -52,15 +53,27 @@ const generateUserCandidat = async (candidatId, props = {}) => {
 /**
  * Create a User in DB.
  * @param {Object} props Properties to use to create User
+ * @param {Object} userCandidatProps Properties to use to create UserCandidat association
  * @param {boolean} insertInDB @default true
  * @return {Promise<User>} a user model,
  * @optional if no DB insertion @returns generated user data
  */
-const userFactory = async (props = {}, insertInDB = true) => {
+const userFactory = async (
+  props = {},
+  userCandidatProps = {},
+  insertInDB = true
+) => {
   let userData = await generateUser(props);
-
   if (insertInDB) {
     await User.create(userData);
+    await User_Candidat.update(
+      { ...userCandidatProps },
+      {
+        where: {
+          candidatId: userData.id,
+        },
+      }
+    );
     const userDb = await User.findOne({ where: { email: userData.email } });
     userData = userDb.dataValues;
   }

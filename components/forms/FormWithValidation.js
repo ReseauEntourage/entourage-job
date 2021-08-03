@@ -115,6 +115,7 @@ const FormWithValidation = forwardRef(
 
     useEffect(() => {
       initializeForm();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fields, defaultValues]);
 
     return (

@@ -66,7 +66,7 @@ const UserProvider = ({ children }) => {
         .then(({ data }) => {
           localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.user.token);
           setIsAuthentificated(true);
-          setUser(data.user);
+          if (!user) setUser(data.user);
           restrictAccessByRole(data.user.role);
         })
         .catch((err) => {
@@ -79,6 +79,7 @@ const UserProvider = ({ children }) => {
         resetAndRedirect();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children]);
 
   return (
