@@ -41,7 +41,6 @@ const Opportunites = () => {
 
   const setCandidatZone = useCallback(
     (candidatZone) => {
-      console.log('CANDIDATE ZONE', candidatZone);
       if (!candidatZone) {
         setFilters(initializeFilters(candidateFilters));
       } else {
