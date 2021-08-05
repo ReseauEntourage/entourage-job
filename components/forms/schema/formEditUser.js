@@ -58,6 +58,19 @@ export default {
       title: 'Adresse postale',
     },
     {
+      id: 'zone',
+      title: 'Zone*',
+      name: 'zone',
+      component: 'select',
+      options: [
+        { value: -1, label: 'Choisissez une zone' },
+        { value: ADMIN_ZONES.PARIS, label: _.capitalize(ADMIN_ZONES.PARIS) },
+        { value: ADMIN_ZONES.LILLE, label: _.capitalize(ADMIN_ZONES.LILLE) },
+        { value: ADMIN_ZONES.LYON, label: _.capitalize(ADMIN_ZONES.LYON) },
+        { value: ADMIN_ZONES.HZ, label: _.capitalize(ADMIN_ZONES.HZ) },
+      ],
+    },
+    {
       id: 'role',
       title: 'Role*',
       name: 'role',
@@ -113,19 +126,6 @@ export default {
       },
       placeholder: 'Tapez le nom du coach ou candidat à lier',
       title: 'Coach ou candidat lié',
-    },
-    {
-      id: 'zone',
-      title: 'Zone*',
-      name: 'zone',
-      component: 'select',
-      options: [
-        { value: -1, label: 'Choisissez une zone' },
-        { value: ADMIN_ZONES.PARIS, label: _.capitalize(ADMIN_ZONES.PARIS) },
-        { value: ADMIN_ZONES.LILLE, label: _.capitalize(ADMIN_ZONES.LILLE) },
-        { value: ADMIN_ZONES.LYON, label: _.capitalize(ADMIN_ZONES.LYON) },
-        { value: ADMIN_ZONES.HZ, label: _.capitalize(ADMIN_ZONES.HZ) },
-      ],
     },
   ],
   rules: [

@@ -14,13 +14,16 @@ const Select = ({
   hidden,
 }) => {
   return (
-    <>
+    <div
+      style={{
+        padding: '15px 0',
+      }}
+    >
       <div
         className={`uk-form-controls ent-select${hidden ? ' uk-hidden' : ''}`}
         style={{
           paddingTop: '15px',
           paddingBottom: '2px',
-          margin: '15px 0',
         }}
       >
         {title ? (
@@ -64,7 +67,7 @@ const Select = ({
         </select>
       </div>
       <FormValidatorErrorMessage validObj={valid} />
-    </>
+    </div>
   );
 };
 Select.defaultProps = {

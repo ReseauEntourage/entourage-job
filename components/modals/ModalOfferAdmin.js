@@ -139,13 +139,13 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
             <OfferInfoContainer>
               {(() => {
                 let className = ' uk-label-warning';
-                let content = 'En attente';
+                let content = 'À valider';
                 if (currentOffer.isValidated) {
-                  content = 'Validé';
+                  content = 'Publiée';
                   className = ' uk-label-success';
                 }
                 if (currentOffer.isArchived) {
-                  content = 'Archivé';
+                  content = 'Archivée';
                   className = ' uk-label-danger';
                 }
                 return <div className={`uk-label${className}`}>{content}</div>;

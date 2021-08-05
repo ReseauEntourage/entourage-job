@@ -125,12 +125,12 @@ const OfferCard = ({
               {!archived &&
                 (isValidated ? (
                   <div className="uk-flex uk-flex-middle">
-                    Validé&nbsp;
+                    Publiée&nbsp;
                     <IconNoSSR name="check" />
                   </div>
                 ) : (
                   <div className="uk-flex uk-flex-middle uk-text-warning">
-                    En attente
+                    À valider
                   </div>
                 ))}
             </div>
