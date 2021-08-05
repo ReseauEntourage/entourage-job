@@ -28,8 +28,7 @@ const CVPage = ({ cv, router, hideShareOptions }) => {
 
   useEffect(() => {
     updateSharesCount(cv.UserId, 'other');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cv.UserId]);
+  }, [cv.UserId, updateSharesCount]);
 
   if (!cv) {
     return (

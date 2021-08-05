@@ -14,6 +14,7 @@ import ImgProfile from '../../../../components/headers/ImgProfile';
 import { CV_STATUS, USER_ROLES } from '../../../../constants';
 import Button from '../../../../components/utils/Button';
 import { mutateFormSchema } from '../../../../utils';
+import { usePrevious } from '../../../../hooks/utils';
 
 let debounceTimeoutId;
 
@@ -21,6 +22,7 @@ function translateStatusCV(status) {
   const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unknown;
   return <span className={`uk-text-${cvStatus.style}`}>{cvStatus.label}</span>;
 }
+const LIMIT = 50;
 
 const MembersAdmin = ({ query: { role } }) => {
   const [members, setMembers] = useState([]);
@@ -29,7 +31,7 @@ const MembersAdmin = ({ query: { role } }) => {
   const [loading, setLoading] = useState(true);
   const [allLoaded, setAllLoaded] = useState(false);
   const [offset, setOffset] = useState(0);
-  const LIMIT = 50;
+  const prevSearchQuery = usePrevious(searchQuery);
   const router = useRouter();
 
   const mutatedSchema = mutateFormSchema(schemaCreateUser, [
@@ -66,8 +68,12 @@ const MembersAdmin = ({ query: { role } }) => {
           setOffset(LIMIT);
           setAllLoaded(false);
         } else {
-          setMembers([...members, ...data]);
-          setOffset(offset + LIMIT);
+          setMembers((prevMembers) => {
+            return [...prevMembers, ...data];
+          });
+          setOffset((prevOffset) => {
+            return prevOffset + LIMIT;
+          });
         }
 
         if (data.length < LIMIT) {
@@ -80,13 +86,14 @@ const MembersAdmin = ({ query: { role } }) => {
         setLoading(false);
       }
     },
-    [members, offset, role]
+    [offset, role]
   );
 
   useEffect(() => {
-    fetchData(true, searchQuery);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [role, searchQuery]);
+    if (searchQuery !== prevSearchQuery) {
+      fetchData(true, searchQuery);
+    }
+  }, [fetchData, prevSearchQuery, searchQuery]);
 
   return (
     <LayoutBackOffice title="Gestion des membres">
@@ -378,7 +385,7 @@ const MembersAdmin = ({ query: { role } }) => {
                 <Button
                   style="text"
                   onClick={() => {
-                    return fetchData();
+                    return fetchData(false, searchQuery);
                   }}
                 >
                   Voir plus...

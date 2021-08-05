@@ -13,17 +13,17 @@ import {
 import Header from '../components/headers/Header';
 import HowItWorks from '../components/sections/HowItWorks';
 import AnnouncementPartial from '../components/partials/AnnouncementPartial';
+import { useMount } from '../hooks/utils';
 
 const Index = ({ query }) => {
   const router = useRouter();
 
-  useEffect(() => {
+  useMount(() => {
     // Fix because the site would'nt load right if there was a query param on the root page
     if (query) {
       router.replace('/');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   return (
     <Layout>

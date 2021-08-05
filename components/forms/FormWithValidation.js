@@ -7,6 +7,7 @@ import React, {
   useState,
   forwardRef,
   useImperativeHandle,
+  useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 import FooterForm from '../utils/FooterForm';
@@ -89,7 +90,7 @@ const FormWithValidation = forwardRef(
       }
     };
 
-    const initializeForm = () => {
+    const initializeForm = useCallback(() => {
       // on extrait les nom des champs
       const fieldsId = fields.map((field) => {
         return field.id;
@@ -105,7 +106,7 @@ const FormWithValidation = forwardRef(
 
       setFieldValues(values);
       setFieldValidations(validations);
-    };
+    }, [defaultValues, fields]);
 
     useImperativeHandle(ref, () => {
       return {
@@ -115,8 +116,7 @@ const FormWithValidation = forwardRef(
 
     useEffect(() => {
       initializeForm();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fields, defaultValues]);
+    }, [initializeForm]);
 
     return (
       <form

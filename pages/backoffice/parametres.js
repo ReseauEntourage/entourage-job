@@ -12,7 +12,7 @@ import schemaPersonalData from '../../components/forms/schema/formPersonalData.j
 import schemaChangePassword from '../../components/forms/schema/formChangePassword.json';
 import ToggleWithConfirmationModal from '../../components/backoffice/ToggleWithConfirmationModal';
 import { USER_ROLES } from '../../constants';
-import { useResetForm } from '../../hooks';
+import { useResetForm } from '../../hooks/utils';
 import UserInformationCard from '../../components/cards/UserInformationCard';
 import { mutateFormSchema } from '../../utils';
 

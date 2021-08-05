@@ -6,16 +6,15 @@ export const DataContext = createContext({});
 const DataProvider = ({ children }) => {
   const [data, setData] = useState(true);
 
-  const storeData = useCallback(
-    (key, value, storeInStorage) => {
-      if (storeInStorage) localStorage.setItem(key, JSON.stringify(value));
-      setData({
-        ...data,
+  const storeData = useCallback((key, value, storeInStorage) => {
+    if (storeInStorage) localStorage.setItem(key, JSON.stringify(value));
+    setData((prevData) => {
+      return {
+        ...prevData,
         [key]: value,
-      });
-    },
-    [data]
-  );
+      };
+    });
+  }, []);
 
   const getData = useCallback(
     (key) => {
@@ -25,9 +24,11 @@ const DataProvider = ({ children }) => {
       let item = localStorage.getItem(key);
       if (item) {
         item = JSON.parse(item);
-        setData({
-          ...data,
-          [key]: item,
+        setData((prevData) => {
+          return {
+            ...prevData,
+            [key]: item,
+          };
         });
       }
 

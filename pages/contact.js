@@ -5,7 +5,7 @@ import interestLinkedOutSchema from '../components/forms/schema/formInterestLink
 import { Section } from '../components/utils';
 import FormWithValidation from '../components/forms/FormWithValidation';
 import Api from '../Axios';
-import { useResetForm } from '../hooks';
+import { useResetForm } from '../hooks/utils';
 import SimpleLink from '../components/utils/SimpleLink';
 
 const Contact = () => {

@@ -9,6 +9,7 @@ import Api from '../../Axios';
 import { CV_FILTERS_DATA, INITIAL_NB_OF_CV_TO_DISPLAY } from '../../constants';
 import PostJobAdModal from '../modals/PostJobAdModal';
 import SimpleLink from '../utils/SimpleLink';
+import { usePrevious } from '../../hooks/utils';
 
 const NoCVInThisArea = () => {
   return (
@@ -40,47 +41,65 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
     return setNbOfCVToDisplay(nbOfCVToDisplay + INITIAL_NB_OF_CV_TO_DISPLAY);
   }, [nbOfCVToDisplay]);
 
-  const fetchData = useCallback(() => {
-    Api.get(`/api/v1/cv/cards/random`, {
-      params: {
-        q: search,
-        nb: nbOfCVToDisplay,
-        ...filtersToQueryParams(filters),
-      },
-    })
-      .then(({ data }) => {
-        setHasSuggestions(data.suggestions);
-        if (cvs) {
-          return setCVs([
-            ...cvs,
-            ..._.differenceWith(data.cvs, cvs, (cv1, cv2) => {
-              return cv1.id === cv2.id;
-            }),
-          ]);
-        }
+  const prevSearch = usePrevious(search);
+  const prevFilters = usePrevious(filters);
+  const prevNbOfCVToDisplay = usePrevious(nbOfCVToDisplay);
 
-        return setCVs(data.cvs);
+  const fetchData = useCallback(
+    (isPagination) => {
+      Api.get(`/api/v1/cv/cards/random`, {
+        params: {
+          q: search,
+          nb: nbOfCVToDisplay,
+          ...filtersToQueryParams(filters),
+        },
       })
-      .catch((err) => {
-        console.error(err);
-        setError('Impossible de récupérer les CVs.');
-      });
-  }, [cvs, filters, nbOfCVToDisplay, search]);
+        .then(({ data }) => {
+          setHasSuggestions(data.suggestions);
+          setCVs((prevCVs = []) => {
+            console.log(prevCVs);
+            if (isPagination) {
+              return [
+                ...prevCVs,
+                ..._.differenceWith(data.cvs, prevCVs, (cv1, cv2) => {
+                  return cv1.id === cv2.id;
+                }),
+              ];
+            }
+
+            return data.cvs;
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          setError('Impossible de récupérer les CVs.');
+        });
+    },
+    [filters, nbOfCVToDisplay, search]
+  );
 
   useEffect(() => {
-    setCVs(undefined);
-    setError(undefined);
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, search]);
-
-  useEffect(() => {
-    if (nbOfCVToDisplay > defaultNbOfCVs) {
+    if (search !== prevSearch || filters !== prevFilters) {
       setError(undefined);
+      setCVs(undefined);
       fetchData();
+    } else if (
+      nbOfCVToDisplay !== prevNbOfCVToDisplay &&
+      nbOfCVToDisplay > defaultNbOfCVs
+    ) {
+      setError(undefined);
+      fetchData(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nbOfCVToDisplay]);
+  }, [
+    defaultNbOfCVs,
+    fetchData,
+    filters,
+    nbOfCVToDisplay,
+    prevFilters,
+    prevNbOfCVToDisplay,
+    prevSearch,
+    search,
+  ]);
 
   useEffect(() => {
     const hasFiltersActivated = Object.keys(filters).some((filter) => {

@@ -8,7 +8,8 @@ import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
-import { useRemoveModal, useResetForm } from '../../hooks';
+import { useRemoveModal, useResetForm } from '../../hooks/utils';
+
 import { findOfferStatus, formatParagraph } from '../../utils';
 import { OFFER_STATUS } from '../../constants';
 

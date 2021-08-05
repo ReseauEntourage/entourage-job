@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import _ from 'lodash';
 import OpportunityList from '../../../components/opportunities/OpportunityList';
 import { findFilter, initializeFilters } from '../../../utils';
 import { DEPARTMENTS_FILTERS } from '../../../constants/departements';
@@ -19,6 +20,8 @@ import {
 } from '../../../constants';
 import OpportunityError from '../../../components/opportunities/OpportunityError';
 
+const candidateFilters = OPPORTUNITY_FILTERS_DATA.slice(1);
+
 const Opportunites = () => {
   const { user } = useContext(UserContext);
 
@@ -30,8 +33,6 @@ const Opportunites = () => {
   const [candidatZones, setCandidatZones] = useState();
 
   const [tabFilters, setTabFilters] = useState(OFFER_CANDIDATE_FILTERS_DATA);
-  const candidateFilters = OPPORTUNITY_FILTERS_DATA.slice(1);
-
   const {
     filters,
     setFilters,
@@ -58,9 +59,7 @@ const Opportunites = () => {
         );
       }
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [candidatZones]);
+  }, [candidatZones, setFilters]);
 
   useEffect(() => {
     if (candidatId) {

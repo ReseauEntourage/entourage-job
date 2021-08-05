@@ -219,7 +219,7 @@ const OPPORTUNITY_FILTERS_DATA = [
   {
     key: 'status',
     constants: OFFER_STATUS,
-    title: 'Status',
+    title: 'Statut',
   },
   {
     key: 'locations',

@@ -47,8 +47,7 @@ const Container = ({ Component, pageProps, err }) => {
     setTimeout(() => {
       setFading(true);
     }, 1000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isFirstLoad, setIsFirstLoad]);
 
   useEffect(() => {
     if (fading) {

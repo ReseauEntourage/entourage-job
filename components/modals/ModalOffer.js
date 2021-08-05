@@ -9,7 +9,7 @@ import { CloseButtonNoSSR } from '../utils/CloseButton';
 import Api from '../../Axios';
 import { OFFER_STATUS } from '../../constants';
 import { formatParagraph } from '../../utils';
-import { useRemoveModal } from '../../hooks';
+import { useRemoveModal } from '../../hooks/utils';
 
 export const List = ({ className, children }) => {
   return (
@@ -91,8 +91,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
     return setNoteBuffer(note);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(resetNoteBuffer, [currentOffer]);
+  useEffect(resetNoteBuffer, [currentOffer, note]);
 
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">

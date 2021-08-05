@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { usePrevious } from '../../hooks/utils';
 import { GridNoSSR } from '../utils/Grid';
 import {
   ExperiencesProfileCard,
@@ -30,6 +31,9 @@ const CVFicheEdition = ({
   const [previewUrl, setPreviewUrl] = useState(undefined);
   const [imageUrl, setImageUrl] = useState(undefined);
 
+  const prevPreviewGenerating = usePrevious(previewGenerating);
+  const prevCVStatus = usePrevious(cv.status);
+
   const updateImage = useCallback(() => {
     // Use hash to reload image if an update is done
     const previewHash = Date.now();
@@ -39,18 +43,21 @@ const CVFicheEdition = ({
   }, [cv.UserId, cv.status]);
 
   useEffect(() => {
-    if (cv.status !== CV_STATUS.Draft.value) {
+    console.log('CV_STATUS CHANGED');
+    if (
+      (prevCVStatus !== cv.status && cv.status !== CV_STATUS.Draft.value) ||
+      (!!prevPreviewGenerating && !previewGenerating)
+    ) {
+      console.log('update image');
       updateImage();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cv.status]);
-
-  useEffect(() => {
-    if (!previewGenerating && cv) {
-      updateImage();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cv, previewGenerating]);
+  }, [
+    cv.status,
+    prevCVStatus,
+    prevPreviewGenerating,
+    previewGenerating,
+    updateImage,
+  ]);
 
   return (
     <GridNoSSR childWidths={['1-1']}>

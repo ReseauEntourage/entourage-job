@@ -10,6 +10,7 @@ import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
 import { DataContext } from '../store/DataProvider';
 import { useFilters } from '../../hooks';
+import { useMount } from '../../hooks/utils';
 
 let debounceTimeoutId;
 
@@ -50,7 +51,7 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
     }
   }, [searchBuffer, startSearch]);
 
-  useEffect(() => {
+  useMount(() => {
     const storageItem = getData(
       isCompany
         ? STORAGE_KEYS.CV_FILTERS_COMPANY
@@ -59,8 +60,7 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
     if (storageItem) {
       setFilters(storageItem);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCompany]);
+  });
 
   useEffect(() => {
     storeData(
@@ -69,8 +69,7 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
         : STORAGE_KEYS.CV_FILTERS_PUBLIC,
       filters
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCompany, filters]);
+  }, [isCompany, filters, storeData]);
 
   return (
     <Section style={style}>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useRemoveModal } from '../../hooks';
+import { useRemoveModal } from '../../hooks/utils';
 
 const ModalGeneric = ({
   children,

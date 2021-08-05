@@ -1,6 +1,7 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { usePrevious } from '../../../../hooks/utils';
 import LayoutBackOffice from '../../../../components/backoffice/LayoutBackOffice';
 import Api from '../../../../Axios';
 import {
@@ -34,7 +35,9 @@ const CVPage = () => {
     push,
   } = useRouter();
 
-  const getUser = () => {
+  const prevId = usePrevious(id);
+
+  const getUser = useCallback(() => {
     Api.get(`/api/v1/user/${id}`)
       .then(({ data }) => {
         setUser(data);
@@ -44,22 +47,16 @@ const CVPage = () => {
         console.log(err);
         setLoading(false);
       });
-  };
-
-  useEffect(() => {
-    if (id) {
-      setLoading(true);
-      getUser();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
-    if (onglet === 'settings') {
+    if (id !== prevId) {
+      setLoading(true);
+      getUser();
+    } else if (onglet === 'settings') {
       getUser();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onglet]);
+  }, [onglet, getUser, id, prevId]);
 
   let mutatedSchema = mutateFormSchema(schemaEditUser, [
     {
