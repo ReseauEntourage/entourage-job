@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Api from '../../Axios';
-import schema from '../forms/schema/formEditOpportunity';
+import schema, { adminMutation } from '../forms/schema/formEditOpportunity';
 import FormWithValidation from '../forms/FormWithValidation';
 import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
@@ -10,7 +10,11 @@ import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
 import { useRemoveModal, useResetForm } from '../../hooks/utils';
 
-import { findOfferStatus, formatParagraph } from '../../utils';
+import {
+  findOfferStatus,
+  formatParagraph,
+  mutateFormSchema,
+} from '../../utils';
 import { OFFER_STATUS } from '../../constants';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
@@ -20,6 +24,20 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  // desactivation du champ de disclaimer
+  const mutatedSchema = mutateFormSchema(schema, [
+    {
+      fieldId: 'disclaimer',
+      props: [
+        {
+          propName: 'hidden',
+          value: true,
+        },
+      ],
+    },
+    adminMutation,
+  ]);
 
   const [form, resetForm] = useResetForm();
 
@@ -74,7 +92,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
           <h3>Modification de l&apos;offres d&apos;emploi</h3>
           <FormWithValidation
             ref={form}
-            formSchema={schema}
+            formSchema={mutatedSchema}
             defaultValues={{
               ...currentOffer,
               candidatesId:

@@ -686,16 +686,6 @@ const updateOpportunity = async (opportunity) => {
   const sendJobOfferMails = (candidates) => {
     return Promise.all(
       candidates.map(async (candidat) => {
-        await addToWorkQueue({
-          type: JOBS.JOB_TYPES.SEND_MAIL,
-          toEmail: candidat.User.email,
-          subject: `Vous avez reçu une nouvelle offre d'emploi`,
-          text: `
-            Vous venez de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
-            Vous pouvez la consulter en cliquant ici :
-            ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
-        });
-
         const coach =
           candidat.User &&
           candidat.User.candidat &&
@@ -703,17 +693,17 @@ const updateOpportunity = async (opportunity) => {
             ? candidat.User.candidat.coach
             : null;
 
-        if (coach) {
-          await addToWorkQueue({
-            type: JOBS.JOB_TYPES.SEND_MAIL,
-            toEmail: coach.email,
-            subject: `${candidat.User.firstName} a reçu une nouvelle offre d'emploi`,
-            text: `
-           ${candidat.User.firstName} vient de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
-           Vous pouvez la consulter en cliquant ici :
-           ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
-          });
-        }
+        await addToWorkQueue({
+          type: JOBS.JOB_TYPES.SEND_MAIL,
+          toEmail: coach
+            ? { to: candidat.User.email, cc: coach.email }
+            : candidat.User.email,
+          subject: `Vous avez reçu une nouvelle offre d'emploi`,
+          text: `
+            Vous venez de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
+            Vous pouvez la consulter en cliquant ici :
+            ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
+        });
       })
     );
   };

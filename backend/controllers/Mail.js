@@ -12,15 +12,29 @@ const send = mailjet.post('send');
  * il est optionnel de remplir à la fois text et html
  */
 const sendMail = ({ toEmail, subject, text, html }) => {
+  const recipients = {};
+  if (typeof toEmail === 'object') {
+    if (toEmail.cc) {
+      recipients.CC = toEmail.cc;
+    }
+    if (toEmail.to) {
+      recipients.To = toEmail.to;
+    }
+    if (toEmail.bcc) {
+      recipients.BCC = toEmail.bcc;
+    }
+  } else {
+    recipients.Recipients = [{ Email: toEmail }];
+  }
   return new Promise((res, rej) => {
     send
       .request({
         FromEmail: process.env.MAILJET_FROM_EMAIL,
         FromName: process.env.MAILJET_FROM_NAME,
-        Recipients: [{ Email: toEmail }],
         Subject: subject,
         'Text-part': text,
         'HTML-part': html,
+        ...recipients,
       })
       .then((result) => {
         res(result);
