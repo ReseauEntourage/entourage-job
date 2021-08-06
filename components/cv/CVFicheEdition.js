@@ -43,12 +43,10 @@ const CVFicheEdition = ({
   }, [cv.UserId, cv.status]);
 
   useEffect(() => {
-    console.log('CV_STATUS CHANGED');
     if (
       (prevCVStatus !== cv.status && cv.status !== CV_STATUS.Draft.value) ||
       (!!prevPreviewGenerating && !previewGenerating)
     ) {
-      console.log('update image');
       updateImage();
     }
   }, [

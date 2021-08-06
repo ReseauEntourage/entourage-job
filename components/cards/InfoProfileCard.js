@@ -8,7 +8,7 @@ import ButtonIcon from '../utils/ButtonIcon';
 import { GridNoSSR } from '../utils';
 import { getAllFilters, mutateFormSchema } from '../../utils';
 
-import { LOCATIONS } from '../../constants';
+import { DEPARTMENTS_FILTERS } from '../../constants/departements';
 
 const InfoProfileCard = ({
   contracts,
@@ -37,7 +37,7 @@ const InfoProfileCard = ({
       props: [
         {
           propName: 'options',
-          value: getAllFilters(LOCATIONS, userZone),
+          value: getAllFilters(DEPARTMENTS_FILTERS, userZone),
         },
       ],
     },

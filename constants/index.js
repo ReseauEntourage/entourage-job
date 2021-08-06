@@ -203,8 +203,8 @@ const CV_FILTERS_DATA = [
   },
   {
     key: 'locations',
-    constants: LOCATIONS,
-    title: 'Secteurs géographiques',
+    constants: DEPARTMENTS_FILTERS,
+    title: 'Départements',
     tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
   },
 ];

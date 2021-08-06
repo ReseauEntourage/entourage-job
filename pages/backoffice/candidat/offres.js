@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import _ from 'lodash';
 import OpportunityList from '../../../components/opportunities/OpportunityList';
 import { findFilter, initializeFilters } from '../../../utils';
@@ -16,7 +16,6 @@ import {
   OPPORTUNITY_FILTERS_DATA,
   USER_ROLES,
   OFFER_CANDIDATE_FILTERS_DATA,
-  LOCATIONS,
 } from '../../../constants';
 import OpportunityError from '../../../components/opportunities/OpportunityError';
 
@@ -30,7 +29,6 @@ const Opportunites = () => {
   const [search, setSearch] = useState();
 
   const [candidatId, setCandidatId] = useState();
-  const [candidatZones, setCandidatZones] = useState();
 
   const [tabFilters, setTabFilters] = useState(OFFER_CANDIDATE_FILTERS_DATA);
   const {
@@ -41,16 +39,18 @@ const Opportunites = () => {
     resetFilters,
   } = useFilters(candidateFilters);
 
-  useEffect(() => {
-    if (candidatZones && candidatZones.length > 0) {
-      if (candidatZones.includes(undefined)) {
+  const setCandidatZone = useCallback(
+    (candidatZone) => {
+      console.log('CANDIDATE ZONE', candidatZone);
+      if (!candidatZone) {
         setFilters(initializeFilters(candidateFilters));
       } else {
         const defaultDepartmentsForCandidate = DEPARTMENTS_FILTERS.filter(
           (dept) => {
-            return candidatZones.includes(dept.zone);
+            return candidatZone === dept.zone;
           }
         );
+        console.log(defaultDepartmentsForCandidate);
 
         setFilters(
           initializeFilters(candidateFilters, {
@@ -58,8 +58,9 @@ const Opportunites = () => {
           })
         );
       }
-    }
-  }, [candidatZones, setFilters]);
+    },
+    [setFilters]
+  );
 
   useEffect(() => {
     if (candidatId) {
@@ -70,10 +71,13 @@ const Opportunites = () => {
         },
       })
         .then(({ data }) => {
-          if (data && data.locations) {
-            setCandidatZones(
-              data.locations.map((location) => {
-                return findFilter(LOCATIONS, location).zone;
+          if (data && data.locations && data.locations.length > 0) {
+            const cvFilters = data.locations.map((location) => {
+              return findFilter(DEPARTMENTS_FILTERS, location);
+            });
+            setFilters(
+              initializeFilters(candidateFilters, {
+                [candidateFilters[1].key]: _.compact(cvFilters),
               })
             );
           }
@@ -86,7 +90,7 @@ const Opportunites = () => {
           return setLoading(false);
         });
     }
-  }, [candidatId]);
+  }, [candidatId, setFilters]);
 
   useEffect(() => {
     if (user) {
@@ -98,7 +102,7 @@ const Opportunites = () => {
 
       if (user.role === USER_ROLES.CANDIDAT) {
         setCandidatId(user.id);
-        setCandidatZones([user.zone]);
+        setCandidatZone(user.zone);
         setLoading(false);
       } else if (user.role === USER_ROLES.COACH) {
         Api.get(`/api/v1/user/candidat/`, {
@@ -109,7 +113,7 @@ const Opportunites = () => {
           .then(({ data }) => {
             if (data) {
               setCandidatId(data.candidat.id);
-              setCandidatZones([data.candidat.zone]);
+              setCandidatZone(data.candidat.zone);
             } else {
               setHasError(true);
             }
@@ -121,7 +125,7 @@ const Opportunites = () => {
           });
       }
     }
-  }, [user]);
+  }, [setCandidatZone, user]);
 
   if (!user) return null;
 

@@ -10,12 +10,10 @@ import {
 } from 'react-share';
 import { useRouter } from 'next/router';
 
-import { hasAsChild } from '../../utils';
 import { SimpleLink, GridNoSSR, IconNoSSR, ImgNoSSR } from '../utils';
 import ModalShareCV from '../modals/ModalShareCV';
 import Api from '../../Axios';
 import { SharesCountContext } from '../store/SharesCountProvider';
-import { LOCATIONS } from '../../constants';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';
 
@@ -73,35 +71,6 @@ const CandidatCard = ({
         console.log(e);
       });
   };
-
-  const getReducedLocations = () => {
-    if (locations && locations.length > 0) {
-      let indexesToRemove = [];
-      const reducedLocations = locations;
-      for (let i = 0; i < locations.length; i += 1) {
-        for (let j = 0; j < locations.length; j += 1) {
-          if (hasAsChild(LOCATIONS, locations[i], locations[j])) {
-            indexesToRemove.push(j);
-          }
-        }
-      }
-
-      indexesToRemove = indexesToRemove.filter((index, idx) => {
-        return indexesToRemove.indexOf(index) === idx;
-      });
-      indexesToRemove.sort((a, b) => {
-        return b - a;
-      });
-
-      for (let i = indexesToRemove.length - 1; i >= 0; i -= 1) {
-        reducedLocations.splice(indexesToRemove[i], 1);
-      }
-      return reducedLocations;
-    }
-    return [];
-  };
-
-  const reducedLocations = getReducedLocations();
 
   const linksToCV = {
     as: `/cv/${url}?hideShareOptions=${!showShareOptions}`,
@@ -259,14 +228,14 @@ const CandidatCard = ({
                   </GridNoSSR>
                 </div>
               )} */}
-              {reducedLocations && reducedLocations.length > 0 && (
+              {locations && locations.length > 0 && (
                 <GridNoSSR
                   column
                   gap="collapse"
                   childWidths={['1-1']}
                   style={{ marginTop: 10 }}
                 >
-                  {reducedLocations.slice(0, 2).map((text, index) => {
+                  {locations.slice(0, 2).map((text, index) => {
                     return (
                       <div
                         key={text + index}

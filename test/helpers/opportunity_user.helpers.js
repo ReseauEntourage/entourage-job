@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const {
   models: { Opportunity_User },
 } = require('../../backend/db/models');
