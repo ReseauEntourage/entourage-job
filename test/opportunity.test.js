@@ -163,8 +163,7 @@ describe('Opportunity', () => {
             .post(`${route}/`)
             .send(opportunity);
           expect(response.status).toBe(200);
-          // eslint-disable-next-line no-plusplus
-          totalOpp++;
+          totalOpp += 1;
         });
         it('Should return 401, if invalid opportunity', async () => {
           const opportunity = await opportunityFactory({}, false);

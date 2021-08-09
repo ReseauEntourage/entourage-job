@@ -44,7 +44,7 @@ const OfferCard = ({
       <GridNoSSR
         gap="medium"
         childWidths={['1-1']}
-        className="uk-height-max-large"
+        className="uk-height-max-large uk-overflow-auto"
       >
         <GridNoSSR eachWidths={['expand', 'auto']}>
           <h5 className="uk-text-bold">{title}</h5>
@@ -119,27 +119,27 @@ const OfferCard = ({
             <p>{moment(date).format('DD/MM/YYYY')}</p>
           </GridNoSSR>
         )}
-        <div className="uk-flex uk-flex-between uk-flex-bottom uk-margin-small-top">
-          {isAdmin && (
-            <div className="uk-flex-1 uk-text-left uk-text-meta uk-text-success uk-flex uk-flex-bottom">
-              {!archived &&
-                (isValidated ? (
-                  <div className="uk-flex uk-flex-middle">
-                    Publiée&nbsp;
-                    <IconNoSSR name="check" />
-                  </div>
-                ) : (
-                  <div className="uk-flex uk-flex-middle uk-text-warning">
-                    À valider
-                  </div>
-                ))}
-            </div>
-          )}
-          <u className="uk-link-muted uk-flex-1 uk-text-right">
-            Voir l&rsquo;offre
-          </u>
-        </div>
       </GridNoSSR>
+      <div className="uk-flex uk-flex-between uk-flex-bottom uk-margin-medium-top">
+        {isAdmin && (
+          <div className="uk-flex-1 uk-text-left uk-text-meta uk-text-success uk-flex uk-flex-bottom">
+            {!archived &&
+              (isValidated ? (
+                <div className="uk-flex uk-flex-middle">
+                  Publiée&nbsp;
+                  <IconNoSSR name="check" />
+                </div>
+              ) : (
+                <div className="uk-flex uk-flex-middle uk-text-warning">
+                  À valider
+                </div>
+              ))}
+          </div>
+        )}
+        <u className="uk-link-muted uk-flex-1 uk-text-right">
+          Voir l&rsquo;offre
+        </u>
+      </div>
     </div>
   );
 };

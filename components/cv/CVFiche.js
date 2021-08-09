@@ -65,7 +65,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
       await Api.post(`/api/v1/opportunity/`, opportunity);
       closeModal();
       UIkit.notification(
-        `Merci pour votre message, ${cv.user.candidat.firstName} et son coach reviennent vers vous bientôt.`,
+        `Merci pour votre offre, ${cv.user.candidat.firstName} et son coach reviennent vers vous bientôt.`,
         'success'
       );
     } catch (err) {

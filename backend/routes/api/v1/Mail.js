@@ -13,12 +13,14 @@ router.post('/contact-us', auth(), (req, res) => {
     addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: process.env.MAILJET_CONTACT_EMAIL,
-      subject: `LinkedOut - Contact`,
-      text: `Prénom : ${firstName}\nNom : ${lastName}\nTéléphone : ${
-        phone || ''
-      }\nAdresse mail : ${email}\nStructure : ${
-        structure || ''
-      }\nMessage : ${message}`,
+      subject: `Demande de contact`,
+      html:
+        `<strong>Prénom :</strong> ${firstName}<br />` +
+        `<strong>Nom :</strong> ${lastName}<br />` +
+        `<strong>Téléphone :</strong> ${phone || ''}<br />` +
+        `<strong>Adresse mail :</strong> ${email}<br />` +
+        `<strong>Structure :</strong> ${structure || ''}<br />` +
+        `<strong>Message :</strong> ${message}`,
     })
       .then(() => {
         logger(res).log('mail: contact us sent');
