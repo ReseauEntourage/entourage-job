@@ -33,21 +33,16 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
     salt,
   })
     .then(async (users) => {
-      logger(res).log(
-        '# User créé',
-        `login : ${req.body.email}`,
-        `password: ${userPassword}`
-      );
       await addToWorkQueue({
         type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail: req.body.email,
         subject: 'Bienvenue chez LinkedOut',
-        text:
-          'Bonjour,\n' +
-          `Vous êtes maintenant inscrit sur le site LinkedOut. Vous pouvez accéder à votre espace personnel depuis la plateforme en renseignant votre adresse mail et le mot de passe suivant : ${userPassword}\n` +
-          "Depuis cette espace, vous pouvez rédiger votre CV avec l'aide de votre bénévole-coach et gérer les opportunités que vous recevez.\n" +
-          "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres afin d'en créer un facile à retenir pour vous.\n\n" +
-          'A bientôt,\n\n' +
+        html:
+          'Bonjour,<br /><br />' +
+          `Vous êtes maintenant inscrit sur le site LinkedOut. Vous pouvez accéder à votre espace personnel depuis la plateforme en renseignant votre adresse mail et le mot de passe suivant : <strong>${userPassword}</strong><br /><br />` +
+          "Depuis cette espace, vous pouvez rédiger votre CV avec l'aide de votre bénévole-coach et gérer les opportunités que vous recevez.<br /><br />" +
+          "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres afin d'en créer un facile à retenir pour vous.<br /><br />" +
+          'A bientôt,<br /><br />' +
           "L'équipe Entourage",
       });
 

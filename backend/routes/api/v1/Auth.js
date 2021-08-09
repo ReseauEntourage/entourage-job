@@ -123,11 +123,11 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
         type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail: user.email,
         subject: 'Réinitialisation mot de passe',
-        text:
-          'Bonjour,\n\n' +
-          'Pour réinitialiser votre mot de passe, cliquer ici sur ce lien : \n' +
-          `${process.env.SERVER_URL}/reset/${user.id}/${token}\n\n` +
-          'Cordialement,\n\n' +
+        html:
+          'Bonjour,<br /><br />' +
+          'Pour réinitialiser votre mot de passe, cliquer ici sur ce lien : <br />' +
+          `<strong>${process.env.SERVER_URL}/reset/${user.id}/${token}</strong><br /><br />` +
+          'Cordialement,<br /><br />' +
           `L'équipe LinkedOut`,
       });
 

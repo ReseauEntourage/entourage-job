@@ -272,12 +272,80 @@ const createOpportunity = async (data, isAdmin) => {
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: adminMail,
       subject: `Nouvelle offre d'emploi`,
-      text: `
-    Une nouvelle offre d'emploi est en attente de validation : ${finalOpportunity.title} - ${finalOpportunity.company}.
-    Vous pouvez la consulter en cliquant ici :
-    ${process.env.SERVER_URL}/backoffice/admin/offres?q=${finalOpportunity.id}.
-    `,
+      html:
+        `Une nouvelle offre d'emploi est en attente de validation : <strong>${finalOpportunity.title} - ${finalOpportunity.company}</strong>.<br /><br />` +
+        `Vous pouvez la consulter en cliquant ici :<br />` +
+        `<strong>${process.env.SERVER_URL}/backoffice/admin/offres?q=${finalOpportunity.id}</strong>.<br /><br />` +
+        `L’équipe LinkedOut`,
     });
+
+    const stringOpportunity =
+      `----------<br /><br />` +
+      `<strong>Titre :</strong> ${finalOpportunity.title}<br />` +
+      `<strong>Nom du recruteur :</strong> ${finalOpportunity.recruiterName}<br />` +
+      `<strong>Adresse mail du recruteur :</strong> ${finalOpportunity.recruiterMail}<br />` +
+      `<strong>Téléphone du recruteur :</strong> ${finalOpportunity.recruiterPhone}<br />` +
+      `<strong>Secteurs d'activité :</strong> ${
+        data.businessLines ? data.businessLines.join(', ') : ''
+      }<br />` +
+      `<strong>Entreprise :</strong> ${finalOpportunity.company}<br />` +
+      `<strong>Addresse postale :</strong> ${finalOpportunity.location}<br />` +
+      `<strong>Département :</strong> ${finalOpportunity.department}<br />` +
+      `<strong>Description :</strong> ${finalOpportunity.description}<br />` +
+      `<strong>Pré-requis :</strong> ${finalOpportunity.prerequisites || ''}`;
+
+    if (finalOpportunity.isPublic) {
+      await addToWorkQueue({
+        type: JOBS.JOB_TYPES.SEND_MAIL,
+        toEmail: finalOpportunity.recruiterMail,
+        subject: `Accusé de réception de votre offre`,
+        html:
+          `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
+          `Merci pour votre offre LinkedOut et votre confiance !<br /><br />` +
+          `Après validation par l’équipe LinkedOut, votre opportunité d’emploi sera visible par l’ensemble des candidats LinkedOut disponibles. Ils l'étudieront avec leur coach LinkedOut. Les candidats intéressés par votre offre prendront contact avec vous.<br /><br />` +
+          `Si votre offre ne correspond à aucun profil, sachez qu’une nouvelle promotion se lance en octobre avec 80 candidats à Paris, 40 à Lille et 40 à Lyon ! Votre prochaine recrue se trouvera peut-être parmi ces nouveaux profils.<br /><br />` +
+          `L’équipe LinkedOut se tient à votre disposition à chaque étape du recrutement pour vous apporter des informations sur le dispositif et les profils des candidats.<br /><br />` +
+          `<strong>Pour nous contacter : entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
+          `Nous sommes tous une partie de la solution face à l’exclusion, merci d’y croire avec nous !<br /><br />` +
+          `L’équipe LinkedOut<br /><br />` +
+          `${stringOpportunity}`,
+      });
+    } else {
+      const listOfNames = candidates.map((candidate) => {
+        return candidate.User.firstName;
+      });
+
+      let stringOfNames = '';
+      if (listOfNames.length === 0) {
+        stringOfNames = 'le candidat';
+      } else {
+        stringOfNames =
+          listOfNames.length > 1
+            ? `${listOfNames.slice(0, -1).join(', ')} et ${listOfNames.slice(
+                -1
+              )}`
+            : listOfNames[0];
+      }
+
+      await addToWorkQueue({
+        type: JOBS.JOB_TYPES.SEND_MAIL,
+        toEmail: finalOpportunity.recruiterMail,
+        subject: `Accusé de réception de votre offre`,
+        html:
+          `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
+          `Merci pour votre offre LinkedOut et votre confiance !<br /><br />` +
+          `Après validation par l’équipe LinkedOut, ${
+            candidates.length > 1
+              ? `${stringOfNames} vont prendre le temps d’étudier votre opportunité avec leur coach LinkedOut et vous recontacteront`
+              : `${stringOfNames} va prendre le temps d’étudier votre opportunité avec son coach LinkedOut et vous recontactera`
+          } dans les meilleurs délais.<br /><br />` +
+          `L’équipe LinkedOut se tient à votre disposition à chaque étape du recrutement pour vous apporter des informations sur le dispositif et les profils des candidats.<br /><br />` +
+          `<strong>Pour nous contacter : entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
+          `Nous sommes tous une partie de la solution face à l’exclusion, merci d’y croire avec nous !<br /><br />` +
+          `L’équipe LinkedOut<br /><br />` +
+          `${stringOpportunity}`,
+      });
+    }
   }
 
   return cleanedOpportunity;
@@ -686,16 +754,6 @@ const updateOpportunity = async (opportunity) => {
   const sendJobOfferMails = (candidates) => {
     return Promise.all(
       candidates.map(async (candidat) => {
-        await addToWorkQueue({
-          type: JOBS.JOB_TYPES.SEND_MAIL,
-          toEmail: candidat.User.email,
-          subject: `Vous avez reçu une nouvelle offre d'emploi`,
-          text: `
-            Vous venez de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
-            Vous pouvez la consulter en cliquant ici :
-            ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
-        });
-
         const coach =
           candidat.User &&
           candidat.User.candidat &&
@@ -703,17 +761,18 @@ const updateOpportunity = async (opportunity) => {
             ? candidat.User.candidat.coach
             : null;
 
-        if (coach) {
-          await addToWorkQueue({
-            type: JOBS.JOB_TYPES.SEND_MAIL,
-            toEmail: coach.email,
-            subject: `${candidat.User.firstName} a reçu une nouvelle offre d'emploi`,
-            text: `
-           ${candidat.User.firstName} vient de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
-           Vous pouvez la consulter en cliquant ici :
-           ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
-          });
-        }
+        await addToWorkQueue({
+          type: JOBS.JOB_TYPES.SEND_MAIL,
+          toEmail: coach
+            ? { to: candidat.User.email, cc: coach.email }
+            : candidat.User.email,
+          subject: `Vous avez reçu une nouvelle offre d'emploi`,
+          html:
+            `Vous venez de recevoir une nouvelle offre d'emploi : <strong>${finalOpportunity.title} - ${finalOpportunity.company}</strong>.<br /><br />` +
+            `Vous pouvez la consulter en cliquant ici :<br />` +
+            `<strong>${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}</strong>.<br /><br />` +
+            `L’équipe LinkedOut`,
+        });
       })
     );
   };

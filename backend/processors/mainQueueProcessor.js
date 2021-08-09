@@ -49,7 +49,9 @@ module.exports = async (job) => {
 
     case JOBS.JOB_TYPES.SEND_MAIL:
       await sendMailBackground(data);
-      return `Mail sent to '${data.toEmail}' and subject '${data.subject}'`;
+      const toEmail =
+        typeof data.toEmail === 'string' ? data.toEmail : data.toEmail.to;
+      return `Mail sent to '${toEmail}' and subject '${data.subject}'`;
 
     case JOBS.JOB_TYPES.INSERT_AIRTABLE:
       await insertAirtable(data.tableName, data.fields);

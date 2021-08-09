@@ -7,7 +7,9 @@ import { Button, Section } from '../../../components/utils';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
 import Filter from '../../../components/utils/Filter';
 import Axios from '../../../Axios';
-import schema from '../../../components/forms/schema/formEditOpportunity';
+import schema, {
+  adminMutation,
+} from '../../../components/forms/schema/formEditOpportunity';
 import { UserContext } from '../../../components/store/UserProvider';
 import ModalEdit from '../../../components/modals/ModalEdit';
 
@@ -33,6 +35,7 @@ const LesOpportunites = () => {
         },
       ],
     },
+    adminMutation,
   ]);
 
   const [search, setSearch] = useState();
