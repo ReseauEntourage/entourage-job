@@ -32,6 +32,7 @@ const MembersAdmin = ({ query: { role } }) => {
   const [allLoaded, setAllLoaded] = useState(false);
   const [offset, setOffset] = useState(0);
   const prevSearchQuery = usePrevious(searchQuery);
+  const prevRole = usePrevious(role);
   const router = useRouter();
 
   const mutatedSchema = mutateFormSchema(schemaCreateUser, [
@@ -90,10 +91,10 @@ const MembersAdmin = ({ query: { role } }) => {
   );
 
   useEffect(() => {
-    if (searchQuery !== prevSearchQuery) {
+    if (searchQuery !== prevSearchQuery || role !== prevRole) {
       fetchData(true, searchQuery);
     }
-  }, [fetchData, prevSearchQuery, searchQuery]);
+  }, [fetchData, prevRole, prevSearchQuery, role, searchQuery]);
 
   return (
     <LayoutBackOffice title="Gestion des membres">
