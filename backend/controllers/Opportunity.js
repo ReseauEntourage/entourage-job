@@ -25,6 +25,7 @@ const {
     User,
   },
   Sequelize: { Op, fn, col, where },
+  sequelize,
 } = require('../db/models');
 
 const { cleanOpportunity } = require('../utils');
@@ -186,7 +187,7 @@ const getAirtableOpportunityFields = (
     : commonFields;
 };
 
-const updateTable = (opportunity, candidates) => {
+const updateTable = async (opportunity, candidates) => {
   const fields = getAirtableOpportunityFields(
     opportunity,
     candidates,
@@ -568,7 +569,8 @@ const updateOpportunityAirtable = async (opportunityId) => {
 
   try {
     await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
-  } catch (e) {
+  } catch (err) {
+    console.error(err);
     console.log('Failed to update table with modified offer.');
   }
 };
@@ -603,8 +605,21 @@ const addUserToOpportunity = async (opportunityId, userId, seen) => {
           OpportunityId: opportunityId,
           UserId: userId,
         },
+        individualHooks: true,
+        attributes: [
+          'id',
+          'UserId',
+          'OpportunityId',
+          'status',
+          'bookmarked',
+          'archived',
+          'note',
+          'seen',
+        ],
       }
-    );
+    ).then((model) => {
+      return model && model.length > 1 && model[1][0];
+    });
   } else {
     modelOpportunityUser = await Opportunity_User.create({
       OpportunityId: opportunityId,
@@ -684,47 +699,56 @@ const updateOpportunity = async (opportunity) => {
       },
     });
   } else if (opportunity.candidatesId) {
-    const opportunitiesUser = await Promise.all(
-      opportunity.candidatesId.map((candidatId) => {
-        return Opportunity_User.findOrCreate({
-          where: {
-            OpportunityId: modelOpportunity.id,
-            UserId: candidatId, // to rename in userId
+    const t = await sequelize.transaction();
+    try {
+      const opportunitiesUser = await Promise.all(
+        opportunity.candidatesId.map((candidatId) => {
+          return Opportunity_User.findOrCreate({
+            where: {
+              OpportunityId: modelOpportunity.id,
+              UserId: candidatId, // to rename in userId
+            },
+            transaction: t,
+          }).then((model) => {
+            return model[0];
+          });
+        })
+      );
+      await Opportunity_User.destroy({
+        where: {
+          OpportunityId: modelOpportunity.id,
+          UserId: {
+            [Op.not]: opportunitiesUser.map((opportunityUser) => {
+              return opportunityUser.UserId;
+            }),
           },
-        }).then((model) => {
-          return model[0];
-        });
-      })
-    );
-
-    await Opportunity_User.destroy({
-      where: {
-        OpportunityId: modelOpportunity.id,
-        UserId: {
-          [Op.not]: opportunitiesUser.map((opportunityUser) => {
-            return opportunityUser.UserId;
-          }),
         },
-      },
-    });
-
-    // Check case where the opportunity has become private and has candidates, to see if there are any new candidates so send mail to
-    const newCandidates =
-      opportunity.candidatesId &&
-      opportunity.candidatesId.length > 0 &&
-      opportunity.candidatesId.filter((candidateId) => {
-        return !oldOpportunity.userOpportunity.some((oldUserOpp) => {
-          return candidateId === oldUserOpp.User.id;
-        });
+        transaction: t,
       });
 
-    if (
-      newCandidates &&
-      newCandidates.length > 0 &&
-      modelOpportunity.isValidated
-    ) {
-      newCandidatesIdsToSendMailTo = newCandidates;
+      t.commit();
+    } catch (error) {
+      await t.rollback();
+      throw error;
     }
+  }
+
+  // Check case where the opportunity has become private and has candidates, to see if there are any new candidates so send mail to
+  const newCandidates =
+    opportunity.candidatesId &&
+    opportunity.candidatesId.length > 0 &&
+    opportunity.candidatesId.filter((candidateId) => {
+      return !oldOpportunity.userOpportunity.some((oldUserOpp) => {
+        return candidateId === oldUserOpp.User.id;
+      });
+    });
+
+  if (
+    newCandidates &&
+    newCandidates.length > 0 &&
+    modelOpportunity.isValidated
+  ) {
+    newCandidatesIdsToSendMailTo = newCandidates;
   }
 
   const finalOpportunity = await getOpportunity(opportunity.id, true);
@@ -751,6 +775,14 @@ const updateOpportunity = async (opportunity) => {
     }
   }
 
+  try {
+    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
+    console.log('Updated table with modified offer.');
+  } catch (err) {
+    console.error(err);
+    console.log('Failed to update table with modified offer.');
+  }
+
   const sendJobOfferMails = (candidates) => {
     return Promise.all(
       candidates.map(async (candidat) => {
@@ -768,28 +800,34 @@ const updateOpportunity = async (opportunity) => {
             : candidat.User.email,
           subject: `Vous avez reçu une nouvelle offre d'emploi`,
           html:
+            `Bonjour,<br /><br />` +
             `Vous venez de recevoir une nouvelle offre d'emploi : <strong>${finalOpportunity.title} - ${finalOpportunity.company}</strong>.<br /><br />` +
             `Vous pouvez la consulter en cliquant ici :<br />` +
             `<strong>${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}</strong>.<br /><br />` +
             `L’équipe LinkedOut`,
         });
+
+        await addToWorkQueue(
+          {
+            type: JOBS.JOB_TYPES.REMINDER_OFFER,
+            opportunityId: finalOpportunity.id,
+            candidatId: candidat.User.id,
+          },
+          {
+            delay:
+              (process.env.OFFER_REMINDER_DELAY
+                ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
+                : 5) *
+              3600000 *
+              24,
+          }
+        );
       })
     );
   };
 
-  try {
-    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
-    if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) {
-      await sendJobOfferMails(candidatesToSendMailTo);
-    }
-    console.log(
-      'Updated table with modified offer and sent mail to candidate and coach.'
-    );
-  } catch (err) {
-    console.error(err);
-    console.log(
-      'Failed to update table with modified offer or send mail to candidate and coach.'
-    );
+  if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) {
+    await sendJobOfferMails(candidatesToSendMailTo);
   }
 
   return finalOpportunity;

@@ -27,8 +27,10 @@ const CVPage = ({ cv, router, hideShareOptions }) => {
     : '';
 
   useEffect(() => {
-    updateSharesCount(cv.UserId, 'other');
-  }, [cv.UserId, updateSharesCount]);
+    if (cv) {
+      updateSharesCount(cv.UserId, 'other');
+    }
+  }, [cv, cv.UserId, updateSharesCount]);
 
   if (!cv) {
     return (
