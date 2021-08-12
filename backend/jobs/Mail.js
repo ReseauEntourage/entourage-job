@@ -54,6 +54,9 @@ const sendRecapAboutOffers = async () => {
     const candidates = await getAllCandidates();
     const emails = [];
 
+    console.log('OPPORTUNITIES', opportunities);
+    console.log('CANDIDATES', candidates);
+
     for (let i = 0; i < adminZonesKeys.length; i += 1) {
       const zone = ADMIN_ZONES[adminZonesKeys[i]];
       const zoneFilters = _.map(
@@ -115,6 +118,7 @@ const sendRecapAboutOffers = async () => {
       }
     }
 
+    console.log('EMAILS', emails);
     await sendMail(emails);
     return emails;
   } catch (err) {
