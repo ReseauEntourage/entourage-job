@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const {
   filterOffers,
   getFiltersObjectsFromQueryParams,
@@ -291,7 +293,9 @@ const createOpportunity = async (data, isAdmin) => {
       }<br />` +
       `<strong>Entreprise :</strong> ${finalOpportunity.company}<br />` +
       `<strong>Addresse postale :</strong> ${finalOpportunity.location}<br />` +
-      `<strong>Département :</strong> ${finalOpportunity.department}<br />` +
+      `<strong>Département :</strong> ${
+        finalOpportunity.department || ''
+      }<br />` +
       `<strong>Description :</strong> ${finalOpportunity.description}<br />` +
       `<strong>Pré-requis :</strong> ${finalOpportunity.prerequisites || ''}`;
 
@@ -392,6 +396,30 @@ const getOpportunities = async (params) => {
     filteredTypeOpportunites,
     getFiltersObjectsFromQueryParams(restFilters, OPPORTUNITY_FILTERS_DATA)
   );
+};
+
+const getLatestOpportunities = async () => {
+  const options = {
+    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
+    paranoid: false,
+  };
+
+  const lastWeek = moment().subtract(7, 'd');
+
+  const opportunities = await Opportunity.findAll({
+    ...options,
+    where: {
+      isPublic: true,
+      isValidated: true,
+      createdAt: {
+        [Op.gt]: lastWeek.toDate(),
+      },
+    },
+  });
+
+  return opportunities.map((model) => {
+    return cleanOpportunity(model);
+  });
 };
 
 const getPublicOpportunities = async () => {
@@ -849,4 +877,5 @@ module.exports = {
 
   addUserToOpportunity,
   refreshAirtableOpportunities,
+  getLatestOpportunities,
 };

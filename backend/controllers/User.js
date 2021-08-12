@@ -288,6 +288,29 @@ const searchCandidates = async (query) => {
   return User.findAll(options);
 };
 
+const getAllCandidates = async () => {
+  const publishedCVs = await sequelize.query(publishedCVQuery, {
+    type: QueryTypes.SELECT,
+  });
+  const filteredPublishedCVs = publishedCVs.filter((cv) => {
+    return !cv.employed;
+  });
+  const options = {
+    attributes: ATTRIBUTES_USER,
+    where: {
+      [Op.and]: [
+        {
+          id: filteredPublishedCVs.map((publishedCV) => {
+            return publishedCV.UserId;
+          }),
+        },
+      ],
+    },
+    include: INCLUDE_USER_CANDIDAT,
+  };
+  return User.findAll(options);
+};
+
 const setUser = async (id, user) => {
   const [updateCount] = await User.update(user, {
     where: { id },
@@ -543,4 +566,5 @@ module.exports = {
   getUserCandidat,
   getUserCandidatOpt,
   getUserCandidats,
+  getAllCandidates,
 };
