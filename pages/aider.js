@@ -74,8 +74,8 @@ const Aider = () => {
           <p className="uk-text-center uk-padding-small uk-padding-remove-top">
             Vous souhaitez donner de votre temps pour tisser une relation de
             proximité avec un candidat et le coacher dans son retour à
-            l’emploi&nbsp;? Entourage vous forme à la mission de bénévole-coach
-            et vous donne les outils.
+            l’emploi&nbsp;? LinkedOut vous forme à la mission de coach et vous
+            donne les outils.
           </p>
           <div className="uk-flex-center uk-flex uk-flex-middle">
             <Button
@@ -87,7 +87,7 @@ const Aider = () => {
                 return event(TAGS.PAGE_AIDER_INSCRIPTION_COACH_CLIC);
               }}
             >
-              Devenir bénévole-coach&nbsp;
+              Devenir coach LinkedOut&nbsp;
               <IconNoSSR name="chevron-right" />
             </Button>
           </div>

@@ -143,7 +143,7 @@ const getFiltersObjectsFromQueryParams = (params, filtersConst) => {
       ) {
         const valueArray = params[paramKey];
         if (valueArray.length > 0) {
-          filters[paramKey] = valueArray.map((val) => {
+          filters[paramKey] = _.map(valueArray, (val) => {
             return { value: val };
           });
         }

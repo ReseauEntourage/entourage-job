@@ -3,16 +3,21 @@ const loadEnvironementVariables = require('../utils/env');
 loadEnvironementVariables();
 
 const { JOBS, SOCKETS } = require('../../constants');
+const { pusher } = require('../jobs');
 const {
   generatePDF,
   cacheCV,
   cacheAllCVs,
   createCVSearchString,
-  sendMailBackground,
+} = require('../jobs/CV');
+const {
   insertAirtable,
   updateOpportunityAirtable,
-  pusher,
-} = require('../jobs');
+} = require('../jobs/Airtable');
+const {
+  sendMailBackground,
+  sendReminderMailAboutOffer,
+} = require('../jobs/Mail');
 
 module.exports = async (job) => {
   const { data } = job;
@@ -60,6 +65,15 @@ module.exports = async (job) => {
     case JOBS.JOB_TYPES.UPDATE_AIRTABLE:
       await updateOpportunityAirtable(data.tableName, data.fields);
       return `Airtable : update in '${data.tableName}'`;
+
+    case JOBS.JOB_TYPES.REMINDER_OFFER:
+      const hasBeenSent = await sendReminderMailAboutOffer(
+        data.opportunityId,
+        data.candidatId
+      );
+      return hasBeenSent
+        ? `Reminder about opportunity '${data.opportunityId}' sent to '${data.candidatId}'`
+        : `No reminder about opportunity '${data.opportunityId}' sent to '${data.candidatId}'`;
 
     default:
       return `No process method for this job ${job.id} of type ${job.data.type}`;

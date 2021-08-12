@@ -51,6 +51,29 @@ const CVEntreprises = () => {
             </Button>
           </GridNoSSR>
         </div>
+        <hr className="uk-margin-large-top uk-margin-large-bottom" />
+        <div className="uk-flex uk-flex-middle uk-flex-center uk-flex-column">
+          <h3 className="uk-text-bold">
+            Vous n&apos;avez pas trouvé{' '}
+            <span className="uk-text-primary">
+              le profil correspondant&nbsp;?
+            </span>
+          </h3>
+          <h4>
+            D&apos;autres partenaires pourraient vous orienter des
+            personnes&nbsp;!
+          </h4>
+          <GridNoSSR middle column gap="collapse">
+            <Button
+              className="uk-margin-medium-top"
+              style="secondary"
+              href="/entreprises/recruter-hors-linkedout"
+            >
+              Voir les partenaires&nbsp;
+              <IconNoSSR name="chevron-right" />
+            </Button>
+          </GridNoSSR>
+        </div>
       </Section>
       <PostJobAdModal />
       <CorporateContact />

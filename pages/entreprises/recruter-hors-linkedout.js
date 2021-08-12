@@ -15,8 +15,8 @@ const RecruterHorsLinkedOut = () => {
           &nbsp;un candidat en précarité
         </h1>
         <p className="uk-text-center">
-          Le programme LinkedOut est pour l’instant présent seulement à Paris,
-          dans les Hauts de Seine, en Seine-St-Denis et dans le Nord.
+          Le programme LinkedOut est pour l’instant présent seulement en
+          Île-de-France, à Lille et à Lyon.
         </p>
         <p className="uk-text-center">
           Dans les territoires où nous ne sommes pas présents, nous avons mis en

@@ -313,6 +313,7 @@ const JOBS = {
     SEND_MAIL: 'send_mail',
     INSERT_AIRTABLE: 'insert_airtable',
     UPDATE_AIRTABLE: 'update_airtable',
+    REMINDER_OFFER: 'reminder_offer',
   },
   QUEUES: {
     WORK: 'work',

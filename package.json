@@ -7,8 +7,9 @@
     "node": "12.x"
   },
   "scripts": {
-    "mainWorker": "node --expose-gc ./backend/mainWorker.js",
-    "imageWorker": "node --expose-gc ./backend/imageWorker.js",
+    "mainWorker": "NODE_ENV=production node -r dotenv/config --expose-gc ./backend/mainWorker.js",
+    "imageWorker": "NODE_ENV=production node -r dotenv/config --expose-gc ./backend/imageWorker.js",
+    "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"./backend/jobs/Mail.js\").sendRecapAboutOffers()'",
     "dev": "nodemon -r dotenv/config ./backend/serveur-next.js",
     "dev-server": "nodemon --watch ./backend/* -r dotenv/config ./backend/serveur-next.js",
     "dev-front": "node -r dotenv/config ./backend/serveur-next.js",
