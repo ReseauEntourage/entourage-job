@@ -1,4 +1,4 @@
-const sequelize = require('sequelize');
+const Sequelize = require('sequelize');
 const RedisManager = require('../utils/RedisManager');
 
 const { VALUES, REDIS_KEYS } = require('../../constants');
@@ -42,12 +42,12 @@ const getTotalShares = async () => {
       const shares = await Share.findAll({
         attributes: [
           /*
-            [sequelize.fn('sum', sequelize.col('facebook')), 'facebook'],
-            [sequelize.fn('sum', sequelize.col('linkedin')), 'linkedin'],
-            [sequelize.fn('sum', sequelize.col('twitter')), 'twitter'],
-            [sequelize.fn('sum', sequelize.col('whatsapp')), 'whatsapp'],
+            [Sequelize.fn('sum', Sequelize.col('facebook')), 'facebook'],
+            [Sequelize.fn('sum', Sequelize.col('linkedin')), 'linkedin'],
+            [Sequelize.fn('sum', Sequelize.col('twitter')), 'twitter'],
+            [Sequelize.fn('sum', Sequelize.col('whatsapp')), 'whatsapp'],
           */
-          [sequelize.fn('sum', sequelize.col('other')), 'other'],
+          [Sequelize.fn('sum', Sequelize.col('other')), 'other'],
         ],
       });
       const shareCounts = Object.values(shares[0].dataValues);

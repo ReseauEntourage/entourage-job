@@ -57,7 +57,6 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
         .then(({ data }) => {
           setHasSuggestions(data.suggestions);
           setCVs((prevCVs = []) => {
-            console.log(prevCVs);
             if (isPagination) {
               return [
                 ...prevCVs,

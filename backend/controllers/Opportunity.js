@@ -1,11 +1,12 @@
 const moment = require('moment');
+const { fn, col, where, Op } = require('sequelize');
 
 const {
   filterOffers,
   getFiltersObjectsFromQueryParams,
   filterCandidateOffersByType,
   filterAdminOffersByType,
-} = require('../../utils/Filters');
+} = require('../utils/Filters');
 const { OFFER_STATUS, JOBS, AIRTABLE_NAMES } = require('../../constants');
 
 const {
@@ -26,7 +27,6 @@ const {
     User_Candidat,
     User,
   },
-  Sequelize: { Op, fn, col, where },
   sequelize,
 } = require('../db/models');
 
