@@ -3441,9 +3441,7 @@ select.uk-form-width-xsmall {
   align-items: center;
   height: inherit;
   font-size: 12px;
-  color: #333;
-  background-color: #FFF8F5;
-  padding: 0 10px;
+  color: white;
 }
 /*
  * Required for `a`
@@ -3453,8 +3451,6 @@ select.uk-form-width-xsmall {
   color: #fff;
   text-decoration: none;
   outline: none;
-  color: #333;
-  background-color: #FFF8F5;
 }
 /* ========================================================================
    Component: Label
@@ -11158,6 +11154,8 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-badge {
   background-color: #fff;
   color: #363636;
+  color: white;
+  background-color: #f55f24;
 }
 .uk-light .uk-badge:hover,
 .uk-light .uk-badge:focus,
@@ -11182,6 +11180,8 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-badge:hover,
 .uk-offcanvas-bar .uk-badge:focus {
   color: #363636;
+  color: white;
+  background-color: #f55f24;
 }
 .uk-light .uk-label,
 .uk-section-primary:not(.uk-preserve-color) .uk-label,
@@ -12732,9 +12732,8 @@ iframe.uk-cover {
 .uk-tab > .uk-active > a > * {
   color: #f55f24;
 }
-.uk-offcanvas-bar .uk-select {
-  color: inherit !important;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23363636%22%20points%3D%2212%201%209%206%2015%206%22%20%2F%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23363636%22%20points%3D%2212%2013%209%208%2015%208%22%20%2F%3E%0A%3C%2Fsvg%3E%0A") !important;
+.uk-offcanvas-bar {
+  overflow: visible;
 }
 .uk-offcanvas-bar .uk-text-muted {
   color: #999 !important;

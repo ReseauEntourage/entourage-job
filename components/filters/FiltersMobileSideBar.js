@@ -8,7 +8,7 @@ import { OffcanvasNoSSR } from '../utils';
 const FiltersMobileSideBar = ({ filterData, filters, setFilters }) => {
   return (
     <OffcanvasNoSSR
-      id="toggle-filter-menu"
+      id="toggle-filter-menu-mobile"
       className="ent-filter-menu uk-padding-medium-top uk-preserve-color"
       flip={false}
     >
@@ -21,7 +21,7 @@ const FiltersMobileSideBar = ({ filterData, filters, setFilters }) => {
           showSeparator
         />
       </div>
-      <div className="uk-margin-medium-top">
+      <div className="uk-margin-small-top">
         <FiltersCheckboxes
           filterData={filterData}
           filters={filters}

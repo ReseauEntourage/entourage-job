@@ -200,6 +200,7 @@ const CV_FILTERS_DATA = [
     constants: DEPARTMENTS_FILTERS,
     title: 'Où ?',
     tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
+    icon: 'location',
   },
   {
     key: 'businessLines',

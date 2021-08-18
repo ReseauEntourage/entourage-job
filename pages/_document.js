@@ -41,7 +41,8 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <script src={addPrefix('/static/dist/js/uikit.js')} />
+          {/* do not use the minified versions because of fix in full versions */}
+          <script src={addPrefix('/static/dist/js/uikit-fixed.js')} />
           <script src={addPrefix('/static/dist/js/uikit-icons.js')} />
           {/* Google Tag Manager (noscript) */}
           <noscript>

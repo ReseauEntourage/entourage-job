@@ -18,7 +18,7 @@ const FiltersCheckboxes = ({
           return (
             <div key={key}>
               <label
-                htmlFor="hide-employed"
+                htmlFor={key}
                 className="uk-flex uk-flex-middle uk-text-small"
                 style={{ height: 20 }}
               >
