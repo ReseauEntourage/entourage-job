@@ -57,7 +57,6 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
         .then(({ data }) => {
           setHasSuggestions(data.suggestions);
           setCVs((prevCVs = []) => {
-            console.log(prevCVs);
             if (isPagination) {
               return [
                 ...prevCVs,
@@ -193,8 +192,8 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
     if (cvs.length <= 0) {
       if (
         filters &&
-        filters[CV_FILTERS_DATA[2].key] &&
-        filters[CV_FILTERS_DATA[2].key].length > 0
+        filters[CV_FILTERS_DATA[1].key] &&
+        filters[CV_FILTERS_DATA[1].key].length > 0
       ) {
         return <NoCVInThisArea />;
       }

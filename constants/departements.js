@@ -515,9 +515,7 @@ const DEPARTMENTS = [
 ];
 
 const DEPARTMENTS_FILTERS = [
-  ...DEPARTMENTS.filter(({ zone }) => {
-    return zone !== ADMIN_ZONES.HZ;
-  }).map(({ name, zone }) => {
+  ...DEPARTMENTS.map(({ name, zone }) => {
     return {
       value: name,
       label: name,

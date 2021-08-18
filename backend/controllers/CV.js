@@ -1,29 +1,23 @@
 const _ = require('lodash');
 
-const { QueryTypes } = require('sequelize');
+const { QueryTypes, fn, col } = require('sequelize');
 const fs = require('fs');
 const puppeteer = require('puppeteer-core');
 const { PDFDocument } = require('pdf-lib');
 const moment = require('moment');
-const {
-  filterCVs,
-  getFiltersObjectsFromQueryParams,
-} = require('../../utils/Filters');
+const { getFiltersObjectsFromQueryParams } = require('../utils/Filters');
 const { forceGC } = require('../utils');
 const S3 = require('./Aws');
 const RedisManager = require('../utils/RedisManager');
 
 const { CV_FILTERS_DATA } = require('../../constants');
 
-const {
-  models,
-  sequelize,
-  // Sequelize: { Op, fn, col, where },
-} = require('../db/models');
+const { models, sequelize } = require('../db/models');
 
 const { cleanCV, escapeColumn, escapeQuery } = require('../utils');
 
 const { CV_STATUS, REDIS_KEYS } = require('../../constants');
+const { getCVOptions } = require('../utils/Filters');
 
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
@@ -154,7 +148,8 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE = [
   INCLUDE_ALL_USERS_PRIVATE,
 ];
 
-const publishedCVQuery = `
+const getPublishedCVQuery = (hideEmployed) => {
+  return `
     /* CV par recherche */
 
     with groupCVs as (	select
@@ -168,6 +163,7 @@ const publishedCVQuery = `
         and "CVs"."deletedAt" IS NULL
         and "User_Candidats"."candidatId" = "CVs"."UserId"
         and "User_Candidats".hidden = false
+       ${hideEmployed ? 'and "User_Candidats".employed = false' : ''}
       group by
         "UserId", "employed")
     select
@@ -176,6 +172,7 @@ const publishedCVQuery = `
       "CVs" cvs
     inner join groupCVs on
       cvs."UserId" = groupCVs."UserId" and cvs.version = groupCVs.version`;
+};
 
 const dividedCompleteCVQuery = async (query, privateUser) => {
   const completeIncludes = privateUser
@@ -228,7 +225,7 @@ const createCV = async (data) => {
   }
 
   const maxVersions = await models.CV.findAll({
-    attributes: [[sequelize.fn('MAX', sequelize.col('version')), 'maxVersion']],
+    attributes: [[fn('MAX', col('version')), 'maxVersion']],
     raw: true,
     where: {
       UserId: data.UserId,
@@ -535,10 +532,15 @@ const getCVs = async () => {
   });
 };
 
-const getAndCacheAllCVs = async (dbQuery, cache) => {
-  const cvs = await sequelize.query(dbQuery || publishedCVQuery, {
-    type: QueryTypes.SELECT,
-  });
+const getAndCacheAllCVs = async (dbQuery, cache, options = {}) => {
+  const { hideEmployed, ...restOptions } = options;
+
+  const cvs = await sequelize.query(
+    dbQuery || getPublishedCVQuery(hideEmployed),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
 
   const cvList = await models.CV.findAll({
     where: {
@@ -565,12 +567,22 @@ const getAndCacheAllCVs = async (dbQuery, cache) => {
         as: 'businessLines',
         through: { attributes: [] },
         attributes: ['name'],
+        where: restOptions.businessLines
+          ? {
+              name: restOptions.businessLines,
+            }
+          : undefined,
       },
       {
         model: models.Location,
         as: 'locations',
         through: { attributes: [] },
         attributes: ['name'],
+        where: restOptions.locations
+          ? {
+              name: restOptions.locations,
+            }
+          : undefined,
       },
       INCLUDE_ALL_USERS,
     ],
@@ -597,27 +609,73 @@ const getRandomShortCVs = async (nb, query, params) => {
     }`
   );
 
-  let modelCVs;
+  const filtersObj = getFiltersObjectsFromQueryParams(params, CV_FILTERS_DATA);
 
-  if (!escapedQuery) {
+  let modelCVs;
+  let hasSuggestions = false;
+  const options = getCVOptions(filtersObj);
+
+  if (!escapedQuery && Object.keys(options).length === 0) {
     const redisKey = REDIS_KEYS.CV_LIST;
     const redisCvs = await RedisManager.getAsync(redisKey);
 
     if (redisCvs) {
       modelCVs = JSON.parse(redisCvs);
     } else {
-      modelCVs = await getAndCacheAllCVs(publishedCVQuery, true);
+      modelCVs = await getAndCacheAllCVs(getPublishedCVQuery(), true);
     }
   } else {
-    modelCVs = await getAndCacheAllCVs(`
-      with publishedCVs as (${publishedCVQuery})
+    const { hideEmployed, ...restOptions } = options;
+    const dbQuery = escapedQuery
+      ? `
+      with publishedCVs as (${getPublishedCVQuery(hideEmployed)})
       SELECT cvSearches."CVId" as id
       FROM "CV_Searches" cvSearches
         INNER JOIN publishedCVs on cvSearches."CVId" = publishedCVs."id"
         WHERE ${escapeColumn(
           'cvSearches."searchString"'
         )} like '%${escapedQuery}%'
-    `);
+    `
+      : undefined;
+    modelCVs = await getAndCacheAllCVs(
+      dbQuery,
+      false,
+      dbQuery ? restOptions : options
+    );
+
+    if (modelCVs.length <= 0) {
+      if (
+        filtersObj &&
+        filtersObj[CV_FILTERS_DATA[1].key] &&
+        filtersObj[CV_FILTERS_DATA[1].key].length > 0
+      ) {
+        if (
+          filtersObj[CV_FILTERS_DATA[2].key] &&
+          filtersObj[CV_FILTERS_DATA[2].key].length > 0
+        ) {
+          const newFiltersObj = {
+            ...filtersObj,
+            [CV_FILTERS_DATA[2].key]: [],
+          };
+          const newOptions = getCVOptions(newFiltersObj);
+
+          const {
+            hideEmployed: newHideEmployed,
+            ...newRestOptions
+          } = newOptions;
+
+          const filteredOtherCvs = await getAndCacheAllCVs(
+            dbQuery,
+            false,
+            dbQuery ? newRestOptions : newOptions
+          );
+          if (filteredOtherCvs && filteredOtherCvs.length > 0) {
+            modelCVs = filteredOtherCvs;
+            hasSuggestions = true;
+          }
+        }
+      }
+    }
   }
 
   const totalSharesPerUser = await sequelize.query(
@@ -667,16 +725,14 @@ const getRandomShortCVs = async (nb, query, params) => {
     }
   );
 
-  const sortedFinalCVsList = sortedKeys
-    .reduce((acc, curr) => {
-      return [...acc, ...sortedGroupedCvsByMonth[curr]];
-    }, [])
-    .slice(0, nb);
-
-  return filterCVs(
-    sortedFinalCVsList,
-    getFiltersObjectsFromQueryParams(params, CV_FILTERS_DATA)
-  );
+  return {
+    cvs: sortedKeys
+      .reduce((acc, curr) => {
+        return [...acc, ...sortedGroupedCvsByMonth[curr]];
+      }, [])
+      .slice(0, nb),
+    suggestions: hasSuggestions,
+  };
 };
 
 const setCV = (id, cv) => {
@@ -818,5 +874,5 @@ module.exports = {
   generatePdfFromCV,
   getAndCacheCV,
   getAndCacheAllCVs,
-  publishedCVQuery,
+  getPublishedCVQuery,
 };

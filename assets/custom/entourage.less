@@ -197,14 +197,17 @@
 .hook-badge() {
   height: inherit;
   font-size: 12px;
-  color: #333;
-  background-color: #FFF8F5;
-  padding: 0 10px;
+  color: white;
 }
 
-.hook-badge-hover() {
-  color: #333;
-  background-color: #FFF8F5;
+.hook-inverse-badge-hover() {
+  color: white;
+  background-color: @global-primary-background;
+}
+
+.hook-inverse-badge() {
+  color: white;
+  background-color: @global-primary-background;
 }
 
 .hook-link-heading() {
@@ -389,7 +392,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
   // keep this background for better visibility
   background-color: #F2F2F0;
 }
@@ -423,6 +425,13 @@
 
 .uk-tab > .uk-active > a > * {
   color: @global-primary-background
+}
+.uk-offcanvas-bar {
+  overflow: visible;
+}
+
+.uk-offcanvas-bar .uk-text-muted {
+  color: #999 !important;
 }
 
 .uk-offcanvas-bar .uk-button-primary {
