@@ -22,7 +22,7 @@ const Select = ({
       <div
         className={`uk-form-controls ent-select${hidden ? ' uk-hidden' : ''}`}
         style={{
-          paddingTop: '15px',
+          paddingTop: title ? '15px' : '2px',
           paddingBottom: '2px',
         }}
       >
@@ -76,6 +76,7 @@ Select.defaultProps = {
   disabled: false,
   onChange: () => {},
   hidden: false,
+  title: undefined,
 };
 
 Select.propTypes = {
@@ -83,7 +84,7 @@ Select.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   valid: PropTypes.shape({
     isInvalid: PropTypes.bool,
     message: PropTypes.string,

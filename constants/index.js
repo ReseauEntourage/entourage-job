@@ -193,19 +193,19 @@ const CV_FILTERS_DATA = [
     key: 'hideEmployed',
     type: 'checkbox',
     constants: [{ label: 'Masquer les candidats employés', value: true }],
-    title: 'Masquer les candidats ayant retrouvé un emploi',
-  },
-  {
-    key: 'businessLines',
-    constants: BUSINESS_LINES,
-    title: "Secteurs d'activité",
-    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
+    title: 'Masquer les candidats en emploi',
   },
   {
     key: 'locations',
     constants: DEPARTMENTS_FILTERS,
-    title: 'Départements',
+    title: 'Où ?',
     tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
+  },
+  {
+    key: 'businessLines',
+    constants: BUSINESS_LINES,
+    title: 'Secteur',
+    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
 ];
 

@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import FiltersMobile from '../filters/FiltersMobile';
+import FiltersMobileSideBar from '../filters/FiltersMobileSideBar';
+import FiltersCheckboxes from '../filters/FiltersCheckboxes';
 import CVList from '../cv/CVList';
 import { GridNoSSR, Section } from '../utils';
-import FiltersSideBar from '../filters/FiltersSideBar';
-import CurrentFilters from '../filters/CurrentFilters';
+import FiltersOptions from '../filters/FiltersOptions';
 import { CV_FILTERS_DATA, STORAGE_KEYS } from '../../constants';
 import Icon from '../utils/Icon';
 import { event } from '../../lib/gtag';
@@ -11,6 +13,7 @@ import TAGS from '../../constants/tags';
 import { DataContext } from '../store/DataProvider';
 import { useFilters } from '../../hooks';
 import { useMount } from '../../hooks/utils';
+import FiltersDropdowns from '../filters/FiltersDropdowns';
 
 let debounceTimeoutId;
 
@@ -112,6 +115,13 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
                 }}
               />
             </form>
+            <FiltersMobile filters={filters} />
+            <FiltersDropdowns
+              hideOnMobile
+              filterData={CV_FILTERS_DATA}
+              filters={filters}
+              setFilters={setFilters}
+            />
             <a
               className="ent-search-icon uk-background-primary uk-light"
               onClick={() => {
@@ -122,20 +132,25 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
               <Icon name="search" className="uk-text-secondary" />
             </a>
           </div>
-
+          <FiltersMobileSideBar
+            filterData={CV_FILTERS_DATA}
+            filters={filters}
+            setFilters={setFilters}
+          />
           <div
-            style={{ maxWidth: 1100 }}
-            className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-top"
+            style={{ maxWidth: 1000 }}
+            className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-between@m uk-margin-top"
           >
-            <CurrentFilters
-              numberOfResults={numberOfResults}
-              filters={filters}
-              resetFilters={resetFilters}
-            />
-            <FiltersSideBar
+            <FiltersCheckboxes
               filterData={CV_FILTERS_DATA}
               filters={filters}
               setFilters={setFilters}
+              hideOnMobile
+            />
+            <FiltersOptions
+              numberOfResults={numberOfResults}
+              filters={filters}
+              resetFilters={resetFilters}
             />
           </div>
         </div>

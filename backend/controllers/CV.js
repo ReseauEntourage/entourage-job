@@ -646,16 +646,16 @@ const getRandomShortCVs = async (nb, query, params) => {
     if (modelCVs.length <= 0) {
       if (
         filtersObj &&
-        filtersObj[CV_FILTERS_DATA[2].key] &&
-        filtersObj[CV_FILTERS_DATA[2].key].length > 0
+        filtersObj[CV_FILTERS_DATA[1].key] &&
+        filtersObj[CV_FILTERS_DATA[1].key].length > 0
       ) {
         if (
-          filtersObj[CV_FILTERS_DATA[1].key] &&
-          filtersObj[CV_FILTERS_DATA[1].key].length > 0
+          filtersObj[CV_FILTERS_DATA[2].key] &&
+          filtersObj[CV_FILTERS_DATA[2].key].length > 0
         ) {
           const newFiltersObj = {
             ...filtersObj,
-            [CV_FILTERS_DATA[1].key]: [],
+            [CV_FILTERS_DATA[2].key]: [],
           };
           const newOptions = getCVOptions(newFiltersObj);
 
