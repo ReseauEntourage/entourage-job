@@ -37,8 +37,8 @@ const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {
       subject: "Rappel à propos d'une offre",
       html:
         'Bonjour,<br /><br />' +
-        `Pour rappel, l'offre suivante vous a été adressé : <strong>${opportunity.title} - ${opportunity.company}</strong>.<br /><br />` +
-        `Vous pouvez la consulter et mettre à jour le statut si nécessaire en cliquant ici :<br />` +
+        `Pour rappel, l'offre suivante vous a été adressée : <strong>${opportunity.title} - ${opportunity.company}</strong>.<br /><br />` +
+        `Vous pouvez la consulter et mettre à jour son statut si nécessaire en cliquant ici :<br />` +
         `<strong>${process.env.SERVER_URL}/backoffice/candidat/offres?q=${opportunityId}</strong>.<br /><br />` +
         `L’équipe LinkedOut`,
     });
