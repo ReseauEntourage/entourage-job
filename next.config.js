@@ -1,3 +1,6 @@
+// eslint-disable-next-line
+require('dotenv').config();
+
 const webpack = require('webpack');
 
 const withCSS = require('@zeit/next-css');
@@ -5,15 +8,13 @@ const withLess = require('@zeit/next-less');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
-const loadEnvironementVariables = require('./backend/utils/env');
-
-loadEnvironementVariables();
-
 const dev = process.env.NODE_ENV !== 'production';
 
 module.exports = withLess(
   withCSS({
     webpack: (config, options) => {
+      config.resolve.modules.push(__dirname);
+
       if (!options.isServer) {
         config.resolve.alias['@sentry/node'] = '@sentry/react';
       }
@@ -26,8 +27,8 @@ module.exports = withLess(
           exclude: /a\.js|node_modules/,
           // add errors to webpack instead of warnings
           failOnError: true,
-          // allow import cycles that include an asyncronous import,
-          // e.g. via import(/* webpackMode: "weak" */ './file.js')
+          // allow const cycles that include an asyncronous const,
+          // e.g. via const(/* webpackMode: "weak" */ './file.js')
           allowAsyncCycles: false,
           // set the current working directory for displaying module paths
           cwd: process.cwd(),
