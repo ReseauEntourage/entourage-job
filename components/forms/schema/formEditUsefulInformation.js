@@ -1,5 +1,5 @@
-import { LOCATIONS } from '../../../constants';
 import { getAllFilters } from '../../../utils';
+import { DEPARTMENTS_FILTERS } from '../../../constants/departements';
 
 export default {
   id: 'form-usefullinformation',
@@ -49,7 +49,7 @@ export default {
       type: 'text',
       title: 'Lieu de travail souhaité',
       component: 'select-request',
-      options: getAllFilters(LOCATIONS),
+      options: getAllFilters(DEPARTMENTS_FILTERS),
       isMulti: true,
     },
     {

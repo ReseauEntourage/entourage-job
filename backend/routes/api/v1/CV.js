@@ -90,7 +90,12 @@ router.post(
           reqCV.status === CV_STATUS.Pending.value
         ) {
           const mailSubject = 'Soumission CV';
-          const mailText = `Bonjour,\n\n${req.payload.firstName} vient de soumettre le CV de son candidat.\nRendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\nMerci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\nL'équipe Entourage.`;
+          const mailText =
+            `${req.payload.firstName} vient de soumettre le CV de son candidat.\n\n` +
+            `Rendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\n` +
+            `Merci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\n` +
+            `L'équipe Entourage.`;
+
           // notification de l'admin
           await addToWorkQueue({
             type: JOBS.JOB_TYPES.SEND_MAIL,
@@ -304,9 +309,10 @@ router.get('/', auth(), (req, res) => {
  * Exemple : <server_url>/api/v1/cv/cards/random?nb=2
  */
 router.get('/cards/random', auth(), (req, res) => {
-  CVController.getRandomShortCVs(req.query.nb, req.query.q)
-    .then((listeCVs) => {
-      res.status(200).json(listeCVs);
+  const { nb, q, ...restParams } = req.query;
+  CVController.getRandomShortCVs(nb, q, restParams)
+    .then((cvsRes) => {
+      res.status(200).json(cvsRes);
     })
     .catch((err) => {
       logger(res).error(err);

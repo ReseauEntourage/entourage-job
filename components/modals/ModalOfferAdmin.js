@@ -2,14 +2,19 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Api from '../../Axios';
-import schema from '../forms/schema/formEditOpportunity';
+import schema, { adminMutation } from '../forms/schema/formEditOpportunity';
 import FormWithValidation from '../forms/FormWithValidation';
 import { GridNoSSR, Button, SimpleLink, IconNoSSR } from '../utils';
 import ButtonIcon from '../utils/ButtonIcon';
 import { CloseButtonNoSSR } from '../utils/CloseButton';
 import { translateCategory, OfferInfoContainer, List } from './ModalOffer';
-import { useRemoveModal, useResetForm } from '../../hooks';
-import { findOfferStatus, formatParagraph } from '../../utils';
+import { useRemoveModal, useResetForm } from '../../hooks/utils';
+
+import {
+  findOfferStatus,
+  formatParagraph,
+  mutateFormSchema,
+} from '../../utils';
 import { OFFER_STATUS } from '../../constants';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
@@ -19,6 +24,20 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  // desactivation du champ de disclaimer
+  const mutatedSchema = mutateFormSchema(schema, [
+    {
+      fieldId: 'disclaimer',
+      props: [
+        {
+          propName: 'hidden',
+          value: true,
+        },
+      ],
+    },
+    adminMutation,
+  ]);
 
   const [form, resetForm] = useResetForm();
 
@@ -73,7 +92,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
           <h3>Modification de l&apos;offres d&apos;emploi</h3>
           <FormWithValidation
             ref={form}
-            formSchema={schema}
+            formSchema={mutatedSchema}
             defaultValues={{
               ...currentOffer,
               candidatesId:
@@ -138,13 +157,13 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
             <OfferInfoContainer>
               {(() => {
                 let className = ' uk-label-warning';
-                let content = 'En attente';
+                let content = 'À valider';
                 if (currentOffer.isValidated) {
-                  content = 'Validé';
+                  content = 'Publiée';
                   className = ' uk-label-success';
                 }
                 if (currentOffer.isArchived) {
-                  content = 'Archivé';
+                  content = 'Archivée';
                   className = ' uk-label-danger';
                 }
                 return <div className={`uk-label${className}`}>{content}</div>;
@@ -184,7 +203,9 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 {moment(currentOffer.date).format('DD/MM/YYYY')}
               </span>
             </OfferInfoContainer>
-            <OfferInfoContainer icon="location" title={currentOffer.location} />
+            <OfferInfoContainer icon="location" title={currentOffer.location}>
+              {currentOffer.department}
+            </OfferInfoContainer>
             {currentOffer.userOpportunity && (
               <OfferInfoContainer
                 icon="users"
@@ -364,6 +385,7 @@ ModalOfferAdmin.propTypes = {
     businessLines: PropTypes.arrayOf(PropTypes.string),
     date: PropTypes.string,
     location: PropTypes.string,
+    department: PropTypes.string,
     userOpportunity: PropTypes.arrayOf(
       PropTypes.shape({
         status: PropTypes.string,

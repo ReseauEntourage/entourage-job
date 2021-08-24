@@ -1,9 +1,9 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { CloseButtonNoSSR } from '../utils/CloseButton';
-import { useRemoveModal } from '../../hooks';
+import { useRemoveModal } from '../../hooks/utils';
 import HeaderModal from './HeaderModal';
 
 /**
@@ -14,18 +14,26 @@ import HeaderModal from './HeaderModal';
 const StepperModal = ({ composers, title, id, resetForm }) => {
   const [index, setIndex] = useState(0);
   const [wrappedComponents, setWrappedComponents] = useState();
-  const close = () => {
+
+  const close = useCallback(() => {
     resetForm();
     UIkit.modal(`#${id}`).hide();
     // TODO: Probleme car il est possible que la modale se ferme par un moyen autre qu'ici (uk-close-icon~)
     setIndex(0);
-  };
-  const next = () => {
-    setIndex(index + 1);
-  };
-  const previous = () => {
-    setIndex(index - 1);
-  };
+  }, [id, resetForm]);
+
+  const next = useCallback(() => {
+    setIndex((prevIndex) => {
+      return prevIndex + 1;
+    });
+  }, []);
+
+  const previous = useCallback(() => {
+    setIndex((prevIndex) => {
+      return prevIndex - 1;
+    });
+  }, []);
+
   useEffect(() => {
     if (composers) {
       setWrappedComponents(
@@ -34,7 +42,7 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
         })
       );
     }
-  }, [composers]);
+  }, [close, composers, next, previous]);
 
   // Fix because of bug where multiple modals with the same id are created
   useRemoveModal(id);

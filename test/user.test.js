@@ -72,6 +72,7 @@ describe('User', () => {
           {
             role: USER_ROLES.CANDIDAT,
           },
+          {},
           false
         );
         const response = await request(serverTest)
@@ -83,6 +84,7 @@ describe('User', () => {
       it('Should return 200 and a created user (create user without password).', async () => {
         const candidat = await userFactory(
           { role: USER_ROLES.CANDIDAT },
+          {},
           false
         );
         delete candidat.password;
@@ -95,7 +97,7 @@ describe('User', () => {
       });
       it('Should return 401 when user data contain wrong data types', async () => {
         const wrongData = {
-          ...(await userFactory({}, false)),
+          ...(await userFactory({}, {}, false)),
           firstName: 123,
         };
         const response = await request(serverTest)
@@ -109,6 +111,7 @@ describe('User', () => {
           {
             role: USER_ROLES.CANDIDAT,
           },
+          {},
           false
         );
         const response = await request(serverTest)
@@ -121,6 +124,7 @@ describe('User', () => {
           {
             role: USER_ROLES.CANDIDAT,
           },
+          {},
           false
         );
         const response = await request(serverTest)
@@ -134,6 +138,7 @@ describe('User', () => {
           {
             role: USER_ROLES.CANDIDAT,
           },
+          {},
           true
         );
         const response = await request(serverTest)
@@ -269,6 +274,7 @@ describe('User', () => {
               gender: candidat.gender,
               lastConnection: candidat.lastConnection.toISOString(),
               phone: candidat.phone,
+              zone: candidat.zone,
             },
           ];
 
@@ -357,7 +363,7 @@ describe('User', () => {
     describe('U - Update 1 User', () => {
       describe('Update user - /:id', () => {
         it('Should return 401 if user is not logged in', async () => {
-          const updates = await userFactory({}, false);
+          const updates = await userFactory({}, {}, false);
           const response = await request(serverTest)
             .put(`${route}/${otherCandidat.user.id}`)
             .send({
@@ -367,7 +373,7 @@ describe('User', () => {
           expect(response.status).toBe(401);
         });
         it('Should return 401 if user do not have the rights to update targeted user', async () => {
-          const updates = await userFactory({}, false);
+          const updates = await userFactory({}, {}, false);
           const response = await request(serverTest)
             .put(`${route}/${otherCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
@@ -378,7 +384,7 @@ describe('User', () => {
           expect(response.status).toBe(401);
         });
         it('Should return 200 and updated user when a candiate update himself', async () => {
-          const updates = await userFactory({}, false);
+          const updates = await userFactory({}, {}, false);
           const response = await request(serverTest)
             .put(`${route}/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
@@ -390,7 +396,7 @@ describe('User', () => {
           expect(response.body.phone).toEqual(updates.phone);
         });
         it('Should return 200 and updated user when coach update himself', async () => {
-          const updates = await userFactory({}, false);
+          const updates = await userFactory({}, {}, false);
           const response = await request(serverTest)
             .put(`${route}/${loggedInCoach.user.id}`)
             .set('authorization', `Token ${loggedInCoach.token}`)
@@ -401,7 +407,7 @@ describe('User', () => {
           expect(response.body.phone).toEqual(updates.phone);
         });
         it('Should return 401 when a not admin user updates his first name', async () => {
-          const updates = await userFactory({}, false);
+          const updates = await userFactory({}, {}, false);
           const response = await request(serverTest)
             .put(`${route}/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
@@ -411,7 +417,7 @@ describe('User', () => {
           expect(response.status).toBe(401);
         });
         it('Should return 401 when a not admin user updates his last name', async () => {
-          const updates = await userFactory({}, false);
+          const updates = await userFactory({}, {}, false);
           const response = await request(serverTest)
             .put(`${route}/${loggedInCoach.user.id}`)
             .set('authorization', `Token ${loggedInCoach.token}`)
@@ -421,7 +427,7 @@ describe('User', () => {
           expect(response.status).toBe(401);
         });
         it('Should return 200 and updated user when an admin update a user', async () => {
-          const updates = await userFactory({}, false);
+          const updates = await userFactory({}, {}, false);
           const response = await request(serverTest)
             .put(`${route}/${otherCandidat.user.id}`)
             .set('authorization', `Token ${loggedInAdmin.token}`)

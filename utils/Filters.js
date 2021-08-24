@@ -1,3 +1,21 @@
+const _ = require('lodash');
+
+const getUserOpportunityFromOffer = (offer, candidatId) => {
+  let userOpportunity;
+  if (
+    offer.userOpportunity &&
+    Array.isArray(offer.userOpportunity) &&
+    offer.userOpportunity.length > 0
+  ) {
+    userOpportunity = offer.userOpportunity.find((userOpp) => {
+      return userOpp.UserId === candidatId;
+    });
+  } else {
+    userOpportunity = offer.userOpportunity;
+  }
+  return userOpportunity;
+};
+
 const getChildrenFilters = (filters) => {
   return filters.reduce((acc, curr) => {
     const accToReturn = [...acc];
@@ -14,13 +32,14 @@ const getChildrenFilters = (filters) => {
   }, []);
 };
 
-const getAllFilters = (filters) => {
-  return filters.reduce((acc, curr) => {
+const getAllFilters = (filters, zone) => {
+  const filtersToShow = filters.reduce((acc, curr) => {
     const accToReturn = [
       ...acc,
       {
         value: curr.value,
         label: curr.label,
+        zone: curr.zone,
       },
     ];
     if (curr.children && curr.children.length > 0) {
@@ -28,6 +47,14 @@ const getAllFilters = (filters) => {
     }
     return accToReturn;
   }, []);
+
+  if (zone) {
+    return filtersToShow.filter((filter) => {
+      return !filter.zone || filter.zone === zone;
+    });
+  }
+
+  return filtersToShow;
 };
 
 const findFilter = (filters, value) => {
@@ -45,38 +72,14 @@ const findFilter = (filters, value) => {
   }, null);
 };
 
-const hasAsChild = (filters, parent, value, notFirst) => {
-  let parentFilter = parent;
-
-  if (!notFirst) {
-    parentFilter = findFilter(filters, parent);
-  }
-
-  if (
-    parentFilter &&
-    parentFilter.children &&
-    parentFilter.children.length > 0
-  ) {
-    const index = parentFilter.children.findIndex((filter) => {
-      const found = value.toLowerCase().includes(filter.value.toLowerCase());
-      if (!found && filter.children && filter.children.length > 0) {
-        return hasAsChild(filter.children, filter, value, true);
-      }
-      return found;
-    });
-    return index >= 0;
-  }
-  return false;
-};
-
-const initializeFilters = (filtersConst, defaultIndexes) => {
+const initializeFilters = (filtersConst, defaults) => {
   let hasDefaults = false;
-  if (Array.isArray(defaultIndexes) && defaultIndexes.length > 0) {
+  if (defaults && Object.keys(defaults).length > 0) {
     hasDefaults = true;
   }
-  return filtersConst.reduce((acc, curr, index) => {
-    if (hasDefaults && defaultIndexes.includes(index)) {
-      acc[curr.key] = curr.constants;
+  return filtersConst.reduce((acc, curr) => {
+    if (hasDefaults && defaults[curr.key]) {
+      acc[curr.key] = defaults[curr.key];
     } else {
       acc[curr.key] = [];
     }
@@ -84,10 +87,21 @@ const initializeFilters = (filtersConst, defaultIndexes) => {
   }, {});
 };
 
+const filtersToQueryParams = (filters) => {
+  const params = {};
+  _.forEach(Object.keys(filters), (filter) => {
+    params[filter] = filters[filter].map((f) => {
+      return f.value;
+    });
+  });
+  return params;
+};
+
 module.exports = {
+  getUserOpportunityFromOffer,
   getChildrenFilters,
   getAllFilters,
   findFilter,
-  hasAsChild,
   initializeFilters,
+  filtersToQueryParams,
 };

@@ -8,7 +8,7 @@ import StepperModal from './StepperModal';
 import FormWithValidation from '../forms/FormWithValidation';
 import schema from '../forms/schema/formEditOpportunity';
 import Api from '../../Axios';
-import { useResetForm } from '../../hooks';
+import { useResetForm } from '../../hooks/utils';
 import { mutateFormSchema } from '../../utils';
 
 const formId = 'post-job-ad';

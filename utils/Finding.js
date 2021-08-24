@@ -9,16 +9,6 @@ const findOfferStatus = (status) => {
   return { label: 'Non défini', color: 'muted' };
 };
 
-const getUserOpportunityFromOffer = (offer, candidatId) => {
-  let userOpportunity;
-  if (offer.userOpportunity && offer.userOpportunity.length > 0) {
-    userOpportunity = offer.userOpportunity.find((userOpp) => {
-      return userOpp.UserId === candidatId;
-    });
-  }
-  return userOpportunity;
-};
-
 const getZoneFromDepartment = (dep) => {
   const zone = DEPARTMENTS.find((depObj) => {
     return depObj.name === dep;
@@ -33,6 +23,5 @@ const getAdminMailFromDepartment = (dep) => {
 
 module.exports = {
   findOfferStatus,
-  getUserOpportunityFromOffer,
   getAdminMailFromDepartment,
 };

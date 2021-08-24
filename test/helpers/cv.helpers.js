@@ -3,21 +3,22 @@ const cvFactory = require('../factories/cvFactory');
 
 /**
  * Create a cv and associated entities
- * 
- * @param {Object} cvData 
+ *
+ * @param {Object} cvData
  * @param {Object<
             ambitions: number,
             contracts: number,
             languages: number,
             passions: number,
             buisnessLines: number,
+            locations: number,
             skills: number,
             experiences: number,
             reviews: number,
             candidat: boolean,
-            >} 
+            >}
 * associations other models to be created and associated to the cv
-* @returns a cv with desired associated entities, 
+* @returns a cv with desired associated entities,
 * @optional with associated user
 */
 const createCvWithAssociations = async (props = {}) => {

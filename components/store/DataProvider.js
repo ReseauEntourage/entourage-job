@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 
 export const DataContext = createContext({});
@@ -6,29 +6,36 @@ export const DataContext = createContext({});
 const DataProvider = ({ children }) => {
   const [data, setData] = useState(true);
 
-  const storeData = (key, value, storeInStorage) => {
+  const storeData = useCallback((key, value, storeInStorage) => {
     if (storeInStorage) localStorage.setItem(key, JSON.stringify(value));
-    setData({
-      ...data,
-      [key]: value,
+    setData((prevData) => {
+      return {
+        ...prevData,
+        [key]: value,
+      };
     });
-  };
+  }, []);
 
-  const getData = (key) => {
-    if (data[key]) {
-      return data[key];
-    }
-    let item = localStorage.getItem(key);
-    if (item) {
-      item = JSON.parse(item);
-      setData({
-        ...data,
-        [key]: item,
-      });
-    }
+  const getData = useCallback(
+    (key) => {
+      if (data[key]) {
+        return data[key];
+      }
+      let item = localStorage.getItem(key);
+      if (item) {
+        item = JSON.parse(item);
+        setData((prevData) => {
+          return {
+            ...prevData,
+            [key]: item,
+          };
+        });
+      }
 
-    return item;
-  };
+      return item;
+    },
+    [data]
+  );
 
   return (
     <DataContext.Provider value={{ storeData, getData }}>

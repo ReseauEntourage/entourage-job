@@ -10,7 +10,7 @@ import Api from '../Axios';
 import { USER_ROLES } from '../constants';
 import StepperModal from '../components/modals/StepperModal';
 import SuccessModalContent from '../components/modals/SuccessModalContent';
-import { useResetForm } from '../hooks';
+import { useResetForm } from '../hooks/utils';
 
 const Login = () => {
   const { login, user } = useContext(UserContext);
@@ -26,7 +26,7 @@ const Login = () => {
         router.push('/backoffice/candidat/offres');
       }
     }
-  }, [user]);
+  }, [router, user]);
 
   const rateLimitErrorMessage =
     'Trop de tentatives infructueuses.\nVeuillez ressayer dans 1 minute.';

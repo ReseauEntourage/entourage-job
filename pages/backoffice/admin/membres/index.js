@@ -1,6 +1,6 @@
 /* global UIkit */
 import moment from 'moment';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
@@ -14,6 +14,7 @@ import ImgProfile from '../../../../components/headers/ImgProfile';
 import { CV_STATUS, USER_ROLES } from '../../../../constants';
 import Button from '../../../../components/utils/Button';
 import { mutateFormSchema } from '../../../../utils';
+import { usePrevious } from '../../../../hooks/utils';
 
 let debounceTimeoutId;
 
@@ -21,6 +22,7 @@ function translateStatusCV(status) {
   const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unknown;
   return <span className={`uk-text-${cvStatus.style}`}>{cvStatus.label}</span>;
 }
+const LIMIT = 50;
 
 const MembersAdmin = ({ query: { role } }) => {
   const [members, setMembers] = useState([]);
@@ -29,7 +31,8 @@ const MembersAdmin = ({ query: { role } }) => {
   const [loading, setLoading] = useState(true);
   const [allLoaded, setAllLoaded] = useState(false);
   const [offset, setOffset] = useState(0);
-  const LIMIT = 50;
+  const prevSearchQuery = usePrevious(searchQuery);
+  const prevRole = usePrevious(role);
   const router = useRouter();
 
   const mutatedSchema = mutateFormSchema(schemaCreateUser, [
@@ -45,48 +48,53 @@ const MembersAdmin = ({ query: { role } }) => {
     },
   ]);
 
-  const fetchData = async (doReset, query) => {
-    setLoading(true);
-    setHasError(false);
-    if (doReset) {
-      setMembers([]);
-    }
-    try {
-      const { data } = await axios.get('/api/v1/user/members', {
-        params: {
-          limit: LIMIT,
-          offset: doReset ? 0 : offset,
-          role,
-          query,
-        },
-      });
+  const fetchData = useCallback(
+    async (doReset, query) => {
+      setLoading(true);
+      setHasError(false);
       if (doReset) {
-        setMembers(data);
-        setOffset(LIMIT);
-        setAllLoaded(false);
-      } else {
-        setMembers([...members, ...data]);
-        setOffset(offset + LIMIT);
+        setMembers([]);
       }
+      try {
+        const { data } = await axios.get('/api/v1/user/members', {
+          params: {
+            limit: LIMIT,
+            offset: doReset ? 0 : offset,
+            role,
+            query,
+          },
+        });
+        if (doReset) {
+          setMembers(data);
+          setOffset(LIMIT);
+          setAllLoaded(false);
+        } else {
+          setMembers((prevMembers) => {
+            return [...prevMembers, ...data];
+          });
+          setOffset((prevOffset) => {
+            return prevOffset + LIMIT;
+          });
+        }
 
-      if (data.length < LIMIT) {
-        setAllLoaded(true);
+        if (data.length < LIMIT) {
+          setAllLoaded(true);
+        }
+      } catch (err) {
+        console.error(err);
+        setHasError(true);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error(err);
-      setHasError(true);
-    } finally {
-      setLoading(false);
+    },
+    [offset, role]
+  );
+
+  useEffect(() => {
+    if (searchQuery !== prevSearchQuery || role !== prevRole) {
+      fetchData(true, searchQuery);
     }
-  };
-
-  useEffect(() => {
-    fetchData(true, searchQuery);
-  }, [searchQuery]);
-
-  useEffect(() => {
-    fetchData(true, searchQuery);
-  }, [role]);
+  }, [fetchData, prevRole, prevSearchQuery, role, searchQuery]);
 
   return (
     <LayoutBackOffice title="Gestion des membres">
@@ -378,7 +386,7 @@ const MembersAdmin = ({ query: { role } }) => {
                 <Button
                   style="text"
                   onClick={() => {
-                    return fetchData();
+                    return fetchData(false, searchQuery);
                   }}
                 >
                   Voir plus...

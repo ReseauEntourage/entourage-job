@@ -2,7 +2,7 @@ const ADMIN_ZONES = {
   PARIS: 'PARIS',
   LYON: 'LYON',
   LILLE: 'LILLE',
-  HZ: 'HZ',
+  HZ: 'HORS ZONE',
 };
 
 const DEPARTMENTS = [
@@ -514,6 +514,16 @@ const DEPARTMENTS = [
   },
 ];
 
+const DEPARTMENTS_FILTERS = [
+  ...DEPARTMENTS.map(({ name, zone }) => {
+    return {
+      value: name,
+      label: name,
+      zone,
+    };
+  }),
+];
+
 const FORMATTED_DEPARTMENTS = [
   {
     value: -1,
@@ -531,4 +541,5 @@ module.exports = {
   DEPARTMENTS,
   ADMIN_ZONES,
   FORMATTED_DEPARTMENTS,
+  DEPARTMENTS_FILTERS,
 };

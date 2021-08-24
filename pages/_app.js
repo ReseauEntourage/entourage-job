@@ -47,7 +47,7 @@ const Container = ({ Component, pageProps, err }) => {
     setTimeout(() => {
       setFading(true);
     }, 1000);
-  }, []);
+  }, [isFirstLoad, setIsFirstLoad]);
 
   useEffect(() => {
     if (fading) {

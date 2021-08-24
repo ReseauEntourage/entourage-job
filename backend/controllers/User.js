@@ -1,4 +1,4 @@
-const { QueryTypes } = require('sequelize');
+const { QueryTypes, Op, fn, where, col } = require('sequelize');
 
 const uuid = require('uuid/v4');
 const { USER_ROLES, REDIS_KEYS, JOBS, CV_STATUS } = require('../../constants');
@@ -10,11 +10,10 @@ const { addToWorkQueue } = require('../jobs');
 
 const {
   models: { User, User_Candidat, CV, Opportunity_User, Revision },
-  Sequelize: { Op, fn, col, where },
   sequelize,
 } = require('../db/models');
 
-const { publishedCVQuery } = require('./CV');
+const { getPublishedCVQuery } = require('./CV');
 
 const ATTRIBUTES_USER_CANDIDAT = ['employed', 'hidden', 'note', 'url'];
 const ATTRIBUTES_USER = [
@@ -25,6 +24,7 @@ const ATTRIBUTES_USER = [
   'phone',
   'address',
   'role',
+  'zone',
   'gender',
   'lastConnection',
   'deletedAt',
@@ -257,18 +257,15 @@ const searchUsers = (query, role) => {
 
 const searchCandidates = async (query) => {
   const lowerCaseQuery = query.toLowerCase();
-  const publishedCVs = await sequelize.query(publishedCVQuery, {
+  const publishedCVs = await sequelize.query(getPublishedCVQuery(true), {
     type: QueryTypes.SELECT,
-  });
-  const filteredPublishedCVs = publishedCVs.filter((cv) => {
-    return !cv.employed;
   });
   const options = {
     attributes: ATTRIBUTES_USER_PUBLIC,
     where: {
       [Op.and]: [
         {
-          id: filteredPublishedCVs.map((publishedCV) => {
+          id: publishedCVs.map((publishedCV) => {
             return publishedCV.UserId;
           }),
         },
@@ -283,6 +280,27 @@ const searchCandidates = async (query) => {
         ),
       ],
     },
+  };
+  return User.findAll(options);
+};
+
+const getAllCandidates = async () => {
+  const publishedCVs = await sequelize.query(getPublishedCVQuery(true), {
+    type: QueryTypes.SELECT,
+  });
+
+  const options = {
+    attributes: ATTRIBUTES_USER,
+    where: {
+      [Op.and]: [
+        {
+          id: publishedCVs.map((publishedCV) => {
+            return publishedCV.UserId;
+          }),
+        },
+      ],
+    },
+    include: INCLUDE_USER_CANDIDAT,
   };
   return User.findAll(options);
 };
@@ -542,4 +560,5 @@ module.exports = {
   getUserCandidat,
   getUserCandidatOpt,
   getUserCandidats,
+  getAllCandidates,
 };

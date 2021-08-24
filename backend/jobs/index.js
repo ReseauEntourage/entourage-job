@@ -1,19 +1,6 @@
 const Pusher = require('pusher');
 const { getMainWorkQueue, getImageQueue } = require('../utils/WorkQueue');
 
-const { sendMailBackground } = require('./Mail');
-
-const { insertAirtable, updateOpportunityAirtable } = require('./Airtable');
-
-const {
-  generatePDF,
-  cacheCV,
-  cacheAllCVs,
-  createCVSearchString,
-} = require('./CV');
-
-const { generatePreview } = require('./Image');
-
 const dev = process.env.NODE_ENV !== 'production';
 
 const workers = process.env.WEB_CONCURRENCY
@@ -49,10 +36,10 @@ const queueOptions = {
   removeOnComplete: true,
 };
 
-const addToWorkQueue = async (data) => {
+const addToWorkQueue = async (data, options = {}) => {
   if (!dev) {
     try {
-      workQueue.add(data, queueOptions);
+      workQueue.add(data, { ...queueOptions, ...options });
     } catch (err) {
       console.error('Failed to add job to queue : ', err);
     }
@@ -108,12 +95,4 @@ module.exports = {
   attachListeners,
   addToWorkQueue,
   addToImageQueue,
-  generatePDF,
-  generatePreview,
-  cacheCV,
-  cacheAllCVs,
-  createCVSearchString,
-  sendMailBackground,
-  insertAirtable,
-  updateOpportunityAirtable,
 };

@@ -6,7 +6,7 @@ import HeaderModal from './HeaderModal';
 import FormWithValidation from '../forms/FormWithValidation';
 
 import { CloseButtonNoSSR } from '../utils';
-import { useResetForm } from '../../hooks';
+import { useResetForm } from '../../hooks/utils';
 
 const ModalEdit = ({
   id,

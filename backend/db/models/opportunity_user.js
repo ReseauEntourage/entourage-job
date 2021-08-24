@@ -1,26 +1,28 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-underscore-dangle */
 
-const { sendMail } = require('../../controllers/Mail');
+const { JOBS } = require('../../../constants');
+const { addToWorkQueue } = require('../../jobs');
 
 const sendMailEmbauche = async (
   toEmail,
   firstName,
   title,
+  company,
   opportunityId,
   roleMin
 ) => {
-  // Fix because of bug where the addToWorkQueue function cannot be imported
-  if (!process.env.NODE_ENV.includes('test')) {
-    await sendMail({
-      toEmail,
-      subject: `${firstName} a retrouvé un emploi`,
-      text: `
-          ${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : ${title}.
-          Vous pouvez maintenant l'archiver en cliquant ici :
-          ${process.env.SERVER_URL}/backoffice/${roleMin}/offres?q=${opportunityId}.`,
-    });
-  }
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.SEND_MAIL,
+    toEmail,
+    subject: `${firstName} a retrouvé un emploi`,
+    html:
+      `Bonjour,<br /><br />` +
+      `${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : <strong>${title} - ${company}</strong>.<br /><br />` +
+      `Vous pouvez maintenant l'archiver en cliquant ici :<br />` +
+      `<strong>${process.env.SERVER_URL}/backoffice/${roleMin}/offres?q=${opportunityId}</strong>.<br /><br />` +
+      `L'équipe LinkedOut`,
+  });
 };
 
 module.exports = (sequelize, DataTypes) => {
@@ -81,7 +83,10 @@ module.exports = (sequelize, DataTypes) => {
         nextData.status === 2
       ) {
         try {
-          const [{ firstName, candidat }, { title }] = await Promise.all([
+          const [
+            { firstName, candidat },
+            { title, company },
+          ] = await Promise.all([
             models.User.findByPk(nextData.UserId, {
               attributes: ['firstName'],
               include: [
@@ -99,7 +104,7 @@ module.exports = (sequelize, DataTypes) => {
               ],
             }),
             models.Opportunity.findByPk(nextData.OpportunityId, {
-              attributes: ['title'],
+              attributes: ['title', 'company'],
             }),
           ]);
 
@@ -108,6 +113,7 @@ module.exports = (sequelize, DataTypes) => {
             process.env.MAILJET_TO_EMAIL,
             firstName,
             title,
+            company,
             nextData.OpportunityId,
             'admin'
           );
@@ -118,6 +124,7 @@ module.exports = (sequelize, DataTypes) => {
               email,
               firstName,
               title,
+              company,
               nextData.OpportunityId,
               'candidat'
             );

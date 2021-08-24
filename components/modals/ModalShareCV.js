@@ -7,7 +7,7 @@ import FormWithValidation from '../forms/FormWithValidation';
 import schemaGetEmail from '../forms/schema/formGetEmail.json';
 import Axios from '../../Axios';
 import { Button, IconNoSSR, ImgNoSSR } from '../utils';
-import { useResetForm } from '../../hooks';
+import { useResetForm } from '../../hooks/utils';
 import { EXTERNAL_LINKS } from '../../constants';
 import { event } from '../../lib/gtag';
 import TAGS from '../../constants/tags';

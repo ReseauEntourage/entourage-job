@@ -112,7 +112,7 @@ const CVPageContent = ({ candidatId }) => {
         `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${cv.UserId}.${cv.status}.jpg?${previewHash}`
       );
     }
-  }, [previewGenerating]);
+  }, [cv, previewGenerating]);
 
   const saveUserData = (modifiedCv) => {
     return new Promise((res, rej) => {
@@ -322,6 +322,7 @@ const CVPageContent = ({ candidatId }) => {
           await autoSaveCV({ ...cv, ...fields });
           setCV({ ...cv, ...fields, status: CV_STATUS.Draft.value });
         }}
+        userZone={cv.user.candidat.zone}
       />
 
       {/* preview modal */}

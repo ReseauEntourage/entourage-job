@@ -5,11 +5,18 @@ import interestLinkedOutSchema from '../components/forms/schema/formInterestLink
 import { Section } from '../components/utils';
 import FormWithValidation from '../components/forms/FormWithValidation';
 import Api from '../Axios';
-import { useResetForm } from '../hooks';
+import { useResetForm } from '../hooks/utils';
 import SimpleLink from '../components/utils/SimpleLink';
 
 const Contact = () => {
   const [form, resetForm] = useResetForm();
+
+  const contactPerCity = {
+    Paris: '07 82 44 97 39',
+    Lille: '07 83 85 48 95',
+    Lyon: '07 67 35 05 86',
+    'Autres demandes': '07 67 69 67 61',
+  };
 
   return (
     <Layout title="Contact - LinkedOut">
@@ -43,26 +50,38 @@ const Contact = () => {
           }}
         />
         <h4 className="uk-align-center uk-text-center uk-margin-large-bottom">
-          Vous êtes journaliste&nbsp;? Contactez Marie Perier, responsable du
-          projet&nbsp;:
+          Vous êtes journaliste&nbsp;? Contactez-nous :
+          <br />
           <br />
           <SimpleLink
             className="uk-link uk-margin-small-top uk-margin-small-bottom"
-            href="mailto:marie@entourage.social"
+            href={`mailto:${process.env.MAILJET_CONTACT_EMAIL}`}
             newTab
             isExternal
           >
-            marie@entourage.social
+            {process.env.MAILJET_CONTACT_EMAIL}
           </SimpleLink>
           <br />
-          <SimpleLink
-            className="uk-link"
-            href="tel:06 88 51 45 03"
-            newTab
-            isExternal
-          >
-            07 67 69 67 61
-          </SimpleLink>
+          <div className="uk-margin-small-top uk-text-italic uk-text-muted">
+            ou
+          </div>
+          <ul className="uk-list">
+            {Object.keys(contactPerCity).map((contact) => {
+              return (
+                <li key={contact}>
+                  <span className="uk-text-bold">{contact}&nbsp;:&nbsp;</span>
+                  <SimpleLink
+                    className="uk-link"
+                    href={`tel:${contactPerCity[contact]}`}
+                    newTab
+                    isExternal
+                  >
+                    {contactPerCity[contact]}
+                  </SimpleLink>
+                </li>
+              );
+            })}
+          </ul>
         </h4>
       </Section>
     </Layout>

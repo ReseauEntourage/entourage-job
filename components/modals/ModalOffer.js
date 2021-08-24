@@ -9,7 +9,7 @@ import { CloseButtonNoSSR } from '../utils/CloseButton';
 import Api from '../../Axios';
 import { OFFER_STATUS } from '../../constants';
 import { formatParagraph } from '../../utils';
-import { useRemoveModal } from '../../hooks';
+import { useRemoveModal } from '../../hooks/utils';
 
 export const List = ({ className, children }) => {
   return (
@@ -91,7 +91,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
     return setNoteBuffer(note);
   };
 
-  useEffect(resetNoteBuffer, [currentOffer]);
+  useEffect(resetNoteBuffer, [currentOffer, note]);
 
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">
@@ -205,7 +205,9 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                   <OfferInfoContainer
                     icon="location"
                     title={currentOffer.location}
-                  />
+                  >
+                    {currentOffer.department}
+                  </OfferInfoContainer>
                 </GridNoSSR>,
                 <GridNoSSR gap="medium" childWidths={['1-1']}>
                   <OfferInfoContainer icon="comment" title="Message">
@@ -288,6 +290,7 @@ ModalOffer.propTypes = {
     businessLines: PropTypes.arrayOf(PropTypes.string),
     date: PropTypes.string,
     location: PropTypes.string,
+    department: PropTypes.string,
     userOpportunity: PropTypes.shape({
       status: PropTypes.string,
       bookmarked: PropTypes.string,

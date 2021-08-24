@@ -7,7 +7,7 @@ const throng = require('throng');
 
 const { getMainWorkQueue } = require('./utils/WorkQueue');
 
-const { attachListeners, workers, maxJobsPerWorker } = require('./jobs');
+const { attachListeners, maxJobsPerWorker, workers } = require('./jobs');
 
 const start = () => {
   const workQueue = getMainWorkQueue();

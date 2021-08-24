@@ -3,7 +3,8 @@ const loadEnvironementVariables = require('../utils/env');
 loadEnvironementVariables();
 
 const { JOBS, SOCKETS } = require('../../constants');
-const { generatePreview, pusher } = require('../jobs');
+const { pusher } = require('../jobs');
+const { generatePreview } = require('../jobs/Image');
 
 module.exports = async (job) => {
   const { data } = job;

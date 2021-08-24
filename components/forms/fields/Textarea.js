@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from '../FormValidatorErrorMessage';
+import { usePrevious } from '../../../hooks/utils';
 
 // function inputIsEmpty(id) {
 //   /** Cette condition est indispensable avant de faire appel a document
@@ -28,15 +29,19 @@ const Textarea = ({
 }) => {
   const [labelClass, setLabelClass] = useState('');
 
+  const prevValue = usePrevious(value);
+
   function update(event) {
     setLabelClass(event.target.value.length > 0 && ' stay-small');
     onChange(event);
   }
 
   useEffect(() => {
-    setLabelClass((value && value.length > 0 && ' stay-small') || '');
-    onChange({ target: { name, value: value || '', type: 'textarea' } });
-  }, [value]);
+    if (value !== prevValue) {
+      setLabelClass((value && value.length > 0 && ' stay-small') || '');
+      onChange({ target: { name, value: value || '', type: 'textarea' } });
+    }
+  }, [name, onChange, prevValue, value]);
 
   return (
     <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">

@@ -1,6 +1,6 @@
-import axios from '../../../Axios';
-import { USER_ROLES, BUSINESS_LINES } from '../../../constants';
+import { BUSINESS_LINES, USER_ROLES } from '../../../constants';
 import { FORMATTED_DEPARTMENTS } from '../../../constants/departements';
+import Axios from '../../../Axios';
 
 export default {
   id: 'form-offer',
@@ -99,12 +99,11 @@ export default {
         return getValue('isPublic') === true;
       },
       loadOptions: (inputValue, callback) => {
-        axios
-          .get('api/v1/user/search/candidates', {
-            params: {
-              query: inputValue,
-            },
-          })
+        Axios.get('api/v1/user/search/candidates', {
+          params: {
+            query: inputValue,
+          },
+        })
           .then(({ data }) => {
             return data.map((u) => {
               return {
@@ -241,6 +240,32 @@ export default {
       ],
       validWhen: false,
       message: 'Obligatoire',
+    },
+  ],
+};
+
+export const adminMutation = {
+  fieldId: 'candidatesId',
+  props: [
+    {
+      propName: 'loadOptions',
+      value: (inputValue, callback) => {
+        Axios.get('api/v1/user/search', {
+          params: {
+            query: inputValue,
+            role: USER_ROLES.CANDIDAT,
+          },
+        })
+          .then(({ data }) => {
+            return data.map((u) => {
+              return {
+                value: u.id,
+                label: `${u.firstName} ${u.lastName}`,
+              };
+            });
+          })
+          .then(callback);
+      },
     },
   ],
 };

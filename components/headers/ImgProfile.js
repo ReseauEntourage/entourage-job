@@ -5,7 +5,9 @@ import { ImgNoSSR } from '../utils';
 import { USER_ROLES } from '../../constants';
 
 const ImgProfile = ({ user, size }) => {
-  const { firstName, role, candidat } = user || useContext(UserContext).user;
+  const userFromContext = useContext(UserContext).user;
+
+  const { firstName, role, candidat } = user || userFromContext;
   const [urlImg, setUrlImg] = useState(null);
 
   useEffect(() => {
@@ -18,7 +20,7 @@ const ImgProfile = ({ user, size }) => {
       );
       setUrlImg(latestCV.urlImg);
     }
-  }, [user]);
+  }, [candidat, role, user]);
 
   return (
     <div

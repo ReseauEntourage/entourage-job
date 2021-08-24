@@ -14,13 +14,16 @@ const Select = ({
   hidden,
 }) => {
   return (
-    <>
+    <div
+      style={{
+        padding: '15px 0',
+      }}
+    >
       <div
         className={`uk-form-controls ent-select${hidden ? ' uk-hidden' : ''}`}
         style={{
-          paddingTop: '15px',
+          paddingTop: title ? '15px' : '2px',
           paddingBottom: '2px',
-          margin: '15px 0',
         }}
       >
         {title ? (
@@ -64,7 +67,7 @@ const Select = ({
         </select>
       </div>
       <FormValidatorErrorMessage validObj={valid} />
-    </>
+    </div>
   );
 };
 Select.defaultProps = {
@@ -73,6 +76,7 @@ Select.defaultProps = {
   disabled: false,
   onChange: () => {},
   hidden: false,
+  title: undefined,
 };
 
 Select.propTypes = {
@@ -80,7 +84,7 @@ Select.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   valid: PropTypes.shape({
     isInvalid: PropTypes.bool,
     message: PropTypes.string,

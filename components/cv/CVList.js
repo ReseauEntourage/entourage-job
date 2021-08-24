@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Button, GridNoSSR } from '../utils';
+import ButtonPost from '../backoffice/cv/ButtonPost';
+import { filtersToQueryParams } from '../../utils';
+import { GridNoSSR } from '../utils';
 import { CandidatCard } from '../cards';
 import Api from '../../Axios';
 import { CV_FILTERS_DATA, INITIAL_NB_OF_CV_TO_DISPLAY } from '../../constants';
-import { hasAsChild } from '../../utils';
 import PostJobAdModal from '../modals/PostJobAdModal';
 import SimpleLink from '../utils/SimpleLink';
+import { usePrevious } from '../../hooks/utils';
 
 const NoCVInThisArea = () => {
   return (
     <p className="uk-text-center uk-text-italic">
-      LinkedOut se déploie d’ici mars 2023 dans les régions de Paris, de Lille
-      et de Lyon. Vous ne trouvez pas de candidats LinkedOut dans votre
+      LinkedOut se déploie d’ici septembre 2021 dans les régions de Paris, de
+      Lille et de Lyon. Vous ne trouvez pas de candidats LinkedOut dans votre
       région&nbsp;? Contactez-nous à{' '}
       <SimpleLink
         isExternal
@@ -26,116 +29,86 @@ const NoCVInThisArea = () => {
   );
 };
 
-const CVList = ({
-  nb,
-  search,
-  filters,
-  updateNumberOfResults,
-  hideEmployed,
-}) => {
+const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
   const [cvs, setCVs] = useState(undefined);
-  const [filteredCvs, setFilteredCvs] = useState(undefined);
+  const [hasSuggestions, setHasSuggestions] = useState(false);
+
   const [error, setError] = useState(undefined);
-  const [nbOfCVToDisplay, setNbOfCVToDisplay] = useState(
-    INITIAL_NB_OF_CV_TO_DISPLAY
-  );
+  const defaultNbOfCVs = nb || INITIAL_NB_OF_CV_TO_DISPLAY;
+  const [nbOfCVToDisplay, setNbOfCVToDisplay] = useState(defaultNbOfCVs);
 
-  const displayMoreCVs = () => {
+  const displayMoreCVs = useCallback(() => {
     return setNbOfCVToDisplay(nbOfCVToDisplay + INITIAL_NB_OF_CV_TO_DISPLAY);
-  };
+  }, [nbOfCVToDisplay]);
 
-  useEffect(() => {
-    setCVs(undefined);
-    setError(undefined);
-    Api.get(`/api/v1/cv/cards/random`, {
-      params: {
-        q: search,
-        nb,
-      },
-    })
-      .then(({ data }) => {
-        return setCVs(data);
+  const prevSearch = usePrevious(search);
+  const prevFilters = usePrevious(filters);
+  const prevNbOfCVToDisplay = usePrevious(nbOfCVToDisplay);
+
+  const fetchData = useCallback(
+    (isPagination) => {
+      Api.get(`/api/v1/cv/cards/random`, {
+        params: {
+          q: search,
+          nb: nbOfCVToDisplay,
+          ...filtersToQueryParams(filters),
+        },
       })
-      .catch((err) => {
-        console.error(err);
-        setError('Impossible de récupérer les CVs.');
-      });
-  }, [nb, search]);
-
-  const filterCvs = (filtersObj) => {
-    let filteredList = cvs;
-
-    if (cvs && filtersObj) {
-      const keys = Object.keys(filtersObj);
-
-      if (keys.length > 0) {
-        const totalFilters = keys.reduce((acc, curr) => {
-          return acc + filtersObj[curr].length;
-        }, 0);
-
-        if (totalFilters > 0) {
-          filteredList = cvs.filter((cv) => {
-            const resultForEachFilter = [];
-            for (let i = 0; i < keys.length; i += 1) {
-              const currentFilterConstants = CV_FILTERS_DATA.find((data) => {
-                return data.key === keys[i];
-              }).constants;
-
-              let hasFound = false;
-              if (filtersObj[keys[i]].length === 0) {
-                hasFound = true;
-              } else if (cv[keys[i]].length > 0) {
-                hasFound = filtersObj[keys[i]].some((currentFilter) => {
-                  return (
-                    cv[keys[i]].findIndex((value) => {
-                      const isInChildren = hasAsChild(
-                        currentFilterConstants,
-                        value,
-                        currentFilter.value
-                      );
-                      return (
-                        isInChildren ||
-                        value
-                          .toLowerCase()
-                          .includes(currentFilter.value.toLowerCase())
-                      );
-                    }) >= 0
-                  );
-                });
-              }
-              resultForEachFilter.push(hasFound);
+        .then(({ data }) => {
+          setHasSuggestions(data.suggestions);
+          setCVs((prevCVs = []) => {
+            if (isPagination) {
+              return [
+                ...prevCVs,
+                ..._.differenceWith(data.cvs, prevCVs, (cv1, cv2) => {
+                  return cv1.id === cv2.id;
+                }),
+              ];
             }
 
-            return resultForEachFilter.every((value) => {
-              return value;
-            });
+            return data.cvs;
           });
-        }
-      }
-    }
-
-    if (filteredList && filteredList.length > 0 && hideEmployed) {
-      filteredList = filteredList.filter((cv) => {
-        return !cv.user.employed;
-      });
-    }
-
-    return filteredList;
-  };
+        })
+        .catch((err) => {
+          console.error(err);
+          setError('Impossible de récupérer les CVs.');
+        });
+    },
+    [filters, nbOfCVToDisplay, search]
+  );
 
   useEffect(() => {
-    setFilteredCvs(undefined);
-    setError(undefined);
-
-    setNbOfCVToDisplay(INITIAL_NB_OF_CV_TO_DISPLAY);
-    setFilteredCvs(filterCvs(filters));
-  }, [hideEmployed, filters, cvs]);
+    if (search !== prevSearch || filters !== prevFilters) {
+      setError(undefined);
+      setCVs(undefined);
+      fetchData();
+    } else if (
+      nbOfCVToDisplay !== prevNbOfCVToDisplay &&
+      nbOfCVToDisplay > defaultNbOfCVs
+    ) {
+      setError(undefined);
+      fetchData(true);
+    }
+  }, [
+    defaultNbOfCVs,
+    fetchData,
+    filters,
+    nbOfCVToDisplay,
+    prevFilters,
+    prevNbOfCVToDisplay,
+    prevSearch,
+    search,
+  ]);
 
   useEffect(() => {
-    if (filteredCvs) {
-      updateNumberOfResults(filteredCvs.length);
+    const hasFiltersActivated = Object.keys(filters).some((filter) => {
+      return filters[filter].length > 0;
+    });
+
+    if (hasFiltersActivated && cvs) {
+      updateNumberOfResults(cvs.length);
     }
-  }, [filteredCvs]);
+  }, [cvs, filters, updateNumberOfResults]);
 
   const renderCvList = (items) => {
     return (
@@ -168,11 +141,15 @@ const CVList = ({
             );
           })}
         />
-        {items.length > nbOfCVToDisplay && (
+        {!nb && (
           <div className="uk-flex uk-flex-center uk-margin-top">
-            <Button style="primary" onClick={displayMoreCVs}>
-              Voir plus
-            </Button>
+            <ButtonPost
+              text="Voir plus"
+              style="primary"
+              action={async () => {
+                displayMoreCVs();
+              }}
+            />
           </div>
         )}
       </div>
@@ -183,57 +160,46 @@ const CVList = ({
     return <p className="uk-text-center uk-text-italic">{error}</p>;
   }
 
-  if (cvs && filteredCvs) {
-    if (filteredCvs.length <= 0) {
+  if (cvs && filters) {
+    if (hasSuggestions) {
+      return (
+        <div>
+          <p className="uk-text-center uk-text-italic">
+            Nous n’avons aucun résultat pour votre recherche. Voici d’autres
+            candidats dans la zone géographique sélectionnée qui pourraient
+            correspondre.
+          </p>
+          <p className="uk-text-center uk-text-italic uk-margin-medium-bottom">
+            Vous êtes recruteur&nbsp;?{' '}
+            <a
+              style={{
+                textDecoration: 'underline',
+              }}
+              className="uk-link-text"
+              data-uk-toggle="#modal-offer-add-search"
+            >
+              Publier une offre d’emploi
+            </a>{' '}
+            qui sera visible par tous les candidats LinkedOut, certains
+            pourraient être intéressés&nbsp;!{' '}
+          </p>
+          {renderCvList(cvs)}
+          <PostJobAdModal />
+        </div>
+      );
+    }
+
+    if (cvs.length <= 0) {
       if (
         filters &&
-        filters[CV_FILTERS_DATA[2].key] &&
-        filters[CV_FILTERS_DATA[2].key].length > 0
+        filters[CV_FILTERS_DATA[1].key] &&
+        filters[CV_FILTERS_DATA[1].key].length > 0
       ) {
-        if (
-          filters[CV_FILTERS_DATA[1].key] &&
-          filters[CV_FILTERS_DATA[1].key].length > 0
-        ) {
-          const filteredOtherCvs = filterCvs({
-            ...filters,
-            [CV_FILTERS_DATA[1].key]: [],
-          });
-
-          if (filteredOtherCvs && filteredOtherCvs.length > 0) {
-            return (
-              <div>
-                <p className="uk-text-center uk-text-italic">
-                  Nous n’avons aucun résultat pour votre recherche. Voici
-                  d’autres candidats dans la zone géographique sélectionnée qui
-                  pourraient correspondre.
-                </p>
-                <p className="uk-text-center uk-text-italic uk-margin-medium-bottom">
-                  Vous êtes recruteur&nbsp;?{' '}
-                  <a
-                    style={{
-                      textDecoration: 'underline',
-                    }}
-                    className="uk-link-text"
-                    data-uk-toggle="#modal-offer-add-search"
-                  >
-                    Publier une offre d’emploi
-                  </a>{' '}
-                  qui sera visible par tous les candidats LinkedOut, certains
-                  pourraient être intéressés&nbsp;!{' '}
-                </p>
-                {renderCvList(filteredOtherCvs)}
-                <PostJobAdModal />
-              </div>
-            );
-          }
-        }
-
         return <NoCVInThisArea />;
       }
-
       return <p className="uk-text-center uk-text-italic">Aucun CV trouvé</p>;
     }
-    return renderCvList(filteredCvs);
+    return renderCvList(cvs);
   }
 
   return (
@@ -248,14 +214,12 @@ CVList.propTypes = {
   search: PropTypes.string,
   filters: PropTypes.shape(),
   updateNumberOfResults: PropTypes.func,
-  hideEmployed: PropTypes.bool,
 };
 
 CVList.defaultProps = {
   nb: undefined,
   search: undefined,
-  filters: undefined,
+  filters: {},
   updateNumberOfResults: () => {},
-  hideEmployed: false,
 };
 export default CVList;

@@ -1,4 +1,12 @@
-const { sendMail } = require('../controllers/Mail');
+const moment = require('moment');
+const { fn, col, where, Op } = require('sequelize');
+
+const {
+  filterOffers,
+  getFiltersObjectsFromQueryParams,
+  filterCandidateOffersByType,
+  filterAdminOffersByType,
+} = require('../utils/Filters');
 const { OFFER_STATUS, JOBS, AIRTABLE_NAMES } = require('../../constants');
 
 const {
@@ -19,10 +27,12 @@ const {
     User_Candidat,
     User,
   },
-  Sequelize: { Op, fn, col, where },
+  sequelize,
 } = require('../db/models');
 
 const { cleanOpportunity } = require('../utils');
+
+const { OPPORTUNITY_FILTERS_DATA } = require('../../constants');
 
 const INCLUDE_OPPORTUNITY_CANDIDATE = [
   {
@@ -114,6 +124,32 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
   },
 ];
 
+const getOfferSearchOptions = (search) => {
+  if (search) {
+    const lowerCaseSearch = search.toLowerCase();
+    return {
+      [Op.or]: [
+        where(fn('lower', col('Opportunity.title')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.recruiterName')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.location')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.department')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+        where(fn('lower', col('Opportunity.company')), {
+          [Op.like]: `%${lowerCaseSearch}%`,
+        }),
+      ],
+    };
+  }
+  return {};
+};
+
 const getAirtableOpportunityFields = (
   opportunity,
   candidates,
@@ -153,7 +189,7 @@ const getAirtableOpportunityFields = (
     : commonFields;
 };
 
-const updateTable = (opportunity, candidates) => {
+const updateTable = async (opportunity, candidates) => {
   const fields = getAirtableOpportunityFields(
     opportunity,
     candidates,
@@ -239,12 +275,82 @@ const createOpportunity = async (data, isAdmin) => {
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: adminMail,
       subject: `Nouvelle offre d'emploi`,
-      text: `
-    Une nouvelle offre d'emploi est en attente de validation : ${finalOpportunity.title} - ${finalOpportunity.company}.
-    Vous pouvez la consulter en cliquant ici :
-    ${process.env.SERVER_URL}/backoffice/admin/offres?q=${finalOpportunity.id}.
-    `,
+      html:
+        `Une nouvelle offre d'emploi est en attente de validation : <strong>${finalOpportunity.title} - ${finalOpportunity.company}</strong>.<br /><br />` +
+        `Vous pouvez la consulter en cliquant ici :<br />` +
+        `<strong>${process.env.SERVER_URL}/backoffice/admin/offres?q=${finalOpportunity.id}</strong>.<br /><br />` +
+        `L’équipe LinkedOut`,
     });
+
+    const stringOpportunity =
+      `----------<br /><br />` +
+      `<strong>Titre :</strong> ${finalOpportunity.title}<br />` +
+      `<strong>Nom du recruteur :</strong> ${finalOpportunity.recruiterName}<br />` +
+      `<strong>Adresse mail du recruteur :</strong> ${finalOpportunity.recruiterMail}<br />` +
+      `<strong>Téléphone du recruteur :</strong> ${finalOpportunity.recruiterPhone}<br />` +
+      `<strong>Secteurs d'activité :</strong> ${
+        data.businessLines ? data.businessLines.join(', ') : ''
+      }<br />` +
+      `<strong>Entreprise :</strong> ${finalOpportunity.company}<br />` +
+      `<strong>Addresse postale :</strong> ${finalOpportunity.location}<br />` +
+      `<strong>Département :</strong> ${
+        finalOpportunity.department || ''
+      }<br />` +
+      `<strong>Description :</strong> ${finalOpportunity.description}<br />` +
+      `<strong>Pré-requis :</strong> ${finalOpportunity.prerequisites || ''}`;
+
+    if (finalOpportunity.isPublic) {
+      await addToWorkQueue({
+        type: JOBS.JOB_TYPES.SEND_MAIL,
+        toEmail: finalOpportunity.recruiterMail,
+        subject: `Accusé de réception de votre offre`,
+        html:
+          `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
+          `Merci pour votre offre LinkedOut et votre confiance !<br /><br />` +
+          `Après validation par l’équipe LinkedOut, votre opportunité d’emploi sera visible par l’ensemble des candidats LinkedOut disponibles. Ils l'étudieront avec leur coach LinkedOut. Les candidats intéressés par votre offre prendront contact avec vous.<br /><br />` +
+          `Si votre offre ne correspond à aucun profil, sachez qu’une nouvelle promotion se lance en octobre avec 80 candidats à Paris, 40 à Lille et 40 à Lyon ! Votre prochaine recrue se trouvera peut-être parmi ces nouveaux profils.<br /><br />` +
+          `L’équipe LinkedOut se tient à votre disposition à chaque étape du recrutement pour vous apporter des informations sur le dispositif et les profils des candidats.<br /><br />` +
+          `<strong>Pour nous contacter : entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
+          `Nous sommes tous une partie de la solution face à l’exclusion, merci d’y croire avec nous !<br /><br />` +
+          `L’équipe LinkedOut<br /><br />` +
+          `${stringOpportunity}`,
+      });
+    } else {
+      const listOfNames = candidates.map((candidate) => {
+        return candidate.User.firstName;
+      });
+
+      let stringOfNames = '';
+      if (listOfNames.length === 0) {
+        stringOfNames = 'le candidat';
+      } else {
+        stringOfNames =
+          listOfNames.length > 1
+            ? `${listOfNames.slice(0, -1).join(', ')} et ${listOfNames.slice(
+                -1
+              )}`
+            : listOfNames[0];
+      }
+
+      await addToWorkQueue({
+        type: JOBS.JOB_TYPES.SEND_MAIL,
+        toEmail: finalOpportunity.recruiterMail,
+        subject: `Accusé de réception de votre offre`,
+        html:
+          `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
+          `Merci pour votre offre LinkedOut et votre confiance !<br /><br />` +
+          `Après validation par l’équipe LinkedOut, ${
+            candidates.length > 1
+              ? `${stringOfNames} vont prendre le temps d’étudier votre opportunité avec leur coach LinkedOut et vous recontacteront`
+              : `${stringOfNames} va prendre le temps d’étudier votre opportunité avec son coach LinkedOut et vous recontactera`
+          } dans les meilleurs délais.<br /><br />` +
+          `L’équipe LinkedOut se tient à votre disposition à chaque étape du recrutement pour vous apporter des informations sur le dispositif et les profils des candidats.<br /><br />` +
+          `<strong>Pour nous contacter : entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
+          `Nous sommes tous une partie de la solution face à l’exclusion, merci d’y croire avec nous !<br /><br />` +
+          `L’équipe LinkedOut<br /><br />` +
+          `${stringOpportunity}`,
+      });
+    }
   }
 
   return cleanedOpportunity;
@@ -259,41 +365,57 @@ const deleteOpportunity = (id) => {
   });
 };
 
-const getOpportunity = async (id) => {
-  const model = await Opportunity.findByPk(id, {
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
-  });
-  return cleanOpportunity(model);
-};
-
-const getOpportunities = async (search) => {
+const getOpportunities = async (params) => {
+  const { search, ...restParams } = params;
   const options = {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     paranoid: false,
   };
-  if (search) {
-    const lowerCaseSearch = search.toLowerCase();
-    options.where = {
-      [Op.or]: [
-        where(fn('lower', col('Opportunity.title')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.recruiterName')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.location')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.department')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.company')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-      ],
-    };
-  }
-  const opportunities = await Opportunity.findAll(options);
+
+  const searchOptions = getOfferSearchOptions(search);
+
+  const opportunities = await Opportunity.findAll({
+    ...options,
+    where: {
+      ...searchOptions,
+    },
+  });
+
+  const { type, ...restFilters } = restParams;
+
+  const cleanedOpportunites = opportunities.map((model) => {
+    return cleanOpportunity(model);
+  });
+
+  const filteredTypeOpportunites = filterAdminOffersByType(
+    cleanedOpportunites,
+    type
+  );
+
+  return filterOffers(
+    filteredTypeOpportunites,
+    getFiltersObjectsFromQueryParams(restFilters, OPPORTUNITY_FILTERS_DATA)
+  );
+};
+
+const getLatestOpportunities = async () => {
+  const options = {
+    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
+    paranoid: false,
+  };
+
+  const lastWeek = moment().subtract(7, 'd');
+
+  const opportunities = await Opportunity.findAll({
+    ...options,
+    where: {
+      isPublic: true,
+      isValidated: true,
+      createdAt: {
+        [Op.gt]: lastWeek.toDate(),
+      },
+    },
+  });
 
   return opportunities.map((model) => {
     return cleanOpportunity(model);
@@ -314,7 +436,10 @@ const getPublicOpportunities = async () => {
   });
 };
 
-const getPrivateUserOpportunities = async (userId) => {
+const getPrivateUserOpportunities = async (userId, params) => {
+  const { search, ...restParams } = params;
+  const searchOptions = getOfferSearchOptions(search);
+
   console.log(`getOpportunities - Récupérer les opportunités`);
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
@@ -327,16 +452,25 @@ const getPrivateUserOpportunities = async (userId) => {
       id: opportunityUsers.map((model) => {
         return model.OpportunityId;
       }),
+      ...searchOptions,
     },
   });
 
-  return opportunities.map((model) => {
+  const cleanedOpportunities = opportunities.map((model) => {
     return cleanOpportunity(model);
   });
+
+  return filterOffers(
+    cleanedOpportunities,
+    getFiltersObjectsFromQueryParams(restParams, OPPORTUNITY_FILTERS_DATA),
+    userId
+  );
 };
 
-const getAllUserOpportunities = async (userId) => {
-  // private
+const getAllUserOpportunities = async (userId, params = {}) => {
+  const { search, ...restParams } = params;
+  const searchOptions = getOfferSearchOptions(search);
+
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
     attributes: ['OpportunityId'],
@@ -355,6 +489,7 @@ const getAllUserOpportunities = async (userId) => {
           isValidated: true,
         },
       ],
+      ...searchOptions,
     },
   });
 
@@ -428,15 +563,42 @@ const getAllUserOpportunities = async (userId) => {
     return new Date(b.date) - new Date(a.date);
   });
 
-  return finalOpportunities;
+  const { type, ...restFilters } = restParams;
+
+  const filteredTypeOpportunities = filterCandidateOffersByType(
+    finalOpportunities,
+    type
+  );
+
+  return filterOffers(
+    filteredTypeOpportunities,
+    getFiltersObjectsFromQueryParams(restFilters, OPPORTUNITY_FILTERS_DATA),
+    userId
+  );
+};
+
+const getOpportunity = async (opportunityId, isAdmin, candidateId) => {
+  if (isAdmin) {
+    const model = await Opportunity.findByPk(opportunityId, {
+      include: INCLUDE_OPPORTUNITY_COMPLETE,
+    });
+
+    return cleanOpportunity(model);
+  }
+
+  const userOpportunities = await getAllUserOpportunities(candidateId);
+  return userOpportunities.find((opportunity) => {
+    return opportunity.id === opportunityId;
+  });
 };
 
 const updateOpportunityAirtable = async (opportunityId) => {
-  const finalOpportunity = await getOpportunity(opportunityId);
+  const finalOpportunity = await getOpportunity(opportunityId, true);
 
   try {
     await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
-  } catch (e) {
+  } catch (err) {
+    console.error(err);
     console.log('Failed to update table with modified offer.');
   }
 };
@@ -471,8 +633,21 @@ const addUserToOpportunity = async (opportunityId, userId, seen) => {
           OpportunityId: opportunityId,
           UserId: userId,
         },
+        individualHooks: true,
+        attributes: [
+          'id',
+          'UserId',
+          'OpportunityId',
+          'status',
+          'bookmarked',
+          'archived',
+          'note',
+          'seen',
+        ],
       }
-    );
+    ).then((model) => {
+      return model && model.length > 1 && model[1][0];
+    });
   } else {
     modelOpportunityUser = await Opportunity_User.create({
       OpportunityId: opportunityId,
@@ -509,7 +684,7 @@ const updateOpportunityUser = async (opportunityUser) => {
 };
 
 const updateOpportunity = async (opportunity) => {
-  const oldOpportunity = await getOpportunity(opportunity.id);
+  const oldOpportunity = await getOpportunity(opportunity.id, true);
 
   const modelOpportunity = await Opportunity.update(opportunity, {
     where: { id: opportunity.id },
@@ -552,50 +727,59 @@ const updateOpportunity = async (opportunity) => {
       },
     });
   } else if (opportunity.candidatesId) {
-    const opportunitiesUser = await Promise.all(
-      opportunity.candidatesId.map((candidatId) => {
-        return Opportunity_User.findOrCreate({
-          where: {
-            OpportunityId: modelOpportunity.id,
-            UserId: candidatId, // to rename in userId
+    const t = await sequelize.transaction();
+    try {
+      const opportunitiesUser = await Promise.all(
+        opportunity.candidatesId.map((candidatId) => {
+          return Opportunity_User.findOrCreate({
+            where: {
+              OpportunityId: modelOpportunity.id,
+              UserId: candidatId, // to rename in userId
+            },
+            transaction: t,
+          }).then((model) => {
+            return model[0];
+          });
+        })
+      );
+      await Opportunity_User.destroy({
+        where: {
+          OpportunityId: modelOpportunity.id,
+          UserId: {
+            [Op.not]: opportunitiesUser.map((opportunityUser) => {
+              return opportunityUser.UserId;
+            }),
           },
-        }).then((model) => {
-          return model[0];
-        });
-      })
-    );
-
-    await Opportunity_User.destroy({
-      where: {
-        OpportunityId: modelOpportunity.id,
-        UserId: {
-          [Op.not]: opportunitiesUser.map((opportunityUser) => {
-            return opportunityUser.UserId;
-          }),
         },
-      },
-    });
-
-    // Check case where the opportunity has become private and has candidates, to see if there are any new candidates so send mail to
-    const newCandidates =
-      opportunity.candidatesId &&
-      opportunity.candidatesId.length > 0 &&
-      opportunity.candidatesId.filter((candidateId) => {
-        return !oldOpportunity.userOpportunity.some((oldUserOpp) => {
-          return candidateId === oldUserOpp.User.id;
-        });
+        transaction: t,
       });
 
-    if (
-      newCandidates &&
-      newCandidates.length > 0 &&
-      modelOpportunity.isValidated
-    ) {
-      newCandidatesIdsToSendMailTo = newCandidates;
+      t.commit();
+    } catch (error) {
+      await t.rollback();
+      throw error;
     }
   }
 
-  const finalOpportunity = await getOpportunity(opportunity.id);
+  // Check case where the opportunity has become private and has candidates, to see if there are any new candidates so send mail to
+  const newCandidates =
+    opportunity.candidatesId &&
+    opportunity.candidatesId.length > 0 &&
+    opportunity.candidatesId.filter((candidateId) => {
+      return !oldOpportunity.userOpportunity.some((oldUserOpp) => {
+        return candidateId === oldUserOpp.User.id;
+      });
+    });
+
+  if (
+    newCandidates &&
+    newCandidates.length > 0 &&
+    modelOpportunity.isValidated
+  ) {
+    newCandidatesIdsToSendMailTo = newCandidates;
+  }
+
+  const finalOpportunity = await getOpportunity(opportunity.id, true);
 
   let candidatesToSendMailTo;
 
@@ -619,19 +803,17 @@ const updateOpportunity = async (opportunity) => {
     }
   }
 
+  try {
+    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
+    console.log('Updated table with modified offer.');
+  } catch (err) {
+    console.error(err);
+    console.log('Failed to update table with modified offer.');
+  }
+
   const sendJobOfferMails = (candidates) => {
     return Promise.all(
       candidates.map(async (candidat) => {
-        await addToWorkQueue({
-          type: JOBS.JOB_TYPES.SEND_MAIL,
-          toEmail: candidat.User.email,
-          subject: `Vous avez reçu une nouvelle offre d'emploi`,
-          text: `
-            Vous venez de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
-            Vous pouvez la consulter en cliquant ici :
-            ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
-        });
-
         const coach =
           candidat.User &&
           candidat.User.candidat &&
@@ -639,34 +821,41 @@ const updateOpportunity = async (opportunity) => {
             ? candidat.User.candidat.coach
             : null;
 
-        if (coach) {
-          await addToWorkQueue({
-            type: JOBS.JOB_TYPES.SEND_MAIL,
-            toEmail: coach.email,
-            subject: `${candidat.User.firstName} a reçu une nouvelle offre d'emploi`,
-            text: `
-           ${candidat.User.firstName} vient de recevoir une nouvelle offre d'emploi : ${finalOpportunity.title} - ${finalOpportunity.company}.
-           Vous pouvez la consulter en cliquant ici :
-           ${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}.`,
-          });
-        }
+        await addToWorkQueue({
+          type: JOBS.JOB_TYPES.SEND_MAIL,
+          toEmail: coach
+            ? { to: candidat.User.email, cc: coach.email }
+            : candidat.User.email,
+          subject: `Vous avez reçu une nouvelle offre d'emploi`,
+          html:
+            `Bonjour,<br /><br />` +
+            `Vous venez de recevoir une nouvelle offre d'emploi : <strong>${finalOpportunity.title} - ${finalOpportunity.company}</strong>.<br /><br />` +
+            `Vous pouvez la consulter en cliquant ici :<br />` +
+            `<strong>${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}</strong>.<br /><br />` +
+            `L’équipe LinkedOut`,
+        });
+
+        await addToWorkQueue(
+          {
+            type: JOBS.JOB_TYPES.REMINDER_OFFER,
+            opportunityId: finalOpportunity.id,
+            candidatId: candidat.User.id,
+          },
+          {
+            delay:
+              (process.env.OFFER_REMINDER_DELAY
+                ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
+                : 5) *
+              3600000 *
+              24,
+          }
+        );
       })
     );
   };
 
-  try {
-    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
-    if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) {
-      await sendJobOfferMails(candidatesToSendMailTo);
-    }
-    console.log(
-      'Updated table with modified offer and sent mail to candidate and coach.'
-    );
-  } catch (err) {
-    console.error(err);
-    console.log(
-      'Failed to update table with modified offer or send mail to candidate and coach.'
-    );
+  if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) {
+    await sendJobOfferMails(candidatesToSendMailTo);
   }
 
   return finalOpportunity;
@@ -688,4 +877,5 @@ module.exports = {
 
   addUserToOpportunity,
   refreshAirtableOpportunities,
+  getLatestOpportunities,
 };

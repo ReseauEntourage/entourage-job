@@ -17,6 +17,7 @@ const OfferCard = ({
   userOpportunity,
   isValidated,
   isAdmin,
+  department,
 }) => {
   const renderStatus = (userOpp) => {
     if (userOpp.status !== undefined) {
@@ -43,7 +44,7 @@ const OfferCard = ({
       <GridNoSSR
         gap="medium"
         childWidths={['1-1']}
-        className="uk-height-max-large"
+        className="uk-height-max-large uk-overflow-auto"
       >
         <GridNoSSR eachWidths={['expand', 'auto']}>
           <h5 className="uk-text-bold">{title}</h5>
@@ -60,6 +61,12 @@ const OfferCard = ({
           <IconNoSSR name="user" />
           <p>{from}</p>
         </GridNoSSR>
+        {department && (
+          <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
+            <IconNoSSR name="location" />
+            <p>{department}</p>
+          </GridNoSSR>
+        )}
         <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
           <IconNoSSR name="world" />
           <p>{shortDescription}</p>
@@ -112,27 +119,27 @@ const OfferCard = ({
             <p>{moment(date).format('DD/MM/YYYY')}</p>
           </GridNoSSR>
         )}
-        <div className="uk-flex uk-flex-between uk-flex-bottom uk-margin-small-top">
-          {isAdmin && (
-            <div className="uk-flex-1 uk-text-left uk-text-meta uk-text-success uk-flex uk-flex-bottom">
-              {!archived &&
-                (isValidated ? (
-                  <div className="uk-flex uk-flex-middle">
-                    Validé&nbsp;
-                    <IconNoSSR name="check" />
-                  </div>
-                ) : (
-                  <div className="uk-flex uk-flex-middle uk-text-warning">
-                    En attente
-                  </div>
-                ))}
-            </div>
-          )}
-          <u className="uk-link-muted uk-flex-1 uk-text-right">
-            Voir l&rsquo;offre
-          </u>
-        </div>
       </GridNoSSR>
+      <div className="uk-flex uk-flex-between uk-flex-bottom uk-margin-medium-top">
+        {isAdmin && (
+          <div className="uk-flex-1 uk-text-left uk-text-meta uk-text-success uk-flex uk-flex-bottom">
+            {!archived &&
+              (isValidated ? (
+                <div className="uk-flex uk-flex-middle">
+                  Publiée&nbsp;
+                  <IconNoSSR name="check" />
+                </div>
+              ) : (
+                <div className="uk-flex uk-flex-middle uk-text-warning">
+                  À valider
+                </div>
+              ))}
+          </div>
+        )}
+        <u className="uk-link-muted uk-flex-1 uk-text-right">
+          Voir l&rsquo;offre
+        </u>
+      </div>
     </div>
   );
 };
@@ -152,6 +159,7 @@ OfferCard.propTypes = {
   ]),
   isValidated: PropTypes.bool.isRequired,
   isAdmin: PropTypes.bool,
+  department: PropTypes.string,
 };
 
 OfferCard.defaultProps = {
@@ -162,5 +170,6 @@ OfferCard.defaultProps = {
   date: undefined,
   userOpportunity: undefined,
   isAdmin: false,
+  department: undefined,
 };
 export default OfferCard;

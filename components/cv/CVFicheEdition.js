@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { usePrevious } from '../../hooks/utils';
 import { GridNoSSR } from '../utils/Grid';
 import {
   ExperiencesProfileCard,
@@ -25,29 +26,36 @@ const CVFicheEdition = ({
   email,
   phone,
   address,
+  userZone,
 }) => {
   const [previewUrl, setPreviewUrl] = useState(undefined);
   const [imageUrl, setImageUrl] = useState(undefined);
 
-  const updateImage = () => {
+  const prevPreviewGenerating = usePrevious(previewGenerating);
+  const prevCVStatus = usePrevious(cv.status);
+
+  const updateImage = useCallback(() => {
     // Use hash to reload image if an update is done
     const previewHash = Date.now();
     const baseUrl = `${process.env.AWSS3_URL}${process.env.AWSS3_IMAGE_DIRECTORY}${cv.UserId}.${cv.status}`;
     setPreviewUrl(`${baseUrl}.preview.jpg?${previewHash}`);
     setImageUrl(`${baseUrl}.jpg?${previewHash}`);
-  };
+  }, [cv.UserId, cv.status]);
 
   useEffect(() => {
-    if (cv.status !== CV_STATUS.Draft.value) {
+    if (
+      (prevCVStatus !== cv.status && cv.status !== CV_STATUS.Draft.value) ||
+      (!!prevPreviewGenerating && !previewGenerating)
+    ) {
       updateImage();
     }
-  }, [cv]);
-
-  useEffect(() => {
-    if (!previewGenerating && cv) {
-      updateImage();
-    }
-  }, [previewGenerating]);
+  }, [
+    cv.status,
+    prevCVStatus,
+    prevPreviewGenerating,
+    previewGenerating,
+    updateImage,
+  ]);
 
   return (
     <GridNoSSR childWidths={['1-1']}>
@@ -127,6 +135,7 @@ const CVFicheEdition = ({
           phone={phone}
           address={address}
           onChange={onChange}
+          userZone={userZone}
         />
         <GridNoSSR childWidths={['1-2@m']} match>
           <SkillsCard list={cv.skills} onChange={onChange} />
@@ -176,6 +185,7 @@ CVFicheEdition.propTypes = {
   phone: PropTypes.string,
   address: PropTypes.string,
   previewGenerating: PropTypes.bool.isRequired,
+  userZone: PropTypes.string,
 };
 
 CVFicheEdition.defaultProps = {
@@ -183,6 +193,7 @@ CVFicheEdition.defaultProps = {
   disablePicture: false,
   phone: undefined,
   address: undefined,
+  userZone: undefined,
 };
 
 export default CVFicheEdition;

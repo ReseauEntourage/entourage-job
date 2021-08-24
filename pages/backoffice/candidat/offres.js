@@ -1,148 +1,109 @@
-/* global UIkit */
-import React, { useState, useEffect, useContext } from 'react';
-import { useRouter } from 'next/router';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import _ from 'lodash';
+import OpportunityList from '../../../components/opportunities/OpportunityList';
+import { findFilter, initializeFilters } from '../../../utils';
+import { DEPARTMENTS_FILTERS } from '../../../constants/departements';
+import { useFilters } from '../../../hooks';
+import CurrentFilters from '../../../components/filters/CurrentFilters';
+import FiltersSideBar from '../../../components/filters/FiltersSideBar';
 import { UserContext } from '../../../components/store/UserProvider';
 import LayoutBackOffice from '../../../components/backoffice/LayoutBackOffice';
 import { Section } from '../../../components/utils';
-import OfferCard from '../../../components/cards/OfferCard';
 import HeaderBackoffice from '../../../components/headers/HeaderBackoffice';
-import ModalOffer from '../../../components/modals/ModalOffer';
 import Api from '../../../Axios';
 import Filter from '../../../components/utils/Filter';
-import { USER_ROLES } from '../../../constants';
+import {
+  OPPORTUNITY_FILTERS_DATA,
+  USER_ROLES,
+  OFFER_CANDIDATE_FILTERS_DATA,
+} from '../../../constants';
 import OpportunityError from '../../../components/opportunities/OpportunityError';
 
-const tabFiltersConst = [
-  { tag: 'all', title: 'Toutes les offres' },
-  { tag: 'private', title: 'Offres du candidat', active: true },
-  { tag: 'public', title: 'Offres générales' },
-  { tag: 'archived', title: 'Offres archivées' },
-];
+const candidateFilters = OPPORTUNITY_FILTERS_DATA.slice(1);
 
 const Opportunites = () => {
   const { user } = useContext(UserContext);
 
-  const {
-    query: { q: opportunityId },
-  } = useRouter();
-
-  const [currentOffer, setCurrentOffer] = useState(null);
-  const [offers, setOffers] = useState(undefined);
   const [hasError, setHasError] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState();
+
   const [candidatId, setCandidatId] = useState();
 
-  /* TAB FILTERS */
+  const [tabFilters, setTabFilters] = useState(OFFER_CANDIDATE_FILTERS_DATA);
+  const {
+    filters,
+    setFilters,
+    numberOfResults,
+    setNumberOfResults,
+    resetFilters,
+  } = useFilters(candidateFilters);
 
-  const [tabFilters, setTabFilters] = useState(tabFiltersConst);
-  const [tabFilteredOffers, setTabFilteredOffers] = useState(undefined);
+  const setCandidatZone = useCallback(
+    (candidatZone) => {
+      if (!candidatZone) {
+        setFilters(initializeFilters(candidateFilters));
+      } else {
+        const defaultDepartmentsForCandidate = DEPARTMENTS_FILTERS.filter(
+          (dept) => {
+            return candidatZone === dept.zone;
+          }
+        );
+        console.log(defaultDepartmentsForCandidate);
 
-  const tabFilterOffers = () => {
-    let filteredList = offers;
-    if (offers) {
-      const activeFilter = tabFilters.find((filter) => {
-        return filter.active;
-      });
-      filteredList = filteredList.filter((offer) => {
-        const isArchived =
-          offer.userOpportunity && offer.userOpportunity.archived;
-        switch (activeFilter.tag) {
-          case tabFiltersConst[0].tag:
-            return true;
-          case tabFiltersConst[1].tag:
-            return !offer.isPublic && !isArchived;
-          case tabFiltersConst[2].tag:
-            return offer.isPublic && !isArchived;
-          case tabFiltersConst[3].tag:
-            return offer.userOpportunity && offer.userOpportunity.archived;
-          default:
-            return true;
-        }
-      });
-    }
-
-    return filteredList;
-  };
-
-  useEffect(() => {
-    setHasError(false);
-    setLoading(true);
-    setTabFilteredOffers(tabFilterOffers());
-  }, [offers, tabFilters]);
+        setFilters(
+          initializeFilters(candidateFilters, {
+            [candidateFilters[1].key]: [...defaultDepartmentsForCandidate],
+          })
+        );
+      }
+    },
+    [setFilters]
+  );
 
   useEffect(() => {
-    if (tabFilteredOffers) {
-      setLoading(false);
+    if (candidatId) {
+      setLoading(true);
+      Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
+        params: {
+          userId: candidatId,
+        },
+      })
+        .then(({ data }) => {
+          if (data && data.locations && data.locations.length > 0) {
+            const cvFilters = data.locations.map((location) => {
+              return findFilter(DEPARTMENTS_FILTERS, location);
+            });
+            setFilters(
+              initializeFilters(candidateFilters, {
+                [candidateFilters[1].key]: _.compact(cvFilters),
+              })
+            );
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          return setLoading(false);
+        });
     }
-  }, [tabFilteredOffers]);
+  }, [candidatId, setFilters]);
 
-  /* END TAB FILTERS */
-
-  const fetchData = async (userId) => {
+  useEffect(() => {
     if (user) {
       setLoading(true);
-      try {
-        const { data } = await Api.get(
-          `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${userId}`
-        );
-
-        setOffers(data);
-        return data;
-      } catch (err) {
-        console.error(err);
-        setLoading(false);
-        setHasError(true);
-      }
-    } else console.log('no user');
-    return null;
-  };
-
-  const onClickOpportunityCard = async (offer) => {
-    const opportunity = offer;
-    // si jamais ouvert
-    if (!opportunity.userOpportunity || !opportunity.userOpportunity.seen) {
-      const { data } = await Api.post(
-        `${process.env.SERVER_URL}/api/v1/opportunity/join`,
-        {
-          opportunityId: offer.id,
-          userId: candidatId,
-          seen: true,
-        }
-      );
-      opportunity.userOpportunity = data;
-      fetchData(candidatId);
-    }
-    setCurrentOffer({ ...opportunity });
-    UIkit.modal('#modal-offer').show();
-  };
-
-  useEffect(() => {
-    // récupére les offres et si id en url ouvre loffre en question
-    const fetchAndAct = (id) => {
-      return fetchData(id).then((data) => {
-        if (data) {
-          const offer = data.find((o) => {
-            return o.id === opportunityId;
-          });
-          if (offer) {
-            setCurrentOffer({ ...offer });
-            UIkit.modal('#modal-offer').show();
-          }
-        }
-      });
-    };
-
-    if (user) {
-      const updatedFilterConsts = [...tabFiltersConst];
+      const updatedFilterConsts = [...OFFER_CANDIDATE_FILTERS_DATA];
       updatedFilterConsts[1].title =
         user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat';
       setTabFilters(updatedFilterConsts);
 
       if (user.role === USER_ROLES.CANDIDAT) {
         setCandidatId(user.id);
-        fetchAndAct(user.id);
-      }
-      if (user.role === USER_ROLES.COACH) {
+        setCandidatZone(user.zone);
+        setLoading(false);
+      } else if (user.role === USER_ROLES.COACH) {
         Api.get(`/api/v1/user/candidat/`, {
           params: {
             coachId: user.id,
@@ -151,17 +112,19 @@ const Opportunites = () => {
           .then(({ data }) => {
             if (data) {
               setCandidatId(data.candidat.id);
-              fetchAndAct(data.candidat.id);
+              setCandidatZone(data.candidat.zone);
             } else {
               setHasError(true);
             }
+            setLoading(false);
           })
           .catch(() => {
+            setLoading(false);
             return setHasError(true);
           });
       }
     }
-  }, [user, opportunityId]);
+  }, [setCandidatZone, user]);
 
   if (!user) return null;
 
@@ -191,64 +154,44 @@ const Opportunites = () => {
         ) : (
           <>
             <Filter
+              search={(text) => {
+                return setSearch(text);
+              }}
               loading={loading}
               filters={tabFilters}
               setFilters={setTabFilters}
-            >
-              {tabFilteredOffers && tabFilteredOffers.length > 0 ? (
-                tabFilteredOffers.map((offer, i) => {
-                  return (
-                    <li key={i}>
-                      <a
-                        aria-hidden
-                        role="button"
-                        className="uk-link-reset"
-                        onClick={() => {
-                          return onClickOpportunityCard(offer);
-                        }}
-                      >
-                        <OfferCard
-                          title={offer.title}
-                          from={offer.recruiterName}
-                          shortDescription={offer.company}
-                          date={offer.date}
-                          isValidated={offer.isValidated}
-                          isPublic={offer.isPublic}
-                          userOpportunity={offer.userOpportunity}
-                          archived={
-                            offer.userOpportunity &&
-                            offer.userOpportunity.archived
-                          }
-                          isNew={
-                            !offer.userOpportunity ||
-                            !offer.userOpportunity.seen
-                          }
-                          isStared={
-                            offer.userOpportunity &&
-                            offer.userOpportunity.bookmarked
-                          }
-                        />
-                      </a>
-                    </li>
-                  );
-                })
-              ) : (
-                <div className="uk-text-center uk-flex uk-flex-center uk-flex-1">
-                  <p className="uk-text-italic">
-                    Aucune offre d&apos;emploi dans cette catégorie.
-                  </p>
+              otherFilterComponent={
+                <div
+                  style={{ maxWidth: 1100 }}
+                  className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-bottom"
+                >
+                  <CurrentFilters
+                    numberOfResults={numberOfResults}
+                    filters={filters}
+                    resetFilters={resetFilters}
+                  />
+                  <FiltersSideBar
+                    filterData={candidateFilters}
+                    filters={filters}
+                    setFilters={setFilters}
+                  />
                 </div>
+              }
+            >
+              {candidatId && (
+                <OpportunityList
+                  search={search}
+                  candidatId={candidatId}
+                  tabFilter={
+                    tabFilters.find((filter) => {
+                      return filter.active;
+                    }).tag
+                  }
+                  filters={filters}
+                  updateNumberOfResults={setNumberOfResults}
+                />
               )}
             </Filter>
-            <div>
-              <ModalOffer
-                currentOffer={currentOffer}
-                setCurrentOffer={(offer) => {
-                  setCurrentOffer({ ...offer });
-                  fetchData(candidatId);
-                }}
-              />
-            </div>
           </>
         )}
       </Section>
