@@ -1,0 +1,11 @@
+export { default as CandidatCard } from 'src/components/cards/CandidatCard';
+export { default as HelpingCard } from 'src/components/cards/HelpingCard';
+export { default as NumberCard } from 'src/components/cards/NumberCard';
+export { default as PresentationCard } from 'src/components/cards/PresentationCard';
+export { default as ScaleCard } from 'src/components/cards/ScaleCard';
+export { default as SkillsCard } from 'src/components/cards/SkillsCard';
+export { default as PassionsCard } from 'src/components/cards/PassionsCard';
+export { default as InfoProfileCard } from 'src/components/cards/InfoProfileCard';
+export { default as StoryProfileCard } from 'src/components/cards/StoryProfileCard';
+export { default as ExperiencesProfileCard } from 'src/components/cards/ExperiencesProfileCard';
+export { default as CommentProfileCard } from 'src/components/cards/CommentProfileCard';

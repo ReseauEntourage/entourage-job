@@ -7039,14 +7039,15 @@
                     var clientHeight = ref.clientHeight;
 
                     // Removed for now because of bug where we can't touch scroll on Offcanvas
-                   /*
-                   if (clientHeight >= scrollHeight
-                        || scrollTop === 0 && clientY > 0
-                        || scrollHeight - scrollTop <= clientHeight && clientY < 0
-                    ) {
-                        e.cancelable && e.preventDefault();
-                    }
+                    /*
+                      if (clientHeight >= scrollHeight
+                          || scrollTop === 0 && clientY > 0
+                          || scrollHeight - scrollTop <= clientHeight && clientY < 0
+                      ) {
+                          e.cancelable && e.preventDefault();
+                      }
                     */
+
                 }
 
             },

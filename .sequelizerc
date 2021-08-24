@@ -1,8 +1,16 @@
+const dev = process.env.NODE_ENV !== 'production';
+
+if (dev) {
+  require("@babel/register");
+}
+
 const path = require('path');
 
+const backendPath = __dirname + (dev ? '/src/backend/db' : '/build/backend/db')
+
 module.exports = {
-  'config': path.resolve('./backend/db/config', 'database.js'),
-  'models-path': path.resolve('./backend/db', 'models'),
-  'seeders-path': path.resolve('./backend/db', 'seeders'),
-  'migrations-path': path.resolve('./backend/db', 'migrations')
+  'config': path.resolve(backendPath + '/config', 'database.js'),
+  'models-path': path.resolve(backendPath, 'models'),
+  'seeders-path': path.resolve(backendPath, 'seeders'),
+  'migrations-path': path.resolve(backendPath, 'migrations')
 }

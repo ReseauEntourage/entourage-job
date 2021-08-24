@@ -1,11 +1,8 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
-const loadEnvironementVariables = require('./backend/utils/env');
-
-loadEnvironementVariables();
 
 module.exports = {
-  roots: ['<rootDir>/test'],
+  roots: ['<rootDir>/src/test'],
   testRegex: '.+\\.(test|spec)\\.js?$',
   testEnvironment: 'node',
   maxConcurrency: 5,
@@ -13,6 +10,7 @@ module.exports = {
   moduleNameMapper: {
     '@/(.*)': '<rootDir>/src/$1',
   },
-  collectCoverageFrom: ['backend/**/*.js'],
+  collectCoverageFrom: ['src/backend/**/*.js'],
   verbose: true,
+  setupFiles: ['<rootDir>/jest.setupTests.js'],
 };
