@@ -19,10 +19,10 @@ const FiltersMobile = ({ filters }) => {
     const modalInterval = setInterval(() => {
       if (UIkit) {
         clearInterval(modalInterval);
-        UIkit.util.on(document, 'show', '#toggle-filter-menu-mobile', () => {
+        UIkit.util.on(document, 'show', '#toggle-filter-menu', () => {
           return onFilterMenuToggle(true);
         });
-        UIkit.util.on(document, 'hide', '#toggle-filter-menu-mobile', () => {
+        UIkit.util.on(document, 'hide', '#toggle-filter-menu', () => {
           return onFilterMenuToggle(false);
         });
       }
@@ -45,7 +45,7 @@ const FiltersMobile = ({ filters }) => {
     <div className="uk-flex uk-flex-middle uk-flex-center uk-hidden@m">
       <Button
         className="ent-filter-button-search"
-        toggle="target: #toggle-filter-menu-mobile;"
+        toggle="target: #toggle-filter-menu;"
       >
         <div className="uk-position-relative">
           <IconNoSSR

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import FiltersMobile from '../filters/FiltersMobile';
-import FiltersMobileSideBar from '../filters/FiltersMobileSideBar';
+import FiltersSideBar from '../filters/FiltersSideBar';
 import FiltersCheckboxes from '../filters/FiltersCheckboxes';
 import CVList from '../cv/CVList';
 import { GridNoSSR, Section } from '../utils';
@@ -132,7 +132,7 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
               <Icon name="search" className="uk-text-secondary" />
             </a>
           </div>
-          <FiltersMobileSideBar
+          <FiltersSideBar
             filterData={CV_FILTERS_DATA}
             filters={filters}
             setFilters={setFilters}
