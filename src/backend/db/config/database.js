@@ -2,7 +2,6 @@ import loadEnvironementVariables from 'src/backend/utils/env';
 
 loadEnvironementVariables();
 
-// keep module.exports
 module.exports = {
   development: {
     use_env_variable: 'DATABASE_URL',

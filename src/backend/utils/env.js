@@ -1,5 +1,5 @@
-const dotenv = require('dotenv');
-const path = require('path');
+import dotenv from 'dotenv';
+import path from 'path';
 
 /**
  * load environement variables located in ./.env or ./env.test depending on NODE_ENV
@@ -13,4 +13,4 @@ const loadEnvironnementVariables = () => {
   dotenv.config({ path: completePath });
 };
 
-module.exports = loadEnvironnementVariables;
+export default loadEnvironnementVariables;

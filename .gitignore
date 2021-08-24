@@ -8,3 +8,4 @@ assets/uikit
 _next
 .DS_Store
 coverage/
+build

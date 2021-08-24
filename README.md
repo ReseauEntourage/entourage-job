@@ -68,14 +68,13 @@ Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
 
 - `docker run --name entourage-db-test -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 54300:5432 entourage`
 
-- Vous avez besoin des données du fichier **`.env.test`** et de renseigner le champs DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:54300/entourage`) avec votre adresse.
+- Vous avez besoin des données du fichier **`.env.test`** pour les tests en local, et de renseigner le champs DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:54300/entourage`) avec votre adresse.
 
-- `NODE_ENV=test npx sequelize db:migrate`
+- `NODE_ENV=dev-test npx sequelize db:migrate`
 
 ## 6# Lancer les tests
 
 - `npm run test` est utilisé pour l'intégration continue pour lancer les tests avec les valeurs du fichier `.env`
-- `npm run dev-test-coverage` pour lancer les tests avec un rapport de couverture
-- `npm run dev-test` pour lancer les tests en mode watch sans rapport de couverture
+- `npm run dev-test` pour lancer les tests en local, en utilisant le fichier `.env.test` avec un rapport de couverture
 
 ### You are all set !
