@@ -8,6 +8,7 @@ import {
   OPPORTUNITY_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,
   OFFER_ADMIN_FILTERS_DATA,
+  CANDIDATE_FILTERS_DATA,
 } from 'src/constants';
 
 // OFFER FILTERS
@@ -57,10 +58,38 @@ const filterAdminOffersByType = (offers, type) => {
   return filteredList;
 };
 
-const filterOffers = (offers, filtersObj, candidatId) => {
+const filterOffersByStatus = (offers, status, candidatId) => {
   let filteredList = offers;
 
-  if (offers && filtersObj) {
+  if (offers && status) {
+    filteredList = offers.filter((offer) => {
+      if (candidatId) {
+        const userOpportunity = getUserOpportunityFromOffer(offer, candidatId);
+        return userOpportunity
+          ? status.some((currentFilter) => {
+              return currentFilter.value === userOpportunity.status.toString();
+            })
+          : false;
+      }
+      return status.some((currentFilter) => {
+        if (offer.userOpportunity && offer.userOpportunity.length > 0) {
+          return offer.userOpportunity.some((userOpp) => {
+            return currentFilter.value === userOpp.status.toString();
+          });
+        }
+
+        return false;
+      });
+    });
+  }
+
+  return filteredList;
+};
+
+const getOfferOptions = (filtersObj) => {
+  const whereOptions = {};
+
+  if (filtersObj) {
     const keys = Object.keys(filtersObj);
 
     if (keys.length > 0) {
@@ -69,63 +98,28 @@ const filterOffers = (offers, filtersObj, candidatId) => {
       }, 0);
 
       if (totalFilters > 0) {
-        filteredList = offers.filter((offer) => {
-          // TODO make generic if several filters
-          const resultForEachFilter = [];
-          for (let i = 0; i < keys.length; i += 1) {
-            let hasFound = false;
-            if (filtersObj[keys[i]].length === 0) {
-              hasFound = true;
-            } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
-              hasFound = offer.isPublic;
-            } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[1].key) {
-              if (candidatId) {
-                const userOpportunity = getUserOpportunityFromOffer(
-                  offer,
-                  candidatId
-                );
-                hasFound = userOpportunity
-                  ? filtersObj[keys[i]].some((currentFilter) => {
-                      return (
-                        currentFilter.value ===
-                        userOpportunity.status.toString()
-                      );
-                    })
-                  : false;
-              } else {
-                hasFound = filtersObj[keys[i]].some((currentFilter) => {
-                  if (
-                    offer.userOpportunity &&
-                    offer.userOpportunity.length > 0
-                  ) {
-                    return offer.userOpportunity.some((userOpp) => {
-                      return currentFilter.value === userOpp.status.toString();
-                    });
-                  }
-
-                  return false;
-                });
-              }
-            } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[2].key) {
-              const deptFilters = filtersObj[keys[i]]
-                .map((filter) => {
-                  return filter.value;
-                })
-                .join();
-              hasFound = deptFilters.includes(offer.department);
+        for (let i = 0; i < keys.length; i += 1) {
+          if (filtersObj[keys[i]].length > 0) {
+            if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
+              whereOptions[keys[i]] = {
+                [Op.and]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value === 'true';
+                }),
+              };
+            } else {
+              whereOptions[keys[i]] = {
+                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value;
+                }),
+              };
             }
-            resultForEachFilter.push(hasFound);
           }
-
-          return resultForEachFilter.every((value) => {
-            return value;
-          });
-        });
+        }
       }
     }
   }
 
-  return filteredList;
+  return whereOptions;
 };
 
 // CVS FILTERS
@@ -143,7 +137,47 @@ const getCVOptions = (filtersObj) => {
       if (totalFilters > 0) {
         for (let i = 0; i < keys.length; i += 1) {
           if (filtersObj[keys[i]].length > 0) {
-            if (keys[i] === CV_FILTERS_DATA[0].key) {
+            if (
+              keys[i] === CV_FILTERS_DATA[1].key ||
+              keys[i] === CV_FILTERS_DATA[2].key
+            ) {
+              whereOptions[keys[i]] = {
+                [Op.and]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value === 'true';
+                }),
+              };
+            } else {
+              whereOptions[keys[i]] = {
+                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value;
+                }),
+              };
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return whereOptions;
+};
+
+// MEMBERS FILTERS
+const getMemberOptions = (filtersObj) => {
+  const whereOptions = {};
+
+  if (filtersObj) {
+    const keys = Object.keys(filtersObj);
+
+    if (keys.length > 0) {
+      const totalFilters = keys.reduce((acc, curr) => {
+        return acc + filtersObj[curr].length;
+      }, 0);
+
+      if (totalFilters > 0) {
+        for (let i = 0; i < keys.length; i += 1) {
+          if (filtersObj[keys[i]].length > 0) {
+            if (keys[i] === CANDIDATE_FILTERS_DATA[0].key) {
               whereOptions[keys[i]] = true;
             } else {
               whereOptions[keys[i]] = {
@@ -159,6 +193,33 @@ const getCVOptions = (filtersObj) => {
   }
 
   return whereOptions;
+};
+
+const filterMembersByCVStatus = (members, status) => {
+  let filteredList = members;
+
+  if (members && status) {
+    filteredList = members.filter((member) => {
+      return status.some((currentFilter) => {
+        if (member.candidat && member.candidat.cvs.length > 0) {
+          return currentFilter === member.candidat.cvs[0].status.toString();
+        }
+        if (
+          member.coach &&
+          member.coach.candidat &&
+          member.coach.candidat.cvs.length > 0
+        ) {
+          return (
+            currentFilter === member.coach.candidat.cvs[0].status.toString()
+          );
+        }
+
+        return false;
+      });
+    });
+  }
+
+  return filteredList;
 };
 
 // UTILS
@@ -184,9 +245,12 @@ const getFiltersObjectsFromQueryParams = (params, filtersConst) => {
 };
 
 export {
-  filterOffers,
   filterCandidateOffersByType,
   filterAdminOffersByType,
+  filterOffersByStatus,
+  getOfferOptions,
   getCVOptions,
+  filterMembersByCVStatus,
+  getMemberOptions,
   getFiltersObjectsFromQueryParams,
 };

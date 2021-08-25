@@ -26,6 +26,7 @@ const FiltersSideBar = ({ filterData, filters, setFilters }) => {
           filterData={filterData}
           filters={filters}
           setFilters={setFilters}
+          fullWidth
         />
       </div>
     </OffcanvasNoSSR>

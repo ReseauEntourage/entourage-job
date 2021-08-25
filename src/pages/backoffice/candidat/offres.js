@@ -21,7 +21,7 @@ import OpportunityError from 'src/components/opportunities/OpportunityError';
 
 const candidateFilters = OPPORTUNITY_FILTERS_DATA.slice(1);
 
-const Opportunites = () => {
+const Opportunities = () => {
   const { user } = useContext(UserContext);
 
   const [hasError, setHasError] = useState(false);
@@ -198,4 +198,4 @@ const Opportunites = () => {
     </LayoutBackOffice>
   );
 };
-export default Opportunites;
+export default Opportunities;

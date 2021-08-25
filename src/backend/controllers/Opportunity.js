@@ -10,18 +10,20 @@ import { addToWorkQueue } from 'src/backend/jobs';
 import { cleanOpportunity } from 'src/backend/utils';
 
 import moment from 'moment';
-import { fn, col, where, Op } from 'sequelize';
+import { Op } from 'sequelize';
 
 import {
-  filterOffers,
   getFiltersObjectsFromQueryParams,
   filterCandidateOffersByType,
   filterAdminOffersByType,
+  filterOffersByStatus,
+  getOfferOptions,
 } from 'src/backend/utils/Filters';
 
 import { findOfferStatus, getAdminMailFromDepartment } from 'src/utils/Finding';
 
 import { models, sequelize } from 'src/backend/db/models';
+import { searchInColumnWhereOption } from '../utils/DatabaseQueries';
 
 const offerTable = AIRTABLE_NAMES.OFFERS;
 const {
@@ -32,6 +34,7 @@ const {
   User_Candidat,
   User,
 } = models;
+
 const INCLUDE_OPPORTUNITY_CANDIDATE = [
   {
     model: User,
@@ -124,28 +127,38 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
 
 const getOfferSearchOptions = (search) => {
   if (search) {
-    const lowerCaseSearch = search.toLowerCase();
     return {
       [Op.or]: [
-        where(fn('lower', col('Opportunity.title')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.recruiterName')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.location')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.department')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
-        where(fn('lower', col('Opportunity.company')), {
-          [Op.like]: `%${lowerCaseSearch}%`,
-        }),
+        searchInColumnWhereOption('Opportunity.title', search),
+        searchInColumnWhereOption('Opportunity.recruiterName', search),
+        searchInColumnWhereOption('Opportunity.location', search),
+        searchInColumnWhereOption('Opportunity.department', search),
+        searchInColumnWhereOption('Opportunity.company', search),
       ],
     };
   }
   return {};
+};
+
+const destructureOptionsAndParams = (params) => {
+  const { search, type: typeParams, ...restParams } = params;
+
+  const filtersObj = getFiltersObjectsFromQueryParams(
+    restParams,
+    OPPORTUNITY_FILTERS_DATA
+  );
+
+  const { status: statusParams, ...restFiltersObj } = filtersObj;
+
+  const searchOptions = getOfferSearchOptions(search);
+  const filterOptions = getOfferOptions(restFiltersObj);
+
+  return {
+    typeParams,
+    statusParams,
+    searchOptions,
+    filterOptions,
+  };
 };
 
 const getAirtableOpportunityFields = (
@@ -364,22 +377,25 @@ const deleteOpportunity = (id) => {
 };
 
 const getOpportunities = async (params) => {
-  const { search, ...restParams } = params;
+  const {
+    typeParams,
+    statusParams,
+    searchOptions,
+    filterOptions,
+  } = destructureOptionsAndParams(params);
+
   const options = {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     paranoid: false,
   };
 
-  const searchOptions = getOfferSearchOptions(search);
-
   const opportunities = await Opportunity.findAll({
     ...options,
     where: {
       ...searchOptions,
+      ...filterOptions,
     },
   });
-
-  const { type, ...restFilters } = restParams;
 
   const cleanedOpportunites = opportunities.map((model) => {
     return cleanOpportunity(model);
@@ -387,13 +403,10 @@ const getOpportunities = async (params) => {
 
   const filteredTypeOpportunites = filterAdminOffersByType(
     cleanedOpportunites,
-    type
+    typeParams
   );
 
-  return filterOffers(
-    filteredTypeOpportunites,
-    getFiltersObjectsFromQueryParams(restFilters, OPPORTUNITY_FILTERS_DATA)
-  );
+  return filterOffersByStatus(filteredTypeOpportunites, statusParams);
 };
 
 const getLatestOpportunities = async () => {
@@ -435,8 +448,11 @@ const getPublicOpportunities = async () => {
 };
 
 const getPrivateUserOpportunities = async (userId, params) => {
-  const { search, ...restParams } = params;
-  const searchOptions = getOfferSearchOptions(search);
+  const {
+    statusParams,
+    searchOptions,
+    filterOptions,
+  } = destructureOptionsAndParams(params);
 
   console.log(`getOpportunities - Récupérer les opportunités`);
   const opportunityUsers = await Opportunity_User.findAll({
@@ -451,6 +467,7 @@ const getPrivateUserOpportunities = async (userId, params) => {
         return model.OpportunityId;
       }),
       ...searchOptions,
+      ...filterOptions,
     },
   });
 
@@ -458,16 +475,16 @@ const getPrivateUserOpportunities = async (userId, params) => {
     return cleanOpportunity(model);
   });
 
-  return filterOffers(
-    cleanedOpportunities,
-    getFiltersObjectsFromQueryParams(restParams, OPPORTUNITY_FILTERS_DATA),
-    userId
-  );
+  return filterOffersByStatus(cleanedOpportunities, statusParams, userId);
 };
 
 const getAllUserOpportunities = async (userId, params = {}) => {
-  const { search, ...restParams } = params;
-  const searchOptions = getOfferSearchOptions(search);
+  const {
+    typeParams,
+    statusParams,
+    searchOptions,
+    filterOptions,
+  } = destructureOptionsAndParams(params);
 
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
@@ -488,6 +505,7 @@ const getAllUserOpportunities = async (userId, params = {}) => {
         },
       ],
       ...searchOptions,
+      ...filterOptions,
     },
   });
 
@@ -561,18 +579,12 @@ const getAllUserOpportunities = async (userId, params = {}) => {
     return new Date(b.date) - new Date(a.date);
   });
 
-  const { type, ...restFilters } = restParams;
-
   const filteredTypeOpportunities = filterCandidateOffersByType(
     finalOpportunities,
-    type
+    typeParams
   );
 
-  return filterOffers(
-    filteredTypeOpportunities,
-    getFiltersObjectsFromQueryParams(restFilters, OPPORTUNITY_FILTERS_DATA),
-    userId
-  );
+  return filterOffersByStatus(filteredTypeOpportunities, statusParams, userId);
 };
 
 const getOpportunity = async (opportunityId, isAdmin, candidateId) => {

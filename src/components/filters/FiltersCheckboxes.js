@@ -8,6 +8,7 @@ const FiltersCheckboxes = ({
   filters,
   setFilters,
   hideOnMobile,
+  fullWidth,
 }) => {
   return (
     <div
@@ -16,7 +17,7 @@ const FiltersCheckboxes = ({
       {filterData.map(({ title, constants, key, tag, type }) => {
         if (type && type === 'checkbox') {
           return (
-            <div key={key}>
+            <div key={key} className={fullWidth ? 'uk-flex-1' : ''}>
               <label
                 htmlFor={key}
                 className="uk-flex uk-flex-middle uk-text-small"
@@ -53,10 +54,12 @@ FiltersCheckboxes.propTypes = {
   setFilters: PropTypes.func.isRequired,
   filterData: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   hideOnMobile: PropTypes.bool,
+  fullWidth: PropTypes.bool,
 };
 
 FiltersCheckboxes.defaultProps = {
   hideOnMobile: false,
+  fullWidth: false,
 };
 
 export default FiltersCheckboxes;

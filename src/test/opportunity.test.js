@@ -330,9 +330,9 @@ describe('Opportunity', () => {
               ])
             );
           });
-          it('should return 200, and all the opportunities that matches the hidePrivate filters', async () => {
+          it('should return 200, and all the opportunities that matches the isPublic filters', async () => {
             const response = await request(serverTest)
-              .get(`${route}/admin?hidePrivate[]=true`)
+              .get(`${route}/admin?isPublic[]=true`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
             expect(response.body).not.toEqual(
@@ -374,7 +374,7 @@ describe('Opportunity', () => {
           it('should return 200, and all the opportunities that matches the multiple filters (AND between different filters, OR inside each filters)', async () => {
             const response = await request(serverTest)
               .get(
-                `${route}/admin?locations[]=Rhône (69)&locations[]=Paris (75)&hidePrivate[]=true&type=validated`
+                `${route}/admin?locations[]=Rhône (69)&locations[]=Paris (75)&isPublic[]=true&type=validated`
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
@@ -450,7 +450,7 @@ describe('Opportunity', () => {
           it('should return 200, and all the opportunities that matches the hide public filter', async () => {
             const response = await request(serverTest)
               .get(
-                `${route}/user/private/${loggedInCandidat.user.id}?hidePrivate[]=true`
+                `${route}/user/private/${loggedInCandidat.user.id}?isPublic[]=true`
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
@@ -514,7 +514,7 @@ describe('Opportunity', () => {
           it('should return 200, and all the opportunities that matches the multiple filters (AND between different filters, OR inside each filters)', async () => {
             const response = await request(serverTest)
               .get(
-                `${route}/user/private/${loggedInCandidat.user.id}?locations[]=Rhône (69)&status[]=0&status[]=1&hidePrivate[]=true`
+                `${route}/user/private/${loggedInCandidat.user.id}?locations[]=Rhône (69)&status[]=0&status[]=1&isPublic[]=true`
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
