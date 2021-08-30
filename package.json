@@ -15,7 +15,7 @@
     "dev-test": "NODE_ENV=dev-test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
     "lint": "eslint .",
     "format": "prettier --write './**/*.{js,jsx,md,json}' --config .prettierrc.json",
-    "build": "next build && babel src -d build --ignore src/test,src/pages",
+    "build": "next build && babel src -d build --ignore src/test,src/pages,src/hooks,src/components,src/lib",
     "db-create": "npx sequelize db:create",
     "db-migrate": "npx sequelize db:migrate",
     "start": "NODE_ENV=production node -r dotenv/config build/backend/serveur-next.js",

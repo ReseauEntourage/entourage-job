@@ -71,25 +71,26 @@ const FiltersDropdowns = ({
 
   return (
     <div className={hideOnMobile ? 'uk-visible@m' : ''}>
-      {filterData.map(({ title, constants, key, tag, type }) => {
+      {filterData.map(({ title, constants, key, tag, type, disabled }) => {
         if (type && type === 'checkbox') {
           return null;
         }
         return (
           <div
             key={key}
+            style={{ minWidth: 150 }}
             className={`uk-inline ${
-              fullWidth
-                ? 'uk-width-expand uk-margin-small-bottom'
-                : 'uk-width-small'
+              fullWidth ? 'uk-width-expand uk-margin-small-bottom' : ''
             }`}
           >
             <div
               className={`ent-select-search ${
                 showSeparator ? 'ent-select-separator' : ''
               }`}
+              style={{ opacity: disabled ? 0.6 : 1 }}
             >
               <Button
+                disabled={disabled}
                 style="text"
                 className={`uk-width-expand ${
                   filters[key].length === 0 ? 'uk-text-muted' : ''

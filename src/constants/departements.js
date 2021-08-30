@@ -1,9 +1,18 @@
+import _ from 'lodash';
+
 const ADMIN_ZONES = {
   PARIS: 'PARIS',
   LYON: 'LYON',
   LILLE: 'LILLE',
   HZ: 'HORS ZONE',
 };
+
+const ADMIN_ZONES_FILTERS = [
+  { value: ADMIN_ZONES.PARIS, label: _.capitalize(ADMIN_ZONES.PARIS) },
+  { value: ADMIN_ZONES.LILLE, label: _.capitalize(ADMIN_ZONES.LILLE) },
+  { value: ADMIN_ZONES.LYON, label: _.capitalize(ADMIN_ZONES.LYON) },
+  { value: ADMIN_ZONES.HZ, label: _.capitalize(ADMIN_ZONES.HZ) },
+];
 
 const DEPARTMENTS = [
   {
@@ -537,4 +546,10 @@ const FORMATTED_DEPARTMENTS = [
   }),
 ];
 
-export { DEPARTMENTS, ADMIN_ZONES, FORMATTED_DEPARTMENTS, DEPARTMENTS_FILTERS };
+export {
+  DEPARTMENTS,
+  ADMIN_ZONES,
+  FORMATTED_DEPARTMENTS,
+  DEPARTMENTS_FILTERS,
+  ADMIN_ZONES_FILTERS,
+};

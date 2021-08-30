@@ -1,6 +1,10 @@
 import TAGS from 'src/constants/tags';
 
-import { DEPARTMENTS_FILTERS, ADMIN_ZONES } from 'src/constants/departements';
+import {
+  DEPARTMENTS_FILTERS,
+  ADMIN_ZONES,
+  ADMIN_ZONES_FILTERS,
+} from 'src/constants/departements';
 
 const OFFER_STATUS = [
   { value: -1, label: 'Offre à traiter', color: 'muted' },
@@ -175,6 +179,39 @@ const LOCATIONS = [
   },
 ];
 
+const CV_STATUS = {
+  Published: {
+    label: 'Publié',
+    value: 'Published',
+    style: 'success',
+  },
+  Pending: {
+    label: 'En attente',
+    value: 'Pending',
+    style: 'danger',
+  },
+  Progress: {
+    label: 'En cours',
+    value: 'Progress',
+    style: 'muted',
+  },
+  New: {
+    label: 'Nouveau',
+    value: 'New',
+    style: 'muted',
+  },
+  Draft: {
+    label: 'Brouillon',
+    value: 'Draft',
+    style: 'warning',
+  },
+  Unknown: {
+    label: 'Inconnu',
+    value: 'Unknown',
+    style: '',
+  },
+};
+
 const OFFER_CANDIDATE_FILTERS_DATA = [
   { tag: 'all', title: 'Toutes les offres' },
   { tag: 'private', title: 'Offres du candidat', active: true },
@@ -213,10 +250,12 @@ const CV_FILTERS_DATA = [
 
 const OPPORTUNITY_FILTERS_DATA = [
   {
-    key: 'hidePrivate',
-    type: 'checkbox',
-    constants: [{ label: 'Masquer les offres privées', value: true }],
-    title: 'Masquer les offres privées',
+    key: 'isPublic',
+    constants: [
+      { label: 'Masquer les offres privées', value: true },
+      { label: 'Masquer les offres générales', value: false },
+    ],
+    title: 'Privée/générale',
   },
   {
     key: 'status',
@@ -224,44 +263,53 @@ const OPPORTUNITY_FILTERS_DATA = [
     title: 'Statut',
   },
   {
-    key: 'locations',
+    key: 'department',
     constants: DEPARTMENTS_FILTERS,
-    title: 'Secteurs géographiques',
+    title: 'Département',
   },
 ];
 
-const CV_STATUS = {
-  Published: {
-    label: 'Publié',
-    value: 'Published',
-    style: 'success',
+const MEMBER_FILTERS_DATA = [
+  {
+    key: 'zone',
+    constants: ADMIN_ZONES_FILTERS,
+    title: 'Zone',
   },
-  Pending: {
-    label: 'En attente',
-    value: 'Pending',
-    style: 'danger',
+  {
+    key: 'associatedUser',
+    constants: [
+      { label: 'Masquer les candidats/coachs associés', value: false },
+      { label: 'Masquer les candidats/coachs non associés', value: true },
+    ],
+    title: 'Membre associé',
   },
-  Progress: {
-    label: 'En cours',
-    value: 'Progress',
-    style: 'muted',
+  {
+    key: 'hidden',
+    constants: [
+      { label: 'Masquer les candidats avec le CV masqué', value: false },
+      { label: 'Masquer les candidats avec le CV visible', value: true },
+    ],
+    title: 'CV masqué',
   },
-  New: {
-    label: 'Nouveau',
-    value: 'New',
-    style: 'muted',
+  {
+    key: 'employed',
+    constants: [
+      { label: 'Masquer les candidats en emploi', value: false },
+      { label: "Masquer les candidats en recherche d'emploi", value: true },
+    ],
+    title: 'En emploi',
   },
-  Draft: {
-    label: 'Brouillon',
-    value: 'Draft',
-    style: 'warning',
+  {
+    key: 'cvStatus',
+    constants: [
+      CV_STATUS.Published,
+      CV_STATUS.Pending,
+      CV_STATUS.Progress,
+      CV_STATUS.New,
+    ],
+    title: 'Statut du CV',
   },
-  Unknown: {
-    label: 'Inconnu',
-    value: 'Unknown',
-    style: '',
-  },
-};
+];
 
 const USER_ROLES = {
   COACH: 'Coach',
@@ -302,6 +350,7 @@ const REDIS_KEYS = {
 const STORAGE_KEYS = {
   CV_FILTERS_PUBLIC: 'cv-filters-public',
   CV_FILTERS_COMPANY: 'cv-filters-company',
+  MEMBERS_FILTERS: 'members-filters',
   ACCESS_TOKEN: 'access-token',
 };
 
@@ -361,6 +410,7 @@ export {
   OPPORTUNITY_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,
   OFFER_ADMIN_FILTERS_DATA,
+  MEMBER_FILTERS_DATA,
   NEWSLETTER_ORIGINS,
   REDIS_KEYS,
   JOBS,

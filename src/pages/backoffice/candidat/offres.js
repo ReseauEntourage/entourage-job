@@ -4,8 +4,6 @@ import OpportunityList from 'src/components/opportunities/OpportunityList';
 import { findFilter, initializeFilters } from 'src/utils';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import { useFilters } from 'src/hooks';
-import CurrentFilters from 'src/components/filters/CurrentFilters';
-import FiltersSideBar from 'src/components/filters/FiltersSideBar';
 import { UserContext } from 'src/components/store/UserProvider';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { Section } from 'src/components/utils';
@@ -18,14 +16,16 @@ import {
   OFFER_CANDIDATE_FILTERS_DATA,
 } from 'src/constants';
 import OpportunityError from 'src/components/opportunities/OpportunityError';
+import SearchBar from 'src/components/filters/SearchBar';
 
 const candidateFilters = OPPORTUNITY_FILTERS_DATA.slice(1);
 
-const Opportunites = () => {
+const Opportunities = () => {
   const { user } = useContext(UserContext);
 
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
   const [search, setSearch] = useState();
 
   const [candidatId, setCandidatId] = useState();
@@ -49,7 +49,6 @@ const Opportunites = () => {
             return candidatZone === dept.zone;
           }
         );
-        console.log(defaultDepartmentsForCandidate);
 
         setFilters(
           initializeFilters(candidateFilters, {
@@ -80,6 +79,7 @@ const Opportunites = () => {
               })
             );
           }
+          setLoadingDefaultFilters(false);
           setLoading(false);
         })
         .catch((err) => {
@@ -154,31 +154,22 @@ const Opportunites = () => {
         ) : (
           <>
             <Filter
-              search={(text) => {
-                return setSearch(text);
-              }}
               loading={loading}
               filters={tabFilters}
               setFilters={setTabFilters}
               otherFilterComponent={
-                <div
-                  style={{ maxWidth: 1100 }}
-                  className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-bottom"
-                >
-                  <CurrentFilters
-                    numberOfResults={numberOfResults}
-                    filters={filters}
-                    resetFilters={resetFilters}
-                  />
-                  <FiltersSideBar
-                    filterData={candidateFilters}
-                    filters={filters}
-                    setFilters={setFilters}
-                  />
-                </div>
+                <SearchBar
+                  filtersConstants={candidateFilters}
+                  filters={filters}
+                  numberOfResults={numberOfResults}
+                  resetFilters={resetFilters}
+                  setSearch={setSearch}
+                  setFilters={setFilters}
+                  placeholder="Rechercher..."
+                />
               }
             >
-              {candidatId && (
+              {candidatId && !loadingDefaultFilters && (
                 <OpportunityList
                   search={search}
                   candidatId={candidatId}
@@ -198,4 +189,4 @@ const Opportunites = () => {
     </LayoutBackOffice>
   );
 };
-export default Opportunites;
+export default Opportunities;

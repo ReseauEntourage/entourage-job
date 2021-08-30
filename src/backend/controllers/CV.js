@@ -1,4 +1,9 @@
-import { forceGC, cleanCV, escapeColumn, escapeQuery } from 'src/backend/utils';
+import {
+  forceGC,
+  cleanCV,
+  escapeColumnRaw,
+  escapeQuery,
+} from 'src/backend/utils';
 import * as S3 from 'src/backend/controllers/Aws';
 import RedisManager from 'src/backend/utils/RedisManager';
 
@@ -632,7 +637,7 @@ const getRandomShortCVs = async (nb, query, params) => {
       SELECT cvSearches."CVId" as id
       FROM "CV_Searches" cvSearches
         INNER JOIN publishedCVs on cvSearches."CVId" = publishedCVs."id"
-        WHERE ${escapeColumn(
+        WHERE ${escapeColumnRaw(
           'cvSearches."searchString"'
         )} like '%${escapedQuery}%'
     `

@@ -8,16 +8,17 @@ import ModalEdit from 'src/components/modals/ModalEdit';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import Api from 'src/Axios';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
-import schemaPersonalData from 'src/components/forms/schema/formPersonalData.json';
+import schemaPersonalData from 'src/components/forms/schema/formPersonalData';
 import schemaChangePassword from 'src/components/forms/schema/formChangePassword.json';
 import ToggleWithConfirmationModal from 'src/components/backoffice/ToggleWithConfirmationModal';
 import { USER_ROLES } from 'src/constants';
 import { useResetForm } from 'src/hooks/utils';
 import UserInformationCard from 'src/components/cards/UserInformationCard';
 import { mutateFormSchema } from 'src/utils';
+import _ from 'lodash';
 
 const Parametres = () => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const [userData, setUserData] = useState(false);
   const [loadingPersonal, setLoadingPersonal] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
@@ -71,6 +72,19 @@ const Parametres = () => {
         },
         {
           fieldId: 'lastName',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
+        {
+          fieldId: 'zone',
           props: [
             {
               propName: 'disabled',
@@ -292,6 +306,15 @@ const Parametres = () => {
                       )}
                     </GridNoSSR>
                   )}
+                  {userData.role === USER_ROLES.ADMIN && (
+                    <GridNoSSR row gap="small">
+                      <span className="uk-label">
+                        {userData.zone
+                          ? _.capitalize(userData.zone)
+                          : 'Non renseignée'}
+                      </span>
+                    </GridNoSSR>
+                  )}
                 </GridNoSSR>
               ) : undefined}
             </div>
@@ -362,12 +385,14 @@ const Parametres = () => {
               gender: userData && userData.gender.toString(),
               phone: userData.phone,
               address: userData.address,
+              zone: userData.zone,
             }}
             formSchema={mutatedSchema}
             onSubmit={(
               {
                 firstName,
                 lastName,
+                zone,
                 gender,
                 phone,
                 address,
@@ -383,7 +408,15 @@ const Parametres = () => {
                 Api.put(`/api/v1/user/${userData.id}`, newUserData)
                   .then(() => {
                     closeModal();
-                    setUserData({ ...userData, ...newUserData });
+                    setUserData((prevUserData) => {
+                      return { ...prevUserData, ...newUserData };
+                    });
+                    setUser((prevUser) => {
+                      return {
+                        ...prevUser,
+                        ...newUserData,
+                      };
+                    });
                     UIkit.notification(
                       'Vos informations personnelles ont bien été mises à jour',
                       'success'
@@ -403,7 +436,7 @@ const Parametres = () => {
 
               let newUserData = {};
               if (userData.role === USER_ROLES.ADMIN) {
-                newUserData = { firstName, lastName, gender };
+                newUserData = { firstName, lastName, gender, zone };
                 if (phone !== userData.phone) {
                   newUserData.phone = phone;
                 }

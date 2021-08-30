@@ -48,28 +48,30 @@ const Filter = ({
             );
           })}
         </ul>
-        <div className="uk-margin">
-          <div className="uk-search uk-search-default">
-            <span data-uk-search-icon />
-            <input
-              className="uk-search-input"
-              type="search"
-              placeholder="Rechercher..."
-              onKeyDown={(ev) => {
-                if (ev.key === 'Enter') {
-                  ev.preventDefault();
-                }
-              }}
-              onChange={(event) => {
-                clearTimeout(debounceTimeoutId);
-                event.persist();
-                debounceTimeoutId = setTimeout(() => {
-                  return search(event.target.value);
-                }, 1000);
-              }}
-            />
+        {search && (
+          <div className="uk-margin">
+            <div className="uk-search uk-search-default">
+              <span data-uk-search-icon />
+              <input
+                className="uk-search-input"
+                type="search"
+                placeholder="Rechercher..."
+                onKeyDown={(ev) => {
+                  if (ev.key === 'Enter') {
+                    ev.preventDefault();
+                  }
+                }}
+                onChange={(event) => {
+                  clearTimeout(debounceTimeoutId);
+                  event.persist();
+                  debounceTimeoutId = setTimeout(() => {
+                    return search(event.target.value);
+                  }, 1000);
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </GridNoSSR>
       {otherFilterComponent}
       {loading ? (

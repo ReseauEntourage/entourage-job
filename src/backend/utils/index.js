@@ -4,7 +4,12 @@ import {
   checkCandidatOrCoachAuthorization,
   checkUserAuthorization,
 } from 'src/backend/utils/RoleManagement';
-import { escapeColumn, escapeQuery } from 'src/backend/utils/DatabaseQueries';
+
+import {
+  escapeColumnRaw,
+  escapeQuery,
+} from 'src/backend/utils/DatabaseQueries';
+
 import {
   cleanCV,
   cleanOpportunity,
@@ -14,7 +19,7 @@ import {
 export {
   checkUserAuthorization,
   checkCandidatOrCoachAuthorization,
-  escapeColumn,
+  escapeColumnRaw,
   escapeQuery,
   cleanCV,
   cleanOpportunity,

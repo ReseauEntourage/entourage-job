@@ -1,6 +1,6 @@
 import { getUserOpportunityFromOffer } from 'src/utils/Filters';
 
-import { Op } from 'sequelize';
+import { col, Op, where } from 'sequelize';
 import _ from 'lodash';
 
 import {
@@ -8,6 +8,7 @@ import {
   OPPORTUNITY_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,
   OFFER_ADMIN_FILTERS_DATA,
+  MEMBER_FILTERS_DATA,
 } from 'src/constants';
 
 // OFFER FILTERS
@@ -57,10 +58,38 @@ const filterAdminOffersByType = (offers, type) => {
   return filteredList;
 };
 
-const filterOffers = (offers, filtersObj, candidatId) => {
+const filterOffersByStatus = (offers, status, candidatId) => {
   let filteredList = offers;
 
-  if (offers && filtersObj) {
+  if (offers && status) {
+    filteredList = offers.filter((offer) => {
+      if (candidatId) {
+        const userOpportunity = getUserOpportunityFromOffer(offer, candidatId);
+        return userOpportunity
+          ? status.some((currentFilter) => {
+              return currentFilter.value === userOpportunity.status.toString();
+            })
+          : false;
+      }
+      return status.some((currentFilter) => {
+        if (offer.userOpportunity && offer.userOpportunity.length > 0) {
+          return offer.userOpportunity.some((userOpp) => {
+            return currentFilter.value === userOpp.status.toString();
+          });
+        }
+
+        return false;
+      });
+    });
+  }
+
+  return filteredList;
+};
+
+const getOfferOptions = (filtersObj) => {
+  const whereOptions = {};
+
+  if (filtersObj) {
     const keys = Object.keys(filtersObj);
 
     if (keys.length > 0) {
@@ -69,63 +98,28 @@ const filterOffers = (offers, filtersObj, candidatId) => {
       }, 0);
 
       if (totalFilters > 0) {
-        filteredList = offers.filter((offer) => {
-          // TODO make generic if several filters
-          const resultForEachFilter = [];
-          for (let i = 0; i < keys.length; i += 1) {
-            let hasFound = false;
-            if (filtersObj[keys[i]].length === 0) {
-              hasFound = true;
-            } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
-              hasFound = offer.isPublic;
-            } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[1].key) {
-              if (candidatId) {
-                const userOpportunity = getUserOpportunityFromOffer(
-                  offer,
-                  candidatId
-                );
-                hasFound = userOpportunity
-                  ? filtersObj[keys[i]].some((currentFilter) => {
-                      return (
-                        currentFilter.value ===
-                        userOpportunity.status.toString()
-                      );
-                    })
-                  : false;
-              } else {
-                hasFound = filtersObj[keys[i]].some((currentFilter) => {
-                  if (
-                    offer.userOpportunity &&
-                    offer.userOpportunity.length > 0
-                  ) {
-                    return offer.userOpportunity.some((userOpp) => {
-                      return currentFilter.value === userOpp.status.toString();
-                    });
-                  }
-
-                  return false;
-                });
-              }
-            } else if (keys[i] === OPPORTUNITY_FILTERS_DATA[2].key) {
-              const deptFilters = filtersObj[keys[i]]
-                .map((filter) => {
-                  return filter.value;
-                })
-                .join();
-              hasFound = deptFilters.includes(offer.department);
+        for (let i = 0; i < keys.length; i += 1) {
+          if (filtersObj[keys[i]].length > 0) {
+            if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
+              whereOptions[keys[i]] = {
+                [Op.and]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value === 'true';
+                }),
+              };
+            } else {
+              whereOptions[keys[i]] = {
+                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value;
+                }),
+              };
             }
-            resultForEachFilter.push(hasFound);
           }
-
-          return resultForEachFilter.every((value) => {
-            return value;
-          });
-        });
+        }
       }
     }
   }
 
-  return filteredList;
+  return whereOptions;
 };
 
 // CVS FILTERS
@@ -161,6 +155,100 @@ const getCVOptions = (filtersObj) => {
   return whereOptions;
 };
 
+// MEMBERS FILTERS
+const getMemberOptions = (filtersObj) => {
+  const whereOptions = {};
+
+  if (filtersObj) {
+    const keys = Object.keys(filtersObj);
+
+    if (keys.length > 0) {
+      const totalFilters = keys.reduce((acc, curr) => {
+        return acc + filtersObj[curr].length;
+      }, 0);
+
+      if (totalFilters > 0) {
+        for (let i = 0; i < keys.length; i += 1) {
+          if (filtersObj[keys[i]].length > 0) {
+            if (
+              keys[i] === MEMBER_FILTERS_DATA[2].key ||
+              keys[i] === MEMBER_FILTERS_DATA[3].key
+            ) {
+              whereOptions[keys[i]] = {
+                [Op.and]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value === 'true';
+                }),
+              };
+            } else if (keys[i] === MEMBER_FILTERS_DATA[1].key) {
+              whereOptions[keys[i]] = {
+                coach: filtersObj[keys[i]].map((currentFilter) => {
+                  return where(
+                    col(`coach.candidatId`),
+                    currentFilter.value === 'true' ? Op.is : Op.not,
+                    null
+                  );
+                }),
+                candidat: filtersObj[keys[i]].map((currentFilter) => {
+                  return where(
+                    col(`candidat.coachId`),
+                    currentFilter.value === 'true' ? Op.is : Op.not,
+                    null
+                  );
+                }),
+              };
+            } else {
+              whereOptions[keys[i]] = {
+                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value;
+                }),
+              };
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return whereOptions;
+};
+
+const filterMembersByCVStatus = (members, status) => {
+  let filteredList = members;
+
+  if (members && status) {
+    filteredList = members.filter((member) => {
+      return status.some((currentFilter) => {
+        if (member.candidat && member.candidat.cvs.length > 0) {
+          return currentFilter.value === member.candidat.cvs[0].status;
+        }
+        return false;
+      });
+    });
+  }
+
+  return filteredList;
+};
+
+const filterMembersByAssociatedUser = (members, associatedUsers) => {
+  let filteredList = members;
+
+  if (members && associatedUsers && associatedUsers.length > 0) {
+    filteredList = members.filter((member) => {
+      return associatedUsers.every((currentFilter) => {
+        if (member.candidat) {
+          return !!member.candidat.coach === (currentFilter.value === 'true');
+        }
+        if (member.coach) {
+          return !!member.coach.candidat === (currentFilter.value === 'true');
+        }
+        return !(currentFilter.value === 'true');
+      });
+    });
+  }
+
+  return filteredList;
+};
+
 // UTILS
 const getFiltersObjectsFromQueryParams = (params, filtersConst) => {
   const filters = {};
@@ -184,9 +272,13 @@ const getFiltersObjectsFromQueryParams = (params, filtersConst) => {
 };
 
 export {
-  filterOffers,
   filterCandidateOffersByType,
   filterAdminOffersByType,
+  filterOffersByStatus,
+  getOfferOptions,
   getCVOptions,
+  filterMembersByCVStatus,
+  filterMembersByAssociatedUser,
+  getMemberOptions,
   getFiltersObjectsFromQueryParams,
 };

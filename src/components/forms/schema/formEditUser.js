@@ -1,7 +1,6 @@
-import _ from 'lodash';
 import Api from 'src/Axios';
 import { USER_ROLES } from 'src/constants';
-import { ADMIN_ZONES } from 'src/constants/departements';
+import { ADMIN_ZONES_FILTERS } from 'src/constants/departements';
 
 export default {
   id: 'form-edit-user',
@@ -64,10 +63,7 @@ export default {
       component: 'select',
       options: [
         { value: -1, label: 'Choisissez une zone' },
-        { value: ADMIN_ZONES.PARIS, label: _.capitalize(ADMIN_ZONES.PARIS) },
-        { value: ADMIN_ZONES.LILLE, label: _.capitalize(ADMIN_ZONES.LILLE) },
-        { value: ADMIN_ZONES.LYON, label: _.capitalize(ADMIN_ZONES.LYON) },
-        { value: ADMIN_ZONES.HZ, label: _.capitalize(ADMIN_ZONES.HZ) },
+        ...ADMIN_ZONES_FILTERS,
       ],
     },
     {

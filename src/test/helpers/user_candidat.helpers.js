@@ -2,7 +2,7 @@ import { getTokenAndId } from 'src/test/helpers/user.helpers';
 
 import { models } from 'src/backend/db/models';
 
-const { User, User_Candidat } = models;
+const { User_Candidat } = models;
 /**
  * Associate a coach to a candidat
  *
@@ -13,9 +13,11 @@ const { User, User_Candidat } = models;
  * @param {string} candidat.email the candidat email
  * @param {string} candidat.password the candidat in unhashed
  */
-const associateCoachAndCandidat = async (coach, candidat) => {
-  const coachCredentials = await getTokenAndId({ ...coach });
-  const candidatCredentials = await getTokenAndId({ ...candidat });
+const associateCoachAndCandidat = async (coach, candidat, isLogged = false) => {
+  const coachCredentials = isLogged ? coach : await getTokenAndId({ ...coach });
+  const candidatCredentials = isLogged
+    ? candidat
+    : await getTokenAndId({ ...candidat });
 
   await User_Candidat.update(
     {
@@ -24,16 +26,7 @@ const associateCoachAndCandidat = async (coach, candidat) => {
     },
     {
       where: { candidatId: candidatCredentials.id },
-    }
-  );
-
-  await User.update(
-    {
-      coachId: coachCredentials.id,
-      candidatId: candidatCredentials.id,
-    },
-    {
-      where: { id: coachCredentials.id },
+      individualHooks: true,
     }
   );
 };
