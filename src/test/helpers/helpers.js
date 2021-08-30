@@ -25,25 +25,6 @@ const stopTestServer = async () => {
 };
 
 /**
- * Create a test database according to env variables
- *
- * @returns the db connection
- */
-const recreateTestDB = async () => {
-  db = new Sequelize(process.env.DATABASE_URL, {
-    logging: process.env.DEBUG_MODE ? console.log : false,
-  });
-
-  try {
-    await db.authenticate();
-  } catch (error) {
-    console.error('Impossible de se connecter à la base de données : ', error);
-  }
-
-  return db;
-};
-
-/**
  * Drops all the tables content and close db connection
  *
  */
@@ -57,6 +38,26 @@ const resetTestDB = async () => {
   // await Sequelize.truncate({
   //   force: true
   // });
+};
+
+/**
+ * Create a test database according to env variables
+ *
+ * @returns the db connection
+ */
+const recreateTestDB = async () => {
+  db = new Sequelize(process.env.DATABASE_URL, {
+    logging: process.env.DEBUG_MODE ? console.log : false,
+  });
+  await resetTestDB();
+
+  try {
+    await db.authenticate();
+  } catch (error) {
+    console.error('Impossible de se connecter à la base de données : ', error);
+  }
+
+  return db;
 };
 
 /**

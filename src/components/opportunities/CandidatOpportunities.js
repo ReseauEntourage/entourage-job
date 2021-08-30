@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
-import CurrentFilters from 'src/components/filters/CurrentFilters';
-import FiltersSideBar from 'src/components/filters/FiltersSideBar';
 import { OPPORTUNITY_FILTERS_DATA } from 'src/constants';
 import { useFilters } from 'src/hooks';
+import SearchBar from 'src/components/filters/SearchBar';
 
 const CandidatOpportunities = ({ candidatId }) => {
+  const [search, setSearch] = useState();
+
   const {
     filters,
     setFilters,
@@ -17,22 +18,17 @@ const CandidatOpportunities = ({ candidatId }) => {
 
   return (
     <div>
-      <div
-        style={{ maxWidth: 1100 }}
-        className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-bottom"
-      >
-        <CurrentFilters
-          numberOfResults={numberOfResults}
-          filters={filters}
-          resetFilters={resetFilters}
-        />
-        <FiltersSideBar
-          filterData={OPPORTUNITY_FILTERS_DATA}
-          filters={filters}
-          setFilters={setFilters}
-        />
-      </div>
+      <SearchBar
+        filtersConstants={OPPORTUNITY_FILTERS_DATA}
+        filters={filters}
+        numberOfResults={numberOfResults}
+        resetFilters={resetFilters}
+        setSearch={setSearch}
+        setFilters={setFilters}
+        placeholder="Rechercher..."
+      />
       <OpportunityList
+        search={search}
         userRole="candidateAsAdmin"
         candidatId={candidatId}
         filters={filters}

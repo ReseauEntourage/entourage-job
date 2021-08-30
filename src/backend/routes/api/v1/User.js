@@ -109,31 +109,13 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
  */
 router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
   const order = [['firstName', 'ASC']];
-  UserController.getMembers(
-    req.query.limit,
-    req.query.offset,
+  UserController.getMembers({
+    ...req.query,
     order,
-    req.query.role,
-    req.query.query
-  )
+  })
     .then((users) => {
       logger(res).log(`Users récupérés (Total : ${users.length})`);
-      res.status(200).json(
-        users.map((u) => {
-          const user = u.toJSON();
-          // sort by version desc
-          if (
-            user.role === USER_ROLES.CANDIDAT &&
-            user.candidat &&
-            user.candidat.cvs
-          ) {
-            user.candidat.cvs = user.candidat.cvs.sort((a, b) => {
-              return b.version - a.version;
-            });
-          }
-          return user;
-        })
-      );
+      res.status(200).json(users);
     })
     .catch((err) => {
       logger(res).error(err);

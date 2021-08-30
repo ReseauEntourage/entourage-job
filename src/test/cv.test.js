@@ -52,9 +52,9 @@ describe('CV', () => {
     coach.password = 'coach';
     candidat.password = 'candidat';
     await associateCoachAndCandidat(coach, candidat);
-    loggedInAdmin = await createLoggedInUser(admin, false);
-    loggedInCoach = await createLoggedInUser(coach, false);
-    loggedInCandidat = await createLoggedInUser(candidat, false);
+    loggedInAdmin = await createLoggedInUser(admin, {}, false);
+    loggedInCoach = await createLoggedInUser(coach, {}, false);
+    loggedInCandidat = await createLoggedInUser(candidat, {}, false);
 
     path = getTestImagePath();
   });
@@ -323,6 +323,7 @@ describe('CV', () => {
             `${route}/cards/random/?locations[]=Paris (75)&locations[]=Rhône (69)`
           );
           expect(response.status).toBe(200);
+          expect(response.body.cvs.length).toBe(2);
           expect(response.body.cvs).toEqual(
             expect.arrayContaining([
               expect.objectContaining({
@@ -385,6 +386,7 @@ describe('CV', () => {
             `${route}/cards/random/?hideEmployed[]=true`
           );
           expect(response.status).toBe(200);
+          expect(response.body.cvs.length).toBe(8);
           expect(response.body.cvs).toEqual(
             expect.arrayContaining([
               expect.objectContaining({
@@ -447,6 +449,7 @@ describe('CV', () => {
             `${route}/cards/random/?businessLines[]=BTP&businessLines[]=Informatique`
           );
           expect(response.status).toBe(200);
+          expect(response.body.cvs.length).toBe(2);
           expect(response.body.cvs).toEqual(
             expect.arrayContaining([
               expect.objectContaining({
@@ -527,6 +530,7 @@ describe('CV', () => {
             `${route}/cards/random/?businessLines[]=Associatif&businessLines[]=Informatique&hideEmployed[]=true&locations[]=Rhône (69)&locations[]=Nord (59)&locations[]=Paris (75)`
           );
           expect(response.status).toBe(200);
+          expect(response.body.cvs.length).toBe(1);
           expect(response.body.cvs).toEqual(
             expect.arrayContaining([
               expect.objectContaining({
@@ -607,6 +611,7 @@ describe('CV', () => {
             `${route}/cards/random/?businessLines[]=Artisanat&hideEmployed[]=true&locations[]=Paris (75)`
           );
           expect(response.status).toBe(200);
+          expect(response.body.cvs.length).toBe(5);
           expect(response.body.suggestions).toBe(true);
           expect(response.body.cvs).toEqual(
             expect.arrayContaining([

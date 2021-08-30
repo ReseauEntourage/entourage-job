@@ -193,7 +193,7 @@ const OpportunityList = forwardRef(
     if (!user) return null;
 
     return (
-      <div>
+      <div className="uk-margin-medium-top">
         {loading && (
           <div className="uk-text-center">
             <div data-uk-spinner />
@@ -262,7 +262,7 @@ const OpportunityList = forwardRef(
                 })}
               </GridNoSSR>
             ) : (
-              <div className=" uk-text-center uk-flex uk-flex-center">
+              <div className=" uk-text-center uk-flex uk-flex-center uk-margin-medium-top">
                 <div className="uk-width-xlarge">
                   <p className="uk-text-italic">
                     {Object.values(filters).reduce((acc, curr) => {

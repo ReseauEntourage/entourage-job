@@ -1,6 +1,6 @@
 import { getUserOpportunityFromOffer } from 'src/utils/Filters';
 
-import { Op } from 'sequelize';
+import { col, Op, where } from 'sequelize';
 import _ from 'lodash';
 
 import {
@@ -8,7 +8,7 @@ import {
   OPPORTUNITY_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,
   OFFER_ADMIN_FILTERS_DATA,
-  CANDIDATE_FILTERS_DATA,
+  MEMBER_FILTERS_DATA,
 } from 'src/constants';
 
 // OFFER FILTERS
@@ -137,15 +137,8 @@ const getCVOptions = (filtersObj) => {
       if (totalFilters > 0) {
         for (let i = 0; i < keys.length; i += 1) {
           if (filtersObj[keys[i]].length > 0) {
-            if (
-              keys[i] === CV_FILTERS_DATA[1].key ||
-              keys[i] === CV_FILTERS_DATA[2].key
-            ) {
-              whereOptions[keys[i]] = {
-                [Op.and]: filtersObj[keys[i]].map((currentFilter) => {
-                  return currentFilter.value === 'true';
-                }),
-              };
+            if (keys[i] === CV_FILTERS_DATA[0].key) {
+              whereOptions[keys[i]] = true;
             } else {
               whereOptions[keys[i]] = {
                 [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
@@ -177,8 +170,32 @@ const getMemberOptions = (filtersObj) => {
       if (totalFilters > 0) {
         for (let i = 0; i < keys.length; i += 1) {
           if (filtersObj[keys[i]].length > 0) {
-            if (keys[i] === CANDIDATE_FILTERS_DATA[0].key) {
-              whereOptions[keys[i]] = true;
+            if (
+              keys[i] === MEMBER_FILTERS_DATA[2].key ||
+              keys[i] === MEMBER_FILTERS_DATA[3].key
+            ) {
+              whereOptions[keys[i]] = {
+                [Op.and]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value === 'true';
+                }),
+              };
+            } else if (keys[i] === MEMBER_FILTERS_DATA[1].key) {
+              whereOptions[keys[i]] = {
+                coach: filtersObj[keys[i]].map((currentFilter) => {
+                  return where(
+                    col(`coach.candidatId`),
+                    currentFilter.value === 'true' ? Op.is : Op.not,
+                    null
+                  );
+                }),
+                candidat: filtersObj[keys[i]].map((currentFilter) => {
+                  return where(
+                    col(`candidat.coachId`),
+                    currentFilter.value === 'true' ? Op.is : Op.not,
+                    null
+                  );
+                }),
+              };
             } else {
               whereOptions[keys[i]] = {
                 [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
@@ -202,19 +219,29 @@ const filterMembersByCVStatus = (members, status) => {
     filteredList = members.filter((member) => {
       return status.some((currentFilter) => {
         if (member.candidat && member.candidat.cvs.length > 0) {
-          return currentFilter === member.candidat.cvs[0].status.toString();
+          return currentFilter.value === member.candidat.cvs[0].status;
         }
-        if (
-          member.coach &&
-          member.coach.candidat &&
-          member.coach.candidat.cvs.length > 0
-        ) {
-          return (
-            currentFilter === member.coach.candidat.cvs[0].status.toString()
-          );
-        }
-
         return false;
+      });
+    });
+  }
+
+  return filteredList;
+};
+
+const filterMembersByAssociatedUser = (members, associatedUsers) => {
+  let filteredList = members;
+
+  if (members && associatedUsers && associatedUsers.length > 0) {
+    filteredList = members.filter((member) => {
+      return associatedUsers.every((currentFilter) => {
+        if (member.candidat) {
+          return !!member.candidat.coach === (currentFilter.value === 'true');
+        }
+        if (member.coach) {
+          return !!member.coach.candidat === (currentFilter.value === 'true');
+        }
+        return !(currentFilter.value === 'true');
       });
     });
   }
@@ -251,6 +278,7 @@ export {
   getOfferOptions,
   getCVOptions,
   filterMembersByCVStatus,
+  filterMembersByAssociatedUser,
   getMemberOptions,
   getFiltersObjectsFromQueryParams,
 };

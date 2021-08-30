@@ -1,7 +1,8 @@
 /* global UIkit */
-import React, { useState, useContext, useRef } from 'react';
+
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
-import { mutateFormSchema } from 'src/utils';
+import { initializeFilters, mutateFormSchema } from 'src/utils';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { Button, Section } from 'src/components/utils';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
@@ -17,12 +18,15 @@ import {
   OFFER_ADMIN_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
-import CurrentFilters from 'src/components/filters/CurrentFilters';
-import FiltersSideBar from 'src/components/filters/FiltersSideBar';
 import { useFilters } from 'src/hooks';
+import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import { usePrevious } from 'src/hooks/utils';
+import SearchBar from 'src/components/filters/SearchBar';
 
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
+  const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
+  const prevUser = usePrevious(user);
 
   // desactivation du champ de disclaimer
   const mutatedSchema = mutateFormSchema(schema, [
@@ -63,6 +67,27 @@ const LesOpportunites = () => {
     resetFilters,
   } = useFilters(OPPORTUNITY_FILTERS_DATA);
 
+  useEffect(() => {
+    if (user && user !== prevUser) {
+      if (user.zone) {
+        const defaultDepartmentsForAdmin = DEPARTMENTS_FILTERS.filter(
+          (dept) => {
+            return user.zone === dept.zone;
+          }
+        );
+
+        setFilters(
+          initializeFilters(OPPORTUNITY_FILTERS_DATA, {
+            [OPPORTUNITY_FILTERS_DATA[2].key]: [...defaultDepartmentsForAdmin],
+          })
+        );
+      } else {
+        setFilters(initializeFilters(OPPORTUNITY_FILTERS_DATA));
+      }
+      setLoadingDefaultFilters(false);
+    }
+  }, [prevUser, setFilters, user]);
+
   if (!user) return null;
 
   return (
@@ -102,39 +127,32 @@ const LesOpportunites = () => {
         <Filter
           filters={tabFilters}
           setFilters={setTabFilters}
-          search={(text) => {
-            return setSearch(text);
-          }}
           otherFilterComponent={
-            <div
-              style={{ maxWidth: 1100 }}
-              className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-column uk-margin-medium-bottom"
-            >
-              <CurrentFilters
-                numberOfResults={numberOfResults}
-                filters={filters}
-                resetFilters={resetFilters}
-              />
-              <FiltersSideBar
-                filterData={OPPORTUNITY_FILTERS_DATA}
-                filters={filters}
-                setFilters={setFilters}
-              />
-            </div>
+            <SearchBar
+              filtersConstants={OPPORTUNITY_FILTERS_DATA}
+              filters={filters}
+              numberOfResults={numberOfResults}
+              resetFilters={resetFilters}
+              setSearch={setSearch}
+              setFilters={setFilters}
+              placeholder="Rechercher..."
+            />
           }
         >
-          <OpportunityList
-            ref={opportunityListRef}
-            search={search}
-            tabFilter={
-              tabFilters.find((filter) => {
-                return filter.active;
-              }).tag
-            }
-            filters={filters}
-            userRole="admin"
-            updateNumberOfResults={setNumberOfResults}
-          />
+          {!loadingDefaultFilters && (
+            <OpportunityList
+              ref={opportunityListRef}
+              search={search}
+              tabFilter={
+                tabFilters.find((filter) => {
+                  return filter.active;
+                }).tag
+              }
+              filters={filters}
+              userRole="admin"
+              updateNumberOfResults={setNumberOfResults}
+            />
+          )}
         </Filter>
       </Section>
     </LayoutBackOffice>

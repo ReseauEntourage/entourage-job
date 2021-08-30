@@ -33,8 +33,12 @@ const getTokenAndId = async (user) => {
  *
  * @param {Object} props user data
  */
-const createLoggedInUser = async (props = {}, insertDB = true) => {
-  const user = await userFactory(props, {}, insertDB);
+const createLoggedInUser = async (
+  props = {},
+  userCandidatProps = {},
+  insertDB = true
+) => {
+  const user = await userFactory(props, userCandidatProps, insertDB);
   const { token, id } = await getTokenAndId({
     ...user,
     password: props.password,

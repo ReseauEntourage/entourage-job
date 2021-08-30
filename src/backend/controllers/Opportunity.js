@@ -23,7 +23,7 @@ import {
 import { findOfferStatus, getAdminMailFromDepartment } from 'src/utils/Finding';
 
 import { models, sequelize } from 'src/backend/db/models';
-import { searchInColumnWhereOption } from '../utils/DatabaseQueries';
+import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
 
 const offerTable = AIRTABLE_NAMES.OFFERS;
 const {

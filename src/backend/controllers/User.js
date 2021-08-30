@@ -1,4 +1,10 @@
-import { USER_ROLES, REDIS_KEYS, JOBS, CV_STATUS } from 'src/constants';
+import {
+  USER_ROLES,
+  REDIS_KEYS,
+  JOBS,
+  CV_STATUS,
+  MEMBER_FILTERS_DATA,
+} from 'src/constants';
 
 import RedisManager from 'src/backend/utils/RedisManager';
 import * as S3 from 'src/backend/controllers/Aws';
@@ -7,11 +13,18 @@ import { addToWorkQueue } from 'src/backend/jobs';
 
 import { getPublishedCVQuery } from 'src/backend/controllers/CV';
 
-import { QueryTypes, Op, fn, where, col } from 'sequelize';
+import { QueryTypes, Op } from 'sequelize';
 
 import uuid from 'uuid/v4';
 
 import { models, sequelize } from 'src/backend/db/models';
+import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
+import {
+  filterMembersByAssociatedUser,
+  filterMembersByCVStatus,
+  getFiltersObjectsFromQueryParams,
+  getMemberOptions,
+} from 'src/backend/utils/Filters';
 
 const { User, User_Candidat, CV, Opportunity_User, Revision } = models;
 
@@ -60,6 +73,14 @@ const INCLUDE_USER_CANDIDAT = [
     ],
   },
 ];
+
+const userSearchQuery = (query) => {
+  return [
+    searchInColumnWhereOption('User.email', query),
+    searchInColumnWhereOption('User.firstName', query),
+    searchInColumnWhereOption('User.lastName', query),
+  ];
+};
 
 const capitalizeName = (name) => {
   let capitalizedName = name
@@ -155,7 +176,18 @@ const getUsers = (limit, offset, order) => {
   });
 };
 
-const getMembers = (limit, offset, order, role, query) => {
+const getMembers = async (params) => {
+  const { limit, offset, order, role, query: search, ...restParams } = params;
+
+  const filtersObj = getFiltersObjectsFromQueryParams(
+    restParams,
+    MEMBER_FILTERS_DATA
+  );
+
+  const { cvStatus, associatedUser, ...restFilters } = filtersObj;
+
+  const filterOptions = getMemberOptions(restFilters);
+
   const options = {
     offset,
     limit,
@@ -167,22 +199,16 @@ const getMembers = (limit, offset, order, role, query) => {
     include: INCLUDE_USER_CANDIDAT,
   };
   // recherche de l'utilisateur
-  if (query) {
-    const lowerCaseQuery = query.toLowerCase();
+  if (search) {
     options.where = {
       ...options.where,
-      [Op.or]: [
-        { email: { [Op.like]: `%${lowerCaseQuery}%` } },
-        where(
-          fn(
-            'concat',
-            fn('lower', col('User.firstName')),
-            ' ',
-            fn('lower', col('User.lastName'))
-          ),
-          { [Op.like]: `%${lowerCaseQuery}%` }
-        ),
-      ],
+      [Op.or]: userSearchQuery(search),
+    };
+  }
+  if (filterOptions.zone) {
+    options.where = {
+      ...options.where,
+      zone: filterOptions.zone,
     };
   }
 
@@ -194,12 +220,43 @@ const getMembers = (limit, offset, order, role, query) => {
     };
   }
 
+  const userCandidatOptions = {};
+  if (
+    (role === USER_ROLES.CANDIDAT || role === 'All') &&
+    (filterOptions.hidden || filterOptions.employed)
+  ) {
+    userCandidatOptions.where = {};
+    if (filterOptions.hidden) {
+      userCandidatOptions.where = {
+        ...userCandidatOptions.where,
+        hidden: filterOptions.hidden,
+      };
+    }
+    if (filterOptions.employed) {
+      userCandidatOptions.where = {
+        ...userCandidatOptions.where,
+        employed: filterOptions.employed,
+      };
+    }
+  }
+
+  // TODO filter associated users in query
+  /*
+    if (filterOptions.associatedUser) {
+      userCandidatOptions.where = {
+        ...(userCandidatOptions.where ?? {}),
+        ...filterOptions.associatedUser.candidat,
+      };
+    }
+  */
+
   // recuperer la derniere version de cv
   options.include = [
     {
       model: User_Candidat,
       as: 'candidat',
-      attributes: ATTRIBUTES_USER_CANDIDAT,
+      attributes: ['coachId', ...ATTRIBUTES_USER_CANDIDAT],
+      ...userCandidatOptions,
       include: [
         {
           model: CV,
@@ -212,11 +269,12 @@ const getMembers = (limit, offset, order, role, query) => {
           attributes: ATTRIBUTES_USER,
         },
       ],
+      order: [['cvs.version', 'DESC']],
     },
     {
       model: User_Candidat,
       as: 'coach',
-      attributes: ATTRIBUTES_USER_CANDIDAT,
+      attributes: ['candidatId', ...ATTRIBUTES_USER_CANDIDAT],
       include: [
         {
           model: User,
@@ -227,26 +285,40 @@ const getMembers = (limit, offset, order, role, query) => {
     },
   ];
 
-  return User.findAll(options);
+  const members = await User.findAll(options);
+
+  const filteredMembers = filterMembersByAssociatedUser(
+    members,
+    associatedUser
+  );
+
+  const membersWithLastCV = filteredMembers.map((member) => {
+    const user = member.toJSON();
+    if (user.candidat && user.candidat.cvs && user.candidat.cvs.length > 0) {
+      const sortedCvs = user.candidat.cvs.sort((cv1, cv2) => {
+        return cv2.version - cv1.version;
+      });
+      return {
+        ...user,
+        candidat: {
+          ...user.candidat,
+          cvs: [sortedCvs[0]],
+        },
+      };
+    }
+    return user;
+  });
+
+  return role === USER_ROLES.CANDIDAT || role === 'All'
+    ? filterMembersByCVStatus(membersWithLastCV, cvStatus)
+    : membersWithLastCV;
 };
 
 const searchUsers = (query, role) => {
-  const lowerCaseQuery = query.toLowerCase();
   const options = {
     attributes: ATTRIBUTES_USER,
     where: {
-      [Op.or]: [
-        { email: { [Op.like]: `%${lowerCaseQuery}%` } },
-        where(
-          fn(
-            'concat',
-            fn('lower', col('firstName')),
-            ' ',
-            fn('lower', col('lastName'))
-          ),
-          { [Op.like]: `%${lowerCaseQuery}%` }
-        ),
-      ],
+      [Op.or]: userSearchQuery(query),
     },
   };
   if (role) {
@@ -256,7 +328,6 @@ const searchUsers = (query, role) => {
 };
 
 const searchCandidates = async (query) => {
-  const lowerCaseQuery = query.toLowerCase();
   const publishedCVs = await sequelize.query(getPublishedCVQuery(true), {
     type: QueryTypes.SELECT,
   });
@@ -269,15 +340,9 @@ const searchCandidates = async (query) => {
             return publishedCV.UserId;
           }),
         },
-        where(
-          fn(
-            'concat',
-            fn('lower', col('firstName')),
-            ' ',
-            fn('lower', col('lastName'))
-          ),
-          { [Op.like]: `%${lowerCaseQuery}%` }
-        ),
+        {
+          [Op.or]: userSearchQuery(query),
+        },
       ],
     },
   };

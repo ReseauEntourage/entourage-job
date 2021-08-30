@@ -1,25 +1,17 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import FiltersMobile from 'src/components/filters/FiltersMobile';
-import FiltersSideBar from 'src/components/filters/FiltersSideBar';
-import FiltersCheckboxes from 'src/components/filters/FiltersCheckboxes';
 import CVList from 'src/components/cv/CVList';
 import { GridNoSSR, Section } from 'src/components/utils';
-import FiltersOptions from 'src/components/filters/FiltersOptions';
 import { CV_FILTERS_DATA, STORAGE_KEYS } from 'src/constants';
-import Icon from 'src/components/utils/Icon';
-import { event } from 'src/lib/gtag';
-import TAGS from 'src/constants/tags';
 import { DataContext } from 'src/components/store/DataProvider';
 import { useFilters } from 'src/hooks';
 import { useMount } from 'src/hooks/utils';
-import FiltersDropdowns from 'src/components/filters/FiltersDropdowns';
-
-let debounceTimeoutId;
+import SearchBar from 'src/components/filters/SearchBar';
 
 const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
-  const [search, setSearch] = useState(null);
-  const [searchBuffer, setSearchBuffer] = useState();
+  const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
+
+  const [search, setSearch] = useState();
 
   const { getData, storeData } = useContext(DataContext);
 
@@ -36,24 +28,6 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
       : null
   );
 
-  const startSearch = useCallback((searchString) => {
-    if (searchString) {
-      event(TAGS.PAGE_GALERIE_RECHERCHE);
-      setSearch(searchString);
-    } else {
-      setSearch(null);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (process.env.DISABLE_SEARCH_ON_THE_FLY !== 'true') {
-      clearTimeout(debounceTimeoutId);
-      debounceTimeoutId = setTimeout(() => {
-        return startSearch(searchBuffer);
-      }, 1000);
-    }
-  }, [searchBuffer, startSearch]);
-
   useMount(() => {
     const storageItem = getData(
       isCompany
@@ -63,6 +37,7 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
     if (storageItem) {
       setFilters(storageItem);
     }
+    setLoadingDefaultFilters(false);
   });
 
   useEffect(() => {
@@ -83,7 +58,7 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
         center
         eachWidths={['2-3@s', '1-1', '1-1']}
       >
-        <div className="uk-text-center">
+        <div className="uk-text-center uk-margin-medium-bottom">
           <h2 className="uk-text-bold">
             Découvrez les <span className="uk-text-primary">candidats</span>
           </h2>
@@ -93,72 +68,22 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
             recrutement.
           </div>
         </div>
-        <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-medium-top">
-          <div
-            style={{ maxWidth: 1000 }}
-            className="uk-width-expand ent-search-bar"
-          >
-            <form className="uk-search uk-search-navbar uk-width-expand">
-              <input
-                className="uk-search-input"
-                type="search"
-                placeholder="Chercher un secteur d’activité, une compétence, un profil..."
-                onKeyDown={(ev) => {
-                  if (ev.key === 'Enter') {
-                    ev.preventDefault();
-                    clearTimeout(debounceTimeoutId);
-                    startSearch(searchBuffer);
-                  }
-                }}
-                onChange={(ev) => {
-                  setSearchBuffer(ev.target.value);
-                }}
-              />
-            </form>
-            <FiltersMobile filters={filters} />
-            <FiltersDropdowns
-              hideOnMobile
-              filterData={CV_FILTERS_DATA}
-              filters={filters}
-              setFilters={setFilters}
-            />
-            <a
-              className="ent-search-icon uk-background-primary uk-light"
-              onClick={() => {
-                clearTimeout(debounceTimeoutId);
-                startSearch(searchBuffer);
-              }}
-            >
-              <Icon name="search" className="uk-text-secondary" />
-            </a>
-          </div>
-          <FiltersSideBar
-            filterData={CV_FILTERS_DATA}
-            filters={filters}
-            setFilters={setFilters}
-          />
-          <div
-            style={{ maxWidth: 1000 }}
-            className="uk-width-expand uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-between@m uk-margin-top"
-          >
-            <FiltersCheckboxes
-              filterData={CV_FILTERS_DATA}
-              filters={filters}
-              setFilters={setFilters}
-              hideOnMobile
-            />
-            <FiltersOptions
-              numberOfResults={numberOfResults}
-              filters={filters}
-              resetFilters={resetFilters}
-            />
-          </div>
-        </div>
-        <CVList
-          search={search}
+        <SearchBar
+          filtersConstants={CV_FILTERS_DATA}
           filters={filters}
-          updateNumberOfResults={setNumberOfResults}
+          numberOfResults={numberOfResults}
+          resetFilters={resetFilters}
+          setSearch={setSearch}
+          setFilters={setFilters}
+          placeholder="Chercher un secteur d’activité, une compétence, un profil..."
         />
+        {!loadingDefaultFilters && (
+          <CVList
+            search={search}
+            filters={filters}
+            updateNumberOfResults={setNumberOfResults}
+          />
+        )}
       </GridNoSSR>
     </Section>
   );

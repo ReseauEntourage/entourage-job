@@ -68,13 +68,14 @@ const userFactory = async (
 ) => {
   let userData = await generateUser(props);
   if (insertInDB) {
-    await User.create(userData);
+    await User.create(userData, { individualHooks: true });
     await User_Candidat.update(
       { ...userCandidatProps },
       {
         where: {
           candidatId: userData.id,
         },
+        individualHooks: true,
       }
     );
     const userDb = await User.findOne({ where: { email: userData.email } });

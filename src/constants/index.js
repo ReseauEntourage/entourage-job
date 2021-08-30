@@ -255,7 +255,7 @@ const OPPORTUNITY_FILTERS_DATA = [
       { label: 'Masquer les offres privées', value: true },
       { label: 'Masquer les offres générales', value: false },
     ],
-    title: 'Offres privées/générales',
+    title: 'Privée/générale',
   },
   {
     key: 'status',
@@ -269,42 +269,45 @@ const OPPORTUNITY_FILTERS_DATA = [
   },
 ];
 
-const CANDIDATE_FILTERS_DATA = [
+const MEMBER_FILTERS_DATA = [
   {
     key: 'zone',
     constants: ADMIN_ZONES_FILTERS,
     title: 'Zone',
   },
   {
+    key: 'associatedUser',
+    constants: [
+      { label: 'Masquer les candidats/coachs associés', value: false },
+      { label: 'Masquer les candidats/coachs non associés', value: true },
+    ],
+    title: 'Membre associé',
+  },
+  {
     key: 'hidden',
     constants: [
-      { label: 'Masquer les candidats avec le CV masqué', value: true },
-      { label: 'Masquer les candidats avec le CV visible', value: false },
+      { label: 'Masquer les candidats avec le CV masqué', value: false },
+      { label: 'Masquer les candidats avec le CV visible', value: true },
     ],
     title: 'CV masqué',
   },
   {
     key: 'employed',
     constants: [
-      { label: 'Masquer les candidats en emploi', value: true },
-      { label: "Masquer les candidats en recherche d'emploi", value: false },
+      { label: 'Masquer les candidats en emploi', value: false },
+      { label: "Masquer les candidats en recherche d'emploi", value: true },
     ],
     title: 'En emploi',
   },
   {
     key: 'cvStatus',
-    constants: Object.keys(CV_STATUS).map((key) => {
-      return CV_STATUS[key];
-    }),
-    title: 'Statut des CV',
-  },
-  {
-    key: 'associatedUser',
     constants: [
-      { label: 'Masquer les candidats/coachs non associés', value: true },
-      { label: 'Masquer les candidats/coachs associés', value: false },
+      CV_STATUS.Published,
+      CV_STATUS.Pending,
+      CV_STATUS.Progress,
+      CV_STATUS.New,
     ],
-    title: 'Candidats/coachs associés',
+    title: 'Statut du CV',
   },
 ];
 
@@ -347,6 +350,7 @@ const REDIS_KEYS = {
 const STORAGE_KEYS = {
   CV_FILTERS_PUBLIC: 'cv-filters-public',
   CV_FILTERS_COMPANY: 'cv-filters-company',
+  MEMBERS_FILTERS: 'members-filters',
   ACCESS_TOKEN: 'access-token',
 };
 
@@ -406,7 +410,7 @@ export {
   OPPORTUNITY_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,
   OFFER_ADMIN_FILTERS_DATA,
-  CANDIDATE_FILTERS_DATA,
+  MEMBER_FILTERS_DATA,
   NEWSLETTER_ORIGINS,
   REDIS_KEYS,
   JOBS,
