@@ -214,6 +214,37 @@ const updateTable = async (opportunity, candidates) => {
   });
 };
 
+const getStringOpportunity = (opportunity, businessLines) => {
+  return (
+    `----------<br /><br />` +
+    `<strong>Titre :</strong> ${opportunity.title}<br />` +
+    `<strong>Nom du recruteur :</strong> ${opportunity.recruiterName}<br />` +
+    `<strong>Adresse mail du recruteur :</strong> ${opportunity.recruiterMail}<br />` +
+    `<strong>Téléphone du recruteur :</strong> ${opportunity.recruiterPhone}<br />` +
+    `<strong>Secteurs d'activité :</strong> ${
+      businessLines ? businessLines.join(', ') : ''
+    }<br />` +
+    `<strong>Entreprise :</strong> ${opportunity.company}<br />` +
+    `<strong>Addresse postale :</strong> ${opportunity.location}<br />` +
+    `<strong>Département :</strong> ${opportunity.department || ''}<br />` +
+    `<strong>Description :</strong> ${opportunity.description}<br />` +
+    `<strong>Pré-requis :</strong> ${opportunity.prerequisites || ''}` +
+    `${
+      !opportunity.isPublic &&
+      opportunity.userOpportunity &&
+      opportunity.userOpportunity.length > 0
+        ? `<br /><strong>Candidat${
+            opportunity.userOpportunity.length > 1 ? 's' : ''
+          } :</strong> ${opportunity.userOpportunity
+            .map((candidate) => {
+              return `${candidate.User.firstName} ${candidate.User.lastName}`;
+            })
+            .join(',')}`
+        : ''
+    }`
+  );
+};
+
 const createOpportunity = async (data, isAdmin) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
@@ -281,6 +312,7 @@ const createOpportunity = async (data, isAdmin) => {
 
   if (!isAdmin) {
     const adminMail = getAdminMailFromDepartment(finalOpportunity.department);
+    console.log(adminMail);
 
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
@@ -293,75 +325,18 @@ const createOpportunity = async (data, isAdmin) => {
         `L’équipe LinkedOut`,
     });
 
-    const stringOpportunity =
-      `----------<br /><br />` +
-      `<strong>Titre :</strong> ${finalOpportunity.title}<br />` +
-      `<strong>Nom du recruteur :</strong> ${finalOpportunity.recruiterName}<br />` +
-      `<strong>Adresse mail du recruteur :</strong> ${finalOpportunity.recruiterMail}<br />` +
-      `<strong>Téléphone du recruteur :</strong> ${finalOpportunity.recruiterPhone}<br />` +
-      `<strong>Secteurs d'activité :</strong> ${
-        data.businessLines ? data.businessLines.join(', ') : ''
-      }<br />` +
-      `<strong>Entreprise :</strong> ${finalOpportunity.company}<br />` +
-      `<strong>Addresse postale :</strong> ${finalOpportunity.location}<br />` +
-      `<strong>Département :</strong> ${
-        finalOpportunity.department || ''
-      }<br />` +
-      `<strong>Description :</strong> ${finalOpportunity.description}<br />` +
-      `<strong>Pré-requis :</strong> ${finalOpportunity.prerequisites || ''}`;
-
-    if (finalOpportunity.isPublic) {
-      await addToWorkQueue({
-        type: JOBS.JOB_TYPES.SEND_MAIL,
-        toEmail: finalOpportunity.recruiterMail,
-        subject: `Accusé de réception de votre offre`,
-        html:
-          `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
-          `Merci pour votre offre LinkedOut et votre confiance !<br /><br />` +
-          `Après validation par l’équipe LinkedOut, votre opportunité d’emploi sera visible par l’ensemble des candidats LinkedOut disponibles. Ils l'étudieront avec leur coach LinkedOut. Les candidats intéressés par votre offre prendront contact avec vous.<br /><br />` +
-          `Si votre offre ne correspond à aucun profil, sachez qu’une nouvelle promotion se lance en octobre avec 80 candidats à Paris, 40 à Lille et 40 à Lyon ! Votre prochaine recrue se trouvera peut-être parmi ces nouveaux profils.<br /><br />` +
-          `L’équipe LinkedOut se tient à votre disposition à chaque étape du recrutement pour vous apporter des informations sur le dispositif et les profils des candidats.<br /><br />` +
-          `<strong>Pour nous contacter : entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
-          `Nous sommes tous une partie de la solution face à l’exclusion, merci d’y croire avec nous !<br /><br />` +
-          `L’équipe LinkedOut<br /><br />` +
-          `${stringOpportunity}`,
-      });
-    } else {
-      const listOfNames = candidates.map((candidate) => {
-        return candidate.User.firstName;
-      });
-
-      let stringOfNames = '';
-      if (listOfNames.length === 0) {
-        stringOfNames = 'le candidat';
-      } else {
-        stringOfNames =
-          listOfNames.length > 1
-            ? `${listOfNames.slice(0, -1).join(', ')} et ${listOfNames.slice(
-                -1
-              )}`
-            : listOfNames[0];
-      }
-
-      await addToWorkQueue({
-        type: JOBS.JOB_TYPES.SEND_MAIL,
-        toEmail: finalOpportunity.recruiterMail,
-        subject: `Accusé de réception de votre offre`,
-        html:
-          `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
-          `Merci pour votre offre LinkedOut et votre confiance !<br /><br />` +
-          `Après validation par l’équipe LinkedOut, ${
-            candidates.length > 1
-              ? `${stringOfNames} vont prendre le temps d’étudier votre opportunité avec leur coach LinkedOut et vous recontacteront`
-              : `${stringOfNames} va prendre le temps d’étudier votre opportunité avec son coach LinkedOut et vous recontactera`
-          } dans les meilleurs délais.<br /><br />` +
-          `L’équipe LinkedOut se tient à votre disposition à chaque étape du recrutement pour vous apporter des informations sur le dispositif et les profils des candidats.<br /><br />` +
-          `<strong>Pour nous contacter : entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
-          `Nous sommes tous une partie de la solution face à l’exclusion, merci d’y croire avec nous !<br /><br />` +
-          `L’équipe LinkedOut<br /><br />` +
-          `${stringOpportunity}`,
-      });
-    }
+    await addToWorkQueue({
+      type: JOBS.JOB_TYPES.SEND_MAIL,
+      toEmail: finalOpportunity.recruiterMail,
+      subject: `LinkedOut, merci pour votre offre !`,
+      html:
+        `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
+        `Nous avons bien reçu votre offre, et nous vous remercions de votre confiance ! Elle est en attente de validation par l’équipe LinkedOut.<br /><br />` +
+        `Pour toute question sur le dispositif ou si vous souhaitez modifier votre offre, n’hésitez pas à nous contacter : <strong>entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
+        `Nous sommes tous une partie de la solution face à l’exclusion, merci d’y croire avec nous !<br /><br />` +
+        `L’équipe LinkedOut<br /><br />` +
+        `${getStringOpportunity(finalOpportunity, data.businessLines)}`,
+    });
   }
 
   return cleanedOpportunity;
@@ -836,12 +811,17 @@ const updateOpportunity = async (opportunity) => {
           toEmail: coach
             ? { to: candidat.User.email, cc: coach.email }
             : candidat.User.email,
-          subject: `Vous avez reçu une nouvelle offre d'emploi`,
+          subject: `Vous avez reçu une nouvelle offre d'emploi : répondez-y rapidement !`,
           html:
             `Bonjour,<br /><br />` +
-            `Vous venez de recevoir une nouvelle offre d'emploi : <strong>${finalOpportunity.title} - ${finalOpportunity.company}</strong>.<br /><br />` +
-            `Vous pouvez la consulter en cliquant ici :<br />` +
+            `Vous avez reçu une nouvelle offre d'emploi : <strong>${finalOpportunity.title} - ${finalOpportunity.company}</strong>.<br /><br />` +
+            `Consultez l'offre ici :<br />` +
             `<strong>${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}</strong>.<br /><br />` +
+            `Le recruteur attend une réponse de votre part, prenez le temps d'étudier l'opportunité puis répondez rapidement à l'entreprise avec votre Coach !<br />` +
+            `<ul><li><strong>Si l’offre vous intéresse</strong>, contactez le recruteur pour établir les éventuelles prochaines étapes du recrutement, et passez le statut de l’offre à "Contacté".</li>` +
+            `<li><strong>Si vous avez des questions sur l’offre</strong>, contactez l'entreprise avec votre Coach pour avoir plus d'informations.</li>` +
+            `<li><strong>Si l’offre n'est pas adéquate</strong>, passez la statut de l’offre en “Refus avant entretien” et envoyez tout de même un message au recruteur pour le remercier.</li></ul><br/>` +
+            `Votre réponse est essentielle. Merci de la personnaliser au mieux et de la faire relire par votre Coach.<br /><br />` +
             `L’équipe LinkedOut`,
         });
 
@@ -866,6 +846,71 @@ const updateOpportunity = async (opportunity) => {
 
   if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) {
     await sendJobOfferMails(candidatesToSendMailTo);
+  }
+
+  if (!oldOpportunity.isValidated && finalOpportunity.isValidated) {
+    if (finalOpportunity.isPublic) {
+      await addToWorkQueue({
+        type: JOBS.JOB_TYPES.SEND_MAIL,
+        toEmail: finalOpportunity.recruiterMail,
+        subject: `Votre offre LinkedOut est validée, les candidats vont pouvoir l’étudier !`,
+        html:
+          `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
+          `Votre offre vient d’être validée par l’équipe LinkedOut !<br /><br />` +
+          `Votre opportunité d’emploi est désormais visible par l’ensemble des candidats LinkedOut disponibles. Les candidats vont étudier l’offre avec leur coach LinkedOut et ceux qui sont intéressés prendront contact avec vous dans les meilleurs délais.<br /><br />` +
+          `Si votre offre ne correspond à aucun profil, un peu de patience, votre prochaine recrue se trouvera peut-être parmi la nouvelle promotion.<br /><br />` +
+          `L’équipe LinkedOut se tient à votre disposition à chaque étape du recrutement pour vous aider.<br /><br />` +
+          `N’hésitez pas à nous solliciter : <strong>entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
+          `Bien chaleureusement,<br /><br />` +
+          `L’équipe LinkedOut<br /><br />` +
+          `${getStringOpportunity(
+            finalOpportunity,
+            finalOpportunity.businessLines.map((businessLine) => {
+              return businessLine.name;
+            })
+          )}`,
+      });
+    } else {
+      const listOfNames = finalOpportunity.userOpportunity.map((candidate) => {
+        return candidate.User.firstName;
+      });
+
+      let stringOfNames = '';
+      if (listOfNames.length === 0) {
+        stringOfNames = 'le candidat';
+      } else {
+        stringOfNames =
+          listOfNames.length > 1
+            ? `${listOfNames.slice(0, -1).join(', ')} et ${listOfNames.slice(
+                -1
+              )}`
+            : listOfNames[0];
+      }
+
+      await addToWorkQueue({
+        type: JOBS.JOB_TYPES.SEND_MAIL,
+        toEmail: finalOpportunity.recruiterMail,
+        subject: `Votre offre LinkedOut est validée, le candidat vous répondra sous les meilleurs délais`,
+        html:
+          `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
+          `Votre offre vient d’être validée par l’équipe LinkedOut !<br /><br />` +
+          `${
+            finalOpportunity.userOpportunity.length > 1
+              ? `${stringOfNames} vont l’étudier avec leur coach LinkedOut et vous répondront`
+              : `${stringOfNames} va l’étudier avec son coach LinkedOut et vous répondra`
+          } dans les meilleurs délais.<br /><br />` +
+          `L’équipe LinkedOut se tient à votre disposition à chaque étape du recrutement pour vous aider.<br /><br />` +
+          `N’hésitez pas à nous solliciter : <strong>entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
+          `Bien chaleureusement,<br /><br />` +
+          `L’équipe LinkedOut<br /><br />` +
+          `${getStringOpportunity(
+            finalOpportunity,
+            finalOpportunity.businessLines.map((businessLine) => {
+              return businessLine.name;
+            })
+          )}`,
+      });
+    }
   }
 
   return finalOpportunity;

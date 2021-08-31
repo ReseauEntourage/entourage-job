@@ -96,7 +96,7 @@ router.post(
             `${req.payload.firstName} vient de soumettre le CV de son candidat.\n\n` +
             `Rendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\n` +
             `Merci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\n` +
-            `L'équipe Entourage.`;
+            `L'équipe LinkedOut.`;
 
           // notification de l'admin
           await addToWorkQueue({

@@ -47,7 +47,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
             } sur le site LinkedOut en tant qu'administrateur. Vous pouvez accéder à votre espace personnel depuis la plateforme en renseignant votre adresse mail et le mot de passe suivant : <strong>${userPassword}</strong><br /><br />` +
             "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres afin d'en créer un facile à retenir pour vous.<br /><br />" +
             'A bientôt,<br /><br />' +
-            "L'équipe Entourage",
+            "L'équipe LinkedOut",
         });
       } else {
         await addToWorkQueue({
@@ -61,12 +61,16 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
             } sur le site LinkedOut. Vous pouvez accéder à votre espace personnel depuis la plateforme en renseignant votre adresse mail et le mot de passe suivant : <strong>${userPassword}</strong><br /><br />` +
             `Depuis cet espace, vous pouvez ${
               user.role === USER_ROLES.CANDIDAT
-                ? "rédiger votre CV avec l'aide de votre coach LinkedOut et gérer les opportunités que vous recevez"
+                ? "rédiger votre CV avec l'aide de votre coach LinkedOut et avoir accès à des offres d’emploi"
                 : 'accompagner votre Candidat dans la rédaction de son CV et gérer ensemble les opportunités qu’il reçoit'
             }.<br /><br />` +
             "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres afin d'en créer un facile à retenir pour vous.<br /><br />" +
             'A bientôt,<br /><br />' +
-            "L'équipe Entourage",
+            "L'équipe LinkedOut<br/><br/>" +
+            `Un souci de connexion ? Une question ? Contactez-nous !<br/>` +
+            `<ul><li><strong>Paris :</strong> Inès (07 82 44 97 39 / ines@entourage.social) / Jeanne (07 67 32 53 63 / jeanne@entourage.social)</li>` +
+            `<li><strong>Lille :</strong> Marie (07 83 85 48 95 / marie.lasne@entourage.social)</li>` +
+            `<li><strong>Lyon :</strong> Gabriella (07 67 35 05 86 / gabriella@entourage.social)</li></ul>`,
         });
       }
 
