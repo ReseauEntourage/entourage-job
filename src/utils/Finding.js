@@ -1,4 +1,4 @@
-import { DEPARTMENTS, ADMIN_ZONES } from 'src/constants/departements';
+import { ADMIN_ZONES, DEPARTMENTS } from 'src/constants/departements';
 import { OFFER_STATUS } from 'src/constants';
 
 const findOfferStatus = (status) => {
@@ -13,7 +13,7 @@ const getZoneFromDepartment = (dep) => {
   const zone = DEPARTMENTS.find((depObj) => {
     return depObj.name === dep;
   });
-  return zone ? zone.zone : ADMIN_ZONES.HZ;
+  return zone && zone.zone !== ADMIN_ZONES.HZ ? zone.zone : 'HZ';
 };
 
 const getAdminMailFromDepartment = (dep) => {
