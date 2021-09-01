@@ -3,7 +3,7 @@ import * as CVController from 'src/backend/controllers/CV';
 import * as ShareController from 'src/backend/controllers/Share';
 import * as S3 from 'src/backend/controllers/Aws';
 
-import { addToWorkQueue, addToImageQueue } from 'src/backend/jobs';
+import { addToWorkQueue } from 'src/backend/jobs';
 import { logger } from 'src/backend/utils/Logger';
 import { checkCandidatOrCoachAuthorization } from 'src/backend/utils';
 import multer from 'multer';
@@ -165,7 +165,7 @@ router.post(
             }
           }
 
-          await addToImageQueue({
+          await addToWorkQueue({
             type: JOBS.JOB_TYPES.GENERATE_CV_PREVIEW,
             candidatId: reqCV.UserId,
             oldImg,

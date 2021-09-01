@@ -14,6 +14,7 @@ import {
   sendMailBackground,
   sendReminderMailAboutOffer,
 } from 'src/backend/jobs/Mail';
+import { generatePreview } from 'src/backend/jobs/Image';
 
 export default async (job) => {
   const { data } = job;
@@ -70,6 +71,20 @@ export default async (job) => {
       return hasBeenSent
         ? `Reminder about opportunity '${data.opportunityId}' sent to '${data.candidatId}'`
         : `No reminder about opportunity '${data.opportunityId}' sent to '${data.candidatId}'`;
+    case JOBS.JOB_TYPES.GENERATE_CV_PREVIEW:
+      const previewUrl = await generatePreview(
+        data.candidatId,
+        data.uploadedImg,
+        data.oldImg
+      );
+      await pusher.trigger(
+        SOCKETS.CHANNEL_NAMES.CV_PREVIEW,
+        SOCKETS.EVENTS.CV_PREVIEW_DONE,
+        {
+          candidatId: data.candidatId,
+        }
+      );
+      return `Preview generated for User ${data.candidatId} : ${previewUrl}`;
 
     default:
       return `No process method for this job ${job.id} of type ${job.data.type}`;
