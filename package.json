@@ -7,9 +7,9 @@
     "node": "12.x"
   },
   "scripts": {
-    "mainWorker": "NODE_ENV=production npx babel-node -r dotenv/config --expose-gc src/backend/mainWorker.js",
-    "imageWorker": "NODE_ENV=production npx babel-node -r dotenv/config --expose-gc src/backend/imageWorker.js",
-    "send-recap": "NODE_ENV=production npx babel-node -r dotenv/config -e 'require(\"src/backend/jobs/Mail.js\").sendRecapAboutOffers()'",
+    "mainWorker": "NODE_ENV=production node -r dotenv/config --expose-gc build/backend/mainWorker.js",
+    "imageWorker": "NODE_ENV=production node -r dotenv/config --expose-gc build/backend/imageWorker.js",
+    "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"src/backend/jobs/Mail.js\").sendRecapAboutOffers()'",
     "dev": "npx babel-node -r dotenv/config src/backend/serveur-next.js",
     "test": "NODE_ENV=test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
     "dev-test": "NODE_ENV=dev-test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
