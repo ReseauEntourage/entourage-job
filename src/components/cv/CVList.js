@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import ButtonPost from 'src/components/backoffice/cv/ButtonPost';
 import { filtersToQueryParams } from 'src/utils';
-import { GridNoSSR } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 import { CandidatCard } from 'src/components/cards';
 import Api from 'src/Axios';
 import { CV_FILTERS_DATA, INITIAL_NB_OF_CV_TO_DISPLAY } from 'src/constants';
@@ -116,7 +116,7 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
         className="cv-list"
         uk-scrollspy="cls:uk-animation-slide-bottom-small; target: .uk-card; delay: 50"
       >
-        <GridNoSSR
+        <Grid
           childWidths={['1-1', '1-2@s', '1-3@m']}
           gap="small"
           row

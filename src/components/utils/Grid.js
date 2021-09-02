@@ -95,7 +95,10 @@ Grid.propTypes = {
   ),
   children: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.element, PropTypes.bool])),
+    PropTypes.string,
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.bool])
+    ),
   ]),
   className: PropTypes.string,
   around: PropTypes.bool,

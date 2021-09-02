@@ -1,7 +1,7 @@
 /* global UIkit */
 
 import React, { useState, useEffect } from 'react';
-import { Button, IconNoSSR } from 'src/components/utils';
+import { Button, Icon } from 'src/components/utils';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { addPrefix } from 'src/utils';
 import Img from 'src/components/utils/Img';
@@ -82,7 +82,7 @@ const ContestModal = () => {
           className="uk-margin-medium-top"
         >
           C&apos;est parti !&nbsp;
-          <IconNoSSR name="chevron-right" />
+          <Icon name="chevron-right" />
         </Button>
       </>
     );

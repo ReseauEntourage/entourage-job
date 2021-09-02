@@ -6,7 +6,7 @@ import Img from 'src/components/utils/Img';
 import LogoList from 'src/components/partials/LogoList';
 import WhatItBringsToCompanies from 'src/components/sections/WhatItBringsToCompanies';
 import Layout from 'src/components/Layout';
-import { Button, GridNoSSR, Section } from 'src/components/utils';
+import { Button, Grid, Section } from 'src/components/utils';
 import ImageTitle from 'src/components/sections/ImageTitle';
 import HireCTA from 'src/components/partials/HireCTA';
 import Reviews from 'src/components/sections/Reviews';
@@ -32,7 +32,7 @@ const Entreprises = () => {
           Laissez-nous votre contact pour être tenus informés.
         </h3>
       </div>
-      <GridNoSSR middle column gap="collapse">
+      <Grid middle column gap="collapse">
         <Button
           style="secondary"
           toggle="target: #modal-interest-linkedOut"
@@ -42,7 +42,7 @@ const Entreprises = () => {
         >
           Nous contacter
         </Button>
-      </GridNoSSR>
+      </Grid>
       <ModalInterestLinkedOut />
     </div>
   );

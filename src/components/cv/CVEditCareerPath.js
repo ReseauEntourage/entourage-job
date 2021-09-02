@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaCareerPath from 'src/components/forms/schema/formEditCareerPath.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
-import { GridNoSSR } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 
 const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
   const ContentByGender = () => {
@@ -46,7 +46,7 @@ const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
   };
   return (
     <div className="uk-card uk-card-default uk-card-body">
-      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+      <Grid gap="small" between eachWidths={['expand', 'auto']}>
         <h3 className="uk-card-title">
           Mon <span className="uk-text-primary">projet professionnel</span>
         </h3>
@@ -58,7 +58,7 @@ const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
             }}
           />
         )}
-      </GridNoSSR>
+      </Grid>
       <ContentByGender />
       {onChange && (
         <div>

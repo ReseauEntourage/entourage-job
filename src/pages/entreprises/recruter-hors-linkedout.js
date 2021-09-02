@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from 'src/components/Layout';
 import { Section } from 'src/components/utils';
-import { PartnersMapNoSSR } from 'src/components/partials/PartnersMap';
+import PartnersMap from 'src/components/partials/PartnersMap';
 import MultipleCTA from 'src/components/partials/MultipleCTA';
 import { EXTERNAL_LINKS } from 'src/constants';
 import CorporateNewsletter from 'src/components/partials/CorporateNewsletterPartial';
@@ -31,7 +31,7 @@ const RecruterHorsLinkedOut = () => {
         <h2 className="uk-text-bold uk-text-center uk-text-large">
           Contactez nos partenaires&nbsp;:
         </h2>
-        <PartnersMapNoSSR />
+        <PartnersMap />
       </Section>
       <Section container="small">
         <MultipleCTA

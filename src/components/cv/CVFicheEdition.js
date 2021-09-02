@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { usePrevious } from 'src/hooks/utils';
-import { GridNoSSR } from 'src/components/utils/Grid';
+import { Grid, Img } from 'src/components/utils';
 import {
   ExperiencesProfileCard,
   InfoProfileCard,
@@ -14,7 +14,7 @@ import CVEditReviews from 'src/components/cv/CVEditReviews';
 import CVEditPicture from 'src/components/cv/CVEditPicture';
 import CVEditBusinessLines from 'src/components/cv/CVEditBusinessLines';
 import CVEditCareerPath from 'src/components/cv/CVEditCareerPath';
-import { ImgNoSSR } from 'src/components/utils';
+
 import { CV_STATUS } from 'src/constants';
 
 const CVFicheEdition = ({
@@ -58,9 +58,9 @@ const CVFicheEdition = ({
   ]);
 
   return (
-    <GridNoSSR childWidths={['1-1']}>
-      <GridNoSSR childWidths={['1-2@s']} match>
-        <GridNoSSR childWidths={['1-1']} match>
+    <Grid childWidths={['1-1']}>
+      <Grid childWidths={['1-2@s']} match>
+        <Grid childWidths={['1-1']} match>
           <CVEditBusinessLines
             businessLines={cv.businessLines}
             onChange={onChange}
@@ -72,8 +72,8 @@ const CVFicheEdition = ({
             gender={gender}
             onChange={onChange}
           />
-        </GridNoSSR>
-        <GridNoSSR childWidths={['1-1']} match>
+        </Grid>
+        <Grid childWidths={['1-1']} match>
           <CVEditPicture
             imageUploading={previewGenerating}
             urlImg={imageUrl || '/static/img/arthur-background.jpg'}
@@ -89,7 +89,7 @@ const CVFicheEdition = ({
               </div>
               <div className="uk-card-media-bottom">
                 <div className="uk-inline">
-                  <ImgNoSSR
+                  <Img
                     className="uk-height-medium"
                     src={previewUrl}
                     alt="Preview"
@@ -122,9 +122,9 @@ const CVFicheEdition = ({
               </div>
             </div>
           )}
-        </GridNoSSR>
-      </GridNoSSR>
-      <GridNoSSR childWidths={['1-2@s']} match>
+        </Grid>
+      </Grid>
+      <Grid childWidths={['1-2@s']} match>
         <InfoProfileCard
           contracts={cv.contracts}
           locations={cv.locations}
@@ -137,24 +137,24 @@ const CVFicheEdition = ({
           onChange={onChange}
           userZone={userZone}
         />
-        <GridNoSSR childWidths={['1-2@m']} match>
+        <Grid childWidths={['1-2@m']} match>
           <SkillsCard list={cv.skills} onChange={onChange} />
           <PassionsCard list={cv.passions} onChange={onChange} />
-        </GridNoSSR>
-      </GridNoSSR>
-      <GridNoSSR childWidths={['1-2@s']}>
-        <GridNoSSR childWidths={['1-1']}>
+        </Grid>
+      </Grid>
+      <Grid childWidths={['1-2@s']}>
+        <Grid childWidths={['1-1']}>
           <StoryProfileCard description={cv.story} onChange={onChange} />
           <CVEditReviews reviews={cv.reviews} onChange={onChange} />
-        </GridNoSSR>
-        <GridNoSSR childWidths={['1-1']}>
+        </Grid>
+        <Grid childWidths={['1-1']}>
           <ExperiencesProfileCard
             experiences={cv.experiences}
             onChange={onChange}
           />
-        </GridNoSSR>
-      </GridNoSSR>
-    </GridNoSSR>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 

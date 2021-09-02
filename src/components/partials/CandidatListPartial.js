@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import CountUp from 'react-countup';
-import { GridNoSSR, IconNoSSR, Section } from 'src/components/utils';
+import { Grid, Icon, Section } from 'src/components/utils';
 import CVList from 'src/components/cv/CVList';
 import Button from 'src/components/utils/Button';
 import { INITIAL_NB_OF_CV_TO_DISPLAY } from 'src/constants';
@@ -45,7 +45,7 @@ const CandidatListPartial = () => {
 
   return (
     <Section style="muted" id="candidat">
-      <GridNoSSR column middle eachWidths={['2-3@m', '1-1']}>
+      <Grid column middle eachWidths={['2-3@m', '1-1']}>
         <div className="uk-text-center">
           <h1 className="uk-text-bold uk-margin-remove-bottom">
             Ils sont <span className="uk-text-primary">motivés</span> pour
@@ -80,12 +80,12 @@ const CandidatListPartial = () => {
           </h4>
         </div>
         <CVList nb={INITIAL_NB_OF_CV_TO_DISPLAY} />
-        <GridNoSSR middle column gap="collapse">
+        <Grid middle column gap="collapse">
           <Button href="/candidats" style="secondary">
-            Voir tous les candidats <IconNoSSR name="chevron-right" />
+            Voir tous les candidats <Icon name="chevron-right" />
           </Button>
-        </GridNoSSR>
-      </GridNoSSR>
+        </Grid>
+      </Grid>
     </Section>
   );
 };

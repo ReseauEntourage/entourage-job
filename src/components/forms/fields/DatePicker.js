@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { GridNoSSR } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 import FormValidatorErrorMessage from 'src/components/forms/FormValidatorErrorMessage';
 
 export default class DatePicker extends Component {
@@ -85,7 +85,7 @@ export default class DatePicker extends Component {
         >
           {title}
         </label>
-        <GridNoSSR
+        <Grid
           childWidths={['1-2']}
           items={[
             <div className="uk-margin">

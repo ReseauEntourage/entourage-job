@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, IconNoSSR } from 'src/components/utils';
+import { Button, Icon } from 'src/components/utils';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 
@@ -48,7 +48,7 @@ const FiltersMobile = ({ filters }) => {
         toggle="target: #toggle-filter-menu;"
       >
         <div className="uk-position-relative">
-          <IconNoSSR
+          <Icon
             style={{ width: 18, height: 18 }}
             name={`filter${filterMenuOpened ? '' : '-empty'}`}
           />

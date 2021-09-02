@@ -2,7 +2,7 @@ import React from 'react';
 import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
-import { Button, GridNoSSR, Section } from 'src/components/utils';
+import { Button, Grid, Section } from 'src/components/utils';
 
 const CorporateContact = () => {
   return (
@@ -14,7 +14,7 @@ const CorporateContact = () => {
         Pour tout renseignement, l&apos;équipe se tient à votre
         disposition&nbsp;!
       </p>
-      <GridNoSSR middle column gap="collapse">
+      <Grid middle column gap="collapse">
         <Button
           style="secondary"
           className="uk-margin-small-top"
@@ -25,7 +25,7 @@ const CorporateContact = () => {
         >
           Nous contacter
         </Button>
-      </GridNoSSR>
+      </Grid>
       <ModalInterestLinkedOut />
     </Section>
   );

@@ -6,7 +6,7 @@ import arrayMove from 'array-move';
 
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaformEditExperience from 'src/components/forms/schema/formEditExperience.json';
-import { GridNoSSR } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import ModalConfirm from 'src/components/modals/ModalConfirm';
 import { formatParagraph, sortExperiences } from 'src/utils';
@@ -15,7 +15,7 @@ const Experience = SortableElement(
   ({ value, sortIndex, onChange, setCurrentIndex, setCurrentDefaultValue }) => {
     return (
       <li style={{ cursor: 'move', listStyleType: 'none' }}>
-        <GridNoSSR
+        <Grid
           eachWidths={['expand', 'auto']}
           className="uk-margin-medium-bottom"
           style={{
@@ -57,7 +57,7 @@ const Experience = SortableElement(
               />
             </div>
           )}
-        </GridNoSSR>
+        </Grid>
       </li>
     );
   }
@@ -126,7 +126,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
   return (
     <>
       <div className="uk-card uk-card-default uk-card-body">
-        <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+        <Grid gap="small" between eachWidths={['expand', 'auto']}>
           <h3 className="uk-card-title">
             Mes <span className="uk-text-primary">expériences</span> et{' '}
             <span className="uk-text-primary">compétences</span>
@@ -139,7 +139,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
               name="plus"
             />
           )}
-        </GridNoSSR>
+        </Grid>
         <ExperienceList
           pressDelay={200}
           items={sortedExperiences}

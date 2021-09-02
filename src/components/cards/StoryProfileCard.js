@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaStory from 'src/components/forms/schema/formEditStory.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
-import { GridNoSSR } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 import { formatParagraph } from 'src/utils';
 
 const StoryProfileCard = ({ description, onChange }) => {
   return (
     <div className="uk-card uk-card-default uk-card-body">
-      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+      <Grid gap="small" between eachWidths={['expand', 'auto']}>
         <h3 className="uk-card-title">
           Mon <span className="uk-text-primary">histoire</span>
         </h3>
@@ -22,7 +22,7 @@ const StoryProfileCard = ({ description, onChange }) => {
             }}
           />
         )}
-      </GridNoSSR>
+      </Grid>
 
       {description ? (
         <p>{formatParagraph(description)}</p>

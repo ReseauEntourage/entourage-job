@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 import { filtersToQueryParams, getUserOpportunityFromOffer } from 'src/utils';
 import Api from 'src/Axios';
 import ModalOffer from 'src/components/modals/ModalOffer';
-import { GridNoSSR } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 import OfferCard from 'src/components/cards/OfferCard';
 import { UserContext } from 'src/components/store/UserProvider';
 import ModalOfferAdmin from 'src/components/modals/ModalOfferAdmin';
@@ -203,7 +203,7 @@ const OpportunityList = forwardRef(
         {!loading && !hasError && (
           <div>
             {offers && offers.length > 0 ? (
-              <GridNoSSR childWidths={['1-4@l', '1-3@m', '1-2@s']} left top>
+              <Grid childWidths={['1-4@l', '1-3@m', '1-2@s']} left top>
                 {offers.map((offer, i) => {
                   const userOpportunity =
                     role === 'candidateAsAdmin'
@@ -260,7 +260,7 @@ const OpportunityList = forwardRef(
                     </li>
                   );
                 })}
-              </GridNoSSR>
+              </Grid>
             ) : (
               <div className=" uk-text-center uk-flex uk-flex-center uk-margin-medium-top">
                 <div className="uk-width-xlarge">

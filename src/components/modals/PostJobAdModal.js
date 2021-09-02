@@ -3,7 +3,7 @@
 import React from 'react';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
-import { Button, IconNoSSR } from 'src/components/utils';
+import { Button, Icon } from 'src/components/utils';
 import StepperModal from 'src/components/modals/StepperModal';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
 import schema from 'src/components/forms/schema/formEditOpportunity';
@@ -94,7 +94,7 @@ const PostJobAdModal = () => {
           return (
             <div className="uk-flex uk-flex-center uk-margin-large">
               <div className="uk-card uk-card-body uk-text-center">
-                <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
+                <Icon name="check" ratio={4} className="uk-text-primary" />
                 <p className="uk-text-lead">
                   Merci pour votre offre, nous reviendrons bientôt vers vous.
                 </p>

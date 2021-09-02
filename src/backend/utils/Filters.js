@@ -234,7 +234,7 @@ const filterMembersByAssociatedUser = (members, associatedUsers) => {
 
   if (members && associatedUsers && associatedUsers.length > 0) {
     filteredList = members.filter((member) => {
-      return associatedUsers.every((currentFilter) => {
+      return associatedUsers.some((currentFilter) => {
         if (member.candidat) {
           return !!member.candidat.coach === (currentFilter.value === 'true');
         }

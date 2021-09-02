@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import validator from 'validator';
 import PropTypes from 'prop-types';
-import { IconNoSSR, GridNoSSR, Section } from 'src/components/utils';
+import { Icon, Grid, Section } from 'src/components/utils';
 import Api from 'src/Axios';
 import Button from 'src/components/utils/Button';
 import { NEWSLETTER_ORIGINS } from 'src/constants';
@@ -35,7 +35,7 @@ const CorporateNewsletter = ({ style }) => {
   return (
     <Section style={style}>
       <div className="uk-flex uk-flex-center uk-flex-middle uk-flex-column">
-        <GridNoSSR
+        <Grid
           eachWidths={['expand', 'auto']}
           className="uk-width-1-2@s"
           gap="collapse"
@@ -43,7 +43,7 @@ const CorporateNewsletter = ({ style }) => {
         >
           <div data-uk-form-custom="target: true" className="uk-width-1-1">
             <a className="uk-form-icon" disabled>
-              <IconNoSSR name="mail" />
+              <Icon name="mail" />
             </a>
             <input
               className="uk-input"
@@ -63,7 +63,7 @@ const CorporateNewsletter = ({ style }) => {
           <Button style="primary" onClick={onSubmit}>
             S&apos;abonner&nbsp;!
           </Button>
-        </GridNoSSR>
+        </Grid>
         {!isValid && (
           <span className="uk-text-danger uk-padding-small">
             {!isValid && 'Adresse mail invalide'}

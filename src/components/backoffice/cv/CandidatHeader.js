@@ -1,21 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { GridNoSSR, SimpleLink, IconNoSSR } from 'src/components/utils';
+import { Grid, SimpleLink, Icon } from 'src/components/utils';
 import ImgProfile from 'src/components/headers/ImgProfile';
 import { USER_ROLES } from 'src/constants';
 
 const CandidatHeader = ({ user, showZone }) => {
   if (!user) return null;
   return (
-    <GridNoSSR row gap="small">
+    <Grid row gap="small">
       <ImgProfile user={user} size={48} />
-      <GridNoSSR column gap="collapse">
+      <Grid column gap="collapse">
         <h3 className="uk-text-bold">
           {user.firstName} {user.lastName}
         </h3>
-        <GridNoSSR row gap="small" middle className="uk-margin-small-top">
-          <IconNoSSR name="user" style={{ width: 20 }} />
+        <Grid row gap="small" middle className="uk-margin-small-top">
+          <Icon name="user" style={{ width: 20 }} />
           {user.role === USER_ROLES.COACH ? (
             <span>
               Coach de{' '}
@@ -30,9 +30,9 @@ const CandidatHeader = ({ user, showZone }) => {
           ) : (
             <span>{user.role}</span>
           )}
-        </GridNoSSR>
-        <GridNoSSR row gap="small" middle className="uk-margin-small-top">
-          <IconNoSSR name="link" style={{ width: 20 }} />
+        </Grid>
+        <Grid row gap="small" middle className="uk-margin-small-top">
+          <Icon name="link" style={{ width: 20 }} />
           {(user.role === USER_ROLES.CANDIDAT ||
             (user.role === USER_ROLES.COACH && user.coach)) && (
             <SimpleLink
@@ -52,16 +52,16 @@ const CandidatHeader = ({ user, showZone }) => {
               </span>
             </SimpleLink>
           )}
-        </GridNoSSR>
+        </Grid>
         {showZone && (
-          <GridNoSSR row gap="small" middle className="uk-margin-small-top">
+          <Grid row gap="small" middle className="uk-margin-small-top">
             <span className="uk-label">
               {user.zone ? _.capitalize(user.zone) : 'Non renseignée'}
             </span>
-          </GridNoSSR>
+          </Grid>
         )}
-      </GridNoSSR>
-    </GridNoSSR>
+      </Grid>
+    </Grid>
   );
 };
 

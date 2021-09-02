@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypess from 'prop-types';
-import { GridNoSSR } from 'src/components/utils';
+import PropTypes from 'prop-types';
+import { Grid } from 'src/components/utils';
 
 const HeaderBackoffice = ({ title, description, children, childrenBottom }) => {
   return (
     <div className="uk-margin-large-bottom">
-      <GridNoSSR
+      <Grid
         gap="small"
         column={childrenBottom}
         eachWidths={['expand@s', 'auto']}
@@ -14,23 +14,23 @@ const HeaderBackoffice = ({ title, description, children, childrenBottom }) => {
           <h2 className="uk-text-bold">{title}</h2>
           <p className="uk-text-lead uk-width-2-3@m">{description}</p>
         </div>
-        {children}
-      </GridNoSSR>
+        <div>{children}</div>
+      </Grid>
       <hr className="ent-divier-backoffice uk-margin-medium-top" />
     </div>
   );
 };
 HeaderBackoffice.propTypes = {
-  title: PropTypess.string.isRequired,
-  description: PropTypess.string.isRequired,
-  children: PropTypess.oneOfType([
-    PropTypess.arrayOf(PropTypess.node),
-    PropTypess.node,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
   ]),
-  childrenBottom: PropTypess.bool,
+  childrenBottom: PropTypes.bool,
 };
 HeaderBackoffice.defaultProps = {
-  children: [],
+  children: undefined,
   childrenBottom: false,
 };
 export default HeaderBackoffice;

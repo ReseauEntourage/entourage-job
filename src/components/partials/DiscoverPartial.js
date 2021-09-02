@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { GridNoSSR, Section, IconNoSSR } from 'src/components/utils';
+import { Grid, Section, Icon } from 'src/components/utils';
 import { CandidatCard } from 'src/components/cards';
 import Api from 'src/Axios';
 import Button from 'src/components/utils/Button';
@@ -24,7 +24,7 @@ const DiscoverPartial = ({ style }) => {
     if (error) return <p className="uk-text-italic">{error}</p>;
     if (cvs === undefined) return <div data-uk-spinner="" />;
     return (
-      <GridNoSSR
+      <Grid
         childWidths={['1-3@m']}
         gap="small"
         items={cvs.map((cv) => {
@@ -61,7 +61,7 @@ const DiscoverPartial = ({ style }) => {
           href="/candidats"
           className="uk-margin-large-top"
         >
-          Voir tous les candidats <IconNoSSR name="arrow-right" />
+          Voir tous les candidats <Icon name="arrow-right" />
         </Button>
       </div>
     </Section>

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Section, GridNoSSR } from 'src/components/utils';
+import { Section, Grid } from 'src/components/utils';
 import SharePartial from 'src/components/partials/SharePartial';
 import NewsletterPartial from 'src/components/partials/NewsletterPartial';
 import MultipleCTA from 'src/components/partials/MultipleCTA';
@@ -39,7 +39,7 @@ const datas = [
 const ActionPartial = ({ style }) => {
   return (
     <Section style={style} id="actions">
-      <GridNoSSR gap="large" column>
+      <Grid gap="large" column>
         <div className="uk-text-center">
           <h2 className="uk-text-bold">
             <span className="uk-text-primary">Agissez</span> avec LinkedOut
@@ -57,7 +57,7 @@ const ActionPartial = ({ style }) => {
         />
         <NewsletterPartial tag={TAGS.HOME_INSCRIPTION_NEWSLETTER_CLIC} />
         <SharePartial />
-      </GridNoSSR>
+      </Grid>
     </Section>
   );
 };

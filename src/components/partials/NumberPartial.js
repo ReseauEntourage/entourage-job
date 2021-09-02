@@ -1,5 +1,5 @@
 import React from 'react';
-import { GridNoSSR, Section } from 'src/components/utils';
+import { Grid, Section } from 'src/components/utils';
 import { NumberCard } from 'src/components/cards';
 
 const staticNumbers = [
@@ -37,7 +37,7 @@ const NumberPartial = () => {
       <p className="uk-text-center uk-margin-medium-bottom">
         Miah, Abdul, Laith... ont retrouvé un emploi grâce à LinkedOut
       </p>
-      <GridNoSSR
+      <Grid
         center
         childWidths={['1-1', '1-2@s', '1-3@l']}
         items={staticNumbers.map((content) => {

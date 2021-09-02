@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, GridNoSSR, IconNoSSR, Section } from 'src/components/utils';
+import { Button, Grid, Icon, Section } from 'src/components/utils';
 
 import 'src/components/partials/HireCTA.less';
 import CVList from 'src/components/cv/CVList';
@@ -49,15 +49,15 @@ const HireCTA = () => {
                 <br /> et sont situés en Île&#8209;de&#8209;France.
               </p>
             </div>
-            <GridNoSSR middle column gap="collapse">
+            <Grid middle column gap="collapse">
               <Button
                 href="/entreprises/cvs"
                 style="secondary"
                 className="uk-margin-small-top"
               >
-                Découvrez tous les CV <IconNoSSR name="chevron-right" />
+                Découvrez tous les CV <Icon name="chevron-right" />
               </Button>
-            </GridNoSSR>
+            </Grid>
             <hr className="uk-margin-large-top uk-width-1-1" />
             <div className="uk-flex uk-flex-middle uk-flex-center uk-padding">
               <div
@@ -77,7 +77,7 @@ const HireCTA = () => {
                 alt="Visages LinkedOut"
               />
             </div>
-            <GridNoSSR middle column gap="collapse">
+            <Grid middle column gap="collapse">
               <Button
                 className="uk-margin-medium-top"
                 style="secondary"
@@ -86,9 +86,9 @@ const HireCTA = () => {
                   return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
                 }}
               >
-                Déposez votre offre <IconNoSSR name="chevron-right" />
+                Déposez votre offre <Icon name="chevron-right" />
               </Button>
-            </GridNoSSR>
+            </Grid>
             <PostJobAdModal />
           </div>
         </div>

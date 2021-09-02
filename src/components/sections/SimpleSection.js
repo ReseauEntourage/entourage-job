@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, IconNoSSR, Section } from 'src/components/utils';
+import { Button, Icon, Section } from 'src/components/utils';
 
 const SimpleSection = ({
   id,
@@ -40,7 +40,7 @@ const SimpleSection = ({
             toggle={button.modal}
             onClick={button.onClick}
           >
-            {button.label} <IconNoSSR name="chevron-right" />
+            {button.label} <Icon name="chevron-right" />
           </Button>
         )}
         {children}

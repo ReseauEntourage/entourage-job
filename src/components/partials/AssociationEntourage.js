@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  GridNoSSR,
-  ImgNoSSR,
-  Background,
-  Section,
-  IconNoSSR,
-} from 'src/components/utils';
+import { Grid, Img, Background, Section, Icon } from 'src/components/utils';
 import Button from 'src/components/utils/Button';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { event } from 'src/lib/gtag';
@@ -19,17 +13,14 @@ const AssociationEntourage = () => {
           style={{ borderTop: 'solid 1px rgba(255, 255, 255, 0.2)' }}
           className="uk-text-center"
         >
-          <GridNoSSR
+          <Grid
             middle
             center
             childWidths={['1-2@m']}
             className="uk-margin-large-top"
           >
             <div>
-              <ImgNoSSR
-                src="/static/img/logo-entourage.svg"
-                alt="logo-entourage"
-              />
+              <Img src="/static/img/logo-entourage.svg" alt="logo-entourage" />
               <h2 className="uk-text-bold uk-margin-small">
                 <span style={{ color: '#fff' }}>L&apos;association </span>
                 <span className="uk-text-primary">Entourage</span>
@@ -51,19 +42,19 @@ const AssociationEntourage = () => {
                     }}
                     newTab
                   >
-                    Voir le site <IconNoSSR name="chevron-right" />
+                    Voir le site <Icon name="chevron-right" />
                   </Button>
                 </div>
               </div>
             </div>
             <div className="uk-cover-container uk-height-medium">
-              <ImgNoSSR
+              <Img
                 className="uk-cover uk-position-center"
                 src="/static/img/association_pic.jpg"
                 alt="association entourage"
               />
             </div>
-          </GridNoSSR>
+          </Grid>
         </div>
       </Section>
     </Background>

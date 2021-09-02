@@ -10,12 +10,7 @@ import {
 } from 'react-share';
 import { useRouter } from 'next/router';
 
-import {
-  SimpleLink,
-  GridNoSSR,
-  IconNoSSR,
-  ImgNoSSR,
-} from 'src/components/utils';
+import { SimpleLink, Grid, Icon, Img } from 'src/components/utils';
 import ModalShareCV from 'src/components/modals/ModalShareCV';
 import Api from 'src/Axios';
 import { SharesCountContext } from 'src/components/store/SharesCountProvider';
@@ -100,7 +95,7 @@ const CandidatCard = ({
           }}
         >
           {/* Image de fond */}
-          <ImgNoSSR src={imgSrc} alt={imgAlt} cover />
+          <Img src={imgSrc} alt={imgAlt} cover />
           {/* Bandeau à retrouvé un emploie */}
           {employed && (
             <div
@@ -110,10 +105,7 @@ const CandidatCard = ({
               className="uk-width-1-1 uk-position-bottom uk-flex uk-flex-middle uk-flex-right" // uk-position-cover
             >
               <div className="uk-width-1-2 uk-padding-small uk-text-center">
-                <ImgNoSSR
-                  src="/static/img/logo-white.png"
-                  alt="logo entourage"
-                />
+                <Img src="/static/img/logo-white.png" alt="logo entourage" />
                 <p
                   className="uk-text-uppercase"
                   style={{ color: '#FFF', margin: '8px 0 0 0' }}
@@ -134,7 +126,7 @@ const CandidatCard = ({
             className="uk-width-1-2 uk-position-center-left"
           >
             {/*  uk-margin-small-bottom uk-margin-small-top uk-margin-small-right */}
-            <GridNoSSR
+            <Grid
               gap="collapse"
               between
               column
@@ -163,7 +155,7 @@ const CandidatCard = ({
                 </p>
               </div>
               {skills && skills.length > 0 && (
-                <GridNoSSR
+                <Grid
                   column
                   style={{
                     marginTop: 5,
@@ -196,7 +188,7 @@ const CandidatCard = ({
                     <br />
                     travailler dans&nbsp;:
                   </p>
-                  <GridNoSSR column gap="collapse" childWidths={['1-1']}>
+                  <Grid column gap="collapse" childWidths={['1-1']}>
                     {ambitions.slice(0, 2).map((text, index) => {
                       return (
                         <span
@@ -207,7 +199,7 @@ const CandidatCard = ({
                         </span>
                       );
                     })}
-                  </GridNoSSR>
+                  </Grid>
                 </div>
               )}
               {/* {businessLines && businessLines.length > 0 && (
@@ -221,7 +213,7 @@ const CandidatCard = ({
                   >
                     Secteurs d&apos;activité&nbsp;:
                   </p>
-                  <GridNoSSR column gap="collapse" childWidths={['1-1']}>
+                  <Grid column gap="collapse" childWidths={['1-1']}>
                     {businessLines.slice(0, 2).map((text, index) => (
                       <span
                         key={index}
@@ -230,11 +222,11 @@ const CandidatCard = ({
                         {text}
                       </span>
                     ))}
-                  </GridNoSSR>
+                  </Grid>
                 </div>
               )} */}
               {locations && locations.length > 0 && (
-                <GridNoSSR
+                <Grid
                   column
                   gap="collapse"
                   childWidths={['1-1']}
@@ -246,7 +238,7 @@ const CandidatCard = ({
                         key={text + index}
                         className="uk-flex uk-flex-middle"
                       >
-                        <IconNoSSR name="location" ratio={0.6} />
+                        <Icon name="location" ratio={0.6} />
                         &nbsp;
                         <span
                           className="uk-text-meta uk-flex-1"
@@ -259,15 +251,15 @@ const CandidatCard = ({
                       </div>
                     );
                   })}
-                </GridNoSSR>
+                </Grid>
               )}
-            </GridNoSSR>
+            </Grid>
           </div>
         </div>
       </SimpleLink>
       {/* Bas de carte */}
       {showShareOptions ? (
-        <GridNoSSR gap="small" between middle eachWidths={['expand', 'auto']}>
+        <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
           <SimpleLink
             as={linksToCV.as}
             href={linksToCV.href}
@@ -278,7 +270,7 @@ const CandidatCard = ({
           >
             <u className="uk-text-link uk-text-primary">Voir le CV</u>
           </SimpleLink>
-          <GridNoSSR middle center gap="small">
+          <Grid middle center gap="small">
             <span>Partager :</span>
             <ul className="uk-iconnav">
               <li>
@@ -298,7 +290,7 @@ const CandidatCard = ({
                   style={{ cursor: 'pointer' }}
                   className="uk-icon-button light-icon-button"
                 >
-                  <IconNoSSR
+                  <Icon
                     name="linkedin"
                     ratio={0.9}
                     className={`share-linkedin-${firstName}`}
@@ -322,7 +314,7 @@ const CandidatCard = ({
                   style={{ cursor: 'pointer' }}
                   className="uk-icon-button light-icon-button"
                 >
-                  <IconNoSSR
+                  <Icon
                     name="facebook"
                     ratio={0.9}
                     className={`share-facebook-${firstName}`}
@@ -347,7 +339,7 @@ const CandidatCard = ({
                   style={{ cursor: 'pointer' }}
                   className="uk-icon-button light-icon-button"
                 >
-                  <IconNoSSR
+                  <Icon
                     name="twitter"
                     ratio={0.9}
                     className={`share-twitter-${firstName}`}
@@ -355,8 +347,8 @@ const CandidatCard = ({
                 </TwitterShareButton>
               </li>
             </ul>
-          </GridNoSSR>
-        </GridNoSSR>
+          </Grid>
+        </Grid>
       ) : (
         <div className="uk-text-center">
           <SimpleLink

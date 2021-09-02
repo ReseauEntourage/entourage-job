@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconNoSSR, Section } from 'src/components/utils';
+import { Icon, Section } from 'src/components/utils';
 import Button from 'src/components/utils/Button';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
@@ -30,7 +30,7 @@ const StepsToJoin = () => {
           }}
           href={process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION}
         >
-          Je m&apos;inscris <IconNoSSR name="chevron-right" />
+          Je m&apos;inscris <Icon name="chevron-right" />
         </Button>
       </div>
       <p className="uk-text-center uk-text-italic">

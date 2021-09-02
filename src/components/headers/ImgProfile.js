@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { UserContext } from 'src/components/store/UserProvider';
-import { ImgNoSSR } from 'src/components/utils';
+import { Img } from 'src/components/utils';
 import { USER_ROLES } from 'src/constants';
 
 const ImgProfile = ({ user, size }) => {
@@ -36,7 +36,7 @@ const ImgProfile = ({ user, size }) => {
           className="uk-height-1-1 uk-position-center uk-width-expand"
           style={{ maxWidth: 'inherit' }}
         >
-          <ImgNoSSR
+          <Img
             className="uk-height-1-1"
             src={process.env.AWSS3_URL + urlImg}
             alt={`photo de ${firstName}`}

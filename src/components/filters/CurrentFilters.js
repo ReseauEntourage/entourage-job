@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, GridNoSSR, IconNoSSR } from 'src/components/utils';
+import { Button, Grid, Icon } from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
@@ -43,7 +43,7 @@ const CurrentFilters = ({ numberOfResults, filters, resetFilters }) => {
   }, [filters]);
 
   return (
-    <GridNoSSR middle gap="small" eachWidths={['1-4@m', '3-4@m']}>
+    <Grid middle gap="small" eachWidths={['1-4@m', '3-4@m']}>
       <div
         className="uk-flex uk-flex-middle uk-flex-left"
         style={{
@@ -57,7 +57,7 @@ const CurrentFilters = ({ numberOfResults, filters, resetFilters }) => {
           toggle="target: #toggle-filter-menu;"
         >
           Filtrer par &nbsp;
-          <IconNoSSR
+          <Icon
             style={{ width: 15, height: 15 }}
             name={`filter${filterMenuOpened ? '' : '-empty'}`}
           />
@@ -100,7 +100,7 @@ const CurrentFilters = ({ numberOfResults, filters, resetFilters }) => {
           </div>
         </div>
       )}
-    </GridNoSSR>
+    </Grid>
   );
 };
 

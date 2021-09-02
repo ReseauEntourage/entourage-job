@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import CVList from 'src/components/cv/CVList';
-import { GridNoSSR, Section } from 'src/components/utils';
+import { Grid, Section } from 'src/components/utils';
 import { CV_FILTERS_DATA, STORAGE_KEYS } from 'src/constants';
 import { DataContext } from 'src/components/store/DataProvider';
 import { useFilters } from 'src/hooks';
@@ -51,7 +51,7 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
 
   return (
     <Section style={style}>
-      <GridNoSSR
+      <Grid
         gap="medium"
         column
         middle
@@ -85,7 +85,7 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
             updateNumberOfResults={setNumberOfResults}
           />
         )}
-      </GridNoSSR>
+      </Grid>
     </Section>
   );
 };

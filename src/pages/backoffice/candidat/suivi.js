@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import Api from 'src/Axios';
-import { Section, GridNoSSR, Button, IconNoSSR } from 'src/components/utils';
+import { Section, Grid, Button, Icon } from 'src/components/utils';
 import { UserContext } from 'src/components/store/UserProvider';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import { USER_ROLES } from 'src/constants';
@@ -141,7 +141,7 @@ const Suivi = () => {
           className="uk-textarea uk-form-large"
         />
       </div>
-      <GridNoSSR match className="uk-flex-right">
+      <Grid match className="uk-flex-right">
         <Button
           style="default"
           onClick={() => {
@@ -149,7 +149,7 @@ const Suivi = () => {
           }}
           disabled={value === userCandidat.note}
         >
-          <IconNoSSR name="history" />
+          <Icon name="history" />
         </Button>
         <Button
           style="default"
@@ -160,7 +160,7 @@ const Suivi = () => {
         >
           Sauvegarder
         </Button>
-      </GridNoSSR>
+      </Grid>
     </Wrapper>
   );
 };

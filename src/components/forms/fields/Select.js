@@ -91,7 +91,7 @@ Select.propTypes = {
   }),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   options: PropTypes.arrayOf(
-    PropTypes.objectOf({
+    PropTypes.shape({
       value: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,

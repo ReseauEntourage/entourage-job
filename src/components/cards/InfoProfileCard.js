@@ -1,11 +1,11 @@
 /* global UIkit */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconNoSSR } from 'src/components/utils/Icon';
+import { Icon, Grid } from 'src/components/utils';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaUsefulInformation from 'src/components/forms/schema/formEditUsefulInformation';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
-import { GridNoSSR } from 'src/components/utils';
+
 import { getAllFilters, mutateFormSchema } from 'src/utils';
 
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
@@ -45,11 +45,11 @@ const InfoProfileCard = ({
 
   return (
     <div className="uk-card uk-card-primary uk-card-body">
-      <GridNoSSR between gap="small" eachWidths={['expand', 'auto']}>
+      <Grid between gap="small" eachWidths={['expand', 'auto']}>
         <h3 className="uk-card-title">
           {!onChange && (
             <span className="uk-margin-small-right">
-              <IconNoSSR name="info" />
+              <Icon name="info" />
             </span>
           )}
           Infos pratiques
@@ -62,51 +62,51 @@ const InfoProfileCard = ({
             }}
           />
         )}
-      </GridNoSSR>
-      <GridNoSSR column gap="small">
-        <GridNoSSR row gap="small" middle>
-          <IconNoSSR name="mail" style={{ width: 20 }} />
+      </Grid>
+      <Grid column gap="small">
+        <Grid row gap="small" middle>
+          <Icon name="mail" style={{ width: 20 }} />
           {email || 'Adresse mail non renseigné'}
-        </GridNoSSR>
-        <GridNoSSR row gap="small" middle>
-          <IconNoSSR name="phone" style={{ width: 20 }} />
+        </Grid>
+        <Grid row gap="small" middle>
+          <Icon name="phone" style={{ width: 20 }} />
           {phone || 'Numéro de téléphone non renseigné'}
-        </GridNoSSR>
-        <GridNoSSR row gap="small" middle>
-          <IconNoSSR name="home" style={{ width: 20 }} />
+        </Grid>
+        <Grid row gap="small" middle>
+          <Icon name="home" style={{ width: 20 }} />
           {address || 'Adresse postale non renseignée'}
-        </GridNoSSR>
-        <GridNoSSR row gap="small" middle>
-          <IconNoSSR name="file-text" style={{ width: 20 }} />
+        </Grid>
+        <Grid row gap="small" middle>
+          <Icon name="file-text" style={{ width: 20 }} />
           {contracts && contracts.length > 0
             ? contracts.join(' / ')
             : 'Type de contrat recherché non renseigné'}
-        </GridNoSSR>
-        <GridNoSSR row gap="small" middle>
-          <IconNoSSR name="location" style={{ width: 20 }} />
+        </Grid>
+        <Grid row gap="small" middle>
+          <Icon name="location" style={{ width: 20 }} />
           {locations && locations.length > 0
             ? locations.join(' / ')
             : 'Localisations non renseignées'}
-        </GridNoSSR>
-        <GridNoSSR row gap="small" middle>
-          <IconNoSSR name="calendar" style={{ width: 20 }} />
+        </Grid>
+        <Grid row gap="small" middle>
+          <Icon name="calendar" style={{ width: 20 }} />
           {availability && availability !== ''
             ? availability
             : 'Disponibilités non renseignée'}
-        </GridNoSSR>
-        <GridNoSSR row gap="small" middle>
-          <IconNoSSR name="users" style={{ width: 20 }} />
+        </Grid>
+        <Grid row gap="small" middle>
+          <Icon name="users" style={{ width: 20 }} />
           {languages && languages.length > 0
             ? languages.join(' / ')
             : 'Langues apprises non renseignées'}
-        </GridNoSSR>
-        <GridNoSSR row gap="small" middle>
-          <IconNoSSR name="car" style={{ width: 20 }} />
+        </Grid>
+        <Grid row gap="small" middle>
+          <Icon name="car" style={{ width: 20 }} />
           {transport && transport !== ''
             ? transport
             : 'Moyen de transport non renseigné'}
-        </GridNoSSR>
-      </GridNoSSR>
+        </Grid>
+      </Grid>
       {onChange && (
         <ModalEdit
           id="modal-usefulinformation"

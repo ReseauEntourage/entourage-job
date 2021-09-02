@@ -6,7 +6,7 @@ import StepperModal from 'src/components/modals/StepperModal';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
 import schemaGetEmail from 'src/components/forms/schema/formGetEmail.json';
 import Api from 'src/Axios';
-import { Button, IconNoSSR, ImgNoSSR } from 'src/components/utils';
+import { Button, Icon, Img } from 'src/components/utils';
 import { useResetForm } from 'src/hooks/utils';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { event } from 'src/lib/gtag';
@@ -63,7 +63,7 @@ const ModalShareCV = ({ firstName, id }) => {
                   Entourage&nbsp;?
                 </p>
                 <div className="uk-flex uk-flex-center">
-                  <ImgNoSSR
+                  <Img
                     className="uk-height-max-small uk-margin-medium-top"
                     src="../../static/img/logo-entourage.png"
                   />
@@ -79,7 +79,7 @@ const ModalShareCV = ({ firstName, id }) => {
                     href={EXTERNAL_LINKS.ENTOURAGE}
                     style="primary"
                   >
-                    En savoir plus <IconNoSSR name="chevron-right" />
+                    En savoir plus <Icon name="chevron-right" />
                   </Button>
                 </div>
 

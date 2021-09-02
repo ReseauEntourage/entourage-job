@@ -3,11 +3,11 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {
-  NavbarNoSSR,
-  HamburgerNoSSR,
+  Navbar,
+  Hamburger,
   NavbarLogo,
-  IconNoSSR,
-  OffcanvasNoSSR,
+  Icon,
+  Offcanvas,
   SimpleLink,
 } from 'src/components/utils';
 import 'src/components/headers/Header.less';
@@ -84,7 +84,7 @@ const HeaderConnected = ({ isHome }) => {
 
   return (
     <header id="header">
-      <NavbarNoSSR
+      <Navbar
         sticky=""
         mode="click"
         className={`uk-background-default uk-navbar-transparent ${
@@ -119,7 +119,7 @@ const HeaderConnected = ({ isHome }) => {
                             : {}),
                         }}
                       >
-                        <IconNoSSR name={link.icon} />
+                        <Icon name={link.icon} />
                       </span>
                       <span
                         style={{
@@ -158,7 +158,7 @@ const HeaderConnected = ({ isHome }) => {
                 <span className="uk-margin-small-left">
                   Salut {user.firstName}
                 </span>
-                <IconNoSSR name="triangle-down" />
+                <Icon name="triangle-down" />
               </a>
               <Dropdown
                 dividers={[2]}
@@ -198,15 +198,15 @@ const HeaderConnected = ({ isHome }) => {
                 }}
               >
                 <span className="uk-margin-small-left uk-margin-small-right">
-                  <IconNoSSR name="bell" />
+                  <Icon name="bell" />
                 </span>
               </a>
             </li> */}
-            <HamburgerNoSSR targetId="offcanvas-logged" hidden="m" />
+            <Hamburger targetId="offcanvas-logged" hidden="m" />
           </ul>
         }
       />
-      <OffcanvasNoSSR id="offcanvas-logged">
+      <Offcanvas id="offcanvas-logged">
         <ul className="uk-nav uk-nav-default">
           <li>
             <SimpleLink href="/">
@@ -271,7 +271,7 @@ const HeaderConnected = ({ isHome }) => {
             }
           )}
         </ul>
-      </OffcanvasNoSSR>
+      </Offcanvas>
     </header>
   );
 };

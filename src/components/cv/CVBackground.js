@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ImgNoSSR } from 'src/components/utils';
+import { Img } from 'src/components/utils';
 import { addPrefix } from 'src/utils';
 
 const CVBackground = ({ url, employed }) => {
   const employedBadgeContent = (
     <>
       <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-small-right">
-        <ImgNoSSR
+        <Img
           width="17px"
           height="25px"
           src="/static/img/logo-white.png"

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Pusher from 'pusher-js';
 import Api from 'src/Axios';
-import { GridNoSSR, Button } from 'src/components/utils';
+import { Grid, Button } from 'src/components/utils';
 import { CVFicheEdition, CVBackground, CVFiche } from 'src/components/cv';
 import { UserContext } from 'src/components/store/UserProvider';
 import ButtonPost from 'src/components/backoffice/cv/ButtonPost';
@@ -255,8 +255,8 @@ const CVPageContent = ({ candidatId }) => {
   // affichage du CV
   return (
     <div>
-      <GridNoSSR between middle>
-        <GridNoSSR column gap="collapse">
+      <Grid between middle>
+        <Grid column gap="collapse">
           <div>
             Statut&nbsp;:{' '}
             <span className={`uk-text-${cvStatus.style}`}>
@@ -269,9 +269,9 @@ const CVPageContent = ({ candidatId }) => {
               {cvVersion}
             </div>
           )}
-        </GridNoSSR>
+        </Grid>
 
-        <GridNoSSR row gap="small">
+        <Grid row gap="small">
           <ButtonDownload
             pdfGenerating={pdfGenerating}
             candidatId={cv.UserId}
@@ -306,8 +306,8 @@ const CVPageContent = ({ candidatId }) => {
               text="Publier"
             />
           )}
-        </GridNoSSR>
-      </GridNoSSR>
+        </Grid>
+      </Grid>
       <CVFicheEdition
         gender={cv.user.candidat.gender}
         email={cv.email || cv.user.candidat.email}

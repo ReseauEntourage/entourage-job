@@ -1,7 +1,7 @@
 /* global UIkit */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { GridNoSSR, CloseButtonNoSSR, Button } from 'src/components/utils';
+import { Grid, CloseButton, Button } from 'src/components/utils';
 import ModalGeneric from 'src/components/modals/ModalGeneric';
 import HeaderModal from 'src/components/modals/HeaderModal';
 import 'static/css/Toggle.less';
@@ -48,12 +48,12 @@ const ToggleWithConfirmationModal = ({
           {(closeModal) => {
             return (
               <>
-                <CloseButtonNoSSR className="uk-modal-close-default" />
+                <CloseButton className="uk-modal-close-default" />
                 <HeaderModal>{modalTitle}</HeaderModal>
                 {modalDescription && (
                   <p className="uk-text-lead">{modalDescription}</p>
                 )}
-                <GridNoSSR className="uk-grid-small uk-flex-center uk-margin-large-top">
+                <Grid className="uk-grid-small uk-flex-center uk-margin-large-top">
                   <Button style="default" onClick={closeModal}>
                     Annuler
                   </Button>
@@ -68,7 +68,7 @@ const ToggleWithConfirmationModal = ({
                   >
                     {modalConfirmation}
                   </Button>
-                </GridNoSSR>
+                </Grid>
               </>
             );
           }}

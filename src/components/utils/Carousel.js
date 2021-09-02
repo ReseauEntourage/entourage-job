@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { IconNoSSR } from 'src/components/utils/Icon';
+import Icon from 'src/components/utils/Icon';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 
@@ -41,7 +41,7 @@ const Carousel = ({ style, children, containerClasses }) => {
             }
           }}
         >
-          <IconNoSSR
+          <Icon
             className="uk-icon-button uk-overlay-default"
             name="chevron-left"
             ratio={2}
@@ -57,7 +57,7 @@ const Carousel = ({ style, children, containerClasses }) => {
             }
           }}
         >
-          <IconNoSSR
+          <Icon
             className="uk-icon-button uk-overlay-default"
             name="chevron-right"
             ratio={2}
@@ -75,11 +75,7 @@ const Carousel = ({ style, children, containerClasses }) => {
             }
           }}
         >
-          <IconNoSSR
-            className="uk-text-primary"
-            name="chevron-left"
-            ratio={3}
-          />
+          <Icon className="uk-text-primary" name="chevron-left" ratio={3} />
         </a>
         <a
           href="#"
@@ -91,11 +87,7 @@ const Carousel = ({ style, children, containerClasses }) => {
             }
           }}
         >
-          <IconNoSSR
-            className="uk-text-primary"
-            name="chevron-right"
-            ratio={3}
-          />
+          <Icon className="uk-text-primary" name="chevron-right" ratio={3} />
         </a>
       </div>
     </div>

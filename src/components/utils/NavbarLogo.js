@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { ImgNoSSR } from 'src/components/utils/Img';
+import Img from 'src/components/utils/Img';
 
 const NavbarLogo = ({ href, src, alt, style, alwaysVisible }) => {
   return (
@@ -13,7 +13,7 @@ const NavbarLogo = ({ href, src, alt, style, alwaysVisible }) => {
           }`}
           style={style}
         >
-          <ImgNoSSR src={src} alt={alt} />
+          <Img src={src} alt={alt} />
         </a>
       </div>
     </Link>

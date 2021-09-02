@@ -1,20 +1,19 @@
 /* global UIkit */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconNoSSR } from 'src/components/utils/Icon';
+import { Icon, Grid } from 'src/components/utils';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaformEditSkills from 'src/components/forms/schema/formEditSkills.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
-import { GridNoSSR } from 'src/components/utils';
 
 const SkillCard = ({ list, onChange }) => {
   return (
     <div className="uk-card uk-card-secondary uk-card-body">
-      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+      <Grid gap="small" between eachWidths={['expand', 'auto']}>
         <h3 className="uk-card-title">
           {!onChange && (
             <span className="uk-margin-small-right">
-              <IconNoSSR name="bolt" />
+              <Icon name="bolt" />
             </span>
           )}
           Mes atouts
@@ -27,7 +26,7 @@ const SkillCard = ({ list, onChange }) => {
             }}
           />
         )}
-      </GridNoSSR>
+      </Grid>
       <ul className="uk-list">
         {list.length !== 0 ? (
           list.map((item, i) => {

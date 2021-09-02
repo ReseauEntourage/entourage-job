@@ -1,7 +1,7 @@
 /* global UIkit */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { IconNoSSR, GridNoSSR } from 'src/components/utils';
+import { Icon, Grid } from 'src/components/utils';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaTestimonial from 'src/components/forms/schema/formEditTestimonial.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
@@ -17,7 +17,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
 
   return (
     <div className="uk-card uk-card-default uk-card-body">
-      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+      <Grid gap="small" between eachWidths={['expand', 'auto']}>
         <h3 className="uk-card-title">
           Ils me <span className="uk-text-primary">recommandent</span>
         </h3>
@@ -29,7 +29,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
             name="plus"
           />
         )}
-      </GridNoSSR>
+      </Grid>
       {/* todo terminer linterface graphique. alignement des informaiton */}
       <ul className="uk-list uk-list-divider">
         {/* Il y avait un probleme lors de lapparition de la liste */}
@@ -39,11 +39,11 @@ const CVEditReviews = ({ reviews, onChange }) => {
           sortedReviews.map((review, i) => {
             return (
               <li id={i} key={i} className="">
-                <GridNoSSR
+                <Grid
                   eachWidths={['auto', 'expand']}
                   className="uk-padding-small uk-padding-remove-horizontal"
                 >
-                  <IconNoSSR name="quote-right" />
+                  <Icon name="quote-right" />
                   <>
                     <p className="uk-text-small uk-margin-small">
                       {formatParagraph(review.text)}
@@ -72,7 +72,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
                       />
                     </div>
                   </span>
-                </GridNoSSR>
+                </Grid>
               </li>
             );
           })

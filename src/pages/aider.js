@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, GridNoSSR, IconNoSSR, Section } from 'src/components/utils';
+import { Button, Grid, Icon, Section } from 'src/components/utils';
 import { NewsletterPartial, SharePartial } from 'src/components/partials';
 import { EXTERNAL_LINKS } from 'src/constants';
 import Layout from 'src/components/Layout';
@@ -34,7 +34,7 @@ const Aider = () => {
           </p>
           <div className="uk-flex-center uk-flex uk-flex-middle">
             <Button href="/candidats" style="secondary">
-              Partager un CV <IconNoSSR name="chevron-right" />
+              Partager un CV <Icon name="chevron-right" />
             </Button>
           </div>
         </div>
@@ -60,7 +60,7 @@ const Aider = () => {
               }}
             >
               Faire un don&nbsp;
-              <IconNoSSR name="chevron-right" />
+              <Icon name="chevron-right" />
             </Button>
           </div>
         </div>
@@ -88,16 +88,16 @@ const Aider = () => {
               }}
             >
               Devenir coach LinkedOut&nbsp;
-              <IconNoSSR name="chevron-right" />
+              <Icon name="chevron-right" />
             </Button>
           </div>
         </div>
       </Section>
       <Section style="default">
-        <GridNoSSR gap="large" column>
+        <Grid gap="large" column>
           <NewsletterPartial padding={false} />
           <SharePartial />
-        </GridNoSSR>
+        </Grid>
       </Section>
       <ModalInterestLinkedOut />
     </Layout>

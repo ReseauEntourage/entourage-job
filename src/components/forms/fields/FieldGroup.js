@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { GridNoSSR } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 
 const FieldGroup = ({ title, fields }) => {
   return (
@@ -32,7 +32,7 @@ const FieldGroup = ({ title, fields }) => {
             {title}
           </p>
         ) : null}
-        <GridNoSSR childWidths={[`1-${fields.length}`]} items={fields} />
+        <Grid childWidths={[`1-${fields.length}`]} items={fields} />
       </div>
     </div>
   );

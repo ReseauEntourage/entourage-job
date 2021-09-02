@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from 'src/components/Layout';
-import { Section, IconNoSSR, Button } from 'src/components/utils';
+import { Section, Icon, Button } from 'src/components/utils';
 import schema from 'src/components/forms/schema/formResetPassword.json';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
 import Api from 'src/Axios';
@@ -56,7 +56,7 @@ const ResetPasswordPage = () => {
             </div>
           ) : (
             <div className="uk-card uk-card-body uk-text-center">
-              <IconNoSSR name="ban" ratio={4} className="uk-text-primary" />
+              <Icon name="ban" ratio={4} className="uk-text-primary" />
               <p className="uk-text-lead">
                 Ce lien ne semble pas valide. Veuillez contacter l&apos;équipe
                 Linkedout.

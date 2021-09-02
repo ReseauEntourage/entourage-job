@@ -5,7 +5,7 @@ import ModalGeneric from 'src/components/modals/ModalGeneric';
 import HeaderModal from 'src/components/modals/HeaderModal';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
 
-import { CloseButtonNoSSR } from 'src/components/utils';
+import { CloseButton } from 'src/components/utils';
 import { useResetForm } from 'src/hooks/utils';
 
 const ModalEdit = ({
@@ -24,7 +24,7 @@ const ModalEdit = ({
       {(closeModal) => {
         return (
           <>
-            <CloseButtonNoSSR
+            <CloseButton
               className="uk-modal-close-default"
               onClick={resetForm}
             />

@@ -5,7 +5,7 @@ import { CONTACT_INFO } from 'src/constants';
 import WhoFor from 'src/components/sections/WhoFor';
 import WhatItBringsToCandidates from 'src/components/sections/WhatItBringsToCandidates';
 import Layout from 'src/components/Layout';
-import { IconNoSSR, Section, SimpleLink } from 'src/components/utils';
+import { Icon, Section, SimpleLink } from 'src/components/utils';
 import SimpleSection from 'src/components/sections/SimpleSection';
 import Button from 'src/components/utils/Button';
 import ImageTitle from 'src/components/sections/ImageTitle';
@@ -91,7 +91,7 @@ const Orienter = () => {
           >
             Je souhaite orienter un candidat&nbsp;: je m&apos;inscris au
             webinaire d&apos;info&nbsp;!
-            <IconNoSSR name="chevron-right" />
+            <Icon name="chevron-right" />
           </Button>
         </div>
       </Section>
@@ -148,7 +148,7 @@ const Orienter = () => {
                   >
                     {step.button.label}
                     &nbsp;
-                    <IconNoSSR name="chevron-right" />
+                    <Icon name="chevron-right" />
                   </Button>
                 </div>
                 {index < array.length - 1 && <hr />}

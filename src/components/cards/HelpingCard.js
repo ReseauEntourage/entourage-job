@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ImgNoSSR } from 'src/components/utils';
+import { Img } from 'src/components/utils';
 
 const HelpingCard = ({
   titleHead,
@@ -13,7 +13,7 @@ const HelpingCard = ({
   return (
     <div className="uk-card uk-card-default uk-card-body">
       <div className="uk-height-small uk-text-center">
-        <ImgNoSSR alt={alt} src={img} className="uk-height-1-1" />
+        <Img alt={alt} src={img} className="uk-height-1-1" />
       </div>
       <div>
         <h3 className="uk-text-bold">

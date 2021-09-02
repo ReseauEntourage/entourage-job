@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
-import { Section, GridNoSSR, IconNoSSR } from 'src/components/utils';
+import { Section, Grid, Icon } from 'src/components/utils';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import Api from 'src/Axios';
 import ModalEdit from 'src/components/modals/ModalEdit';
@@ -68,6 +68,7 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
   const [offset, setOffset] = useState(0);
   const [filtersConst, setFiltersConst] = useState(MEMBER_FILTERS_DATA);
   const prevSearchQuery = usePrevious(searchQuery);
+  const prevRole = usePrevious(role);
   const router = useRouter();
 
   const { getData, storeData } = useContext(DataContext);
@@ -81,49 +82,61 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
   } = useFilters(filtersConst);
 
   useEffect(() => {
-    if (role === USER_ROLES.COACH) {
-      setFilters((prevFilters) => {
-        return {
-          [MEMBER_FILTERS_DATA[0].key]: prevFilters[MEMBER_FILTERS_DATA[0].key],
-          [MEMBER_FILTERS_DATA[1].key]: prevFilters[MEMBER_FILTERS_DATA[1].key],
-        };
-      });
-      setFiltersConst(MEMBER_FILTERS_DATA.slice(0, 2));
-    } else {
-      setFilters((prevFilters) => {
-        return initializeFilters(MEMBER_FILTERS_DATA, prevFilters);
-      });
-      setFiltersConst(MEMBER_FILTERS_DATA);
-    }
-  }, [role, setFilters]);
-
-  useEffect(() => {
     if (!loadingDefaultFilters) {
       storeData(STORAGE_KEYS.MEMBERS_FILTERS, filters);
     }
   }, [filters, loadingDefaultFilters, storeData]);
 
   useEffect(() => {
-    if (user && user !== prevUser) {
-      const storageItem = getData(STORAGE_KEYS.MEMBERS_FILTERS);
-      if (storageItem) {
-        setFilters(storageItem);
+    if (user) {
+      const initialFiltersConst =
+        role === USER_ROLES.COACH
+          ? MEMBER_FILTERS_DATA.slice(0, 2)
+          : MEMBER_FILTERS_DATA;
+      if (user !== prevUser) {
+        if (user.zone) {
+          const defaultZoneForAdmin = ADMIN_ZONES_FILTERS.filter(
+            (adminZone) => {
+              return adminZone.value === user.zone;
+            }
+          );
+          setFilters(
+            initializeFilters(initialFiltersConst, {
+              [MEMBER_FILTERS_DATA[0].key]: [...defaultZoneForAdmin],
+            })
+          );
+        } else {
+          setFilters(initializeFilters(initialFiltersConst));
+        }
+        setFiltersConst(initialFiltersConst);
         setLoadingDefaultFilters(false);
-      } else if (user.zone) {
-        const defaultZoneForAdmin = ADMIN_ZONES_FILTERS.filter((adminZone) => {
-          return adminZone.value === user.zone;
-        });
-        setFilters(
-          initializeFilters(MEMBER_FILTERS_DATA, {
-            [MEMBER_FILTERS_DATA[0].key]: [...defaultZoneForAdmin],
-          })
-        );
-      } else {
-        setFilters(initializeFilters(MEMBER_FILTERS_DATA));
+      } else if (!loadingDefaultFilters && role !== prevRole) {
+        if (role === USER_ROLES.COACH) {
+          setFilters((prevFilters) => {
+            return {
+              [MEMBER_FILTERS_DATA[0].key]:
+                prevFilters[MEMBER_FILTERS_DATA[0].key],
+              [MEMBER_FILTERS_DATA[1].key]:
+                prevFilters[MEMBER_FILTERS_DATA[1].key],
+            };
+          });
+        } else {
+          setFilters((prevFilters) => {
+            return initializeFilters(MEMBER_FILTERS_DATA, prevFilters);
+          });
+        }
+        setFiltersConst(initialFiltersConst);
       }
-      setLoadingDefaultFilters(false);
     }
-  }, [getData, prevUser, setFilters, user]);
+  }, [
+    getData,
+    loadingDefaultFilters,
+    prevRole,
+    prevUser,
+    role,
+    setFilters,
+    user,
+  ]);
 
   const prevFilters = usePrevious(filters);
   const prevLoadingDefaultFilters = usePrevious(loadingDefaultFilters);
@@ -278,7 +291,7 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
           </Section>
         ) : (
           <>
-            <GridNoSSR eachWidths={['expand', 'auto']}>
+            <Grid eachWidths={['expand', 'auto']}>
               <ul className="uk-subnav ent-subnav">
                 <li
                   className={
@@ -326,233 +339,232 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
                   </a>
                 </li>
               </ul>
-            </GridNoSSR>
-            <SearchBar
-              filtersConstants={filtersConst}
-              filters={filters}
-              numberOfResults={numberOfResults}
-              resetFilters={resetFilters}
-              search={searchQuery}
-              setSearch={setSearchQuery}
-              setFilters={setFilters}
-              placeholder="Rechercher..."
-            />
-            <div className="uk-overflow-auto uk-margin-top">
-              <table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-responsive">
-                <thead>
-                  <tr>
-                    <th className="uk-text-nowrap">Membre</th>
-                    <th className="uk-text-center">Zone</th>
-                    {role === 'All' && (
-                      <th className="uk-text-center">Coach/candidat associé</th>
-                    )}
-                    {role === USER_ROLES.CANDIDAT && (
-                      <th className="uk-text-center">Coach associé</th>
-                    )}
-                    {role === USER_ROLES.COACH && (
-                      <th className="uk-text-center">Candidat associé</th>
-                    )}
-                    <th className="uk-text-center">Dernière connexion</th>
-                    {role !== USER_ROLES.COACH && (
-                      <>
-                        <th className="uk-text-center">A retrouvé un emploi</th>
-                        <th className="uk-text-center">Statut du CV</th>
-                        <th className="uk-text-center">CV masqué</th>
-                      </>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {members.map((member, key) => {
-                    return (
-                      <tr key={key}>
-                        <Link
-                          as={`/backoffice/admin/membres/${member.id}`}
-                          href="/backoffice/admin/membres/[id]"
-                        >
-                          <a
-                            className="uk-link-reset"
-                            style={{
-                              display: 'contents',
-                              height: '100%',
-                              width: '100%',
-                            }}
-                          >
-                            <td>
-                              <GridNoSSR
-                                row
-                                gap="small"
-                                middle
-                                className="uk-hidden@m"
-                                center
-                              >
-                                <ImgProfile user={member} size={48} />
-                                <GridNoSSR column gap="collapse">
-                                  <span className="uk-text-bold">
-                                    {member.firstName} {member.lastName}
-                                  </span>
-                                  <span>{member.email}</span>
-                                </GridNoSSR>
-                              </GridNoSSR>
-                              <GridNoSSR
-                                row
-                                gap="small"
-                                middle
-                                className="uk-visible@m"
-                              >
-                                <ImgProfile user={member} size={48} />
-                                <GridNoSSR column gap="collapse">
-                                  <span className="uk-text-bold">
-                                    {member.firstName} {member.lastName}
-                                  </span>
-                                  <span>{member.email}</span>
-                                </GridNoSSR>
-                              </GridNoSSR>
-                            </td>
-                            <td className="uk-text-center">
-                              <span className="uk-label uk-text-nowrap uk-visible@m">
-                                {member.zone && _.capitalize(member.zone)}
-                              </span>
-                              <div className="uk-hidden@m">
-                                {member.zone ? (
-                                  <span className="uk-label uk-text-nowrap">
-                                    {_.capitalize(member.zone)}
-                                  </span>
-                                ) : (
-                                  <span className="uk-text-italic">
-                                    Zone non renseignée
-                                  </span>
-                                )}
-                              </div>
-                            </td>
-                            <td className="uk-text-center">
-                              {role === 'All' && (
-                                <span className="uk-text-bold">
-                                  {member.role} de
-                                  <br />
-                                </span>
-                              )}
-                              {getRelatedUser(member) ? (
-                                `${getRelatedUser(member).firstName} ${
-                                  getRelatedUser(member).lastName
-                                }`
-                              ) : (
-                                <span className="uk-text-italic">Non lié</span>
-                              )}
-                            </td>
-                            <td className="uk-text-center">
-                              {member.lastConnection ? (
-                                moment(member.lastConnection).format(
-                                  'DD/MM/YYYY'
-                                )
-                              ) : (
-                                <span className="uk-text-italic">
-                                  Aucune connexion
-                                </span>
-                              )}
-                            </td>
-                            {role !== USER_ROLES.COACH && (
-                              <>
-                                <td className="uk-text-center">
-                                  {member.role === USER_ROLES.CANDIDAT ? (
-                                    <>
-                                      {getCandidateFromCoachOrCandidate(
-                                        member
-                                      ) && (
-                                        <>
-                                          <span className="uk-hidden@m">
-                                            {getCandidateFromCoachOrCandidate(
-                                              member
-                                            ).employed
-                                              ? 'A trouvé un emploi'
-                                              : "En recherche d'emploi"}
-                                          </span>
-                                          {getCandidateFromCoachOrCandidate(
-                                            member
-                                          ).employed && (
-                                            <IconNoSSR
-                                              name="check"
-                                              ratio={1.2}
-                                              className="uk-text-primary uk-visible@m"
-                                            />
-                                          )}
-                                        </>
-                                      )}
-                                    </>
-                                  ) : (
-                                    <span>-</span>
-                                  )}
-                                </td>
-                                <td className="uk-text-center">
-                                  {member.role === USER_ROLES.CANDIDAT ? (
-                                    <>
-                                      {getCandidateFromCoachOrCandidate(
-                                        member
-                                      ) &&
-                                      getCandidateFromCoachOrCandidate(member)
-                                        .cvs &&
-                                      getCandidateFromCoachOrCandidate(member)
-                                        .cvs.length > 0 ? (
-                                        translateStatusCV(
-                                          getCandidateFromCoachOrCandidate(
-                                            member
-                                          ).cvs[0].status
-                                        )
-                                      ) : (
-                                        <span className="uk-text-italic uk-text-info">
-                                          Aucun CV
-                                        </span>
-                                      )}
-                                    </>
-                                  ) : (
-                                    <span>-</span>
-                                  )}
-                                </td>
-                                <td className="uk-text-center">
-                                  {member.role === USER_ROLES.CANDIDAT ? (
-                                    <>
-                                      {getCandidateFromCoachOrCandidate(
-                                        member
-                                      ) && (
-                                        <>
-                                          <span className="uk-hidden@m">
-                                            {getCandidateFromCoachOrCandidate(
-                                              member
-                                            ).hidden
-                                              ? 'Masqué'
-                                              : 'Visible'}
-                                          </span>
-                                          {getCandidateFromCoachOrCandidate(
-                                            member
-                                          ).hidden && (
-                                            <IconNoSSR
-                                              name="check"
-                                              ratio={1.2}
-                                              className="uk-text-primary uk-visible@m"
-                                            />
-                                          )}
-                                        </>
-                                      )}
-                                    </>
-                                  ) : (
-                                    <span>-</span>
-                                  )}
-                                </td>
-                              </>
-                            )}
-                          </a>
-                        </Link>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-            {loading && (
+            </Grid>
+            {!loadingDefaultFilters && (
+              <SearchBar
+                filtersConstants={filtersConst}
+                filters={filters}
+                numberOfResults={numberOfResults}
+                resetFilters={resetFilters}
+                search={searchQuery}
+                setSearch={setSearchQuery}
+                setFilters={setFilters}
+                placeholder="Rechercher..."
+              />
+            )}
+            {loading || loadingDefaultFilters ? (
               <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
                 <div data-uk-spinner="" />
               </div>
+            ) : (
+              <div className="uk-overflow-auto uk-margin-top">
+                <table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-responsive">
+                  <thead>
+                    <tr>
+                      <th className="uk-text-nowrap">Membre</th>
+                      <th className="uk-text-center">Zone</th>
+                      {role === 'All' && (
+                        <th className="uk-text-center">
+                          Coach/candidat associé
+                        </th>
+                      )}
+                      {role === USER_ROLES.CANDIDAT && (
+                        <th className="uk-text-center">Coach associé</th>
+                      )}
+                      {role === USER_ROLES.COACH && (
+                        <th className="uk-text-center">Candidat associé</th>
+                      )}
+                      <th className="uk-text-center">Dernière connexion</th>
+                      {role !== USER_ROLES.COACH && (
+                        <>
+                          <th className="uk-text-center">
+                            A retrouvé un emploi
+                          </th>
+                          <th className="uk-text-center">Statut du CV</th>
+                          <th className="uk-text-center">CV masqué</th>
+                        </>
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {members.map((member, key) => {
+                      return (
+                        <tr
+                          key={key}
+                          className="uk-link-reset"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            return router.push(
+                              '/backoffice/admin/membres/[id]',
+                              `/backoffice/admin/membres/${member.id}`
+                            );
+                          }}
+                        >
+                          <td>
+                            <Grid
+                              row
+                              gap="small"
+                              middle
+                              className="uk-hidden@m"
+                              center
+                            >
+                              <ImgProfile user={member} size={48} />
+                              <Grid column gap="collapse">
+                                <span className="uk-text-bold">
+                                  {member.firstName} {member.lastName}
+                                </span>
+                                <span>{member.email}</span>
+                              </Grid>
+                            </Grid>
+                            <Grid
+                              row
+                              gap="small"
+                              middle
+                              className="uk-visible@m"
+                            >
+                              <ImgProfile user={member} size={48} />
+                              <Grid column gap="collapse">
+                                <span className="uk-text-bold">
+                                  {member.firstName} {member.lastName}
+                                </span>
+                                <span>{member.email}</span>
+                              </Grid>
+                            </Grid>
+                          </td>
+                          <td className="uk-text-center">
+                            <span className="uk-label uk-text-nowrap uk-visible@m">
+                              {member.zone && _.capitalize(member.zone)}
+                            </span>
+                            <div className="uk-hidden@m">
+                              {member.zone ? (
+                                <span className="uk-label uk-text-nowrap">
+                                  {_.capitalize(member.zone)}
+                                </span>
+                              ) : (
+                                <span className="uk-text-italic">
+                                  Zone non renseignée
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="uk-text-center">
+                            {role === 'All' && (
+                              <span className="uk-text-bold">
+                                {member.role} de
+                                <br />
+                              </span>
+                            )}
+                            {getRelatedUser(member) ? (
+                              `${getRelatedUser(member).firstName} ${
+                                getRelatedUser(member).lastName
+                              }`
+                            ) : (
+                              <span className="uk-text-italic">Non lié</span>
+                            )}
+                          </td>
+                          <td className="uk-text-center">
+                            {member.lastConnection ? (
+                              moment(member.lastConnection).format('DD/MM/YYYY')
+                            ) : (
+                              <span className="uk-text-italic">
+                                Aucune connexion
+                              </span>
+                            )}
+                          </td>
+                          {role !== USER_ROLES.COACH && (
+                            <>
+                              <td className="uk-text-center">
+                                {member.role === USER_ROLES.CANDIDAT ? (
+                                  <>
+                                    {getCandidateFromCoachOrCandidate(
+                                      member
+                                    ) && (
+                                      <>
+                                        <span className="uk-hidden@m">
+                                          {getCandidateFromCoachOrCandidate(
+                                            member
+                                          ).employed
+                                            ? 'A trouvé un emploi'
+                                            : "En recherche d'emploi"}
+                                        </span>
+                                        {getCandidateFromCoachOrCandidate(
+                                          member
+                                        ).employed && (
+                                          <Icon
+                                            name="check"
+                                            ratio={1.2}
+                                            className="uk-text-primary uk-visible@m"
+                                          />
+                                        )}
+                                      </>
+                                    )}
+                                  </>
+                                ) : (
+                                  <span>-</span>
+                                )}
+                              </td>
+                              <td className="uk-text-center">
+                                {member.role === USER_ROLES.CANDIDAT ? (
+                                  <>
+                                    {getCandidateFromCoachOrCandidate(member) &&
+                                    getCandidateFromCoachOrCandidate(member)
+                                      .cvs &&
+                                    getCandidateFromCoachOrCandidate(member).cvs
+                                      .length > 0 ? (
+                                      translateStatusCV(
+                                        getCandidateFromCoachOrCandidate(member)
+                                          .cvs[0].status
+                                      )
+                                    ) : (
+                                      <span className="uk-text-italic uk-text-info">
+                                        Aucun CV
+                                      </span>
+                                    )}
+                                  </>
+                                ) : (
+                                  <span>-</span>
+                                )}
+                              </td>
+                              <td className="uk-text-center">
+                                {member.role === USER_ROLES.CANDIDAT ? (
+                                  <>
+                                    {getCandidateFromCoachOrCandidate(
+                                      member
+                                    ) && (
+                                      <>
+                                        <span className="uk-hidden@m">
+                                          {getCandidateFromCoachOrCandidate(
+                                            member
+                                          ).hidden
+                                            ? 'Masqué'
+                                            : 'Visible'}
+                                        </span>
+                                        {getCandidateFromCoachOrCandidate(
+                                          member
+                                        ).hidden && (
+                                          <Icon
+                                            name="check"
+                                            ratio={1.2}
+                                            className="uk-text-primary uk-visible@m"
+                                          />
+                                        )}
+                                      </>
+                                    )}
+                                  </>
+                                ) : (
+                                  <span>-</span>
+                                )}
+                              </td>
+                            </>
+                          )}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
+
             {!loading && !allLoaded && (
               <div
                 style={{ borderTop: '1px solid #e5e5e5' }}

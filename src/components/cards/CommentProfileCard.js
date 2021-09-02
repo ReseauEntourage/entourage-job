@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconNoSSR, ImgNoSSR } from 'src/components/utils';
+import { Icon, Img } from 'src/components/utils';
 
 const CommentProfileCard = ({ name, title, description, imgSrc }) => {
   return (
     <article className="uk-comment uk-comment-primary">
       <div className="uk-grid-match" data-uk-grid>
         <div className="uk-text-primary">
-          <IconNoSSR name="quote-right" ratio={1.4} />
+          <Icon name="quote-right" ratio={1.4} />
         </div>
         <div className="uk-width-expand">
           <div className="uk-comment-body uk-margin-bottom">
@@ -22,7 +22,7 @@ const CommentProfileCard = ({ name, title, description, imgSrc }) => {
         </div>
         <div className="uk-comment-header uk-grid-medium uk-flex-bottom">
           <div className="uk-width-auto">
-            <ImgNoSSR
+            <Img
               className="uk-comment-avatar"
               src={imgSrc}
               width={80}

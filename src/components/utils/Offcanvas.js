@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-import { CloseButtonNoSSR } from 'src/components/utils/CloseButton';
+import CloseButton from 'src/components/utils/CloseButton';
 
 const Offcanvas = ({ id, children, container, flip, className }) => {
   return (
@@ -13,7 +13,7 @@ const Offcanvas = ({ id, children, container, flip, className }) => {
       id={id}
     >
       <div className={`uk-offcanvas-bar ${className}`}>
-        <CloseButtonNoSSR />
+        <CloseButton />
         {children}
       </div>
     </div>

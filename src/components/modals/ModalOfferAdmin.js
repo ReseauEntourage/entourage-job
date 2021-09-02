@@ -6,9 +6,15 @@ import schema, {
   adminMutation,
 } from 'src/components/forms/schema/formEditOpportunity';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
-import { GridNoSSR, Button, SimpleLink, IconNoSSR } from 'src/components/utils';
+import {
+  Grid,
+  Button,
+  SimpleLink,
+  Icon,
+  CloseButton,
+} from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
-import { CloseButtonNoSSR } from 'src/components/utils/CloseButton';
+
 import {
   translateCategory,
   OfferInfoContainer,
@@ -137,13 +143,13 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
     // view
     return (
       <div>
-        <GridNoSSR gap="small" between middle eachWidths={['expand', 'auto']}>
-          <GridNoSSR gap="collapse" column>
+        <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
+          <Grid gap="collapse" column>
             <h3 className="uk-text-bold uk-margin-remove-bottom">
               {currentOffer.title}
             </h3>
             <span>{translateCategory(currentOffer.isPublic)}</span>
-          </GridNoSSR>
+          </Grid>
           <List className="uk-iconnav uk-grid-medium">
             <ButtonIcon
               name="pencil"
@@ -152,10 +158,10 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               }}
             />
           </List>
-        </GridNoSSR>
+        </Grid>
         <hr />
-        <GridNoSSR className="uk-margin-bottom" eachWidths={['1-3@s', '2-3@s']}>
-          <GridNoSSR column gap="medium">
+        <Grid className="uk-margin-bottom" eachWidths={['1-3@s', '2-3@s']}>
+          <Grid column gap="medium">
             <OfferInfoContainer>
               {(() => {
                 let className = ' uk-label-warning';
@@ -186,7 +192,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                   {currentOffer.recruiterMail}
                   &nbsp;
                 </span>
-                <IconNoSSR name="mail" ratio={0.8} />
+                <Icon name="mail" ratio={0.8} />
               </SimpleLink>
               <SimpleLink
                 href={`tel:${currentOffer.recruiterPhone}`}
@@ -198,7 +204,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                   {currentOffer.recruiterPhone}
                   &nbsp;
                 </span>
-                <IconNoSSR name="phone" ratio={0.8} />
+                <Icon name="phone" ratio={0.8} />
               </SimpleLink>
               <span className="uk-text-italic uk-text-small">
                 offre soumise le{' '}
@@ -219,6 +225,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                   {currentOffer.userOpportunity.map((userOpp) => {
                     return (
                       <div
+                        key={userOpp.OpportunityId + userOpp.UserId}
                         className="uk-flex uk-flex-column"
                         style={{ marginTop: 5 }}
                       >
@@ -232,7 +239,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                             {`${userOpp.User.firstName} ${userOpp.User.lastName}`}
                             &nbsp;
                           </span>
-                          <IconNoSSR name="link" ratio={0.8} />
+                          <Icon name="link" ratio={0.8} />
                         </SimpleLink>
                         <div uk-form-custom="target: true">
                           <select
@@ -267,7 +274,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                             >
                               {findOfferStatus(userOpp.status).label}
                             </span>
-                            <IconNoSSR
+                            <Icon
                               ratio={0.8}
                               className="uk-margin-small-left uk-text-muted"
                               name="triangle-down"
@@ -280,8 +287,8 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 </div>
               </OfferInfoContainer>
             )}
-          </GridNoSSR>
-          <GridNoSSR gap="medium" childWidths={['1-1']}>
+          </Grid>
+          <Grid gap="medium" childWidths={['1-1']}>
             <OfferInfoContainer icon="comment" title="Message">
               <div>{formatParagraph(currentOffer.description)}</div>
             </OfferInfoContainer>
@@ -291,7 +298,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               </OfferInfoContainer>
             )}
             {currentOffer.businessLines && (
-              <GridNoSSR gap="small">
+              <Grid gap="small">
                 {currentOffer.businessLines.map((businessLine, index) => {
                   return (
                     <Button key={index} disabled>
@@ -299,11 +306,11 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                     </Button>
                   );
                 })}
-              </GridNoSSR>
+              </Grid>
             )}
-          </GridNoSSR>
-        </GridNoSSR>
-        <GridNoSSR className="uk-flex-right" gap="small" row>
+          </Grid>
+        </Grid>
+        <Grid className="uk-flex-right" gap="small" row>
           {!currentOffer.isArchived ? (
             <Button
               style="default"
@@ -345,7 +352,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               Valider l&apos;offre
             </Button>
           )}
-        </GridNoSSR>
+        </Grid>
       </div>
     );
   };
@@ -358,7 +365,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
           currentOffer.isArchived && 'uk-light uk-background-secondary'
         }`}
       >
-        <CloseButtonNoSSR
+        <CloseButton
           className="uk-modal-close-default"
           onClick={() => {
             if (isEditing) {
@@ -390,7 +397,7 @@ ModalOfferAdmin.propTypes = {
     department: PropTypes.string,
     userOpportunity: PropTypes.arrayOf(
       PropTypes.shape({
-        status: PropTypes.string,
+        status: PropTypes.number,
         bookmarked: PropTypes.string,
         note: PropTypes.string,
         archived: PropTypes.string,

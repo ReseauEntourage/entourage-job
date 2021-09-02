@@ -7,9 +7,10 @@ import Api from 'src/Axios';
 import {
   Section,
   SimpleLink,
-  GridNoSSR,
-  IconNoSSR,
+  Grid,
+  Icon,
   Card,
+  Button,
 } from 'src/components/utils';
 import schemaEditUser from 'src/components/forms/schema/formEditUser';
 import schemaDeleteUser from 'src/components/forms/schema/formDeleteUser.json';
@@ -22,8 +23,6 @@ import { USER_ROLES } from 'src/constants';
 import ToggleWithConfirmationModal from 'src/components/backoffice/ToggleWithConfirmationModal';
 import { mutateFormSchema } from 'src/utils';
 import CandidatOpportunities from 'src/components/opportunities/CandidatOpportunities';
-import Button from 'src/components/utils/Button';
-import Icon from 'src/components/utils/Icon';
 
 const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
@@ -168,19 +167,19 @@ const CVPage = () => {
     return (
       <LayoutBackOffice title="Chargement - Gestion des membres">
         <Section>
-          <GridNoSSR column gap="large">
+          <Grid column gap="large">
             <SimpleLink
               href="/backoffice/admin/membres"
               className="uk-link-reset uk-flex uk-flex-middle"
             >
-              <IconNoSSR name="chevron-left" />
+              <Icon name="chevron-left" />
               Retour à la liste
             </SimpleLink>
             <div>
               <div data-uk-spinner="" />
               <hr className="ent-divier-backoffice" />
             </div>
-          </GridNoSSR>
+          </Grid>
         </Section>
       </LayoutBackOffice>
     );
@@ -190,12 +189,12 @@ const CVPage = () => {
     return (
       <LayoutBackOffice title="Page introuvable - Gestion des membres">
         <Section className="uk-text-center" size="large">
-          <GridNoSSR column gap="large">
+          <Grid column gap="large">
             <SimpleLink
               href="/backoffice/admin/membres"
               className="uk-link-reset uk-flex uk-flex-middle"
             >
-              <IconNoSSR name="chevron-left" />
+              <Icon name="chevron-left" />
               Retour à la liste
             </SimpleLink>
             <div>
@@ -206,7 +205,7 @@ const CVPage = () => {
                 été supprimée.
               </p>
             </div>
-          </GridNoSSR>
+          </Grid>
         </Section>
       </LayoutBackOffice>
     );
@@ -215,12 +214,12 @@ const CVPage = () => {
   return (
     <LayoutBackOffice title={`${user.firstName} - Gestion des membres`}>
       <Section>
-        <GridNoSSR column gap="medium">
+        <Grid column gap="medium">
           <SimpleLink
             href={`/backoffice/admin/membres?role=${user.role}`}
             className="uk-link-reset uk-flex uk-flex-middle"
           >
-            <IconNoSSR name="chevron-left" />
+            <Icon name="chevron-left" />
             Retour à la liste
           </SimpleLink>
           <div>
@@ -291,11 +290,11 @@ const CVPage = () => {
             </div>
           )}
           {onglet === 'settings' && (
-            <GridNoSSR childWidths={['1-2@m']}>
+            <Grid childWidths={['1-2@m']}>
               {(user.role === USER_ROLES.CANDIDAT ||
                 user.role === USER_ROLES.COACH) && (
                 /* TODO CHECK IF BUG COMES FROM HERE */
-                <GridNoSSR
+                <Grid
                   gap={isCandidat ? 'medium' : 'collapse'}
                   childWidths={['1-1']}
                 >
@@ -370,11 +369,7 @@ const CVPage = () => {
                     )}
                   </div>
                   <div className="uk-card uk-card-default uk-card-body">
-                    <GridNoSSR
-                      gap="small"
-                      between
-                      eachWidths={['expand', 'auto']}
-                    >
+                    <Grid gap="small" between eachWidths={['expand', 'auto']}>
                       <h3 className="uk-card-title">
                         Informations personnelles
                       </h3>
@@ -384,25 +379,25 @@ const CVPage = () => {
                           return UIkit.modal(`#edit-user`).show();
                         }}
                       />
-                    </GridNoSSR>
+                    </Grid>
                     {user ? (
-                      <GridNoSSR column gap="small">
-                        <GridNoSSR row gap="small" middle>
-                          <IconNoSSR name="user" style={{ width: 20 }} />
+                      <Grid column gap="small">
+                        <Grid row gap="small" middle>
+                          <Icon name="user" style={{ width: 20 }} />
                           <span>{`${user.firstName} ${user.lastName}`}</span>
-                        </GridNoSSR>
-                        <GridNoSSR row gap="small" middle>
-                          <IconNoSSR name="gender" style={{ width: 20 }} />
+                        </Grid>
+                        <Grid row gap="small" middle>
+                          <Icon name="gender" style={{ width: 20 }} />
                           <span>
                             {`${user.gender === 0 ? 'Homme' : 'Femme'}`}
                           </span>
-                        </GridNoSSR>
-                        <GridNoSSR row gap="small" middle>
-                          <IconNoSSR name="mail" style={{ width: 20 }} />
+                        </Grid>
+                        <Grid row gap="small" middle>
+                          <Icon name="mail" style={{ width: 20 }} />
                           <span>{user.email}</span>
-                        </GridNoSSR>
-                        <GridNoSSR row gap="small" middle>
-                          <IconNoSSR name="phone" style={{ width: 20 }} />
+                        </Grid>
+                        <Grid row gap="small" middle>
+                          <Icon name="phone" style={{ width: 20 }} />
                           {user.phone ? (
                             <span>{user.phone}</span>
                           ) : (
@@ -410,10 +405,10 @@ const CVPage = () => {
                               Numéro de téléphone non renseigné
                             </span>
                           )}
-                        </GridNoSSR>
+                        </Grid>
                         {user.role === USER_ROLES.CANDIDAT && (
-                          <GridNoSSR row gap="small" middle>
-                            <IconNoSSR name="home" style={{ width: 20 }} />
+                          <Grid row gap="small" middle>
+                            <Icon name="home" style={{ width: 20 }} />
                             {user.address ? (
                               <span>{user.address}</span>
                             ) : (
@@ -421,9 +416,9 @@ const CVPage = () => {
                                 Adresse postale non renseignée
                               </span>
                             )}
-                          </GridNoSSR>
+                          </Grid>
                         )}
-                      </GridNoSSR>
+                      </Grid>
                     ) : undefined}
                   </div>
                   <div>
@@ -501,9 +496,9 @@ const CVPage = () => {
                       }}
                     />
                   </div>
-                </GridNoSSR>
+                </Grid>
               )}
-              <GridNoSSR childWidths={['1-1']} gap="medium">
+              <Grid childWidths={['1-1']} gap="medium">
                 {(user.role === USER_ROLES.CANDIDAT ||
                   user.role === USER_ROLES.COACH) && (
                   <UserInformationCard
@@ -536,10 +531,10 @@ const CVPage = () => {
                     onSubmit={deleteUser}
                   />
                 </div>
-              </GridNoSSR>
-            </GridNoSSR>
+              </Grid>
+            </Grid>
           )}
-        </GridNoSSR>
+        </Grid>
       </Section>
     </LayoutBackOffice>
   );

@@ -1,13 +1,13 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { OffcanvasNoSSR } from 'src/components/utils';
+import { Offcanvas } from 'src/components/utils';
 import FiltersDropdowns from './FiltersDropdowns';
 import FiltersCheckboxes from './FiltersCheckboxes';
 
 const FiltersSideBar = ({ filterData, filters, setFilters }) => {
   return (
-    <OffcanvasNoSSR
+    <Offcanvas
       id="toggle-filter-menu"
       className="ent-filter-menu uk-padding-medium-top uk-preserve-color"
       flip={false}
@@ -29,7 +29,7 @@ const FiltersSideBar = ({ filterData, filters, setFilters }) => {
           fullWidth
         />
       </div>
-    </OffcanvasNoSSR>
+    </Offcanvas>
   );
 };
 

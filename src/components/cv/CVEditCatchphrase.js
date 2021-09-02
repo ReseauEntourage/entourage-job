@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaCatchphrase from 'src/components/forms/schema/formEditCatchphrase.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
-import { GridNoSSR } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 
 const CVEditCatchphrase = ({ catchphrase, onChange }) => {
   return (
     <div className="uk-card uk-card-default uk-card-body">
-      <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+      <Grid gap="small" between eachWidths={['expand', 'auto']}>
         <h3 className="uk-card-title">
           Ma <span className="uk-text-primary">phrase d&apos;accroche</span>
         </h3>
@@ -21,7 +21,7 @@ const CVEditCatchphrase = ({ catchphrase, onChange }) => {
             }}
           />
         )}
-      </GridNoSSR>
+      </Grid>
       {catchphrase ? (
         <p>{catchphrase}</p>
       ) : (

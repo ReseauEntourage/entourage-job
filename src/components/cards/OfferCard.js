@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import { GridNoSSR, IconNoSSR } from 'src/components/utils';
+import { Grid, Icon } from 'src/components/utils';
 import { findOfferStatus } from 'src/utils';
 
 const OfferCard = ({
@@ -41,38 +41,38 @@ const OfferCard = ({
       }`}
     >
       {isNew && <div className="ent-offer-badge" />}
-      <GridNoSSR
+      <Grid
         gap="medium"
         childWidths={['1-1']}
         className="uk-height-max-large uk-overflow-auto"
       >
-        <GridNoSSR eachWidths={['expand', 'auto']}>
+        <Grid eachWidths={['expand', 'auto']}>
           <h5 className="uk-text-bold">{title}</h5>
           {isStared === undefined ? (
             <></>
           ) : (
-            <IconNoSSR
+            <Icon
               name="star"
               className={`${isStared ? 'ent-color-amber' : undefined}`}
             />
           )}
-        </GridNoSSR>
-        <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
-          <IconNoSSR name="user" />
+        </Grid>
+        <Grid gap="small" middle eachWidths={['auto', 'expand']}>
+          <Icon name="user" />
           <p>{from}</p>
-        </GridNoSSR>
+        </Grid>
         {department && (
-          <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
-            <IconNoSSR name="location" />
+          <Grid gap="small" middle eachWidths={['auto', 'expand']}>
+            <Icon name="location" />
             <p>{department}</p>
-          </GridNoSSR>
+          </Grid>
         )}
-        <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
-          <IconNoSSR name="world" />
+        <Grid gap="small" middle eachWidths={['auto', 'expand']}>
+          <Icon name="world" />
           <p>{shortDescription}</p>
-        </GridNoSSR>
-        <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
-          <IconNoSSR name="info" />
+        </Grid>
+        <Grid gap="small" middle eachWidths={['auto', 'expand']}>
+          <Icon name="info" />
           <div>
             {isPublic ? (
               <div>
@@ -113,14 +113,14 @@ const OfferCard = ({
               </div>
             )}
           </div>
-        </GridNoSSR>
+        </Grid>
         {date && (
-          <GridNoSSR gap="small" middle eachWidths={['auto', 'expand']}>
-            <IconNoSSR name="calendar" />
+          <Grid gap="small" middle eachWidths={['auto', 'expand']}>
+            <Icon name="calendar" />
             <p>{moment(date).format('DD/MM/YYYY')}</p>
-          </GridNoSSR>
+          </Grid>
         )}
-      </GridNoSSR>
+      </Grid>
       <div className="uk-flex uk-flex-between uk-flex-bottom uk-margin-medium-top">
         {isAdmin && (
           <div className="uk-flex-1 uk-text-left uk-text-meta uk-text-success uk-flex uk-flex-bottom">
@@ -128,7 +128,7 @@ const OfferCard = ({
               (isValidated ? (
                 <div className="uk-flex uk-flex-middle">
                   Publiée&nbsp;
-                  <IconNoSSR name="check" />
+                  <Icon name="check" />
                 </div>
               ) : (
                 <div className="uk-flex uk-flex-middle uk-text-warning">

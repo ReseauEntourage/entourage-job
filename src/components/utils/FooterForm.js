@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'src/components/utils/Button';
-import { GridNoSSR } from 'src/components/utils/index';
+import { Grid } from 'src/components/utils/index';
 
 const FooterForm = ({ error, onSubmit, onCancel, submitText }) => {
   return (
@@ -16,7 +16,7 @@ const FooterForm = ({ error, onSubmit, onCancel, submitText }) => {
           </span>
         </div>
       )}
-      <GridNoSSR
+      <Grid
         className="uk-margin uk-grid-small"
         between
         childWidths={['auto']}
@@ -27,7 +27,7 @@ const FooterForm = ({ error, onSubmit, onCancel, submitText }) => {
             </span>
           </div>,
           <div className="uk-text-right">
-            <GridNoSSR
+            <Grid
               className="uk-grid-small"
               items={[
                 onCancel ? (

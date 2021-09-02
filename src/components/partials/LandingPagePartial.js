@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  GridNoSSR,
-  IconNoSSR,
-  Section,
-  Background,
-  ImgNoSSR,
-} from 'src/components/utils';
+import { Grid, Icon, Section, Background, Img } from 'src/components/utils';
 
 const LandingPagePartial = () => {
   return (
@@ -19,8 +13,8 @@ const LandingPagePartial = () => {
         data-uk-height-viewport="offset-bottom: 40"
       >
         <Section container="large" className="uk-padding-remove-bottom">
-          <GridNoSSR middle column gap="medium">
-            <ImgNoSSR
+          <Grid middle column gap="medium">
+            <Img
               src="/static/img/linkedout_logo_white.png"
               alt="LinkedOut by entourage"
               className="uk-width-medium"
@@ -41,10 +35,10 @@ const LandingPagePartial = () => {
                 /* style={{ color: 'white' }} */
                 data-uk-scroll="offset: -1"
               >
-                <IconNoSSR name="chevron-down" ratio="2.5" />
+                <Icon name="chevron-down" ratio="2.5" />
               </a>
             </div>
-          </GridNoSSR>
+          </Grid>
         </Section>
       </div>
     </Background>

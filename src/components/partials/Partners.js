@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Background, IconNoSSR, Section } from 'src/components/utils';
+import { Background, Icon, Section } from 'src/components/utils';
 import PARTNERS from 'src/constants/partners';
 import Button from 'src/components/utils/Button';
 import LogoList from 'src/components/partials/LogoList';
@@ -50,7 +50,7 @@ const Partners = ({ showOrientationPartners }) => {
             <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-large-top">
               <Button style="primary" href="/partenaires">
                 En savoir plus &nbsp;
-                <IconNoSSR name="arrow-right" />
+                <Icon name="arrow-right" />
               </Button>
             </div>
           </div>

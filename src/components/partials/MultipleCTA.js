@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, IconNoSSR } from 'src/components/utils';
+import { Button, Icon } from 'src/components/utils';
 import Grid from 'src/components/utils/Grid';
 import Img from 'src/components/utils/Img';
 
@@ -103,7 +103,7 @@ const MultipleCTA = ({
                       >
                         {item.button.label}
                         &nbsp;
-                        <IconNoSSR name="chevron-right" />
+                        <Icon name="chevron-right" />
                       </Button>
                     </div>
                   )}

@@ -1,18 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { GridNoSSR } from 'src/components/utils/Grid';
+import { Grid } from 'src/components/utils';
 
 // todo: les cartes sont un petit peu decallés à cause du jeu expand auto
 // recentrer les cartes
 const NumberCard = ({ value, description, subDescription }) => {
   return (
     <div className="uk-card uk-width-1-1 uk-card-body uk-card-small uk-flex uk-flex-center uk-flex-middle">
-      <GridNoSSR
-        middle
-        center
-        gap="collapse"
-        eachWidths={['1-3', '1-6', '1-2']}
-      >
+      <Grid middle center gap="collapse" eachWidths={['1-3', '1-6', '1-2']}>
         <div className="uk-text-right uk-text-primary">
           {value.toString().length > 6 ? (
             <span className="uk-text-primary uk-text-right">{value}</span>
@@ -36,7 +31,7 @@ const NumberCard = ({ value, description, subDescription }) => {
             </p>
           )}
         </div>
-      </GridNoSSR>
+      </Grid>
     </div>
   );
 };

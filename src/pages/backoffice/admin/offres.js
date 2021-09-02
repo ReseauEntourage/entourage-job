@@ -140,7 +140,7 @@ const LesOpportunites = () => {
             />
           }
         >
-          {!loadingDefaultFilters && (
+          {!loadingDefaultFilters ? (
             <OpportunityList
               ref={opportunityListRef}
               search={search}
@@ -153,6 +153,10 @@ const LesOpportunites = () => {
               userRole="admin"
               updateNumberOfResults={setNumberOfResults}
             />
+          ) : (
+            <div className="uk-height-small uk-flex uk-flex-center uk-flex-middle">
+              <div data-uk-spinner="" />
+            </div>
           )}
         </Filter>
       </Section>

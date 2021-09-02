@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, GridNoSSR } from 'src/components/utils';
+import { Button, Grid } from 'src/components/utils';
 import { CV_STATUS, USER_ROLES } from 'src/constants';
 import Api from 'src/Axios';
 
 const NoCV = ({ candidatId, user, setCV }) => {
   return (
-    <GridNoSSR column middle>
+    <Grid column middle>
       {user.role === USER_ROLES.COACH &&
       (!user.candidat || (user.candidat && user.candidat.deletedAt)) ? (
         <div className="uk-flex uk-flex-column uk-flex-middle">
@@ -45,7 +45,7 @@ const NoCV = ({ candidatId, user, setCV }) => {
           </div>
         )
       )}
-    </GridNoSSR>
+    </Grid>
   );
 };
 

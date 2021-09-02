@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { IconNoSSR, GridNoSSR, Button } from 'src/components/utils';
+import { Icon, Grid, Button } from 'src/components/utils';
 import TAGS from 'src/constants/tags';
 import { event } from 'src/lib/gtag';
 
@@ -13,7 +13,7 @@ const SharePartial = ({ showTitle, padding }) => {
   return (
     <div id="share" className={!padding ? 'uk-padding-remove-vertical' : ''}>
       {showTitle && <p className="uk-text-center">Suivez-nous sur :</p>}
-      <GridNoSSR center>
+      <Grid center>
         {[
           {
             name: 'facebook',
@@ -61,11 +61,11 @@ const SharePartial = ({ showTitle, padding }) => {
               key={key}
             >
               {title}&nbsp;
-              <IconNoSSR name={name} />
+              <Icon name={name} />
             </Button>
           );
         })}
-      </GridNoSSR>
+      </Grid>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from 'src/components/Layout';
 import PARTNERS from 'src/constants/partners';
 import Grid from 'src/components/utils/Grid';
-import { ImgNoSSR, Section } from 'src/components/utils';
+import { Img, Section } from 'src/components/utils';
 import { addPrefix, formatParagraph } from 'src/utils';
 import Carousel from 'src/components/utils/Carousel';
 import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
@@ -89,14 +89,14 @@ const Partenaires = () => {
               reverse={reverse}
             >
               <div className="uk-flex uk-flex-column uk-flex-middle uk-flex-center">
-                <ImgNoSSR
+                <Img
                   src={`/static/img/partners/${key}/logo.png`}
                   width=""
                   height=""
                   alt=""
                 />
                 {bis && (
-                  <ImgNoSSR
+                  <Img
                     src={`/static/img/partners/${key}/logo_bis.png`}
                     width=""
                     height=""
@@ -142,7 +142,7 @@ const Partenaires = () => {
                     )}
                     <div className="uk-flex">
                       <div className="uk-flex uk-flex-top">
-                        <ImgNoSSR
+                        <Img
                           alt=""
                           width="27"
                           height="21"
@@ -166,7 +166,7 @@ const Partenaires = () => {
                         )}
                       </div>
                       <div className="uk-flex uk-flex-bottom">
-                        <ImgNoSSR
+                        <Img
                           alt=""
                           width="15"
                           height="12"
@@ -252,7 +252,7 @@ const Partenaires = () => {
                             className="uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-padding-large"
                           >
                             <div className="uk-width-large uk-flex uk-flex-center uk-flex-middle">
-                              <ImgNoSSR
+                              <Img
                                 src={`/static/img/partners/${key}/logo.png`}
                                 width=""
                                 height=""

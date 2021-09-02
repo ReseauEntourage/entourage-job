@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import {
   Nav,
-  NavbarNoSSR,
-  OffcanvasNoSSR,
-  HamburgerNoSSR,
+  Navbar,
+  Offcanvas,
+  Hamburger,
   NavbarLogo,
-  IconNoSSR,
+  Icon,
 } from 'src/components/utils';
 import 'src/components/headers/Header.less';
 import Button from 'src/components/utils/Button';
@@ -26,7 +26,7 @@ const Header = ({ isHome }) => {
   const router = useRouter();
   return (
     <header id="header">
-      <NavbarNoSSR
+      <Navbar
         sticky=""
         className="uk-background-secondary uk-navbar-transparent ent-home"
         left={
@@ -52,7 +52,7 @@ const Header = ({ isHome }) => {
                 style="default"
               >
                 Faire un don&nbsp;
-                <IconNoSSR name="chevron-right" />
+                <Icon name="chevron-right" />
               </Button>
             </div>
           </div>
@@ -94,15 +94,15 @@ const Header = ({ isHome }) => {
               <div className="uk-navbar-item uk-visible@m">
                 <Button href="/candidats" style="primary">
                   Découvrir les CV&nbsp;
-                  <IconNoSSR name="chevron-right" />
+                  <Icon name="chevron-right" />
                 </Button>
               </div>,
-              <HamburgerNoSSR targetId="offcanvas-guest" hidden="m" />,
+              <Hamburger targetId="offcanvas-guest" hidden="m" />,
             ]}
           />
         }
       />
-      <OffcanvasNoSSR id="offcanvas-guest">
+      <Offcanvas id="offcanvas-guest">
         <ul className="uk-nav uk-nav-default uk-margin-medium-top">
           <li>
             <a
@@ -143,7 +143,7 @@ const Header = ({ isHome }) => {
               style="primary"
             >
               Découvrir les CV&nbsp;
-              <IconNoSSR name="chevron-right" />
+              <Icon name="chevron-right" />
             </Button>
           </li>
           <li className="uk-flex uk-flex-center uk-padding-small">
@@ -158,11 +158,11 @@ const Header = ({ isHome }) => {
               style="default"
             >
               Faire un don&nbsp;
-              <IconNoSSR name="chevron-right" />
+              <Icon name="chevron-right" />
             </Button>
           </li>
         </ul>
-      </OffcanvasNoSSR>
+      </Offcanvas>
     </header>
   );
 };

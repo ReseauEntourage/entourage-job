@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { GridNoSSR } from 'src/components/utils/Grid';
+import Grid from 'src/components/utils/Grid';
 
 let debounceTimeoutId;
 
@@ -23,7 +23,7 @@ const Filter = ({
 
   return (
     <div>
-      <GridNoSSR eachWidths={['expand', 'auto']}>
+      <Grid eachWidths={['expand', 'auto']}>
         <ul className="uk-subnav ent-subnav">
           {filters.map(({ title, tag, active }, i) => {
             return (
@@ -72,7 +72,7 @@ const Filter = ({
             </div>
           </div>
         )}
-      </GridNoSSR>
+      </Grid>
       {otherFilterComponent}
       {loading ? (
         <div className="uk-text-center">
@@ -87,7 +87,10 @@ const Filter = ({
 Filter.propTypes = {
   loading: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  children: PropTypes.arrayOf(PropTypes.element),
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]),
   search: PropTypes.func,
   setFilters: PropTypes.func.isRequired,
   otherFilterComponent: PropTypes.element,

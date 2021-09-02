@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { GridNoSSR } from 'src/components/utils/Grid';
-import { IconNoSSR, SimpleLink } from 'src/components/utils';
+import { Grid, Icon, SimpleLink } from 'src/components/utils';
+
 import {
   addPrefix,
   formatParagraph,
@@ -76,7 +76,7 @@ const CVPDF = ({ cv, page }) => {
       )}
       <div className="uk-flex-1 uk-flex uk-padding uk-position-relative">
         <div className="uk-flex-1 uk-flex uk-flex-column uk-card uk-card-default uk-padding uk-background-default">
-          <GridNoSSR childWidths={['1-1']} gap="small">
+          <Grid childWidths={['1-1']} gap="small">
             <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-remove-bottom">
               <h1 className="uk-text-bold uk-text-primary">
                 {cv.user.candidat.firstName} {cv.user.candidat.lastName}
@@ -84,7 +84,7 @@ const CVPDF = ({ cv, page }) => {
               {cv.catchphrase && (
                 <div className="uk-width-xlarge uk-text-center uk-flex uk-flex-center uk-flex-middle">
                   <p className="uk-text-small uk-position-relative">
-                    <IconNoSSR
+                    <Icon
                       className="uk-text-primary ent-quote-after"
                       name="quote-right"
                       ratio={1}
@@ -93,7 +93,7 @@ const CVPDF = ({ cv, page }) => {
                     <span className="uk-margin-small-left uk-margin-small-right uk-text-italic">
                       {cv.catchphrase}
                     </span>
-                    <IconNoSSR
+                    <Icon
                       className="uk-text-primary ent-quote-before"
                       name="quote-right"
                       ratio={0.8}
@@ -145,8 +145,8 @@ const CVPDF = ({ cv, page }) => {
                 </p>
               )}
             </div>
-            <GridNoSSR className="uk-flex" eachWidths={['2-3', '1-3']}>
-              <GridNoSSR column gap="medium">
+            <Grid className="uk-flex" eachWidths={['2-3', '1-3']}>
+              <Grid column gap="medium">
                 {firstExperiences && firstExperiences.length > 0 && (
                   <div className="">
                     <h5 className="uk-margin-small-bottom">
@@ -180,8 +180,8 @@ const CVPDF = ({ cv, page }) => {
                     </dl>
                   </div>
                 )}
-              </GridNoSSR>
-              <GridNoSSR column gap="medium">
+              </Grid>
+              <Grid column gap="medium">
                 {(cv.contracts ||
                   cv.locations ||
                   cv.availability ||
@@ -196,7 +196,7 @@ const CVPDF = ({ cv, page }) => {
                       {cv.user.candidat.address &&
                         cv.user.candidat.address.length > 0 && (
                           <li className="uk-flex uk-flex-middle">
-                            <IconNoSSR
+                            <Icon
                               className="uk-text-primary uk-margin-small-right"
                               name="home"
                               style={{ width: 20 }}
@@ -209,7 +209,7 @@ const CVPDF = ({ cv, page }) => {
                       {cv.user.candidat.email &&
                         cv.user.candidat.email.length > 0 && (
                           <li className="uk-flex uk-flex-middle">
-                            <IconNoSSR
+                            <Icon
                               className="uk-text-primary uk-margin-small-right"
                               name="mail"
                               style={{ width: 20 }}
@@ -222,7 +222,7 @@ const CVPDF = ({ cv, page }) => {
                       {cv.user.candidat.phone &&
                         cv.user.candidat.phone.length > 0 && (
                           <li className="uk-flex uk-flex-middle">
-                            <IconNoSSR
+                            <Icon
                               className="uk-text-primary uk-margin-small-right"
                               name="phone"
                               style={{ width: 20 }}
@@ -234,7 +234,7 @@ const CVPDF = ({ cv, page }) => {
                         )}
                       {cv.contracts && cv.contracts.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR
+                          <Icon
                             className="uk-text-primary uk-margin-small-right"
                             name="file-text"
                             style={{ width: 20 }}
@@ -246,7 +246,7 @@ const CVPDF = ({ cv, page }) => {
                       )}
                       {cv.locations && cv.locations.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR
+                          <Icon
                             className="uk-text-primary uk-margin-small-right"
                             name="location"
                             style={{ width: 20 }}
@@ -258,7 +258,7 @@ const CVPDF = ({ cv, page }) => {
                       )}
                       {cv.availability && cv.availability.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR
+                          <Icon
                             className="uk-text-primary uk-margin-small-right"
                             name="calendar"
                             style={{ width: 20 }}
@@ -268,7 +268,7 @@ const CVPDF = ({ cv, page }) => {
                       )}
                       {cv.languages && cv.languages.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR
+                          <Icon
                             className="uk-text-primary uk-margin-small-right"
                             name="users"
                             style={{ width: 20 }}
@@ -280,7 +280,7 @@ const CVPDF = ({ cv, page }) => {
                       )}
                       {cv.transport && cv.transport.length > 0 && (
                         <li className="uk-flex uk-flex-middle">
-                          <IconNoSSR
+                          <Icon
                             className="uk-text-primary uk-margin-small-right"
                             name="car"
                             style={{ width: 20 }}
@@ -306,9 +306,9 @@ const CVPDF = ({ cv, page }) => {
                     </ul>
                   </div>
                 )}
-              </GridNoSSR>
-            </GridNoSSR>
-          </GridNoSSR>
+              </Grid>
+            </Grid>
+          </Grid>
         </div>
       </div>
     </div>,
@@ -323,9 +323,9 @@ const CVPDF = ({ cv, page }) => {
     >
       <div className="uk-flex-1 uk-flex cv-fiche uk-padding uk-position-relative">
         <div className="uk-flex-1 uk-flex uk-flex-column uk-card uk-card-default uk-padding uk-background-default">
-          <GridNoSSR childWidths={['1-1']} gap="small" style={{ scale: 0.9 }}>
-            <GridNoSSR className="uk-flex" eachWidths={['2-3', '1-3']}>
-              <GridNoSSR column gap="medium">
+          <Grid childWidths={['1-1']} gap="small" style={{ scale: 0.9 }}>
+            <Grid className="uk-flex" eachWidths={['2-3', '1-3']}>
+              <Grid column gap="medium">
                 {restOfExperiences && restOfExperiences.length > 0 && (
                   <div className="">
                     <dl className="uk-description-list uk-margin-remove">
@@ -375,7 +375,7 @@ const CVPDF = ({ cv, page }) => {
                       {sortReviews(cv.reviews).map((review, i) => {
                         return (
                           <li key={i}>
-                            <IconNoSSR
+                            <Icon
                               flip
                               className="uk-text-primary uk-margin-small-bottom"
                               name="quote-right"
@@ -384,7 +384,7 @@ const CVPDF = ({ cv, page }) => {
                             <p className="uk-text-small uk-margin-remove">
                               {formatParagraph(review.text, true)}
                             </p>
-                            <GridNoSSR
+                            <Grid
                               className="uk-margin-small-top"
                               eachWidths={['expand', 'auto']}
                               between
@@ -396,20 +396,20 @@ const CVPDF = ({ cv, page }) => {
                                 </span>
                                 , {review.status}
                               </p>
-                              <IconNoSSR
+                              <Icon
                                 className="uk-text-muted uk-width-1-1 uk-text-right"
                                 name="quote-right"
                                 ratio={0.8}
                               />
-                            </GridNoSSR>
+                            </Grid>
                           </li>
                         );
                       })}
                     </ul>
                   </div>
                 )}
-              </GridNoSSR>
-              <GridNoSSR column gap="medium">
+              </Grid>
+              <Grid column gap="medium">
                 {cv.passions && cv.passions.length > 0 && (
                   <div className="">
                     <h5 className="uk-margin-small-bottom">Mes passions</h5>
@@ -425,12 +425,12 @@ const CVPDF = ({ cv, page }) => {
                     </ul>
                   </div>
                 )}
-              </GridNoSSR>
-            </GridNoSSR>
-          </GridNoSSR>
+              </Grid>
+            </Grid>
+          </Grid>
           <div className="uk-flex-1 uk-flex uk-flex-column uk-flex-right">
             <hr className="uk-margin-small-bottom" />
-            <GridNoSSR column middle gap="small">
+            <Grid column middle gap="small">
               <p className="uk-text-small uk-text-center uk-text-meta uk-width-xlarge@m uk-margin-remove">
                 Je suis accompagné(e) dans ma recherche d&apos;emploi et mon
                 intégration en entreprise par le projet LinkedOut. Pour plus
@@ -450,7 +450,7 @@ const CVPDF = ({ cv, page }) => {
                 className="uk-width-small"
                 src={addPrefix('/static/img/linkedout_logo_orange_small.png')}
               />
-            </GridNoSSR>
+            </Grid>
           </div>
         </div>
       </div>

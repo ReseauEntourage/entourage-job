@@ -1,6 +1,6 @@
 import React from 'react';
 import { event } from 'src/lib/gtag';
-import { Button, GridNoSSR, IconNoSSR, Section } from 'src/components/utils';
+import { Button, Grid, Icon, Section } from 'src/components/utils';
 import PostJobAdModal, { modalId } from 'src/components/modals/PostJobAdModal';
 import TAGS from 'src/constants/tags';
 import Layout from 'src/components/Layout';
@@ -36,7 +36,7 @@ const CVEntreprises = () => {
               alt="Visages LinkedOut"
             />
           </div>
-          <GridNoSSR middle column gap="collapse">
+          <Grid middle column gap="collapse">
             <Button
               className="uk-margin-medium-top"
               style="secondary"
@@ -45,9 +45,9 @@ const CVEntreprises = () => {
                 return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
               }}
             >
-              Déposez votre offre <IconNoSSR name="chevron-right" />
+              Déposez votre offre <Icon name="chevron-right" />
             </Button>
-          </GridNoSSR>
+          </Grid>
         </div>
         <hr className="uk-margin-large-top uk-margin-large-bottom" />
         <div className="uk-flex uk-flex-middle uk-flex-center uk-flex-column">
@@ -61,16 +61,16 @@ const CVEntreprises = () => {
             D&apos;autres partenaires pourraient vous orienter des
             personnes&nbsp;!
           </h4>
-          <GridNoSSR middle column gap="collapse">
+          <Grid middle column gap="collapse">
             <Button
               className="uk-margin-medium-top"
               style="secondary"
               href="/entreprises/recruter-hors-linkedout"
             >
               Voir les partenaires&nbsp;
-              <IconNoSSR name="chevron-right" />
+              <Icon name="chevron-right" />
             </Button>
-          </GridNoSSR>
+          </Grid>
         </div>
       </Section>
       <PostJobAdModal />

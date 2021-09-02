@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { GridNoSSR, Button, IconNoSSR, SimpleLink } from 'src/components/utils';
+import {
+  Grid,
+  Button,
+  Icon,
+  SimpleLink,
+  CloseButton,
+} from 'src/components/utils';
 import Textarea from 'src/components/forms/fields/Textarea';
 import Select from 'src/components/forms/fields/Select';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
-import { CloseButtonNoSSR } from 'src/components/utils/CloseButton';
+
 import Api from 'src/Axios';
 import { OFFER_STATUS } from 'src/constants';
 import { formatParagraph } from 'src/utils';
@@ -24,7 +30,10 @@ export const List = ({ className, children }) => {
 };
 List.propTypes = {
   className: PropTypes.string,
-  children: PropTypes.arrayOf(PropTypes.element).isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]).isRequired,
 };
 List.defaultProps = {
   className: undefined,
@@ -38,21 +47,27 @@ export const OfferInfoContainer = ({ icon, title, children }) => {
   }
 
   return (
-    <GridNoSSR gap="small" eachWidths={['auto', 'expand']}>
-      {icon ? <IconNoSSR name={icon} /> : <div className="uk-margin-left" />}
+    <Grid gap="small" eachWidths={['auto', 'expand']}>
+      {icon ? <Icon name={icon} /> : <div className="uk-margin-left" />}
       <div>
         {title ? <span className="uk-text-bold">{title}</span> : undefined}
-        <GridNoSSR gap="collapse" childWidths={['1-1']}>
+        <Grid gap="collapse" childWidths={['1-1']}>
           {children}
-        </GridNoSSR>
+        </Grid>
       </div>
-    </GridNoSSR>
+    </Grid>
   );
 };
 OfferInfoContainer.propTypes = {
   icon: PropTypes.string,
   title: PropTypes.string,
-  children: PropTypes.arrayOf(PropTypes.string),
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.element, PropTypes.string])
+    ),
+  ]),
 };
 OfferInfoContainer.defaultProps = {
   title: undefined,
@@ -100,18 +115,13 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
           archived && 'uk-light uk-background-secondary'
         }`}
       >
-        <CloseButtonNoSSR
+        <CloseButton
           className="uk-modal-close-default"
           onClick={resetNoteBuffer}
         />
         {!currentOffer ? null : (
           <div className="uk-modal-body">
-            <GridNoSSR
-              gap="small"
-              between
-              middle
-              eachWidths={['expand', 'auto']}
-            >
+            <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
               <div className="uk-flex uk-flex-column">
                 <h3 className="uk-flex-1 uk-text-bold uk-margin-remove-bottom">
                   {currentOffer.title}
@@ -143,14 +153,14 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                   }}
                 />
               </List>
-            </GridNoSSR>
+            </Grid>
             <hr />
-            <GridNoSSR
+            <Grid
               className="uk-margin-bottom"
               eachWidths={['1-3@s', '2-3@s']}
               items={[
-                <GridNoSSR column gap="medium">
-                  <GridNoSSR eachWidths={['expand', 'auto']} row middle>
+                <Grid column gap="medium">
+                  <Grid eachWidths={['expand', 'auto']} row middle>
                     <Select
                       id="modal-offer-status"
                       title="Statut"
@@ -167,7 +177,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       }}
                     />
                     {loadingStatus && <div data-uk-spinner="" />}
-                  </GridNoSSR>
+                  </Grid>
                   <OfferInfoContainer icon="hashtag" title="Entreprise">
                     {currentOffer.company}
                   </OfferInfoContainer>
@@ -183,7 +193,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                         {currentOffer.recruiterMail}
                         &nbsp;
                       </span>
-                      <IconNoSSR name="mail" ratio={0.8} />
+                      <Icon name="mail" ratio={0.8} />
                     </SimpleLink>
                     <SimpleLink
                       href={`tel:${currentOffer.recruiterPhone}`}
@@ -195,7 +205,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                         {currentOffer.recruiterPhone}
                         &nbsp;
                       </span>
-                      <IconNoSSR name="phone" ratio={0.8} />
+                      <Icon name="phone" ratio={0.8} />
                     </SimpleLink>
                     <span className="uk-text-italic uk-text-small">
                       offre soumise le{' '}
@@ -208,8 +218,8 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                   >
                     {currentOffer.department}
                   </OfferInfoContainer>
-                </GridNoSSR>,
-                <GridNoSSR gap="medium" childWidths={['1-1']}>
+                </Grid>,
+                <Grid gap="medium" childWidths={['1-1']}>
                   <OfferInfoContainer icon="comment" title="Message">
                     <div>{formatParagraph(currentOffer.description)}</div>
                   </OfferInfoContainer>
@@ -219,7 +229,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                     </OfferInfoContainer>
                   )}
                   {currentOffer.businessLines && (
-                    <GridNoSSR gap="small">
+                    <Grid gap="small">
                       {currentOffer.businessLines.map((businessLine, index) => {
                         return (
                           <Button key={index} disabled>
@@ -229,9 +239,9 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                           </Button>
                         );
                       })}
-                    </GridNoSSR>
+                    </Grid>
                   )}
-                </GridNoSSR>,
+                </Grid>,
               ]}
             />
             <div>

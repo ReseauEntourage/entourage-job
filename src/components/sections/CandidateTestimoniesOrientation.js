@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ImgNoSSR, Section } from 'src/components/utils';
+import { Img, Section } from 'src/components/utils';
 import Carousel from 'src/components/utils/Carousel';
 import CarouselItem from 'src/components/partials/CarouselItem';
 
@@ -50,7 +50,7 @@ const CandidateTestimoniesOrientation = ({ style }) => {
                 img={image}
                 description={
                   <div>
-                    <ImgNoSSR
+                    <Img
                       alt="guillemets"
                       width="27"
                       height="21"
@@ -63,7 +63,7 @@ const CandidateTestimoniesOrientation = ({ style }) => {
                       className="uk-text-bottom"
                       style={{ display: 'flex', justifyContent: 'flex-end' }}
                     >
-                      <ImgNoSSR
+                      <Img
                         alt="guillemets-petits"
                         width="15"
                         height="12"

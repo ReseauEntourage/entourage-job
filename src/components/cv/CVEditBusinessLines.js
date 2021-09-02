@@ -2,8 +2,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { GridNoSSR } from 'src/components/utils/Grid';
-import { IconNoSSR } from 'src/components/utils';
+import { Grid, Icon } from 'src/components/utils/';
+
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaEditCVBusinessLines from 'src/components/forms/schema/formEditCVBusinessLines';
@@ -11,11 +11,11 @@ import schemaEditCVBusinessLines from 'src/components/forms/schema/formEditCVBus
 const CVEditBusinessLines = ({ businessLines, onChange }) => {
   return (
     <div className="uk-card uk-card-default uk-card-body">
-      <GridNoSSR between gap="medium" eachWidths={['expand', 'auto']}>
+      <Grid between gap="medium" eachWidths={['expand', 'auto']}>
         <h3 className="uk-card-title">
           {!onChange && (
             <span className="uk-margin-small-right">
-              <IconNoSSR name="info" />
+              <Icon name="info" />
             </span>
           )}
           Mes <span className="uk-text-primary">secteurs d&apos;activité</span>
@@ -28,7 +28,7 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => {
             }}
           />
         )}
-      </GridNoSSR>
+      </Grid>
       <p>
         {businessLines && businessLines.length > 0 ? (
           businessLines.map((t, key) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ModalGeneric from 'src/components/modals/ModalGeneric';
-import { Button, GridNoSSR } from 'src/components/utils';
+import { Button, Grid } from 'src/components/utils';
 
 const ModalConfirm = ({ id, onConfirm, text, buttonText }) => {
   return (
@@ -11,7 +11,7 @@ const ModalConfirm = ({ id, onConfirm, text, buttonText }) => {
         return (
           <>
             <p className="uk-text-center uk-text-lead">{text}</p>
-            <GridNoSSR gap="small" center>
+            <Grid gap="small" center>
               <Button style="default" onClick={close}>
                 Annuler
               </Button>
@@ -24,7 +24,7 @@ const ModalConfirm = ({ id, onConfirm, text, buttonText }) => {
               >
                 {buttonText}
               </Button>
-            </GridNoSSR>
+            </Grid>
           </>
         );
       }}

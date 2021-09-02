@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-import { CloseButtonNoSSR } from 'src/components/utils/CloseButton';
+import { CloseButton } from 'src/components/utils';
 import { useRemoveModal } from 'src/hooks/utils';
 import HeaderModal from 'src/components/modals/HeaderModal';
 
@@ -50,10 +50,7 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
   return (
     <div id={id} className="uk-flex-top" data-uk-modal="bg-close:false">
       <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-2-3@m uk-width-1-2@l">
-        <CloseButtonNoSSR
-          className="uk-modal-close-default"
-          onClick={resetForm}
-        />
+        <CloseButton className="uk-modal-close-default" onClick={resetForm} />
         <div className="uk-modal-body uk-padding-large">
           <HeaderModal>{title}</HeaderModal>
           {wrappedComponents && wrappedComponents[index]}

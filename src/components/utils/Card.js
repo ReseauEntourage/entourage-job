@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { GridNoSSR } from 'src/components/utils/Grid';
+import Grid from 'src/components/utils/Grid';
 
 // todo create a card component with each class parameters
 const Card = ({ title, style, body, hover, size, children, badge }) => {
@@ -13,10 +13,10 @@ const Card = ({ title, style, body, hover, size, children, badge }) => {
   return (
     <div className={classBuffer}>
       {title && (
-        <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+        <Grid gap="small" between eachWidths={['expand', 'auto']}>
           <h3 className="uk-card-title">{title}</h3>
           {badge}
-        </GridNoSSR>
+        </Grid>
       )}
       {children}
     </div>

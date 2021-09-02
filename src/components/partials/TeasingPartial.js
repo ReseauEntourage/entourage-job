@@ -3,7 +3,7 @@ import Countdown from 'react-countdown';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import Img from 'src/components/utils/Img';
-import { Button, IconNoSSR, Section } from 'src/components/utils';
+import { Button, Icon, Section } from 'src/components/utils';
 import { addPrefix } from 'src/utils';
 
 const CountDown = ({ days, hours, minutes, seconds, completed }) => {
@@ -11,7 +11,7 @@ const CountDown = ({ days, hours, minutes, seconds, completed }) => {
     return (
       <Button href="/candidats" style="default">
         Découvrir les candidats
-        <IconNoSSR name="chevron-right" />
+        <Icon name="chevron-right" />
       </Button>
     );
   }

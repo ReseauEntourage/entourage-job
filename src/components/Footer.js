@@ -1,11 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import {
-  GridNoSSR,
-  IconNoSSR,
-  Section,
-  SimpleLink,
-} from 'src/components/utils';
+import { Grid, Icon, Section, SimpleLink } from 'src/components/utils';
 import AssociationEntourage from 'src/components/partials/AssociationEntourage';
 import Partners from 'src/components/partials/Partners';
 import Button from 'src/components/utils/Button';
@@ -80,7 +75,7 @@ const Footer = () => {
       {asPath === '/' && <Partners />}
       {showAssociationEntourage && <AssociationEntourage />}
       <Section style="secondary" size="small" container="large" preserveColor>
-        <GridNoSSR middle center column childWidths={['1-1']} gap="medium">
+        <Grid middle center column childWidths={['1-1']} gap="medium">
           {asPath === '/' && (
             <div className="uk-text-center uk-light">
               <p>
@@ -94,7 +89,7 @@ const Footer = () => {
               </p>
             </div>
           )}
-          <GridNoSSR
+          <Grid
             row
             center
             middle
@@ -111,7 +106,7 @@ const Footer = () => {
                 }}
                 style="primary"
               >
-                Soutenir LinkedOut <IconNoSSR name="chevron-right" />
+                Soutenir LinkedOut <Icon name="chevron-right" />
               </Button>
             </div>
             <ul className="uk-padding-small uk-subnav uk-subnav-divider uk-flex-center uk-light">
@@ -159,11 +154,11 @@ const Footer = () => {
             </ul>
             <div className="uk-flex uk-flex-center">
               <Button href="/login" style="primary">
-                Espace candidat <IconNoSSR name="chevron-right" />
+                Espace candidat <Icon name="chevron-right" />
               </Button>
             </div>
-          </GridNoSSR>
-        </GridNoSSR>
+          </Grid>
+        </Grid>
       </Section>
     </footer>
   );

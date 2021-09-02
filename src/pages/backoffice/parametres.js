@@ -2,7 +2,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { UserContext } from 'src/components/store/UserProvider';
-import { Section, GridNoSSR, IconNoSSR, Card } from 'src/components/utils';
+import { Section, Grid, Icon, Card } from 'src/components/utils';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
@@ -170,8 +170,8 @@ const Parametres = () => {
           title="Mes paramètres"
           description="Ici, vous pouvez gérer les données qui sont liées à votre compte sur LinkedOut. Vous pouvez aussi changer votre mail et votre mot de passe."
         />
-        <GridNoSSR childWidths={['1-2@m']}>
-          <GridNoSSR childWidths={['1-1']}>
+        <Grid childWidths={['1-2@m']}>
+          <Grid childWidths={['1-1']}>
             {/* Preferences du CV */}
             {userData.role === USER_ROLES.CANDIDAT && (
               <Card title="Préférences du CV">
@@ -251,7 +251,7 @@ const Parametres = () => {
             )}
             {/* Informations personnelles */}
             <div className="uk-card uk-card-default uk-card-body">
-              <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+              <Grid gap="small" between eachWidths={['expand', 'auto']}>
                 <h3 className="uk-card-title">Informations personnelles</h3>
                 {loadingPersonal ? (
                   <div data-uk-spinner="ratio: .8" />
@@ -263,28 +263,28 @@ const Parametres = () => {
                     }}
                   />
                 )}
-              </GridNoSSR>
+              </Grid>
               {userData ? (
-                <GridNoSSR column gap="small">
-                  <GridNoSSR row gap="small">
-                    <IconNoSSR name="user" style={{ width: 20 }} />
+                <Grid column gap="small">
+                  <Grid row gap="small">
+                    <Icon name="user" style={{ width: 20 }} />
                     <span>{`${userData.firstName} ${userData.lastName}`}</span>
-                  </GridNoSSR>
+                  </Grid>
                   {userData.role !== USER_ROLES.ADMIN && (
-                    <GridNoSSR row gap="small">
-                      <IconNoSSR name="gender" style={{ width: 20 }} />
+                    <Grid row gap="small">
+                      <Icon name="gender" style={{ width: 20 }} />
                       <span>
                         {`${userData.gender === 0 ? 'Homme' : 'Femme'}`}
                       </span>
-                    </GridNoSSR>
+                    </Grid>
                   )}
-                  <GridNoSSR row gap="small">
-                    <IconNoSSR name="mail" style={{ width: 20 }} />
+                  <Grid row gap="small">
+                    <Icon name="mail" style={{ width: 20 }} />
                     <span>{userData.email}</span>
-                  </GridNoSSR>
+                  </Grid>
                   {userData.role !== USER_ROLES.ADMIN && (
-                    <GridNoSSR row gap="small">
-                      <IconNoSSR name="phone" style={{ width: 20 }} />
+                    <Grid row gap="small">
+                      <Icon name="phone" style={{ width: 20 }} />
                       {userData.phone ? (
                         <span>{userData.phone}</span>
                       ) : (
@@ -292,11 +292,11 @@ const Parametres = () => {
                           Numéro de téléphone non renseigné
                         </span>
                       )}
-                    </GridNoSSR>
+                    </Grid>
                   )}
                   {userData.role === USER_ROLES.CANDIDAT && (
-                    <GridNoSSR row gap="small">
-                      <IconNoSSR name="home" style={{ width: 20 }} />
+                    <Grid row gap="small">
+                      <Icon name="home" style={{ width: 20 }} />
                       {userData.address ? (
                         <span>{userData.address}</span>
                       ) : (
@@ -304,18 +304,18 @@ const Parametres = () => {
                           Adresse postale non renseignée
                         </span>
                       )}
-                    </GridNoSSR>
+                    </Grid>
                   )}
                   {userData.role === USER_ROLES.ADMIN && (
-                    <GridNoSSR row gap="small">
+                    <Grid row gap="small">
                       <span className="uk-label">
                         {userData.zone
                           ? _.capitalize(userData.zone)
                           : 'Non renseignée'}
                       </span>
-                    </GridNoSSR>
+                    </Grid>
                   )}
-                </GridNoSSR>
+                </Grid>
               ) : undefined}
             </div>
             {(userData.role === USER_ROLES.CANDIDAT ||
@@ -327,14 +327,14 @@ const Parametres = () => {
                 }}
               />
             )}
-          </GridNoSSR>
+          </Grid>
 
           {/* Changement de mot de passe */}
           <div className="uk-card uk-card-default uk-card-body">
-            <GridNoSSR gap="small" between eachWidths={['expand', 'auto']}>
+            <Grid gap="small" between eachWidths={['expand', 'auto']}>
               <h3 className="uk-card-title">Changer de mot de passe</h3>
               {loadingPassword ? <div data-uk-spinner="ratio: .8" /> : <></>}
-            </GridNoSSR>
+            </Grid>
             <FormWithValidation
               ref={form}
               submitText="Modifier"
@@ -373,7 +373,7 @@ const Parametres = () => {
               }}
             />
           </div>
-        </GridNoSSR>
+        </Grid>
         <div>
           <ModalEdit
             submitText="Envoyer"
