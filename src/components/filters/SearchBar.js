@@ -15,8 +15,9 @@ const SearchBar = ({
   filtersConstants,
   filters,
   setFilters,
-  numberOfResults,
+  search,
   setSearch,
+  numberOfResults,
   resetFilters,
   placeholder,
   startSearchEvent,
@@ -102,6 +103,7 @@ const SearchBar = ({
         <FiltersOptions
           numberOfResults={numberOfResults}
           filters={filters}
+          search={search}
           resetFilters={resetFilters}
         />
       </div>
@@ -113,8 +115,9 @@ SearchBar.propTypes = {
   filtersConstants: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   filters: PropTypes.shape().isRequired,
   setFilters: PropTypes.func.isRequired,
-  numberOfResults: PropTypes.number.isRequired,
+  search: PropTypes.string,
   setSearch: PropTypes.func.isRequired,
+  numberOfResults: PropTypes.number.isRequired,
   resetFilters: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   startSearchEvent: PropTypes.shape({
@@ -125,6 +128,7 @@ SearchBar.propTypes = {
 SearchBar.defaultProps = {
   placeholder: 'Rechercher...',
   startSearchEvent: undefined,
+  search: undefined,
 };
 
 export default SearchBar;

@@ -102,7 +102,7 @@ const getOfferOptions = (filtersObj) => {
           if (filtersObj[keys[i]].length > 0) {
             if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
               whereOptions[keys[i]] = {
-                [Op.and]: filtersObj[keys[i]].map((currentFilter) => {
+                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
                   return currentFilter.value === 'true';
                 }),
               };
@@ -175,7 +175,7 @@ const getMemberOptions = (filtersObj) => {
               keys[i] === MEMBER_FILTERS_DATA[3].key
             ) {
               whereOptions[keys[i]] = {
-                [Op.and]: filtersObj[keys[i]].map((currentFilter) => {
+                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
                   return currentFilter.value === 'true';
                 }),
               };

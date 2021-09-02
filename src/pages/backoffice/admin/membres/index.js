@@ -66,6 +66,7 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
   const [loading, setLoading] = useState(true);
   const [allLoaded, setAllLoaded] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [filtersConst, setFiltersConst] = useState(MEMBER_FILTERS_DATA);
   const prevSearchQuery = usePrevious(searchQuery);
   const router = useRouter();
 
@@ -77,22 +78,24 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
     numberOfResults,
     setNumberOfResults,
     resetFilters,
-  } = useFilters(MEMBER_FILTERS_DATA);
+  } = useFilters(filtersConst);
 
-  const filtersConst = MEMBER_FILTERS_DATA.map((filter) => {
-    if (
-      role === USER_ROLES.COACH &&
-      (filter.key === MEMBER_FILTERS_DATA[2].key ||
-        filter.key === MEMBER_FILTERS_DATA[3].key ||
-        filter.key === MEMBER_FILTERS_DATA[4].key)
-    ) {
-      return {
-        ...filter,
-        disabled: true,
-      };
+  useEffect(() => {
+    if (role === USER_ROLES.COACH) {
+      setFilters((prevFilters) => {
+        return {
+          [MEMBER_FILTERS_DATA[0].key]: prevFilters[MEMBER_FILTERS_DATA[0].key],
+          [MEMBER_FILTERS_DATA[1].key]: prevFilters[MEMBER_FILTERS_DATA[1].key],
+        };
+      });
+      setFiltersConst(MEMBER_FILTERS_DATA.slice(0, 2));
+    } else {
+      setFilters((prevFilters) => {
+        return initializeFilters(MEMBER_FILTERS_DATA, prevFilters);
+      });
+      setFiltersConst(MEMBER_FILTERS_DATA);
     }
-    return filter;
-  });
+  }, [role, setFilters]);
 
   useEffect(() => {
     if (!loadingDefaultFilters) {
@@ -329,6 +332,7 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
               filters={filters}
               numberOfResults={numberOfResults}
               resetFilters={resetFilters}
+              search={searchQuery}
               setSearch={setSearchQuery}
               setFilters={setFilters}
               placeholder="Rechercher..."

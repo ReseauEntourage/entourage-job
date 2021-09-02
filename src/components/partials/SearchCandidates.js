@@ -73,6 +73,7 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
           filters={filters}
           numberOfResults={numberOfResults}
           resetFilters={resetFilters}
+          search={search}
           setSearch={setSearch}
           setFilters={setFilters}
           placeholder="Chercher un secteur d’activité, une compétence, un profil..."

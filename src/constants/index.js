@@ -252,8 +252,8 @@ const OPPORTUNITY_FILTERS_DATA = [
   {
     key: 'isPublic',
     constants: [
-      { label: 'Masquer les offres privées', value: true },
-      { label: 'Masquer les offres générales', value: false },
+      { label: 'Offres privées', value: false },
+      { label: 'Offres générales', value: true },
     ],
     title: 'Privée/générale',
   },
@@ -278,24 +278,24 @@ const MEMBER_FILTERS_DATA = [
   {
     key: 'associatedUser',
     constants: [
-      { label: 'Masquer les candidats/coachs associés', value: false },
-      { label: 'Masquer les candidats/coachs non associés', value: true },
+      { label: 'Binôme en cours', value: true },
+      { label: 'Sans binôme', value: false },
     ],
     title: 'Membre associé',
   },
   {
     key: 'hidden',
     constants: [
-      { label: 'Masquer les candidats avec le CV masqué', value: false },
-      { label: 'Masquer les candidats avec le CV visible', value: true },
+      { label: 'CV masqués', value: true },
+      { label: 'CV visibles', value: false },
     ],
     title: 'CV masqué',
   },
   {
     key: 'employed',
     constants: [
-      { label: 'Masquer les candidats en emploi', value: false },
-      { label: "Masquer les candidats en recherche d'emploi", value: true },
+      { label: 'En emploi', value: true },
+      { label: "Recherche d'emploi", value: false },
     ],
     title: 'En emploi',
   },

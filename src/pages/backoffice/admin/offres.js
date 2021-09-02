@@ -133,6 +133,7 @@ const LesOpportunites = () => {
               filters={filters}
               numberOfResults={numberOfResults}
               resetFilters={resetFilters}
+              search={search}
               setSearch={setSearch}
               setFilters={setFilters}
               placeholder="Rechercher..."
