@@ -78,9 +78,24 @@ export default {
       link: 'https://www.caissedesdepots.fr/',
     },
     {
-      key: 'safran',
-      title: 'Fondation Safran',
-      link: 'https://www.safran-group.com/fr/engagements/un-groupe-citoyen',
+      key: 'camping',
+      title: 'Campings.com',
+      link: 'https://www.campings.com/fr/',
+    },
+    {
+      key: 'eurazeo',
+      title: 'Eurazeo',
+      link: 'https://www.eurazeo.com/fr',
+    },
+    {
+      key: 'kleever',
+      title: 'Kleever',
+      link: 'https://www.kleever.com/',
+    },
+    {
+      key: 'airliquide',
+      title: 'Fondation Air Liquide',
+      link: 'https://www.fondationairliquide.com/',
     },
     {
       key: 'cera',
@@ -89,29 +104,15 @@ export default {
         'https://www.caissedepargnerhonealpes.fr/fondation-caisse-depargne-rhone-alpes',
     },
     {
-      key: 'airliquide',
-      title: 'Fondation Air Liquide',
-      link: 'https://www.fondationairliquide.com/',
+      key: 'suez',
+      title: 'Fondation Suez',
+      link:
+        'https://www.suez.com/fr/notre-groupe/un-groupe-engage/la-fondation-suez',
     },
     {
       key: 'transdev',
       title: 'Fondation Transdev',
       link: 'http://www.fondation.transdev.com/',
-    },
-    {
-      key: 'camping',
-      title: 'Campings.com',
-      link: 'https://www.campings.com/fr/',
-    },
-    {
-      key: 'kleever',
-      title: 'Kleever',
-      link: 'https://www.kleever.com/',
-    },
-    {
-      key: 'nuitdubiencommun',
-      title: 'La Nuit du Bien Commun',
-      link: 'https://lanuitdubiencommun.com/',
     },
     {
       key: 'neoxia',
@@ -126,6 +127,41 @@ export default {
         answer: 'De réussir là où beaucoup échoue (ramener vers l’emploi des personnes en difficultés) et de se développer pour permettre à un maximum de personnes de revenir vers l’emploi avec l’aide de ceux qui sont près à les aider, et il y en a beaucoup\xa0!',
       */
       link: 'https://neoxia.com/',
+    },
+    {
+      key: 'nuitdubiencommun',
+      title: 'La Nuit du Bien Commun',
+      link: 'https://lanuitdubiencommun.com/',
+    },
+    {
+      key: 'prefiledefrance',
+      title: 'Préfecture Île-de-France',
+      link: 'https://www.prefectures-regions.gouv.fr/ile-de-france',
+    },
+    {
+      key: 'redstar',
+      title: 'Red Star',
+      link: 'https://www.redstar.fr/',
+    },
+    {
+      key: 'ringfoundation',
+      title: 'Ring Foundation',
+      link: 'https://www.ringcp.com/ring-foundation',
+    },
+    {
+      key: 'safran',
+      title: 'Fondation Safran',
+      link: 'https://www.safran-group.com/fr/engagements/un-groupe-citoyen',
+    },
+    {
+      key: 'swisslife',
+      title: 'Swiss Life',
+      link: 'https://www.swisslife.fr/',
+    },
+    {
+      key: 'trracing',
+      title: 'TR Racing',
+      link: 'https://www.thomasruyant.com/',
     },
   ],
   associations: [

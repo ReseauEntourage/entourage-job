@@ -77,9 +77,9 @@ const Partenaires = () => {
             target="_blank"
             href={link}
           >
-            <h1 className="uk-text-primary uk-text-center uk-text-bold uk-margin-large-bottom">
+            <h2 className="uk-text-primary uk-text-center uk-text-bold uk-margin-large-bottom">
               {title}
-            </h1>
+            </h2>
             <Grid
               eachWidths={['1-3@m', '2-3@m']}
               match
@@ -109,36 +109,26 @@ const Partenaires = () => {
                   className="animate uk-flex uk-flex-column"
                   uk-scrollspy-class={`uk-animation-slide-${secondDirection}`}
                 >
-                  {desc.length > 300 ? (
-                    <h4
-                      className={`${
-                        answer ? 'uk-margin-medium-bottom' : ''
-                      } uk-text-${secondDirection}`}
-                    >
-                      {formatParagraph(desc)}
-                    </h4>
-                  ) : (
-                    <h3
-                      className={`${
-                        answer ? 'uk-margin-medium-bottom' : ''
-                      } uk-text-${secondDirection}`}
-                    >
-                      {formatParagraph(desc)}
-                    </h3>
-                  )}
+                  <h4
+                    className={`${
+                      answer ? 'uk-margin-medium-bottom' : ''
+                    } uk-text-${secondDirection}`}
+                  >
+                    {formatParagraph(desc)}
+                  </h4>
                 </div>
                 {answer && <hr className="uk-divider-small" />}
                 {answer && (
                   <div
-                    className={`animate uk-flex uk-flex-column uk-flex-stretch uk-margin-large-${secondDirection} uk-margin-medium-top`}
+                    className={`uk-text-secondary animate uk-flex uk-flex-column uk-flex-stretch uk-margin-large-${secondDirection} uk-margin-medium-top`}
                     uk-scrollspy-class={`uk-animation-slide-${firstDirection}`}
                   >
                     {question && (
-                      <h4
+                      <p
                         className={`uk-flex-1 uk-text-${secondDirection} uk-text-bold`}
                       >
                         {question}
-                      </h4>
+                      </p>
                     )}
                     <div className="uk-flex">
                       <div className="uk-flex uk-flex-top">
@@ -151,17 +141,17 @@ const Partenaires = () => {
                         />
                       </div>
                       <div className="uk-flex-1">
-                        <h4
+                        <p
                           className={`uk-text-${firstDirection} uk-text-italic uk-margin-small-top uk-margin-small-bottom`}
                         >
                           {answer}
-                        </h4>
+                        </p>
                         {author && (
                           <div
                             className={`uk-flex-1 uk-text-${firstDirection} uk-margin-small-top uk-text-secondary`}
                           >
                             <span className="uk-text-bold">{author.name}</span>,
-                            {author.status}
+                            &nbsp;{author.status}
                           </div>
                         )}
                       </div>

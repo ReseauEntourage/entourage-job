@@ -9,7 +9,7 @@ import { addPrefix } from 'src/utils';
 const LogoList = ({ logos }) => {
   return (
     <Grid
-      childWidths={[`1-${Math.floor(logos.length / 2 + 1)}@m`, 'auto']}
+      childWidths={[`1-${Math.floor(logos.length / 3 + 1)}@m`, 'auto']}
       match
       middle
       center
