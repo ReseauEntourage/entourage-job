@@ -8,9 +8,10 @@
   },
   "scripts": {
     "mainWorker": "NODE_ENV=production node -r dotenv/config --expose-gc build/backend/mainWorker.js",
-    "imageWorker": "NODE_ENV=production node -r dotenv/config --expose-gc build/backend/imageWorker.js",
+    "dev-mainWorker": "npx babel-node -r dotenv/config --expose-gc src/backend/mainWorker.js",
     "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"src/backend/jobs/Mail.js\").sendRecapAboutOffers()'",
     "dev": "npx babel-node -r dotenv/config src/backend/serveur-next.js",
+    "start": "NODE_ENV=production node -r dotenv/config build/backend/serveur-next.js",
     "test": "NODE_ENV=test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
     "dev-test": "NODE_ENV=dev-test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
     "lint": "eslint .",
@@ -18,7 +19,6 @@
     "build": "next build && babel src -d build --ignore src/test,src/pages,src/hooks,src/components,src/lib",
     "db-create": "npx sequelize db:create",
     "db-migrate": "npx sequelize db:migrate",
-    "start": "NODE_ENV=production node -r dotenv/config build/backend/serveur-next.js",
     "uikit-install": "cd ./node_modules/uikit && npm i",
     "uikit-update": "cd ./node_modules/uikit/ && git pull && npm i",
     "uikit-compile": "cp -r ./assets/custom/ ./node_modules/uikit/custom/ && cd ./node_modules/uikit && npm run compile && cd ../../ && cp -r ./node_modules/uikit/dist/ ./static/dist"

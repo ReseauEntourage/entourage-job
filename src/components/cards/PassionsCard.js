@@ -57,7 +57,6 @@ const PassionsCard = ({ list, onChange }) => {
                   return typeof val === 'string' && val !== '';
                 }),
               };
-              console.log(fields);
               onChange(fieldsTransform);
             }}
           />

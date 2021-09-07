@@ -312,8 +312,6 @@ const createOpportunity = async (data, isAdmin) => {
 
   if (!isAdmin) {
     const adminMail = getAdminMailFromDepartment(finalOpportunity.department);
-    console.log(adminMail);
-
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: adminMail,
