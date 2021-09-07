@@ -38,13 +38,13 @@ const Partners = ({ showOrientationPartners }) => {
             ) : (
               <>
                 <h4 className="uk-text-primary uk-text-bold">
-                  Ce projet est développé en partenariat avec
+                  Partenaires majeurs
                 </h4>
                 <LogoList logos={PARTNERS.strategy} />
               </>
             )}
             <h4 className="uk-text-primary uk-text-bold uk-margin-large-top">
-              Avec le soutien précieux de
+              Partenaires financiers et opérationnels
             </h4>
             <LogoList logos={PARTNERS.finance} />
             <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-large-top">
