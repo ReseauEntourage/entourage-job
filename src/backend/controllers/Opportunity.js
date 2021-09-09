@@ -20,7 +20,10 @@ import {
   getOfferOptions,
 } from 'src/backend/utils/Filters';
 
-import { findOfferStatus, getAdminMailFromDepartment } from 'src/utils/Finding';
+import {
+  findOfferStatus,
+  getAdminMailsFromDepartment,
+} from 'src/utils/Finding';
 
 import { models, sequelize } from 'src/backend/db/models';
 import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
@@ -311,10 +314,10 @@ const createOpportunity = async (data, isAdmin) => {
   });
 
   if (!isAdmin) {
-    const adminMail = getAdminMailFromDepartment(finalOpportunity.department);
+    const adminMails = getAdminMailsFromDepartment(finalOpportunity.department);
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
-      toEmail: adminMail,
+      toEmail: adminMails.companies,
       subject: `Nouvelle offre d'emploi`,
       html:
         `Une nouvelle offre d'emploi est en attente de validation : <strong>${finalOpportunity.title} - ${finalOpportunity.company}</strong>.<br /><br />` +

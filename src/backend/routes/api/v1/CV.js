@@ -19,6 +19,7 @@ import {
   NEWSLETTER_ORIGINS,
   AIRTABLE_NAMES,
 } from 'src/constants';
+import { getZoneSuffix } from 'src/utils';
 
 const router = express.Router();
 
@@ -98,10 +99,12 @@ router.post(
             `Merci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\n` +
             `L'équipe LinkedOut.`;
 
+          const adminMail =
+            process.env[`ADMIN_CANDIDATES_${getZoneSuffix(req.payload.zone)}`];
           // notification de l'admin
           await addToWorkQueue({
             type: JOBS.JOB_TYPES.SEND_MAIL,
-            toEmail: process.env.MAILJET_TO_EMAIL,
+            toEmail: adminMail,
             subject: mailSubject,
             text: mailText,
           });
