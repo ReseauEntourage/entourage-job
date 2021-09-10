@@ -9,16 +9,23 @@ const findOfferStatus = (status) => {
   return { label: 'Non défini', color: 'muted' };
 };
 
+const getZoneSuffix = (zone) => {
+  return zone && zone !== ADMIN_ZONES.HZ ? zone : 'HZ';
+};
+
 const getZoneFromDepartment = (dep) => {
   const zone = DEPARTMENTS.find((depObj) => {
     return depObj.name === dep;
   });
-  return zone && zone.zone !== ADMIN_ZONES.HZ ? zone.zone : 'HZ';
+  return getZoneSuffix(zone ? zone.zone : null);
 };
 
-const getAdminMailFromDepartment = (dep) => {
+const getAdminMailsFromDepartment = (dep) => {
   const zone = getZoneFromDepartment(dep);
-  return process.env[`ADMIN_${zone}`];
+  return {
+    candidates: process.env[`ADMIN_CANDIDATES_${zone}`],
+    companies: process.env[`ADMIN_COMPANIES_${zone}`],
+  };
 };
 
-export { findOfferStatus, getAdminMailFromDepartment };
+export { findOfferStatus, getAdminMailsFromDepartment, getZoneSuffix };
