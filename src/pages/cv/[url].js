@@ -9,11 +9,14 @@ import {
 import { CVBackground, CVFiche } from 'src/components/cv';
 import Layout from 'src/components/Layout';
 import Api from 'src/Axios';
-import { Section } from 'src/components/utils';
+import { Grid, Icon, Section, SimpleLink } from 'src/components/utils';
 import TAGS from 'src/constants/tags';
 import { useUpdateSharesCount } from 'src/hooks';
+import Button from 'src/components/utils/Button';
+import { CV_FILTERS_DATA } from 'src/constants';
+import CVList from 'src/components/cv/CVList';
 
-const CVPage = ({ cv, router, hideShareOptions }) => {
+const CVPage = ({ cv, exists, router, hideShareOptions }) => {
   const updateSharesCount = useUpdateSharesCount();
 
   const hostname = process.env.SERVER_URL;
@@ -30,9 +33,56 @@ const CVPage = ({ cv, router, hideShareOptions }) => {
     if (cv) {
       updateSharesCount(cv.UserId, 'other');
     }
-  }, [cv, cv.UserId, updateSharesCount]);
+  }, [cv, updateSharesCount]);
 
   if (!cv) {
+    if (exists) {
+      return (
+        <Layout title="Bonne nouvelle ! - LinkedOut" noIndex>
+          <Section className="uk-text-center" style="default">
+            <h2 className="uk-text-bold">
+              C&apos;est une{' '}
+              <span className="uk-text-bold uk-text-primary">
+                bonne nouvelle&nbsp;!
+              </span>{' '}
+            </h2>
+            <h4>
+              Ce candidat n&apos;est plus en recherche d&apos;emploi car il est{' '}
+              <span className="uk-text-bold">actuellement en poste</span>, ou{' '}
+              <span className="uk-text-bold">
+                dans un parcours de réorientation
+              </span>
+              &nbsp;!
+            </h4>
+            <h4 className="uk-margin-medium-bottom">
+              Pour partager le CV d&apos;un autre candidat,{' '}
+              <SimpleLink href="/candidats" className="uk-text-bold">
+                rendez-vous sur la page des candidats
+              </SimpleLink>
+              .
+            </h4>
+            <CVList
+              nb={3}
+              filters={{
+                [CV_FILTERS_DATA[0].key]: CV_FILTERS_DATA[0].constants,
+              }}
+            />
+            <Grid middle column gap="collapse">
+              <Button
+                href="/candidats"
+                style="secondary"
+                className="uk-margin-large-top"
+              >
+                Voir tous les candidats <Icon name="chevron-right" />
+              </Button>
+            </Grid>
+          </Section>
+          <Section style="muted">
+            <NewsletterPartial tag={TAGS.PAGE_CV_INSCRIPTION_NEWSLETTER_CLIC} />
+          </Section>
+        </Layout>
+      );
+    }
     return (
       <Layout title="Page introuvable - LinkedOut" noIndex>
         <Section className="uk-text-center" size="large">
@@ -80,8 +130,13 @@ const CVPage = ({ cv, router, hideShareOptions }) => {
 
 CVPage.getInitialProps = async ({ query }) => {
   return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
-    .then(({ data }) => {
-      return { cv: data, hideShareOptions: query.hideShareOptions === 'true' };
+    .then(({ data: { cv, exists } }) => {
+      console.log(cv, exists);
+      return {
+        cv,
+        exists,
+        hideShareOptions: query.hideShareOptions === 'true',
+      };
     })
     .catch((err) => {
       console.log(err);
@@ -92,9 +147,11 @@ CVPage.propTypes = {
   cv: PropTypes.shape(),
   hideShareOptions: PropTypes.bool,
   router: PropTypes.shape(),
+  exists: PropTypes.bool,
 };
 CVPage.defaultProps = {
   cv: null,
+  exists: true,
   hideShareOptions: false,
   router: {
     asPath: '',
