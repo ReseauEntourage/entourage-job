@@ -21,7 +21,8 @@
     "db-migrate": "npx sequelize db:migrate",
     "uikit-install": "cd ./node_modules/uikit && npm i",
     "uikit-update": "cd ./node_modules/uikit/ && git pull && npm i",
-    "uikit-compile": "cp -r ./assets/custom/ ./node_modules/uikit/custom/ && cd ./node_modules/uikit && npm run compile && cd ../../ && cp -r ./node_modules/uikit/dist/ ./static/dist"
+    "uikit-compile": "cp -r ./assets/custom/ ./node_modules/uikit/custom/ && cd ./node_modules/uikit && npm run compile && cd ../../ && cp -r ./node_modules/uikit/dist/ ./static/dist",
+    "heroku-cleanup": "rm -rf src"
   },
   "repository": {
     "type": "git",
