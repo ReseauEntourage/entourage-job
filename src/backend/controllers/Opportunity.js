@@ -217,7 +217,7 @@ const updateTable = async (opportunity, candidates) => {
   });
 };
 
-const getStringOpportunity = (opportunity, businessLines) => {
+const getStringOpportunity = (opportunity, candidates, businessLines) => {
   return (
     `----------<br /><br />` +
     `<strong>Titre :</strong> ${opportunity.title}<br />` +
@@ -233,12 +233,10 @@ const getStringOpportunity = (opportunity, businessLines) => {
     `<strong>Description :</strong> ${opportunity.description}<br />` +
     `<strong>Pré-requis :</strong> ${opportunity.prerequisites || ''}` +
     `${
-      !opportunity.isPublic &&
-      opportunity.userOpportunity &&
-      opportunity.userOpportunity.length > 0
+      !opportunity.isPublic && candidates && candidates.length > 0
         ? `<br /><strong>Candidat${
-            opportunity.userOpportunity.length > 1 ? 's' : ''
-          } :</strong> ${opportunity.userOpportunity
+            candidates.length > 1 ? 's' : ''
+          } :</strong> ${candidates
             .map((candidate) => {
               return `${candidate.User.firstName} ${candidate.User.lastName}`;
             })
@@ -336,7 +334,11 @@ const createOpportunity = async (data, isAdmin) => {
         `Pour toute question sur le dispositif ou si vous souhaitez modifier votre offre, n’hésitez pas à nous contacter : <strong>entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
         `Nous sommes tous une partie de la solution face à l’exclusion, merci d’y croire avec nous !<br /><br />` +
         `L’équipe LinkedOut<br /><br />` +
-        `${getStringOpportunity(finalOpportunity, data.businessLines)}`,
+        `${getStringOpportunity(
+          finalOpportunity,
+          candidates,
+          data.businessLines
+        )}`,
     });
   }
 
@@ -866,6 +868,7 @@ const updateOpportunity = async (opportunity) => {
           `L’équipe LinkedOut<br /><br />` +
           `${getStringOpportunity(
             finalOpportunity,
+            finalOpportunity.userOpportunity,
             finalOpportunity.businessLines.map((businessLine) => {
               return businessLine.name;
             })
@@ -906,6 +909,7 @@ const updateOpportunity = async (opportunity) => {
           `L’équipe LinkedOut<br /><br />` +
           `${getStringOpportunity(
             finalOpportunity,
+            finalOpportunity.userOpportunity,
             finalOpportunity.businessLines.map((businessLine) => {
               return businessLine.name;
             })
