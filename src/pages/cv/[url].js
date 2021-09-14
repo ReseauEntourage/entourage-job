@@ -47,19 +47,16 @@ const CVPage = ({ cv, exists, router, hideShareOptions }) => {
               </span>{' '}
             </h2>
             <h4>
-              Ce candidat n&apos;est plus en recherche d&apos;emploi car il est{' '}
-              <span className="uk-text-bold">actuellement en poste</span>, ou{' '}
-              <span className="uk-text-bold">
-                dans un parcours de réorientation
-              </span>
-              &nbsp;!
+              Ce candidat est actuellement{' '}
+              <span className="uk-text-bold">en emploi ou a été réorienté</span>
+              .
             </h4>
             <h4 className="uk-margin-medium-bottom">
-              Pour partager le CV d&apos;un autre candidat,{' '}
+              Soutenez un autre candidat&nbsp;:
               <SimpleLink href="/candidats" className="uk-text-bold">
-                rendez-vous sur la page des candidats
+                {' '}
+                partagez son CV&nbsp;!
               </SimpleLink>
-              .
             </h4>
             <CVList
               nb={3}
