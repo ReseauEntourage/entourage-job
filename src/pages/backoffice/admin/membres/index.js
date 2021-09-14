@@ -205,7 +205,7 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
     if (
       !loadingDefaultFilters &&
       (loadingDefaultFilters !== prevLoadingDefaultFilters ||
-        filters !== prevFilters ||
+        !_.isEqual(filters, prevFilters) ||
         prevSearchQuery !== searchQuery)
     ) {
       fetchData(true);

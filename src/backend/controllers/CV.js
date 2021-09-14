@@ -498,7 +498,17 @@ const getCVbyUrl = async (url) => {
     cv = await getAndCacheCV(url);
   }
 
-  return cv;
+  const userCandidat = await models.User_Candidat.findOne({
+    where: {
+      url,
+    },
+  });
+
+  const cvResponse = {
+    cv,
+    exists: cv ? true : !!userCandidat,
+  };
+  return cvResponse;
 };
 
 // todo: revoir
