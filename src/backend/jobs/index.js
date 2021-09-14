@@ -1,6 +1,6 @@
 import Pusher from 'pusher';
 
-import { getMainWorkQueue, getImageQueue } from 'src/backend/utils/WorkQueue';
+import { getMainWorkQueue } from 'src/backend/utils/WorkQueue';
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -21,7 +21,6 @@ const pusher = new Pusher({
 });
 
 const workQueue = getMainWorkQueue();
-const imageQueue = getImageQueue();
 
 const queueOptions = {
   attempts: process.env.JOBS_NB_ATTEMPS
@@ -41,17 +40,6 @@ const addToWorkQueue = async (data, options = {}) => {
   if (!dev) {
     try {
       workQueue.add(data, { ...queueOptions, ...options });
-    } catch (err) {
-      console.error('Failed to add job to queue : ', err);
-    }
-  }
-  return Promise.resolve();
-};
-
-const addToImageQueue = async (data) => {
-  if (!dev) {
-    try {
-      imageQueue.add(data, queueOptions);
     } catch (err) {
       console.error('Failed to add job to queue : ', err);
     }
@@ -89,11 +77,4 @@ const attachListeners = (queue) => {
   });
 };
 
-export {
-  workers,
-  pusher,
-  maxJobsPerWorker,
-  attachListeners,
-  addToWorkQueue,
-  addToImageQueue,
-};
+export { workers, pusher, maxJobsPerWorker, attachListeners, addToWorkQueue };

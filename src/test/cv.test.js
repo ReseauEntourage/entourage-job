@@ -214,11 +214,10 @@ describe('CV', () => {
             .get(`${route}/${candidatUrl}`)
             .set('authorization', `Token ${loggedInCandidat.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.UserId).toBe(candidatCV.id);
+          expect(response.body.cv.UserId).toBe(candidatCV.id);
+          expect(response.body.exists).toBe(true);
         });
-        // TODO Check why didn't detect error
-        // There is an attempt in the route to return 204 code for this case but returns 401
-        it("Should return 204 if valid url provided and candidat doesn't have a CV", async () => {
+        it('Should return 200 if valid url provided and candidat has hidden CV', async () => {
           const candidatNoCv = await createLoggedInUser({
             role: USER_ROLES.CANDIDAT,
             password: 'candidatNoCv',
@@ -227,7 +226,9 @@ describe('CV', () => {
           const response = await request(serverTest).get(
             `${route}/${candidatNoCvUrl}`
           );
-          expect(response.status).toBe(204);
+          expect(response.status).toBe(200);
+          expect(response.body.cv).toBe(undefined);
+          expect(response.body.exists).toBe(true);
         });
         it.skip("Should return 401 if candidat's url is invalid", async () => {
           const response = await request(serverTest).get(

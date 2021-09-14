@@ -29,13 +29,4 @@ const getMainWorkQueue = () => {
   return new Queue(JOBS.QUEUES.WORK, { redis: getRedisOptions() });
 };
 
-const getImageQueue = () => {
-  if (dev) {
-    return;
-  }
-
-  // https://devcenter.heroku.com/articles/securing-heroku-redis if needed
-  return new Queue(JOBS.QUEUES.IMAGE, { redis: getRedisOptions() });
-};
-
-export { getMainWorkQueue, getImageQueue };
+export { getMainWorkQueue };

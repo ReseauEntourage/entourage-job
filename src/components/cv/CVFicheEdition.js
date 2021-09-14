@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { usePrevious } from 'src/hooks/utils';
+import { useMount, usePrevious } from 'src/hooks/utils';
 import { Grid, Img } from 'src/components/utils';
 import {
   ExperiencesProfileCard,
@@ -42,20 +42,15 @@ const CVFicheEdition = ({
     setImageUrl(`${baseUrl}.jpg?${previewHash}`);
   }, [cv.UserId, cv.status]);
 
+  useMount(() => {
+    updateImage();
+  });
+
   useEffect(() => {
-    if (
-      (prevCVStatus !== cv.status && cv.status !== CV_STATUS.Draft.value) ||
-      (!!prevPreviewGenerating && !previewGenerating)
-    ) {
+    if (!!prevPreviewGenerating && !previewGenerating) {
       updateImage();
     }
-  }, [
-    cv.status,
-    prevCVStatus,
-    prevPreviewGenerating,
-    previewGenerating,
-    updateImage,
-  ]);
+  }, [prevPreviewGenerating, previewGenerating, updateImage]);
 
   return (
     <Grid childWidths={['1-1']}>
@@ -88,12 +83,17 @@ const CVFicheEdition = ({
                 </h3>
               </div>
               <div className="uk-card-media-bottom">
-                <div className="uk-inline">
-                  <Img
-                    className="uk-height-medium"
-                    src={previewUrl}
-                    alt="Preview"
-                  />
+                <div className="uk-inline uk-width-expand">
+                  {previewUrl ? (
+                    <Img
+                      className="uk-height-medium"
+                      src={previewUrl}
+                      alt="Preview"
+                    />
+                  ) : (
+                    <div className="uk-height-medium uk-width-expand" />
+                  )}
+
                   {(cv.status === CV_STATUS.Draft.value ||
                     previewGenerating) && (
                     <>
@@ -176,7 +176,7 @@ CVFicheEdition.propTypes = {
     reviews: PropTypes.array,
     experiences: PropTypes.array,
     status: PropTypes.string,
-    UserId: PropTypes.number,
+    UserId: PropTypes.string,
   }).isRequired,
   onChange: PropTypes.func,
   disablePicture: PropTypes.bool,

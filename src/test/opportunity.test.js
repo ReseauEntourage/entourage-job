@@ -22,7 +22,7 @@ describe('Opportunity', () => {
   const nbPrivateOpportunity = 6;
   const nbPublicOpportunitiesToAssociate = 5;
   let totalOpp =
-    nbOpportunity + nbPrivateOpportunity + nbPublicOpportunitiesToAssociate + 3;
+    nbOpportunity + nbPrivateOpportunity + nbPublicOpportunitiesToAssociate + 5;
   let opportunities;
   let opportunitiesId;
   let loggedInAdmin;
@@ -58,6 +58,18 @@ describe('Opportunity', () => {
         true
       )),
     ];
+
+    await createEntities(
+      opportunityFactory,
+      2,
+      {
+        isValidated: false,
+        isPublic: false,
+        department: 'Paris (75)',
+      },
+      true
+    );
+
     opportunitiesId = opportunities.map((o) => {
       return o.id;
     });

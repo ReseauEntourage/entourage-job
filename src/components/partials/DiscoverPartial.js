@@ -61,7 +61,7 @@ const DiscoverPartial = ({ style }) => {
           href="/candidats"
           className="uk-margin-large-top"
         >
-          Voir tous les candidats <Icon name="arrow-right" />
+          Voir tous les candidats <Icon name="chevron-right" />
         </Button>
       </div>
     </Section>
