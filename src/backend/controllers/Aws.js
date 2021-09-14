@@ -7,14 +7,13 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl as S3GetSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-const dev = process.env.NODE_ENV !== 'production';
-
 // The name of the bucket that you have created
 const s3 = new S3Client({
   region: 'eu-west-3',
-  accessKeyId: process.env.AWSS3_ID,
-  secretAccessKey: process.env.AWSS3_SECRET,
-  signatureVersion: 'v4',
+  credentials: {
+    accessKeyId: process.env.AWSS3_ID,
+    secretAccessKey: process.env.AWSS3_SECRET,
+  },
 });
 
 const upload = (data, contentType, outputPath, isPrivate) => {
@@ -49,7 +48,6 @@ const deleteFiles = (keys) => {
   if (!Array.isArray(keys)) {
     keys = [keys];
   }
-
   const deleteObjectsCommand = new DeleteObjectsCommand({
     Bucket: process.env.AWSS3_BUCKET_NAME,
     Delete: {
@@ -60,18 +58,15 @@ const deleteFiles = (keys) => {
   });
 
   return new Promise((resolve, reject) => {
-    if (!dev) {
-      // Deleting files
-      s3.send(deleteObjectsCommand)
-        .then(() => {
-          console.log('============ AWS Delete ============', keys);
-          resolve(keys);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    }
-    resolve(keys);
+    // Deleting files
+    s3.send(deleteObjectsCommand)
+      .then(() => {
+        console.log('============ AWS Delete ============', keys);
+        resolve(keys);
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 };
 
