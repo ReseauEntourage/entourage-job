@@ -78,7 +78,7 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
   );
 
   useEffect(() => {
-    if (search !== prevSearch || !_.isEqual(filters, prevFilters)) {
+    if (search !== prevSearch || filters !== prevFilters) {
       setError(undefined);
       setCVs(undefined);
       fetchData();

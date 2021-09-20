@@ -32,7 +32,6 @@ const CVFicheEdition = ({
   const [imageUrl, setImageUrl] = useState(undefined);
 
   const prevPreviewGenerating = usePrevious(previewGenerating);
-  const prevCVStatus = usePrevious(cv.status);
 
   const updateImage = useCallback(() => {
     // Use hash to reload image if an update is done

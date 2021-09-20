@@ -2,7 +2,6 @@
 import moment from 'moment';
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { PropTypes } from 'prop-types';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { Section, Grid, Icon } from 'src/components/utils';
@@ -205,7 +204,7 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
     if (
       !loadingDefaultFilters &&
       (loadingDefaultFilters !== prevLoadingDefaultFilters ||
-        !_.isEqual(filters, prevFilters) ||
+        filters !== prevFilters ||
         prevSearchQuery !== searchQuery)
     ) {
       fetchData(true);
