@@ -137,7 +137,7 @@ const GenericField = ({
         options={options}
         valid={getValid(data.name)}
         onChange={onChange}
-        disabled={data.disabled}
+        disabled={data.disable ? data.disable(getValue) : data.disabled}
         hidden={data.hidden}
       />
     );

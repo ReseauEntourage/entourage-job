@@ -27,6 +27,8 @@ import {
 
 import { models, sequelize } from 'src/backend/db/models';
 import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
+import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import { getUser } from './User';
 
 const offerTable = AIRTABLE_NAMES.OFFERS;
 const {
@@ -387,6 +389,24 @@ const getOpportunities = async (params) => {
   return filterOffersByStatus(filteredTypeOpportunites, statusParams);
 };
 
+const countPendingOpportunitiesCount = async (zone) => {
+  const locationFilters = DEPARTMENTS_FILTERS.filter((dept) => {
+    return zone === dept.zone || !zone;
+  });
+  const filterOptions = getOfferOptions({ department: locationFilters });
+
+  const pendingOpportunitiesCount = await Opportunity.count({
+    where: {
+      ...filterOptions,
+      isValidated: false,
+    },
+  });
+
+  return {
+    pendingOpportunities: pendingOpportunitiesCount,
+  };
+};
+
 const getLatestOpportunities = async () => {
   const options = {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
@@ -563,6 +583,59 @@ const getAllUserOpportunities = async (userId, params = {}) => {
   );
 
   return filterOffersByStatus(filteredTypeOpportunities, statusParams, userId);
+};
+
+const getUnseenUserOpportunitiesCount = async (candidatId) => {
+  const user = await getUser(candidatId);
+
+  const locationFilters = DEPARTMENTS_FILTERS.filter((dept) => {
+    return user.zone === dept.zone || !user.zone;
+  });
+
+  const filterOptions = getOfferOptions({ department: locationFilters });
+
+  const opportunityUsers = await Opportunity_User.findAll({
+    where: { UserId: candidatId },
+    attributes: ['OpportunityId'],
+  });
+
+  const opportunities = await Opportunity.findAll({
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    where: {
+      [Op.or]: [
+        { isPublic: true, isValidated: true },
+        {
+          id: opportunityUsers.map((model) => {
+            return model.OpportunityId;
+          }),
+          isPublic: false,
+          isValidated: true,
+        },
+      ],
+      ...filterOptions,
+    },
+  });
+
+  const filteredOpportunities = opportunities
+    .map((model) => {
+      return cleanOpportunity(model);
+    })
+    .filter((opportunity) => {
+      return (
+        !opportunity.userOpportunity ||
+        opportunity.userOpportunity.length === 0 ||
+        !opportunity.userOpportunity.find((opp) => {
+          return opp.UserId === candidatId;
+        }) ||
+        opportunity.userOpportunity.find((opp) => {
+          return opp.UserId === candidatId;
+        }).seen === false
+      );
+    });
+
+  return {
+    unseenOpportunities: filteredOpportunities.length,
+  };
 };
 
 const getOpportunity = async (opportunityId, isAdmin, candidateId) => {
@@ -934,4 +1007,6 @@ export {
   addUserToOpportunity,
   refreshAirtableOpportunities,
   getLatestOpportunities,
+  getUnseenUserOpportunitiesCount,
+  countPendingOpportunitiesCount,
 };

@@ -1,4 +1,5 @@
 import { ADMIN_ZONES_FILTERS } from 'src/constants/departements';
+import { ADMIN_ROLES } from 'src/constants';
 
 export default {
   id: 'form-personal-data',
@@ -27,6 +28,17 @@ export default {
       options: [
         { value: -1, label: 'Choisissez une zone' },
         ...ADMIN_ZONES_FILTERS,
+      ],
+    },
+    {
+      id: 'adminRole',
+      title: 'Responsabilité*',
+      name: 'adminRole',
+      component: 'select',
+      options: [
+        { value: -1, label: 'Choisissez une responsabilité' },
+        { value: ADMIN_ROLES.CANDIDATES, label: ADMIN_ROLES.CANDIDATES },
+        { value: ADMIN_ROLES.COMPANIES, label: ADMIN_ROLES.COMPANIES },
       ],
     },
     {
@@ -138,6 +150,17 @@ export default {
     },
     {
       field: 'zone',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'adminRole',
       method: 'isEmpty',
       args: [
         {

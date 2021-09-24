@@ -76,6 +76,10 @@ export default (sequelize, DataTypes) => {
         defaultValue: 1,
         allowNull: false,
       },
+      lastModifiedBy: {
+        allowNull: true,
+        type: DataTypes.UUID,
+      },
     },
     {
       paranoid: true,

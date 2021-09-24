@@ -85,7 +85,7 @@ router.post(
         }
 
         // création du corps du CV
-        const cv = await CVController.createCV(reqCV);
+        const cv = await CVController.createCV(reqCV, req.payload.id);
 
         // notification mail to coach and admin
         if (
@@ -269,6 +269,56 @@ router.get('/', auth(), (req, res) => {
       res.status(401).send('Une erreur est survenue');
     });
 });
+
+/**
+ * Route : GET /api/<VERSION>/cv/checkUpdate
+ * Description : Vérifie si des modifications ont étés apportés au CV
+ */
+router.get(
+  '/checkUpdate',
+  auth([USER_ROLES.COACH, USER_ROLES.CANDIDAT]),
+  (req, res) => {
+    let candidatId;
+    if (req.payload.role === USER_ROLES.CANDIDAT) {
+      candidatId = req.payload.id;
+    } else if (req.payload.candidatId) {
+      candidatId = req.payload.candidatId;
+    }
+    CVController.checkCVHasBeenModified(candidatId, req.payload.id)
+      .then((cvHasBeenModified) => {
+        res.status(200).json(cvHasBeenModified);
+      })
+      .catch((err) => {
+        logger(res).error(err);
+        res.status(401).send('Une erreur est survenue');
+      });
+  }
+);
+
+/**
+ * Route : PUT /api/<VERSION>/cv/read/<ID>
+ * Description : Reset le lastModifiedBy du CV associé à l'<ID> de candidat fournit
+ */
+router.put(
+  '/read/:id',
+  auth([USER_ROLES.COACH, USER_ROLES.CANDIDAT]),
+  (req, res) => {
+    let candidatId;
+    if (req.payload.role === USER_ROLES.CANDIDAT) {
+      candidatId = req.payload.id;
+    } else if (req.payload.candidatId) {
+      candidatId = req.payload.candidatId;
+    }
+    CVController.setCVHasBeenRead(candidatId, req.payload.id)
+      .then((cv) => {
+        res.status(200).json(cv);
+      })
+      .catch((err) => {
+        logger(res).error(err);
+        res.status(401).send('Une erreur est survenue');
+      });
+  }
+);
 
 /**
  * Route : GET /api/<VERSION>/cv/edit

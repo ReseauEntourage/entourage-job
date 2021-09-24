@@ -35,6 +35,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      lastModifiedBy: {
+        allowNull: true,
+        type: DataTypes.UUID,
+      },
     },
     {}
   );

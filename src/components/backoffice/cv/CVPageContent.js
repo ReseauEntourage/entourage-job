@@ -1,6 +1,6 @@
 /* global UIkit */
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Pusher from 'pusher-js';
@@ -32,6 +32,16 @@ const CVPageContent = ({ candidatId }) => {
   const [error, setError] = useState(false);
   const { user } = useContext(UserContext);
 
+  const setCVHasBeenRead = useCallback(() => {
+    Api.put(`/api/v1/cv/read/${candidatId}`)
+      .then(() => {
+        console.log('Note has been read');
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [candidatId]);
+
   useEffect(() => {
     return () => {
       pusher.unsubscribe(SOCKETS.CHANNEL_NAMES.CV_PREVIEW);
@@ -53,6 +63,7 @@ const CVPageContent = ({ candidatId }) => {
             setCV(data);
             setCvVersion(data.version);
             setImageUrl(`${process.env.AWSS3_URL}${data.urlImg}`);
+            setCVHasBeenRead();
           } else {
             setCV(null);
             console.log('pas de cv');
@@ -69,7 +80,7 @@ const CVPageContent = ({ candidatId }) => {
       setCV(null);
       setLoading(false);
     }
-  }, [candidatId]);
+  }, [candidatId, setCVHasBeenRead]);
 
   useEffect(() => {
     const unsavedChanges = cv && cv.status === CV_STATUS.Draft.value;
