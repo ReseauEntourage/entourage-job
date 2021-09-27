@@ -2,6 +2,18 @@ import { useEffect, useState } from 'react';
 import { ADMIN_ROLES, USER_ROLES } from 'src/constants';
 import Api from 'src/Axios';
 
+const reducePromisesResults = (data) => {
+  return data.reduce((acc, curr) => {
+    if (curr && curr.data) {
+      return {
+        ...acc,
+        ...curr.data,
+      };
+    }
+    return acc;
+  }, {});
+};
+
 export function useNotifBadges(user, path) {
   const [badges, setBadges] = useState({
     offers: 0,
@@ -37,8 +49,10 @@ export function useNotifBadges(user, path) {
         )
           .then((data) => {
             if (data) {
-              const pendingCVs = data[0]?.data?.pendingCVs;
-              const pendingOpportunities = data[1]?.data?.pendingOpportunities;
+              const {
+                pendingCVs,
+                pendingOpportunities,
+              } = reducePromisesResults(data);
 
               setBadges((prevBadges) => {
                 return {
@@ -71,9 +85,11 @@ export function useNotifBadges(user, path) {
           ])
             .then((data) => {
               if (data) {
-                const unseenOpportunities = data[0]?.data?.unseenOpportunities;
-                const noteHasBeenModified = data[1]?.data?.noteHasBeenModified;
-                const cvHasBeenModified = data[2]?.data?.cvHasBeenModified;
+                const {
+                  unseenOpportunities,
+                  noteHasBeenModified,
+                  cvHasBeenModified,
+                } = reducePromisesResults(data);
 
                 setBadges((prevBadges) => {
                   return {

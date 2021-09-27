@@ -337,6 +337,8 @@ const EXTERNAL_LINKS = {
   REPAIRS_75: 'https://www.repairs75.org/',
   REDSTAR:
     'https://blog.linkedout.fr/2021/07/21/apres-la-voile-le-foot-linkedout-nouveau-partenaire-maillot-du-red-star-fc-avec-le-soutien-de-randstad/',
+  TOOLBOX:
+    'https://drive.google.com/drive/folders/1fUhZtsdaAElpjWsC6Rz4Jw5ZJ94vBnSd?usp=sharing',
 };
 
 const NEWSLETTER_ORIGINS = {

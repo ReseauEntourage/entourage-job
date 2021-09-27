@@ -14,6 +14,7 @@ import 'src/components/headers/Header.less';
 import { UserContext } from 'src/components/store/UserProvider';
 import ImgProfile from 'src/components/headers/ImgProfile';
 import Dropdown from 'src/components/utils/Dropdown';
+import { EXTERNAL_LINKS } from 'src/constants';
 import { useNotifBadges } from 'src/hooks';
 
 const HeaderConnected = ({ isHome }) => {
@@ -88,6 +89,12 @@ const HeaderConnected = ({ isHome }) => {
         icon: 'user',
         badge: 'cv',
       },
+      {
+        href: EXTERNAL_LINKS.TOOLBOX,
+        name: 'Boîte à outils',
+        icon: 'question',
+        external: true,
+      },
     ],
   };
 
@@ -113,7 +120,7 @@ const HeaderConnected = ({ isHome }) => {
               style={{ borderLeft: '1px solid lightgray' }}
             >
               {LINKS_CONNECTED[user.role.toLowerCase()].map(
-                ({ href, badge, icon, name }, index) => {
+                ({ href, badge, icon, name, external }, index) => {
                   return (
                     <li
                       key={index}
@@ -121,6 +128,8 @@ const HeaderConnected = ({ isHome }) => {
                     >
                       <SimpleLink
                         href={href}
+                        isExternal={external}
+                        target={external ? '_blank' : '_self'}
                         className="uk-visible@m uk-flex uk-flex-middle"
                       >
                         <span
