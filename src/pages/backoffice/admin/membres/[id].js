@@ -81,6 +81,19 @@ const CVPage = () => {
         },
       ],
     },
+    {
+      fieldId: 'adminRole',
+      props: [
+        {
+          propName: 'hidden',
+          value: true,
+        },
+        {
+          propName: 'disabled',
+          value: true,
+        },
+      ],
+    },
   ]);
 
   const deleteUser = async (fields, closeModal) => {
