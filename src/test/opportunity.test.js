@@ -22,7 +22,7 @@ describe('Opportunity', () => {
   const nbPrivateOpportunity = 6;
   const nbPublicOpportunitiesToAssociate = 5;
   let totalOpp =
-    nbOpportunity + nbPrivateOpportunity + nbPublicOpportunitiesToAssociate + 5;
+    nbOpportunity + nbPrivateOpportunity + nbPublicOpportunitiesToAssociate + 7;
   let opportunities;
   let opportunitiesId;
   let loggedInAdmin;
@@ -153,10 +153,23 @@ describe('Opportunity', () => {
     await opportunityFactory({
       isValidated: false,
       isPublic: true,
+      isArchived: false,
     });
     await opportunityFactory({
       isValidated: false,
       isPublic: false,
+      isArchived: false,
+    });
+
+    await opportunityFactory({
+      isValidated: false,
+      isPublic: true,
+      isArchived: true,
+    });
+    await opportunityFactory({
+      isValidated: false,
+      isPublic: false,
+      isArchived: true,
     });
     /*
       opportunityOtherCandidat = await opportunityFactory({
@@ -440,7 +453,7 @@ describe('Opportunity', () => {
             .get(`${route}/admin/count`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.pendingOpportunities).toBe(4);
+          expect(response.body.pendingOpportunities).toBe(6);
         });
         it('Should return 401, if not logged in admin', async () => {
           const response = await request(serverTest)
