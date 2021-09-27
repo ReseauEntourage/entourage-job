@@ -80,7 +80,7 @@ export default {
     },
     {
       id: 'adminRole',
-      title: 'Responsabilité*',
+      title: 'Responsabilité',
       name: 'adminRole',
       component: 'select',
       options: [
@@ -173,17 +173,6 @@ export default {
     },
     {
       field: 'role',
-      method: 'isEmpty',
-      args: [
-        {
-          ignore_whitespace: true,
-        },
-      ],
-      validWhen: false,
-      message: 'Obligatoire',
-    },
-    {
-      field: 'adminRole',
       method: 'isEmpty',
       args: [
         {
