@@ -222,7 +222,7 @@ const queryConditionCV = (attribute, value, allowHidden) => {
   on cvs."UserId" = groupUsers."candidatId"`;
 };
 
-const createCV = async (data) => {
+const createCV = async (data, userId) => {
   console.log(`createCV - Création du CV`);
   if (data.userId) {
     data.UserId = data.userId;
@@ -240,6 +240,7 @@ const createCV = async (data) => {
   const cvData = {
     ...data,
     version: maxVersions[0].maxVersion + 1,
+    lastModifiedBy: userId,
   };
 
   const modelCV = await models.CV.create(cvData); // TODO VERIFIER LES ENTREES
@@ -877,6 +878,46 @@ const createSearchString = async (userId) => {
   return searchString;
 };
 
+const setCVHasBeenRead = async (candidatId, userId) => {
+  const cv = await models.CV.findOne({
+    where: {
+      UserId: candidatId,
+    },
+    order: [['version', 'DESC']],
+  });
+
+  if (cv) {
+    return models.CV.update(
+      {
+        lastModifiedBy: cv.lastModifiedBy !== userId ? null : cv.lastModifiedBy,
+      },
+      {
+        where: { id: cv.id },
+        individualHooks: true,
+      }
+    ).then((model) => {
+      return model && model.length > 1 && model[1][0];
+    });
+  }
+
+  return null;
+};
+
+const checkCVHasBeenModified = async (candidatId, userId) => {
+  const cv = await models.CV.findOne({
+    where: {
+      UserId: candidatId,
+    },
+    order: [['version', 'DESC']],
+  });
+
+  return {
+    cvHasBeenModified: cv
+      ? !!cv.lastModifiedBy && cv.lastModifiedBy !== userId
+      : false,
+  };
+};
+
 export {
   createCV,
   deleteCV,
@@ -890,4 +931,6 @@ export {
   getAndCacheCV,
   getAndCacheAllCVs,
   getPublishedCVQuery,
+  checkCVHasBeenModified,
+  setCVHasBeenRead,
 };

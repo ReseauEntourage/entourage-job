@@ -89,6 +89,27 @@ describe('CV', () => {
         expect(response.status).toBe(200);
         expect(response.body).toMatchObject(cvResponse);
       });
+
+      it('Should return 200 and cvHasBeenModified, if coach checks if CV has been updated', async () => {
+        const response = await request(serverTest)
+          .get(`${route}/checkUpdate`)
+          .set('authorization', `Token ${loggedInCoach.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.cvHasBeenModified).toBe(true);
+      });
+      it('Should return 200 and cvHasBeenModified be false, if coach reads CV', async () => {
+        const setHasReadCVRequest = await request(serverTest)
+          .put(`${route}/read/${loggedInCandidat.user.id}`)
+          .set('authorization', `Token ${loggedInCoach.token}`);
+        expect(setHasReadCVRequest.status).toBe(200);
+
+        const response = await request(serverTest)
+          .get(`${route}/checkUpdate`)
+          .set('authorization', `Token ${loggedInCoach.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.cvHasBeenModified).toBe(false);
+      });
+
       it("Should return 200 and CV with cv status set as progress, if logged in user is coach of cv's owner", async () => {
         const cv = await cvFactory(
           {
@@ -125,6 +146,28 @@ describe('CV', () => {
         expect(response.status).toBe(200);
         expect(response.body.status).toMatch(CV_STATUS.Pending.value);
       });
+
+      it('Should return 200 and cvHasBeenModified, if candidat checks if CV has been updated', async () => {
+        const response = await request(serverTest)
+          .get(`${route}/checkUpdate`)
+          .set('authorization', `Token ${loggedInCandidat.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.cvHasBeenModified).toBe(true);
+      });
+
+      it('Should return 200 and cvHasBeenModified be false, if candidat reads CV', async () => {
+        const setHasReadCVRequest = await request(serverTest)
+          .put(`${route}/read/${loggedInCandidat.user.id}`)
+          .set('authorization', `Token ${loggedInCandidat.token}`);
+        expect(setHasReadCVRequest.status).toBe(200);
+
+        const response = await request(serverTest)
+          .get(`${route}/checkUpdate`)
+          .set('authorization', `Token ${loggedInCandidat.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.cvHasBeenModified).toBe(false);
+      });
+
       it('Should return 200 and CV with cv status set as published, if logged in admin', async () => {
         const cv = await cvFactory(
           {
@@ -163,6 +206,7 @@ describe('CV', () => {
         expect(response.status).toBe(200);
         expect(response.body).toMatchObject(cv);
       });
+
       it('Should return 401 if not logged in user', async () => {
         const cv = await cvFactory(
           { UserId: loggedInCandidat.user.id },

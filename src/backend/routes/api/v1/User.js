@@ -108,7 +108,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
 */
 
 /**
- * Route : GET /api/<VERSION>/user
+ * Route : GET /api/<VERSION>/user/members
  * Description : Récupère tous les Users
  */
 router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
@@ -120,6 +120,21 @@ router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
     .then((users) => {
       logger(res).log(`Users récupérés (Total : ${users.length})`);
       res.status(200).json(users);
+    })
+    .catch((err) => {
+      logger(res).error(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Route : GET /api/<VERSION>/user/members/count
+ * Description : Compte les membres ayant soumis leur CVs
+ */
+router.get('/members/count', auth([USER_ROLES.ADMIN]), (req, res) => {
+  UserController.countSubmittedCVMembers(req.payload.zone)
+    .then((membersCount) => {
+      res.status(200).json(membersCount);
     })
     .catch((err) => {
       logger(res).error(err);
@@ -295,13 +310,59 @@ router.put(
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
-      UserController.setUserCandidat(req.params.id, req.body)
+      UserController.setUserCandidat(req.params.id, req.body, req.payload.id)
         .then((user) => {
-          logger(res).log('Visibilité CV candidat - mise à jour réussie');
+          logger(res).log('User candidat - mise à jour réussie');
           res.status(200).json(user);
         })
         .catch((err) => {
-          logger(res).log('Visibilité CV candidat - Erreur mise à jour :');
+          logger(res).log('User_Candidat - Erreur mise à jour :');
+          logger(res).error(err);
+          res.status(400).send('Une erreur est survenue');
+        });
+    });
+  }
+);
+
+/**
+ * Route : GET /api/<VERSION>/user/checkUpdate
+ * Description : Vérifie si des modifications ont étés apportés à la note de suivi
+ */
+router.get(
+  '/candidat/checkUpdate',
+  auth([USER_ROLES.COACH, USER_ROLES.CANDIDAT]),
+  (req, res) => {
+    let candidatId;
+    if (req.payload.role === USER_ROLES.CANDIDAT) {
+      candidatId = req.payload.id;
+    } else if (req.payload.candidatId) {
+      candidatId = req.payload.candidatId;
+    }
+    UserController.checkNoteHasBeenModified(candidatId, req.payload.id)
+      .then((noteHasBeenModified) => {
+        res.status(200).json(noteHasBeenModified);
+      })
+      .catch((err) => {
+        logger(res).error(err);
+        res.status(401).send('Une erreur est survenue');
+      });
+  }
+);
+
+/**
+ * Route : PUT /api/<VERSION>/user/candidat/read/<ID>
+ * Description : Reset le lastModifiedBy du User associé à l'<ID> fournit
+ */
+router.put(
+  '/candidat/read/:id',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
+      UserController.setNoteHasBeenRead(req.params.id, req.payload.id)
+        .then((userCandidat) => {
+          res.status(200).json(userCandidat);
+        })
+        .catch((err) => {
           logger(res).error(err);
           res.status(400).send('Une erreur est survenue');
         });

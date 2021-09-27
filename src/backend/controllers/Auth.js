@@ -79,6 +79,7 @@ function toAuthJSON(user) {
     address: user.address,
     zone: user.zone,
     role: user.role,
+    adminRole: user.adminRole,
     token: generateJWT(user),
     candidat,
     coach,

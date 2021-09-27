@@ -67,6 +67,26 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
 });
 
 /**
+ * Route : GET /api/<VERSION>/opportunity/admin/count
+ * Description : Count all the pending opportunities
+ * Params:
+ * -  QUERY: string, optional
+ * Responses:
+ * - 200 + number of pending opportunities
+ * - 401
+ */
+router.get('/admin/count', auth([USER_ROLES.ADMIN]), (req, res) => {
+  OpportunityController.countPendingOpportunitiesCount(req.payload.zone)
+    .then((pendingOpportunities) => {
+      res.status(200).json(pendingOpportunities);
+    })
+    .catch((err) => {
+      logger(res).error(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
  * Route : GET /api/<VERSION>/user/private/<ID>
  * Description : Read the opportunities associated to a user wich are
  * private as well as the general opportunities and the candidate status about them
@@ -97,7 +117,7 @@ router.get(
 );
 
 /**
- * Route : GET /api/<VERSION>/user/private/<ID>
+ * Route : GET /api/<VERSION>/user/all/<ID>
  * Description : Read the opportunities associated to a user wich are
  * validated (isValidated: true)
  * Params:
@@ -114,6 +134,33 @@ router.get(
       OpportunityController.getAllUserOpportunities(req.params.id, req.query)
         .then((listeOpportunities) => {
           res.status(200).json(listeOpportunities);
+        })
+        .catch((err) => {
+          logger(res).error(err);
+          res.status(401).send('Une erreur est survenue');
+        });
+    });
+  }
+);
+
+/**
+ * Route : GET /api/<VERSION>/user/count/<ID>
+ * Description : Get the number of unseen opportunities associated to a user wich are
+ * validated (isValidated: true)
+ * Params:
+ * -  ID: string (user's id)
+ * Responses:
+ * -  200 + the unseen count
+ * -  401
+ */
+router.get(
+  '/user/count/:id',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
+      OpportunityController.getUnseenUserOpportunitiesCount(req.params.id)
+        .then((opportunitiesCount) => {
+          res.status(200).json(opportunitiesCount);
         })
         .catch((err) => {
           logger(res).error(err);

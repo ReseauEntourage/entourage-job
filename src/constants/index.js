@@ -317,6 +317,11 @@ const USER_ROLES = {
   ADMIN: 'Admin',
 };
 
+const ADMIN_ROLES = {
+  CANDIDATES: 'Candidats',
+  COMPANIES: 'Entreprises',
+};
+
 const EXTERNAL_LINKS = {
   DONATION: 'https://entourage.iraiser.eu/linkedout/~mon-don',
   LKO_VG: 'https://www.linkedout-vendeeglobe.com',
@@ -419,4 +424,5 @@ export {
   AIRTABLE_NAMES,
   SOCKETS,
   STORAGE_KEYS,
+  ADMIN_ROLES,
 };

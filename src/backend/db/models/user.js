@@ -51,6 +51,11 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: USER_ROLES.CANDIDAT,
       },
+      adminRole: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
+      },
       password: {
         // hash
         type: DataTypes.TEXT,

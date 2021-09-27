@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { filtersToQueryParams, getUserOpportunityFromOffer } from 'src/utils';
+import { getUserOpportunityFromOffer } from 'src/utils';
 import Api from 'src/Axios';
 import ModalOffer from 'src/components/modals/ModalOffer';
 import { Grid } from 'src/components/utils';
@@ -17,6 +17,7 @@ import OfferCard from 'src/components/cards/OfferCard';
 import { UserContext } from 'src/components/store/UserProvider';
 import ModalOfferAdmin from 'src/components/modals/ModalOfferAdmin';
 import OpportunityError from 'src/components/opportunities/OpportunityError';
+import { useOpportunityList } from 'src/hooks/useOpportunityList';
 
 const OpportunityList = forwardRef(
   (
@@ -43,73 +44,17 @@ const OpportunityList = forwardRef(
 
     const isAdmin = role === 'admin' || role === 'candidateAsAdmin';
 
-    const fetchData = useCallback(async () => {
-      if (user) {
-        try {
-          setLoading(true);
-
-          switch (role) {
-            case 'candidateAsAdmin': {
-              const { data } = await Api.get(
-                `${process.env.SERVER_URL}/api/v1/opportunity/user/private/${candidatId}`,
-                {
-                  params: {
-                    search,
-                    ...filtersToQueryParams(filters),
-                  },
-                }
-              );
-              setOffers(
-                data.sort((a, b) => {
-                  return new Date(b.date) - new Date(a.date);
-                })
-              );
-              setLoading(false);
-              return data;
-            }
-            case 'admin': {
-              const { data } = await Api.get(
-                `${process.env.SERVER_URL}/api/v1/opportunity/admin`,
-                {
-                  params: {
-                    search,
-                    type: tabFilter,
-                    ...filtersToQueryParams(filters),
-                  },
-                }
-              );
-              setOffers(
-                data.sort((a, b) => {
-                  return new Date(b.date) - new Date(a.date);
-                })
-              );
-              setLoading(false);
-              return data;
-            }
-            default: {
-              const { data } = await Api.get(
-                `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${candidatId}`,
-                {
-                  params: {
-                    search,
-                    type: tabFilter,
-                    ...filtersToQueryParams(filters),
-                  },
-                }
-              );
-              setOffers(data);
-              setLoading(false);
-              return data;
-            }
-          }
-        } catch (err) {
-          console.error(err);
-          setLoading(false);
-          setHasError(true);
-        }
-      }
-      return null;
-    }, [candidatId, filters, role, search, tabFilter, user]);
+    const fetchData = useOpportunityList(
+      user,
+      candidatId,
+      role,
+      search,
+      tabFilter,
+      filters,
+      setOffers,
+      setLoading,
+      setHasError
+    );
 
     useImperativeHandle(ref, () => {
       return {
