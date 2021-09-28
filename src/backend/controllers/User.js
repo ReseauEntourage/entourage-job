@@ -28,7 +28,14 @@ import {
 
 const { User, User_Candidat, CV, Opportunity_User, Revision } = models;
 
-const ATTRIBUTES_USER_CANDIDAT = ['employed', 'hidden', 'note', 'url'];
+const ATTRIBUTES_USER_CANDIDAT = [
+  'employed',
+  'hidden',
+  'note',
+  'url',
+  'contract',
+  'endOfContract',
+];
 const ATTRIBUTES_USER = [
   'id',
   'firstName',

@@ -4,7 +4,7 @@ import { Button, Grid, Icon, Section } from 'src/components/utils';
 import PostJobAdModal, { modalId } from 'src/components/modals/PostJobAdModal';
 import TAGS from 'src/constants/tags';
 import Layout from 'src/components/Layout';
-import ImageTitle from 'src/components/sections/ImageTitle';
+import ImageTitle from 'src/components/partials/ImageTitle';
 import SearchCandidates from 'src/components/partials/SearchCandidates';
 import CorporateContact from 'src/components/partials/CorporateContactPartial';
 import CorporateNewsletter from 'src/components/partials/CorporateNewsletterPartial';

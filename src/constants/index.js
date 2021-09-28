@@ -322,6 +322,49 @@ const ADMIN_ROLES = {
   COMPANIES: 'Entreprises',
 };
 
+const CONTRACTS = [
+  {
+    label: 'CDI',
+    value: 'cdi',
+    end: false,
+  },
+  {
+    label: 'CDD + de 6 mois',
+    value: 'cdd+6',
+    end: true,
+  },
+  {
+    label: 'CDD - de 6 mois',
+    value: 'cdd-6',
+    end: true,
+  },
+  {
+    label: "Contrat d'insertion",
+    value: 'cddi',
+    end: true,
+  },
+  {
+    label: 'Intérim',
+    value: 'inte',
+    end: true,
+  },
+  {
+    label: 'Stage',
+    value: 'stage',
+    end: true,
+  },
+  {
+    label: 'Alternance',
+    value: 'alt',
+    end: true,
+  },
+  {
+    label: 'Formation',
+    value: 'form',
+    end: true,
+  },
+];
+
 const EXTERNAL_LINKS = {
   DONATION: 'https://entourage.iraiser.eu/linkedout/~mon-don',
   LKO_VG: 'https://www.linkedout-vendeeglobe.com',
@@ -427,4 +470,5 @@ export {
   SOCKETS,
   STORAGE_KEYS,
   ADMIN_ROLES,
+  CONTRACTS,
 };

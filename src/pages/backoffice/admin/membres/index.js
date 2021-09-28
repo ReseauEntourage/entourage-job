@@ -246,7 +246,11 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
             submitText="Créer le membre"
             onSubmit={async (fields, closeModal) => {
               try {
-                const { data } = await Api.post('api/v1/user', fields);
+                const { data } = await Api.post('api/v1/user', {
+                  ...fields,
+                  adminRole:
+                    fields.role === USER_ROLES.ADMIN ? fields.adminRole : null,
+                });
                 if (data) {
                   closeModal();
                   UIkit.notification('Le membre a bien été créé', 'success');

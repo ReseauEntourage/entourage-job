@@ -168,7 +168,7 @@ CVFicheEdition.propTypes = {
     contracts: PropTypes.array,
     ambitions: PropTypes.array,
     languages: PropTypes.array,
-    transport: PropTypes.array,
+    transport: PropTypes.string,
     skills: PropTypes.array,
     passions: PropTypes.array,
     businessLines: PropTypes.array,

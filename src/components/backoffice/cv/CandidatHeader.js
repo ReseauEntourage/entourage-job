@@ -31,10 +31,11 @@ const CandidatHeader = ({ user, showZone }) => {
             <span>{user.role}</span>
           )}
         </Grid>
-        <Grid row gap="small" middle className="uk-margin-small-top">
-          <Icon name="link" style={{ width: 20 }} />
-          {(user.role === USER_ROLES.CANDIDAT ||
-            (user.role === USER_ROLES.COACH && user.coach)) && (
+
+        {(user.role === USER_ROLES.CANDIDAT ||
+          (user.role === USER_ROLES.COACH && user.coach)) && (
+          <Grid row gap="small" middle className="uk-margin-small-top">
+            <Icon name="link" style={{ width: 20 }} />
             <SimpleLink
               className="uk-link-text uk-margin-small-top"
               target="_blank"
@@ -51,8 +52,8 @@ const CandidatHeader = ({ user, showZone }) => {
                 }
               </span>
             </SimpleLink>
-          )}
-        </Grid>
+          </Grid>
+        )}
         {showZone && (
           <Grid row gap="small" middle className="uk-margin-small-top">
             <span className="uk-label">

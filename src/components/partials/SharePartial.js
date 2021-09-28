@@ -18,7 +18,7 @@ const SharePartial = ({ showTitle, padding }) => {
           {
             name: 'facebook',
             title: 'Facebook',
-            href: 'https://www.facebook.com/linkedout.vendeeglobe',
+            href: 'https://www.facebook.com/linkedout.byentouragee',
             tag: isCVPage
               ? TAGS.PAGE_CV_SUIVRE_SUR_FACEBOOK_CLIC
               : TAGS.HOME_SUIVRE_SUR_FACEBOOK_CLIC,
@@ -34,8 +34,7 @@ const SharePartial = ({ showTitle, padding }) => {
           {
             name: 'linkedin',
             title: 'LinkedIn',
-            href:
-              'https://www.linkedin.com/company/linkedout-vend%C3%A9e-globe/',
+            href: 'https://www.linkedin.com/company/linkedout-byentourage',
             tag: isCVPage
               ? TAGS.PAGE_CV_SUIVRE_SUR_LINKEDIN_CLIC
               : TAGS.HOME_SUIVRE_SUR_LINKEDIN_CLIC,
@@ -43,7 +42,7 @@ const SharePartial = ({ showTitle, padding }) => {
           {
             name: 'instagram',
             title: 'Instagram',
-            href: 'https://www.instagram.com/linkedout.vendeeglobe/',
+            href: 'https://www.instagram.com/linkedout_byentourage',
             tag: isCVPage
               ? TAGS.PAGE_CV_SUIVRE_SUR_INSTAGRAM_CLIC
               : TAGS.HOME_SUIVRE_SUR_INSTAGRAM_CLIC,

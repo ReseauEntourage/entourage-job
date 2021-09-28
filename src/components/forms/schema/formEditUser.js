@@ -77,6 +77,7 @@ export default {
         { value: USER_ROLES.COACH, label: USER_ROLES.COACH },
         { value: USER_ROLES.ADMIN, label: USER_ROLES.ADMIN },
       ],
+      fieldsToReset: ['adminRole', 'userToCoach'],
     },
     {
       id: 'adminRole',
@@ -125,7 +126,6 @@ export default {
               });
             })
             .then((m) => {
-              console.log(m);
               return m;
             })
             .then(callback);

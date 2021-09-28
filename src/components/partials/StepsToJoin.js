@@ -3,7 +3,7 @@ import { Icon, Section } from 'src/components/utils';
 import Button from 'src/components/utils/Button';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
-import { SharePartial } from 'src/components/partials';
+import { SharePartial } from 'src/components/partials/index';
 
 const StepsToJoin = () => {
   return (
