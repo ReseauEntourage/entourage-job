@@ -1,7 +1,7 @@
 /* global UIkit */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import Api from 'src/Axios';
@@ -61,6 +61,16 @@ const Suivi = () => {
       });
   };
 
+  const setNoteHasBeenRead = (candidatId) => {
+    Api.put(`/api/v1/user/candidat/read/${candidatId}`)
+      .then(() => {
+        console.log('Note has been read');
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   useEffect(() => {
     if (user) {
       setLoading(true);
@@ -77,6 +87,7 @@ const Suivi = () => {
         .then(({ data }) => {
           if (data) {
             setUserCandidat(data);
+            setNoteHasBeenRead(data.candidat.id);
             updateValue(data.note);
           }
         })

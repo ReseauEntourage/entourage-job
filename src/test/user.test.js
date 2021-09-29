@@ -32,6 +32,7 @@ describe('User', () => {
     const admin = await userFactory({
       role: USER_ROLES.ADMIN,
       password: 'admin',
+      zone: ADMIN_ZONES.LILLE,
     });
     const coach = await userFactory({
       role: USER_ROLES.COACH,
@@ -322,6 +323,7 @@ describe('User', () => {
               firstName: candidat.firstName,
               lastName: candidat.lastName,
               role: candidat.role,
+              adminRole: candidat.adminRole,
               address: candidat.address,
               deletedAt: candidat.deletedAt,
               email: candidat.email,
@@ -410,6 +412,22 @@ describe('User', () => {
             .set('authorization', `Token ${loggedInAdmin.token}`);
         });
       });
+      describe('Members - Count all pending members', () => {
+        it('Should return 401 if user is not a logged in admin', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/members/count`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          expect(response.status).toBe(401);
+        });
+        it('Should return 200 and count of members with pending CVs', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/members/count`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.pendingCVs).toBe(1);
+        });
+      });
+
       describe('Read all members as admin with filters', () => {
         it('should return 200, and all the candidates that matches the zone filter', async () => {
           const response = await request(serverTest)
@@ -669,7 +687,7 @@ describe('User', () => {
         });
         it('Should return 200 and updated user when an admin update a user role', async () => {
           const response = await request(serverTest)
-            .put(`${route}/${loggedInCandidat.user.id}`)
+            .put(`${route}/${otherLoggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInAdmin.token}`)
             .send({
               role: USER_ROLES.COACH,
@@ -713,6 +731,25 @@ describe('User', () => {
             });
           expect(response.status).toBe(200);
         });
+        it('Should return 200 and noteHasBeenModified, if coach checks if note has been updated', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/candidat/checkUpdate`)
+            .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.noteHasBeenModified).toBe(true);
+        });
+        it('Should return 200 and noteHasBeenModified be false, if coach reads note', async () => {
+          const setHasReadNoteRequest = await request(serverTest)
+            .put(`${route}/candidat/read/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(setHasReadNoteRequest.status).toBe(200);
+
+          const response = await request(serverTest)
+            .get(`${route}/candidat/checkUpdate`)
+            .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.noteHasBeenModified).toBe(false);
+        });
         it('Should return 200 and updated user_candidat, if coach updates candidate associated to him', async () => {
           const response = await request(serverTest)
             .put(`${route}/candidat/${loggedInCandidat.user.id}`)
@@ -722,6 +759,25 @@ describe('User', () => {
               note: 'updated note by coach',
             });
           expect(response.status).toBe(200);
+        });
+        it('Should return 200 and noteHasBeenModified, if candidat checks if note has been updated', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/candidat/checkUpdate`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.noteHasBeenModified).toBe(true);
+        });
+        it('Should return 200 and noteHasBeenModified be false, if candidat reads note', async () => {
+          const setHasReadNoteRequest = await request(serverTest)
+            .put(`${route}/candidat/read/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          expect(setHasReadNoteRequest.status).toBe(200);
+
+          const response = await request(serverTest)
+            .get(`${route}/candidat/checkUpdate`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.noteHasBeenModified).toBe(false);
         });
         it('Should return 200 and updated user_candidat, if logged in admin', async () => {
           const response = await request(serverTest)

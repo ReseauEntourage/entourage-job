@@ -96,6 +96,19 @@ const Parametres = () => {
             },
           ],
         },
+        {
+          fieldId: 'adminRole',
+          props: [
+            {
+              propName: 'disabled',
+              value: true,
+            },
+            {
+              propName: 'hidden',
+              value: true,
+            },
+          ],
+        },
       ]);
     }
 
@@ -313,6 +326,11 @@ const Parametres = () => {
                           ? _.capitalize(userData.zone)
                           : 'Non renseignée'}
                       </span>
+                      {userData.adminRole && (
+                        <span className="uk-label">
+                          {_.capitalize(userData.adminRole)}
+                        </span>
+                      )}
                     </Grid>
                   )}
                 </Grid>
@@ -386,6 +404,7 @@ const Parametres = () => {
               phone: userData.phone,
               address: userData.address,
               zone: userData.zone,
+              adminRole: userData.adminRole,
             }}
             formSchema={mutatedSchema}
             onSubmit={(
@@ -393,6 +412,7 @@ const Parametres = () => {
                 firstName,
                 lastName,
                 zone,
+                adminRole,
                 gender,
                 phone,
                 address,
@@ -436,7 +456,7 @@ const Parametres = () => {
 
               let newUserData = {};
               if (userData.role === USER_ROLES.ADMIN) {
-                newUserData = { firstName, lastName, gender, zone };
+                newUserData = { firstName, lastName, gender, zone, adminRole };
                 if (phone !== userData.phone) {
                   newUserData.phone = phone;
                 }

@@ -58,13 +58,16 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
             'Bonjour,<br /><br />' +
             `Vous êtes maintenant inscrit${
               user.gender === 0 ? '' : 'e'
-            } sur le site LinkedOut. Vous pouvez accéder à votre espace personnel depuis la plateforme en renseignant votre adresse mail et le mot de passe suivant : <strong>${userPassword}</strong><br /><br />` +
+            } sur le site LinkedOut. Vous pouvez accéder à <a href="${
+              process.env.SERVER_URL
+            }/login">votre espace personnel depuis la plateforme</a> en renseignant votre adresse mail et le mot de passe suivant : <strong>${userPassword}</strong><br /><br />` +
             `Depuis cet espace, vous pouvez ${
               user.role === USER_ROLES.CANDIDAT
                 ? "rédiger votre CV avec l'aide de votre coach LinkedOut et avoir accès à des offres d’emploi"
                 : 'accompagner votre Candidat dans la rédaction de son CV et gérer ensemble les opportunités qu’il reçoit'
             }.<br /><br />` +
-            "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres afin d'en créer un facile à retenir pour vous.<br /><br />" +
+            "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres.<br /><br />" +
+            `À tout moment, retrouvez votre espace personnel en ajoutant ce lien à vos favoris, ou bien en consultant le site <a href="${process.env.SERVER_URL}">LinkedOut</a> puis en cliquant sur le bouton "Se connecter" situé tout en bas de chaque page.<br /><br />` +
             'A bientôt,<br /><br />' +
             "L'équipe LinkedOut<br/><br/>" +
             `Un souci de connexion ? Une question ? Contactez-nous !<br/>` +
@@ -108,7 +111,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
 */
 
 /**
- * Route : GET /api/<VERSION>/user
+ * Route : GET /api/<VERSION>/user/members
  * Description : Récupère tous les Users
  */
 router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
@@ -120,6 +123,21 @@ router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
     .then((users) => {
       logger(res).log(`Users récupérés (Total : ${users.length})`);
       res.status(200).json(users);
+    })
+    .catch((err) => {
+      logger(res).error(err);
+      res.status(401).send('Une erreur est survenue');
+    });
+});
+
+/**
+ * Route : GET /api/<VERSION>/user/members/count
+ * Description : Compte les membres ayant soumis leur CVs
+ */
+router.get('/members/count', auth([USER_ROLES.ADMIN]), (req, res) => {
+  UserController.countSubmittedCVMembers(req.payload.zone)
+    .then((membersCount) => {
+      res.status(200).json(membersCount);
     })
     .catch((err) => {
       logger(res).error(err);
@@ -295,13 +313,59 @@ router.put(
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
-      UserController.setUserCandidat(req.params.id, req.body)
+      UserController.setUserCandidat(req.params.id, req.body, req.payload.id)
         .then((user) => {
-          logger(res).log('Visibilité CV candidat - mise à jour réussie');
+          logger(res).log('User candidat - mise à jour réussie');
           res.status(200).json(user);
         })
         .catch((err) => {
-          logger(res).log('Visibilité CV candidat - Erreur mise à jour :');
+          logger(res).log('User_Candidat - Erreur mise à jour :');
+          logger(res).error(err);
+          res.status(400).send('Une erreur est survenue');
+        });
+    });
+  }
+);
+
+/**
+ * Route : GET /api/<VERSION>/user/checkUpdate
+ * Description : Vérifie si des modifications ont étés apportés à la note de suivi
+ */
+router.get(
+  '/candidat/checkUpdate',
+  auth([USER_ROLES.COACH, USER_ROLES.CANDIDAT]),
+  (req, res) => {
+    let candidatId;
+    if (req.payload.role === USER_ROLES.CANDIDAT) {
+      candidatId = req.payload.id;
+    } else if (req.payload.candidatId) {
+      candidatId = req.payload.candidatId;
+    }
+    UserController.checkNoteHasBeenModified(candidatId, req.payload.id)
+      .then((noteHasBeenModified) => {
+        res.status(200).json(noteHasBeenModified);
+      })
+      .catch((err) => {
+        logger(res).error(err);
+        res.status(401).send('Une erreur est survenue');
+      });
+  }
+);
+
+/**
+ * Route : PUT /api/<VERSION>/user/candidat/read/<ID>
+ * Description : Reset le lastModifiedBy du User associé à l'<ID> fournit
+ */
+router.put(
+  '/candidat/read/:id',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
+      UserController.setNoteHasBeenRead(req.params.id, req.payload.id)
+        .then((userCandidat) => {
+          res.status(200).json(userCandidat);
+        })
+        .catch((err) => {
           logger(res).error(err);
           res.status(400).send('Une erreur est survenue');
         });

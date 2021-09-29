@@ -14,10 +14,14 @@ import 'src/components/headers/Header.less';
 import { UserContext } from 'src/components/store/UserProvider';
 import ImgProfile from 'src/components/headers/ImgProfile';
 import Dropdown from 'src/components/utils/Dropdown';
+import { EXTERNAL_LINKS } from 'src/constants';
+import { useNotifBadges } from 'src/hooks';
 
 const HeaderConnected = ({ isHome }) => {
   const { user, logout } = useContext(UserContext);
   const router = useRouter();
+
+  const badges = useNotifBadges(user, router.asPath);
 
   const LINKS_CONNECTED = {
     admin: [
@@ -25,11 +29,13 @@ const HeaderConnected = ({ isHome }) => {
         href: '/backoffice/admin/membres',
         name: 'Les membres',
         icon: 'users',
+        badge: 'members',
       },
       {
         href: '/backoffice/admin/offres',
         name: 'Les opportunités',
         icon: 'list',
+        badge: 'offers',
       },
     ],
     dropdown: [
@@ -49,16 +55,19 @@ const HeaderConnected = ({ isHome }) => {
         href: '/backoffice/candidat/offres',
         name: 'Mes offres',
         icon: 'list',
+        badge: 'offers',
       },
       {
         href: '/backoffice/candidat/suivi',
         name: 'Mon suivi',
         icon: 'file-text',
+        badge: 'note',
       },
       {
         href: '/backoffice/candidat/cv',
         name: 'Mon CV',
         icon: 'user',
+        badge: 'cv',
       },
     ],
     coach: [
@@ -66,16 +75,25 @@ const HeaderConnected = ({ isHome }) => {
         href: '/backoffice/candidat/offres',
         name: 'Offres',
         icon: 'list',
+        badge: 'offers',
       },
       {
         href: '/backoffice/candidat/suivi',
         name: 'Suivi',
         icon: 'file-text',
+        badge: 'note',
       },
       {
         href: '/backoffice/candidat/cv',
         name: 'CV',
         icon: 'user',
+        badge: 'cv',
+      },
+      {
+        href: EXTERNAL_LINKS.TOOLBOX,
+        name: 'Boîte à outils',
+        icon: 'question',
+        external: true,
       },
     ],
   };
@@ -101,41 +119,51 @@ const HeaderConnected = ({ isHome }) => {
               className="uk-navbar-nav"
               style={{ borderLeft: '1px solid lightgray' }}
             >
-              {LINKS_CONNECTED[user.role.toLowerCase()].map((link, index) => {
-                return (
-                  <li
-                    key={index}
-                    style={{ borderRight: '1px solid lightgray' }}
-                  >
-                    <SimpleLink
-                      href={link.href}
-                      className="uk-visible@m uk-flex uk-flex-middle"
+              {LINKS_CONNECTED[user.role.toLowerCase()].map(
+                ({ href, badge, icon, name, external }, index) => {
+                  return (
+                    <li
+                      key={index}
+                      style={{ borderRight: '1px solid lightgray' }}
                     >
-                      <span
-                        className="uk-margin-small-right"
-                        style={{
-                          ...(router.asPath.includes(link.href)
-                            ? { color: 'black' }
-                            : {}),
-                        }}
+                      <SimpleLink
+                        href={href}
+                        isExternal={external}
+                        target={external ? '_blank' : '_self'}
+                        className="uk-visible@m uk-flex uk-flex-middle"
                       >
-                        <Icon name={link.icon} />
-                      </span>
-                      <span
-                        style={{
-                          textTransform: 'none',
-                          fontSize: '1rem',
-                          ...(router.asPath.includes(link.href)
-                            ? { color: 'black', fontWeight: 500 }
-                            : {}),
-                        }}
-                      >
-                        {link.name}
-                      </span>
-                    </SimpleLink>
-                  </li>
-                );
-              })}
+                        <span
+                          className="uk-margin-small-right"
+                          style={{
+                            ...(router.asPath.includes(href)
+                              ? { color: 'black' }
+                              : {}),
+                          }}
+                        >
+                          <Icon name={icon} />
+                        </span>
+                        <span
+                          style={{
+                            textTransform: 'none',
+                            fontSize: '1rem',
+                            ...(router.asPath.includes(href)
+                              ? { color: 'black', fontWeight: 500 }
+                              : {}),
+                          }}
+                        >
+                          {name}
+                        </span>
+                        {badges[badge] > 0 && (
+                          <div>
+                            &nbsp;
+                            <div className="uk-badge">{badges[badge]}</div>
+                          </div>
+                        )}
+                      </SimpleLink>
+                    </li>
+                  );
+                }
+              )}
             </ul>
           </>
         }
@@ -221,7 +249,7 @@ const HeaderConnected = ({ isHome }) => {
             .filter(({ href }) => {
               return href !== '#';
             })
-            .map(({ href, icon, name }, index) => {
+            .map(({ href, icon, name, badge }, index) => {
               return (
                 <li key={index}>
                   <a
@@ -237,6 +265,12 @@ const HeaderConnected = ({ isHome }) => {
                     />
                     {name}
                   </a>
+                  {badges[badge] > 0 && (
+                    <div>
+                      &nbsp;
+                      <div className="uk-badge">{badges[badge]}</div>
+                    </div>
+                  )}
                 </li>
               );
             })}

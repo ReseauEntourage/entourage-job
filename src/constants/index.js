@@ -317,6 +317,11 @@ const USER_ROLES = {
   ADMIN: 'Admin',
 };
 
+const ADMIN_ROLES = {
+  CANDIDATES: 'Candidats',
+  COMPANIES: 'Entreprises',
+};
+
 const EXTERNAL_LINKS = {
   DONATION: 'https://entourage.iraiser.eu/linkedout/~mon-don',
   LKO_VG: 'https://www.linkedout-vendeeglobe.com',
@@ -332,6 +337,8 @@ const EXTERNAL_LINKS = {
   REPAIRS_75: 'https://www.repairs75.org/',
   REDSTAR:
     'https://blog.linkedout.fr/2021/07/21/apres-la-voile-le-foot-linkedout-nouveau-partenaire-maillot-du-red-star-fc-avec-le-soutien-de-randstad/',
+  TOOLBOX:
+    'https://drive.google.com/drive/folders/1fUhZtsdaAElpjWsC6Rz4Jw5ZJ94vBnSd?usp=sharing',
 };
 
 const NEWSLETTER_ORIGINS = {
@@ -419,4 +426,5 @@ export {
   AIRTABLE_NAMES,
   SOCKETS,
   STORAGE_KEYS,
+  ADMIN_ROLES,
 };

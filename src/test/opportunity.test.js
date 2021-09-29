@@ -22,7 +22,7 @@ describe('Opportunity', () => {
   const nbPrivateOpportunity = 6;
   const nbPublicOpportunitiesToAssociate = 5;
   let totalOpp =
-    nbOpportunity + nbPrivateOpportunity + nbPublicOpportunitiesToAssociate + 5;
+    nbOpportunity + nbPrivateOpportunity + nbPublicOpportunitiesToAssociate + 7;
   let opportunities;
   let opportunitiesId;
   let loggedInAdmin;
@@ -153,10 +153,23 @@ describe('Opportunity', () => {
     await opportunityFactory({
       isValidated: false,
       isPublic: true,
+      isArchived: false,
     });
     await opportunityFactory({
       isValidated: false,
       isPublic: false,
+      isArchived: false,
+    });
+
+    await opportunityFactory({
+      isValidated: false,
+      isPublic: true,
+      isArchived: true,
+    });
+    await opportunityFactory({
+      isValidated: false,
+      isPublic: false,
+      isArchived: true,
     });
     /*
       opportunityOtherCandidat = await opportunityFactory({
@@ -434,6 +447,22 @@ describe('Opportunity', () => {
           });
         });
       });
+      describe('Count all pending opportunities - /admin', () => {
+        it('Should return 200 and count of all pending opportunities, if logged in admin', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/admin/count`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.pendingOpportunities).toBe(6);
+        });
+        it('Should return 401, if not logged in admin', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/admin`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          expect(response.status).toBe(401);
+        });
+      });
+
       describe("Read a user's private opportunities - /user/private/:id", () => {
         it('should return 200, if candidat read his opportunities', async () => {
           const response = await request(serverTest)
@@ -597,7 +626,7 @@ describe('Opportunity', () => {
           expect(response.status).toBe(200);
           expect(response.body.length).toBeGreaterThanOrEqual(1);
         });
-        it('should return 200, if a admin read his associated candidat opportunities', async () => {
+        it('should return 200, if a admin read a candidates opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/all/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
@@ -755,6 +784,48 @@ describe('Opportunity', () => {
           });
         });
       });
+      describe("Count all user's opportunities - /user/count/:id", () => {
+        it('should return 200, if candidat counts his opportunities', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/user/count/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.unseenOpportunities).toBeGreaterThanOrEqual(1);
+        });
+        it('should return 200, if a coach counts his associated candidat opportunities', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/user/count/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.unseenOpportunities).toBe(22);
+        });
+        it('should return 200, if a admin counts a candidate opportunities', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/user/count/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.unseenOpportunities).toBe(22);
+        });
+        it('should return 401, if invalid user id', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/user/count/a824df-c9e0-42cb-adb6-02267fc9e5f6`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(401);
+        });
+        it('should return 401, if candidat counts an other candidat opportunities', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/user/count/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${otherCandidat.token}`);
+          expect(response.status).toBe(401);
+        });
+        it("should return 401, if a coach counts not associate candidat's opportunities", async () => {
+          const response = await request(serverTest)
+            .get(`${route}/user/count/${otherCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(response.status).toBe(401);
+        });
+      });
+
       describe('Read one specific opportunity - /:opportunityId', () => {
         it('should return 200, if candidat read one of his opportunity', async () => {
           const response = await request(serverTest)

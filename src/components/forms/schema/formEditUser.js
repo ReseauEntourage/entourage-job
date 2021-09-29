@@ -1,5 +1,5 @@
 import Api from 'src/Axios';
-import { USER_ROLES } from 'src/constants';
+import { ADMIN_ROLES, USER_ROLES } from 'src/constants';
 import { ADMIN_ZONES_FILTERS } from 'src/constants/departements';
 
 export default {
@@ -77,6 +77,20 @@ export default {
         { value: USER_ROLES.COACH, label: USER_ROLES.COACH },
         { value: USER_ROLES.ADMIN, label: USER_ROLES.ADMIN },
       ],
+    },
+    {
+      id: 'adminRole',
+      title: 'Responsabilité',
+      name: 'adminRole',
+      component: 'select',
+      options: [
+        { value: -1, label: 'Choisissez une responsabilité' },
+        { value: ADMIN_ROLES.CANDIDATES, label: ADMIN_ROLES.CANDIDATES },
+        { value: ADMIN_ROLES.COMPANIES, label: ADMIN_ROLES.COMPANIES },
+      ],
+      disable: (getValue) => {
+        return getValue('role') !== USER_ROLES.ADMIN;
+      },
     },
     {
       id: 'userToCoach',

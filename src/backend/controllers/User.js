@@ -1,9 +1,9 @@
 import {
-  USER_ROLES,
-  REDIS_KEYS,
-  JOBS,
   CV_STATUS,
+  JOBS,
   MEMBER_FILTERS_DATA,
+  REDIS_KEYS,
+  USER_ROLES,
 } from 'src/constants';
 
 import RedisManager from 'src/backend/utils/RedisManager';
@@ -13,7 +13,7 @@ import { addToWorkQueue } from 'src/backend/jobs';
 
 import { getPublishedCVQuery } from 'src/backend/controllers/CV';
 
-import { QueryTypes, Op } from 'sequelize';
+import { Op, QueryTypes } from 'sequelize';
 
 import uuid from 'uuid/v4';
 
@@ -37,6 +37,7 @@ const ATTRIBUTES_USER = [
   'phone',
   'address',
   'role',
+  'adminRole',
   'zone',
   'gender',
   'lastConnection',
@@ -314,6 +315,64 @@ const getMembers = async (params) => {
     : membersWithLastCV;
 };
 
+const countSubmittedCVMembers = async (zone) => {
+  const options = {
+    where: {
+      role: USER_ROLES.CANDIDAT,
+      zone,
+    },
+    attributes: ATTRIBUTES_USER,
+    include: INCLUDE_USER_CANDIDAT,
+  };
+
+  // recuperer la derniere version de cv
+  options.include = [
+    {
+      model: User_Candidat,
+      as: 'candidat',
+      attributes: ['coachId', ...ATTRIBUTES_USER_CANDIDAT],
+      include: [
+        {
+          model: CV,
+          as: 'cvs',
+          attributes: ['version', 'status', 'urlImg'],
+        },
+        {
+          model: User,
+          as: 'coach',
+          attributes: ATTRIBUTES_USER,
+        },
+      ],
+      order: [['cvs.version', 'DESC']],
+    },
+  ];
+
+  const members = await User.findAll(options);
+
+  const membersWithLastCV = members.map((member) => {
+    const user = member.toJSON();
+    if (user.candidat && user.candidat.cvs && user.candidat.cvs.length > 0) {
+      const sortedCvs = user.candidat.cvs.sort((cv1, cv2) => {
+        return cv2.version - cv1.version;
+      });
+      return {
+        ...user,
+        candidat: {
+          ...user.candidat,
+          cvs: [sortedCvs[0]],
+        },
+      };
+    }
+    return user;
+  });
+
+  return {
+    pendingCVs: filterMembersByCVStatus(membersWithLastCV, [
+      { value: CV_STATUS.Pending.value },
+    ]).length,
+  };
+};
+
 const searchUsers = (query, role) => {
   const options = {
     attributes: ATTRIBUTES_USER,
@@ -381,11 +440,17 @@ const setUser = async (id, user) => {
   return getUser(id);
 };
 
-const setUserCandidat = async (candidatId, candidat) => {
-  const userCandidat = await User_Candidat.update(candidat, {
-    where: { candidatId },
-    individualHooks: true,
-  }).then((model) => {
+const setUserCandidat = async (candidatId, candidat, userId) => {
+  const userCandidat = await User_Candidat.update(
+    {
+      ...candidat,
+      lastModifiedBy: userId,
+    },
+    {
+      where: { candidatId },
+      individualHooks: true,
+    }
+  ).then((model) => {
     return model && model.length > 1 && model[1][0];
   });
   if (candidat.hidden) {
@@ -402,23 +467,36 @@ const setUserCandidat = async (candidatId, candidat) => {
   return userCandidat;
 };
 
-const getUserCandidat = (candidatId) => {
-  return User_Candidat.findOne({
-    where: { candidatId },
-    attributes: ATTRIBUTES_USER_CANDIDAT,
-    include: [
-      {
-        model: User,
-        as: 'coach',
-        attributes: ATTRIBUTES_USER,
-      },
-      {
-        model: User,
-        as: 'candidat',
-        attributes: ATTRIBUTES_USER,
-      },
-    ],
+const setNoteHasBeenRead = async (candidatId, userId) => {
+  const userCandidat = await User_Candidat.findByPk(candidatId);
+
+  return User_Candidat.update(
+    {
+      lastModifiedBy:
+        userCandidat.lastModifiedBy !== userId
+          ? null
+          : userCandidat.lastModifiedBy,
+    },
+    {
+      where: { candidatId },
+      individualHooks: true,
+    }
+  ).then((model) => {
+    return model && model.length > 1 && model[1][0];
   });
+};
+
+const checkNoteHasBeenModified = async (candidatId, userId) => {
+  const userCandidat = await User_Candidat.findOne({
+    where: { candidatId },
+    attributes: ['lastModifiedBy'],
+  });
+
+  return {
+    noteHasBeenModified: userCandidat
+      ? !!userCandidat.lastModifiedBy && userCandidat.lastModifiedBy !== userId
+      : false,
+  };
 };
 
 const getUserCandidatOpt = async ({ candidatId, coachId }) => {
@@ -622,8 +700,10 @@ export {
   searchCandidates,
   getMembers,
   setUserCandidat,
-  getUserCandidat,
   getUserCandidatOpt,
   getUserCandidats,
   getAllCandidates,
+  countSubmittedCVMembers,
+  checkNoteHasBeenModified,
+  setNoteHasBeenRead,
 };

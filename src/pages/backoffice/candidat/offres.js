@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import _ from 'lodash';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
-import { findFilter, initializeFilters } from 'src/utils';
-import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import { initializeFilters } from 'src/utils';
+import { ADMIN_ZONES, DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import { useFilters } from 'src/hooks';
 import { UserContext } from 'src/components/store/UserProvider';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
@@ -41,7 +40,7 @@ const Opportunities = () => {
 
   const setCandidatZone = useCallback(
     (candidatZone) => {
-      if (!candidatZone) {
+      if (!candidatZone || candidatZone === ADMIN_ZONES.HZ) {
         setFilters(initializeFilters(candidateFilters));
       } else {
         const defaultDepartmentsForCandidate = DEPARTMENTS_FILTERS.filter(
@@ -61,37 +60,6 @@ const Opportunities = () => {
   );
 
   useEffect(() => {
-    if (candidatId) {
-      setLoading(true);
-      Api.get(`${process.env.SERVER_URL}/api/v1/cv/`, {
-        params: {
-          userId: candidatId,
-        },
-      })
-        .then(({ data }) => {
-          if (data && data.locations && data.locations.length > 0) {
-            const cvFilters = data.locations.map((location) => {
-              return findFilter(DEPARTMENTS_FILTERS, location);
-            });
-            setFilters(
-              initializeFilters(candidateFilters, {
-                [candidateFilters[1].key]: _.compact(cvFilters),
-              })
-            );
-          }
-          setLoadingDefaultFilters(false);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error(err);
-        })
-        .finally(() => {
-          return setLoading(false);
-        });
-    }
-  }, [candidatId, setFilters]);
-
-  useEffect(() => {
     if (user) {
       setLoading(true);
       const updatedFilterConsts = [...OFFER_CANDIDATE_FILTERS_DATA];
@@ -103,6 +71,7 @@ const Opportunities = () => {
         setCandidatId(user.id);
         setCandidatZone(user.zone);
         setLoading(false);
+        setLoadingDefaultFilters(false);
       } else if (user.role === USER_ROLES.COACH) {
         Api.get(`/api/v1/user/candidat/`, {
           params: {
@@ -117,6 +86,7 @@ const Opportunities = () => {
               setHasError(true);
             }
             setLoading(false);
+            setLoadingDefaultFilters(false);
           })
           .catch(() => {
             setLoading(false);
