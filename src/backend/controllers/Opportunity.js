@@ -391,14 +391,18 @@ const getOpportunities = async (params) => {
 
 const countPendingOpportunitiesCount = async (zone) => {
   const locationFilters = DEPARTMENTS_FILTERS.filter((dept) => {
-    return zone === dept.zone || !zone;
+    return zone === dept.zone;
   });
-  const filterOptions = getOfferOptions({ department: locationFilters });
+  const filterOptions =
+    locationFilters.length > 0
+      ? getOfferOptions({ department: locationFilters })
+      : {};
 
   const pendingOpportunitiesCount = await Opportunity.count({
     where: {
       ...filterOptions,
       isValidated: false,
+      isArchived: false,
     },
   });
 
@@ -589,10 +593,13 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
   const user = await getUser(candidatId);
 
   const locationFilters = DEPARTMENTS_FILTERS.filter((dept) => {
-    return user.zone === dept.zone || !user.zone;
+    return user.zone === dept.zone;
   });
 
-  const filterOptions = getOfferOptions({ department: locationFilters });
+  const filterOptions =
+    locationFilters.length > 0
+      ? getOfferOptions({ department: locationFilters })
+      : {};
 
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: candidatId },

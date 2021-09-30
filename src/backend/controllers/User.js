@@ -190,8 +190,6 @@ const getMembers = async (params) => {
   const filterOptions = getMemberOptions(restFilters);
 
   const options = {
-    offset,
-    limit,
     order,
     where: {
       role: { [Op.not]: USER_ROLES.ADMIN },
@@ -199,6 +197,13 @@ const getMembers = async (params) => {
     attributes: ATTRIBUTES_USER,
     include: INCLUDE_USER_CANDIDAT,
   };
+
+  const hasFilterOptions = Object.keys(filtersObj).length > 0;
+
+  if (!hasFilterOptions) {
+    options.offset = offset;
+    options.limit = limit;
+  }
   // recherche de l'utilisateur
   if (search) {
     options.where = {
@@ -288,12 +293,12 @@ const getMembers = async (params) => {
 
   const members = await User.findAll(options);
 
-  const filteredMembers = filterMembersByAssociatedUser(
+  const filteredMembersByAssociatedUser = filterMembersByAssociatedUser(
     members,
     associatedUser
   );
 
-  const membersWithLastCV = filteredMembers.map((member) => {
+  const membersWithLastCV = filteredMembersByAssociatedUser.map((member) => {
     const user = member.toJSON();
     if (user.candidat && user.candidat.cvs && user.candidat.cvs.length > 0) {
       const sortedCvs = user.candidat.cvs.sort((cv1, cv2) => {
@@ -310,16 +315,37 @@ const getMembers = async (params) => {
     return user;
   });
 
-  return role === USER_ROLES.CANDIDAT || role === 'All'
-    ? filterMembersByCVStatus(membersWithLastCV, cvStatus)
-    : membersWithLastCV;
+  const filteredMembersByCVStatus =
+    role === USER_ROLES.CANDIDAT || role === 'All'
+      ? filterMembersByCVStatus(membersWithLastCV, cvStatus)
+      : membersWithLastCV;
+
+  if (hasFilterOptions && (offset || limit)) {
+    if (offset && limit) {
+      const intOffset = parseInt(offset, 10);
+      const intLimit = parseInt(limit, 10);
+      return filteredMembersByCVStatus.slice(intOffset, intOffset + intLimit);
+    }
+    if (offset) {
+      const intOffset = parseInt(offset, 10);
+      return filteredMembersByCVStatus.slice(intOffset);
+    }
+    if (limit) {
+      const intLimit = parseInt(limit, 10);
+
+      return filteredMembersByCVStatus.slice(0, intLimit);
+    }
+  }
+  return filteredMembersByCVStatus;
 };
 
 const countSubmittedCVMembers = async (zone) => {
+  const whereOptions = zone ? { zone } : {};
+
   const options = {
     where: {
+      ...whereOptions,
       role: USER_ROLES.CANDIDAT,
-      zone,
     },
     attributes: ATTRIBUTES_USER,
     include: INCLUDE_USER_CANDIDAT,

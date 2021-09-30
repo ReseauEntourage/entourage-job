@@ -155,9 +155,9 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
 
   const fetchData = useCallback(
     async (doReset) => {
-      setLoading(true);
       setHasError(false);
       if (doReset) {
+        setLoading(true);
         setMembers([]);
       }
       try {
