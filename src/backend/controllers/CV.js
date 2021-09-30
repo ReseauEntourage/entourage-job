@@ -27,7 +27,7 @@ import moment from 'moment';
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
   as: 'user',
-  attributes: ['employed', 'hidden', 'url'],
+  attributes: ['employed', 'hidden', 'url', 'endOfContract'],
   include: [
     {
       model: models.User,
