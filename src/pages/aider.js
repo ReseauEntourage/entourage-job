@@ -3,7 +3,7 @@ import { Button, Grid, Icon, Section } from 'src/components/utils';
 import { NewsletterPartial, SharePartial } from 'src/components/partials';
 import { EXTERNAL_LINKS } from 'src/constants';
 import Layout from 'src/components/Layout';
-import ImageTitle from 'src/components/sections/ImageTitle';
+import ImageTitle from 'src/components/partials/ImageTitle';
 import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';

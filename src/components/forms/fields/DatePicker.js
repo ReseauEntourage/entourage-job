@@ -1,141 +1,89 @@
-/* eslint-disable */
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid } from 'src/components/utils';
 import FormValidatorErrorMessage from 'src/components/forms/FormValidatorErrorMessage';
 
-export default class DatePicker extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      labelClass: '',
-    };
-  }
-
-  static get propTypes() {
-    return {
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      placeholder: PropTypes.string,
-      onChange: PropTypes.func.isRequired,
-      title: PropTypes.string.isRequired,
-      valid: PropTypes.shape({
-        isInvalid: PropTypes.boolean,
-        message: PropTypes.string,
-      }),
-      value: PropTypes.string,
-      min: PropTypes.string,
-      max: PropTypes.string,
-      pattern: PropTypes.string,
-    };
-  }
-
-  static get defaultProps() {
-    return {
-      placeholder: 'Tapez votre texte',
-      valid: undefined,
-      value: '',
-      min: undefined,
-      max: undefined,
-      pattern: undefined,
-    };
-  }
-
-  componentDidMount() {
-    const { value, name } = this.props;
-    if (value) {
-      this.setLabelClass(value);
-      // trick to verify field before the user update of the field
-      this.handleChange({ target: { name, value, type: 'input' } });
-    }
-  }
-
-  getValidClass() {
-    const { valid } = this.props;
-    if (valid !== undefined) {
-      if (!valid.isInvalid) return '';
-      return 'uk-form-danger';
-    }
-    return '';
-  }
-
-  setLabelClass() {
-    this.setState({
-      labelClass: ' stay-small',
-      // labelClass: value.length > 0 ? ' stay-small' : '',
-    });
-  }
-
-  handleChange(event) {
-    const { value } = event.target;
-    const { onChange } = this.props;
-    onChange(event);
-    this.setLabelClass(value);
-  }
-
-  render() {
-    const { id, title, valid, min, max } = this.props;
-
-    return (
-      <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
-        <label
-          className="uk-form-label stay-small"
-          htmlFor={id}
-          style={{ top: '6px' }}
-        >
-          {title}
-        </label>
-        <Grid
-          childWidths={['1-2']}
-          items={[
-            <div className="uk-margin">
-              <select
-                className="uk-select"
-                onChange={(event) => {
-                  return this.handleChange(event);
-                }}
-                name={`${id}-mounth`}
-              >
-                <option />
-                {[
-                  'janvier',
-                  'fevrier',
-                  'mars',
-                  'avril',
-                  'mai',
-                  'juin',
-                  'juillet',
-                ].map((month, index) => {
-                  return (
-                    <option key={index} value={month}>
-                      {month.charAt(0).toUpperCase() + month.slice(1)}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>,
-            <div className="uk-margin">
-              <select
-                className="uk-select"
-                onChange={(event) => {
-                  return this.handleChange(event);
-                }}
-                name={`${id}-year`}
-              >
-                <option>Selectionnez l&apos;année...</option>
-                {Array(max - min)
-                  .fill(min)
-                  .map((val, i) => {
-                    return (
-                      <option value={Number(val) + i}>{Number(val) + i}</option>
-                    );
-                  })}
-              </select>
-            </div>,
-          ]}
+const DatePicker = ({
+  id,
+  name,
+  title,
+  valid,
+  hidden,
+  onChange,
+  disabled,
+  value,
+  min,
+  max,
+}) => {
+  return (
+    <div
+      style={{
+        padding: '15px 0',
+      }}
+    >
+      <div
+        className={`uk-form-controls ent-select${hidden ? ' uk-hidden' : ''}`}
+        style={{
+          paddingTop: title ? '15px' : '2px',
+          paddingBottom: '2px',
+        }}
+      >
+        {title ? (
+          <label
+            className="uk-form-label"
+            style={{
+              paddingLeft: '0px',
+              color: '#f66b28',
+              opacity: '.8',
+              fontSize: '0.8rem',
+              transform: 'translateY(-26px)',
+              transition: '0.8s',
+            }}
+            htmlFor={id}
+          >
+            {title}
+          </label>
+        ) : null}
+        <input
+          className="ent-date-picker"
+          id={id}
+          name={name}
+          value={value}
+          min={min}
+          max={max}
+          type="date"
+          onChange={onChange}
+          disabled={disabled}
+          hidden={hidden}
         />
-        <FormValidatorErrorMessage validObj={valid} />
       </div>
-    );
-  }
-}
+      <FormValidatorErrorMessage validObj={valid} />
+    </div>
+  );
+};
+
+DatePicker.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  valid: PropTypes.shape({
+    isInvalid: PropTypes.bool,
+    message: PropTypes.string,
+  }),
+  value: PropTypes.string,
+  disabled: PropTypes.bool,
+  hidden: PropTypes.bool,
+  min: PropTypes.string,
+  max: PropTypes.string,
+};
+
+DatePicker.defaultProps = {
+  valid: undefined,
+  value: '',
+  min: undefined,
+  max: undefined,
+  disabled: false,
+  hidden: false,
+};
+
+export default DatePicker;

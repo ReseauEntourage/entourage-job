@@ -1,5 +1,4 @@
 /* global UIkit */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -61,15 +60,17 @@ const Suivi = () => {
       });
   };
 
-  const setNoteHasBeenRead = (candidatId) => {
-    Api.put(`/api/v1/user/candidat/read/${candidatId}`)
-      .then(() => {
-        console.log('Note has been read');
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  const setNoteHasBeenRead = useCallback(() => {
+    if (user && user.role !== USER_ROLES.ADMIN && userCandidat?.candidat?.id) {
+      Api.put(`/api/v1/user/candidat/read/${userCandidat.candidat.id}`)
+        .then(() => {
+          console.log('Note has been read');
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [user, userCandidat?.candidat?.id]);
 
   useEffect(() => {
     if (user) {
@@ -87,7 +88,7 @@ const Suivi = () => {
         .then(({ data }) => {
           if (data) {
             setUserCandidat(data);
-            setNoteHasBeenRead(data.candidat.id);
+            setNoteHasBeenRead();
             updateValue(data.note);
           }
         })
@@ -98,7 +99,7 @@ const Suivi = () => {
           return setLoading(false);
         });
     }
-  }, [user]);
+  }, [setNoteHasBeenRead, user]);
 
   if (!user) return null;
 

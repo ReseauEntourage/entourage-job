@@ -1,14 +1,14 @@
 import React from 'react';
 import Partners from 'src/components/partials/Partners';
-import CandidateTestimoniesOrientation from 'src/components/sections/CandidateTestimoniesOrientation';
+import CandidateTestimoniesOrientation from 'src/components/partials/CandidateTestimoniesOrientation';
 import { CONTACT_INFO } from 'src/constants';
-import WhoFor from 'src/components/sections/WhoFor';
-import WhatItBringsToCandidates from 'src/components/sections/WhatItBringsToCandidates';
+import WhoFor from 'src/components/partials/WhoFor';
+import WhatItBringsToCandidates from 'src/components/partials/WhatItBringsToCandidates';
 import Layout from 'src/components/Layout';
 import { Icon, Section, SimpleLink } from 'src/components/utils';
-import SimpleSection from 'src/components/sections/SimpleSection';
+import SimpleSection from 'src/components/partials/SimpleSection';
 import Button from 'src/components/utils/Button';
-import ImageTitle from 'src/components/sections/ImageTitle';
+import ImageTitle from 'src/components/partials/ImageTitle';
 
 const steps = [
   {

@@ -23,6 +23,21 @@ const GenericField = ({
   getValid,
   getValue,
 }) => {
+  const onChangeCustom = (event) => {
+    let events = [event];
+    if (data.fieldsToReset) {
+      events = [
+        ...events,
+        ...data.fieldsToReset.map((field) => {
+          return {
+            target: { name: field, value: null, selectedIndex: 0 },
+          };
+        }),
+      ];
+    }
+    onChange(events);
+  };
+
   const parseValueToUseSelect = () => {
     let valueToUse = null;
     if (data.isMulti && Array.isArray(value) && value.length > 0) {
@@ -48,7 +63,7 @@ const GenericField = ({
       valueToReturn = event.value;
     }
 
-    onChange({
+    onChangeCustom({
       target: {
         name: data.name,
         value: valueToReturn,
@@ -79,7 +94,7 @@ const GenericField = ({
         value={value}
         type={data.type}
         valid={getValid(data.name)}
-        onChange={onChange}
+        onChange={onChangeCustom}
         disabled={data.disabled}
         autocomplete={data.autocomplete}
       />
@@ -89,16 +104,15 @@ const GenericField = ({
     return (
       <DatePicker
         id={`${formId}-${data.id}`}
-        placeholder={data.placeholder}
         name={data.name}
         title={data.title}
         value={value}
         valid={getValid(data.name)}
-        onChange={onChange}
-        pattern={data.pattern}
+        onChange={onChangeCustom}
         min={data.min}
         max={data.max}
-        disabled={data.disabled}
+        disabled={data.disable ? data.disable(getValue) : data.disabled}
+        hidden={data.hidden}
       />
     );
   }
@@ -136,7 +150,7 @@ const GenericField = ({
         value={valueToUse}
         options={options}
         valid={getValid(data.name)}
-        onChange={onChange}
+        onChange={onChangeCustom}
         disabled={data.disable ? data.disable(getValue) : data.disabled}
         hidden={data.hidden}
       />
@@ -153,7 +167,7 @@ const GenericField = ({
         value={value}
         placeholder={data.placeholder}
         valid={getValid(data.name)}
-        onChange={onChange}
+        onChange={onChangeCustom}
         disabled={data.disabled}
       />
     );
@@ -166,7 +180,7 @@ const GenericField = ({
         title={data.title}
         value={value}
         valid={getValid(data.name)}
-        onChange={onChange}
+        onChange={onChangeCustom}
         disabled={data.disabled}
       />
     );
@@ -190,7 +204,7 @@ const GenericField = ({
         }
         value={value}
         valid={getValid(data.name)}
-        onChange={onChange}
+        onChange={onChangeCustom}
         disabled={data.disabled}
       />
     );
@@ -339,6 +353,10 @@ GenericField.propTypes = {
     PropTypes.string,
     PropTypes.number,
     PropTypes.arrayOf(PropTypes.string),
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
   ]),
   onChange: PropTypes.func.isRequired,
   getValid: PropTypes.func.isRequired,

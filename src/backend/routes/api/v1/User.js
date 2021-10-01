@@ -44,8 +44,11 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
             'Bonjour,<br /><br />' +
             `Vous êtes maintenant inscrit${
               user.gender === 0 ? '' : 'e'
-            } sur le site LinkedOut en tant qu'administrateur. Vous pouvez accéder à votre espace personnel depuis la plateforme en renseignant votre adresse mail et le mot de passe suivant : <strong>${userPassword}</strong><br /><br />` +
-            "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres afin d'en créer un facile à retenir pour vous.<br /><br />" +
+            } sur le site LinkedOut en tant qu'administrateur. Vous pouvez accéder à <a href="${
+              process.env.SERVER_URL
+            }/login">votre espace personnel depuis la plateforme</a> en renseignant votre adresse mail et le mot de passe suivant : <strong>${userPassword}</strong><br /><br />` +
+            "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres.<br /><br />" +
+            `À tout moment, retrouvez votre espace personnel en ajoutant ce lien à vos favoris, ou bien en consultant le site <a href="${process.env.SERVER_URL}">LinkedOut</a> puis en cliquant sur le bouton "Se connecter" situé tout en bas de chaque page.<br /><br />` +
             'A bientôt,<br /><br />' +
             "L'équipe LinkedOut",
         });

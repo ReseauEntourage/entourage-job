@@ -8,6 +8,8 @@ import schema from 'src/components/forms/schema/formEditLinkedUser';
 import Api from 'src/Axios';
 import { USER_ROLES } from 'src/constants';
 import ToggleWithConfirmationModal from 'src/components/backoffice/ToggleWithConfirmationModal';
+import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
+import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 
 // userId du candidat ou coach lié
 const UserInformationCard = ({ isAdmin, user, onChange }) => {
@@ -146,33 +148,28 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
         user.role === USER_ROLES.COACH &&
         !linkedUser.deletedAt && (
           <Card style="secondary" title="Préférences du CV">
-            <ToggleWithConfirmationModal
+            <CandidateEmployedToggle
               id="employedLinked"
               title="A retrouvé un emploi"
               modalTitle="Le candidat a retrouvé un emploi ?"
-              modalConfirmation="Oui, il a retrouvé un emploi"
+              modalConfirmation="Valider"
               defaultValue={userCandidat.employed}
-              onToggle={(employed) => {
-                return Api.put(`/api/v1/user/candidat/${linkedUser.id}`, {
-                  employed,
-                })
-                  .then(() => {
-                    setUserCandidat({
-                      ...userCandidat,
-                      employed,
-                    });
-                    UIkit.notification(
-                      'Le profil du candidat a été mis à jour !',
-                      'success'
-                    );
-                  })
-                  .catch(() => {
-                    return UIkit.notification(
-                      'Une erreur est survenue',
-                      'danger'
-                    );
-                  });
+              notificationMessage="Le profil du candidat a été mis à jour !"
+              subtitle={
+                userCandidat && (
+                  <ContractLabel
+                    contract={userCandidat.contract}
+                    endOfContract={userCandidat.endOfContract}
+                  />
+                )
+              }
+              setData={(newData) => {
+                setUserCandidat({
+                  ...userCandidat,
+                  ...newData,
+                });
               }}
+              candidatId={linkedUser.id}
             />
             <ToggleWithConfirmationModal
               id="hiddenLinked"
@@ -230,73 +227,75 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
       >
         {cardContent}
       </Card>
-      <ModalEdit
-        submitText="Envoyer"
-        id="modal-edit-linked-user"
-        title={
-          user.role === USER_ROLES.CANDIDAT
-            ? 'Bénévole coach lié'
-            : 'Candidat lié'
-        }
-        defaultValues={{
-          role:
-            user.role === USER_ROLES.COACH
-              ? USER_ROLES.CANDIDAT
-              : USER_ROLES.COACH,
-          linkedUser: linkedUser
-            ? {
-                value: linkedUser.id,
-                label: `${linkedUser.firstName} ${linkedUser.lastName}`,
-              }
-            : undefined,
-        }}
-        formSchema={schema}
-        onSubmit={({ linkedUser: linkedUserId }, closeModal) => {
-          setLoading(true);
-          let promise = null;
-          if (user.role === USER_ROLES.CANDIDAT) {
-            // on lui assigne ou eleve un coach
-            promise = Api.put(`api/v1/user/candidat/${user.id}`, {
-              coachId: linkedUserId || null,
-            });
+      {isAdmin && (
+        <ModalEdit
+          submitText="Envoyer"
+          id="modal-edit-linked-user"
+          title={
+            user.role === USER_ROLES.CANDIDAT
+              ? 'Bénévole coach lié'
+              : 'Candidat lié'
           }
-          if (user.role === USER_ROLES.COACH) {
-            // on l'assigne à un candidat
-            if (linkedUserId) {
-              promise = Api.put(`api/v1/user/candidat/${linkedUserId}`, {
-                coachId: user.id,
-              });
-            } else {
-              // on lui enleve son candidat
-              promise = Api.put(`api/v1/user/candidat/${linkedUser.id}`, {
-                coachId: null,
+          defaultValues={{
+            role:
+              user.role === USER_ROLES.COACH
+                ? USER_ROLES.CANDIDAT
+                : USER_ROLES.COACH,
+            linkedUser: linkedUser
+              ? {
+                  value: linkedUser.id,
+                  label: `${linkedUser.firstName} ${linkedUser.lastName}`,
+                }
+              : undefined,
+          }}
+          formSchema={schema}
+          onSubmit={({ linkedUser: linkedUserId }, closeModal) => {
+            setLoading(true);
+            let promise = null;
+            if (user.role === USER_ROLES.CANDIDAT) {
+              // on lui assigne ou eleve un coach
+              promise = Api.put(`api/v1/user/candidat/${user.id}`, {
+                coachId: linkedUserId || null,
               });
             }
-          }
-          if (promise) {
-            promise
-              .then(() => {
-                return Api.get(`/api/v1/user/${user.id}`);
-              })
-              .then(({ data }) => {
-                closeModal();
-                assignUser(data);
-                onChange(data);
-                UIkit.notification('Le membre a bien été lié', 'success');
-              })
-              .catch((error) => {
-                console.error(error);
-                UIkit.notification(
-                  "Une erreur c'est produite lors du lien etre les membres",
-                  'danger'
-                );
-              })
-              .finally(() => {
-                return setLoading(false);
-              });
-          }
-        }}
-      />
+            if (user.role === USER_ROLES.COACH) {
+              // on l'assigne à un candidat
+              if (linkedUserId) {
+                promise = Api.put(`api/v1/user/candidat/${linkedUserId}`, {
+                  coachId: user.id,
+                });
+              } else {
+                // on lui enleve son candidat
+                promise = Api.put(`api/v1/user/candidat/${linkedUser.id}`, {
+                  coachId: null,
+                });
+              }
+            }
+            if (promise) {
+              promise
+                .then(() => {
+                  return Api.get(`/api/v1/user/${user.id}`);
+                })
+                .then(({ data }) => {
+                  closeModal();
+                  assignUser(data);
+                  onChange(data);
+                  UIkit.notification('Le membre a bien été lié', 'success');
+                })
+                .catch((error) => {
+                  console.error(error);
+                  UIkit.notification(
+                    "Une erreur c'est produite lors du lien etre les membres",
+                    'danger'
+                  );
+                })
+                .finally(() => {
+                  return setLoading(false);
+                });
+            }
+          }}
+        />
+      )}
     </Grid>
   );
 };

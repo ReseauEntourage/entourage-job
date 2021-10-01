@@ -16,6 +16,8 @@ import { useResetForm } from 'src/hooks/utils';
 import UserInformationCard from 'src/components/cards/UserInformationCard';
 import { mutateFormSchema } from 'src/utils';
 import _ from 'lodash';
+import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
+import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 
 const Parametres = () => {
   const { user, setUser } = useContext(UserContext);
@@ -188,35 +190,31 @@ const Parametres = () => {
             {/* Preferences du CV */}
             {userData.role === USER_ROLES.CANDIDAT && (
               <Card title="Préférences du CV">
-                <ToggleWithConfirmationModal
+                <CandidateEmployedToggle
                   id="employed"
                   title="J'ai retrouvé un emploi"
                   modalTitle="Vous avez retrouvé un emploi ?"
-                  modalConfirmation="Oui, j'ai retrouvé un emploi"
+                  modalConfirmation="Valider"
                   defaultValue={userData.candidat.employed}
-                  onToggle={(employed) => {
-                    return Api.put(`/api/v1/user/candidat/${userData.id}`, {
-                      employed,
-                    })
-                      .then(() => {
-                        setUserData({
-                          ...userData,
-                          candidat: {
-                            ...userData.candidat,
-                            employed,
-                          },
-                        });
-                        UIkit.notification(
-                          'Votre profil a été mis à jour !',
-                          'success'
-                        );
-                      })
-                      .catch(() => {
-                        return UIkit.notification(
-                          'Une erreur est survenue',
-                          'danger'
-                        );
-                      });
+                  candidatId={userData.id}
+                  notificationMessage="Votre profil a été mis à jour !"
+                  subtitle={
+                    userData &&
+                    userData.candidat && (
+                      <ContractLabel
+                        contract={userData.candidat.contract}
+                        endOfContract={userData.candidat.endOfContract}
+                      />
+                    )
+                  }
+                  setData={(newData) => {
+                    setUserData({
+                      ...userData,
+                      candidat: {
+                        ...userData.candidat,
+                        ...newData,
+                      },
+                    });
                   }}
                 />
                 <ToggleWithConfirmationModal

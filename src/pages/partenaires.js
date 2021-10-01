@@ -6,7 +6,7 @@ import { Img, Section } from 'src/components/utils';
 import { addPrefix, formatParagraph } from 'src/utils';
 import Carousel from 'src/components/utils/Carousel';
 import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
-import SimpleSection from 'src/components/sections/SimpleSection';
+import SimpleSection from 'src/components/partials/SimpleSection';
 import SimpleLink from 'src/components/utils/SimpleLink';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';

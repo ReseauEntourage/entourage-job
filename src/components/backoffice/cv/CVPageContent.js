@@ -33,14 +33,16 @@ const CVPageContent = ({ candidatId }) => {
   const { user } = useContext(UserContext);
 
   const setCVHasBeenRead = useCallback(() => {
-    Api.put(`/api/v1/cv/read/${candidatId}`)
-      .then(() => {
-        console.log('Note has been read');
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [candidatId]);
+    if (user && user.role !== USER_ROLES.ADMIN && candidatId) {
+      Api.put(`/api/v1/cv/read/${candidatId}`)
+        .then(() => {
+          console.log('Note has been read');
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [candidatId, user]);
 
   useEffect(() => {
     return () => {

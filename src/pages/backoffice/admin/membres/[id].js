@@ -23,6 +23,8 @@ import { USER_ROLES } from 'src/constants';
 import ToggleWithConfirmationModal from 'src/components/backoffice/ToggleWithConfirmationModal';
 import { mutateFormSchema } from 'src/utils';
 import CandidatOpportunities from 'src/components/opportunities/CandidatOpportunities';
+import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
+import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 
 const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
@@ -314,36 +316,32 @@ const CVPage = () => {
                   <div>
                     {isCandidat && (
                       <Card title="Préférences du CV">
-                        <ToggleWithConfirmationModal
+                        <CandidateEmployedToggle
                           id="employed"
                           title="A retrouvé un emploi"
                           modalTitle="Le candidat a retrouvé un emploi ?"
-                          modalConfirmation="Oui, il a retrouvé un emploi"
+                          modalConfirmation="Valider"
                           defaultValue={user.candidat.employed}
-                          onToggle={(employed) => {
-                            return Api.put(`/api/v1/user/candidat/${user.id}`, {
-                              employed,
-                            })
-                              .then(() => {
-                                setUser({
-                                  ...user,
-                                  candidat: {
-                                    ...user.candidat,
-                                    employed,
-                                  },
-                                });
-                                UIkit.notification(
-                                  'Le profil du candidat a été mis à jour !',
-                                  'success'
-                                );
-                              })
-                              .catch(() => {
-                                return UIkit.notification(
-                                  'Une erreur est survenue',
-                                  'danger'
-                                );
-                              });
+                          notificationMessage="Le profil du candidat a été mis à jour !"
+                          subtitle={
+                            user &&
+                            user.candidat && (
+                              <ContractLabel
+                                contract={user.candidat.contract}
+                                endOfContract={user.candidat.endOfContract}
+                              />
+                            )
+                          }
+                          setData={(newData) => {
+                            setUser({
+                              ...user,
+                              candidat: {
+                                ...user.candidat,
+                                ...newData,
+                              },
+                            });
                           }}
+                          candidatId={user.id}
                         />
                         <ToggleWithConfirmationModal
                           id="hidden"

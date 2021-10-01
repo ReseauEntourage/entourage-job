@@ -1,6 +1,6 @@
 import React from 'react';
 import MultipleCTA from 'src/components/partials/MultipleCTA';
-import SimpleSection from 'src/components/sections/SimpleSection';
+import SimpleSection from 'src/components/partials/SimpleSection';
 import Img from 'src/components/utils/Img';
 
 const WhoFor = () => {
