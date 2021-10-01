@@ -16,6 +16,7 @@ import Api from 'src/Axios';
 import { SharesCountContext } from 'src/components/store/SharesCountProvider';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import moment from 'moment';
 
 const CandidatCard = ({
   url,
@@ -27,6 +28,7 @@ const CandidatCard = ({
   skills,
   catchphrase,
   employed,
+  endOfContract,
   id,
 }) => {
   const router = useRouter();
@@ -100,7 +102,9 @@ const CandidatCard = ({
           {employed && (
             <div
               style={{
-                backgroundColor: 'rgba(245, 95, 36, .7)',
+                backgroundColor: endOfContract
+                  ? 'rgba(245, 174, 36, .7)'
+                  : 'rgba(245, 95, 36, .7)',
               }}
               className="uk-width-1-1 uk-position-bottom uk-flex uk-flex-middle uk-flex-right" // uk-position-cover
             >
@@ -110,7 +114,11 @@ const CandidatCard = ({
                   className="uk-text-uppercase"
                   style={{ color: '#FFF', margin: '8px 0 0 0' }}
                 >
-                  a retrouvé un emploi
+                  {endOfContract
+                    ? `en emploi jusqu'au ${moment(endOfContract).format(
+                        'DD/MM/YYYY'
+                      )}`
+                    : 'a retrouvé un emploi'}
                 </p>
               </div>
             </div>
@@ -383,12 +391,14 @@ CandidatCard.propTypes = {
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
   catchphrase: PropTypes.string,
   employed: PropTypes.bool,
+  endOfContract: PropTypes.string,
   id: PropTypes.string.isRequired,
 };
 
 CandidatCard.defaultProps = {
   imgSrc: 'static/img/arthur.png',
   employed: false,
+  endOfContract: undefined,
   catchphrase: "cherche un job pour s'en sortir",
 };
 export default CandidatCard;

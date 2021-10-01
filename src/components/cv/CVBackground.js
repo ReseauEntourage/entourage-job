@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Img } from 'src/components/utils';
 import { addPrefix } from 'src/utils';
+import moment from 'moment';
 
-const CVBackground = ({ url, employed }) => {
+const CVBackground = ({ url, employed, endOfContract }) => {
   const employedBadgeContent = (
     <>
       <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-small-right">
@@ -15,10 +16,15 @@ const CVBackground = ({ url, employed }) => {
         />
       </div>
       <div className="uk-text-uppercase uk-text-bold uk-text-primary">
-        &nbsp; a retrouvé un emploi
+        &nbsp;{' '}
+        {endOfContract
+          ? `en emploi jusqu'au ${moment(endOfContract).format('DD/MM/YYYY')}`
+          : 'a retrouvé un emploi'}
       </div>
     </>
   );
+
+  const colorClass = endOfContract ? 'ent-temp-employed-color' : '';
 
   return (
     <div
@@ -32,10 +38,14 @@ const CVBackground = ({ url, employed }) => {
     >
       {employed && (
         <div className="ent-employed-container uk-width-large uk-height-large uk-overflow-hidden uk-position-z-index uk-flex uk-flex-center uk-flex-middle">
-          <div className="uk-visible@m ent-employed-badge uk-flex uk-flex-center uk-flex-middle uk-light uk-box-shadow-large">
+          <div
+            className={`uk-visible@m ent-employed-badge ${colorClass} uk-flex uk-flex-center uk-flex-middle uk-light uk-box-shadow-large`}
+          >
             {employedBadgeContent}
           </div>
-          <div className="uk-hidden@m ent-employed-badge-small uk-flex uk-flex-center uk-flex-middle uk-light uk-box-shadow-large">
+          <div
+            className={`uk-hidden@m ent-employed-badge-small ${colorClass} uk-flex uk-flex-center uk-flex-middle uk-light uk-box-shadow-large`}
+          >
             {employedBadgeContent}
           </div>
         </div>
@@ -62,10 +72,12 @@ const CVBackground = ({ url, employed }) => {
 CVBackground.propTypes = {
   url: PropTypes.string,
   employed: PropTypes.bool,
+  endOfContract: PropTypes.string,
 };
 CVBackground.defaultProps = {
   url: '/static/img/arthur-background.jpg',
   employed: false,
+  endOfContract: undefined,
 };
 
 export default CVBackground;

@@ -136,6 +136,7 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
                 skills={cv.skills}
                 catchphrase={cv.catchphrase}
                 employed={cv.user.employed}
+                endOfContract={cv.user.endOfContract}
                 id={cv.user.candidat.id}
               />
             );

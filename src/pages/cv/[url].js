@@ -114,6 +114,7 @@ const CVPage = ({ cv, exists, router, hideShareOptions }) => {
       <div className="uk-background-muted">
         {cv.urlImg && (
           <CVBackground
+            endOfContract={cv?.user?.endOfContract}
             employed={cv.user ? cv.user.employed : false}
             url={process.env.AWSS3_URL + cv.urlImg || undefined}
           />
