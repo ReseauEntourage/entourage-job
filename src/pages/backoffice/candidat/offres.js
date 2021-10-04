@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
 import { initializeFilters } from 'src/utils';
 import { ADMIN_ZONES, DEPARTMENTS_FILTERS } from 'src/constants/departements';
@@ -10,9 +10,9 @@ import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import Api from 'src/Axios';
 import Filter from 'src/components/utils/Filter';
 import {
+  OFFER_CANDIDATE_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
   USER_ROLES,
-  OFFER_CANDIDATE_FILTERS_DATA,
 } from 'src/constants';
 import OpportunityError from 'src/components/opportunities/OpportunityError';
 import SearchBar from 'src/components/filters/SearchBar';

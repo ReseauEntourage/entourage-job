@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  UIKIT_ALIGNMENT,
   UIKIT_COLORS,
   UIKIT_SCREENS,
-  UIKIT_ALIGNMENT,
-  UIKIT_TRANSFORM,
   UIKIT_TEXT_TAG,
+  UIKIT_TRANSFORM,
 } from 'src/components/variables';
 
 const Text = ({

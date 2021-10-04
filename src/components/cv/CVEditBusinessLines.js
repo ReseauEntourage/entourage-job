@@ -2,11 +2,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Icon } from 'src/components/utils/';
+import { Grid } from 'src/components/utils/';
 
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaEditCVBusinessLines from 'src/components/forms/schema/formEditCVBusinessLines';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CVEditBusinessLines = ({ businessLines, onChange }) => {
   return (
@@ -15,7 +16,7 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => {
         <h3 className="uk-card-title">
           {!onChange && (
             <span className="uk-margin-small-right">
-              <Icon name="info" />
+              <IconNoSSR name="info" />
             </span>
           )}
           Mes <span className="uk-text-primary">secteurs d&apos;activité</span>

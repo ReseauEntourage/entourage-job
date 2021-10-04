@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'src/components/utils';
-import Icon from 'src/components/utils/Icon';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const ButtonPost = ({ text, icon, action, style, disabled }) => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const ButtonPost = ({ text, icon, action, style, disabled }) => {
         {loading ? (
           <div className="uk-margin-small-left" data-uk-spinner="ratio: .5" />
         ) : (
-          icon && <Icon className="uk-margin-small-left" name={icon} />
+          icon && <IconNoSSR className="uk-margin-small-left" name={icon} />
         )}
       </div>
     </Button>

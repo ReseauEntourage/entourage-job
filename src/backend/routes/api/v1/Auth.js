@@ -1,7 +1,7 @@
 import * as AuthController from 'src/backend/controllers/Auth';
 import { auth } from 'src/backend/controllers/Auth';
 import * as UserController from 'src/backend/controllers/User';
-import { USER_ROLES, REDIS_KEYS, JOBS } from 'src/constants';
+import { JOBS, REDIS_KEYS, USER_ROLES } from 'src/constants';
 import RateLimiter from 'src/backend/utils/RateLimiter';
 
 import { addToWorkQueue } from 'src/backend/jobs';

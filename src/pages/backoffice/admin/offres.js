@@ -1,6 +1,6 @@
 /* global UIkit */
 
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
 import { initializeFilters, mutateFormSchema } from 'src/utils';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';

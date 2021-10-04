@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import { Grid, Icon } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 import { findOfferStatus } from 'src/utils';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const OfferCard = ({
   title,
@@ -51,28 +52,28 @@ const OfferCard = ({
           {isStared === undefined ? (
             <></>
           ) : (
-            <Icon
+            <IconNoSSR
               name="star"
               className={`${isStared ? 'ent-color-amber' : undefined}`}
             />
           )}
         </Grid>
         <Grid gap="small" middle eachWidths={['auto', 'expand']}>
-          <Icon name="user" />
+          <IconNoSSR name="user" />
           <p>{from}</p>
         </Grid>
         {department && (
           <Grid gap="small" middle eachWidths={['auto', 'expand']}>
-            <Icon name="location" />
+            <IconNoSSR name="location" />
             <p>{department}</p>
           </Grid>
         )}
         <Grid gap="small" middle eachWidths={['auto', 'expand']}>
-          <Icon name="world" />
+          <IconNoSSR name="world" />
           <p>{shortDescription}</p>
         </Grid>
         <Grid gap="small" middle eachWidths={['auto', 'expand']}>
-          <Icon name="info" />
+          <IconNoSSR name="info" />
           <div>
             {isPublic ? (
               <div>
@@ -116,7 +117,7 @@ const OfferCard = ({
         </Grid>
         {date && (
           <Grid gap="small" middle eachWidths={['auto', 'expand']}>
-            <Icon name="calendar" />
+            <IconNoSSR name="calendar" />
             <p>{moment(date).format('DD/MM/YYYY')}</p>
           </Grid>
         )}
@@ -128,7 +129,7 @@ const OfferCard = ({
               (isValidated ? (
                 <div className="uk-flex uk-flex-middle">
                   Publiée&nbsp;
-                  <Icon name="check" />
+                  <IconNoSSR name="check" />
                 </div>
               ) : (
                 <div className="uk-flex uk-flex-middle uk-text-warning">

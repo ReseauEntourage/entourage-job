@@ -2,19 +2,20 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import {
+  ActionPartial,
   DiscoverPartial,
   NewsletterPartial,
-  ActionPartial,
 } from 'src/components/partials';
 import { CVBackground, CVFiche } from 'src/components/cv';
 import Layout from 'src/components/Layout';
 import Api from 'src/Axios';
-import { Grid, Icon, Section, SimpleLink } from 'src/components/utils';
+import { Grid, Section, SimpleLink } from 'src/components/utils';
 import TAGS from 'src/constants/tags';
 import { useUpdateSharesCount } from 'src/hooks';
 import Button from 'src/components/utils/Button';
 import { CV_FILTERS_DATA } from 'src/constants';
 import CVList from 'src/components/cv/CVList';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CVPage = ({ cv, exists, router, hideShareOptions }) => {
   const updateSharesCount = useUpdateSharesCount();
@@ -70,7 +71,7 @@ const CVPage = ({ cv, exists, router, hideShareOptions }) => {
                 style="secondary"
                 className="uk-margin-large-top"
               >
-                Voir tous les candidats <Icon name="chevron-right" />
+                Voir tous les candidats <IconNoSSR name="chevron-right" />
               </Button>
             </Grid>
           </Section>

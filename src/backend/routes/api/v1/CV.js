@@ -13,11 +13,11 @@ import sharp from 'sharp';
 import express from 'express';
 
 import {
-  USER_ROLES,
+  AIRTABLE_NAMES,
   CV_STATUS,
   JOBS,
   NEWSLETTER_ORIGINS,
-  AIRTABLE_NAMES,
+  USER_ROLES,
 } from 'src/constants';
 import { getZoneSuffix } from 'src/utils';
 

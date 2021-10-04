@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { UIKIT_STYLES, UIKIT_BLENDS } from 'src/components/variables';
+import { UIKIT_BLENDS, UIKIT_STYLES } from 'src/components/variables';
 import { addPrefix } from 'src/utils';
 
 const Background = ({ src, position, blend, fixed, children }) => {

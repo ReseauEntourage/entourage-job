@@ -1,17 +1,17 @@
-import { USER_ROLES, CV_STATUS } from 'src/constants';
+import { CV_STATUS, USER_ROLES } from 'src/constants';
 import userFactory from 'src/test/factories/userFactory';
 import cvFactory from 'src/test/factories/cvFactory';
 
 import request from 'supertest';
 
 import {
-  startTestServer,
-  recreateTestDB,
-  stopTestServer,
-  resetTestDB,
+  associateCoachAndCandidat,
   createCvWithAssociations,
   createLoggedInUser,
-  associateCoachAndCandidat,
+  recreateTestDB,
+  resetTestDB,
+  startTestServer,
+  stopTestServer,
 } from 'src/test/helpers';
 import { ADMIN_ZONES } from 'src/constants/departements';
 

@@ -5,14 +5,14 @@ import userFactory from 'src/test/factories/userFactory';
 import request from 'supertest';
 
 import {
-  startTestServer,
-  recreateTestDB,
-  resetTestDB,
-  stopTestServer,
-  createEntities,
-  createLoggedInUser,
   associateCoachAndCandidat,
   associateManyOpportunitiesUser,
+  createEntities,
+  createLoggedInUser,
+  recreateTestDB,
+  resetTestDB,
+  startTestServer,
+  stopTestServer,
 } from 'src/test/helpers';
 
 describe('Opportunity', () => {

@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { Icon, Grid, Button } from 'src/components/utils';
+import { Button, Grid } from 'src/components/utils';
 import TAGS from 'src/constants/tags';
 import { event } from 'src/lib/gtag';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const SharePartial = ({ showTitle, padding }) => {
   const router = useRouter();
@@ -60,7 +61,7 @@ const SharePartial = ({ showTitle, padding }) => {
               key={key}
             >
               {title}&nbsp;
-              <Icon name={name} />
+              <IconNoSSR name={name} />
             </Button>
           );
         })}

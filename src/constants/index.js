@@ -1,9 +1,9 @@
 import TAGS from 'src/constants/tags';
 
 import {
-  DEPARTMENTS_FILTERS,
   ADMIN_ZONES,
   ADMIN_ZONES_FILTERS,
+  DEPARTMENTS_FILTERS,
 } from 'src/constants/departements';
 
 const OFFER_STATUS = [

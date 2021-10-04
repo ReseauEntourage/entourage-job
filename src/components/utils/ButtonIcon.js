@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Icon from 'src/components/utils/Icon';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const ButtonIcon = ({ name, onClick, className, href, ratio }) => {
   return (
@@ -11,7 +11,7 @@ const ButtonIcon = ({ name, onClick, className, href, ratio }) => {
         return onClick();
       }}
     >
-      <Icon name={name} className={className} ratio={ratio} />
+      <IconNoSSR name={name} className={className} ratio={ratio} />
     </a>
   );
 };

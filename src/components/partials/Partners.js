@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Background, Icon, Section } from 'src/components/utils';
+import { Background, Section } from 'src/components/utils';
 import PARTNERS from 'src/constants/partners';
 import Button from 'src/components/utils/Button';
 import LogoList from 'src/components/partials/LogoList';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const Partners = ({ showOrientationPartners }) => {
   return (
@@ -50,7 +51,7 @@ const Partners = ({ showOrientationPartners }) => {
             <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-large-top">
               <Button style="primary" href="/partenaires">
                 En savoir plus &nbsp;
-                <Icon name="arrow-right" />
+                <IconNoSSR name="arrow-right" />
               </Button>
             </div>
           </div>

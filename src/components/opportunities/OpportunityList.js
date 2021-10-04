@@ -1,11 +1,11 @@
 /* global UIkit */
 import React, {
+  forwardRef,
+  useCallback,
   useContext,
   useEffect,
-  useCallback,
-  useState,
   useImperativeHandle,
-  forwardRef,
+  useState,
 } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from 'src/components/forms/FormValidatorErrorMessage';
 import { usePrevious } from 'src/hooks/utils';

@@ -1,9 +1,10 @@
 import React from 'react';
-import { Grid, Img, Background, Section, Icon } from 'src/components/utils';
+import { Background, Grid, Img, Section } from 'src/components/utils';
 import Button from 'src/components/utils/Button';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const AssociationEntourage = () => {
   return (
@@ -42,7 +43,7 @@ const AssociationEntourage = () => {
                     }}
                     newTab
                   >
-                    Voir le site <Icon name="chevron-right" />
+                    Voir le site <IconNoSSR name="chevron-right" />
                   </Button>
                 </div>
               </div>

@@ -1,12 +1,13 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { Grid, Icon, Section, SimpleLink } from 'src/components/utils';
+import { Grid, Section, SimpleLink } from 'src/components/utils';
 import AssociationEntourage from 'src/components/partials/AssociationEntourage';
 import Partners from 'src/components/partials/Partners';
 import Button from 'src/components/utils/Button';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const Footer = () => {
   const { asPath } = useRouter();
@@ -106,7 +107,7 @@ const Footer = () => {
                 }}
                 style="primary"
               >
-                Soutenir LinkedOut <Icon name="chevron-right" />
+                Soutenir LinkedOut <IconNoSSR name="chevron-right" />
               </Button>
             </div>
             <ul className="uk-padding-small uk-subnav uk-subnav-divider uk-flex-center uk-light">
@@ -154,7 +155,7 @@ const Footer = () => {
             </ul>
             <div className="uk-flex uk-flex-center">
               <Button href="/login" style="primary">
-                Espace candidat <Icon name="chevron-right" />
+                Espace candidat <IconNoSSR name="chevron-right" />
               </Button>
             </div>
           </Grid>

@@ -1,7 +1,7 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, CloseButton, Button } from 'src/components/utils';
+import { Button, CloseButton, Grid } from 'src/components/utils';
 import ModalGeneric from 'src/components/modals/ModalGeneric';
 import HeaderModal from 'src/components/modals/HeaderModal';
 import 'static/css/Toggle.less';

@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'src/components/utils';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const HeaderModal = ({ children }) => {
   return (
     <div className="uk-flex">
       <div className="uk-margin-medium-right">
         <span className="uk-text-primary">
-          <Icon name="linkedout-contract" ratio={1.5} />
+          <IconNoSSR name="linkedout-contract" ratio={1.5} />
         </span>
       </div>
       <div className="">

@@ -6,7 +6,7 @@ import React, { createContext, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Api from 'src/Axios';
-import { USER_ROLES, STORAGE_KEYS } from 'src/constants';
+import { STORAGE_KEYS, USER_ROLES } from 'src/constants';
 import { usePrevious } from 'src/hooks/utils';
 
 /**

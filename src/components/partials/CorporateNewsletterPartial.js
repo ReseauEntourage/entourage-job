@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import validator from 'validator';
 import PropTypes from 'prop-types';
-import { Icon, Grid, Section } from 'src/components/utils';
+import { Grid, Section } from 'src/components/utils';
 import Api from 'src/Axios';
 import Button from 'src/components/utils/Button';
 import { NEWSLETTER_ORIGINS } from 'src/constants';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CorporateNewsletter = ({ style }) => {
   const [email, setEmail] = useState('');
@@ -43,7 +44,7 @@ const CorporateNewsletter = ({ style }) => {
         >
           <div data-uk-form-custom="target: true" className="uk-width-1-1">
             <a className="uk-form-icon" disabled>
-              <Icon name="mail" />
+              <IconNoSSR name="mail" />
             </a>
             <input
               className="uk-input"

@@ -5,12 +5,12 @@ import getResetLinkAndUser from 'src/test/helpers/auth.helpers';
 import { getTestImagePath } from 'src/test/helpers/cvImage.helpers';
 
 import {
-  startTestServer,
-  stopTestServer,
-  recreateTestDB,
-  resetTestDB,
   createEntities,
   getApp,
+  recreateTestDB,
+  resetTestDB,
+  startTestServer,
+  stopTestServer,
 } from 'src/test/helpers/helpers';
 
 import {
@@ -25,8 +25,8 @@ import {
 } from 'src/test/helpers/user_candidat.helpers';
 
 import {
-  associateOpportunityUser,
   associateManyOpportunitiesUser,
+  associateOpportunityUser,
 } from 'src/test/helpers/opportunity_user.helpers';
 
 export {

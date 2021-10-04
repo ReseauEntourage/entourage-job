@@ -1,6 +1,6 @@
 import React from 'react';
 import { event } from 'src/lib/gtag';
-import { Button, Grid, Icon, Section } from 'src/components/utils';
+import { Button, Grid, Section } from 'src/components/utils';
 import PostJobAdModal, { modalId } from 'src/components/modals/PostJobAdModal';
 import TAGS from 'src/constants/tags';
 import Layout from 'src/components/Layout';
@@ -8,6 +8,7 @@ import ImageTitle from 'src/components/partials/ImageTitle';
 import SearchCandidates from 'src/components/partials/SearchCandidates';
 import CorporateContact from 'src/components/partials/CorporateContactPartial';
 import CorporateNewsletter from 'src/components/partials/CorporateNewsletterPartial';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CVEntreprises = () => {
   return (
@@ -45,7 +46,7 @@ const CVEntreprises = () => {
                 return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
               }}
             >
-              Déposez votre offre <Icon name="chevron-right" />
+              Déposez votre offre <IconNoSSR name="chevron-right" />
             </Button>
           </Grid>
         </div>
@@ -68,7 +69,7 @@ const CVEntreprises = () => {
               href="/entreprises/recruter-hors-linkedout"
             >
               Voir les partenaires&nbsp;
-              <Icon name="chevron-right" />
+              <IconNoSSR name="chevron-right" />
             </Button>
           </Grid>
         </div>

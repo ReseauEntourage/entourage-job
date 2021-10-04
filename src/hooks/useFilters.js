@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { initializeFilters } from 'src/utils';
 
 export function useFilters(filtersData, defaults) {

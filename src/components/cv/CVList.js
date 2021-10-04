@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import ButtonPost from 'src/components/backoffice/cv/ButtonPost';
 import { filtersToQueryParams } from 'src/utils';
