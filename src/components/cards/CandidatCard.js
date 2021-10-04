@@ -103,7 +103,7 @@ const CandidatCard = ({
             <div
               style={{
                 backgroundColor: endOfContract
-                  ? 'rgba(245, 174, 36, .7)'
+                  ? 'rgba(72, 72, 72, 0.7)'
                   : 'rgba(245, 95, 36, .7)',
               }}
               className="uk-width-1-1 uk-position-bottom uk-flex uk-flex-middle uk-flex-right" // uk-position-cover
