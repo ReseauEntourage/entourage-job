@@ -4,10 +4,11 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import Api from 'src/Axios';
-import { Section, Grid, Button, Icon } from 'src/components/utils';
+import { Button, Grid, Section } from 'src/components/utils';
 import { UserContext } from 'src/components/store/UserProvider';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import { USER_ROLES } from 'src/constants';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const Wrapper = ({ title, description, children }) => {
   return (
@@ -161,7 +162,7 @@ const Suivi = () => {
           }}
           disabled={value === userCandidat.note}
         >
-          <Icon name="history" />
+          <IconNoSSR name="history" />
         </Button>
         <Button
           style="default"

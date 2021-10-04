@@ -3,10 +3,9 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {
-  Navbar,
   Hamburger,
+  Navbar,
   NavbarLogo,
-  Icon,
   Offcanvas,
   SimpleLink,
 } from 'src/components/utils';
@@ -16,6 +15,7 @@ import ImgProfile from 'src/components/headers/ImgProfile';
 import Dropdown from 'src/components/utils/Dropdown';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { useNotifBadges } from 'src/hooks';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const HeaderConnected = ({ isHome }) => {
   const { user, logout } = useContext(UserContext);
@@ -140,7 +140,7 @@ const HeaderConnected = ({ isHome }) => {
                               : {}),
                           }}
                         >
-                          <Icon name={icon} />
+                          <IconNoSSR name={icon} />
                         </span>
                         <span
                           style={{
@@ -186,7 +186,7 @@ const HeaderConnected = ({ isHome }) => {
                 <span className="uk-margin-small-left">
                   Salut {user.firstName}
                 </span>
-                <Icon name="triangle-down" />
+                <IconNoSSR name="triangle-down" />
               </a>
               <Dropdown
                 dividers={[2]}
@@ -226,7 +226,7 @@ const HeaderConnected = ({ isHome }) => {
                 }}
               >
                 <span className="uk-margin-small-left uk-margin-small-right">
-                  <Icon name="bell" />
+                  <IconNoSSR name="bell" />
                 </span>
               </a>
             </li> */}

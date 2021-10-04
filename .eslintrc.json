@@ -29,6 +29,10 @@
     "strict": ["error", "global"],
     "prefer-promise-reject-errors": "off",
     "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["./src/test/**"] }
+    ],
     "no-return-assign": "off",
     "no-case-declarations": "off",
     "no-console": "off",

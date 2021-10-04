@@ -1,7 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Layout from 'src/components/Layout';
-import { Section, Icon, Button } from 'src/components/utils';
+import { Button, Section } from 'src/components/utils';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const ResetSuccessPage = () => {
   const router = useRouter();
@@ -11,7 +12,7 @@ const ResetSuccessPage = () => {
       <Section size="large" style="muted">
         <div className="uk-flex uk-flex-center">
           <div className="uk-card uk-card-body uk-text-center">
-            <Icon name="check" ratio={4} className="uk-text-primary" />
+            <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
             <p className="uk-text-lead">
               Votre mot de passe a bien été réinitialisé.
             </p>

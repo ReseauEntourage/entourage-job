@@ -1,22 +1,23 @@
 /* global UIkit */
 
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import 'static/css/Toggle.less';
 import {
+  FacebookShareButton,
   LinkedinShareButton,
   TwitterShareButton,
-  FacebookShareButton,
 } from 'react-share';
 import { useRouter } from 'next/router';
 
-import { SimpleLink, Grid, Icon, Img } from 'src/components/utils';
+import { Grid, Img, SimpleLink } from 'src/components/utils';
 import ModalShareCV from 'src/components/modals/ModalShareCV';
 import Api from 'src/Axios';
 import { SharesCountContext } from 'src/components/store/SharesCountProvider';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 import moment from 'moment';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CandidatCard = ({
   url,
@@ -246,7 +247,7 @@ const CandidatCard = ({
                         key={text + index}
                         className="uk-flex uk-flex-middle"
                       >
-                        <Icon name="location" ratio={0.6} />
+                        <IconNoSSR name="location" ratio={0.6} />
                         &nbsp;
                         <span
                           className="uk-text-meta uk-flex-1"
@@ -298,7 +299,7 @@ const CandidatCard = ({
                   style={{ cursor: 'pointer' }}
                   className="uk-icon-button light-icon-button"
                 >
-                  <Icon
+                  <IconNoSSR
                     name="linkedin"
                     ratio={0.9}
                     className={`share-linkedin-${firstName}`}
@@ -322,7 +323,7 @@ const CandidatCard = ({
                   style={{ cursor: 'pointer' }}
                   className="uk-icon-button light-icon-button"
                 >
-                  <Icon
+                  <IconNoSSR
                     name="facebook"
                     ratio={0.9}
                     className={`share-facebook-${firstName}`}
@@ -347,7 +348,7 @@ const CandidatCard = ({
                   style={{ cursor: 'pointer' }}
                   className="uk-icon-button light-icon-button"
                 >
-                  <Icon
+                  <IconNoSSR
                     name="twitter"
                     ratio={0.9}
                     className={`share-twitter-${firstName}`}

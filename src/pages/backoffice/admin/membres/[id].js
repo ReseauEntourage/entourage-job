@@ -1,17 +1,10 @@
 /* global UIkit */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { usePrevious } from 'src/hooks/utils';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import Api from 'src/Axios';
-import {
-  Section,
-  SimpleLink,
-  Grid,
-  Icon,
-  Card,
-  Button,
-} from 'src/components/utils';
+import { Button, Card, Grid, Section, SimpleLink } from 'src/components/utils';
 import schemaEditUser from 'src/components/forms/schema/formEditUser';
 import schemaDeleteUser from 'src/components/forms/schema/formDeleteUser.json';
 import CVPageContent from 'src/components/backoffice/cv/CVPageContent';
@@ -25,6 +18,7 @@ import { mutateFormSchema } from 'src/utils';
 import CandidatOpportunities from 'src/components/opportunities/CandidatOpportunities';
 import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
 import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
@@ -187,7 +181,7 @@ const CVPage = () => {
               href="/backoffice/admin/membres"
               className="uk-link-reset uk-flex uk-flex-middle"
             >
-              <Icon name="chevron-left" />
+              <IconNoSSR name="chevron-left" />
               Retour à la liste
             </SimpleLink>
             <div>
@@ -209,7 +203,7 @@ const CVPage = () => {
               href="/backoffice/admin/membres"
               className="uk-link-reset uk-flex uk-flex-middle"
             >
-              <Icon name="chevron-left" />
+              <IconNoSSR name="chevron-left" />
               Retour à la liste
             </SimpleLink>
             <div>
@@ -234,7 +228,7 @@ const CVPage = () => {
             href={`/backoffice/admin/membres?role=${user.role}`}
             className="uk-link-reset uk-flex uk-flex-middle"
           >
-            <Icon name="chevron-left" />
+            <IconNoSSR name="chevron-left" />
             Retour à la liste
           </SimpleLink>
           <div>
@@ -394,21 +388,21 @@ const CVPage = () => {
                     {user ? (
                       <Grid column gap="small">
                         <Grid row gap="small" middle>
-                          <Icon name="user" style={{ width: 20 }} />
+                          <IconNoSSR name="user" style={{ width: 20 }} />
                           <span>{`${user.firstName} ${user.lastName}`}</span>
                         </Grid>
                         <Grid row gap="small" middle>
-                          <Icon name="gender" style={{ width: 20 }} />
+                          <IconNoSSR name="gender" style={{ width: 20 }} />
                           <span>
                             {`${user.gender === 0 ? 'Homme' : 'Femme'}`}
                           </span>
                         </Grid>
                         <Grid row gap="small" middle>
-                          <Icon name="mail" style={{ width: 20 }} />
+                          <IconNoSSR name="mail" style={{ width: 20 }} />
                           <span>{user.email}</span>
                         </Grid>
                         <Grid row gap="small" middle>
-                          <Icon name="phone" style={{ width: 20 }} />
+                          <IconNoSSR name="phone" style={{ width: 20 }} />
                           {user.phone ? (
                             <span>{user.phone}</span>
                           ) : (
@@ -419,7 +413,7 @@ const CVPage = () => {
                         </Grid>
                         {user.role === USER_ROLES.CANDIDAT && (
                           <Grid row gap="small" middle>
-                            <Icon name="home" style={{ width: 20 }} />
+                            <IconNoSSR name="home" style={{ width: 20 }} />
                             {user.address ? (
                               <span>{user.address}</span>
                             ) : (
@@ -531,7 +525,7 @@ const CVPage = () => {
                     <span className="uk-margin-small-right">
                       Supprimer l&apos;utilisateur
                     </span>
-                    <Icon name="trash" />
+                    <IconNoSSR name="trash" />
                   </Button>
                   <ModalEdit
                     id="delete-user"

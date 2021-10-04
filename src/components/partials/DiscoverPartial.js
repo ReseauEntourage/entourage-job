@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Section, Icon } from 'src/components/utils';
+import { Grid, Section } from 'src/components/utils';
 import { CandidatCard } from 'src/components/cards';
 import Api from 'src/Axios';
 import Button from 'src/components/utils/Button';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const DiscoverPartial = ({ style }) => {
   const [cvs, setCVs] = useState(undefined);
@@ -62,7 +63,7 @@ const DiscoverPartial = ({ style }) => {
           href="/candidats"
           className="uk-margin-large-top"
         >
-          Voir tous les candidats <Icon name="chevron-right" />
+          Voir tous les candidats <IconNoSSR name="chevron-right" />
         </Button>
       </div>
     </Section>

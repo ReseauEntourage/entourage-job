@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Grid, Icon } from 'src/components/utils';
+import { Button, Grid } from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CurrentFilters = ({ numberOfResults, filters, resetFilters }) => {
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
@@ -57,7 +58,7 @@ const CurrentFilters = ({ numberOfResults, filters, resetFilters }) => {
           toggle="target: #toggle-filter-menu;"
         >
           Filtrer par &nbsp;
-          <Icon
+          <IconNoSSR
             style={{ width: 15, height: 15 }}
             name={`filter${filterMenuOpened ? '' : '-empty'}`}
           />

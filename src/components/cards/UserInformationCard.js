@@ -1,7 +1,7 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { Grid, Icon, SimpleLink, Card } from 'src/components/utils';
+import { Card, Grid, SimpleLink } from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schema from 'src/components/forms/schema/formEditLinkedUser';
@@ -10,6 +10,7 @@ import { USER_ROLES } from 'src/constants';
 import ToggleWithConfirmationModal from 'src/components/backoffice/ToggleWithConfirmationModal';
 import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
 import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 // userId du candidat ou coach lié
 const UserInformationCard = ({ isAdmin, user, onChange }) => {
@@ -53,7 +54,7 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
   const cardContent = linkedUser ? (
     <Grid column gap="small">
       <Grid row gap="small">
-        <Icon name="user" />
+        <IconNoSSR name="user" />
         <span>{`${linkedUser.firstName} ${linkedUser.lastName}`}</span>
       </Grid>
       {!linkedUser.deletedAt && (
@@ -64,7 +65,7 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
             isExternal
           >
             <Grid row gap="small">
-              <Icon name="mail" />
+              <IconNoSSR name="mail" />
               <span>{linkedUser.email}</span>
             </Grid>
           </SimpleLink>
@@ -75,13 +76,13 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
               isExternal
             >
               <Grid row gap="small">
-                <Icon name="phone" />
+                <IconNoSSR name="phone" />
                 <span>{linkedUser.phone}</span>
               </Grid>
             </SimpleLink>
           ) : (
             <Grid row gap="small">
-              <Icon name="phone" />
+              <IconNoSSR name="phone" />
               <span className="uk-text-italic">
                 Numéro de téléphone non renseigné
               </span>
@@ -90,12 +91,12 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
           {user.role === USER_ROLES.COACH &&
             (linkedUser.address ? (
               <Grid row gap="small">
-                <Icon name="home" />
+                <IconNoSSR name="home" />
                 <span>{linkedUser.address}</span>
               </Grid>
             ) : (
               <Grid row gap="small">
-                <Icon name="home" />
+                <IconNoSSR name="home" />
                 <span className="uk-text-italic">
                   Adresse postale non renseignée
                 </span>
@@ -108,14 +109,14 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
               href={`/cv/${userCandidat.url}`}
             >
               <Grid row gap="small">
-                <Icon name="link" />
+                <IconNoSSR name="link" />
                 <span className="uk-text-italic">{userCandidat.url}</span>
               </Grid>
             </SimpleLink>
           )}
           {isAdmin && user.role === USER_ROLES.COACH && userCandidat && (
             <Grid row gap="small">
-              <Icon name="cog" />
+              <IconNoSSR name="cog" />
               <span className="uk-text-italic">
                 {userCandidat.hidden ? 'CV caché' : 'CV visible'}
               </span>
@@ -123,7 +124,7 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
           )}
           {isAdmin && user.role === USER_ROLES.COACH && userCandidat && (
             <Grid row gap="small">
-              <Icon name="cog" />
+              <IconNoSSR name="cog" />
               <span className="uk-text-italic">
                 {userCandidat.employed
                   ? 'A retrouvé un emploi'

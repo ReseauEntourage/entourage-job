@@ -1,8 +1,8 @@
 import {
-  generatePdfFromCV,
-  getAndCacheCV,
-  getAndCacheAllCVs,
   createSearchString,
+  generatePdfFromCV,
+  getAndCacheAllCVs,
+  getAndCacheCV,
 } from 'src/backend/controllers/CV';
 
 const generatePDF = async (candidatId, token, paths) => {

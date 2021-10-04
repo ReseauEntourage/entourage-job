@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { GoogleApiWrapper, InfoWindow, Map, Marker } from 'google-maps-react';
 import SimpleLink from 'src/components/utils/SimpleLink';
 
 const partnersPlaces = [

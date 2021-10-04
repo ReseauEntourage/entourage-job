@@ -2,9 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import {
-  UIKIT_SCREENS,
-  UIKIT_BUTTON_STYLES_SPEC,
   UIKIT_BUTTON_SIZES,
+  UIKIT_BUTTON_STYLES_SPEC,
+  UIKIT_SCREENS,
 } from 'src/components/variables';
 
 const Button = ({

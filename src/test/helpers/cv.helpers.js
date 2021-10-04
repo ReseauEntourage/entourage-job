@@ -17,10 +17,10 @@ import createLoggedInUser from 'src/test/helpers/user.helpers';
             reviews: number,
             candidat: boolean,
             >}
-* associations other models to be created and associated to the cv
-* @returns a cv with desired associated entities,
-* @optional with associated user
-*/
+ * associations other models to be created and associated to the cv
+ * @returns a cv with desired associated entities,
+ * @optional with associated user
+ */
 const createCvWithAssociations = async (props = {}) => {
   let fullCv = {};
   const associationsId = {};

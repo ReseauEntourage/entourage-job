@@ -1,8 +1,8 @@
 import {
-  forceGC,
   cleanCV,
   escapeColumnRaw,
   escapeQuery,
+  forceGC,
 } from 'src/backend/utils';
 import * as S3 from 'src/backend/controllers/Aws';
 import RedisManager from 'src/backend/utils/RedisManager';
@@ -18,7 +18,7 @@ import {
 
 import _ from 'lodash';
 
-import { QueryTypes, fn, col } from 'sequelize';
+import { col, fn, QueryTypes } from 'sequelize';
 import fs from 'fs';
 import puppeteer from 'puppeteer-core';
 import { PDFDocument } from 'pdf-lib';

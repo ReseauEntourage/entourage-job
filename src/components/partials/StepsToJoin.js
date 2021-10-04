@@ -1,9 +1,10 @@
 import React from 'react';
-import { Icon, Section } from 'src/components/utils';
+import { Section } from 'src/components/utils';
 import Button from 'src/components/utils/Button';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 import { SharePartial } from 'src/components/partials/index';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const StepsToJoin = () => {
   return (
@@ -30,7 +31,7 @@ const StepsToJoin = () => {
           }}
           href={process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION}
         >
-          Je m&apos;inscris <Icon name="chevron-right" />
+          Je m&apos;inscris <IconNoSSR name="chevron-right" />
         </Button>
       </div>
       <p className="uk-text-center uk-text-italic">

@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { CloseButton } from 'src/components/utils';

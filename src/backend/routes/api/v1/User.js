@@ -1,5 +1,5 @@
 import { addToWorkQueue } from 'src/backend/jobs';
-import { USER_ROLES, JOBS } from 'src/constants';
+import { JOBS, USER_ROLES } from 'src/constants';
 import * as AuthController from 'src/backend/controllers/Auth';
 import { auth } from 'src/backend/controllers/Auth';
 import * as UserController from 'src/backend/controllers/User';

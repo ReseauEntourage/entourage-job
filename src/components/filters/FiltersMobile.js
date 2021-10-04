@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Icon } from 'src/components/utils';
+import { Button } from 'src/components/utils';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const FiltersMobile = ({ filters }) => {
   const [filterMenuOpened, setFilterMenuOpened] = useState(false);
@@ -48,7 +49,7 @@ const FiltersMobile = ({ filters }) => {
         toggle="target: #toggle-filter-menu;"
       >
         <div className="uk-position-relative">
-          <Icon
+          <IconNoSSR
             style={{ width: 18, height: 18 }}
             name={`filter${filterMenuOpened ? '' : '-empty'}`}
           />

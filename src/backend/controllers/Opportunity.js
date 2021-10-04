@@ -1,7 +1,7 @@
 import {
-  OFFER_STATUS,
-  JOBS,
   AIRTABLE_NAMES,
+  JOBS,
+  OFFER_STATUS,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
 
@@ -13,10 +13,10 @@ import moment from 'moment';
 import { Op } from 'sequelize';
 
 import {
-  getFiltersObjectsFromQueryParams,
-  filterCandidateOffersByType,
   filterAdminOffersByType,
+  filterCandidateOffersByType,
   filterOffersByStatus,
+  getFiltersObjectsFromQueryParams,
   getOfferOptions,
 } from 'src/backend/utils/Filters';
 

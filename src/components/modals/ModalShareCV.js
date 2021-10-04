@@ -6,11 +6,12 @@ import StepperModal from 'src/components/modals/StepperModal';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
 import schemaGetEmail from 'src/components/forms/schema/formGetEmail.json';
 import Api from 'src/Axios';
-import { Button, Icon, Img } from 'src/components/utils';
+import { Button, Img } from 'src/components/utils';
 import { useResetForm } from 'src/hooks/utils';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const ModalShareCV = ({ firstName, id }) => {
   const [form, resetForm] = useResetForm();
@@ -79,7 +80,7 @@ const ModalShareCV = ({ firstName, id }) => {
                     href={EXTERNAL_LINKS.ENTOURAGE}
                     style="primary"
                   >
-                    En savoir plus <Icon name="chevron-right" />
+                    En savoir plus <IconNoSSR name="chevron-right" />
                   </Button>
                 </div>
 

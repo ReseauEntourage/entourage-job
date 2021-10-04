@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Grid, Icon, Section } from 'src/components/utils';
+import { Button, Grid, Section } from 'src/components/utils';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 import 'src/components/partials/HireCTA.less';
 import CVList from 'src/components/cv/CVList';
@@ -55,7 +56,7 @@ const HireCTA = () => {
                 style="secondary"
                 className="uk-margin-small-top"
               >
-                Découvrez tous les CV <Icon name="chevron-right" />
+                Découvrez tous les CV <IconNoSSR name="chevron-right" />
               </Button>
             </Grid>
             <hr className="uk-margin-large-top uk-width-1-1" />
@@ -86,7 +87,7 @@ const HireCTA = () => {
                   return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
                 }}
               >
-                Déposez votre offre <Icon name="chevron-right" />
+                Déposez votre offre <IconNoSSR name="chevron-right" />
               </Button>
             </Grid>
             <PostJobAdModal />

@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import {
-  Grid,
-  Button,
-  Icon,
-  SimpleLink,
-  CloseButton,
-} from 'src/components/utils';
+import { Button, CloseButton, Grid, SimpleLink } from 'src/components/utils';
 import Textarea from 'src/components/forms/fields/Textarea';
 import Select from 'src/components/forms/fields/Select';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 import Api from 'src/Axios';
 import { OFFER_STATUS } from 'src/constants';
@@ -48,7 +43,7 @@ export const OfferInfoContainer = ({ icon, title, children }) => {
 
   return (
     <Grid gap="small" eachWidths={['auto', 'expand']}>
-      {icon ? <Icon name={icon} /> : <div className="uk-margin-left" />}
+      {icon ? <IconNoSSR name={icon} /> : <div className="uk-margin-left" />}
       <div>
         {title ? <span className="uk-text-bold">{title}</span> : undefined}
         <Grid gap="collapse" childWidths={['1-1']}>
@@ -80,6 +75,7 @@ export function translateCategory(isPublic) {
   if (isPublic) return 'Offre générale';
   return 'Offre inconnue';
 }
+
 const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
     currentOffer = { userOpportunity: {}, businessLines: [] };
@@ -193,7 +189,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                         {currentOffer.recruiterMail}
                         &nbsp;
                       </span>
-                      <Icon name="mail" ratio={0.8} />
+                      <IconNoSSR name="mail" ratio={0.8} />
                     </SimpleLink>
                     <SimpleLink
                       href={`tel:${currentOffer.recruiterPhone}`}
@@ -205,7 +201,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                         {currentOffer.recruiterPhone}
                         &nbsp;
                       </span>
-                      <Icon name="phone" ratio={0.8} />
+                      <IconNoSSR name="phone" ratio={0.8} />
                     </SimpleLink>
                     <span className="uk-text-italic uk-text-small">
                       offre soumise le{' '}

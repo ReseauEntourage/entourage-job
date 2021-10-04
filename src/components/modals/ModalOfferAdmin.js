@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Api from 'src/Axios';
@@ -6,19 +6,14 @@ import schema, {
   adminMutation,
 } from 'src/components/forms/schema/formEditOpportunity';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
-import {
-  Grid,
-  Button,
-  SimpleLink,
-  Icon,
-  CloseButton,
-} from 'src/components/utils';
+import { Button, CloseButton, Grid, SimpleLink } from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 import {
-  translateCategory,
-  OfferInfoContainer,
   List,
+  OfferInfoContainer,
+  translateCategory,
 } from 'src/components/modals/ModalOffer';
 import { useRemoveModal, useResetForm } from 'src/hooks/utils';
 
@@ -192,7 +187,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                   {currentOffer.recruiterMail}
                   &nbsp;
                 </span>
-                <Icon name="mail" ratio={0.8} />
+                <IconNoSSR name="mail" ratio={0.8} />
               </SimpleLink>
               <SimpleLink
                 href={`tel:${currentOffer.recruiterPhone}`}
@@ -204,7 +199,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                   {currentOffer.recruiterPhone}
                   &nbsp;
                 </span>
-                <Icon name="phone" ratio={0.8} />
+                <IconNoSSR name="phone" ratio={0.8} />
               </SimpleLink>
               <span className="uk-text-italic uk-text-small">
                 offre soumise le{' '}
@@ -239,7 +234,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                             {`${userOpp.User.firstName} ${userOpp.User.lastName}`}
                             &nbsp;
                           </span>
-                          <Icon name="link" ratio={0.8} />
+                          <IconNoSSR name="link" ratio={0.8} />
                         </SimpleLink>
                         <div uk-form-custom="target: true">
                           <select
@@ -274,7 +269,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                             >
                               {findOfferStatus(userOpp.status).label}
                             </span>
-                            <Icon
+                            <IconNoSSR
                               ratio={0.8}
                               className="uk-margin-small-left uk-text-muted"
                               name="triangle-down"

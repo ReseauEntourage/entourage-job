@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import CountUp from 'react-countup';
-import { Grid, Icon, Section } from 'src/components/utils';
+import { Grid, Section } from 'src/components/utils';
 import CVList from 'src/components/cv/CVList';
 import Button from 'src/components/utils/Button';
 import { INITIAL_NB_OF_CV_TO_DISPLAY } from 'src/constants';
 import { SharesCountContext } from 'src/components/store/SharesCountProvider';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CandidatListPartial = () => {
   const { totalShares } = useContext(SharesCountContext);
@@ -82,7 +83,7 @@ const CandidatListPartial = () => {
         <CVList nb={INITIAL_NB_OF_CV_TO_DISPLAY} />
         <Grid middle column gap="collapse">
           <Button href="/candidats" style="secondary">
-            Voir tous les candidats <Icon name="chevron-right" />
+            Voir tous les candidats <IconNoSSR name="chevron-right" />
           </Button>
         </Grid>
       </Grid>

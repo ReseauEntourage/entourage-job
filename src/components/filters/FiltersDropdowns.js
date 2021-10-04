@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { getChildrenFilters } from 'src/utils';
-import Icon from 'src/components/utils/Icon';
+import { IconNoSSR } from 'src/components/utils/Icon';
 import { event } from 'src/lib/gtag';
 import { Button } from 'src/components/utils';
 
@@ -97,7 +97,7 @@ const FiltersDropdowns = ({
                 }`}
               >
                 {/* {icon && (
-                  <Icon
+                  <IconNoSSR
                     name={icon}
                     ratio={0.7}
                     className="uk-margin-small-right"
@@ -112,7 +112,10 @@ const FiltersDropdowns = ({
                     <div className="uk-badge">{filters[key].length}</div>
                   </div>
                 )}
-                <Icon name="triangle-down" className="uk-margin-small-left" />
+                <IconNoSSR
+                  name="triangle-down"
+                  className="uk-margin-small-left"
+                />
               </Button>
               <div
                 data-uk-dropdown="mode: click;"

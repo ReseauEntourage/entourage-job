@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { UIKIT_STYLES, UIKIT_SECTION_SIZES } from 'src/components/variables';
+import { UIKIT_SECTION_SIZES, UIKIT_STYLES } from 'src/components/variables';
 
 const Section = ({
   style,
