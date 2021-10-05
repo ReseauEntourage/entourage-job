@@ -3,11 +3,11 @@
 /* eslint-disable max-classes-per-file */
 
 import React, {
-  useEffect,
-  useState,
   forwardRef,
-  useImperativeHandle,
   useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
 } from 'react';
 import PropTypes from 'prop-types';
 import FooterForm from 'src/components/utils/FooterForm';
@@ -39,28 +39,38 @@ const FormWithValidation = forwardRef(
     const [fieldValues, setFieldValues] = useState({});
 
     // fonction permettant de verifier une champs d'entré utilisateur
-    const updateForm = ({
-      target: { name, type, value, checked, selectedIndex },
-    }) => {
-      let fieldValue;
-      if (type === 'checkbox') {
-        fieldValue = checked;
-      } else if (type === 'select-one' && selectedIndex === 0) {
-        fieldValue = null; // si on est sur le placeholder ( option sans valeur )
-      } else fieldValue = value;
-
-      /* Validators start */
-      const tmpFieldValues = { ...fieldValues };
-      tmpFieldValues[name] = fieldValue;
-      setFieldValues(tmpFieldValues); // enregistre la valeur du champs
-      const validation = validator.validate(tmpFieldValues); // envoie une copie des champs pour que le state ne soit pas altéré
-
-      // enregistre la raison de la validation {isInvalid: boolean, message: string}
-      if (validation[name] !== undefined) {
-        const tmpFieldValidations = fieldValidations;
-        tmpFieldValidations[`valid_${name}`] = validation[name];
-        setFieldValidations(tmpFieldValidations);
+    const updateForm = (args) => {
+      let onChangeArgs = args;
+      if (!Array.isArray(onChangeArgs)) {
+        onChangeArgs = [onChangeArgs];
       }
+      const tmpFieldValues = { ...fieldValues };
+      const tmpFieldValidations = fieldValidations;
+      for (let i = 0; i < onChangeArgs.length; i += 1) {
+        const {
+          target: { name, type, value, checked, selectedIndex },
+        } = onChangeArgs[i];
+
+        let fieldValue;
+        if (type === 'checkbox') {
+          fieldValue = checked;
+        } else if (type === 'select-one' && selectedIndex === 0) {
+          fieldValue = null; // si on est sur le placeholder ( option sans valeur )
+        } else fieldValue = value;
+
+        /* Validators start */
+        tmpFieldValues[name] = fieldValue;
+
+        const validation = validator.validate(tmpFieldValues); // envoie une copie des champs pour que le state ne soit pas altéré
+
+        // enregistre la raison de la validation {isInvalid: boolean, message: string}
+        if (validation[name] !== undefined) {
+          tmpFieldValidations[`valid_${name}`] = validation[name];
+        }
+      }
+
+      setFieldValues(tmpFieldValues); // enregistre la valeur du champs
+      setFieldValidations(tmpFieldValidations);
 
       /* Validators end */
       setError('');

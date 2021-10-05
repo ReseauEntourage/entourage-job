@@ -1,13 +1,14 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Button } from 'src/components/utils';
+import { Button } from 'src/components/utils';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const SuccessModalContent = ({ text, closeModal }) => {
   return (
     <div className="uk-flex uk-flex-center uk-margin-large">
       <div className="uk-card uk-card-body uk-text-center">
-        <Icon name="check" ratio={4} className="uk-text-primary" />
+        <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
         <p className="uk-text-lead">{text}</p>
         <div className="uk-flex uk-flex-center">
           <Button style="primary" onClick={closeModal}>

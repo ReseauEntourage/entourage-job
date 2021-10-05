@@ -1,18 +1,18 @@
-import { USER_ROLES, CV_STATUS } from 'src/constants';
+import { CV_STATUS, USER_ROLES } from 'src/constants';
 import cvFactory from 'src/test/factories/cvFactory';
 import userFactory from 'src/test/factories/userFactory';
 
 import request from 'supertest';
 
 import {
-  startTestServer,
-  recreateTestDB,
-  stopTestServer,
-  resetTestDB,
   associateCoachAndCandidat,
   createLoggedInUser,
   getCandidatUrl,
   getTestImagePath,
+  recreateTestDB,
+  resetTestDB,
+  startTestServer,
+  stopTestServer,
 } from 'src/test/helpers';
 
 describe('CV', () => {

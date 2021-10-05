@@ -1,13 +1,13 @@
 import React from 'react';
 import Layout from 'src/components/Layout';
 import { Section } from 'src/components/utils';
-import ImageTitle from 'src/components/sections/ImageTitle';
-import { EXTERNAL_LINKS, CONTACT_INFO } from 'src/constants';
+import ImageTitle from 'src/components/partials/ImageTitle';
+import { CONTACT_INFO, EXTERNAL_LINKS } from 'src/constants';
 import MultipleCTA from 'src/components/partials/MultipleCTA';
-import HowToBeInclusive from 'src/components/sections/HowToBeInclusive';
+import HowToBeInclusive from 'src/components/partials/HowToBeInclusive';
 import CorporateNewsletter from 'src/components/partials/CorporateNewsletterPartial';
-import CandidateTestimonies from 'src/components/sections/CandidateTestimonies';
-import CompanyTestimonies from 'src/components/sections/CompanyTestimonies';
+import CandidateTestimonies from 'src/components/partials/CandidateTestimonies';
+import CompanyTestimonies from 'src/components/partials/CompanyTestimonies';
 
 const Sinformer = () => {
   return (
@@ -17,7 +17,8 @@ const Sinformer = () => {
         id="sinformer-title"
         title={
           <>
-            Pourquoi et comment<div>devenir une</div>{' '}
+            Pourquoi et comment
+            <div>devenir une</div>{' '}
             <div className="uk-text-primary">entreprise inclusive</div>
           </>
         }

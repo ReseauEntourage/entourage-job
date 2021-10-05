@@ -1,5 +1,6 @@
 @orange: #F55F24;
 @black: #363636;
+@disabled: #999;
 @time-transition: 0.8s;
 
 .mixin-default-entry {
@@ -144,5 +145,21 @@
   font-size: 0.6rem;
 }
 
+.ent-date-picker {
+  height: 44px;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  font-family: Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 20px;
+  color: @black
+}
 
+.ent-date-picker:focus-visible {
+  outline: none;
+}
 
+.ent-date-picker:disabled {
+  color: @disabled
+}

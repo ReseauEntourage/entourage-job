@@ -11,7 +11,7 @@ import {
 } from 'src/components/partials';
 
 import Header from 'src/components/headers/Header';
-import HowItWorks from 'src/components/sections/HowItWorks';
+import HowItWorks from 'src/components/partials/HowItWorks';
 import AnnouncementPartial from 'src/components/partials/AnnouncementPartial';
 import { useMount } from 'src/hooks/utils';
 

@@ -1,12 +1,13 @@
 import React from 'react';
-import { Button, Grid, Icon, Section } from 'src/components/utils';
+import { Button, Grid, Section } from 'src/components/utils';
 import { NewsletterPartial, SharePartial } from 'src/components/partials';
 import { EXTERNAL_LINKS } from 'src/constants';
 import Layout from 'src/components/Layout';
-import ImageTitle from 'src/components/sections/ImageTitle';
+import ImageTitle from 'src/components/partials/ImageTitle';
 import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const Aider = () => {
   return (
@@ -34,7 +35,7 @@ const Aider = () => {
           </p>
           <div className="uk-flex-center uk-flex uk-flex-middle">
             <Button href="/candidats" style="secondary">
-              Partager un CV <Icon name="chevron-right" />
+              Partager un CV <IconNoSSR name="chevron-right" />
             </Button>
           </div>
         </div>
@@ -60,7 +61,7 @@ const Aider = () => {
               }}
             >
               Faire un don&nbsp;
-              <Icon name="chevron-right" />
+              <IconNoSSR name="chevron-right" />
             </Button>
           </div>
         </div>
@@ -88,7 +89,7 @@ const Aider = () => {
               }}
             >
               Devenir coach LinkedOut&nbsp;
-              <Icon name="chevron-right" />
+              <IconNoSSR name="chevron-right" />
             </Button>
           </div>
         </div>

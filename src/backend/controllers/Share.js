@@ -1,6 +1,6 @@
 import RedisManager from 'src/backend/utils/RedisManager';
 
-import { VALUES, REDIS_KEYS } from 'src/constants';
+import { REDIS_KEYS, VALUES } from 'src/constants';
 
 import Sequelize from 'sequelize';
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Grid, Icon, Section, Background, Img } from 'src/components/utils';
+import { Background, Grid, Img, Section } from 'src/components/utils';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const LandingPagePartial = () => {
   return (
@@ -35,7 +36,7 @@ const LandingPagePartial = () => {
                 /* style={{ color: 'white' }} */
                 data-uk-scroll="offset: -1"
               >
-                <Icon name="chevron-down" ratio="2.5" />
+                <IconNoSSR name="chevron-down" ratio="2.5" />
               </a>
             </div>
           </Grid>

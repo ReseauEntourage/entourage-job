@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import validator from 'validator';
-import { Icon, Grid } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 import Api from 'src/Axios';
 import Button from 'src/components/utils/Button';
 import { event } from 'src/lib/gtag';
 import { NEWSLETTER_ORIGINS } from 'src/constants';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const NewsletterPartial = ({ padding, tag }) => {
   const [email, setEmail] = useState('');
@@ -52,7 +53,7 @@ const NewsletterPartial = ({ padding, tag }) => {
         >
           <div data-uk-form-custom="target: true" className="uk-width-1-1">
             <a className="uk-form-icon" disabled>
-              <Icon name="mail" />
+              <IconNoSSR name="mail" />
             </a>
             <input
               className="uk-input"

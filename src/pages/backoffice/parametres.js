@@ -1,8 +1,8 @@
 /* global UIkit */
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { UserContext } from 'src/components/store/UserProvider';
-import { Section, Grid, Icon, Card } from 'src/components/utils';
+import { Card, Grid, Section } from 'src/components/utils';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
@@ -16,6 +16,9 @@ import { useResetForm } from 'src/hooks/utils';
 import UserInformationCard from 'src/components/cards/UserInformationCard';
 import { mutateFormSchema } from 'src/utils';
 import _ from 'lodash';
+import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
+import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const Parametres = () => {
   const { user, setUser } = useContext(UserContext);
@@ -188,35 +191,31 @@ const Parametres = () => {
             {/* Preferences du CV */}
             {userData.role === USER_ROLES.CANDIDAT && (
               <Card title="Préférences du CV">
-                <ToggleWithConfirmationModal
+                <CandidateEmployedToggle
                   id="employed"
                   title="J'ai retrouvé un emploi"
                   modalTitle="Vous avez retrouvé un emploi ?"
-                  modalConfirmation="Oui, j'ai retrouvé un emploi"
+                  modalConfirmation="Valider"
                   defaultValue={userData.candidat.employed}
-                  onToggle={(employed) => {
-                    return Api.put(`/api/v1/user/candidat/${userData.id}`, {
-                      employed,
-                    })
-                      .then(() => {
-                        setUserData({
-                          ...userData,
-                          candidat: {
-                            ...userData.candidat,
-                            employed,
-                          },
-                        });
-                        UIkit.notification(
-                          'Votre profil a été mis à jour !',
-                          'success'
-                        );
-                      })
-                      .catch(() => {
-                        return UIkit.notification(
-                          'Une erreur est survenue',
-                          'danger'
-                        );
-                      });
+                  candidatId={userData.id}
+                  notificationMessage="Votre profil a été mis à jour !"
+                  subtitle={
+                    userData &&
+                    userData.candidat && (
+                      <ContractLabel
+                        contract={userData.candidat.contract}
+                        endOfContract={userData.candidat.endOfContract}
+                      />
+                    )
+                  }
+                  setData={(newData) => {
+                    setUserData({
+                      ...userData,
+                      candidat: {
+                        ...userData.candidat,
+                        ...newData,
+                      },
+                    });
                   }}
                 />
                 <ToggleWithConfirmationModal
@@ -280,24 +279,24 @@ const Parametres = () => {
               {userData ? (
                 <Grid column gap="small">
                   <Grid row gap="small">
-                    <Icon name="user" style={{ width: 20 }} />
+                    <IconNoSSR name="user" style={{ width: 20 }} />
                     <span>{`${userData.firstName} ${userData.lastName}`}</span>
                   </Grid>
                   {userData.role !== USER_ROLES.ADMIN && (
                     <Grid row gap="small">
-                      <Icon name="gender" style={{ width: 20 }} />
+                      <IconNoSSR name="gender" style={{ width: 20 }} />
                       <span>
                         {`${userData.gender === 0 ? 'Homme' : 'Femme'}`}
                       </span>
                     </Grid>
                   )}
                   <Grid row gap="small">
-                    <Icon name="mail" style={{ width: 20 }} />
+                    <IconNoSSR name="mail" style={{ width: 20 }} />
                     <span>{userData.email}</span>
                   </Grid>
                   {userData.role !== USER_ROLES.ADMIN && (
                     <Grid row gap="small">
-                      <Icon name="phone" style={{ width: 20 }} />
+                      <IconNoSSR name="phone" style={{ width: 20 }} />
                       {userData.phone ? (
                         <span>{userData.phone}</span>
                       ) : (
@@ -309,7 +308,7 @@ const Parametres = () => {
                   )}
                   {userData.role === USER_ROLES.CANDIDAT && (
                     <Grid row gap="small">
-                      <Icon name="home" style={{ width: 20 }} />
+                      <IconNoSSR name="home" style={{ width: 20 }} />
                       {userData.address ? (
                         <span>{userData.address}</span>
                       ) : (

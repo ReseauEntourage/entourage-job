@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import CVList from 'src/components/cv/CVList';
 import { Grid, Section } from 'src/components/utils';

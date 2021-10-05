@@ -1,10 +1,11 @@
 /* global UIkit */
 
-import React, { useState, useEffect } from 'react';
-import { Button, Icon } from 'src/components/utils';
+import React, { useEffect, useState } from 'react';
+import { Button } from 'src/components/utils';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { addPrefix } from 'src/utils';
 import Img from 'src/components/utils/Img';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const ContestModal = () => {
   const [countdown, setCountdown] = useState('');
@@ -82,7 +83,7 @@ const ContestModal = () => {
           className="uk-margin-medium-top"
         >
           C&apos;est parti !&nbsp;
-          <Icon name="chevron-right" />
+          <IconNoSSR name="chevron-right" />
         </Button>
       </>
     );

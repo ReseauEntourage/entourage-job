@@ -2,11 +2,11 @@ import React from 'react';
 import { CONTACT_INFO } from 'src/constants';
 import { Section, SimpleLink } from 'src/components/utils';
 import Layout from 'src/components/Layout';
-import ImageTitle from 'src/components/sections/ImageTitle';
-import HowToJoin from 'src/components/sections/HowToJoin';
-import StepsToJoin from 'src/components/sections/StepsToJoin';
-import Highlights from 'src/components/sections/Highlights';
-import CandidateTestimoniesOrientation from 'src/components/sections/CandidateTestimoniesOrientation';
+import ImageTitle from 'src/components/partials/ImageTitle';
+import HowToJoin from 'src/components/partials/HowToJoin';
+import StepsToJoin from 'src/components/partials/StepsToJoin';
+import Highlights from 'src/components/partials/Highlights';
+import CandidateTestimoniesOrientation from 'src/components/partials/CandidateTestimoniesOrientation';
 
 const Travailler = () => {
   return (

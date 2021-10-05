@@ -9,7 +9,7 @@ import {
   WhatsappShareButton,
 } from 'react-share';
 
-import { Img, SimpleLink, Icon, Grid } from 'src/components/utils';
+import { Grid, Img, SimpleLink } from 'src/components/utils';
 
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schema from 'src/components/forms/schema/formEditOpportunity';
@@ -25,6 +25,8 @@ import {
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 import { useUpdateSharesCount } from 'src/hooks';
+import { IconNoSSR } from 'src/components/utils/Icon';
+
 /**
  * Le cv en public et en preview
  */
@@ -96,7 +98,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           summary={sharedDescription}
           className="uk-icon-button"
         >
-          <Icon
+          <IconNoSSR
             className={!actionDisabled ? 'ent-text-white' : undefined}
             name="linkedin"
             ratio={1.2}
@@ -114,7 +116,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           hashtags={hashtags}
           className="uk-icon-button"
         >
-          <Icon
+          <IconNoSSR
             className={!actionDisabled ? 'ent-text-white' : undefined}
             name="facebook"
             ratio={1.2}
@@ -133,7 +135,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           via="R_Entourage"
           className="uk-icon-button"
         >
-          <Icon
+          <IconNoSSR
             className={!actionDisabled ? 'ent-text-white' : undefined}
             name="twitter"
             ratio={1.2}
@@ -150,7 +152,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           title={sharedDescription}
           className="uk-icon-button"
         >
-          <Icon
+          <IconNoSSR
             className={!actionDisabled && 'ent-text-white'}
             name="whatsapp"
             ratio={1.2}
@@ -177,7 +179,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           }}
           toggle="target: #modal-send-opportunity"
         >
-          Contactez-moi <Icon name="chevron-right" />
+          Contactez-moi <IconNoSSR name="chevron-right" />
         </Button>
       </div>
       <div>
@@ -241,7 +243,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                     marginBottom: '8px',
                   }}
                 >
-                  <Icon
+                  <IconNoSSR
                     className="uk-text-primary ent-quote-after"
                     name="quote-right"
                     ratio={1.2}
@@ -250,7 +252,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   <span className="uk-margin-small-left uk-margin-small-right">
                     {cv.catchphrase}
                   </span>
-                  <Icon
+                  <IconNoSSR
                     className="uk-text-primary ent-quote-before"
                     name="quote-right"
                     ratio={0.8}
@@ -311,7 +313,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   data-uk-scroll="offset: 80"
                   className={actionDisabled ? 'uk-disabled' : undefined}
                 >
-                  <Icon
+                  <IconNoSSR
                     name="triangle-down"
                     className={
                       actionDisabled ? 'uk-text-muted' : 'uk-text-primary'
@@ -385,7 +387,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                         <div key={i}>
                           <Grid gap="small" column>
                             <div>
-                              <Icon
+                              <IconNoSSR
                                 flip
                                 className="uk-text-primary uk-margin-small-bottom"
                                 name="quote-right"
@@ -406,7 +408,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                                   </span>
                                   , {review.status}
                                 </p>
-                                <Icon
+                                <IconNoSSR
                                   className="uk-text-muted uk-width-1-1 uk-text-right"
                                   name="quote-right"
                                   ratio={0.8}
@@ -428,7 +430,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 <ul className="uk-list">
                   {cv.contracts && cv.contracts.length > 0 && (
                     <li className="uk-flex uk-flex-middle">
-                      <Icon
+                      <IconNoSSR
                         className="uk-text-primary uk-margin-small-right"
                         name="file-text"
                         style={{ width: 20 }}
@@ -440,7 +442,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   )}
                   {cv.locations && cv.locations.length > 0 && (
                     <li className="uk-flex uk-flex-middle">
-                      <Icon
+                      <IconNoSSR
                         className="uk-text-primary uk-margin-small-right"
                         name="location"
                         style={{ width: 20 }}
@@ -452,7 +454,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   )}
                   {cv.availability && cv.availability.length > 0 && (
                     <li className="uk-flex uk-flex-middle">
-                      <Icon
+                      <IconNoSSR
                         className="uk-text-primary uk-margin-small-right"
                         name="calendar"
                         style={{ width: 20 }}
@@ -462,7 +464,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   )}
                   {cv.languages && cv.languages.length > 0 && (
                     <li className="uk-flex uk-flex-middle">
-                      <Icon
+                      <IconNoSSR
                         className="uk-text-primary uk-margin-small-right"
                         name="users"
                         style={{ width: 20 }}
@@ -474,7 +476,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   )}
                   {cv.transport && cv.transport.length > 0 && (
                     <li className="uk-flex uk-flex-middle">
-                      <Icon
+                      <IconNoSSR
                         className="uk-text-primary uk-margin-small-right"
                         name="car"
                         style={{ width: 20 }}

@@ -1,20 +1,20 @@
 /* global UIkit */
 import moment from 'moment';
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { PropTypes } from 'prop-types';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
-import { Section, Grid, Icon } from 'src/components/utils';
+import { Grid, Section } from 'src/components/utils';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import Api from 'src/Axios';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaCreateUser from 'src/components/forms/schema/formEditUser';
 import ImgProfile from 'src/components/headers/ImgProfile';
 import {
-  MEMBER_FILTERS_DATA,
   CV_STATUS,
-  USER_ROLES,
+  MEMBER_FILTERS_DATA,
   STORAGE_KEYS,
+  USER_ROLES,
 } from 'src/constants';
 import Button from 'src/components/utils/Button';
 import {
@@ -29,11 +29,13 @@ import { UserContext } from 'src/components/store/UserProvider';
 import { ADMIN_ZONES_FILTERS } from 'src/constants/departements';
 import SearchBar from 'src/components/filters/SearchBar';
 import { DataContext } from 'src/components/store/DataProvider';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 function translateStatusCV(status) {
   const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unknown;
   return <span className={`uk-text-${cvStatus.style}`}>{cvStatus.label}</span>;
 }
+
 const LIMIT = 50;
 
 const getRelatedUser = (member) => {
@@ -155,9 +157,9 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
 
   const fetchData = useCallback(
     async (doReset) => {
-      setLoading(true);
       setHasError(false);
       if (doReset) {
+        setLoading(true);
         setMembers([]);
       }
       try {
@@ -246,7 +248,11 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
             submitText="Créer le membre"
             onSubmit={async (fields, closeModal) => {
               try {
-                const { data } = await Api.post('api/v1/user', fields);
+                const { data } = await Api.post('api/v1/user', {
+                  ...fields,
+                  adminRole:
+                    fields.role === USER_ROLES.ADMIN ? fields.adminRole : null,
+                });
                 if (data) {
                   closeModal();
                   UIkit.notification('Le membre a bien été créé', 'success');
@@ -489,7 +495,7 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
                                         {getCandidateFromCoachOrCandidate(
                                           member
                                         ).employed && (
-                                          <Icon
+                                          <IconNoSSR
                                             name="check"
                                             ratio={1.2}
                                             className="uk-text-primary uk-visible@m"
@@ -541,7 +547,7 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
                                         {getCandidateFromCoachOrCandidate(
                                           member
                                         ).hidden && (
-                                          <Icon
+                                          <IconNoSSR
                                             name="check"
                                             ratio={1.2}
                                             className="uk-text-primary uk-visible@m"

@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Resizer from 'react-image-file-resizer';
 import { addPrefix } from 'src/utils';

@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import FiltersMobile from 'src/components/filters/FiltersMobile';
 import FiltersSideBar from 'src/components/filters/FiltersSideBar';
 import FiltersCheckboxes from 'src/components/filters/FiltersCheckboxes';
 import FiltersOptions from 'src/components/filters/FiltersOptions';
-import Icon from 'src/components/utils/Icon';
+import { IconNoSSR } from 'src/components/utils/Icon';
 import { event } from 'src/lib/gtag';
 import FiltersDropdowns from 'src/components/filters/FiltersDropdowns';
 
@@ -82,7 +82,7 @@ const SearchBar = ({
             startSearch(searchBuffer);
           }}
         >
-          <Icon name="search" className="uk-text-secondary" />
+          <IconNoSSR name="search" className="uk-text-secondary" />
         </a>
       </div>
       <FiltersSideBar

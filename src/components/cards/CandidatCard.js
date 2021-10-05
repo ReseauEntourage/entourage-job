@@ -1,21 +1,23 @@
 /* global UIkit */
 
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import 'static/css/Toggle.less';
 import {
+  FacebookShareButton,
   LinkedinShareButton,
   TwitterShareButton,
-  FacebookShareButton,
 } from 'react-share';
 import { useRouter } from 'next/router';
 
-import { SimpleLink, Grid, Icon, Img } from 'src/components/utils';
+import { Grid, Img, SimpleLink } from 'src/components/utils';
 import ModalShareCV from 'src/components/modals/ModalShareCV';
 import Api from 'src/Axios';
 import { SharesCountContext } from 'src/components/store/SharesCountProvider';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import moment from 'moment';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CandidatCard = ({
   url,
@@ -27,6 +29,7 @@ const CandidatCard = ({
   skills,
   catchphrase,
   employed,
+  endOfContract,
   id,
 }) => {
   const router = useRouter();
@@ -100,7 +103,9 @@ const CandidatCard = ({
           {employed && (
             <div
               style={{
-                backgroundColor: 'rgba(245, 95, 36, .7)',
+                backgroundColor: endOfContract
+                  ? 'rgba(72, 72, 72, 0.7)'
+                  : 'rgba(245, 95, 36, .7)',
               }}
               className="uk-width-1-1 uk-position-bottom uk-flex uk-flex-middle uk-flex-right" // uk-position-cover
             >
@@ -110,7 +115,11 @@ const CandidatCard = ({
                   className="uk-text-uppercase"
                   style={{ color: '#FFF', margin: '8px 0 0 0' }}
                 >
-                  a retrouvé un emploi
+                  {endOfContract
+                    ? `en emploi jusqu'au ${moment(endOfContract).format(
+                        'DD/MM/YYYY'
+                      )}`
+                    : 'a retrouvé un emploi'}
                 </p>
               </div>
             </div>
@@ -238,7 +247,7 @@ const CandidatCard = ({
                         key={text + index}
                         className="uk-flex uk-flex-middle"
                       >
-                        <Icon name="location" ratio={0.6} />
+                        <IconNoSSR name="location" ratio={0.6} />
                         &nbsp;
                         <span
                           className="uk-text-meta uk-flex-1"
@@ -290,7 +299,7 @@ const CandidatCard = ({
                   style={{ cursor: 'pointer' }}
                   className="uk-icon-button light-icon-button"
                 >
-                  <Icon
+                  <IconNoSSR
                     name="linkedin"
                     ratio={0.9}
                     className={`share-linkedin-${firstName}`}
@@ -314,7 +323,7 @@ const CandidatCard = ({
                   style={{ cursor: 'pointer' }}
                   className="uk-icon-button light-icon-button"
                 >
-                  <Icon
+                  <IconNoSSR
                     name="facebook"
                     ratio={0.9}
                     className={`share-facebook-${firstName}`}
@@ -339,7 +348,7 @@ const CandidatCard = ({
                   style={{ cursor: 'pointer' }}
                   className="uk-icon-button light-icon-button"
                 >
-                  <Icon
+                  <IconNoSSR
                     name="twitter"
                     ratio={0.9}
                     className={`share-twitter-${firstName}`}
@@ -383,12 +392,14 @@ CandidatCard.propTypes = {
   skills: PropTypes.arrayOf(PropTypes.string).isRequired,
   catchphrase: PropTypes.string,
   employed: PropTypes.bool,
+  endOfContract: PropTypes.string,
   id: PropTypes.string.isRequired,
 };
 
 CandidatCard.defaultProps = {
   imgSrc: 'static/img/arthur.png',
   employed: false,
+  endOfContract: undefined,
   catchphrase: "cherche un job pour s'en sortir",
 };
 export default CandidatCard;

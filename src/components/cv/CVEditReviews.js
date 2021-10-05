@@ -1,12 +1,13 @@
 /* global UIkit */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Grid } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaTestimonial from 'src/components/forms/schema/formEditTestimonial.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import ModalConfirm from 'src/components/modals/ModalConfirm';
 import { formatParagraph, sortReviews } from 'src/utils';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CVEditReviews = ({ reviews, onChange }) => {
   const MAX_REVIEWS = 3;
@@ -43,7 +44,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
                   eachWidths={['auto', 'expand']}
                   className="uk-padding-small uk-padding-remove-horizontal"
                 >
-                  <Icon name="quote-right" />
+                  <IconNoSSR name="quote-right" />
                   <>
                     <p className="uk-text-small uk-margin-small">
                       {formatParagraph(review.text)}

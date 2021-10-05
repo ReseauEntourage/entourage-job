@@ -1,10 +1,11 @@
 /* global UIkit */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Grid } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaformEditPassions from 'src/components/forms/schema/formEditPassions.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const PassionsCard = ({ list, onChange }) => {
   return (
@@ -13,7 +14,7 @@ const PassionsCard = ({ list, onChange }) => {
         <h3 className="uk-card-title">
           {!onChange && (
             <span className="uk-margin-small-right">
-              <Icon name="heart" />
+              <IconNoSSR name="heart" />
             </span>
           )}
           Mes passions

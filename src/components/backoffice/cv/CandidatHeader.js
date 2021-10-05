@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Grid, SimpleLink, Icon } from 'src/components/utils';
+import { Grid, SimpleLink } from 'src/components/utils';
 import ImgProfile from 'src/components/headers/ImgProfile';
 import { USER_ROLES } from 'src/constants';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CandidatHeader = ({ user, showZone }) => {
   if (!user) return null;
@@ -15,7 +16,7 @@ const CandidatHeader = ({ user, showZone }) => {
           {user.firstName} {user.lastName}
         </h3>
         <Grid row gap="small" middle className="uk-margin-small-top">
-          <Icon name="user" style={{ width: 20 }} />
+          <IconNoSSR name="user" style={{ width: 20 }} />
           {user.role === USER_ROLES.COACH ? (
             <span>
               Coach de{' '}
@@ -31,10 +32,11 @@ const CandidatHeader = ({ user, showZone }) => {
             <span>{user.role}</span>
           )}
         </Grid>
-        <Grid row gap="small" middle className="uk-margin-small-top">
-          <Icon name="link" style={{ width: 20 }} />
-          {(user.role === USER_ROLES.CANDIDAT ||
-            (user.role === USER_ROLES.COACH && user.coach)) && (
+
+        {(user.role === USER_ROLES.CANDIDAT ||
+          (user.role === USER_ROLES.COACH && user.coach)) && (
+          <Grid row gap="small" middle className="uk-margin-small-top">
+            <IconNoSSR name="link" style={{ width: 20 }} />
             <SimpleLink
               className="uk-link-text uk-margin-small-top"
               target="_blank"
@@ -51,8 +53,8 @@ const CandidatHeader = ({ user, showZone }) => {
                 }
               </span>
             </SimpleLink>
-          )}
-        </Grid>
+          </Grid>
+        )}
         {showZone && (
           <Grid row gap="small" middle className="uk-margin-small-top">
             <span className="uk-label">

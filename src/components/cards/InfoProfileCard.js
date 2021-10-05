@@ -1,10 +1,11 @@
 /* global UIkit */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Grid } from 'src/components/utils';
+import { Grid } from 'src/components/utils';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaUsefulInformation from 'src/components/forms/schema/formEditUsefulInformation';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 import { getAllFilters, mutateFormSchema } from 'src/utils';
 
@@ -49,7 +50,7 @@ const InfoProfileCard = ({
         <h3 className="uk-card-title">
           {!onChange && (
             <span className="uk-margin-small-right">
-              <Icon name="info" />
+              <IconNoSSR name="info" />
             </span>
           )}
           Infos pratiques
@@ -65,43 +66,43 @@ const InfoProfileCard = ({
       </Grid>
       <Grid column gap="small">
         <Grid row gap="small" middle>
-          <Icon name="mail" style={{ width: 20 }} />
+          <IconNoSSR name="mail" style={{ width: 20 }} />
           {email || 'Adresse mail non renseigné'}
         </Grid>
         <Grid row gap="small" middle>
-          <Icon name="phone" style={{ width: 20 }} />
+          <IconNoSSR name="phone" style={{ width: 20 }} />
           {phone || 'Numéro de téléphone non renseigné'}
         </Grid>
         <Grid row gap="small" middle>
-          <Icon name="home" style={{ width: 20 }} />
+          <IconNoSSR name="home" style={{ width: 20 }} />
           {address || 'Adresse postale non renseignée'}
         </Grid>
         <Grid row gap="small" middle>
-          <Icon name="file-text" style={{ width: 20 }} />
+          <IconNoSSR name="file-text" style={{ width: 20 }} />
           {contracts && contracts.length > 0
             ? contracts.join(' / ')
             : 'Type de contrat recherché non renseigné'}
         </Grid>
         <Grid row gap="small" middle>
-          <Icon name="location" style={{ width: 20 }} />
+          <IconNoSSR name="location" style={{ width: 20 }} />
           {locations && locations.length > 0
             ? locations.join(' / ')
             : 'Localisations non renseignées'}
         </Grid>
         <Grid row gap="small" middle>
-          <Icon name="calendar" style={{ width: 20 }} />
+          <IconNoSSR name="calendar" style={{ width: 20 }} />
           {availability && availability !== ''
             ? availability
             : 'Disponibilités non renseignée'}
         </Grid>
         <Grid row gap="small" middle>
-          <Icon name="users" style={{ width: 20 }} />
+          <IconNoSSR name="users" style={{ width: 20 }} />
           {languages && languages.length > 0
             ? languages.join(' / ')
             : 'Langues apprises non renseignées'}
         </Grid>
         <Grid row gap="small" middle>
-          <Icon name="car" style={{ width: 20 }} />
+          <IconNoSSR name="car" style={{ width: 20 }} />
           {transport && transport !== ''
             ? transport
             : 'Moyen de transport non renseigné'}

@@ -4,12 +4,12 @@ import userFactory from 'src/test/factories/userFactory';
 import request from 'supertest';
 
 import {
-  startTestServer,
-  recreateTestDB,
-  resetTestDB,
-  stopTestServer,
   createLoggedInUser,
   getResetLinkAndUser,
+  recreateTestDB,
+  resetTestDB,
+  startTestServer,
+  stopTestServer,
 } from 'src/test/helpers';
 
 describe('Auth', () => {

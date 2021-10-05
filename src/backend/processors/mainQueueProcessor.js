@@ -1,10 +1,10 @@
 import { JOBS, SOCKETS } from 'src/constants';
 import { pusher } from 'src/backend/jobs';
 import {
-  generatePDF,
-  cacheCV,
   cacheAllCVs,
+  cacheCV,
   createCVSearchString,
+  generatePDF,
 } from 'src/backend/jobs/CV';
 import {
   insertAirtable,

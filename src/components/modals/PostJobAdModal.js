@@ -3,13 +3,14 @@
 import React from 'react';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
-import { Button, Icon } from 'src/components/utils';
+import { Button } from 'src/components/utils';
 import StepperModal from 'src/components/modals/StepperModal';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
 import schema from 'src/components/forms/schema/formEditOpportunity';
 import Api from 'src/Axios';
 import { useResetForm } from 'src/hooks/utils';
 import { mutateFormSchema } from 'src/utils';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const formId = 'post-job-ad';
 export const modalId = `modal-${formId}`;
@@ -94,7 +95,7 @@ const PostJobAdModal = () => {
           return (
             <div className="uk-flex uk-flex-center uk-margin-large">
               <div className="uk-card uk-card-body uk-text-center">
-                <Icon name="check" ratio={4} className="uk-text-primary" />
+                <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
                 <p className="uk-text-lead">
                   Merci pour votre offre, nous reviendrons bientôt vers vous.
                 </p>

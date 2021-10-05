@@ -4,18 +4,18 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import {
+  Hamburger,
   Nav,
   Navbar,
-  Offcanvas,
-  Hamburger,
   NavbarLogo,
-  Icon,
+  Offcanvas,
 } from 'src/components/utils';
 import 'src/components/headers/Header.less';
 import Button from 'src/components/utils/Button';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const LINKS = [
   { href: '/aider', name: 'Particuliers, agissez' },
@@ -52,7 +52,7 @@ const Header = ({ isHome }) => {
                 style="default"
               >
                 Faire un don&nbsp;
-                <Icon name="chevron-right" />
+                <IconNoSSR name="chevron-right" />
               </Button>
             </div>
           </div>
@@ -94,7 +94,7 @@ const Header = ({ isHome }) => {
               <div className="uk-navbar-item uk-visible@m">
                 <Button href="/candidats" style="primary">
                   Découvrir les CV&nbsp;
-                  <Icon name="chevron-right" />
+                  <IconNoSSR name="chevron-right" />
                 </Button>
               </div>,
               <Hamburger targetId="offcanvas-guest" hidden="m" />,
@@ -143,7 +143,7 @@ const Header = ({ isHome }) => {
               style="primary"
             >
               Découvrir les CV&nbsp;
-              <Icon name="chevron-right" />
+              <IconNoSSR name="chevron-right" />
             </Button>
           </li>
           <li className="uk-flex uk-flex-center uk-padding-small">
@@ -158,7 +158,7 @@ const Header = ({ isHome }) => {
               style="default"
             >
               Faire un don&nbsp;
-              <Icon name="chevron-right" />
+              <IconNoSSR name="chevron-right" />
             </Button>
           </li>
         </ul>

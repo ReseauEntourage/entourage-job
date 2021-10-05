@@ -12660,6 +12660,9 @@ iframe.uk-cover {
   top: 78px;
   left: -146px;
 }
+.ent-temp-employed-color {
+  background-color: #484848 !important;
+}
 .ent-divier-backoffice {
   border-top: 1px solid black;
 }

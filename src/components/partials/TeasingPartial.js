@@ -3,15 +3,16 @@ import Countdown from 'react-countdown';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import Img from 'src/components/utils/Img';
-import { Button, Icon, Section } from 'src/components/utils';
+import { Button, Section } from 'src/components/utils';
 import { addPrefix } from 'src/utils';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CountDown = ({ days, hours, minutes, seconds, completed }) => {
   if (completed) {
     return (
       <Button href="/candidats" style="default">
         Découvrir les candidats
-        <Icon name="chevron-right" />
+        <IconNoSSR name="chevron-right" />
       </Button>
     );
   }

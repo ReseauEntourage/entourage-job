@@ -1,17 +1,10 @@
 /* global UIkit */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { usePrevious } from 'src/hooks/utils';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import Api from 'src/Axios';
-import {
-  Section,
-  SimpleLink,
-  Grid,
-  Icon,
-  Card,
-  Button,
-} from 'src/components/utils';
+import { Button, Card, Grid, Section, SimpleLink } from 'src/components/utils';
 import schemaEditUser from 'src/components/forms/schema/formEditUser';
 import schemaDeleteUser from 'src/components/forms/schema/formDeleteUser.json';
 import CVPageContent from 'src/components/backoffice/cv/CVPageContent';
@@ -23,6 +16,9 @@ import { USER_ROLES } from 'src/constants';
 import ToggleWithConfirmationModal from 'src/components/backoffice/ToggleWithConfirmationModal';
 import { mutateFormSchema } from 'src/utils';
 import CandidatOpportunities from 'src/components/opportunities/CandidatOpportunities';
+import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
+import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CVPage = () => {
   const [onglet, setOnglet] = useState('cv');
@@ -185,7 +181,7 @@ const CVPage = () => {
               href="/backoffice/admin/membres"
               className="uk-link-reset uk-flex uk-flex-middle"
             >
-              <Icon name="chevron-left" />
+              <IconNoSSR name="chevron-left" />
               Retour à la liste
             </SimpleLink>
             <div>
@@ -207,7 +203,7 @@ const CVPage = () => {
               href="/backoffice/admin/membres"
               className="uk-link-reset uk-flex uk-flex-middle"
             >
-              <Icon name="chevron-left" />
+              <IconNoSSR name="chevron-left" />
               Retour à la liste
             </SimpleLink>
             <div>
@@ -232,7 +228,7 @@ const CVPage = () => {
             href={`/backoffice/admin/membres?role=${user.role}`}
             className="uk-link-reset uk-flex uk-flex-middle"
           >
-            <Icon name="chevron-left" />
+            <IconNoSSR name="chevron-left" />
             Retour à la liste
           </SimpleLink>
           <div>
@@ -314,36 +310,32 @@ const CVPage = () => {
                   <div>
                     {isCandidat && (
                       <Card title="Préférences du CV">
-                        <ToggleWithConfirmationModal
+                        <CandidateEmployedToggle
                           id="employed"
                           title="A retrouvé un emploi"
                           modalTitle="Le candidat a retrouvé un emploi ?"
-                          modalConfirmation="Oui, il a retrouvé un emploi"
+                          modalConfirmation="Valider"
                           defaultValue={user.candidat.employed}
-                          onToggle={(employed) => {
-                            return Api.put(`/api/v1/user/candidat/${user.id}`, {
-                              employed,
-                            })
-                              .then(() => {
-                                setUser({
-                                  ...user,
-                                  candidat: {
-                                    ...user.candidat,
-                                    employed,
-                                  },
-                                });
-                                UIkit.notification(
-                                  'Le profil du candidat a été mis à jour !',
-                                  'success'
-                                );
-                              })
-                              .catch(() => {
-                                return UIkit.notification(
-                                  'Une erreur est survenue',
-                                  'danger'
-                                );
-                              });
+                          notificationMessage="Le profil du candidat a été mis à jour !"
+                          subtitle={
+                            user &&
+                            user.candidat && (
+                              <ContractLabel
+                                contract={user.candidat.contract}
+                                endOfContract={user.candidat.endOfContract}
+                              />
+                            )
+                          }
+                          setData={(newData) => {
+                            setUser({
+                              ...user,
+                              candidat: {
+                                ...user.candidat,
+                                ...newData,
+                              },
+                            });
                           }}
+                          candidatId={user.id}
                         />
                         <ToggleWithConfirmationModal
                           id="hidden"
@@ -396,21 +388,21 @@ const CVPage = () => {
                     {user ? (
                       <Grid column gap="small">
                         <Grid row gap="small" middle>
-                          <Icon name="user" style={{ width: 20 }} />
+                          <IconNoSSR name="user" style={{ width: 20 }} />
                           <span>{`${user.firstName} ${user.lastName}`}</span>
                         </Grid>
                         <Grid row gap="small" middle>
-                          <Icon name="gender" style={{ width: 20 }} />
+                          <IconNoSSR name="gender" style={{ width: 20 }} />
                           <span>
                             {`${user.gender === 0 ? 'Homme' : 'Femme'}`}
                           </span>
                         </Grid>
                         <Grid row gap="small" middle>
-                          <Icon name="mail" style={{ width: 20 }} />
+                          <IconNoSSR name="mail" style={{ width: 20 }} />
                           <span>{user.email}</span>
                         </Grid>
                         <Grid row gap="small" middle>
-                          <Icon name="phone" style={{ width: 20 }} />
+                          <IconNoSSR name="phone" style={{ width: 20 }} />
                           {user.phone ? (
                             <span>{user.phone}</span>
                           ) : (
@@ -421,7 +413,7 @@ const CVPage = () => {
                         </Grid>
                         {user.role === USER_ROLES.CANDIDAT && (
                           <Grid row gap="small" middle>
-                            <Icon name="home" style={{ width: 20 }} />
+                            <IconNoSSR name="home" style={{ width: 20 }} />
                             {user.address ? (
                               <span>{user.address}</span>
                             ) : (
@@ -533,7 +525,7 @@ const CVPage = () => {
                     <span className="uk-margin-small-right">
                       Supprimer l&apos;utilisateur
                     </span>
-                    <Icon name="trash" />
+                    <IconNoSSR name="trash" />
                   </Button>
                   <ModalEdit
                     id="delete-user"

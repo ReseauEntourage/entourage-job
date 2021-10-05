@@ -1,18 +1,18 @@
 /* global UIkit */
 
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Pusher from 'pusher-js';
 import Api from 'src/Axios';
-import { Grid, Button } from 'src/components/utils';
-import { CVFicheEdition, CVBackground, CVFiche } from 'src/components/cv';
+import { Button, Grid } from 'src/components/utils';
+import { CVBackground, CVFiche, CVFicheEdition } from 'src/components/cv';
 import { UserContext } from 'src/components/store/UserProvider';
 import ButtonPost from 'src/components/backoffice/cv/ButtonPost';
 import ErrorMessage from 'src/components/backoffice/cv/ErrorMessage';
 import LoadingScreen from 'src/components/backoffice/cv/LoadingScreen';
 
-import { CV_STATUS, USER_ROLES, SOCKETS } from 'src/constants';
+import { CV_STATUS, SOCKETS, USER_ROLES } from 'src/constants';
 import NoCV from 'src/components/backoffice/cv/NoCV';
 import ButtonDownload from 'src/components/backoffice/cv/ButtonDownload';
 
@@ -33,14 +33,16 @@ const CVPageContent = ({ candidatId }) => {
   const { user } = useContext(UserContext);
 
   const setCVHasBeenRead = useCallback(() => {
-    Api.put(`/api/v1/cv/read/${candidatId}`)
-      .then(() => {
-        console.log('Note has been read');
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [candidatId]);
+    if (user && user.role !== USER_ROLES.ADMIN && candidatId) {
+      Api.put(`/api/v1/cv/read/${candidatId}`)
+        .then(() => {
+          console.log('Note has been read');
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [candidatId, user]);
 
   useEffect(() => {
     return () => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMount, usePrevious } from 'src/hooks/utils';
 import { Grid, Img } from 'src/components/utils';
@@ -168,7 +168,7 @@ CVFicheEdition.propTypes = {
     contracts: PropTypes.array,
     ambitions: PropTypes.array,
     languages: PropTypes.array,
-    transport: PropTypes.array,
+    transport: PropTypes.string,
     skills: PropTypes.array,
     passions: PropTypes.array,
     businessLines: PropTypes.array,

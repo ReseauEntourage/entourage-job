@@ -25,6 +25,14 @@ export default (sequelize, DataTypes) => {
         defaultValue: false,
         allowNull: false,
       },
+      contract: {
+        allowNull: true,
+        type: DataTypes.STRING,
+      },
+      endOfContract: {
+        allowNull: true,
+        type: DataTypes.DATEONLY,
+      },
       hidden: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
