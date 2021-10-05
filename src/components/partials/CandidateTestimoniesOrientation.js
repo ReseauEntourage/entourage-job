@@ -80,6 +80,17 @@ const CandidateTestimoniesOrientation = ({ style }) => {
           })}
         </Carousel>
       </div>
+      <iframe
+        src="https://www.youtube.com/embed/ztZB4BIBi44"
+        width="1280"
+        height="720"
+        frameBorder="0"
+        allowFullScreen
+        data-uk-responsive
+        data-uk-video="automute: false; autoplay: false"
+        title="linkedout"
+        className="uk-margin-medium-top"
+      />
     </Section>
   );
 };
