@@ -236,6 +236,9 @@ const CV_FILTERS_DATA = [
   {
     key: 'locations',
     constants: DEPARTMENTS_FILTERS,
+    priority: DEPARTMENTS_FILTERS.filter((dept) => {
+      return dept.zone !== ADMIN_ZONES.HZ;
+    }),
     title: 'Où ?',
     tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
     icon: 'location',
