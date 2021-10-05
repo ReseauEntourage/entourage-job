@@ -30,7 +30,7 @@ const GenericField = ({
         ...events,
         ...data.fieldsToReset.map((field) => {
           return {
-            target: { name: field, value: null, selectedIndex: 0 },
+            target: { name: field, value: undefined, selectedIndex: 0 },
           };
         }),
       ];

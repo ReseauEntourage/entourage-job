@@ -153,7 +153,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
           className="uk-icon-button"
         >
           <IconNoSSR
-            className={!actionDisabled && 'ent-text-white'}
+            className={!actionDisabled ? 'ent-text-white' : undefined}
             name="whatsapp"
             ratio={1.2}
           />
@@ -343,9 +343,9 @@ const CVFiche = ({ cv, actionDisabled }) => {
                   <dl className="uk-description-list">
                     {experiences.map((exp, i) => {
                       return (
-                        <>
+                        <div key={i}>
                           {exp.skills && (
-                            <dt key={i} style={{ display: 'block' }}>
+                            <dt style={{ display: 'block' }}>
                               {exp.skills.map((name, key) => {
                                 return (
                                   <span
@@ -361,7 +361,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
                           <dd className="uk-margin-small-top">
                             {formatParagraph(exp.description)}
                           </dd>
-                        </>
+                        </div>
                       );
                     })}
                   </dl>

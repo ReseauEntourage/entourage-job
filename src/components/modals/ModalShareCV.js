@@ -67,6 +67,7 @@ const ModalShareCV = ({ firstName, id }) => {
                   <Img
                     className="uk-height-max-small uk-margin-medium-top"
                     src="../../static/img/logo-entourage.png"
+                    alt="Logo Entourage"
                   />
                 </div>
                 <div className="uk-flex uk-flex-center uk-margin-medium-top">
