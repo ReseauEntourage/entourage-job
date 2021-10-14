@@ -73,7 +73,7 @@ const LinkedInPartial = () => {
         {linkedOutStyled('black', 30)}
         &nbsp;? Éclaircissements
       </h2>
-      <div className="uk-margin-large-left uk-margin-large-right uk-margin-medium-top">
+      <div className="uk-margin-large-left uk-margin-large-right uk-margin-medium-top uk-text-justify">
         <p>
           {linkedOutStyled('black')} est un dispositif lancé par l’association
           Entourage en juillet 2019. Ce projet a pour mission de redonner un
