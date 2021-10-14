@@ -8,69 +8,15 @@ import { EXTERNAL_LINKS } from 'src/constants';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import {
+  linkedInStyled,
+  linkedOutStyled,
+} from 'src/components/partials/LinkedInPartial';
 
 const Footer = () => {
   const { asPath } = useRouter();
 
   const showAssociationEntourage = !asPath.includes('/entreprises');
-
-  const linkedOut = (
-    <span
-      style={{
-        fontWeight: 700,
-        color: 'white',
-        fontSize: '16px',
-        whiteSpace: 'nowrap',
-      }}
-    >
-      Linked
-      <span
-        style={{
-          background: 'rgb(245, 95, 36)',
-          borderRadius: '2px',
-          display: 'inline-block',
-          lineHeight: '17px',
-          marginLeft: '2px',
-          padding: '0 2px',
-        }}
-      >
-        out
-      </span>
-    </span>
-  );
-
-  const linkedIn = (
-    <a
-      className="ent-logo-hover"
-      href="https://www.linkedin.com/"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <span
-        style={{
-          fontWeight: 700,
-          color: 'white',
-          fontSize: '16px',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        Linked
-        <span
-          style={{
-            background: '#0077b5',
-            borderRadius: '2px',
-            display: 'inline-block',
-            lineHeight: '17px',
-            marginLeft: '2px',
-            padding: '0 2px',
-          }}
-        >
-          in
-        </span>
-      </span>
-    </a>
-  );
-
   return (
     <footer id="footer">
       {asPath === '/' && <Partners />}
@@ -80,13 +26,13 @@ const Footer = () => {
           {asPath === '/' && (
             <div className="uk-text-center uk-light">
               <p>
-                {linkedOut} est un est un projet porté par l’association
-                Entourage, qui permet l’accompagnement des personnes les plus
-                précaires ou en situation d’exclusion pour un retour à l’emploi.{' '}
-                {linkedIn} soutient la mission et les valeurs véhiculées par ce
-                dispositif, et a contribué au lancement de ce projet en ayant
-                accordé une utilisation limitée de sa marque {linkedOut} par le
-                biais d’une licence.
+                {linkedOutStyled()} est un est un projet porté par
+                l&apos;association Entourage, qui permet l’accompagnement des
+                personnes les plus précaires ou en situation d’exclusion pour un
+                retour à l’emploi. {linkedInStyled()} soutient la mission et les
+                valeurs véhiculées par ce dispositif, et a contribué au
+                lancement de ce projet en ayant accordé une utilisation limitée
+                de sa marque {linkedOutStyled()} par le biais d’une licence.
               </p>
             </div>
           )}
