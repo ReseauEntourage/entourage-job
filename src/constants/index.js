@@ -436,11 +436,6 @@ const SOCKETS = {
   },
 };
 
-const AIRTABLE_NAMES = {
-  NEWSLETTER: 'Newsletter',
-  OFFERS: "Offres d'emploi v2",
-};
-
 const VALUES = { SHARES: 120000 + 64000 };
 
 const CONTACT_INFO = {
@@ -469,7 +464,6 @@ export {
   JOBS,
   CONTACT_INFO,
   INITIAL_NB_OF_CV_TO_DISPLAY,
-  AIRTABLE_NAMES,
   SOCKETS,
   STORAGE_KEYS,
   ADMIN_ROLES,

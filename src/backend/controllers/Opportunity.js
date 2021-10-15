@@ -1,9 +1,4 @@
-import {
-  AIRTABLE_NAMES,
-  JOBS,
-  OFFER_STATUS,
-  OPPORTUNITY_FILTERS_DATA,
-} from 'src/constants';
+import { JOBS, OFFER_STATUS, OPPORTUNITY_FILTERS_DATA } from 'src/constants';
 
 import { addToWorkQueue } from 'src/backend/jobs';
 
@@ -30,7 +25,7 @@ import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import { getUser } from './User';
 
-const offerTable = AIRTABLE_NAMES.OFFERS;
+const offerTable = process.env.AIRTABLE_OFFERS;
 const {
   BusinessLine,
   Opportunity_User,

@@ -12,13 +12,7 @@ import sharp from 'sharp';
 
 import express from 'express';
 
-import {
-  AIRTABLE_NAMES,
-  CV_STATUS,
-  JOBS,
-  NEWSLETTER_ORIGINS,
-  USER_ROLES,
-} from 'src/constants';
+import { CV_STATUS, JOBS, NEWSLETTER_ORIGINS, USER_ROLES } from 'src/constants';
 import { getZoneSuffix } from 'src/utils';
 
 const router = express.Router();
@@ -203,7 +197,7 @@ router.post(
 router.post('/share', auth(), (req, res) => {
   addToWorkQueue({
     type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
-    tableName: AIRTABLE_NAMES.NEWSLETTER,
+    tableName: process.env.AIRTABLE_NEWSLETTER,
     fields: {
       email: req.body.email,
       Origine: req.body.origin || NEWSLETTER_ORIGINS.LKO,
