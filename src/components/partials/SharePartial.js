@@ -27,7 +27,7 @@ const SharePartial = ({ showTitle, padding }) => {
           {
             name: 'twitter',
             title: 'Twitter',
-            href: 'https://twitter.com/linkedout_vg',
+            href: 'https://twitter.com/LinkedOut',
             tag: isCVPage
               ? TAGS.PAGE_CV_SUIVRE_SUR_TWITTER_CLIC
               : TAGS.HOME_SUIVRE_SUR_TWITTER_CLIC,
