@@ -14,8 +14,10 @@ const HireCTA = () => {
     <Section>
       <div className="uk-margin-medium-bottom">
         <h2 className="uk-text-center uk-text-bold">
-          Prêts à balancer{' '}
-          <span className="uk-text-primary">votre offre&nbsp;?</span>
+          Prêts à diffuser{' '}
+          <span className="uk-text-primary">
+            votre offre d&apos;emploi&nbsp;?
+          </span>
         </h2>
         <h4 className="uk-text-center uk-margin-remove-top">
           Deux solutions s&apos;offrent à vous

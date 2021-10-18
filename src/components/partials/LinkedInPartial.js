@@ -29,7 +29,7 @@ export const linkedOutStyled = (color = 'white', fontSize = 16) => {
   );
 };
 
-export const linkedInStyled = (color = 'black', fontSize = 16) => {
+export const linkedInStyled = (color = 'white', fontSize = 16) => {
   return (
     <a
       className="ent-logo-hover"
