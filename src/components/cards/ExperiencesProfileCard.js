@@ -141,7 +141,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           )}
         </Grid>
         <ExperienceList
-          pressDelay={200}
+          pressDelay={100}
           items={sortedExperiences}
           onSortEnd={onSortEnd}
           onChange={onChange}
@@ -183,7 +183,10 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
               defaultValues={currentDefaultValue}
               onSubmit={(fields, closeModal) => {
                 closeModal();
-                sortedExperiences[currentIndex] = fields;
+                sortedExperiences[currentIndex] = {
+                  ...sortedExperiences[currentIndex],
+                  ...fields,
+                };
                 onChange({ experiences: sortedExperiences });
               }}
             />
@@ -194,8 +197,9 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
               text="Êtes-vous sûr(e) de vouloir supprimer cette expérience ?"
               buttonText="Supprimer"
               onConfirm={() => {
-                sortedExperiences.splice(currentIndex, 1);
-                updateExperiencesOrder(sortedExperiences);
+                const experiencesToSort = [...sortedExperiences];
+                experiencesToSort.splice(currentIndex, 1);
+                updateExperiencesOrder(experiencesToSort);
               }}
             />
           </div>
