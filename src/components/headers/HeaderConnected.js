@@ -238,10 +238,7 @@ const HeaderConnected = ({ isHome }) => {
         <ul className="uk-nav uk-nav-default">
           <li>
             <SimpleLink href="/">
-              <span
-                className="uk-margin-small-right"
-                data-uk-icon="icon: home"
-              />
+              <IconNoSSR name="home" className="uk-margin-small-right" />
               Accueil
             </SimpleLink>
           </li>
@@ -259,10 +256,7 @@ const HeaderConnected = ({ isHome }) => {
                       UIkit.offcanvas('#offcanvas-logged').hide();
                     }}
                   >
-                    <span
-                      className="uk-margin-small-right"
-                      data-uk-icon={`icon: ${icon}`}
-                    />
+                    <IconNoSSR name={icon} className="uk-margin-small-right" />
                     {name}
                   </a>
                   {badges[badge] > 0 && (
@@ -294,10 +288,7 @@ const HeaderConnected = ({ isHome }) => {
                       UIkit.offcanvas('#offcanvas-logged').hide();
                     }}
                   >
-                    <span
-                      className="uk-margin-small-right"
-                      data-uk-icon={`icon: ${icon}`}
-                    />
+                    <IconNoSSR name={icon} className="uk-margin-small-right" />
                     {name}
                   </a>
                 </li>

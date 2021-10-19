@@ -10,8 +10,15 @@ import {
   getOpportunity,
 } from 'src/backend/controllers/Opportunity';
 
-const sendMailBackground = async ({ toEmail, subject, text, html }) => {
-  return sendMail({ toEmail, subject, text, html });
+const sendMailBackground = async ({
+  toEmail,
+  subject,
+  text,
+  html,
+  variables,
+  templateId,
+}) => {
+  return sendMail({ toEmail, subject, text, html, variables, templateId });
 };
 
 const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {

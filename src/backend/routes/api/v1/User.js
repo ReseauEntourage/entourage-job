@@ -1,5 +1,5 @@
 import { addToWorkQueue } from 'src/backend/jobs';
-import { JOBS, USER_ROLES } from 'src/constants';
+import { JOBS, MAILJET_TEMPLATES, USER_ROLES } from 'src/constants';
 import * as AuthController from 'src/backend/controllers/Auth';
 import { auth } from 'src/backend/controllers/Auth';
 import * as UserController from 'src/backend/controllers/User';
@@ -35,50 +35,19 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
     salt,
   })
     .then(async (user) => {
-      if (user.role === USER_ROLES.ADMIN) {
-        await addToWorkQueue({
-          type: JOBS.JOB_TYPES.SEND_MAIL,
-          toEmail: req.body.email,
-          subject: 'Bienvenue chez LinkedOut',
-          html:
-            'Bonjour,<br /><br />' +
-            `Vous êtes maintenant inscrit${
-              user.gender === 0 ? '' : 'e'
-            } sur le site LinkedOut en tant qu'administrateur. Vous pouvez accéder à <a href="${
-              process.env.SERVER_URL
-            }/login">votre espace personnel depuis la plateforme</a> en renseignant votre adresse mail et le mot de passe suivant : <strong>${userPassword}</strong><br /><br />` +
-            "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres.<br /><br />" +
-            `À tout moment, retrouvez votre espace personnel en ajoutant ce lien à vos favoris, ou bien en consultant le site <a href="${process.env.SERVER_URL}">LinkedOut</a> puis en cliquant sur le bouton "Se connecter" situé tout en bas de chaque page.<br /><br />` +
-            'A bientôt,<br /><br />' +
-            "L'équipe LinkedOut",
-        });
-      } else {
-        await addToWorkQueue({
-          type: JOBS.JOB_TYPES.SEND_MAIL,
-          toEmail: req.body.email,
-          subject: 'Bienvenue chez LinkedOut',
-          html:
-            'Bonjour,<br /><br />' +
-            `Vous êtes maintenant inscrit${
-              user.gender === 0 ? '' : 'e'
-            } sur le site LinkedOut. Vous pouvez accéder à <a href="${
-              process.env.SERVER_URL
-            }/login">votre espace personnel depuis la plateforme</a> en renseignant votre adresse mail et le mot de passe suivant : <strong>${userPassword}</strong><br /><br />` +
-            `Depuis cet espace, vous pouvez ${
-              user.role === USER_ROLES.CANDIDAT
-                ? "rédiger votre CV avec l'aide de votre coach LinkedOut et avoir accès à des offres d’emploi"
-                : 'accompagner votre Candidat dans la rédaction de son CV et gérer ensemble les opportunités qu’il reçoit'
-            }.<br /><br />` +
-            "N'hésitez pas à aller changer votre mot de passe directement dans vos paramètres.<br /><br />" +
-            `À tout moment, retrouvez votre espace personnel en ajoutant ce lien à vos favoris, ou bien en consultant le site <a href="${process.env.SERVER_URL}">LinkedOut</a> puis en cliquant sur le bouton "Se connecter" situé tout en bas de chaque page.<br /><br />` +
-            'A bientôt,<br /><br />' +
-            "L'équipe LinkedOut<br/><br/>" +
-            `Un souci de connexion ? Une question ? Contactez-nous !<br/>` +
-            `<ul><li><strong>Paris :</strong> Inès (07 82 44 97 39 / ines@entourage.social) / Jeanne (07 67 32 53 63 / jeanne@entourage.social)</li>` +
-            `<li><strong>Lille :</strong> Marie (07 83 85 48 95 / marie.lasne@entourage.social)</li>` +
-            `<li><strong>Lyon :</strong> Gabriella (07 67 35 05 86 / gabriella@entourage.social)</li></ul>`,
-        });
-      }
+      await addToWorkQueue({
+        type: JOBS.JOB_TYPES.SEND_MAIL,
+        toEmail: req.body.email,
+        subject: 'Bienvenue chez LinkedOut',
+        templateId: MAILJET_TEMPLATES.ACCOUNT_CREATION,
+        variables: {
+          role: user.role,
+          siteLink: process.env.SERVER_URL,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          userPassword,
+        },
+      });
 
       res.status(200).json(user);
     })
