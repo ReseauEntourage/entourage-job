@@ -1,9 +1,10 @@
 import { auth } from 'src/backend/controllers/Auth';
 import { addToWorkQueue } from 'src/backend/jobs';
-import { JOBS } from 'src/constants';
+import { JOBS, MAILJET_TEMPLATES } from 'src/constants';
 import { logger } from 'src/backend/utils/Logger';
 
 import express from 'express';
+import _ from 'lodash';
 
 const router = express.Router();
 
@@ -15,13 +16,13 @@ router.post('/contact-us', auth(), (req, res) => {
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: process.env.MAILJET_CONTACT_EMAIL,
       subject: `Demande de contact`,
-      html:
-        `<strong>Prénom :</strong> ${firstName}<br />` +
-        `<strong>Nom :</strong> ${lastName}<br />` +
-        `<strong>Téléphone :</strong> ${phone || ''}<br />` +
-        `<strong>Adresse mail :</strong> ${email}<br />` +
-        `<strong>Structure :</strong> ${structure || ''}<br />` +
-        `<strong>Message :</strong> ${message}`,
+      templateId: MAILJET_TEMPLATES.CONTACT_FORM,
+      variables: {
+        ..._.omitBy(
+          { firstName, lastName, phone, email, structure, message },
+          _.isNil
+        ),
+      },
     })
       .then(() => {
         logger(res).log('mail: contact us sent');

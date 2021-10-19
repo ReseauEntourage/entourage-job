@@ -33,7 +33,7 @@ const createMail = (params) => {
         TemplateID: templateId,
         TemplateLanguage: true,
         TemplateErrorReporting: {
-          Email: process.env.MAILJET_TO_EMAIL,
+          Email: process.env.MAILJET_SUPPORT_EMAIL,
           Name: process.env.MAILJET_FROM_NAME,
         },
       }

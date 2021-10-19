@@ -12,6 +12,7 @@ import {
   checkCandidatOrCoachAuthorization,
   checkUserAuthorization,
 } from 'src/backend/utils';
+import _ from 'lodash';
 
 const router = express.Router();
 
@@ -35,17 +36,23 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
     salt,
   })
     .then(async (user) => {
+      const {
+        password,
+        salt: unusedSalt,
+        revision,
+        hashReset,
+        saltReset,
+        ...restProps
+      } = user.toJSON();
       await addToWorkQueue({
         type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail: req.body.email,
         subject: 'Bienvenue chez LinkedOut',
         templateId: MAILJET_TEMPLATES.ACCOUNT_CREATED,
         variables: {
-          role: user.role,
           siteLink: process.env.SERVER_URL,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          userPassword,
+          ..._.omitBy(restProps, _.isNil),
+          password: userPassword,
         },
       });
 

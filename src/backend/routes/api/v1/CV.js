@@ -12,8 +12,15 @@ import sharp from 'sharp';
 
 import express from 'express';
 
-import { CV_STATUS, JOBS, NEWSLETTER_ORIGINS, USER_ROLES } from 'src/constants';
+import {
+  CV_STATUS,
+  JOBS,
+  MAILJET_TEMPLATES,
+  NEWSLETTER_ORIGINS,
+  USER_ROLES,
+} from 'src/constants';
 import { getZoneSuffix } from 'src/utils';
+import _ from 'lodash';
 
 const router = express.Router();
 
@@ -86,21 +93,22 @@ router.post(
           req.payload.role === USER_ROLES.COACH &&
           reqCV.status === CV_STATUS.Pending.value
         ) {
-          const mailSubject = 'Soumission CV';
-          const mailText =
-            `${req.payload.firstName} vient de soumettre le CV de son candidat.\n\n` +
-            `Rendez-vous dans votre espace personnel pour le relire et vérifier les différents champs. Lorsque vous l'aurez validé, il sera mis en ligne.\n\n` +
-            `Merci de veiller tout particulièrement à la longueur des descriptions des expériences, à la cohérence des dates et aux fautes d'orthographe !\n\n` +
-            `L'équipe LinkedOut.`;
-
           const adminMail =
             process.env[`ADMIN_CANDIDATES_${getZoneSuffix(req.payload.zone)}`];
+
+          const { token, exp, iat, ...restUserProps } = req.payload;
+
           // notification de l'admin
           await addToWorkQueue({
             type: JOBS.JOB_TYPES.SEND_MAIL,
             toEmail: adminMail,
-            subject: mailSubject,
-            text: mailText,
+            subject: 'Soumission de CV',
+            templateId: MAILJET_TEMPLATES.CV_SUBMITTED,
+            variables: {
+              siteLink: process.env.SERVER_URL,
+              ..._.omitBy(restUserProps, _.isNil),
+              cv: _.omitBy(cv, _.isNil),
+            },
           });
         }
 
