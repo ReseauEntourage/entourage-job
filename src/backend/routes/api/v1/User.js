@@ -47,7 +47,6 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       await addToWorkQueue({
         type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail: req.body.email,
-        subject: 'Bienvenue chez LinkedOut',
         templateId: MAILJET_TEMPLATES.ACCOUNT_CREATED,
         variables: {
           siteLink: process.env.SERVER_URL,

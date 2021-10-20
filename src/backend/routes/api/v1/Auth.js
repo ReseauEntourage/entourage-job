@@ -134,7 +134,6 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       await addToWorkQueue({
         type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail: user.email,
-        subject: 'Réinitialisation mot de passe',
         templateId: MAILJET_TEMPLATES.PASSWORD_RESET,
         variables: {
           siteLink: process.env.SERVER_URL,

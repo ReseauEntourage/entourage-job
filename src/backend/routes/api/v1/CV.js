@@ -102,11 +102,10 @@ router.post(
           await addToWorkQueue({
             type: JOBS.JOB_TYPES.SEND_MAIL,
             toEmail: adminMail,
-            subject: 'Soumission de CV',
             templateId: MAILJET_TEMPLATES.CV_SUBMITTED,
             variables: {
               siteLink: process.env.SERVER_URL,
-              ..._.omitBy(restUserProps, _.isNil),
+              coach: _.omitBy(restUserProps, _.isNil),
               cv: _.omitBy(cv, _.isNil),
             },
           });

@@ -1,4 +1,9 @@
-import { JOBS, OFFER_STATUS, OPPORTUNITY_FILTERS_DATA } from 'src/constants';
+import {
+  JOBS,
+  MAILJET_TEMPLATES,
+  OFFER_STATUS,
+  OPPORTUNITY_FILTERS_DATA,
+} from 'src/constants';
 
 import { addToWorkQueue } from 'src/backend/jobs';
 
@@ -23,6 +28,7 @@ import {
 import { models, sequelize } from 'src/backend/db/models';
 import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import _ from 'lodash';
 import { getUser } from './User';
 
 const offerTable = process.env.AIRTABLE_OFFERS;
@@ -313,29 +319,36 @@ const createOpportunity = async (data, isAdmin) => {
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: adminMails.companies,
-      subject: `Nouvelle offre d'emploi`,
-      html:
-        `Une nouvelle offre d'emploi est en attente de validation : <strong>${finalOpportunity.title} - ${finalOpportunity.company}</strong>.<br /><br />` +
-        `Vous pouvez la consulter en cliquant ici :<br />` +
-        `<strong>${process.env.SERVER_URL}/backoffice/admin/offres?q=${finalOpportunity.id}</strong>.<br /><br />` +
-        `L’équipe LinkedOut`,
+      templateId: MAILJET_TEMPLATES.OFFER_TO_VALIDATE,
+      variables: {
+        siteLink: process.env.SERVER_URL,
+        ..._.omitBy(cleanedOpportunity, _.isNil),
+      },
     });
+
+    const candidatesString =
+      !finalOpportunity.isPublic && candidates && candidates.length > 0
+        ? candidates
+            .map((candidate) => {
+              return `${candidate.User.firstName} ${candidate.User.lastName}`;
+            })
+            .join(',')
+        : '';
+
+    const businessLinesString = data.businessLines
+      ? data.businessLines.join(', ')
+      : '';
 
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: finalOpportunity.recruiterMail,
-      subject: `LinkedOut, merci pour votre offre !`,
-      html:
-        `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
-        `Nous avons bien reçu votre offre, et nous vous remercions de votre confiance ! Elle est en attente de validation par l’équipe LinkedOut.<br /><br />` +
-        `Pour toute question sur le dispositif ou si vous souhaitez modifier votre offre, n’hésitez pas à nous contacter : <strong>entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
-        `Nous sommes tous une partie de la solution face à l’exclusion, merci d’y croire avec nous !<br /><br />` +
-        `L’équipe LinkedOut<br /><br />` +
-        `${getStringOpportunity(
-          finalOpportunity,
-          candidates,
-          data.businessLines
-        )}`,
+      templateId: MAILJET_TEMPLATES.OFFER_SENT,
+      variables: {
+        siteLink: process.env.SERVER_URL,
+        ..._.omitBy(cleanedOpportunity, _.isNil),
+        candidates: candidatesString,
+        businessLines: businessLinesString,
+      },
     });
   }
 
@@ -889,18 +902,12 @@ const updateOpportunity = async (opportunity) => {
           toEmail: coach
             ? { to: candidat.User.email, cc: coach.email }
             : candidat.User.email,
-          subject: `Vous avez reçu une nouvelle offre d'emploi : répondez-y rapidement !`,
-          html:
-            `Bonjour,<br /><br />` +
-            `Vous avez reçu une nouvelle offre d'emploi : <strong>${finalOpportunity.title} - ${finalOpportunity.company}</strong>.<br /><br />` +
-            `Consultez l'offre ici :<br />` +
-            `<strong>${process.env.SERVER_URL}/backoffice/candidat/offres?q=${finalOpportunity.id}</strong>.<br /><br />` +
-            `Le recruteur attend une réponse de votre part, prenez le temps d'étudier l'opportunité puis répondez rapidement à l'entreprise avec votre Coach !<br />` +
-            `<ul><li><strong>Si l’offre vous intéresse</strong>, contactez le recruteur pour établir les éventuelles prochaines étapes du recrutement, et passez le statut de l’offre à "Contacté".</li>` +
-            `<li><strong>Si vous avez des questions sur l’offre</strong>, contactez l'entreprise avec votre Coach pour avoir plus d'informations.</li>` +
-            `<li><strong>Si l’offre n'est pas adéquate</strong>, passez la statut de l’offre en “Refus avant entretien” et envoyez tout de même un message au recruteur pour le remercier.</li></ul><br/>` +
-            `Votre réponse est essentielle. Merci de la personnaliser au mieux et de la faire relire par votre Coach.<br /><br />` +
-            `L’équipe LinkedOut`,
+          templateId: MAILJET_TEMPLATES.OFFER_RECEIVED,
+          variables: {
+            siteLink: process.env.SERVER_URL,
+            offer: _.omitBy(finalOpportunity, _.isNil),
+            candidat,
+          },
         });
 
         await addToWorkQueue(

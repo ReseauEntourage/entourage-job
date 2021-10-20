@@ -28,7 +28,7 @@ import {
 
 const { User, User_Candidat, CV, Opportunity_User, Revision } = models;
 
-const ATTRIBUTES_USER_CANDIDAT = [
+export const ATTRIBUTES_USER_CANDIDAT = [
   'employed',
   'hidden',
   'note',
@@ -36,7 +36,7 @@ const ATTRIBUTES_USER_CANDIDAT = [
   'contract',
   'endOfContract',
 ];
-const ATTRIBUTES_USER = [
+export const ATTRIBUTES_USER = [
   'id',
   'firstName',
   'lastName',
@@ -53,7 +53,7 @@ const ATTRIBUTES_USER = [
 
 const ATTRIBUTES_USER_PUBLIC = ['id', 'firstName', 'lastName', 'role'];
 
-const INCLUDE_USER_CANDIDAT = [
+export const INCLUDE_USER_CANDIDAT = [
   {
     model: User_Candidat,
     as: 'candidat',
@@ -533,7 +533,7 @@ const checkNoteHasBeenModified = async (candidatId, userId) => {
 };
 
 const getUserCandidatOpt = async ({ candidatId, coachId }) => {
-  // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: Error: WHERE parameter "coachId" has invalid "undefined" value
+  // pour eviter les erreurs du genre: UnhandledPromiseRejectionWarning: Error: WHERE parameter "coachId" has invalid "undefined" value
   const findWhere = {};
   if (candidatId) {
     findWhere.candidatId = candidatId;

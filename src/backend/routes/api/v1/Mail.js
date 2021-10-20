@@ -15,7 +15,6 @@ router.post('/contact-us', auth(), (req, res) => {
     addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: process.env.MAILJET_CONTACT_EMAIL,
-      subject: `Demande de contact`,
       templateId: MAILJET_TEMPLATES.CONTACT_FORM,
       variables: {
         ..._.omitBy(
