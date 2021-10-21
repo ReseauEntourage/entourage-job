@@ -934,70 +934,33 @@ const updateOpportunity = async (opportunity) => {
   }
 
   if (!oldOpportunity.isValidated && finalOpportunity.isValidated) {
-    if (finalOpportunity.isPublic) {
-      await addToWorkQueue({
-        type: JOBS.JOB_TYPES.SEND_MAIL,
-        toEmail: finalOpportunity.recruiterMail,
-        subject: `Votre offre LinkedOut est validée, les candidats vont pouvoir l’étudier !`,
-        html:
-          `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
-          `Votre offre vient d’être validée par l’équipe LinkedOut !<br /><br />` +
-          `Votre opportunité d’emploi est désormais visible par l’ensemble des candidats LinkedOut disponibles. Les candidats vont étudier l’offre avec leur coach LinkedOut et ceux qui sont intéressés prendront contact avec vous dans les meilleurs délais.<br /><br />` +
-          `Si votre offre ne correspond à aucun profil, un peu de patience, votre prochaine recrue se trouvera peut-être parmi la nouvelle promotion.<br /><br />` +
-          `L’équipe LinkedOut se tient à votre disposition à chaque étape du recrutement pour vous aider.<br /><br />` +
-          `N’hésitez pas à nous solliciter : <strong>entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
-          `Bien chaleureusement,<br /><br />` +
-          `L’équipe LinkedOut<br /><br />` +
-          `${getStringOpportunity(
-            finalOpportunity,
-            finalOpportunity.userOpportunity,
-            finalOpportunity.businessLines.map((businessLine) => {
-              return businessLine.name;
-            })
-          )}`,
-      });
+    const listOfNames = finalOpportunity.userOpportunity.map((candidate) => {
+      return candidate.User.firstName;
+    });
+
+    let stringOfNames = '';
+    if (listOfNames.length === 0) {
+      stringOfNames = 'Le candidat';
     } else {
-      const listOfNames = finalOpportunity.userOpportunity.map((candidate) => {
-        return candidate.User.firstName;
-      });
-
-      let stringOfNames = '';
-      if (listOfNames.length === 0) {
-        stringOfNames = 'le candidat';
-      } else {
-        stringOfNames =
-          listOfNames.length > 1
-            ? `${listOfNames.slice(0, -1).join(', ')} et ${listOfNames.slice(
-                -1
-              )}`
-            : listOfNames[0];
-      }
-
-      await addToWorkQueue({
-        type: JOBS.JOB_TYPES.SEND_MAIL,
-        toEmail: finalOpportunity.recruiterMail,
-        subject: `Votre offre LinkedOut est validée, le candidat vous répondra sous les meilleurs délais`,
-        html:
-          `Bonjour ${finalOpportunity.recruiterName},<br /><br />` +
-          `Votre offre vient d’être validée par l’équipe LinkedOut !<br /><br />` +
-          `${
-            finalOpportunity.userOpportunity.length > 1
-              ? `${stringOfNames} vont l’étudier avec leur coach LinkedOut et vous répondront`
-              : `${stringOfNames} va l’étudier avec son coach LinkedOut et vous répondra`
-          } dans les meilleurs délais.<br /><br />` +
-          `L’équipe LinkedOut se tient à votre disposition à chaque étape du recrutement pour vous aider.<br /><br />` +
-          `N’hésitez pas à nous solliciter : <strong>entreprises@linkedout.fr / 07.67.69.67.61</strong><br /><br />` +
-          `Bien chaleureusement,<br /><br />` +
-          `L’équipe LinkedOut<br /><br />` +
-          `${getStringOpportunity(
-            finalOpportunity,
-            finalOpportunity.userOpportunity,
-            finalOpportunity.businessLines.map((businessLine) => {
-              return businessLine.name;
-            })
-          )}`,
-      });
+      stringOfNames =
+        listOfNames.length > 1
+          ? `${listOfNames.slice(0, -1).join(', ')} et ${listOfNames.slice(-1)}`
+          : listOfNames[0];
     }
+
+    await addToWorkQueue({
+      type: JOBS.JOB_TYPES.SEND_MAIL,
+      toEmail: finalOpportunity.recruiterMail,
+      templateId: MAILJET_TEMPLATES.OFFER_VALIDATED,
+      variables: {
+        siteLink: process.env.SERVER_URL,
+        ..._.omitBy(finalOpportunity, _.isNil),
+        candidates: stringOfNames,
+        isPublicString: finalOpportunity.isPublic.toString(),
+        candidatesLength: finalOpportunity.userOpportunity.length,
+        businessLines: finalOpportunity.businessLines.join(', '),
+      },
+    });
   }
 
   return finalOpportunity;
