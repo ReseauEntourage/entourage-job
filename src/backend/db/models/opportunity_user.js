@@ -16,7 +16,6 @@ const sendMailEmbauche = async (toEmail, candidat, offer, recipientRole) => {
     toEmail,
     templateId: MAILJET_TEMPLATES.HAS_BEEN_HIRED,
     variables: {
-      siteLink: process.env.SERVER_URL,
       candidat: _.omitBy(candidat.toJSON(), _.isNil),
       offer: _.omitBy(offer.toJSON(), _.isNil),
       recipientRole,

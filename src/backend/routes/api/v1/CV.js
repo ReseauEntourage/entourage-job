@@ -104,7 +104,6 @@ router.post(
             toEmail: adminMail,
             templateId: MAILJET_TEMPLATES.CV_SUBMITTED,
             variables: {
-              siteLink: process.env.SERVER_URL,
               coach: _.omitBy(restUserProps, _.isNil),
               cv: _.omitBy(cv, _.isNil),
             },

@@ -18,18 +18,21 @@ const createMail = (params) => {
     });
   } else if (typeof toEmail === 'object') {
     if (toEmail.cc) {
-      recipients.CC = toEmail.cc;
+      recipients.CC = [{ Email: toEmail.cc }];
     }
     if (toEmail.to) {
-      recipients.To = toEmail.to;
+      recipients.To = [{ Email: toEmail.to }];
     }
     if (toEmail.bcc) {
-      recipients.BCC = toEmail.bcc;
+      recipients.BCC = [{ Email: toEmail.bcc }];
     }
   }
   const content = templateId
     ? {
-        Variables: variables,
+        Variables: {
+          siteLink: process.env.SERVER_URL,
+          ...variables,
+        },
         TemplateID: templateId,
         TemplateLanguage: true,
         TemplateErrorReporting: {

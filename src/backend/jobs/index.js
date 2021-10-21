@@ -37,7 +37,7 @@ const queueOptions = {
 };
 
 const addToWorkQueue = async (data, options = {}) => {
-  if (!dev) {
+  if (!dev || process.env.DEBUG_JOBS) {
     try {
       workQueue.add(data, { ...queueOptions, ...options });
     } catch (err) {

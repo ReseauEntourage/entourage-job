@@ -9,7 +9,8 @@
   "scripts": {
     "mainWorker": "NODE_ENV=production node -r dotenv/config --expose-gc build/backend/mainWorker.js",
     "dev-mainWorker": "npx babel-node -r dotenv/config --expose-gc src/backend/mainWorker.js",
-    "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"src/backend/jobs/Mail.js\").sendRecapAboutOffers()'",
+    "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"./build/backend/jobs/Mail.js\").sendRecapAboutOffers()'",
+    "dev-send-recap": "node -r @babel/register -r dotenv/config -e 'require(\"./src/backend/jobs/Mail.js\").sendRecapAboutOffers()'",
     "dev": "npx babel-node -r dotenv/config src/backend/serveur-next.js",
     "start": "NODE_ENV=production node -r dotenv/config build/backend/serveur-next.js",
     "test": "NODE_ENV=test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",

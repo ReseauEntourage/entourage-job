@@ -321,7 +321,6 @@ const createOpportunity = async (data, isAdmin) => {
       toEmail: adminMails.companies,
       templateId: MAILJET_TEMPLATES.OFFER_TO_VALIDATE,
       variables: {
-        siteLink: process.env.SERVER_URL,
         ..._.omitBy(cleanedOpportunity, _.isNil),
       },
     });
@@ -344,7 +343,6 @@ const createOpportunity = async (data, isAdmin) => {
       toEmail: finalOpportunity.recruiterMail,
       templateId: MAILJET_TEMPLATES.OFFER_SENT,
       variables: {
-        siteLink: process.env.SERVER_URL,
         ..._.omitBy(cleanedOpportunity, _.isNil),
         candidates: candidatesString,
         businessLines: businessLinesString,
@@ -904,7 +902,6 @@ const updateOpportunity = async (opportunity) => {
             : candidat.User.email,
           templateId: MAILJET_TEMPLATES.OFFER_RECEIVED,
           variables: {
-            siteLink: process.env.SERVER_URL,
             offer: _.omitBy(finalOpportunity, _.isNil),
             candidat,
           },
@@ -953,7 +950,6 @@ const updateOpportunity = async (opportunity) => {
       toEmail: finalOpportunity.recruiterMail,
       templateId: MAILJET_TEMPLATES.OFFER_VALIDATED,
       variables: {
-        siteLink: process.env.SERVER_URL,
         ..._.omitBy(finalOpportunity, _.isNil),
         candidates: stringOfNames,
         isPublicString: finalOpportunity.isPublic.toString(),

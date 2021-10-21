@@ -14,7 +14,7 @@ import Header from 'src/components/headers/Header';
 import HowItWorks from 'src/components/partials/HowItWorks';
 import AnnouncementPartial from 'src/components/partials/AnnouncementPartial';
 import { useMount } from 'src/hooks/utils';
-import LinkedInPartial from '../components/partials/LinkedInPartial';
+import LinkedInPartial from 'src/components/partials/LinkedInPartial';
 
 const Index = ({ query }) => {
   const router = useRouter();

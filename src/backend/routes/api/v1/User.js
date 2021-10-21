@@ -49,7 +49,6 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
         toEmail: req.body.email,
         templateId: MAILJET_TEMPLATES.ACCOUNT_CREATED,
         variables: {
-          siteLink: process.env.SERVER_URL,
           ..._.omitBy(restProps, _.isNil),
           password: userPassword,
         },

@@ -136,7 +136,6 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
         toEmail: user.email,
         templateId: MAILJET_TEMPLATES.PASSWORD_RESET,
         variables: {
-          siteLink: process.env.SERVER_URL,
           ..._.omitBy(restProps, _.isNil),
           token,
         },

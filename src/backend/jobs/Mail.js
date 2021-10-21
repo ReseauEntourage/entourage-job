@@ -9,6 +9,7 @@ import {
   getLatestOpportunities,
   getOpportunity,
 } from 'src/backend/controllers/Opportunity';
+import { MAILJET_TEMPLATES } from 'src/constants';
 
 const sendMailBackground = async ({
   toEmail,
@@ -34,22 +35,17 @@ const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {
       to: opportunity.userOpportunity.User.email,
       bcc: process.env.MAILJET_TO_EMAIL,
     };
-    const candidatData = opportunity.userOpportunity.User.candidat;
-    if (candidatData && candidatData.coach) {
-      toEmail.cc = candidatData.coach.email;
+    const candidatData = opportunity.userOpportunity.User;
+    if (candidatData.candidat && candidatData.candidat.coach) {
+      toEmail.cc = candidatData.candidat.coach.email;
     }
     await sendMail({
       toEmail,
-      subject: "Rappel à propos d'une offre",
-      html:
-        'Bonjour,<br /><br />' +
-        `Pour rappel, l'offre suivante vous a été adressée il y a 5 jours, n'attendez plus pour y répondre !<br/><br/>` +
-        `<a href="${process.env.SERVER_URL}/backoffice/candidat/offres?q=${opportunityId}"><strong>${opportunity.title} - ${opportunity.company}</strong></a><br /><br />` +
-        `Étudiez-la et prenez le temps de répondre avec votre Coach.<br />` +
-        `<ul><li>Elle vous intéresse ou vous avez besoin de plus amples informations ? Répondez ensemble au recruteur et passez l'offre en statut "Contacté".</li>` +
-        `<li>Elle n'est pas adaptée ? Répondez aussi en expliquant les raisons de votre refus de manière personnalisée ! Passez-la ensuite en statut "Refus avant entretien".</li></ul>` +
-        `Merci,<br /><br />` +
-        `L’équipe LinkedOut`,
+      templateId: MAILJET_TEMPLATES.OFFER_REMINDER,
+      variables: {
+        offer: _.omitBy(opportunity, _.isNil),
+        candidat: _.omitBy(candidatData, _.isNil),
+      },
     });
     return true;
   }
@@ -81,11 +77,6 @@ const sendRecapAboutOffers = async () => {
       });
 
       if (zoneRecentOpportunities.length > 0) {
-        const offerList = zoneRecentOpportunities
-          .map((opportunity) => {
-            return `<li><a href="${process.env.SERVER_URL}/backoffice/candidat/offres?q=${opportunity.id}"><strong>${opportunity.title} - ${opportunity.company}</strong></a></li>`;
-          })
-          .join('');
         const zoneCandidates = candidates.filter((candidate) => {
           return (
             candidate.zone === zone ||
@@ -107,25 +98,20 @@ const sendRecapAboutOffers = async () => {
 
         if (recipients.length > 0) {
           emails.push({
-            html:
-              `Bonjour, <br /><br />` +
-              `Voici les nouvelles offres adressées à tous les candidats${
-                zone !== ADMIN_ZONES.HZ
-                  ? ` de ${_.capitalize(zone)} et ses environs`
-                  : ''
-              } cette semaine. Retrouvez toutes les informations pour contacter ces recruteurs dans votre espace personnel.<br /><br />` +
-              `<ul>${offerList}</ul><br /><br />` +
-              `Concernant celles qui ne vous intéressent pas, vous pouvez directement les archiver sans y apporter de réponse négative.<br/><br/>` +
-              `L’équipe LinkedOut`,
             toEmail: recipients,
-            subject:
-              'Les offres destinées à tous les candidats LinkedOut cette semaine',
+            templateId: MAILJET_TEMPLATES.OFFERS_RECAP,
+            variables: {
+              zone: _.capitalize(zone),
+              offerList: zoneRecentOpportunities,
+            },
           });
         }
       }
     }
 
-    await sendMail(emails);
+    if (emails.length > 0) {
+      await sendMail(emails);
+    }
     return emails;
   } catch (err) {
     console.error(err);

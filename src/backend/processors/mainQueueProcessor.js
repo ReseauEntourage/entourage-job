@@ -53,7 +53,7 @@ export default async (job) => {
       await sendMailBackground(data);
       const toEmail =
         typeof data.toEmail === 'string' ? data.toEmail : data.toEmail.to;
-      return `Mail sent to '${toEmail}' and subject '${data.subject}'`;
+      return `Mail sent to '${toEmail}' with template '${data.templateId}'`;
 
     case JOBS.JOB_TYPES.INSERT_AIRTABLE:
       await insertAirtable(data.tableName, data.fields);

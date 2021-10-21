@@ -21,7 +21,7 @@ const getRedisOptions = () => {
 };
 
 const getMainWorkQueue = () => {
-  if (dev) {
+  if (dev && !process.env.DEBUG_JOBS) {
     return;
   }
 
