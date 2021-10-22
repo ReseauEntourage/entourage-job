@@ -9,7 +9,8 @@ import {
   getLatestOpportunities,
   getOpportunity,
 } from 'src/backend/controllers/Opportunity';
-import { MAILJET_TEMPLATES } from 'src/constants';
+import { JOBS, MAILJET_TEMPLATES } from 'src/constants';
+import { addToWorkQueue } from './index';
 
 const sendMailBackground = async ({
   toEmail,
@@ -110,7 +111,14 @@ const sendRecapAboutOffers = async () => {
     }
 
     if (emails.length > 0) {
-      await sendMail(emails);
+      await Promise.all(
+        emails.map((email) => {
+          return addToWorkQueue({
+            type: JOBS.JOB_TYPES.SEND_MAIL,
+            ...email,
+          });
+        })
+      );
     }
     return emails;
   } catch (err) {
