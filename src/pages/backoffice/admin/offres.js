@@ -22,6 +22,7 @@ import { useFilters } from 'src/hooks';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import { usePrevious } from 'src/hooks/utils';
 import SearchBar from 'src/components/filters/SearchBar';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
@@ -98,8 +99,9 @@ const LesOpportunites = () => {
           description="Ici vous pouvez accéder à toutes les opportunités et valider les offres envoyées par les recruteurs !"
         >
           <Button style="primary" toggle="target: #add-opportunity">
-            <span
-              uk-icon="icon: plus; ratio:0.8"
+            <IconNoSSR
+              name="plus"
+              ratio="0.8"
               className="uk-margin-small-right"
             />
             Nouvelle opportunité

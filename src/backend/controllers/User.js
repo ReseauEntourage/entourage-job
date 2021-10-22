@@ -36,6 +36,7 @@ const ATTRIBUTES_USER_CANDIDAT = [
   'contract',
   'endOfContract',
 ];
+
 const ATTRIBUTES_USER = [
   'id',
   'firstName',
@@ -533,7 +534,7 @@ const checkNoteHasBeenModified = async (candidatId, userId) => {
 };
 
 const getUserCandidatOpt = async ({ candidatId, coachId }) => {
-  // pour eviter les errurs du genre: UnhandledPromiseRejectionWarning: Error: WHERE parameter "coachId" has invalid "undefined" value
+  // pour eviter les erreurs du genre: UnhandledPromiseRejectionWarning: Error: WHERE parameter "coachId" has invalid "undefined" value
   const findWhere = {};
   if (candidatId) {
     findWhere.candidatId = candidatId;
