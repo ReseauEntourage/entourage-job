@@ -3,12 +3,34 @@
 
 import { JOBS, MAILJET_TEMPLATES } from 'src/constants';
 import { addToWorkQueue } from 'src/backend/jobs';
-import {
-  ATTRIBUTES_USER,
-  INCLUDE_USER_CANDIDAT,
-} from 'src/backend/controllers/User';
 import _ from 'lodash';
 import { getZoneSuffix } from 'src/utils';
+
+// Duplicated because of bug during tests where the models are not found
+
+const ATTRIBUTES_USER_CANDIDAT = [
+  'employed',
+  'hidden',
+  'note',
+  'url',
+  'contract',
+  'endOfContract',
+];
+
+const ATTRIBUTES_USER = [
+  'id',
+  'firstName',
+  'lastName',
+  'email',
+  'phone',
+  'address',
+  'role',
+  'adminRole',
+  'zone',
+  'gender',
+  'lastConnection',
+  'deletedAt',
+];
 
 const sendMailEmbauche = async (toEmail, candidat, offer, recipientRole) => {
   await addToWorkQueue({
@@ -84,7 +106,34 @@ export default (sequelize, DataTypes) => {
           const [candidat, offer] = await Promise.all([
             models.User.findByPk(nextData.UserId, {
               attributes: ATTRIBUTES_USER,
-              include: INCLUDE_USER_CANDIDAT,
+              include: [
+                {
+                  model: models.User_Candidat,
+                  as: 'candidat',
+                  attributes: ATTRIBUTES_USER_CANDIDAT,
+                  include: [
+                    {
+                      model: models.User,
+                      as: 'coach',
+                      attributes: ATTRIBUTES_USER,
+                      paranoid: false,
+                    },
+                  ],
+                },
+                {
+                  model: models.User_Candidat,
+                  as: 'coach',
+                  attributes: ATTRIBUTES_USER_CANDIDAT,
+                  include: [
+                    {
+                      model: models.User,
+                      as: 'candidat',
+                      attributes: ATTRIBUTES_USER,
+                      paranoid: false,
+                    },
+                  ],
+                },
+              ],
             }),
             models.Opportunity.findByPk(nextData.OpportunityId),
           ]);

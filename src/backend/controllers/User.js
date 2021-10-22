@@ -28,7 +28,7 @@ import {
 
 const { User, User_Candidat, CV, Opportunity_User, Revision } = models;
 
-export const ATTRIBUTES_USER_CANDIDAT = [
+const ATTRIBUTES_USER_CANDIDAT = [
   'employed',
   'hidden',
   'note',
@@ -36,7 +36,8 @@ export const ATTRIBUTES_USER_CANDIDAT = [
   'contract',
   'endOfContract',
 ];
-export const ATTRIBUTES_USER = [
+
+const ATTRIBUTES_USER = [
   'id',
   'firstName',
   'lastName',
@@ -53,7 +54,7 @@ export const ATTRIBUTES_USER = [
 
 const ATTRIBUTES_USER_PUBLIC = ['id', 'firstName', 'lastName', 'role'];
 
-export const INCLUDE_USER_CANDIDAT = [
+const INCLUDE_USER_CANDIDAT = [
   {
     model: User_Candidat,
     as: 'candidat',
