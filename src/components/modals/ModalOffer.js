@@ -11,6 +11,7 @@ import Api from 'src/Axios';
 import { OFFER_STATUS } from 'src/constants';
 import { formatParagraph } from 'src/utils';
 import { useRemoveModal } from 'src/hooks/utils';
+import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 
 export const List = ({ className, children }) => {
   return (
@@ -53,6 +54,7 @@ export const OfferInfoContainer = ({ icon, title, children }) => {
     </Grid>
   );
 };
+
 OfferInfoContainer.propTypes = {
   icon: PropTypes.string,
   title: PropTypes.string,
@@ -64,6 +66,7 @@ OfferInfoContainer.propTypes = {
     ),
   ]),
 };
+
 OfferInfoContainer.defaultProps = {
   title: undefined,
   icon: undefined,
@@ -123,6 +126,19 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                   {currentOffer.title}
                 </h3>
                 <span>{translateCategory(currentOffer.isPublic)}</span>
+                <ContractLabel
+                  contract={currentOffer.contract}
+                  endOfContract={currentOffer.endOfContract}
+                />
+                <span className="uk-text-small">
+                  {currentOffer.numberOfPositions} poste
+                  {currentOffer.numberOfPositions > 1 ? 's' : ''} -{' '}
+                  {currentOffer.isPartTime ? 'Temps partiel' : 'Temps plein'}
+                </span>
+                <span className="uk-text-italic uk-text-small">
+                  offre soumise le{' '}
+                  {moment(currentOffer.date).format('DD/MM/YYYY')}
+                </span>
               </div>
               <List className="uk-iconnav uk-grid-medium uk-flex-middle">
                 {loadingIcon && <div data-uk-spinner="" />}
@@ -178,7 +194,13 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                     {currentOffer.company}
                   </OfferInfoContainer>
                   <OfferInfoContainer icon="user" title="Recruteur">
-                    {currentOffer.recruiterName}
+                    <span>
+                      {currentOffer.recruiterFirstName}{' '}
+                      {currentOffer.recruiterName}
+                    </span>
+                    <span className="uk-text-muted">
+                      {currentOffer.recruiterPosition}
+                    </span>
                     <SimpleLink
                       href={`mailto:${currentOffer.recruiterMail}`}
                       className="uk-link-muted"
@@ -191,33 +213,34 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       </span>
                       <IconNoSSR name="mail" ratio={0.8} />
                     </SimpleLink>
-                    <SimpleLink
-                      href={`tel:${currentOffer.recruiterPhone}`}
-                      className="uk-link-muted"
-                      isExternal
-                      newTab
-                    >
-                      <span>
-                        {currentOffer.recruiterPhone}
-                        &nbsp;
-                      </span>
-                      <IconNoSSR name="phone" ratio={0.8} />
-                    </SimpleLink>
-                    <span className="uk-text-italic uk-text-small">
-                      offre soumise le{' '}
-                      {moment(currentOffer.date).format('DD/MM/YYYY')}
-                    </span>
                   </OfferInfoContainer>
                   <OfferInfoContainer
                     icon="location"
-                    title={currentOffer.location}
-                  >
-                    {currentOffer.department}
-                  </OfferInfoContainer>
+                    title={currentOffer.department}
+                  />
                 </Grid>,
                 <Grid gap="medium" childWidths={['1-1']}>
-                  <OfferInfoContainer icon="comment" title="Message">
+                  {currentOffer.companyDescription && (
+                    <OfferInfoContainer
+                      icon="comment"
+                      title="Description de l'entreprise"
+                    >
+                      <div>
+                        {formatParagraph(currentOffer.companyDescription)}
+                      </div>
+                    </OfferInfoContainer>
+                  )}
+                  <OfferInfoContainer
+                    icon="comment"
+                    title="Description de l'offre"
+                  >
                     <div>{formatParagraph(currentOffer.description)}</div>
+                  </OfferInfoContainer>
+                  <OfferInfoContainer
+                    icon="check"
+                    title="Compétences importantes"
+                  >
+                    <div>{formatParagraph(currentOffer.skills)}</div>
                   </OfferInfoContainer>
                   {currentOffer.prerequisites && (
                     <OfferInfoContainer icon="check" title="Pré-requis">
@@ -288,20 +311,27 @@ ModalOffer.propTypes = {
     title: PropTypes.string,
     company: PropTypes.string,
     description: PropTypes.string,
+    companyDescription: PropTypes.string,
+    numberOfPositions: PropTypes.string,
     prerequisites: PropTypes.string,
+    skills: PropTypes.string,
+    contract: PropTypes.string,
+    endOfContract: PropTypes.string,
+    isPartTime: PropTypes.bool,
     recruiterName: PropTypes.string,
+    recruiterFirstName: PropTypes.string,
+    recruiterPosition: PropTypes.string,
     isPublic: PropTypes.bool,
     recruiterMail: PropTypes.string,
-    recruiterPhone: PropTypes.string,
     businessLines: PropTypes.arrayOf(PropTypes.string),
     date: PropTypes.string,
     location: PropTypes.string,
     department: PropTypes.string,
     userOpportunity: PropTypes.shape({
       status: PropTypes.string,
-      bookmarked: PropTypes.string,
+      bookmarked: PropTypes.bool,
       note: PropTypes.string,
-      archived: PropTypes.string,
+      archived: PropTypes.bool,
     }),
   }),
   setCurrentOffer: PropTypes.func.isRequired,

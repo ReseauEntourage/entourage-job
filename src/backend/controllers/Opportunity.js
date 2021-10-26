@@ -8,6 +8,7 @@ import {
 import { addToWorkQueue } from 'src/backend/jobs';
 
 import { cleanOpportunity } from 'src/backend/utils';
+import { findContractType } from 'src/utils';
 
 import moment from 'moment';
 import { Op } from 'sequelize';
@@ -40,6 +41,29 @@ const {
   User_Candidat,
   User,
 } = models;
+
+const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
+  'id',
+  'updatedAt',
+  'createdAt',
+  'title',
+  'company',
+  'description',
+  'companyDescription',
+  'numberOfPositions',
+  'prerequisites',
+  'skills',
+  'contract',
+  'endOfContract',
+  'isPartTime',
+  'recruiterName',
+  'recruiterFirstName',
+  'recruiterPosition',
+  'isPublic',
+  'recruiterMail',
+  'date',
+  'department',
+];
 
 const INCLUDE_OPPORTUNITY_CANDIDATE = [
   {
@@ -174,13 +198,16 @@ const getAirtableOpportunityFields = (
 ) => {
   const commonFields = {
     OpportunityId: opportunity.id,
+    Entreprise: opportunity.company,
     Titre: opportunity.title,
     Nom: opportunity.recruiterName,
+    Prénom: opportunity.recruiterFirstName,
     Mail: opportunity.recruiterMail,
     Téléphone: opportunity.recruiterPhone,
-    Entreprise: opportunity.company,
-    Localisation: opportunity.location,
-    Description: opportunity.description,
+    Fonction: opportunity.recruiterPosition,
+    'Description poste': opportunity.description,
+    'Description entreprise': opportunity.companyDescription,
+    'Compétences requises': opportunity.skills,
     'Pré-requis': opportunity.prerequisites,
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
@@ -188,6 +215,11 @@ const getAirtableOpportunityFields = (
     Archivé: opportunity.isArchived,
     'Date de création': opportunity.createdAt,
     Département: opportunity.department,
+    Contrat: findContractType(opportunity.contract)?.label,
+    'Fin de contrat': opportunity.endOfContract,
+    'Temps partiel ?': opportunity.isPartTime,
+    'Nombre de postes': opportunity.numberOfPositions,
+    'Souhaite être recontacté': opportunity.beContacted,
   };
 
   return candidates && candidates.length > 0
@@ -218,35 +250,6 @@ const updateTable = async (opportunity, candidates) => {
     tableName: offerTable,
     fields,
   });
-};
-
-const getStringOpportunity = (opportunity, candidates, businessLines) => {
-  return (
-    `----------<br /><br />` +
-    `<strong>Titre :</strong> ${opportunity.title}<br />` +
-    `<strong>Nom du recruteur :</strong> ${opportunity.recruiterName}<br />` +
-    `<strong>Adresse mail du recruteur :</strong> ${opportunity.recruiterMail}<br />` +
-    `<strong>Téléphone du recruteur :</strong> ${opportunity.recruiterPhone}<br />` +
-    `<strong>Secteurs d'activité :</strong> ${
-      businessLines ? businessLines.join(', ') : ''
-    }<br />` +
-    `<strong>Entreprise :</strong> ${opportunity.company}<br />` +
-    `<strong>Addresse postale :</strong> ${opportunity.location}<br />` +
-    `<strong>Département :</strong> ${opportunity.department || ''}<br />` +
-    `<strong>Description :</strong> ${opportunity.description}<br />` +
-    `<strong>Pré-requis :</strong> ${opportunity.prerequisites || ''}` +
-    `${
-      !opportunity.isPublic && candidates && candidates.length > 0
-        ? `<br /><strong>Candidat${
-            candidates.length > 1 ? 's' : ''
-          } :</strong> ${candidates
-            .map((candidate) => {
-              return `${candidate.User.firstName} ${candidate.User.lastName}`;
-            })
-            .join(',')}`
-        : ''
-    }`
-  );
 };
 
 const createOpportunity = async (data, isAdmin) => {
@@ -500,6 +503,7 @@ const getAllUserOpportunities = async (userId, params = {}) => {
   });
 
   const opportunities = await Opportunity.findAll({
+    attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       [Op.or]: [

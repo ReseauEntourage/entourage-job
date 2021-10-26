@@ -737,7 +737,7 @@ const getRandomShortCVs = async (nb, query, params) => {
 
   const sortedKeys = Object.keys(sortedGroupedCvsByMonth).sort(
     (date1, date2) => {
-      return moment(date2).diff(date1);
+      return moment(date2, 'YYYY/MM').diff(date1, 'YYYY/MM');
     }
   );
 

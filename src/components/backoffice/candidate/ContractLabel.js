@@ -1,17 +1,13 @@
 import moment from 'moment';
 import React from 'react';
-import { CONTRACTS } from 'src/constants';
 import PropTypes from 'prop-types';
+import { findContractType } from 'src/utils';
 
 const ContractLabel = ({ contract, endOfContract }) => {
   if (contract) {
     return (
       <div className="uk-text-muted">
-        {
-          CONTRACTS.find((contractConst) => {
-            return contractConst.value === contract;
-          })?.label
-        }
+        {findContractType(contract)?.label}
         {endOfContract
           ? ` - Jusqu'au ${moment(endOfContract).format('DD/MM/YYYY')}`
           : ''}

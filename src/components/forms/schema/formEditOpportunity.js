@@ -1,23 +1,39 @@
-import { BUSINESS_LINES, USER_ROLES } from 'src/constants';
+import { BUSINESS_LINES, CONTRACTS, USER_ROLES } from 'src/constants';
 import { FORMATTED_DEPARTMENTS } from 'src/constants/departements';
 import Api from 'src/Axios';
+import moment from 'moment';
+import { findContractType } from 'src/utils';
 
 export default {
   id: 'form-offer',
   fields: [
     {
-      id: 'title',
-      name: 'title',
+      id: 'company',
+      name: 'company',
       component: 'input',
       type: 'text',
-      title: 'Titre du poste proposé*',
+      title: 'Nom de votre entreprise*',
+    },
+    {
+      id: 'recruiterFirstName',
+      name: 'recruiterFirstName',
+      component: 'input',
+      type: 'text',
+      title: 'Votre prénom*',
     },
     {
       id: 'recruiterName',
       name: 'recruiterName',
       component: 'input',
       type: 'text',
-      title: 'Nom du recruteur*',
+      title: 'Votre nom*',
+    },
+    {
+      id: 'recruiterPosition',
+      name: 'recruiterPosition',
+      component: 'input',
+      type: 'text',
+      title: 'Votre fonction*',
     },
     {
       id: 'recruiterMail',
@@ -34,6 +50,13 @@ export default {
       title: 'Téléphone du recruteur*',
     },
     {
+      id: 'title',
+      name: 'title',
+      component: 'input',
+      type: 'text',
+      title: 'Titre du poste proposé*',
+    },
+    {
       id: 'businessLines',
       name: 'businessLines',
       title: "Secteur d'activité*",
@@ -42,20 +65,6 @@ export default {
       component: 'select-request',
       isMulti: true,
       options: BUSINESS_LINES,
-    },
-    {
-      id: 'company',
-      name: 'company',
-      component: 'input',
-      type: 'text',
-      title: 'Entreprise*',
-    },
-    {
-      id: 'location',
-      name: 'location',
-      component: 'input',
-      type: 'text',
-      title: 'Addresse postale*',
     },
     {
       id: 'department',
@@ -67,19 +76,72 @@ export default {
       options: FORMATTED_DEPARTMENTS,
     },
     {
+      id: 'companyDescription',
+      name: 'companyDescription',
+      component: 'textarea',
+      type: 'text',
+      title: "Présentez l'entreprise en quelques mots",
+    },
+    {
       id: 'description',
       name: 'description',
       component: 'textarea',
       type: 'text',
-      title: 'Votre description*',
+      title: "Présentez l'opportunité en quelques mots*",
+    },
+    {
+      id: 'skills',
+      name: 'skills',
+      component: 'textarea',
+      type: 'text',
+      title: 'Écrivez 3 compétences importantes pour ce poste*',
     },
     {
       id: 'prerequisites',
       name: 'prerequisites',
       component: 'textarea',
       type: 'text',
+      title: "Est-ce qu'il y a des pré-requis pour exercer cet emploi\xa0?",
+    },
+    {
+      id: 'contract',
+      name: 'contract',
+      component: 'select',
+      options: [{ value: -1, label: 'Choisissez un contrat' }, ...CONTRACTS],
+      title: 'Type de contrat*',
+      fieldsToReset: ['endOfContract'],
+    },
+    {
+      id: 'endOfContract',
+      name: 'endOfContract',
+      title: 'Date de fin de contrat',
+      component: 'datepicker',
+      min: moment().format('YYYY-MM-DD'),
+      disable: (getValue) => {
+        const contract = findContractType(getValue('contract'));
+        return !contract || !contract.end;
+      },
+    },
+    {
+      id: 'isPartTime',
+      name: 'isPartTime',
+      component: 'checkbox',
+      title: 'Contrat en temps partiel',
+    },
+    {
+      id: 'numberOfPositions',
+      name: 'numberOfPositions',
+      component: 'input',
+      type: 'number',
+      min: 1,
+      title: 'Nombre de postes disponibles sur cette offre',
+    },
+    {
+      id: 'beContacted',
+      name: 'beContacted',
+      component: 'checkbox',
       title:
-        'Quels sont les pré-requis fondamentaux pour exercer cet emploi\xa0?',
+        'Souhaitez-vous être contacté par un référent LinkedOut pour vous accompagner et échanger sur votre projet de recrutement inclusif\xa0?',
     },
     {
       id: 'isPublic',
@@ -92,7 +154,7 @@ export default {
       name: 'candidatesId',
       isMulti: true,
       type: 'text',
-      title: "Si non, renseignez le(s) candidat(s) à qui l'adresser",
+      title: "Renseignez le(s) candidat(s) à qui adresser l'offre",
       placeholder: 'Tapez un candidat',
       component: 'select-request-async',
       disable: (getValue) => {
@@ -116,6 +178,12 @@ export default {
       },
     },
     {
+      id: 'openNewForm',
+      name: 'openNewForm',
+      component: 'checkbox',
+      title: 'Créer une offre similaire après validation de cette offre',
+    },
+    {
       id: 'disclaimer',
       name: 'disclaimer',
       component: 'text',
@@ -125,7 +193,18 @@ export default {
   ],
   rules: [
     {
-      field: 'title',
+      field: 'company',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'recruiterFirstName',
       method: 'isEmpty',
       args: [
         {
@@ -137,6 +216,17 @@ export default {
     },
     {
       field: 'recruiterName',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'recruiterPosition',
       method: 'isEmpty',
       args: [
         {
@@ -187,6 +277,17 @@ export default {
       message: 'Invalide',
     },
     {
+      field: 'title',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
       field: 'businessLines',
       method: 'isEmpty',
       args: [
@@ -209,28 +310,6 @@ export default {
       message: 'Obligatoire',
     },
     {
-      field: 'company',
-      method: 'isEmpty',
-      args: [
-        {
-          ignore_whitespace: true,
-        },
-      ],
-      validWhen: false,
-      message: 'Obligatoire',
-    },
-    {
-      field: 'location',
-      method: 'isEmpty',
-      args: [
-        {
-          ignore_whitespace: true,
-        },
-      ],
-      validWhen: false,
-      message: 'Obligatoire',
-    },
-    {
       field: 'description',
       method: 'isEmpty',
       args: [
@@ -240,6 +319,44 @@ export default {
       ],
       validWhen: false,
       message: 'Obligatoire',
+    },
+    {
+      field: 'skills',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'contract',
+      method: 'isEmpty',
+      args: [
+        {
+          ignore_whitespace: true,
+        },
+      ],
+      validWhen: false,
+      message: 'Obligatoire',
+    },
+    {
+      field: 'endOfContract',
+      method: 'isBefore',
+      args: [moment().format('YYYY-MM-DD')],
+      validWhen: false,
+      message: "Date antérieure à aujourd'hui",
+    },
+    {
+      field: 'candidatesId',
+      args: [],
+      method: (fieldValue, state) => {
+        return !fieldValue && state.isPublic === false;
+      },
+      validWhen: false,
+      message: 'Obligatoire si offre privée',
     },
   ],
 };

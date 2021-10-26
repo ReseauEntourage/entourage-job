@@ -18,7 +18,6 @@ const { Opportunity } = models;
  * @param {string} props.recruiterMail
  * @param {string} props.recruiterPhone
  * @param {string} props.date
- * @param {string} props.location
  * @param {string} props.decription
  * @param {string} props.prerequisites
  * @param {string} props.createdAt
@@ -34,7 +33,6 @@ const generateOpportunity = async (props) => {
     recruiterMail: faker.internet.email(),
     recruiterPhone: faker.phone.phoneNumber(),
     date: faker.date.past(),
-    location: faker.address.city(),
     description: faker.lorem.paragraphs(3),
     prerequisites: faker.lorem.paragraphs(3),
     createdAt: faker.date.past(),

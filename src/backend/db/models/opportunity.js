@@ -31,27 +31,46 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      recruiterFirstName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       recruiterMail: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      recruiterPosition: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       recruiterPhone: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      date: DataTypes.DATE,
+      date: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
       location: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: DataTypes.NOW,
       },
       description: {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      companyDescription: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
+      },
+      skills: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
       prerequisites: {
         type: DataTypes.TEXT,
@@ -59,7 +78,29 @@ export default (sequelize, DataTypes) => {
       },
       department: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      contract: {
         allowNull: true,
+        type: DataTypes.STRING,
+      },
+      endOfContract: {
+        allowNull: true,
+        type: DataTypes.DATEONLY,
+      },
+      isPartTime: {
+        defaultValue: false,
+        type: DataTypes.BOOLEAN,
+      },
+      numberOfPositions: {
+        allowNull: false,
+        defaultValue: 1,
+        type: DataTypes.INTEGER,
+      },
+      beContacted: {
+        allowNull: false,
+        defaultValue: false,
+        type: DataTypes.BOOLEAN,
       },
     },
     {}
