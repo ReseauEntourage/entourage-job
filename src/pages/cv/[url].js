@@ -130,7 +130,6 @@ const CVPage = ({ cv, exists, router, hideShareOptions }) => {
 CVPage.getInitialProps = async ({ query }) => {
   return Api.get(`${process.env.SERVER_URL}/api/v1/cv/${query.url}`)
     .then(({ data: { cv, exists } }) => {
-      console.log(cv, exists);
       return {
         cv,
         exists,

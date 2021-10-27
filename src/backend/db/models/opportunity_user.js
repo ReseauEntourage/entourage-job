@@ -1,27 +1,47 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-underscore-dangle */
 
-import { JOBS } from 'src/constants';
+import { JOBS, MAILJET_TEMPLATES } from 'src/constants';
 import { addToWorkQueue } from 'src/backend/jobs';
+import _ from 'lodash';
+import { getZoneSuffix } from 'src/utils';
 
-const sendMailEmbauche = async (
-  toEmail,
-  firstName,
-  title,
-  company,
-  opportunityId,
-  roleMin
-) => {
+// Duplicated because of bug during tests where the models are not found
+
+const ATTRIBUTES_USER_CANDIDAT = [
+  'employed',
+  'hidden',
+  'note',
+  'url',
+  'contract',
+  'endOfContract',
+];
+
+const ATTRIBUTES_USER = [
+  'id',
+  'firstName',
+  'lastName',
+  'email',
+  'phone',
+  'address',
+  'role',
+  'adminRole',
+  'zone',
+  'gender',
+  'lastConnection',
+  'deletedAt',
+];
+
+const sendMailEmbauche = async (toEmail, candidat, offer, recipientRole) => {
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.SEND_MAIL,
     toEmail,
-    subject: `${firstName} a retrouvé un emploi`,
-    html:
-      `Bonjour,<br /><br />` +
-      `${firstName} vient de mentionner le statut "embauche" à propos de l'opportunité : <strong>${title} - ${company}</strong>.<br /><br />` +
-      `Vous pouvez maintenant l'archiver en cliquant ici :<br />` +
-      `<strong>${process.env.SERVER_URL}/backoffice/${roleMin}/offres?q=${opportunityId}</strong>.<br /><br />` +
-      `L'équipe LinkedOut`,
+    templateId: MAILJET_TEMPLATES.HAS_BEEN_HIRED,
+    variables: {
+      candidat: _.omitBy(candidat.toJSON(), _.isNil),
+      offer: _.omitBy(offer.toJSON(), _.isNil),
+      recipientRole,
+    },
   });
 };
 
@@ -83,51 +103,50 @@ export default (sequelize, DataTypes) => {
         nextData.status === 2
       ) {
         try {
-          const [
-            { firstName, candidat },
-            { title, company },
-          ] = await Promise.all([
+          const [candidat, offer] = await Promise.all([
             models.User.findByPk(nextData.UserId, {
-              attributes: ['firstName'],
+              attributes: ATTRIBUTES_USER,
               include: [
                 {
                   model: models.User_Candidat,
                   as: 'candidat',
+                  attributes: ATTRIBUTES_USER_CANDIDAT,
                   include: [
                     {
                       model: models.User,
                       as: 'coach',
-                      attributes: ['email'],
+                      attributes: ATTRIBUTES_USER,
+                      paranoid: false,
+                    },
+                  ],
+                },
+                {
+                  model: models.User_Candidat,
+                  as: 'coach',
+                  attributes: ATTRIBUTES_USER_CANDIDAT,
+                  include: [
+                    {
+                      model: models.User,
+                      as: 'candidat',
+                      attributes: ATTRIBUTES_USER,
+                      paranoid: false,
                     },
                   ],
                 },
               ],
             }),
-            models.Opportunity.findByPk(nextData.OpportunityId, {
-              attributes: ['title', 'company'],
-            }),
+            models.Opportunity.findByPk(nextData.OpportunityId),
           ]);
 
+          const adminMail =
+            process.env[`ADMIN_CANDIDATES_${getZoneSuffix(candidat.zone)}`];
+
           // mail admin
-          await sendMailEmbauche(
-            process.env.MAILJET_TO_EMAIL,
-            firstName,
-            title,
-            company,
-            nextData.OpportunityId,
-            'admin'
-          );
+          await sendMailEmbauche(adminMail, candidat, offer, 'admin');
           if (candidat && candidat.coach) {
             // mail coach
             const { email } = candidat.coach;
-            await sendMailEmbauche(
-              email,
-              firstName,
-              title,
-              company,
-              nextData.OpportunityId,
-              'candidat'
-            );
+            await sendMailEmbauche(email, candidat, offer, 'candidat');
           }
         } catch (err) {
           console.error(

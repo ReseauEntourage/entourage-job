@@ -236,6 +236,9 @@ const CV_FILTERS_DATA = [
   {
     key: 'locations',
     constants: DEPARTMENTS_FILTERS,
+    priority: DEPARTMENTS_FILTERS.filter((dept) => {
+      return dept.zone !== ADMIN_ZONES.HZ;
+    }),
     title: 'Où ?',
     tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
     icon: 'location',
@@ -433,11 +436,6 @@ const SOCKETS = {
   },
 };
 
-const AIRTABLE_NAMES = {
-  NEWSLETTER: 'Newsletter',
-  OFFERS: "Offres d'emploi v2",
-};
-
 const VALUES = { SHARES: 120000 + 64000 };
 
 const CONTACT_INFO = {
@@ -447,6 +445,20 @@ const CONTACT_INFO = {
 };
 
 const INITIAL_NB_OF_CV_TO_DISPLAY = 9;
+
+const MAILJET_TEMPLATES = {
+  ACCOUNT_CREATED: 3267718,
+  CV_SUBMITTED: 3271289,
+  PASSWORD_RESET: 3271976,
+  CONTACT_FORM: 3272334,
+  HAS_BEEN_HIRED: 3275058,
+  OFFER_TO_VALIDATE: 3275461,
+  OFFER_RECEIVED: 3275876,
+  OFFER_SENT: 3276147,
+  OFFER_VALIDATED: 3277863,
+  OFFER_REMINDER: 3279365,
+  OFFERS_RECAP: 3279701,
+};
 
 export {
   OFFER_STATUS,
@@ -466,9 +478,9 @@ export {
   JOBS,
   CONTACT_INFO,
   INITIAL_NB_OF_CV_TO_DISPLAY,
-  AIRTABLE_NAMES,
   SOCKETS,
   STORAGE_KEYS,
   ADMIN_ROLES,
   CONTRACTS,
+  MAILJET_TEMPLATES,
 };

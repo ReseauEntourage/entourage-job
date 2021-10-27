@@ -35,7 +35,7 @@ const Entreprises = () => {
       <Grid middle column gap="collapse">
         <Button
           style="secondary"
-          toggle="target: #modal-interest-linkedOut"
+          toggle="target: #modal-interest-linkedOutStyled"
           onClick={() => {
             return event(TAGS.PAGE_AIDER_CONTACT_RECRUTEUR_CLIC);
           }}

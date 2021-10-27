@@ -234,8 +234,9 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
               UIkit.modal('#add-user').show();
             }}
           >
-            <span
-              uk-icon="icon: plus; ratio:0.8"
+            <IconNoSSR
+              name="plus"
+              ratio={0.8}
               className="uk-margin-small-right"
             />
             Nouveau membre

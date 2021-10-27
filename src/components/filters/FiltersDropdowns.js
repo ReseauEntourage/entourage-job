@@ -71,62 +71,70 @@ const FiltersDropdowns = ({
 
   return (
     <div className={hideOnMobile ? 'uk-visible@m' : ''}>
-      {filterData.map(({ title, constants, key, tag, type, disabled }) => {
-        if (type && type === 'checkbox') {
-          return null;
-        }
-        return (
-          <div
-            key={key}
-            style={{ minWidth: 150 }}
-            className={`uk-inline ${
-              fullWidth ? 'uk-width-expand uk-margin-small-bottom' : ''
-            }`}
-          >
+      {filterData.map(
+        ({ title, constants, priority, key, tag, type, disabled }) => {
+          if (type && type === 'checkbox') {
+            return null;
+          }
+          return (
             <div
-              className={`ent-select-search ${
-                showSeparator ? 'ent-select-separator' : ''
+              key={key}
+              style={{ minWidth: 150 }}
+              className={`uk-inline ${
+                fullWidth ? 'uk-width-expand uk-margin-small-bottom' : ''
               }`}
-              style={{ opacity: disabled ? 0.6 : 1 }}
             >
-              <Button
-                disabled={disabled}
-                style="text"
-                className={`uk-width-expand ${
-                  filters[key].length === 0 ? 'uk-text-muted' : ''
+              <div
+                className={`ent-select-search ${
+                  showSeparator ? 'ent-select-separator' : ''
                 }`}
+                style={{ opacity: disabled ? 0.6 : 1 }}
               >
-                {/* {icon && (
+                <Button
+                  disabled={disabled}
+                  style="text"
+                  className={`uk-width-expand ${
+                    filters[key].length === 0 ? 'uk-text-muted' : ''
+                  }`}
+                >
+                  {/* {icon && (
                   <IconNoSSR
                     name={icon}
                     ratio={0.7}
                     className="uk-margin-small-right"
                   />
                 )} */}
-                <span className="uk-width-expand uk-text-left uk-flex uk-flex-middle">
-                  {title}
-                </span>
-                {filters[key].length > 0 && (
-                  <div>
-                    &nbsp;
-                    <div className="uk-badge">{filters[key].length}</div>
-                  </div>
-                )}
-                <IconNoSSR
-                  name="triangle-down"
-                  className="uk-margin-small-left"
-                />
-              </Button>
-              <div
-                data-uk-dropdown="mode: click;"
-                className="uk-height-max-medium uk-overflow-auto uk-width-medium"
-              >
-                {renderFilters(constants, key, tag)}
+                  <span className="uk-width-expand uk-text-left uk-flex uk-flex-middle">
+                    {title}
+                  </span>
+                  {filters[key].length > 0 && (
+                    <div>
+                      &nbsp;
+                      <div className="uk-badge">{filters[key].length}</div>
+                    </div>
+                  )}
+                  <IconNoSSR
+                    name="triangle-down"
+                    className="uk-margin-small-left"
+                  />
+                </Button>
+                <div
+                  data-uk-dropdown="mode: click;"
+                  className="uk-height-max-medium uk-overflow-auto uk-width-medium"
+                >
+                  {priority && priority.length > 0 && (
+                    <>
+                      {renderFilters(priority, key, tag)}
+                      <hr />
+                    </>
+                  )}
+                  {renderFilters(constants, key, tag)}
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        }
+      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 {
   "name": "linkedout",
-  "version": "1.13.1",
+  "version": "1.13.2",
   "description": "",
   "main": "index.js",
   "engines": {
@@ -9,7 +9,8 @@
   "scripts": {
     "mainWorker": "NODE_ENV=production node -r dotenv/config --expose-gc build/backend/mainWorker.js",
     "dev-mainWorker": "npx babel-node -r dotenv/config --expose-gc src/backend/mainWorker.js",
-    "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"src/backend/jobs/Mail.js\").sendRecapAboutOffers()'",
+    "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"./build/backend/jobs/Mail.js\").sendRecapAboutOffers()'",
+    "dev-send-recap": "node -r @babel/register -r dotenv/config -e 'require(\"./src/backend/jobs/Mail.js\").sendRecapAboutOffers()'",
     "dev": "npx babel-node -r dotenv/config src/backend/serveur-next.js",
     "start": "NODE_ENV=production node -r dotenv/config build/backend/serveur-next.js",
     "test": "NODE_ENV=test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
@@ -126,9 +127,9 @@
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^4.2.0",
     "expose-loader": "^2.0.0",
-    "husky": "^4.3.0",
+    "husky": "^4.3.8",
     "jest": "^26.4.1",
-    "lint-staged": "^10.4.0",
+    "lint-staged": "^11.2.3",
     "nodemon": "^1.19.4",
     "prettier": "^2.1.2",
     "regenerator-runtime": "^0.13.9",

@@ -19,7 +19,7 @@ const promisifyOrResolve = (instance, func, args = []) => {
 
 const RedisManager = {
   getInstance(name = 'default') {
-    if (dev) {
+    if (dev && !process.env.DEBUG_JOBS) {
       return null;
     }
 

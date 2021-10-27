@@ -1,7 +1,7 @@
 import * as AuthController from 'src/backend/controllers/Auth';
 import { auth } from 'src/backend/controllers/Auth';
 import * as UserController from 'src/backend/controllers/User';
-import { JOBS, REDIS_KEYS, USER_ROLES } from 'src/constants';
+import { JOBS, MAILJET_TEMPLATES, REDIS_KEYS, USER_ROLES } from 'src/constants';
 import RateLimiter from 'src/backend/utils/RateLimiter';
 
 import { addToWorkQueue } from 'src/backend/jobs';
@@ -9,6 +9,7 @@ import { logger } from 'src/backend/utils/Logger';
 
 import express from 'express';
 import passport from 'passport';
+import _ from 'lodash';
 
 const router = express.Router();
 
@@ -119,17 +120,25 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
         return res.status(404).send(`Utilisateur inexistant`);
       }
       logger(res).log('sending email');
+
+      const {
+        password,
+        salt: unusedSalt,
+        revision,
+        hashReset,
+        saltReset,
+        ...restProps
+      } = updatedUser.toJSON();
+
       // Envoi du mail
       await addToWorkQueue({
         type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail: user.email,
-        subject: 'Réinitialisation mot de passe',
-        html:
-          'Bonjour,<br /><br />' +
-          'Pour réinitialiser votre mot de passe, cliquer ici sur ce lien : <br />' +
-          `<strong>${process.env.SERVER_URL}/reset/${user.id}/${token}</strong><br /><br />` +
-          'Cordialement,<br /><br />' +
-          `L'équipe LinkedOut`,
+        templateId: MAILJET_TEMPLATES.PASSWORD_RESET,
+        variables: {
+          ..._.omitBy(restProps, _.isNil),
+          token,
+        },
       });
 
       return res.status(200).send('Demande envoyée');
