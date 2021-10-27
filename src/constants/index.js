@@ -460,6 +460,33 @@ const MAILJET_TEMPLATES = {
   OFFERS_RECAP: 3279701,
 };
 
+const HEARD_ABOUT = [
+  {
+    label: 'Par un de mes contacts',
+    value: 'contact',
+  },
+  {
+    label: 'Recherche internet',
+    value: 'search',
+  },
+  {
+    label: 'Publicité sur les réseaux sociaux',
+    value: 'socialAdd',
+  },
+  {
+    label: 'Autre publicité',
+    value: 'otherAdd',
+  },
+  {
+    label: 'Press',
+    value: 'press',
+  },
+  {
+    label: 'Autre',
+    value: 'other',
+  },
+];
+
 export {
   OFFER_STATUS,
   CV_STATUS,
@@ -483,4 +510,5 @@ export {
   ADMIN_ROLES,
   CONTRACTS,
   MAILJET_TEMPLATES,
+  HEARD_ABOUT,
 };

@@ -1,7 +1,7 @@
 /* global UIkit */
 import React from 'react';
 import Layout from 'src/components/Layout';
-import interestLinkedOutSchema from 'src/components/forms/schema/formInterestLinkedOut.json';
+import interestLinkedOutSchema from 'src/components/forms/schema/formInterestLinkedOut';
 import { Section } from 'src/components/utils';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
 import Api from 'src/Axios';
