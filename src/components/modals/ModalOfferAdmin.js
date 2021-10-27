@@ -19,6 +19,7 @@ import { useRemoveModal, useResetForm } from 'src/hooks/utils';
 
 import { findOfferStatus, formatParagraph, mutateFormSchema } from 'src/utils';
 import { OFFER_STATUS } from 'src/constants';
+import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
@@ -144,6 +145,18 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               {currentOffer.title}
             </h3>
             <span>{translateCategory(currentOffer.isPublic)}</span>
+            <ContractLabel
+              contract={currentOffer.contract}
+              endOfContract={currentOffer.endOfContract}
+            />
+            <span className="uk-text-small">
+              {currentOffer.numberOfPositions} poste
+              {currentOffer.numberOfPositions > 1 ? 's' : ''} -{' '}
+              {currentOffer.isPartTime ? 'Temps partiel' : 'Temps plein'}
+            </span>
+            <span className="uk-text-italic uk-text-small">
+              offre soumise le {moment(currentOffer.date).format('DD/MM/YYYY')}
+            </span>
           </Grid>
           <List className="uk-iconnav uk-grid-medium">
             <ButtonIcon
@@ -176,7 +189,12 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               {currentOffer.company}
             </OfferInfoContainer>
             <OfferInfoContainer icon="user" title="Recruteur">
-              {currentOffer.recruiterName}
+              <span>
+                {currentOffer.recruiterFirstName} {currentOffer.recruiterName}
+              </span>
+              <span className="uk-text-muted">
+                {currentOffer.recruiterPosition}
+              </span>
               <SimpleLink
                 href={`mailto:${currentOffer.recruiterMail}`}
                 className="uk-link-muted"
@@ -201,14 +219,14 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 </span>
                 <IconNoSSR name="phone" ratio={0.8} />
               </SimpleLink>
-              <span className="uk-text-italic uk-text-small">
-                offre soumise le{' '}
-                {moment(currentOffer.date).format('DD/MM/YYYY')}
-              </span>
+              {currentOffer.beContacted && (
+                <span>Souhaite être recontacté</span>
+              )}
             </OfferInfoContainer>
-            <OfferInfoContainer icon="location" title={currentOffer.location}>
-              {currentOffer.department}
-            </OfferInfoContainer>
+            <OfferInfoContainer
+              icon="location"
+              title={currentOffer.department}
+            />
             {currentOffer.userOpportunity && (
               <OfferInfoContainer
                 icon="users"
@@ -284,8 +302,19 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
             )}
           </Grid>
           <Grid gap="medium" childWidths={['1-1']}>
-            <OfferInfoContainer icon="comment" title="Message">
+            {currentOffer.companyDescription && (
+              <OfferInfoContainer
+                icon="comment"
+                title="Description de l'entreprise"
+              >
+                <div>{formatParagraph(currentOffer.companyDescription)}</div>
+              </OfferInfoContainer>
+            )}
+            <OfferInfoContainer icon="comment" title="Description de l'offre">
               <div>{formatParagraph(currentOffer.description)}</div>
+            </OfferInfoContainer>
+            <OfferInfoContainer icon="check" title="Compétences importantes">
+              <div>{formatParagraph(currentOffer.skills)}</div>
             </OfferInfoContainer>
             {currentOffer.prerequisites && (
               <OfferInfoContainer icon="check" title="Pré-requis">
@@ -393,12 +422,21 @@ ModalOfferAdmin.propTypes = {
     userOpportunity: PropTypes.arrayOf(
       PropTypes.shape({
         status: PropTypes.number,
-        bookmarked: PropTypes.string,
+        bookmarked: PropTypes.bool,
         note: PropTypes.string,
-        archived: PropTypes.string,
+        archived: PropTypes.bool,
         User: PropTypes.shape(),
       })
     ),
+    companyDescription: PropTypes.string,
+    skills: PropTypes.string,
+    contract: PropTypes.string,
+    endOfContract: PropTypes.string,
+    isPartTime: PropTypes.bool,
+    recruiterFirstName: PropTypes.string,
+    recruiterPosition: PropTypes.string,
+    numberOfPositions: PropTypes.number,
+    beContacted: PropTypes.bool,
   }),
   setCurrentOffer: PropTypes.func.isRequired,
 };

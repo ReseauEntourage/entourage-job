@@ -13,6 +13,8 @@ const Input = ({
   onChange,
   disabled,
   autocomplete,
+  min,
+  max,
 }) => {
   const [labelClass, setLabelClass] = useState('');
 
@@ -44,6 +46,8 @@ const Input = ({
         }`}
         disabled={disabled}
         autoComplete={autocomplete}
+        min={min}
+        max={max}
       />
       <FormValidatorErrorMessage validObj={valid} />
     </div>
@@ -64,6 +68,8 @@ Input.propTypes = {
   value: PropTypes.string,
   disabled: PropTypes.bool,
   autocomplete: PropTypes.string,
+  min: PropTypes.number,
+  max: PropTypes.number,
 };
 
 Input.defaultProps = {
@@ -72,5 +78,7 @@ Input.defaultProps = {
   value: '',
   disabled: false,
   autocomplete: 'on',
+  min: undefined,
+  max: undefined,
 };
 export default Input;

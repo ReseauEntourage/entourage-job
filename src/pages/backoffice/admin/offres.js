@@ -1,5 +1,3 @@
-/* global UIkit */
-
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
 import { initializeFilters, mutateFormSchema } from 'src/utils';
@@ -7,7 +5,6 @@ import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { Button, Section } from 'src/components/utils';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import Filter from 'src/components/utils/Filter';
-import Api from 'src/Axios';
 import schema, {
   adminMutation,
 } from 'src/components/forms/schema/formEditOpportunity';
@@ -18,7 +15,7 @@ import {
   OFFER_ADMIN_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
-import { useFilters } from 'src/hooks';
+import { useFilters, usePostOpportunity } from 'src/hooks';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import { usePrevious } from 'src/hooks/utils';
 import SearchBar from 'src/components/filters/SearchBar';
@@ -28,6 +25,10 @@ const LesOpportunites = () => {
   const { user } = useContext(UserContext);
   const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
   const prevUser = usePrevious(user);
+
+  const { lastFilledForm, postOpportunity } = usePostOpportunity(
+    'add-opportunity'
+  );
 
   // desactivation du champ de disclaimer
   const mutatedSchema = mutateFormSchema(schema, [
@@ -46,17 +47,6 @@ const LesOpportunites = () => {
   const [search, setSearch] = useState();
 
   const opportunityListRef = useRef();
-
-  const postOpportunity = async (opportunity, closeModal) => {
-    try {
-      await Api.post(`/api/v1/opportunity/`, opportunity);
-      closeModal();
-      UIkit.notification(`L'opportunité a été ajoutée.`, 'success');
-      opportunityListRef.current.fetchData();
-    } catch (err) {
-      UIkit.notification(`Une erreur est survenue.`, 'danger');
-    }
-  };
 
   const [tabFilters, setTabFilters] = useState(OFFER_ADMIN_FILTERS_DATA);
 
@@ -113,15 +103,16 @@ const LesOpportunites = () => {
             formSchema={mutatedSchema}
             defaultValues={{
               isPublic: true,
+              ...lastFilledForm,
             }}
-            onSubmit={(fields, closeModal) => {
-              postOpportunity(
+            onSubmit={async (fields, closeModal) => {
+              await postOpportunity(
                 {
                   ...fields,
                   isAdmin: true,
-                  date: Date.now(),
                 },
-                closeModal
+                closeModal,
+                opportunityListRef.current.fetchData
               );
             }}
           />

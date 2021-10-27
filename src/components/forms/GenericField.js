@@ -97,6 +97,8 @@ const GenericField = ({
         onChange={onChangeCustom}
         disabled={data.disabled}
         autocomplete={data.autocomplete}
+        min={data.min}
+        max={data.max}
       />
     );
   }
@@ -256,6 +258,7 @@ const GenericField = ({
           isDisabled={data.disable ? data.disable(getValue) : false}
           onChange={parseValueToReturnSelect}
         />
+        <FormValidatorErrorMessage validObj={getValid(data.name)} />
       </div>
     );
   }

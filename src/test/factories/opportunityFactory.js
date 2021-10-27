@@ -14,13 +14,22 @@ const { Opportunity } = models;
  * @param {boolean} props.isValidated
  * @param {boolean} props.isArchived
  * @param {string} props.company
+ * @param {string} props.companyDescription
  * @param {string} props.recruiterName
+ * @param {string} props.recruiterFirstName
  * @param {string} props.recruiterMail
  * @param {string} props.recruiterPhone
+ * @param {string} props.recruiterPosition
+ * @param {string} props.department
  * @param {string} props.date
- * @param {string} props.location
  * @param {string} props.decription
  * @param {string} props.prerequisites
+ * @param {string} props.skills
+ * @param {string} props.contract
+ * @param {string} props.endOfContract
+ * @param {string} props.isPartTime
+ * @param {string} props.numberOfPositions
+ * @param {string} props.beContacter
  * @param {string} props.createdAt
  */
 const generateOpportunity = async (props) => {
@@ -30,13 +39,22 @@ const generateOpportunity = async (props) => {
     isValidated: faker.random.boolean(),
     isArchived: faker.random.boolean(),
     company: faker.company.companyName(2),
+    companyDescription: faker.lorem.paragraphs(3),
     recruiterName: faker.name.findName(),
+    recruiterFirstName: faker.name.findName(),
     recruiterMail: faker.internet.email(),
     recruiterPhone: faker.phone.phoneNumber(),
+    recruiterPosition: faker.lorem.words(2),
+    department: faker.address.zipCode(),
     date: faker.date.past(),
-    location: faker.address.city(),
     description: faker.lorem.paragraphs(3),
     prerequisites: faker.lorem.paragraphs(3),
+    skills: faker.lorem.paragraphs(3),
+    contract: faker.lorem.words(2),
+    endOfContract: faker.date.future(),
+    isPartTime: faker.random.boolean(),
+    beContacted: faker.random.boolean(),
+    numberOfPositions: faker.random.number(),
     createdAt: faker.date.past(),
   };
   return {
