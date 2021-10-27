@@ -59,6 +59,7 @@ const attachListeners = (queue) => {
     console.error(
       `Job ${job.id} of type ${job.data.type} failed with error : "${err}"`
     );
+    console.error(job.data);
   });
 
   queue.on('waiting', (jobId) => {
