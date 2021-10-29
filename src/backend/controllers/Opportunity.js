@@ -324,7 +324,13 @@ const createOpportunity = async (data, isAdmin) => {
       toEmail: adminMails.companies,
       templateId: MAILJET_TEMPLATES.OFFER_TO_VALIDATE,
       variables: {
-        ..._.omitBy(cleanedOpportunity, _.isNil),
+        ..._.omitBy(
+          {
+            ...cleanedOpportunity,
+            contract: findContractType(cleanedOpportunity.contract)?.label,
+          },
+          _.isNil
+        ),
       },
     });
 
@@ -346,7 +352,13 @@ const createOpportunity = async (data, isAdmin) => {
       toEmail: finalOpportunity.recruiterMail,
       templateId: MAILJET_TEMPLATES.OFFER_SENT,
       variables: {
-        ..._.omitBy(cleanedOpportunity, _.isNil),
+        ..._.omitBy(
+          {
+            ...cleanedOpportunity,
+            contract: findContractType(cleanedOpportunity.contract)?.label,
+          },
+          _.isNil
+        ),
         candidates: candidatesString,
         businessLines: businessLinesString,
       },
@@ -906,7 +918,13 @@ const updateOpportunity = async (opportunity) => {
             : candidat.User.email,
           templateId: MAILJET_TEMPLATES.OFFER_RECEIVED,
           variables: {
-            offer: _.omitBy(finalOpportunity, _.isNil),
+            offer: _.omitBy(
+              {
+                ...finalOpportunity,
+                contract: findContractType(finalOpportunity.contract)?.label,
+              },
+              _.isNil
+            ),
             candidat,
           },
         });
@@ -954,7 +972,13 @@ const updateOpportunity = async (opportunity) => {
       toEmail: finalOpportunity.recruiterMail,
       templateId: MAILJET_TEMPLATES.OFFER_VALIDATED,
       variables: {
-        ..._.omitBy(finalOpportunity, _.isNil),
+        ..._.omitBy(
+          {
+            ...finalOpportunity,
+            contract: findContractType(finalOpportunity.contract)?.label,
+          },
+          _.isNil
+        ),
         candidates: stringOfNames,
         isPublicString: finalOpportunity.isPublic.toString(),
         candidatesLength: finalOpportunity.userOpportunity.length,
