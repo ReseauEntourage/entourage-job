@@ -115,7 +115,7 @@ const Entreprises = () => {
       </Section>
       <Reviews />
       <HowToCommitDifferently />
-      <CorporateNewsletter />
+      <CorporateNewsletter style="muted" />
     </Layout>
   );
 };

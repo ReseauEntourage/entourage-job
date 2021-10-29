@@ -13,10 +13,52 @@ import {
   linkedOutStyled,
 } from 'src/components/partials/LinkedInPartial';
 
+const pages = [
+  {
+    title: 'Découvrez les candidats',
+    path: '/candidats',
+  },
+  {
+    title: 'Particuliers, agissez',
+    path: '/aider',
+  },
+  {
+    title: 'Entreprises, engagez-vous',
+    path: '/entreprises',
+    children: [
+      {
+        title: 'Découvrez les candidats',
+        path: '/entreprises/cvs',
+      },
+      {
+        title: 'Recruter hors LinkedOut',
+        path: '/entreprises/recruter-hors-linkedout',
+      },
+      {
+        title: 'Devenir une entreprise inclusive',
+        path: '/entreprises/sinformer',
+      },
+    ],
+  },
+  {
+    title: 'Orientez-nous des candidats',
+    path: '/orienter',
+  },
+  {
+    title: 'Vous cherchez du travail ?',
+    path: '/travailler',
+  },
+  {
+    title: 'Ils construisent le projet avec nous',
+    path: '/partenaires',
+  },
+];
+
 const Footer = () => {
   const { asPath } = useRouter();
 
   const showAssociationEntourage = !asPath.includes('/entreprises');
+
   return (
     <footer id="footer">
       {asPath === '/' && <Partners />}
@@ -41,6 +83,39 @@ const Footer = () => {
             center
             middle
             eachWidths={['auto@m', 'expand', 'auto@m']}
+            gap="collapse"
+          >
+            <ul className="uk-padding-small uk-subnav uk-flex-center uk-light">
+              {pages.map(({ title, path, children }) => {
+                return (
+                  <li className="uk-flex uk-flex-column uk-margin-small-bottom">
+                    <SimpleLink
+                      className="uk-text-uppercase ent-site-map"
+                      href={path}
+                    >
+                      {title}
+                    </SimpleLink>
+                    {children &&
+                      children.map((childrenPage) => {
+                        return (
+                          <SimpleLink
+                            href={childrenPage.path}
+                            className="uk-text-small uk-text-muted uk-margin-small-top"
+                          >
+                            {childrenPage.title}
+                          </SimpleLink>
+                        );
+                      })}
+                  </li>
+                );
+              })}
+            </ul>
+          </Grid>
+          <Grid
+            row
+            center
+            middle
+            eachWidths={['auto@m', 'expand', 'auto@m']}
             gap="medium"
           >
             <div className="uk-flex uk-flex-center uk-light">
@@ -56,8 +131,8 @@ const Footer = () => {
                 Soutenir LinkedOut <IconNoSSR name="chevron-right" />
               </Button>
             </div>
-            <ul className="uk-padding-small uk-subnav uk-subnav-divider uk-flex-center uk-light">
-              <li className="uk-text-capitalize">
+            <ul className="uk-padding-small uk-subnav uk-flex-center uk-light">
+              <li className="uk-text-capitalize uk-text-small">
                 <SimpleLink
                   isExternal
                   target="_blank"
@@ -66,10 +141,10 @@ const Footer = () => {
                   Mentions légales
                 </SimpleLink>
               </li>
-              <li className="uk-text-capitalize">
+              <li className="uk-text-capitalize uk-text-small">
                 <SimpleLink href="/contact">Contact</SimpleLink>
               </li>
-              <li className="uk-text-capitalize">
+              <li className="uk-text-capitalize uk-text-small">
                 <SimpleLink
                   href={EXTERNAL_LINKS.ENTOURAGE}
                   isExternal
@@ -81,7 +156,7 @@ const Footer = () => {
                   Association Entourage
                 </SimpleLink>
               </li>
-              <li className="uk-text-capitalize">
+              <li className="uk-text-capitalize uk-text-small">
                 <SimpleLink href="/linkedout">
                   Pourquoi LinkedOut&nbsp;?
                 </SimpleLink>
