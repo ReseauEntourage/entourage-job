@@ -56,6 +56,7 @@ const generateOpportunity = async (props) => {
     beContacted: faker.random.boolean(),
     numberOfPositions: faker.random.number(),
     createdAt: faker.date.past(),
+    message: faker.lorem.paragraphs(3),
   };
   return {
     ...data,

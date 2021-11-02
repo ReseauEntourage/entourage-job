@@ -35,6 +35,7 @@ export function usePostOpportunity(modalId) {
         await Api.post(`/api/v1/opportunity/`, {
           ...opportunity,
           candidatesId: opportunity.isPublic ? null : candidatesId,
+          message: opportunity.isPublic ? null : opportunity.message,
           date: Date.now(),
         });
         closeModal();

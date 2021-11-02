@@ -63,6 +63,7 @@ const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
   'recruiterMail',
   'date',
   'department',
+  'message',
 ];
 
 const INCLUDE_OPPORTUNITY_CANDIDATE = [
@@ -220,6 +221,7 @@ const getAirtableOpportunityFields = (
     'Temps partiel ?': opportunity.isPartTime,
     'Nombre de postes': opportunity.numberOfPositions,
     'Souhaite être recontacté': opportunity.beContacted,
+    'Message personnalisé': opportunity.message,
   };
 
   return candidates && candidates.length > 0

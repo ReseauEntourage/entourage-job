@@ -140,57 +140,69 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                   {moment(currentOffer.date).format('DD/MM/YYYY')}
                 </span>
               </div>
-              <List className="uk-iconnav uk-grid-medium uk-flex-middle">
-                {loadingIcon && <div data-uk-spinner="" />}
-                <ButtonIcon
-                  name="archive"
-                  className={archived ? 'ent-color-amber' : undefined}
-                  onClick={() => {
-                    setLoadingIcon(true);
-                    const { userOpportunity } = currentOffer;
-                    userOpportunity.archived = !archived;
-                    updateOpportunityUser(userOpportunity);
-                    setLoadingIcon(false);
-                  }}
-                />
-                <ButtonIcon
-                  name="star"
-                  className={bookmarked ? 'ent-color-amber' : undefined}
-                  onClick={() => {
-                    setLoadingIcon(true);
-                    const { userOpportunity } = currentOffer;
-                    userOpportunity.bookmarked = !bookmarked;
-                    updateOpportunityUser(userOpportunity);
-                    setLoadingIcon(false);
-                  }}
-                />
-              </List>
+              <div>
+                <Grid eachWidths={['expand', 'auto']} row middle>
+                  <Select
+                    id="modal-offer-status"
+                    title="Statut"
+                    name="status"
+                    placeholder="statut"
+                    options={OFFER_STATUS}
+                    value={status}
+                    onChange={async (event) => {
+                      setLoadingStatus(true);
+                      const { userOpportunity } = currentOffer;
+                      userOpportunity.status = Number(event.target.value);
+                      await updateOpportunityUser(userOpportunity);
+                      setLoadingStatus(false);
+                    }}
+                  />
+                  {loadingStatus && <div data-uk-spinner="" />}
+                </Grid>
+                <List className="uk-iconnav uk-flex-right">
+                  {loadingIcon && <div data-uk-spinner="" />}
+                  <ButtonIcon
+                    name="archive"
+                    className={archived ? 'ent-color-amber' : undefined}
+                    onClick={() => {
+                      setLoadingIcon(true);
+                      const { userOpportunity } = currentOffer;
+                      userOpportunity.archived = !archived;
+                      updateOpportunityUser(userOpportunity);
+                      setLoadingIcon(false);
+                    }}
+                  />
+                  <ButtonIcon
+                    name="star"
+                    className={bookmarked ? 'ent-color-amber' : undefined}
+                    onClick={() => {
+                      setLoadingIcon(true);
+                      const { userOpportunity } = currentOffer;
+                      userOpportunity.bookmarked = !bookmarked;
+                      updateOpportunityUser(userOpportunity);
+                      setLoadingIcon(false);
+                    }}
+                  />
+                </List>
+              </div>
             </Grid>
             <hr />
+            {currentOffer.message && (
+              <>
+                <Grid>
+                  <OfferInfoContainer icon="commenting">
+                    <div>{formatParagraph(currentOffer.message)}</div>
+                  </OfferInfoContainer>
+                </Grid>
+                <hr />
+              </>
+            )}
             <Grid
               className="uk-margin-bottom"
               eachWidths={['1-3@s', '2-3@s']}
               items={[
                 <Grid column gap="medium">
-                  <Grid eachWidths={['expand', 'auto']} row middle>
-                    <Select
-                      id="modal-offer-status"
-                      title="Statut"
-                      name="status"
-                      placeholder="statut"
-                      options={OFFER_STATUS}
-                      value={status}
-                      onChange={(event) => {
-                        setLoadingStatus(true);
-                        const { userOpportunity } = currentOffer;
-                        userOpportunity.status = Number(event.target.value);
-                        updateOpportunityUser(userOpportunity);
-                        setLoadingStatus(false);
-                      }}
-                    />
-                    {loadingStatus && <div data-uk-spinner="" />}
-                  </Grid>
-                  <OfferInfoContainer icon="hashtag" title="Entreprise">
+                  <OfferInfoContainer icon="home" title="Entreprise">
                     {currentOffer.company}
                   </OfferInfoContainer>
                   <OfferInfoContainer icon="user" title="Recruteur">
@@ -308,6 +320,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
 };
 ModalOffer.propTypes = {
   currentOffer: PropTypes.shape({
+    message: PropTypes.string,
     title: PropTypes.string,
     company: PropTypes.string,
     description: PropTypes.string,

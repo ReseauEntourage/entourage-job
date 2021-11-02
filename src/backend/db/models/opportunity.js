@@ -102,6 +102,10 @@ export default (sequelize, DataTypes) => {
         defaultValue: false,
         type: DataTypes.BOOLEAN,
       },
+      message: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
     {}
   );

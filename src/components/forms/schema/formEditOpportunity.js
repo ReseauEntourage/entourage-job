@@ -8,6 +8,50 @@ export default {
   id: 'form-offer',
   fields: [
     {
+      id: 'isPublic',
+      name: 'isPublic',
+      component: 'checkbox',
+      title: 'Adresser cette offre à tous les candidats',
+    },
+    {
+      id: 'candidatesId',
+      name: 'candidatesId',
+      isMulti: true,
+      type: 'text',
+      title: "Renseignez le(s) candidat(s) à qui adresser l'offre",
+      placeholder: 'Tapez un candidat',
+      component: 'select-request-async',
+      disable: (getValue) => {
+        return getValue('isPublic') === true;
+      },
+      loadOptions: (inputValue, callback) => {
+        Api.get('api/v1/user/search/candidates', {
+          params: {
+            query: inputValue,
+          },
+        })
+          .then(({ data }) => {
+            return data.map((u) => {
+              return {
+                value: u.id,
+                label: `${u.firstName} ${u.lastName}`,
+              };
+            });
+          })
+          .then(callback);
+      },
+    },
+    {
+      id: 'message',
+      name: 'message',
+      component: 'textarea',
+      type: 'text',
+      title: 'Message personnalisé pour le(s) candidat(s)',
+      disable: (getValue) => {
+        return getValue('isPublic') === true;
+      },
+    },
+    {
       id: 'company',
       name: 'company',
       component: 'input',
@@ -142,40 +186,6 @@ export default {
       component: 'checkbox',
       title:
         'Souhaitez-vous être contacté par un référent LinkedOut pour vous accompagner et échanger sur votre projet de recrutement inclusif\xa0?',
-    },
-    {
-      id: 'isPublic',
-      name: 'isPublic',
-      component: 'checkbox',
-      title: 'Adresser cette offre à tous les candidats',
-    },
-    {
-      id: 'candidatesId',
-      name: 'candidatesId',
-      isMulti: true,
-      type: 'text',
-      title: "Renseignez le(s) candidat(s) à qui adresser l'offre",
-      placeholder: 'Tapez un candidat',
-      component: 'select-request-async',
-      disable: (getValue) => {
-        return getValue('isPublic') === true;
-      },
-      loadOptions: (inputValue, callback) => {
-        Api.get('api/v1/user/search/candidates', {
-          params: {
-            query: inputValue,
-          },
-        })
-          .then(({ data }) => {
-            return data.map((u) => {
-              return {
-                value: u.id,
-                label: `${u.firstName} ${u.lastName}`,
-              };
-            });
-          })
-          .then(callback);
-      },
     },
     {
       id: 'openNewForm',
