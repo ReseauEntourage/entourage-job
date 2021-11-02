@@ -17,7 +17,7 @@ const NewsletterPartial = ({ padding, tag }) => {
     if (validator.isEmail(email)) {
       event(tag);
       try {
-        await Api.post('/api/v1/cv/share', {
+        await Api.post('/api/v1/mail/newsletter', {
           email,
           origin: NEWSLETTER_ORIGINS.LKO,
         });
