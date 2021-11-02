@@ -197,28 +197,6 @@ router.post(
 );
 
 /**
- * Route : POST /api/<VERSION>/cv
- * Description : Prise d'info partageur
- */
-router.post('/share', auth(), (req, res) => {
-  addToWorkQueue({
-    type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
-    tableName: process.env.AIRTABLE_NEWSLETTER,
-    fields: {
-      email: req.body.email,
-      Origine: req.body.origin || NEWSLETTER_ORIGINS.LKO,
-    },
-  })
-    .then(() => {
-      res.status(200).json();
-    })
-    .catch((err) => {
-      logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
-    });
-});
-
-/**
  * Route : POST /api/<VERSION>/cv/count
  * Description : Incrementation du compteur de partage
  */
