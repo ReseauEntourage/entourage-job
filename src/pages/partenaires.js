@@ -293,7 +293,7 @@ const Partenaires = () => {
         style="muted"
         button={{
           label: 'Nous écrire',
-          modal: 'target: #modal-interest-linkedOutStyled',
+          modal: 'target: #modal-interest-linkedOut',
           onClick: () => {
             return event(TAGS.PAGE_PARTENAIRES_NOUS_ECRIRE_CLIC);
           },

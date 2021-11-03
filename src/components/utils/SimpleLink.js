@@ -13,11 +13,19 @@ const SimpleLink = ({
   scroll,
   isExternal,
   onClick,
+  toggle,
 }) => {
   let classBuffer = '';
   if (visible) classBuffer += ` uk-visible@${visible}`;
   if (className) classBuffer += ` ${className}`;
 
+  if (toggle) {
+    return (
+      <a onClick={onClick} className={classBuffer} data-uk-toggle={toggle}>
+        {children}
+      </a>
+    );
+  }
   return isExternal ? (
     <a
       onClick={onClick}
@@ -42,7 +50,7 @@ const SimpleLink = ({
   );
 };
 SimpleLink.propTypes = {
-  href: PropTypes.string.isRequired,
+  href: PropTypes.string,
   as: PropTypes.string,
   visible: PropTypes.oneOf(UIKIT_SCREENS),
   children: PropTypes.oneOfType([
@@ -54,6 +62,7 @@ SimpleLink.propTypes = {
   isExternal: PropTypes.bool,
   scroll: PropTypes.bool,
   onClick: PropTypes.func,
+  toggle: PropTypes.string,
 };
 SimpleLink.defaultProps = {
   as: undefined,
@@ -63,5 +72,6 @@ SimpleLink.defaultProps = {
   isExternal: false,
   scroll: undefined,
   onClick: () => {},
+  toggle: undefined,
 };
 export default SimpleLink;
