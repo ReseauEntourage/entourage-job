@@ -71,9 +71,6 @@ const TAGS = {
   POPUP_OFFRE_ENVOYER_OFFRE_GENERALE_CLIC: {
     action: 'Popup_Offre_Envoyer_Offre_Generale_Clic',
   },
-  FOOTER_DON_CLIC: {
-    action: 'Footer_Don_Clic',
-  },
   PAGE_GALERIE_RECHERCHE: {
     action: 'Page_Galerie_Recherche',
   },
@@ -139,6 +136,12 @@ const TAGS = {
   },
   FOOTER_BLOG_LINKEDOUT_CLIC: {
     action: 'Footer_Blog_LinkedOut_Clic',
+  },
+  FOOTER_DON_CLIC: {
+    action: 'Footer_Don_Clic',
+  },
+  FOOTER_RECRUITMENTS_CLIC: {
+    action: 'Footer_Recruitments_Clic',
   },
   PAGE_RECRUTER_CARROUSEL_CLIC: {
     action: 'Page_Recruter_Carrousel_Clic',

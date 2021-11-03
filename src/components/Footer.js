@@ -12,47 +12,247 @@ import {
   linkedInStyled,
   linkedOutStyled,
 } from 'src/components/partials/LinkedInPartial';
+import PropTypes from 'prop-types';
+import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
 
 const pages = [
   {
-    title: 'Découvrez les candidats',
-    path: '/candidats',
-  },
-  {
-    title: 'Particuliers, agissez',
-    path: '/aider',
-  },
-  {
-    title: 'Entreprises, engagez-vous',
-    path: '/entreprises',
+    title: 'Notre mission',
     children: [
       {
-        title: 'Découvrez les candidats',
-        path: '/entreprises/cvs',
+        title: 'Pourquoi LinkedOut ?',
+        path: '/linkedout',
       },
       {
-        title: 'Recruter hors LinkedOut',
-        path: '/entreprises/recruter-hors-linkedout',
+        title: 'Nos partenaires',
+        path: '/partenaires',
       },
+      /*
+        {
+          title: 'Notre histoire',
+          path: '/histoire',
+        },
+      */
       {
-        title: 'Devenir une entreprise inclusive',
-        path: '/entreprises/sinformer',
+        title: 'Devenir partenaire',
+        toggle: '#modal-interest-linkedOut',
       },
+      /*
+        {
+          title: 'Nos résultats',
+          path: '/resultats',
+        },
+      */
     ],
   },
   {
-    title: 'Orientez-nous des candidats',
-    path: '/orienter',
+    title: "S'engager",
+    children: [
+      {
+        title: 'Entreprises',
+        path: '/entreprises',
+        children: [
+          {
+            title: 'Engager mon entreprise',
+            path: '/entreprises/sinformer',
+          },
+          {
+            title: 'Recruter',
+            path: '/entreprises/cvs',
+          },
+        ],
+      },
+      {
+        title: 'Particuliers',
+        path: '/aider',
+      },
+
+      {
+        title: 'Travailleurs sociaux',
+        path: '/orienter',
+      },
+      {
+        title: 'Candidats',
+        path: '/travailler',
+      },
+    ],
   },
+  /* {
+    title: 'Territoires',
+    children: [
+      {
+        title: 'Paris',
+        path: '/paris',
+      },
+      {
+        title: 'Lyon',
+        path: '/lyon',
+      },
+      {
+        title: 'Lille',
+        path: '/lille',
+      },
+    ],
+  }, */
   {
-    title: 'Vous cherchez du travail ?',
-    path: '/travailler',
-  },
-  {
-    title: 'Ils construisent le projet avec nous',
-    path: '/partenaires',
+    children: [
+      {
+        title: 'Contact',
+        path: '/contact',
+      },
+      {
+        title: 'Nous soutenir',
+        path: EXTERNAL_LINKS.DONATION,
+        props: {
+          isExternal: true,
+          newTab: true,
+          onClick: () => {
+            return event(TAGS.FOOTER_DON_CLIC);
+          },
+        },
+      },
+      /*   {
+        title: 'Presse',
+        path: '/presse',
+      }, */
+      {
+        title: 'Recrutement',
+        path: EXTERNAL_LINKS.RECRUITMENTS,
+        props: {
+          isExternal: true,
+          newTab: true,
+          onClick: () => {
+            return event(TAGS.FOOTER_RECRUITMENTS_CLIC);
+          },
+          target: '_blank',
+        },
+      },
+      {
+        title: 'Actualités',
+        path: EXTERNAL_LINKS.LKO_BLOG,
+        props: {
+          isExternal: true,
+          newTab: true,
+          onClick: () => {
+            return event(TAGS.FOOTER_BLOG_LINKEDOUT_CLIC);
+          },
+          target: '_blank',
+        },
+      },
+      {
+        title: 'Association Entourage',
+        path: EXTERNAL_LINKS.ENTOURAGE,
+        props: {
+          isExternal: true,
+          newTab: true,
+          onClick: () => {
+            return event(TAGS.FOOTER_SITE_ENTOURAGE_CLIC);
+          },
+          target: '_blank',
+        },
+      },
+      {
+        component: (
+          <Button href="/login" style="primary">
+            Espace coach & candidat <IconNoSSR name="chevron-right" />
+          </Button>
+        ),
+      },
+    ],
   },
 ];
+
+const SiteMap = ({ isMobile }) => {
+  return (
+    <Grid
+      row
+      center
+      gap="large"
+      className={isMobile ? 'uk-hidden@m' : 'uk-visible@m'}
+    >
+      {pages.map(({ title, children }) => {
+        return (
+          <div
+            key={title}
+            className="uk-flex uk-flex-column uk-flex-middle uk-margin-small-bottom"
+          >
+            <div
+              className={`uk-flex uk-flex-column ${
+                isMobile ? 'uk-flex-middle' : ''
+              }`}
+            >
+              {title && (
+                <span className="uk-text-uppercase ent-site-map">{title}</span>
+              )}
+              {children &&
+                children.map(
+                  ({
+                    component: childrenComponent,
+                    title: childrenTitle,
+                    path: childrenPath,
+                    toggle: childrenToggle,
+                    children: childrenChildren,
+                    props: childrenProps = {},
+                  }) => {
+                    if (childrenComponent) {
+                      return (
+                        <div className="ent-site-map">{childrenComponent}</div>
+                      );
+                    }
+                    const toggleProps = { href: childrenPath };
+                    if (childrenToggle) {
+                      toggleProps.toggle = `target: ${childrenToggle}`;
+                    }
+                    return (
+                      <>
+                        <SimpleLink
+                          key={childrenPath}
+                          className={
+                            title
+                              ? 'uk-text-muted uk-margin-small-top uk-text-uppercase '
+                              : 'uk-text-uppercase ent-site-map'
+                          }
+                          {...childrenProps}
+                          {...toggleProps}
+                        >
+                          {childrenTitle}
+                        </SimpleLink>
+                        {childrenChildren &&
+                          childrenChildren.map(
+                            ({
+                              title: childrenChildrenTitle,
+                              path: childrenChildrenPath,
+                              props: childrenChildrenProps = {},
+                            }) => {
+                              return (
+                                <SimpleLink
+                                  key={childrenChildrenPath}
+                                  href={childrenChildrenPath}
+                                  className={`${
+                                    isMobile ? '' : 'uk-margin-small-left'
+                                  } uk-text-small uk-text-muted uk-margin-small-top`}
+                                  {...childrenChildrenProps}
+                                >
+                                  {childrenChildrenTitle}
+                                </SimpleLink>
+                              );
+                            }
+                          )}
+                      </>
+                    );
+                  }
+                )}
+            </div>
+          </div>
+        );
+      })}
+    </Grid>
+  );
+};
+
+SiteMap.propTypes = {
+  isMobile: PropTypes.bool.isRequired,
+};
 
 const Footer = () => {
   const { asPath } = useRouter();
@@ -68,124 +268,37 @@ const Footer = () => {
           {asPath === '/' && (
             <div className="uk-text-center uk-light">
               <p>
-                {linkedOutStyled()} est un est un projet porté par
-                l&apos;association Entourage, qui permet l’accompagnement des
-                personnes les plus précaires ou en situation d’exclusion pour un
-                retour à l’emploi. {linkedInStyled()} soutient la mission et les
-                valeurs véhiculées par ce dispositif, et a contribué au
-                lancement de ce projet en ayant accordé une utilisation limitée
-                de sa marque {linkedOutStyled()} par le biais d’une licence.
+                LinkedOut est un est un projet porté par l&apos;association
+                Entourage, qui permet l’accompagnement des personnes les plus
+                précaires ou en situation d’exclusion pour un retour à l’emploi.
+                LinkedIn soutient la mission et les valeurs véhiculées par ce
+                dispositif, et a contribué au lancement de ce projet en ayant
+                accordé une utilisation limitée de sa marque LinkedOut par le
+                biais d’une licence.
               </p>
             </div>
           )}
+          <SiteMap isMobile />
+          <SiteMap isMobile={false} />
           <Grid
             row
             center
             middle
-            eachWidths={['auto@m', 'expand', 'auto@m']}
             gap="collapse"
+            className="uk-margin-medium-top"
           >
-            <ul className="uk-padding-small uk-subnav uk-flex-center uk-light">
-              {pages.map(({ title, path, children }) => {
-                return (
-                  <li
-                    key={path}
-                    className="uk-flex uk-flex-column uk-margin-small-bottom"
-                  >
-                    <SimpleLink
-                      className="uk-text-uppercase ent-site-map"
-                      href={path}
-                    >
-                      {title}
-                    </SimpleLink>
-                    {children &&
-                      children.map((childrenPage) => {
-                        return (
-                          <SimpleLink
-                            key={childrenPage.path}
-                            href={childrenPage.path}
-                            className="uk-text-small uk-text-muted uk-margin-small-top"
-                          >
-                            {childrenPage.title}
-                          </SimpleLink>
-                        );
-                      })}
-                  </li>
-                );
-              })}
-            </ul>
-          </Grid>
-          <Grid
-            row
-            center
-            middle
-            eachWidths={['auto@m', 'expand', 'auto@m']}
-            gap="medium"
-          >
-            <div className="uk-flex uk-flex-center uk-light">
-              <Button
-                href={EXTERNAL_LINKS.DONATION}
-                isExternal
-                newTab
-                onClick={() => {
-                  return event(TAGS.FOOTER_DON_CLIC);
-                }}
-                style="primary"
-              >
-                Soutenir LinkedOut <IconNoSSR name="chevron-right" />
-              </Button>
-            </div>
-            <ul className="uk-padding-small uk-subnav uk-flex-center uk-light">
-              <li className="uk-text-capitalize uk-text-small">
-                <SimpleLink
-                  isExternal
-                  target="_blank"
-                  href={EXTERNAL_LINKS.LEGAL_MENTIONS}
-                >
-                  Mentions légales
-                </SimpleLink>
-              </li>
-              <li className="uk-text-capitalize uk-text-small">
-                <SimpleLink href="/contact">Contact</SimpleLink>
-              </li>
-              <li className="uk-text-capitalize uk-text-small">
-                <SimpleLink
-                  href={EXTERNAL_LINKS.ENTOURAGE}
-                  isExternal
-                  onClick={() => {
-                    return event(TAGS.FOOTER_SITE_ENTOURAGE_CLIC);
-                  }}
-                  target="_blank"
-                >
-                  Association Entourage
-                </SimpleLink>
-              </li>
-              <li className="uk-text-capitalize uk-text-small">
-                <SimpleLink href="/linkedout">
-                  Pourquoi LinkedOut&nbsp;?
-                </SimpleLink>
-              </li>
-              <li className="uk-text-capitalize">
-                <SimpleLink
-                  href={EXTERNAL_LINKS.LKO_BLOG}
-                  isExternal
-                  onClick={() => {
-                    return event(TAGS.FOOTER_BLOG_LINKEDOUT_CLIC);
-                  }}
-                  target="_blank"
-                >
-                  Actualités
-                </SimpleLink>
-              </li>
-            </ul>
-            <div className="uk-flex uk-flex-center">
-              <Button href="/login" style="primary">
-                Espace candidat <IconNoSSR name="chevron-right" />
-              </Button>
-            </div>
+            <SimpleLink
+              isExternal
+              target="_blank"
+              className="uk-text-uppercase uk-text-small uk-text-muted"
+              href={EXTERNAL_LINKS.LEGAL_MENTIONS}
+            >
+              Mentions légales
+            </SimpleLink>
           </Grid>
         </Grid>
       </Section>
+      <ModalInterestLinkedOut />
     </footer>
   );
 };

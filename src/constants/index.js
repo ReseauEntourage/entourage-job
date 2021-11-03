@@ -385,6 +385,7 @@ const EXTERNAL_LINKS = {
     'https://blog.linkedout.fr/2021/07/21/apres-la-voile-le-foot-linkedout-nouveau-partenaire-maillot-du-red-star-fc-avec-le-soutien-de-randstad/',
   TOOLBOX:
     'https://drive.google.com/drive/folders/1fUhZtsdaAElpjWsC6Rz4Jw5ZJ94vBnSd?usp=sharing',
+  RECRUITMENTS: 'https://www.welcometothejungle.com/fr/companies/entourage',
 };
 
 const NEWSLETTER_ORIGINS = {
