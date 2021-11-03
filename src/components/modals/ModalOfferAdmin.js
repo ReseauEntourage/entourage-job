@@ -40,6 +40,19 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
         },
       ],
     },
+    {
+      fieldId: 'openNewForm',
+      props: [
+        {
+          propName: 'hidden',
+          value: true,
+        },
+        {
+          propName: 'disabled',
+          value: true,
+        },
+      ],
+    },
     adminMutation,
   ]);
 
@@ -118,6 +131,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               const tmpOpportunity = {
                 ...currentOffer,
                 ...fields,
+                message: fields.isPublic ? null : fields.message,
                 candidatesId:
                   !fields.isPublic && fields.candidatesId
                     ? fields.candidatesId.map((candidateId) => {
@@ -158,19 +172,8 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               offre soumise le {moment(currentOffer.date).format('DD/MM/YYYY')}
             </span>
           </Grid>
-          <List className="uk-iconnav uk-grid-medium">
-            <ButtonIcon
-              name="pencil"
-              onClick={() => {
-                setIsEditing(true);
-              }}
-            />
-          </List>
-        </Grid>
-        <hr />
-        <Grid className="uk-margin-bottom" eachWidths={['1-3@s', '2-3@s']}>
-          <Grid column gap="medium">
-            <OfferInfoContainer>
+          <div>
+            <div className="uk-margin-small-top uk-margin-small-bottom">
               {(() => {
                 let className = ' uk-label-warning';
                 let content = 'À valider';
@@ -184,8 +187,31 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 }
                 return <div className={`uk-label${className}`}>{content}</div>;
               })()}
-            </OfferInfoContainer>
-            <OfferInfoContainer icon="hashtag" title="Entreprise">
+            </div>
+            <List className="uk-iconnav uk-flex-right">
+              <ButtonIcon
+                name="pencil"
+                onClick={() => {
+                  setIsEditing(true);
+                }}
+              />
+            </List>
+          </div>
+        </Grid>
+        <hr />
+        {currentOffer.message && (
+          <>
+            <Grid>
+              <OfferInfoContainer icon="commenting">
+                <div>{formatParagraph(currentOffer.message)}</div>
+              </OfferInfoContainer>
+            </Grid>
+            <hr />
+          </>
+        )}
+        <Grid className="uk-margin-bottom" eachWidths={['1-3@s', '2-3@s']}>
+          <Grid column gap="medium">
+            <OfferInfoContainer icon="home" title="Entreprise">
               {currentOffer.company}
             </OfferInfoContainer>
             <OfferInfoContainer icon="user" title="Recruteur">
@@ -405,6 +431,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
 };
 ModalOfferAdmin.propTypes = {
   currentOffer: PropTypes.shape({
+    message: PropTypes.string,
     title: PropTypes.string,
     company: PropTypes.string,
     description: PropTypes.string,

@@ -170,7 +170,7 @@ const GenericField = ({
         placeholder={data.placeholder}
         valid={getValid(data.name)}
         onChange={onChangeCustom}
-        disabled={data.disabled}
+        disabled={data.disable ? data.disable(getValue) : data.disabled}
       />
     );
   }

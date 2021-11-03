@@ -39,6 +39,19 @@ const PostJobAdModal = () => {
           },
         ],
       },
+      {
+        fieldId: 'message',
+        props: [
+          {
+            propName: 'disabled',
+            value: true,
+          },
+          {
+            propName: 'hidden',
+            value: true,
+          },
+        ],
+      },
     ],
     formId
   );

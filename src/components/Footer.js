@@ -88,7 +88,10 @@ const Footer = () => {
             <ul className="uk-padding-small uk-subnav uk-flex-center uk-light">
               {pages.map(({ title, path, children }) => {
                 return (
-                  <li className="uk-flex uk-flex-column uk-margin-small-bottom">
+                  <li
+                    key={path}
+                    className="uk-flex uk-flex-column uk-margin-small-bottom"
+                  >
                     <SimpleLink
                       className="uk-text-uppercase ent-site-map"
                       href={path}
@@ -99,6 +102,7 @@ const Footer = () => {
                       children.map((childrenPage) => {
                         return (
                           <SimpleLink
+                            key={childrenPage.path}
                             href={childrenPage.path}
                             className="uk-text-small uk-text-muted uk-margin-small-top"
                           >

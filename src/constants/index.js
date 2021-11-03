@@ -347,6 +347,11 @@ const CONTRACTS = [
     end: true,
   },
   {
+    label: 'Alternance',
+    value: 'alt',
+    end: true,
+  },
+  {
     label: 'Intérim',
     value: 'inte',
     end: true,
@@ -357,13 +362,8 @@ const CONTRACTS = [
     end: true,
   },
   {
-    label: 'Alternance',
-    value: 'alt',
-    end: true,
-  },
-  {
-    label: 'Formation',
-    value: 'form',
+    label: 'Autre',
+    value: 'other',
     end: true,
   },
 ];

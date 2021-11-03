@@ -26,6 +26,7 @@ const Textarea = ({
   onChange,
   maxLength,
   value,
+  disabled,
 }) => {
   const [labelClass, setLabelClass] = useState('');
 
@@ -58,6 +59,7 @@ const Textarea = ({
         onChange={(e) => {
           update(e);
         }}
+        disabled={disabled}
         className={`uk-textarea uk-form-large ${
           valid !== undefined && valid.isInvalid ? 'uk-form-danger' : ''
         }`}
@@ -80,6 +82,7 @@ Textarea.propTypes = {
   rows: PropTypes.number,
   maxLength: PropTypes.number,
   value: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 Textarea.defaultProps = {
@@ -90,5 +93,6 @@ Textarea.defaultProps = {
   maxLength: undefined,
   value: '',
   onChange: () => {},
+  disabled: false,
 };
 export default Textarea;
