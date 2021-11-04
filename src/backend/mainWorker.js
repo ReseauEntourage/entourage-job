@@ -65,7 +65,9 @@ const start = () => {
 
       case JOBS.JOB_TYPES.SEND_MAIL:
         await sendMailBackground(data);
-        return `Mail sent to '${data.toEmail}' with template '${data.templateId}'`;
+        return `Mail sent to '${JSON.stringify(data.toEmail)}' with template '${
+          data.templateId
+        }'`;
 
       case JOBS.JOB_TYPES.INSERT_AIRTABLE:
         await insertAirtable(data.tableName, data.fields);
@@ -76,12 +78,14 @@ const start = () => {
         return `Airtable : update in '${data.tableName}'`;
 
       case JOBS.JOB_TYPES.REMINDER_OFFER:
-        const hasBeenSent = await sendReminderMailAboutOffer(
+        const sentTo = await sendReminderMailAboutOffer(
           data.opportunityId,
           data.candidatId
         );
-        return hasBeenSent
-          ? `Reminder about opportunity '${data.opportunityId}' sent to '${data.candidatId}'`
+        return sentTo
+          ? `Reminder about opportunity '${data.opportunityId}' sent to '${
+              data.candidatId
+            }' (${JSON.stringify(sentTo)})`
           : `No reminder about opportunity '${data.opportunityId}' sent to '${data.candidatId}'`;
       case JOBS.JOB_TYPES.GENERATE_CV_PREVIEW:
         const previewUrl = await generatePreview(

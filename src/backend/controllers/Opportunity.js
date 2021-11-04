@@ -69,7 +69,7 @@ const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
 const INCLUDE_OPPORTUNITY_CANDIDATE = [
   {
     model: User,
-    attributes: ['id', 'email', 'firstName', 'lastName', 'gender'],
+    attributes: ['id', 'email', 'firstName', 'lastName', 'gender', 'zone'],
     include: [
       {
         model: User_Candidat,
@@ -79,7 +79,7 @@ const INCLUDE_OPPORTUNITY_CANDIDATE = [
           {
             model: User,
             as: 'coach',
-            attributes: ['id', 'email', 'firstName', 'lastName'],
+            attributes: ['id', 'email', 'firstName', 'lastName', 'zone'],
           },
         ],
       },
@@ -140,7 +140,15 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
     include: [
       {
         model: User,
-        attributes: ['id', 'email', 'firstName', 'lastName', 'gender', 'email'],
+        attributes: [
+          'id',
+          'email',
+          'firstName',
+          'lastName',
+          'gender',
+          'email',
+          'zone',
+        ],
         paranoid: false,
       },
     ],
