@@ -153,7 +153,7 @@ const pages = [
       },
       {
         component: (
-          <Button href="/login" style="primary">
+          <Button href="/login" style="primary" className="uk-margin-small-top">
             Espace coach & candidat <IconNoSSR name="chevron-right" />
           </Button>
         ),
@@ -168,6 +168,7 @@ const SiteMap = ({ isMobile }) => {
       row
       center
       gap="large"
+      childWidths={['1-3@m']}
       className={isMobile ? 'uk-hidden@m' : 'uk-visible@m'}
     >
       {pages.map(({ title, children }) => {
@@ -182,7 +183,7 @@ const SiteMap = ({ isMobile }) => {
               }`}
             >
               {title && (
-                <span className="uk-text-uppercase ent-site-map">{title}</span>
+                <span className="uk-text-bold ent-site-map">{title}</span>
               )}
               {children &&
                 children.map(
@@ -209,8 +210,8 @@ const SiteMap = ({ isMobile }) => {
                           key={childrenPath}
                           className={
                             title
-                              ? 'uk-text-muted uk-margin-small-top uk-text-uppercase '
-                              : 'uk-text-uppercase ent-site-map'
+                              ? 'uk-text-muted uk-margin-small-top'
+                              : 'uk-text-bold ent-site-map'
                           }
                           {...childrenProps}
                           {...toggleProps}
@@ -290,7 +291,7 @@ const Footer = () => {
             <SimpleLink
               isExternal
               target="_blank"
-              className="uk-text-uppercase uk-text-small uk-text-muted"
+              className="uk-text-small uk-text-muted"
               href={EXTERNAL_LINKS.LEGAL_MENTIONS}
             >
               Mentions légales
