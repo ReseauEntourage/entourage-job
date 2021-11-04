@@ -8,10 +8,6 @@ import { EXTERNAL_LINKS } from 'src/constants';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 import { IconNoSSR } from 'src/components/utils/Icon';
-import {
-  linkedInStyled,
-  linkedOutStyled,
-} from 'src/components/partials/LinkedInPartial';
 import PropTypes from 'prop-types';
 import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
 
@@ -109,6 +105,7 @@ const pages = [
           onClick: () => {
             return event(TAGS.FOOTER_DON_CLIC);
           },
+          target: '_blank',
         },
       },
       /*   {
@@ -285,13 +282,7 @@ const Footer = () => {
           )}
           <SiteMap isMobile />
           <SiteMap isMobile={false} />
-          <Grid
-            row
-            center
-            middle
-            gap="collapse"
-            className="uk-margin-medium-top"
-          >
+          <Grid row center middle gap="collapse">
             <SimpleLink
               isExternal
               target="_blank"

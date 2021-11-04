@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-underscore-dangle */
 
-import { JOBS, MAILJET_TEMPLATES } from 'src/constants';
+import { JOBS, MAILJET_TEMPLATES, OFFER_STATUS } from 'src/constants';
 import { addToWorkQueue } from 'src/backend/jobs';
 import _ from 'lodash';
-import { getZoneSuffix } from 'src/utils';
+import { findOfferStatus, getZoneSuffix } from 'src/utils';
 
 // Duplicated because of bug during tests where the models are not found
 
@@ -32,15 +32,17 @@ const ATTRIBUTES_USER = [
   'deletedAt',
 ];
 
-const sendMailEmbauche = async (toEmail, candidat, offer, recipientRole) => {
+const sendMailStatusUpdate = async (candidat, offer, status) => {
+  const adminMail =
+    process.env[`ADMIN_CANDIDATES_${getZoneSuffix(candidat.zone)}`];
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.SEND_MAIL,
-    toEmail,
-    templateId: MAILJET_TEMPLATES.HAS_BEEN_HIRED,
+    toEmail: adminMail,
+    templateId: MAILJET_TEMPLATES.STATUS_CHANGED,
     variables: {
       candidat: _.omitBy(candidat.toJSON(), _.isNil),
       offer: _.omitBy(offer.toJSON(), _.isNil),
-      recipientRole,
+      status: findOfferStatus(status).label,
     },
   });
 };
@@ -100,7 +102,7 @@ export default (sequelize, DataTypes) => {
         nextData &&
         previousData &&
         nextData.status !== previousData.status &&
-        nextData.status === 2
+        nextData.status !== OFFER_STATUS[0].value
       ) {
         try {
           const [candidat, offer] = await Promise.all([
@@ -138,19 +140,11 @@ export default (sequelize, DataTypes) => {
             models.Opportunity.findByPk(nextData.OpportunityId),
           ]);
 
-          const adminMail =
-            process.env[`ADMIN_CANDIDATES_${getZoneSuffix(candidat.zone)}`];
-
           // mail admin
-          await sendMailEmbauche(adminMail, candidat, offer, 'admin');
-          if (candidat && candidat.coach) {
-            // mail coach
-            const { email } = candidat.coach;
-            await sendMailEmbauche(email, candidat, offer, 'candidat');
-          }
+          await sendMailStatusUpdate(candidat, offer, nextData.status);
         } catch (err) {
           console.error(
-            `Probleme lors de l'envoie du mail d'embauche validée.`,
+            `Probleme lors de l'envoie du mail de mise à jour de status.`,
             `UserId: ${nextData.UserId}`,
             `OpportunityId: ${nextData.OpportunityId}`,
             err

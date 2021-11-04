@@ -18,13 +18,25 @@ const createMail = (params) => {
     });
   } else if (typeof toEmail === 'object') {
     if (toEmail.cc) {
-      recipients.CC = [{ Email: toEmail.cc }];
+      recipients.Cc = Array.isArray(toEmail.cc)
+        ? toEmail.cc.map((email) => {
+            return { Email: email };
+          })
+        : [{ Email: toEmail.cc }];
     }
     if (toEmail.to) {
-      recipients.To = [{ Email: toEmail.to }];
+      recipients.To = Array.isArray(toEmail.to)
+        ? toEmail.to.map((email) => {
+            return { Email: email };
+          })
+        : [{ Email: toEmail.to }];
     }
     if (toEmail.bcc) {
-      recipients.BCC = [{ Email: toEmail.bcc }];
+      recipients.Bcc = Array.isArray(toEmail.bcc)
+        ? toEmail.bcc.map((email) => {
+            return { Email: email };
+          })
+        : [{ Email: toEmail.bcc }];
     }
   }
   const content = templateId
