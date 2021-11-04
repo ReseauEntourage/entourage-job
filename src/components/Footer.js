@@ -153,7 +153,11 @@ const pages = [
       },
       {
         component: (
-          <Button href="/login" style="primary" className="uk-margin-small-top">
+          <Button
+            href="/login"
+            style="primary"
+            className="uk-margin-medium-top"
+          >
             Espace coach & candidat <IconNoSSR name="chevron-right" />
           </Button>
         ),

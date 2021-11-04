@@ -7,7 +7,12 @@ import {
 } from 'src/constants/departements';
 
 const OFFER_STATUS = [
-  { value: -1, label: 'Offre à traiter', color: 'muted' },
+  {
+    value: -1,
+    label: 'Offre à traiter',
+    alt: 'Offre consultée',
+    color: 'muted',
+  },
   { value: 0, label: 'Contacté', color: 'muted' },
   { value: 1, label: "Phase d'entretien", color: 'warning' },
   { value: 2, label: 'Embauche', color: 'success' },
