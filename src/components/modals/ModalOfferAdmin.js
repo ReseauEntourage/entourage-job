@@ -150,6 +150,14 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
       );
     }
 
+    const userOpportunitiesWithoutDefaultStatus = Array.isArray(
+      currentOffer.userOpportunity
+    )
+      ? currentOffer.userOpportunity.filter((userOpp) => {
+          return userOpp.status !== OFFER_STATUS[0].value;
+        })
+      : null;
+
     // view
     return (
       <div>
@@ -261,7 +269,12 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 }`}
               >
                 <div className="uk-height-max-medium uk-overflow-auto">
-                  {currentOffer.userOpportunity.map((userOpp) => {
+                  {(currentOffer.isPublic
+                    ? userOpportunitiesWithoutDefaultStatus
+                    : currentOffer.userOpportunity
+                  ).map((userOpp) => {
+                    const offerStatus = findOfferStatus(userOpp.status);
+
                     return (
                       <div
                         key={userOpp.OpportunityId + userOpp.UserId}
@@ -307,11 +320,11 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                           </select>
                           <div className="uk-flex uk-flex-middle">
                             <span
-                              className={`uk-text-meta uk-text-${
-                                findOfferStatus(userOpp.status).color
-                              }`}
+                              className={`uk-text-meta uk-text-${offerStatus.color}`}
                             >
-                              {findOfferStatus(userOpp.status).label}
+                              {currentOffer.isPublic && offerStatus.alt
+                                ? offerStatus.alt
+                                : offerStatus.label}
                             </span>
                             <IconNoSSR
                               ratio={0.8}

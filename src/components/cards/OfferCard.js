@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Grid } from 'src/components/utils';
 import { findOfferStatus } from 'src/utils';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import { OFFER_STATUS } from 'src/constants';
 
 const OfferCard = ({
   title,
@@ -20,20 +21,23 @@ const OfferCard = ({
   isAdmin,
   department,
 }) => {
-  const renderStatus = (userOpp) => {
+  const renderStatus = (userOpp, isOppPublic) => {
     if (userOpp.status !== undefined) {
+      const offerStatus = findOfferStatus(userOpp.status);
       return (
-        <span
-          className={`uk-text-meta uk-text-${
-            findOfferStatus(userOpp.status).color
-          }`}
-        >
-          {findOfferStatus(userOpp.status).label}
+        <span className={`uk-text-meta uk-text-${offerStatus.color}`}>
+          {isOppPublic && offerStatus.alt ? offerStatus.alt : offerStatus.label}
         </span>
       );
     }
     return null;
   };
+
+  const userOpportunitiesWithoutDefaultStatus = Array.isArray(userOpportunity)
+    ? userOpportunity.filter((userOpp) => {
+        return userOpp.status !== OFFER_STATUS[0].value;
+      })
+    : null;
 
   return (
     <div
@@ -80,15 +84,18 @@ const OfferCard = ({
                 <p className="uk-margin-remove-bottom">Offre générale</p>
                 {userOpportunity &&
                   (Array.isArray(userOpportunity)
-                    ? userOpportunity.length > 0 &&
+                    ? userOpportunitiesWithoutDefaultStatus.length > 0 &&
                       isAdmin && (
                         <span className="uk-text-meta">
-                          {userOpportunity.length}&nbsp;candidat
-                          {userOpportunity.length !== 1 ? 's' : ''} sur
-                          l&apos;offre
+                          {userOpportunitiesWithoutDefaultStatus.length}
+                          &nbsp;candidat
+                          {userOpportunitiesWithoutDefaultStatus.length !== 1
+                            ? 's'
+                            : ''}{' '}
+                          sur l&apos;offre
                         </span>
                       )
-                    : renderStatus(userOpportunity))}
+                    : renderStatus(userOpportunity, isPublic))}
               </div>
             ) : (
               <div>
@@ -106,11 +113,11 @@ const OfferCard = ({
                             <span className="uk-text-meta uk-text-secondary">
                               {userOpp.User.firstName} {userOpp.User.lastName}
                             </span>
-                            {renderStatus(userOpp)}
+                            {renderStatus(userOpp, isPublic)}
                           </div>
                         );
                       })
-                    : renderStatus(userOpportunity))}
+                    : renderStatus(userOpportunity, isPublic))}
               </div>
             )}
           </div>

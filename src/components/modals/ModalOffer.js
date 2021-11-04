@@ -107,6 +107,16 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
 
   useEffect(resetNoteBuffer, [currentOffer, note]);
 
+  const mutatedOfferStatus = [
+    {
+      ...OFFER_STATUS[0],
+      label: currentOffer.isPublic
+        ? OFFER_STATUS[0].alt
+        : OFFER_STATUS[0].label,
+    },
+    ...OFFER_STATUS.slice(1),
+  ];
+
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">
       <div
@@ -142,12 +152,13 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
               </div>
               <div>
                 <Grid eachWidths={['expand', 'auto']} row middle>
+                  {loadingStatus && <div data-uk-spinner="" />}
                   <Select
                     id="modal-offer-status"
                     title="Statut"
                     name="status"
                     placeholder="statut"
-                    options={OFFER_STATUS}
+                    options={mutatedOfferStatus}
                     value={status}
                     onChange={async (event) => {
                       setLoadingStatus(true);
@@ -157,7 +168,6 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                       setLoadingStatus(false);
                     }}
                   />
-                  {loadingStatus && <div data-uk-spinner="" />}
                 </Grid>
                 <List className="uk-iconnav uk-flex-right">
                   {loadingIcon && <div data-uk-spinner="" />}
