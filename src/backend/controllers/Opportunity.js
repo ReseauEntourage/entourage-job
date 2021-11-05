@@ -981,23 +981,34 @@ const updateOpportunity = async (opportunity) => {
           : listOfNames[0];
     }
 
+    const mailjetVariables = {
+      ..._.omitBy(
+        {
+          ...finalOpportunity,
+          contract: findContractType(finalOpportunity.contract)?.label,
+        },
+        _.isNil
+      ),
+      candidates: stringOfNames,
+      isPublicString: finalOpportunity.isPublic.toString(),
+      candidatesLength: finalOpportunity.userOpportunity.length,
+      businessLines: finalOpportunity.businessLines.join(', '),
+    };
+
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: finalOpportunity.recruiterMail,
       templateId: MAILJET_TEMPLATES.OFFER_VALIDATED,
-      variables: {
-        ..._.omitBy(
-          {
-            ...finalOpportunity,
-            contract: findContractType(finalOpportunity.contract)?.label,
-          },
-          _.isNil
-        ),
-        candidates: stringOfNames,
-        isPublicString: finalOpportunity.isPublic.toString(),
-        candidatesLength: finalOpportunity.userOpportunity.length,
-        businessLines: finalOpportunity.businessLines.join(', '),
-      },
+      variables: mailjetVariables,
+    });
+
+    const adminMails = getAdminMailsFromDepartment(finalOpportunity.department);
+
+    await addToWorkQueue({
+      type: JOBS.JOB_TYPES.SEND_MAIL,
+      toEmail: adminMails.candidates,
+      templateId: MAILJET_TEMPLATES.OFFER_VALIDATED_ADMIN,
+      variables: mailjetVariables,
     });
   }
 
