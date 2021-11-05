@@ -98,15 +98,19 @@ const getTokenFromHeaders = (req) => {
   return null;
 };
 
+export const jwtMiddleware = (credentialsRequired) => {
+  return expressJwt({
+    secret: process.env.JWT_SECRET,
+    userProperty: 'payload',
+    algorithms: ['HS256'],
+    getToken: getTokenFromHeaders,
+    credentialsRequired,
+  });
+};
+
 const auth = (roles = []) => {
   return [
-    expressJwt({
-      secret: process.env.JWT_SECRET,
-      userProperty: 'payload',
-      algorithms: ['HS256'],
-      getToken: getTokenFromHeaders,
-      credentialsRequired: roles.length > 0,
-    }),
+    jwtMiddleware(roles.length > 0),
     (req, res, next) => {
       if (roles.length > 0 && !roles.includes(req.payload.role)) {
         return res.status(401).json({

@@ -11,7 +11,7 @@ const loggerMiddleware = () => {
     if (req && res) {
       const infos = infoString(
         req.header('X-Request-ID'),
-        req.payload && req.payload.id,
+        req.payload?.id,
         req.header('X-Request-Origin')
       );
 
