@@ -17,6 +17,7 @@ import * as Tracing from '@sentry/tracing';
 import express from 'express';
 import enforce from 'express-sslify';
 import cors from 'cors';
+import { jwtMiddleware } from 'src/backend/controllers/Auth';
 
 const app = express();
 const dev = process.env.NODE_ENV !== 'production';
@@ -50,8 +51,6 @@ export default {
 
     app.set('trust proxy', 1);
 
-    app.use(loggerMiddleware());
-
     app.use(express.json());
 
     // adding Passport
@@ -76,6 +75,10 @@ export default {
       });
       next();
     });
+
+    app.use(jwtMiddleware(false));
+
+    app.use(loggerMiddleware());
 
     // adding routes
     app.use('/api/v1/auth', apiLimiter, routeAuth);
