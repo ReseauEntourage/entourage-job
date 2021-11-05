@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 import { getUserOpportunityFromOffer } from 'src/utils';
 import Api from 'src/Axios';
 import ModalOffer from 'src/components/modals/ModalOffer';
-import { Grid } from 'src/components/utils';
+import { Grid, SimpleLink } from 'src/components/utils';
 import OfferCard from 'src/components/cards/OfferCard';
 import { UserContext } from 'src/components/store/UserProvider';
 import ModalOfferAdmin from 'src/components/modals/ModalOfferAdmin';
@@ -32,7 +32,8 @@ const OpportunityList = forwardRef(
     ref
   ) => {
     const {
-      query: { q: opportunityId },
+      push,
+      query: { id: opportunityId },
     } = useRouter();
 
     const { user } = useContext(UserContext);
@@ -156,13 +157,10 @@ const OpportunityList = forwardRef(
                       : offer.userOpportunity;
                   return (
                     <li key={i}>
-                      <a
-                        aria-hidden
-                        role="button"
+                      <SimpleLink
                         className="uk-link-reset"
-                        onClick={() => {
-                          return openOffer(offer);
-                        }}
+                        as={`/backoffice/${role}/offres/${offer.id}`}
+                        href={`/backoffice/${role}/offres/[id]`}
                       >
                         {isAdmin ? (
                           <OfferCard
@@ -201,7 +199,7 @@ const OpportunityList = forwardRef(
                             department={offer.department}
                           />
                         )}
-                      </a>
+                      </SimpleLink>
                     </li>
                   );
                 })}
@@ -233,6 +231,9 @@ const OpportunityList = forwardRef(
                 setCurrentOffer({ ...offer });
                 fetchData();
               }}
+              navigateBackToList={() => {
+                return push(`/backoffice/${role}/offres`);
+              }}
             />
           ) : (
             <ModalOffer
@@ -240,6 +241,9 @@ const OpportunityList = forwardRef(
               setCurrentOffer={(offer) => {
                 setCurrentOffer({ ...offer });
                 fetchData();
+              }}
+              navigateBackToList={() => {
+                return push(`/backoffice/${role}/offres`);
               }}
             />
           )}

@@ -309,10 +309,7 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
                   <a
                     aria-hidden="true"
                     onClick={() => {
-                      return router.push({
-                        pathname: '/backoffice/admin/membres',
-                        query: { role: 'All' },
-                      });
+                      router.push(`/backoffice/admin/membres?role=All`);
                     }}
                   >
                     Tous les membres
@@ -322,10 +319,9 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
                   <a
                     aria-hidden="true"
                     onClick={() => {
-                      return router.push({
-                        pathname: '/backoffice/admin/membres',
-                        query: { role: USER_ROLES.CANDIDAT },
-                      });
+                      router.push(
+                        `/backoffice/admin/membres?role=${USER_ROLES.CANDIDAT}`
+                      );
                     }}
                   >
                     Candidats
@@ -335,10 +331,9 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
                   <a
                     aria-hidden="true"
                     onClick={() => {
-                      return router.push({
-                        pathname: '/backoffice/admin/membres',
-                        query: { role: USER_ROLES.COACH },
-                      });
+                      router.push(
+                        `/backoffice/admin/membres?role=${USER_ROLES.COACH}`
+                      );
                     }}
                   >
                     Coachs

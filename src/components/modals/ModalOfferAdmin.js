@@ -21,7 +21,11 @@ import { findOfferStatus, formatParagraph, mutateFormSchema } from 'src/utils';
 import { OFFER_STATUS } from 'src/constants';
 import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 
-const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
+const ModalOfferAdmin = ({
+  currentOffer,
+  setCurrentOffer,
+  navigateBackToList,
+}) => {
   if (!currentOffer) {
     currentOffer = { userOpportunity: [], businessLines: [] };
   }
@@ -438,6 +442,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               setIsEditing(false);
             }
             resetForm();
+            navigateBackToList();
           }}
         />
         <div className="uk-modal-body">{contentBuilder()}</div>
@@ -483,6 +488,7 @@ ModalOfferAdmin.propTypes = {
     beContacted: PropTypes.bool,
   }),
   setCurrentOffer: PropTypes.func.isRequired,
+  navigateBackToList: PropTypes.func.isRequired,
 };
 ModalOfferAdmin.defaultProps = {
   currentOffer: { userOpportunity: {}, businessLines: [] },

@@ -1,25 +1,24 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import OpportunityList from 'src/components/opportunities/OpportunityList';
-import { initializeFilters, mutateFormSchema } from 'src/utils';
-import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
-import { Button, Section } from 'src/components/utils';
-import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
-import Filter from 'src/components/utils/Filter';
-import schema, {
-  adminMutation,
-} from 'src/components/forms/schema/formEditOpportunity';
-import { UserContext } from 'src/components/store/UserProvider';
-import ModalEdit from 'src/components/modals/ModalEdit';
-
 import {
   OFFER_ADMIN_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
-import { useFilters, usePostOpportunity } from 'src/hooks';
-import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { UserContext } from 'src/components/store/UserProvider';
 import { usePrevious } from 'src/hooks/utils';
-import SearchBar from 'src/components/filters/SearchBar';
+import { useFilters, usePostOpportunity } from 'src/hooks';
+import { initializeFilters, mutateFormSchema } from 'src/utils';
+import schema, {
+  adminMutation,
+} from 'src/components/forms/schema/formEditOpportunity';
+import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
+import { Button, Section } from 'src/components/utils';
+import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import ModalEdit from 'src/components/modals/ModalEdit';
+import Filter from 'src/components/utils/Filter';
+import SearchBar from 'src/components/filters/SearchBar';
+import OpportunityList from 'src/components/opportunities/OpportunityList';
 
 const modalId = 'add-opportunity';
 
@@ -156,4 +155,5 @@ const LesOpportunites = () => {
     </LayoutBackOffice>
   );
 };
+
 export default LesOpportunites;

@@ -79,7 +79,7 @@ export function translateCategory(isPublic) {
   return 'Offre inconnue';
 }
 
-const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
+const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
   if (!currentOffer) {
     currentOffer = { userOpportunity: {}, businessLines: [] };
   }
@@ -126,7 +126,10 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
       >
         <CloseButton
           className="uk-modal-close-default"
-          onClick={resetNoteBuffer}
+          onClick={() => {
+            resetNoteBuffer();
+            navigateBackToList();
+          }}
         />
         {!currentOffer ? null : (
           <div className="uk-modal-body">
@@ -360,6 +363,7 @@ ModalOffer.propTypes = {
     }),
   }),
   setCurrentOffer: PropTypes.func.isRequired,
+  navigateBackToList: PropTypes.func.isRequired,
 };
 ModalOffer.defaultProps = {
   currentOffer: { userOpportunity: {}, businessLines: [] },
