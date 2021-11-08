@@ -42,7 +42,7 @@ const Container = ({ Component, pageProps, err }) => {
         setIsFirstLoad(false);
       }
       gtag.pageview(url);
-      window.scrollTo(0, 0);
+      /* window.scrollTo(0, 0); */
     });
     setTimeout(() => {
       setFading(true);

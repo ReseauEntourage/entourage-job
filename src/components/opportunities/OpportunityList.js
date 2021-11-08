@@ -33,7 +33,7 @@ const OpportunityList = forwardRef(
   ) => {
     const {
       push,
-      query: { id: opportunityId },
+      query: { offerId: opportunityId },
     } = useRouter();
 
     const { user } = useContext(UserContext);
@@ -44,6 +44,19 @@ const OpportunityList = forwardRef(
     const [loading, setLoading] = useState(true);
 
     const isAdmin = role === 'admin' || role === 'candidateAsAdmin';
+
+    const currentPath = {
+      as: `/backoffice/${
+        role === 'candidateAsAdmin'
+          ? `admin/membres/${candidatId}/offres`
+          : `${role}/offres`
+      }`,
+      href: `/backoffice/${
+        role === 'candidateAsAdmin'
+          ? 'admin/membres/[memberId]/[tab]'
+          : `${role}/offres`
+      }`,
+    };
 
     const fetchData = useOpportunityList(
       user,
@@ -155,12 +168,14 @@ const OpportunityList = forwardRef(
                     role === 'candidateAsAdmin'
                       ? getUserOpportunityFromOffer(offer, candidatId)
                       : offer.userOpportunity;
+
                   return (
                     <li key={i}>
                       <SimpleLink
+                        scroll={false}
                         className="uk-link-reset"
-                        as={`/backoffice/${role}/offres/${offer.id}`}
-                        href={`/backoffice/${role}/offres/[id]`}
+                        as={`${currentPath.as}/${offer.id}`}
+                        href={`${currentPath.href}/[offerId]`}
                       >
                         {isAdmin ? (
                           <OfferCard
@@ -231,8 +246,13 @@ const OpportunityList = forwardRef(
                 setCurrentOffer({ ...offer });
                 fetchData();
               }}
+              selectedCandidateId={
+                role === 'candidateAsAdmin' ? candidatId : undefined
+              }
               navigateBackToList={() => {
-                return push(`/backoffice/${role}/offres`);
+                return push(currentPath.href, currentPath.as, {
+                  scroll: false,
+                });
               }}
             />
           ) : (
@@ -243,7 +263,9 @@ const OpportunityList = forwardRef(
                 fetchData();
               }}
               navigateBackToList={() => {
-                return push(`/backoffice/${role}/offres`);
+                return push(currentPath.href, currentPath.as, {
+                  scroll: false,
+                });
               }}
             />
           )}
@@ -259,14 +281,14 @@ OpportunityList.propTypes = {
   search: PropTypes.string,
   tabFilter: PropTypes.string,
   updateNumberOfResults: PropTypes.func,
-  userRole: PropTypes.oneOf(['admin', 'candidateAsAdmin', 'candidate']),
+  userRole: PropTypes.oneOf(['admin', 'candidateAsAdmin', 'candidat']),
 };
 
 OpportunityList.defaultProps = {
   candidatId: undefined,
   filters: undefined,
   tabFilter: undefined,
-  userRole: 'candidate',
+  userRole: 'candidat',
   search: undefined,
   updateNumberOfResults: () => {},
 };

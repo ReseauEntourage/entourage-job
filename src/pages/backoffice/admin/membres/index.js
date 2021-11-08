@@ -4,7 +4,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { PropTypes } from 'prop-types';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
-import { Grid, Section } from 'src/components/utils';
+import { Grid, Section, SimpleLink } from 'src/components/utils';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import Api from 'src/Axios';
 import ModalEdit from 'src/components/modals/ModalEdit';
@@ -56,7 +56,7 @@ const getCandidateFromCoachOrCandidate = (member) => {
   return member.coach;
 };
 
-const MembersAdmin = ({ query: { role = 'All' } }) => {
+const MembersAdmin = () => {
   const { user } = useContext(UserContext);
   const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
   const prevUser = usePrevious(user);
@@ -69,8 +69,13 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
   const [offset, setOffset] = useState(0);
   const [filtersConst, setFiltersConst] = useState(MEMBER_FILTERS_DATA);
   const prevSearchQuery = usePrevious(searchQuery);
+
+  const {
+    push,
+    query: { role },
+  } = useRouter();
+
   const prevRole = usePrevious(role);
-  const router = useRouter();
 
   const { getData, storeData } = useContext(DataContext);
 
@@ -81,6 +86,17 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
     setNumberOfResults,
     resetFilters,
   } = useFilters(filtersConst);
+
+  useEffect(() => {
+    if (!role) {
+      push({
+        pathname: '/backoffice/admin/membres',
+        query: {
+          role: 'All',
+        },
+      });
+    }
+  }, [push, role]);
 
   useEffect(() => {
     if (!loadingDefaultFilters) {
@@ -306,38 +322,40 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
                       : ''
                   }
                 >
-                  <a
-                    aria-hidden="true"
-                    onClick={() => {
-                      router.push(`/backoffice/admin/membres?role=All`);
+                  <SimpleLink
+                    href={{
+                      pathname: '/backoffice/admin/membres',
+                      query: {
+                        role: 'All',
+                      },
                     }}
                   >
                     Tous les membres
-                  </a>
+                  </SimpleLink>
                 </li>
                 <li className={role === USER_ROLES.CANDIDAT ? 'uk-active' : ''}>
-                  <a
-                    aria-hidden="true"
-                    onClick={() => {
-                      router.push(
-                        `/backoffice/admin/membres?role=${USER_ROLES.CANDIDAT}`
-                      );
+                  <SimpleLink
+                    href={{
+                      pathname: '/backoffice/admin/membres',
+                      query: {
+                        role: USER_ROLES.CANDIDAT,
+                      },
                     }}
                   >
                     Candidats
-                  </a>
+                  </SimpleLink>
                 </li>
                 <li className={role === USER_ROLES.COACH ? 'uk-active' : ''}>
-                  <a
-                    aria-hidden="true"
-                    onClick={() => {
-                      router.push(
-                        `/backoffice/admin/membres?role=${USER_ROLES.COACH}`
-                      );
+                  <SimpleLink
+                    href={{
+                      pathname: '/backoffice/admin/membres',
+                      query: {
+                        role: USER_ROLES.COACH,
+                      },
                     }}
                   >
                     Coachs
-                  </a>
+                  </SimpleLink>
                 </li>
               </ul>
             </Grid>
@@ -395,8 +413,8 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
                           className="uk-link-reset"
                           style={{ cursor: 'pointer' }}
                           onClick={() => {
-                            return router.push(
-                              '/backoffice/admin/membres/[id]',
+                            return push(
+                              '/backoffice/admin/membres/[memberId]',
                               `/backoffice/admin/membres/${member.id}`
                             );
                           }}
@@ -592,10 +610,5 @@ const MembersAdmin = ({ query: { role = 'All' } }) => {
     </LayoutBackOffice>
   );
 };
-MembersAdmin.getInitialProps = ({ query }) => {
-  return { query };
-};
-MembersAdmin.propTypes = {
-  query: PropTypes.shape({ role: PropTypes.string }).isRequired,
-};
+
 export default MembersAdmin;

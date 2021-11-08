@@ -17,7 +17,12 @@ import {
 } from 'src/components/modals/ModalOffer';
 import { useRemoveModal, useResetForm } from 'src/hooks/utils';
 
-import { findOfferStatus, formatParagraph, mutateFormSchema } from 'src/utils';
+import {
+  findOfferStatus,
+  formatParagraph,
+  getUserOpportunityFromOffer,
+  mutateFormSchema,
+} from 'src/utils';
 import { OFFER_STATUS } from 'src/constants';
 import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 
@@ -25,6 +30,7 @@ const ModalOfferAdmin = ({
   currentOffer,
   setCurrentOffer,
   navigateBackToList,
+  selectedCandidateId,
 }) => {
   if (!currentOffer) {
     currentOffer = { userOpportunity: [], businessLines: [] };
@@ -156,13 +162,32 @@ const ModalOfferAdmin = ({
       );
     }
 
-    const userOpportunitiesWithoutDefaultStatus = Array.isArray(
-      currentOffer.userOpportunity
-    )
-      ? currentOffer.userOpportunity.filter((userOpp) => {
-          return userOpp.status !== OFFER_STATUS[0].value;
-        })
-      : null;
+    const getUsersToShow = () => {
+      if (Array.isArray(currentOffer.userOpportunity)) {
+        if (selectedCandidateId) {
+          return [
+            getUserOpportunityFromOffer(currentOffer, selectedCandidateId),
+          ];
+        }
+        if (currentOffer.isPublic) {
+          return currentOffer.userOpportunity.filter((userOpp) => {
+            return userOpp.status !== OFFER_STATUS[0].value;
+          });
+        }
+        return currentOffer.userOpportunity;
+      }
+      return [currentOffer.userOpportunity];
+    };
+
+    const mutatedOfferStatus = [
+      {
+        ...OFFER_STATUS[0],
+        label: currentOffer.isPublic
+          ? OFFER_STATUS[0].alt
+          : OFFER_STATUS[0].label,
+      },
+      ...OFFER_STATUS.slice(1),
+    ];
 
     // view
     return (
@@ -276,72 +301,72 @@ const ModalOfferAdmin = ({
                 }`}
               >
                 <div className="uk-height-max-medium uk-overflow-auto">
-                  {(currentOffer.isPublic
-                    ? userOpportunitiesWithoutDefaultStatus
-                    : currentOffer.userOpportunity
-                  ).map((userOpp) => {
-                    const offerStatus = findOfferStatus(userOpp.status);
+                  {getUsersToShow().map((userOpp) => {
+                    if (userOpp.User) {
+                      const offerStatus = findOfferStatus(userOpp.status);
 
-                    return (
-                      <div
-                        key={userOpp.OpportunityId + userOpp.UserId}
-                        className="uk-flex uk-flex-column"
-                        style={{ marginTop: 5 }}
-                      >
-                        <SimpleLink
-                          as={`/backoffice/admin/membres/${userOpp.User.id}`}
-                          href="/backoffice/admin/membres/[id]"
-                          className="uk-link-muted"
-                          target="_blank"
+                      return (
+                        <div
+                          key={userOpp.OpportunityId + userOpp.User.id}
+                          className="uk-flex uk-flex-column"
+                          style={{ marginTop: 5 }}
                         >
-                          <span>
-                            {`${userOpp.User.firstName} ${userOpp.User.lastName}`}
-                            &nbsp;
-                          </span>
-                          <IconNoSSR name="link" ratio={0.8} />
-                        </SimpleLink>
-                        <div uk-form-custom="target: true">
-                          <select
-                            className="uk-select"
-                            onChange={(event) => {
-                              setLoading(true);
-                              const userOpportunity = userOpp;
-                              userOpportunity.status = Number(
-                                event.target.value
-                              );
-                              updateOpportunityUser(userOpportunity);
-                              setLoading(false);
-                            }}
-                            value={userOpp.status}
-                            style={{
-                              height: 'auto',
-                            }}
+                          <SimpleLink
+                            as={`/backoffice/admin/membres/${userOpp.User.id}`}
+                            href="/backoffice/admin/membres/[id]"
+                            className="uk-link-muted"
+                            target="_blank"
                           >
-                            {OFFER_STATUS.map((item, i) => {
-                              return (
-                                <option value={item.value} key={i}>
-                                  {item.label}
-                                </option>
-                              );
-                            })}
-                          </select>
-                          <div className="uk-flex uk-flex-middle">
-                            <span
-                              className={`uk-text-meta uk-text-${offerStatus.color}`}
-                            >
-                              {currentOffer.isPublic && offerStatus.alt
-                                ? offerStatus.alt
-                                : offerStatus.label}
+                            <span>
+                              {`${userOpp.User.firstName} ${userOpp.User.lastName}`}
+                              &nbsp;
                             </span>
-                            <IconNoSSR
-                              ratio={0.8}
-                              className="uk-margin-small-left uk-text-muted"
-                              name="triangle-down"
-                            />
+                            <IconNoSSR name="link" ratio={0.8} />
+                          </SimpleLink>
+                          <div uk-form-custom="target: true">
+                            <select
+                              className="uk-select"
+                              onChange={(event) => {
+                                setLoading(true);
+                                const userOpportunity = userOpp;
+                                userOpportunity.status = Number(
+                                  event.target.value
+                                );
+                                updateOpportunityUser(userOpportunity);
+                                setLoading(false);
+                              }}
+                              value={userOpp.status}
+                              style={{
+                                height: 'auto',
+                              }}
+                            >
+                              {mutatedOfferStatus.map((item, i) => {
+                                return (
+                                  <option value={item.value} key={i}>
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                            <div className="uk-flex uk-flex-middle">
+                              <span
+                                className={`uk-text-meta uk-text-${offerStatus.color}`}
+                              >
+                                {currentOffer.isPublic && offerStatus.alt
+                                  ? offerStatus.alt
+                                  : offerStatus.label}
+                              </span>
+                              <IconNoSSR
+                                ratio={0.8}
+                                className="uk-margin-small-left uk-text-muted"
+                                name="triangle-down"
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
+                      );
+                    }
+                    return undefined;
                   })}
                 </div>
               </OfferInfoContainer>
@@ -489,8 +514,10 @@ ModalOfferAdmin.propTypes = {
   }),
   setCurrentOffer: PropTypes.func.isRequired,
   navigateBackToList: PropTypes.func.isRequired,
+  selectedCandidateId: PropTypes.string,
 };
 ModalOfferAdmin.defaultProps = {
+  selectedCandidateId: undefined,
   currentOffer: { userOpportunity: {}, businessLines: [] },
 };
 
