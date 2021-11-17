@@ -4,7 +4,9 @@ import { IconNoSSR } from 'src/components/utils/Icon';
 
 import 'src/components/partials/HireCTA.less';
 import CVList from 'src/components/cv/CVList';
-import PostJobAdModal, { modalId } from 'src/components/modals/PostJobAdModal';
+import PostJobAdModal, {
+  modalPrefix as modalId,
+} from 'src/components/modals/PostJobAdModal';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 import { CV_FILTERS_DATA } from 'src/constants';
