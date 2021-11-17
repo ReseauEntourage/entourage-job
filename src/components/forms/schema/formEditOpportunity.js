@@ -24,6 +24,9 @@ export default {
       disable: (getValue) => {
         return getValue('isPublic') === true;
       },
+      hide: (getValue) => {
+        return getValue('isPublic') === true;
+      },
       loadOptions: (inputValue, callback) => {
         Api.get('api/v1/user/search/candidates', {
           params: {
@@ -48,6 +51,9 @@ export default {
       type: 'text',
       title: 'Message personnalisé pour le(s) candidat(s)',
       disable: (getValue) => {
+        return getValue('isPublic') === true;
+      },
+      hide: (getValue) => {
         return getValue('isPublic') === true;
       },
     },
@@ -84,14 +90,14 @@ export default {
       name: 'recruiterMail',
       component: 'input',
       type: 'email',
-      title: 'Adresse mail du recruteur*',
+      title: 'Votre adresse mail*',
     },
     {
       id: 'recruiterPhone',
       name: 'recruiterPhone',
       component: 'input',
       type: 'tel',
-      title: 'Téléphone du recruteur*',
+      title: 'Votre numéro de téléphone*',
     },
     {
       id: 'title',
@@ -156,21 +162,34 @@ export default {
       fieldsToReset: ['endOfContract'],
     },
     {
-      id: 'endOfContract',
-      name: 'endOfContract',
-      title: 'Date de fin de contrat',
-      component: 'datepicker',
-      min: moment().format('YYYY-MM-DD'),
-      disable: (getValue) => {
-        const contract = findContractType(getValue('contract'));
-        return !contract || !contract.end;
-      },
+      id: 'startEndContract',
+      component: 'fieldgroup',
+      fields: [
+        {
+          id: 'startOfContract',
+          name: 'startOfContract',
+          title: 'Date de début de contrat',
+          component: 'datepicker',
+          min: moment().format('YYYY-MM-DD'),
+        },
+        {
+          id: 'endOfContract',
+          name: 'endOfContract',
+          title: 'Date de fin de contrat',
+          component: 'datepicker',
+          min: moment().format('YYYY-MM-DD'),
+          disable: (getValue) => {
+            const contract = findContractType(getValue('contract'));
+            return !contract || !contract.end;
+          },
+        },
+      ],
     },
     {
       id: 'isPartTime',
       name: 'isPartTime',
       component: 'checkbox',
-      title: 'Contrat en temps partiel',
+      title: 'Temps partiel',
     },
     {
       id: 'numberOfPositions',
@@ -185,20 +204,20 @@ export default {
       name: 'beContacted',
       component: 'checkbox',
       title:
-        'Souhaitez-vous être contacté par un référent LinkedOut pour vous accompagner et échanger sur votre projet de recrutement inclusif\xa0?',
-    },
-    {
-      id: 'openNewForm',
-      name: 'openNewForm',
-      component: 'checkbox',
-      title: 'Créer une offre similaire après validation de cette offre',
+        "Souhaitez-vous qu'un référent LinkedOut échange avec vous sur votre projet de recrutement inclusif\xa0?",
     },
     {
       id: 'disclaimer',
       name: 'disclaimer',
       component: 'text',
       title:
-        "* Les offres font l'objet d'une validation par Entourage avant de devenir publiques",
+        "Les offres font l'objet d'une validation par LinkedOut avant d'être transmises aux candidats",
+    },
+    {
+      id: 'openNewForm',
+      name: 'openNewForm',
+      component: 'checkbox',
+      title: 'Créer une offre similaire après validation de cette offre',
     },
   ],
   rules: [
@@ -353,11 +372,33 @@ export default {
       message: 'Obligatoire',
     },
     {
+      field: 'startOfContract',
+      method: 'isBefore',
+      args: [moment().format('YYYY-MM-DD')],
+      validWhen: false,
+      message: "Date antérieure à aujourd'hui",
+    },
+    {
       field: 'endOfContract',
       method: 'isBefore',
       args: [moment().format('YYYY-MM-DD')],
       validWhen: false,
       message: "Date antérieure à aujourd'hui",
+    },
+    {
+      field: 'endOfContract',
+      method: (fieldValue, state) => {
+        return (
+          !!fieldValue &&
+          !!state.startOfContract &&
+          moment(fieldValue, 'YYYY-MM-DD').isBefore(
+            moment(state.startOfContract, 'YYYY-MM-DD')
+          )
+        );
+      },
+      args: [],
+      validWhen: false,
+      message: 'Date antérieure à la date de début',
     },
     {
       field: 'candidatesId',

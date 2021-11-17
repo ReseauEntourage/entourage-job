@@ -27,6 +27,7 @@ const Textarea = ({
   maxLength,
   value,
   disabled,
+  hidden,
 }) => {
   const [labelClass, setLabelClass] = useState('');
 
@@ -45,7 +46,11 @@ const Textarea = ({
   }, [name, onChange, prevValue, value]);
 
   return (
-    <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+    <div
+      className={`uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right ${
+        hidden ? ' uk-hidden' : ''
+      }`}
+    >
       <label className={`uk-form-label ${labelClass}`} htmlFor={id}>
         {title}
       </label>
@@ -83,6 +88,7 @@ Textarea.propTypes = {
   maxLength: PropTypes.number,
   value: PropTypes.string,
   disabled: PropTypes.bool,
+  hidden: PropTypes.bool,
 };
 
 Textarea.defaultProps = {
@@ -94,5 +100,6 @@ Textarea.defaultProps = {
   value: '',
   onChange: () => {},
   disabled: false,
+  hidden: false,
 };
 export default Textarea;

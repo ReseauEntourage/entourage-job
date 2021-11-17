@@ -132,6 +132,8 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 ...currentOffer,
                 ...fields,
                 message: fields.isPublic ? null : fields.message,
+                startOfContract: fields.startOfContract || null,
+                endOfContract: fields.endOfContract || null,
                 candidatesId:
                   !fields.isPublic && fields.candidatesId
                     ? fields.candidatesId.map((candidateId) => {
@@ -170,6 +172,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
             <ContractLabel
               contract={currentOffer.contract}
               endOfContract={currentOffer.endOfContract}
+              startOfContract={currentOffer.startOfContract}
             />
             <span className="uk-text-small">
               {currentOffer.numberOfPositions} poste
@@ -472,6 +475,7 @@ ModalOfferAdmin.propTypes = {
     skills: PropTypes.string,
     contract: PropTypes.string,
     endOfContract: PropTypes.string,
+    startOfContract: PropTypes.string,
     isPartTime: PropTypes.bool,
     recruiterFirstName: PropTypes.string,
     recruiterPosition: PropTypes.string,
