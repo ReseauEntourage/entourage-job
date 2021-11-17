@@ -1,4 +1,5 @@
 /* global UIkit */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
@@ -13,25 +14,24 @@ import { Grid, Img, SimpleLink } from 'src/components/utils';
 
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schema from 'src/components/forms/schema/formEditOpportunity';
-import Api from 'src/Axios';
 import ModalShareCV from 'src/components/modals/ModalShareCV';
 import Button from 'src/components/utils/Button';
-import {
-  formatParagraph,
-  mutateFormSchema,
-  sortExperiences,
-  sortReviews,
-} from 'src/utils';
+import { formatParagraph, sortExperiences, sortReviews } from 'src/utils';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
-import { useUpdateSharesCount } from 'src/hooks';
+import { usePostOpportunity, useUpdateSharesCount } from 'src/hooks';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import _ from 'lodash';
 
 /**
  * Le cv en public et en preview
  */
 const CVFiche = ({ cv, actionDisabled }) => {
   const updateSharesCount = useUpdateSharesCount();
+
+  const { lastFilledForm, postOpportunity, modalId } = usePostOpportunity(
+    'modal-send-opportunity'
+  );
 
   const router = useRouter();
   const hostname = process.env.SERVER_URL;
@@ -47,32 +47,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
   const title = candidateExists
     ? `LinkedOut\xa0: Aidez ${cv.user.candidat.firstName} à retrouver un emploi`
     : '';
-
-  // Modification du texte sur le champ des candidats
-  const mutatedSchema = mutateFormSchema(schema, [
-    {
-      fieldId: 'candidatesId',
-      props: [
-        {
-          propName: 'title',
-          value: `Ajouter d'autres candidats à qui adresser l'offre en plus de ${cv.user.candidat.firstName}`,
-        },
-      ],
-    },
-  ]);
-
-  const postOpportunity = async (opportunity, closeModal) => {
-    try {
-      await Api.post(`/api/v1/opportunity/`, opportunity);
-      closeModal();
-      UIkit.notification(
-        `Merci pour votre offre, ${cv.user.candidat.firstName} et son coach reviennent vers vous bientôt.`,
-        'success'
-      );
-    } catch (err) {
-      UIkit.notification(`Une erreur est survenue.`, 'danger');
-    }
-  };
 
   const openNewsletterModal = () => {
     return UIkit.modal(`#info-share-${cv.UserId}`).show();
@@ -177,49 +151,32 @@ const CVFiche = ({ cv, actionDisabled }) => {
           onClick={() => {
             return event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC);
           }}
-          toggle="target: #modal-send-opportunity"
+          toggle={`target: #${modalId}`}
         >
           Contactez-moi <IconNoSSR name="chevron-right" />
         </Button>
       </div>
       <div>
         <ModalEdit
-          id="modal-send-opportunity"
-          title={`Proposer une opportunité à ${cv.user.candidat.firstName}`}
+          id={modalId}
+          title="Proposer une opportunité à un candidat"
           description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
           submitText="Envoyer"
           defaultValues={{
             isPublic: false,
+            ...lastFilledForm,
+            candidatesId: _.isEmpty(lastFilledForm)
+              ? [
+                  {
+                    label: `${cv.user.candidat.firstName} ${cv.user.candidat.lastName}`,
+                    value: cv.UserId,
+                  },
+                ]
+              : lastFilledForm.candidatesId,
           }}
-          formSchema={mutatedSchema}
+          formSchema={schema}
           onSubmit={async (fields, closeModal) => {
-            const candidatesId = fields.candidatesId
-              ? fields.candidatesId.map((candidateId) => {
-                  return typeof candidateId === 'object'
-                    ? candidateId.value
-                    : candidateId;
-                })
-              : [];
-            if (!candidatesId.includes(cv.UserId)) {
-              candidatesId.push(cv.UserId);
-            }
-
-            if (fields.isPublic) {
-              event(TAGS.POPUP_OFFRE_ENVOYER_OFFRE_GENERALE_CLIC);
-            } else if (candidatesId.length > 1) {
-              event(TAGS.POPUP_OFFRE_ENVOYER_OFFRE_MULTIPLE_CLIC);
-            } else {
-              event(TAGS.POPUP_OFFRE_ENVOYER_OFFRE_UNIQUE_CLIC);
-            }
-
-            await postOpportunity(
-              {
-                ...fields,
-                candidatesId: fields.isPublic ? null : candidatesId,
-                date: Date.now(),
-              },
-              closeModal
-            );
+            await postOpportunity(fields, closeModal);
           }}
         />
       </div>

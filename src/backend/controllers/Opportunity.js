@@ -8,6 +8,7 @@ import {
 import { addToWorkQueue } from 'src/backend/jobs';
 
 import { cleanOpportunity } from 'src/backend/utils';
+import { findContractType } from 'src/utils';
 
 import moment from 'moment';
 import { Op } from 'sequelize';
@@ -41,10 +42,35 @@ const {
   User,
 } = models;
 
+const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
+  'id',
+  'updatedAt',
+  'createdAt',
+  'title',
+  'company',
+  'description',
+  'companyDescription',
+  'numberOfPositions',
+  'prerequisites',
+  'skills',
+  'contract',
+  'endOfContract',
+  'startOfContract',
+  'isPartTime',
+  'recruiterName',
+  'recruiterFirstName',
+  'recruiterPosition',
+  'isPublic',
+  'recruiterMail',
+  'date',
+  'department',
+  'message',
+];
+
 const INCLUDE_OPPORTUNITY_CANDIDATE = [
   {
     model: User,
-    attributes: ['id', 'email', 'firstName', 'lastName', 'gender'],
+    attributes: ['id', 'email', 'firstName', 'lastName', 'gender', 'zone'],
     include: [
       {
         model: User_Candidat,
@@ -54,7 +80,7 @@ const INCLUDE_OPPORTUNITY_CANDIDATE = [
           {
             model: User,
             as: 'coach',
-            attributes: ['id', 'email', 'firstName', 'lastName'],
+            attributes: ['id', 'email', 'firstName', 'lastName', 'zone'],
           },
         ],
       },
@@ -115,7 +141,15 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
     include: [
       {
         model: User,
-        attributes: ['id', 'email', 'firstName', 'lastName', 'gender', 'email'],
+        attributes: [
+          'id',
+          'email',
+          'firstName',
+          'lastName',
+          'gender',
+          'email',
+          'zone',
+        ],
         paranoid: false,
       },
     ],
@@ -174,13 +208,16 @@ const getAirtableOpportunityFields = (
 ) => {
   const commonFields = {
     OpportunityId: opportunity.id,
+    Entreprise: opportunity.company,
     Titre: opportunity.title,
     Nom: opportunity.recruiterName,
+    Prénom: opportunity.recruiterFirstName,
     Mail: opportunity.recruiterMail,
     Téléphone: opportunity.recruiterPhone,
-    Entreprise: opportunity.company,
-    Localisation: opportunity.location,
-    Description: opportunity.description,
+    Fonction: opportunity.recruiterPosition,
+    'Description poste': opportunity.description,
+    'Description entreprise': opportunity.companyDescription,
+    'Compétences requises': opportunity.skills,
     'Pré-requis': opportunity.prerequisites,
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
@@ -188,16 +225,27 @@ const getAirtableOpportunityFields = (
     Archivé: opportunity.isArchived,
     'Date de création': opportunity.createdAt,
     Département: opportunity.department,
+    Contrat: findContractType(opportunity.contract)?.label,
+    'Début de contrat': opportunity.startOfContract,
+    'Fin de contrat': opportunity.endOfContract,
+    'Temps partiel ?': opportunity.isPartTime,
+    'Nombre de postes': opportunity.numberOfPositions,
+    'Souhaite être recontacté': opportunity.beContacted,
+    'Message personnalisé': opportunity.message,
   };
 
   return candidates && candidates.length > 0
     ? [
         ...candidates.map((candidate) => {
+          const offerStatus = findOfferStatus(candidate.status);
           return {
             ...commonFields,
             OpportunityUserId: candidate.id,
             Candidat: `${candidate.User.firstName} ${candidate.User.lastName}`,
-            Statut: findOfferStatus(candidate.status).label,
+            Statut:
+              opportunity.isPublic && offerStatus.alt
+                ? offerStatus.alt
+                : offerStatus.label,
             Commentaire: candidate.note,
           };
         }),
@@ -218,35 +266,6 @@ const updateTable = async (opportunity, candidates) => {
     tableName: offerTable,
     fields,
   });
-};
-
-const getStringOpportunity = (opportunity, candidates, businessLines) => {
-  return (
-    `----------<br /><br />` +
-    `<strong>Titre :</strong> ${opportunity.title}<br />` +
-    `<strong>Nom du recruteur :</strong> ${opportunity.recruiterName}<br />` +
-    `<strong>Adresse mail du recruteur :</strong> ${opportunity.recruiterMail}<br />` +
-    `<strong>Téléphone du recruteur :</strong> ${opportunity.recruiterPhone}<br />` +
-    `<strong>Secteurs d'activité :</strong> ${
-      businessLines ? businessLines.join(', ') : ''
-    }<br />` +
-    `<strong>Entreprise :</strong> ${opportunity.company}<br />` +
-    `<strong>Addresse postale :</strong> ${opportunity.location}<br />` +
-    `<strong>Département :</strong> ${opportunity.department || ''}<br />` +
-    `<strong>Description :</strong> ${opportunity.description}<br />` +
-    `<strong>Pré-requis :</strong> ${opportunity.prerequisites || ''}` +
-    `${
-      !opportunity.isPublic && candidates && candidates.length > 0
-        ? `<br /><strong>Candidat${
-            candidates.length > 1 ? 's' : ''
-          } :</strong> ${candidates
-            .map((candidate) => {
-              return `${candidate.User.firstName} ${candidate.User.lastName}`;
-            })
-            .join(',')}`
-        : ''
-    }`
-  );
 };
 
 const createOpportunity = async (data, isAdmin) => {
@@ -321,7 +340,13 @@ const createOpportunity = async (data, isAdmin) => {
       toEmail: adminMails.companies,
       templateId: MAILJET_TEMPLATES.OFFER_TO_VALIDATE,
       variables: {
-        ..._.omitBy(cleanedOpportunity, _.isNil),
+        ..._.omitBy(
+          {
+            ...cleanedOpportunity,
+            contract: findContractType(cleanedOpportunity.contract)?.label,
+          },
+          _.isNil
+        ),
       },
     });
 
@@ -343,7 +368,13 @@ const createOpportunity = async (data, isAdmin) => {
       toEmail: finalOpportunity.recruiterMail,
       templateId: MAILJET_TEMPLATES.OFFER_SENT,
       variables: {
-        ..._.omitBy(cleanedOpportunity, _.isNil),
+        ..._.omitBy(
+          {
+            ...cleanedOpportunity,
+            contract: findContractType(cleanedOpportunity.contract)?.label,
+          },
+          _.isNil
+        ),
         candidates: candidatesString,
         businessLines: businessLinesString,
       },
@@ -500,6 +531,7 @@ const getAllUserOpportunities = async (userId, params = {}) => {
   });
 
   const opportunities = await Opportunity.findAll({
+    attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
     include: INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       [Op.or]: [
@@ -902,7 +934,13 @@ const updateOpportunity = async (opportunity) => {
             : candidat.User.email,
           templateId: MAILJET_TEMPLATES.OFFER_RECEIVED,
           variables: {
-            offer: _.omitBy(finalOpportunity, _.isNil),
+            offer: _.omitBy(
+              {
+                ...finalOpportunity,
+                contract: findContractType(finalOpportunity.contract)?.label,
+              },
+              _.isNil
+            ),
             candidat,
           },
         });
@@ -945,17 +983,34 @@ const updateOpportunity = async (opportunity) => {
           : listOfNames[0];
     }
 
+    const mailjetVariables = {
+      ..._.omitBy(
+        {
+          ...finalOpportunity,
+          contract: findContractType(finalOpportunity.contract)?.label,
+        },
+        _.isNil
+      ),
+      candidates: stringOfNames,
+      isPublicString: finalOpportunity.isPublic.toString(),
+      candidatesLength: finalOpportunity.userOpportunity.length,
+      businessLines: finalOpportunity.businessLines.join(', '),
+    };
+
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: finalOpportunity.recruiterMail,
       templateId: MAILJET_TEMPLATES.OFFER_VALIDATED,
-      variables: {
-        ..._.omitBy(finalOpportunity, _.isNil),
-        candidates: stringOfNames,
-        isPublicString: finalOpportunity.isPublic.toString(),
-        candidatesLength: finalOpportunity.userOpportunity.length,
-        businessLines: finalOpportunity.businessLines.join(', '),
-      },
+      variables: mailjetVariables,
+    });
+
+    const adminMails = getAdminMailsFromDepartment(finalOpportunity.department);
+
+    await addToWorkQueue({
+      type: JOBS.JOB_TYPES.SEND_MAIL,
+      toEmail: adminMails.candidates,
+      templateId: MAILJET_TEMPLATES.OFFER_VALIDATED_ADMIN,
+      variables: mailjetVariables,
     });
   }
 

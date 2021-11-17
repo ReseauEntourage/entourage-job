@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import FooterForm from 'src/components/utils/FooterForm';
 import FormValidator from 'src/components/forms/FormValidator';
 import GenericField from 'src/components/forms/GenericField';
+import FieldGroup from 'src/components/forms/fields/FieldGroup';
 
 /**
  * Permet de creer un formulaire avec la generation de ses champs et validations de champs
@@ -102,9 +103,18 @@ const FormWithValidation = forwardRef(
 
     const initializeForm = useCallback(() => {
       // on extrait les nom des champs
-      const fieldsId = fields.map((field) => {
-        return field.id;
-      });
+      const fieldsId = fields.reduce((acc, curr) => {
+        if (curr.component === 'fieldgroup') {
+          return [
+            ...acc,
+            ...curr.fields.map((field) => {
+              return field.id;
+            }),
+          ];
+        }
+        return [...acc, curr.id];
+      }, []);
+
       const validations = fieldsId.reduce((acc, value) => {
         acc[`valid_${value}`] = undefined;
         return acc;
@@ -144,6 +154,33 @@ const FormWithValidation = forwardRef(
       >
         <fieldset className="uk-fieldset">
           {fields.map((value, i) => {
+            if (value.component === 'fieldgroup') {
+              const { fields: childrenFields, title, id: childrenId } = value;
+              return (
+                <li key={i} hidden={!!value.hidden}>
+                  <FieldGroup
+                    id={childrenId}
+                    title={title}
+                    fields={childrenFields.map((field) => {
+                      return (
+                        <GenericField
+                          data={field}
+                          formId={id}
+                          value={fieldValues[field.id]}
+                          onChange={updateForm}
+                          getValid={(name) => {
+                            return fieldValidations[`valid_${name}`];
+                          }}
+                          getValue={(name) => {
+                            return fieldValues[name];
+                          }}
+                        />
+                      );
+                    })}
+                  />
+                </li>
+              );
+            }
             return (
               <li key={i} hidden={!!value.hidden}>
                 <GenericField

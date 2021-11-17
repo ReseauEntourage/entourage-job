@@ -12,7 +12,10 @@ const Input = ({
   value,
   onChange,
   disabled,
+  hidden,
   autocomplete,
+  min,
+  max,
 }) => {
   const [labelClass, setLabelClass] = useState('');
 
@@ -26,7 +29,11 @@ const Input = ({
   }, [value]);
 
   return (
-    <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+    <div
+      className={`uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right ${
+        hidden ? ' uk-hidden' : ''
+      }`}
+    >
       <label className={`uk-form-label ${labelClass}`} htmlFor={id}>
         {title}
       </label>
@@ -44,6 +51,8 @@ const Input = ({
         }`}
         disabled={disabled}
         autoComplete={autocomplete}
+        min={min}
+        max={max}
       />
       <FormValidatorErrorMessage validObj={valid} />
     </div>
@@ -63,7 +72,10 @@ Input.propTypes = {
   }),
   value: PropTypes.string,
   disabled: PropTypes.bool,
+  hidden: PropTypes.bool,
   autocomplete: PropTypes.string,
+  min: PropTypes.number,
+  max: PropTypes.number,
 };
 
 Input.defaultProps = {
@@ -71,6 +83,9 @@ Input.defaultProps = {
   valid: undefined,
   value: '',
   disabled: false,
+  hidden: false,
   autocomplete: 'on',
+  min: undefined,
+  max: undefined,
 };
 export default Input;

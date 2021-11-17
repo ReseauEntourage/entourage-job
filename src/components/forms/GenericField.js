@@ -3,7 +3,6 @@ import ReactSelect, { components } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
-import FieldGroup from 'src/components/forms/fields/FieldGroup';
 import DatePicker from 'src/components/forms/fields/DatePicker';
 import Select from 'src/components/forms/fields/Select';
 import Textarea from 'src/components/forms/fields/Textarea';
@@ -72,18 +71,6 @@ const GenericField = ({
     });
   };
 
-  if (data.component === 'fieldgroup') {
-    const { fields, title, id } = data;
-    return (
-      <FieldGroup
-        id={`${formId}-${id}`}
-        title={title}
-        fields={fields.map((field) => {
-          return this.generate(field);
-        })}
-      />
-    );
-  }
   if (data.component === 'input') {
     return (
       <Input
@@ -95,8 +82,11 @@ const GenericField = ({
         type={data.type}
         valid={getValid(data.name)}
         onChange={onChangeCustom}
-        disabled={data.disabled}
+        disabled={data.disable ? data.disable(getValue) : data.disabled}
+        hidden={data.hide ? data.hide(getValue) : data.hidden}
         autocomplete={data.autocomplete}
+        min={data.min}
+        max={data.max}
       />
     );
   }
@@ -112,7 +102,7 @@ const GenericField = ({
         min={data.min}
         max={data.max}
         disabled={data.disable ? data.disable(getValue) : data.disabled}
-        hidden={data.hidden}
+        hidden={data.hide ? data.hide(getValue) : data.hidden}
       />
     );
   }
@@ -152,7 +142,7 @@ const GenericField = ({
         valid={getValid(data.name)}
         onChange={onChangeCustom}
         disabled={data.disable ? data.disable(getValue) : data.disabled}
-        hidden={data.hidden}
+        hidden={data.hide ? data.hide(getValue) : data.hidden}
       />
     );
   }
@@ -168,7 +158,8 @@ const GenericField = ({
         placeholder={data.placeholder}
         valid={getValid(data.name)}
         onChange={onChangeCustom}
-        disabled={data.disabled}
+        disabled={data.disable ? data.disable(getValue) : data.disabled}
+        hidden={data.hide ? data.hide(getValue) : data.hidden}
       />
     );
   }
@@ -181,7 +172,8 @@ const GenericField = ({
         value={value}
         valid={getValid(data.name)}
         onChange={onChangeCustom}
-        disabled={data.disabled}
+        disabled={data.disable ? data.disable(getValue) : data.disabled}
+        hidden={data.hide ? data.hide(getValue) : data.hidden}
       />
     );
   }
@@ -205,7 +197,8 @@ const GenericField = ({
         value={value}
         valid={getValid(data.name)}
         onChange={onChangeCustom}
-        disabled={data.disabled}
+        disabled={data.disable ? data.disable(getValue) : data.disabled}
+        hidden={data.hide ? data.hide(getValue) : data.hidden}
       />
     );
   }
@@ -223,8 +216,14 @@ const GenericField = ({
       }
     }
 
+    const shouldHide = data.hide ? data.hide(getValue) : data.hidden;
+
     return (
-      <div className="uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+      <div
+        className={`uk-padding-small uk-padding-remove-left uk-padding-remove-right ${
+          shouldHide ? ' uk-hidden' : ''
+        }`}
+      >
         {data.title && (
           <label className="uk-form-label" htmlFor={data.id}>
             {data.title}
@@ -254,14 +253,22 @@ const GenericField = ({
             }, 1000);
           }}
           isDisabled={data.disable ? data.disable(getValue) : false}
+          isHidden={data.hide ? data.hide(getValue) : false}
           onChange={parseValueToReturnSelect}
         />
+        <FormValidatorErrorMessage validObj={getValid(data.name)} />
       </div>
     );
   }
   if (data.component === 'select-request') {
+    const shouldHide = data.hide ? data.hide(getValue) : data.hidden;
+
     return (
-      <div className="uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+      <div
+        className={`uk-padding-small uk-padding-remove-left uk-padding-remove-right ${
+          shouldHide ? ' uk-hidden' : ''
+        }`}
+      >
         {data.title && (
           <label className="uk-form-label" htmlFor={data.id}>
             {data.title}
@@ -283,6 +290,8 @@ const GenericField = ({
             })
           }
           onChange={parseValueToReturnSelect}
+          isDisabled={data.disable ? data.disable(getValue) : false}
+          isHidden={data.hide ? data.hide(getValue) : false}
         />
         <FormValidatorErrorMessage validObj={getValid(data.name)} />
       </div>
@@ -298,9 +307,14 @@ const GenericField = ({
     const customComponents = {
       DropdownIndicator: hasOptions ? DropdownIndicator : null,
     };
+    const shouldHide = data.hide ? data.hide(getValue) : data.hidden;
 
     return (
-      <div className="uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+      <div
+        className={`uk-padding-small uk-padding-remove-left uk-padding-remove-right ${
+          shouldHide ? ' uk-hidden' : ''
+        }`}
+      >
         {data.title && (
           <label className="uk-form-label" htmlFor={data.id}>
             {data.title}
@@ -329,6 +343,8 @@ const GenericField = ({
             })
           }
           onChange={parseValueToReturnSelect}
+          isDisabled={data.disable ? data.disable(getValue) : false}
+          isHidden={data.hide ? data.hide(getValue) : false}
         />
         <FormValidatorErrorMessage validObj={getValid(data.name)} />
       </div>

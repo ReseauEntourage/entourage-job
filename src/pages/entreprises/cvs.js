@@ -1,7 +1,9 @@
 import React from 'react';
 import { event } from 'src/lib/gtag';
 import { Button, Grid, Section } from 'src/components/utils';
-import PostJobAdModal, { modalId } from 'src/components/modals/PostJobAdModal';
+import PostJobAdModal, {
+  modalPrefix as modalId,
+} from 'src/components/modals/PostJobAdModal';
 import TAGS from 'src/constants/tags';
 import Layout from 'src/components/Layout';
 import ImageTitle from 'src/components/partials/ImageTitle';

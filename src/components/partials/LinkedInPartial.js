@@ -69,30 +69,29 @@ const LinkedInPartial = () => {
   return (
     <Section container="small" style="muted">
       <h2 className="uk-text-center uk-text-bold">
-        Quelle relation entre {linkedInStyled('black', 30)} et{' '}
-        {linkedOutStyled('black', 30)}
-        &nbsp;? Éclaircissements
+        Quelle relation entre LinkedIn et LinkedOut&nbsp;?{' '}
+        <span className="uk-text-primary">Éclaircissements</span>
       </h2>
       <div className="uk-margin-large-left uk-margin-large-right uk-margin-medium-top uk-text-justify">
         <p>
-          {linkedOutStyled('black')} est un dispositif lancé par l’association
-          Entourage en juillet 2019. Ce projet a pour mission de redonner un
-          réseau professionnel aux personnes exclues et en précarité, à travers
-          la diffusion massive de leur CV sur les réseaux sociaux pour générer
-          de la visibilité, et l’accompagnement par un coach bénévole jusqu’au
+          LinkedOut est un dispositif lancé par l’association Entourage en
+          juillet 2019. Ce projet a pour mission de redonner un réseau
+          professionnel aux personnes exclues et en précarité, à travers la
+          diffusion massive de leur CV sur les réseaux sociaux pour générer de
+          la visibilité, et l’accompagnement par un coach bénévole jusqu’au
           retour à l’emploi.
         </p>
         <p>
-          {linkedOutStyled('black')} est une marque appartenant à LinkedIn, dont
-          l’utilisation est autorisée de façon limitée par le biais d’une
-          licence. Toutefois, le réseau solidaire LinkedOut n’est pas développé
-          par {linkedInStyled('black')}, mais bien par l’association Entourage.
+          LinkedOut est une marque appartenant à LinkedIn, dont l’utilisation
+          est autorisée de façon limitée par le biais d’une licence. Toutefois,
+          le réseau solidaire LinkedOut n’est pas développé par LinkedIn, mais
+          bien par l’association Entourage.
         </p>
         <p>
-          {linkedInStyled('black')} soutient la mission et les valeurs
-          véhiculées par ce dispositif, et a contribué au lancement de ce projet
-          en ayant accordé une licence d’utilisation de sa marque{' '}
-          {linkedOutStyled('black')} à l’association Entourage.
+          LinkedIn soutient la mission et les valeurs véhiculées par ce
+          dispositif, et a contribué au lancement de ce projet en ayant accordé
+          une licence d’utilisation de sa marque LinkedOut à l’association
+          Entourage.
         </p>
       </div>
     </Section>

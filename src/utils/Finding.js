@@ -1,5 +1,5 @@
 import { ADMIN_ZONES, DEPARTMENTS } from 'src/constants/departements';
-import { OFFER_STATUS } from 'src/constants';
+import { CONTRACTS, OFFER_STATUS } from 'src/constants';
 
 const findOfferStatus = (status) => {
   const currentStatus = OFFER_STATUS.find((oStatus) => {
@@ -7,6 +7,12 @@ const findOfferStatus = (status) => {
   });
   if (currentStatus) return currentStatus;
   return { label: 'Non défini', color: 'muted' };
+};
+
+const findContractType = (type) => {
+  return CONTRACTS.find((contract) => {
+    return contract.value === type;
+  });
 };
 
 const getZoneSuffix = (zone) => {
@@ -28,4 +34,9 @@ const getAdminMailsFromDepartment = (dep) => {
   };
 };
 
-export { findOfferStatus, getAdminMailsFromDepartment, getZoneSuffix };
+export {
+  findOfferStatus,
+  getAdminMailsFromDepartment,
+  getZoneSuffix,
+  findContractType,
+};

@@ -10,6 +10,7 @@ import {
   getOpportunity,
 } from 'src/backend/controllers/Opportunity';
 import { JOBS, MAILJET_TEMPLATES } from 'src/constants';
+import { getZoneSuffix } from 'src/utils';
 import { addToWorkQueue } from './index';
 
 const sendMailBackground = async ({
@@ -32,14 +33,19 @@ const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {
     (!opportunity.userOpportunity.seen ||
       opportunity.userOpportunity.status < 0)
   ) {
-    const toEmail = {
-      to: opportunity.userOpportunity.User.email,
-      bcc: process.env.MAILJET_TO_EMAIL,
-    };
     const candidatData = opportunity.userOpportunity.User;
+
+    const toEmail = {
+      to: candidatData.email,
+      bcc: [
+        process.env[`ADMIN_CANDIDATES_${getZoneSuffix(candidatData.zone)}`],
+        process.env[`ADMIN_COMPANIES_${getZoneSuffix(candidatData.zone)}`],
+      ],
+    };
     if (candidatData.candidat && candidatData.candidat.coach) {
       toEmail.cc = candidatData.candidat.coach.email;
     }
+
     await sendMail({
       toEmail,
       templateId: MAILJET_TEMPLATES.OFFER_REMINDER,
@@ -48,7 +54,7 @@ const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {
         candidat: _.omitBy(candidatData, _.isNil),
       },
     });
-    return true;
+    return toEmail;
   }
   return false;
 };

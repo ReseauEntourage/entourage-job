@@ -21,7 +21,7 @@ const testimonies = [
     image: '/static/img/temoignage-candidat-amelie.jpg',
     author: 'Amélie',
     quote:
-      "C'est vraiment un bon dispositif. Nous ne sommes pas tout seul. Avec ma Coach, on ne parle pas simplement du travail, elle me donne des conseils. Je n’ai pas de famille ici, c'est des choses dont j'avais besoin. J'ai parcouru beaucoup les missions locales et d'autres dispositif et là c'est différent, vous êtes là.",
+      "C'est vraiment un bon dispositif. Avec mon coach, on ne parle pas simplement du travail, il me donne des conseils. Ce sont des choses dont j'avais besoin, surtout que je n'ai pas de famille ici. J'ai parcouru beaucoup d'autres dispositifs et là c'est différent, LinkedOut est très présent.",
   },
   {
     image: '/static/img/temoignage-candidat-lamin.jpg',

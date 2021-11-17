@@ -7,7 +7,12 @@ import {
 } from 'src/constants/departements';
 
 const OFFER_STATUS = [
-  { value: -1, label: 'Offre à traiter', color: 'muted' },
+  {
+    value: -1,
+    label: 'Offre à traiter',
+    alt: 'Offre consultée',
+    color: 'muted',
+  },
   { value: 0, label: 'Contacté', color: 'muted' },
   { value: 1, label: "Phase d'entretien", color: 'warning' },
   { value: 2, label: 'Embauche', color: 'success' },
@@ -347,6 +352,11 @@ const CONTRACTS = [
     end: true,
   },
   {
+    label: 'Alternance',
+    value: 'alt',
+    end: true,
+  },
+  {
     label: 'Intérim',
     value: 'inte',
     end: true,
@@ -357,13 +367,8 @@ const CONTRACTS = [
     end: true,
   },
   {
-    label: 'Alternance',
-    value: 'alt',
-    end: true,
-  },
-  {
-    label: 'Formation',
-    value: 'form',
+    label: 'Autre',
+    value: 'other',
     end: true,
   },
 ];
@@ -385,6 +390,7 @@ const EXTERNAL_LINKS = {
     'https://blog.linkedout.fr/2021/07/21/apres-la-voile-le-foot-linkedout-nouveau-partenaire-maillot-du-red-star-fc-avec-le-soutien-de-randstad/',
   TOOLBOX:
     'https://drive.google.com/drive/folders/1fUhZtsdaAElpjWsC6Rz4Jw5ZJ94vBnSd?usp=sharing',
+  RECRUITMENTS: 'https://www.welcometothejungle.com/fr/companies/entourage',
 };
 
 const NEWSLETTER_ORIGINS = {
@@ -451,14 +457,42 @@ const MAILJET_TEMPLATES = {
   CV_SUBMITTED: 3271289,
   PASSWORD_RESET: 3271976,
   CONTACT_FORM: 3272334,
-  HAS_BEEN_HIRED: 3275058,
+  STATUS_CHANGED: 3275058,
   OFFER_TO_VALIDATE: 3275461,
   OFFER_RECEIVED: 3275876,
   OFFER_SENT: 3276147,
   OFFER_VALIDATED: 3277863,
+  OFFER_VALIDATED_ADMIN: 3320744,
   OFFER_REMINDER: 3279365,
   OFFERS_RECAP: 3279701,
 };
+
+const HEARD_ABOUT = [
+  {
+    label: 'Par un de mes contacts',
+    value: 'contact',
+  },
+  {
+    label: 'Recherche internet',
+    value: 'search',
+  },
+  {
+    label: 'Publicité sur les réseaux sociaux',
+    value: 'socialAdd',
+  },
+  {
+    label: 'Autre publicité',
+    value: 'otherAdd',
+  },
+  {
+    label: 'Press',
+    value: 'press',
+  },
+  {
+    label: 'Autre',
+    value: 'other',
+  },
+];
 
 export {
   OFFER_STATUS,
@@ -483,4 +517,5 @@ export {
   ADMIN_ROLES,
   CONTRACTS,
   MAILJET_TEMPLATES,
+  HEARD_ABOUT,
 };

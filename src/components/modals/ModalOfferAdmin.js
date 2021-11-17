@@ -19,6 +19,7 @@ import { useRemoveModal, useResetForm } from 'src/hooks/utils';
 
 import { findOfferStatus, formatParagraph, mutateFormSchema } from 'src/utils';
 import { OFFER_STATUS } from 'src/constants';
+import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 
 const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
   if (!currentOffer) {
@@ -35,6 +36,19 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
       props: [
         {
           propName: 'hidden',
+          value: true,
+        },
+      ],
+    },
+    {
+      fieldId: 'openNewForm',
+      props: [
+        {
+          propName: 'hidden',
+          value: true,
+        },
+        {
+          propName: 'disabled',
           value: true,
         },
       ],
@@ -117,6 +131,9 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               const tmpOpportunity = {
                 ...currentOffer,
                 ...fields,
+                message: fields.isPublic ? null : fields.message,
+                startOfContract: fields.startOfContract || null,
+                endOfContract: fields.endOfContract || null,
                 candidatesId:
                   !fields.isPublic && fields.candidatesId
                     ? fields.candidatesId.map((candidateId) => {
@@ -135,6 +152,14 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
       );
     }
 
+    const userOpportunitiesWithoutDefaultStatus = Array.isArray(
+      currentOffer.userOpportunity
+    )
+      ? currentOffer.userOpportunity.filter((userOpp) => {
+          return userOpp.status !== OFFER_STATUS[0].value;
+        })
+      : null;
+
     // view
     return (
       <div>
@@ -144,20 +169,22 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               {currentOffer.title}
             </h3>
             <span>{translateCategory(currentOffer.isPublic)}</span>
-          </Grid>
-          <List className="uk-iconnav uk-grid-medium">
-            <ButtonIcon
-              name="pencil"
-              onClick={() => {
-                setIsEditing(true);
-              }}
+            <ContractLabel
+              contract={currentOffer.contract}
+              endOfContract={currentOffer.endOfContract}
+              startOfContract={currentOffer.startOfContract}
             />
-          </List>
-        </Grid>
-        <hr />
-        <Grid className="uk-margin-bottom" eachWidths={['1-3@s', '2-3@s']}>
-          <Grid column gap="medium">
-            <OfferInfoContainer>
+            <span className="uk-text-small">
+              {currentOffer.numberOfPositions} poste
+              {currentOffer.numberOfPositions > 1 ? 's' : ''} -{' '}
+              {currentOffer.isPartTime ? 'Temps partiel' : 'Temps plein'}
+            </span>
+            <span className="uk-text-italic uk-text-small">
+              offre soumise le {moment(currentOffer.date).format('DD/MM/YYYY')}
+            </span>
+          </Grid>
+          <div>
+            <div className="uk-margin-small-top uk-margin-small-bottom">
               {(() => {
                 let className = ' uk-label-warning';
                 let content = 'À valider';
@@ -171,12 +198,40 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 }
                 return <div className={`uk-label${className}`}>{content}</div>;
               })()}
-            </OfferInfoContainer>
-            <OfferInfoContainer icon="hashtag" title="Entreprise">
+            </div>
+            <List className="uk-iconnav uk-flex-right">
+              <ButtonIcon
+                name="pencil"
+                onClick={() => {
+                  setIsEditing(true);
+                }}
+              />
+            </List>
+          </div>
+        </Grid>
+        <hr />
+        {currentOffer.message && (
+          <>
+            <Grid>
+              <OfferInfoContainer icon="commenting">
+                <div>{formatParagraph(currentOffer.message)}</div>
+              </OfferInfoContainer>
+            </Grid>
+            <hr />
+          </>
+        )}
+        <Grid className="uk-margin-bottom" eachWidths={['1-3@s', '2-3@s']}>
+          <Grid column gap="medium">
+            <OfferInfoContainer icon="home" title="Entreprise">
               {currentOffer.company}
             </OfferInfoContainer>
             <OfferInfoContainer icon="user" title="Recruteur">
-              {currentOffer.recruiterName}
+              <span>
+                {currentOffer.recruiterFirstName} {currentOffer.recruiterName}
+              </span>
+              <span className="uk-text-muted">
+                {currentOffer.recruiterPosition}
+              </span>
               <SimpleLink
                 href={`mailto:${currentOffer.recruiterMail}`}
                 className="uk-link-muted"
@@ -201,14 +256,14 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 </span>
                 <IconNoSSR name="phone" ratio={0.8} />
               </SimpleLink>
-              <span className="uk-text-italic uk-text-small">
-                offre soumise le{' '}
-                {moment(currentOffer.date).format('DD/MM/YYYY')}
-              </span>
+              {currentOffer.beContacted && (
+                <span>Souhaite être recontacté</span>
+              )}
             </OfferInfoContainer>
-            <OfferInfoContainer icon="location" title={currentOffer.location}>
-              {currentOffer.department}
-            </OfferInfoContainer>
+            <OfferInfoContainer
+              icon="location"
+              title={currentOffer.department}
+            />
             {currentOffer.userOpportunity && (
               <OfferInfoContainer
                 icon="users"
@@ -217,7 +272,12 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 }`}
               >
                 <div className="uk-height-max-medium uk-overflow-auto">
-                  {currentOffer.userOpportunity.map((userOpp) => {
+                  {(currentOffer.isPublic
+                    ? userOpportunitiesWithoutDefaultStatus
+                    : currentOffer.userOpportunity
+                  ).map((userOpp) => {
+                    const offerStatus = findOfferStatus(userOpp.status);
+
                     return (
                       <div
                         key={userOpp.OpportunityId + userOpp.UserId}
@@ -263,11 +323,11 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                           </select>
                           <div className="uk-flex uk-flex-middle">
                             <span
-                              className={`uk-text-meta uk-text-${
-                                findOfferStatus(userOpp.status).color
-                              }`}
+                              className={`uk-text-meta uk-text-${offerStatus.color}`}
                             >
-                              {findOfferStatus(userOpp.status).label}
+                              {currentOffer.isPublic && offerStatus.alt
+                                ? offerStatus.alt
+                                : offerStatus.label}
                             </span>
                             <IconNoSSR
                               ratio={0.8}
@@ -284,8 +344,19 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
             )}
           </Grid>
           <Grid gap="medium" childWidths={['1-1']}>
-            <OfferInfoContainer icon="comment" title="Message">
+            {currentOffer.companyDescription && (
+              <OfferInfoContainer
+                icon="comment"
+                title="Description de l'entreprise"
+              >
+                <div>{formatParagraph(currentOffer.companyDescription)}</div>
+              </OfferInfoContainer>
+            )}
+            <OfferInfoContainer icon="comment" title="Description de l'offre">
               <div>{formatParagraph(currentOffer.description)}</div>
+            </OfferInfoContainer>
+            <OfferInfoContainer icon="check" title="Compétences importantes">
+              <div>{formatParagraph(currentOffer.skills)}</div>
             </OfferInfoContainer>
             {currentOffer.prerequisites && (
               <OfferInfoContainer icon="check" title="Pré-requis">
@@ -376,6 +447,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
 };
 ModalOfferAdmin.propTypes = {
   currentOffer: PropTypes.shape({
+    message: PropTypes.string,
     title: PropTypes.string,
     company: PropTypes.string,
     description: PropTypes.string,
@@ -393,12 +465,22 @@ ModalOfferAdmin.propTypes = {
     userOpportunity: PropTypes.arrayOf(
       PropTypes.shape({
         status: PropTypes.number,
-        bookmarked: PropTypes.string,
+        bookmarked: PropTypes.bool,
         note: PropTypes.string,
-        archived: PropTypes.string,
+        archived: PropTypes.bool,
         User: PropTypes.shape(),
       })
     ),
+    companyDescription: PropTypes.string,
+    skills: PropTypes.string,
+    contract: PropTypes.string,
+    endOfContract: PropTypes.string,
+    startOfContract: PropTypes.string,
+    isPartTime: PropTypes.bool,
+    recruiterFirstName: PropTypes.string,
+    recruiterPosition: PropTypes.string,
+    numberOfPositions: PropTypes.number,
+    beContacted: PropTypes.bool,
   }),
   setCurrentOffer: PropTypes.func.isRequired,
 };

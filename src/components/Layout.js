@@ -61,7 +61,11 @@ const Layout = ({
         <meta name="twitter:description" content={metaDescription} />
         <meta name="twitter:site" content="@R_Entourage" />
         <meta name="twitter:image" content={metaImage} />
-        {/* <meta name="fb:app_id" content="" /> */}
+        <meta name="fb:app_id" content={process.env.FB_APP_ID} />
+        <meta
+          name="facebook-domain-verification"
+          content={process.env.FB_DOMAIN_VERIFICATION}
+        />
       </Head>
       {!isPDF && (
         <UserContext.Consumer>

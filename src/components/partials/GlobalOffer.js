@@ -1,5 +1,7 @@
 import React from 'react';
-import PostJobAdModal, { modalId } from 'src/components/modals/PostJobAdModal';
+import PostJobAdModal, {
+  modalPrefix as modalId,
+} from 'src/components/modals/PostJobAdModal';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 

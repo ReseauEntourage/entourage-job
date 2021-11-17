@@ -141,7 +141,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           )}
         </Grid>
         <ExperienceList
-          pressDelay={100}
+          pressDelay={150}
           items={sortedExperiences}
           onSortEnd={onSortEnd}
           onChange={onChange}

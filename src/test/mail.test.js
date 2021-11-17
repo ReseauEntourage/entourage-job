@@ -17,6 +17,7 @@ describe('Mail', () => {
       email: faker.internet.email(),
       structure: faker.company.companyName(2),
       message: faker.lorem.paragraphs(3, '\n'),
+      heardAbout: faker.lorem.paragraphs(1),
     };
   });
   afterAll(async () => {
