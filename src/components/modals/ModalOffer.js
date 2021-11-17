@@ -139,6 +139,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
                 <ContractLabel
                   contract={currentOffer.contract}
                   endOfContract={currentOffer.endOfContract}
+                  startOfContract={currentOffer.startOfContract}
                 />
                 <span className="uk-text-small">
                   {currentOffer.numberOfPositions} poste
@@ -340,6 +341,7 @@ ModalOffer.propTypes = {
     skills: PropTypes.string,
     contract: PropTypes.string,
     endOfContract: PropTypes.string,
+    startOfContract: PropTypes.string,
     isPartTime: PropTypes.bool,
     recruiterName: PropTypes.string,
     recruiterFirstName: PropTypes.string,

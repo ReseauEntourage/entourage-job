@@ -26,7 +26,7 @@ const LesOpportunites = () => {
   const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
   const prevUser = usePrevious(user);
 
-  const { lastFilledForm, postOpportunity } = usePostOpportunity(
+  const { lastFilledForm, postOpportunity, modalId } = usePostOpportunity(
     'add-opportunity'
   );
 
@@ -88,7 +88,7 @@ const LesOpportunites = () => {
           title="Modération des offres d'emploi"
           description="Ici vous pouvez accéder à toutes les opportunités et valider les offres envoyées par les recruteurs !"
         >
-          <Button style="primary" toggle="target: #add-opportunity">
+          <Button style="primary" toggle={`target: #${modalId}`}>
             <IconNoSSR
               name="plus"
               ratio="0.8"
@@ -97,7 +97,7 @@ const LesOpportunites = () => {
             Nouvelle opportunité
           </Button>
           <ModalEdit
-            id="add-opportunity"
+            id={modalId}
             title="Ajouter une opportunité"
             submitText="Envoyer"
             formSchema={mutatedSchema}

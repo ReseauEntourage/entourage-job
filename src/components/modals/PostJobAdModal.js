@@ -5,10 +5,12 @@ import ModalEdit from 'src/components/modals/ModalEdit';
 import { usePostOpportunity } from 'src/hooks';
 
 const formId = 'post-job-ad';
-export const modalId = `modal-${formId}`;
+export const modalPrefix = `modal-${formId}`;
 
 const PostJobAdModal = () => {
-  const { lastFilledForm, postOpportunity } = usePostOpportunity(modalId);
+  const { lastFilledForm, postOpportunity, modalId } = usePostOpportunity(
+    modalPrefix
+  );
 
   const mutatedSchema = mutateFormSchema(
     schema,

@@ -12,6 +12,7 @@ const Input = ({
   value,
   onChange,
   disabled,
+  hidden,
   autocomplete,
   min,
   max,
@@ -28,7 +29,11 @@ const Input = ({
   }, [value]);
 
   return (
-    <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+    <div
+      className={`uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right ${
+        hidden ? ' uk-hidden' : ''
+      }`}
+    >
       <label className={`uk-form-label ${labelClass}`} htmlFor={id}>
         {title}
       </label>
@@ -67,6 +72,7 @@ Input.propTypes = {
   }),
   value: PropTypes.string,
   disabled: PropTypes.bool,
+  hidden: PropTypes.bool,
   autocomplete: PropTypes.string,
   min: PropTypes.number,
   max: PropTypes.number,
@@ -77,6 +83,7 @@ Input.defaultProps = {
   valid: undefined,
   value: '',
   disabled: false,
+  hidden: false,
   autocomplete: 'on',
   min: undefined,
   max: undefined,
