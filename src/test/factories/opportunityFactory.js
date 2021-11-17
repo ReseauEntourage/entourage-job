@@ -52,6 +52,7 @@ const generateOpportunity = async (props) => {
     skills: faker.lorem.paragraphs(3),
     contract: faker.lorem.words(2),
     endOfContract: faker.date.future(),
+    startOfContract: faker.date.future(),
     isPartTime: faker.random.boolean(),
     beContacted: faker.random.boolean(),
     numberOfPositions: faker.random.number(),

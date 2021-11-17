@@ -84,6 +84,10 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         type: DataTypes.STRING,
       },
+      startOfContract: {
+        allowNull: true,
+        type: DataTypes.DATEONLY,
+      },
       endOfContract: {
         allowNull: true,
         type: DataTypes.DATEONLY,

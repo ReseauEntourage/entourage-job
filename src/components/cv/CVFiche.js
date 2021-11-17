@@ -29,7 +29,7 @@ import _ from 'lodash';
 const CVFiche = ({ cv, actionDisabled }) => {
   const updateSharesCount = useUpdateSharesCount();
 
-  const { lastFilledForm, postOpportunity } = usePostOpportunity(
+  const { lastFilledForm, postOpportunity, modalId } = usePostOpportunity(
     'modal-send-opportunity'
   );
 
@@ -151,14 +151,14 @@ const CVFiche = ({ cv, actionDisabled }) => {
           onClick={() => {
             return event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC);
           }}
-          toggle="target: #modal-send-opportunity"
+          toggle={`target: #${modalId}`}
         >
           Contactez-moi <IconNoSSR name="chevron-right" />
         </Button>
       </div>
       <div>
         <ModalEdit
-          id="modal-send-opportunity"
+          id={modalId}
           title="Proposer une opportunité à un candidat"
           description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
           submitText="Envoyer"

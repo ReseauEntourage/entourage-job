@@ -2,9 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FormValidatorErrorMessage from 'src/components/forms/FormValidatorErrorMessage';
 
-const Checkbox = ({ id, name, value, onChange, title, valid, disabled }) => {
+const Checkbox = ({
+  id,
+  name,
+  value,
+  onChange,
+  title,
+  valid,
+  disabled,
+  hidden,
+}) => {
   return (
-    <div className="uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right">
+    <div
+      className={`uk-form-controls uk-padding-small uk-padding-remove-left uk-padding-remove-right ${
+        hidden ? ' uk-hidden' : ''
+      }`}
+    >
       <label htmlFor={id}>
         <input
           id={id}
@@ -30,6 +43,7 @@ Checkbox.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
+  hidden: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.bool,
   title: PropTypes.node.isRequired,
@@ -42,6 +56,7 @@ Checkbox.defaultProps = {
   valid: undefined,
   value: false,
   disabled: false,
+  hidden: false,
 };
 
 export default Checkbox;
