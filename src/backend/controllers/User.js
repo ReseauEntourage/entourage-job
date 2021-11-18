@@ -22,8 +22,8 @@ import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
 import {
   filterMembersByAssociatedUser,
   filterMembersByCVStatus,
-  getFiltersObjectsFromQueryParams,
   getMemberOptions,
+  getFiltersObjectsFromQueryParams,
 } from 'src/backend/utils/Filters';
 
 const { User, User_Candidat, CV, Opportunity_User, Revision } = models;

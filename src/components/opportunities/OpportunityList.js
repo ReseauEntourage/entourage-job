@@ -33,7 +33,7 @@ const OpportunityList = forwardRef(
   ) => {
     const {
       push,
-      query: { offerId: opportunityId },
+      query: { offerId: opportunityId, ...restQuery },
     } = useRouter();
 
     const { user } = useContext(UserContext);
@@ -174,8 +174,12 @@ const OpportunityList = forwardRef(
                       <SimpleLink
                         scroll={false}
                         className="uk-link-reset"
-                        as={`${currentPath.as}/${offer.id}`}
                         href={`${currentPath.href}/[offerId]`}
+                        as={{
+                          pathname: `${currentPath.as}/${offer.id}`,
+                          query: restQuery,
+                        }}
+                        /* href={`${currentPath.href}/[offerId]`} */
                       >
                         {isAdmin ? (
                           <OfferCard

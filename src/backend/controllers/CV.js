@@ -18,7 +18,7 @@ import {
 
 import _ from 'lodash';
 
-import { col, fn, QueryTypes } from 'sequelize';
+import { col, fn, Op, QueryTypes } from 'sequelize';
 import fs from 'fs';
 import puppeteer from 'puppeteer-core';
 import { PDFDocument } from 'pdf-lib';
@@ -168,7 +168,15 @@ const getPublishedCVQuery = (hideEmployed) => {
         and "CVs"."deletedAt" IS NULL
         and "User_Candidats"."candidatId" = "CVs"."UserId"
         and "User_Candidats".hidden = false
-       ${hideEmployed ? 'and "User_Candidats".employed = false' : ''}
+       ${
+         hideEmployed
+           ? `and (${hideEmployed[Op.or].map((value, index) => {
+               return `${
+                 index !== 0 ? 'or ' : ''
+               }"User_Candidats".employed = ${!value}`;
+             })})`
+           : ''
+       }
       group by
         "UserId", "employed")
     select

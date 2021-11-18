@@ -12,13 +12,7 @@ import sharp from 'sharp';
 
 import express from 'express';
 
-import {
-  CV_STATUS,
-  JOBS,
-  MAILJET_TEMPLATES,
-  NEWSLETTER_ORIGINS,
-  USER_ROLES,
-} from 'src/constants';
+import { CV_STATUS, JOBS, MAILJET_TEMPLATES, USER_ROLES } from 'src/constants';
 import { getZoneSuffix } from 'src/utils';
 import _ from 'lodash';
 

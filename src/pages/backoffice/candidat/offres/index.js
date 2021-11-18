@@ -25,7 +25,6 @@ const Opportunities = () => {
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
-  const [search, setSearch] = useState();
 
   const [candidatId, setCandidatId] = useState();
 
@@ -33,10 +32,14 @@ const Opportunities = () => {
   const {
     filters,
     setFilters,
+    search,
+    setSearch,
     numberOfResults,
     setNumberOfResults,
     resetFilters,
-  } = useFilters(candidateFilters);
+  } = useFilters(candidateFilters, undefined, {
+    href: '/backoffice/candidats/offres',
+  });
 
   const setCandidatZone = useCallback(
     (candidatZone) => {

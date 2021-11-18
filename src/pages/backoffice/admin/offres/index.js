@@ -43,8 +43,6 @@ const LesOpportunites = () => {
     adminMutation,
   ]);
 
-  const [search, setSearch] = useState();
-
   const opportunityListRef = useRef();
 
   const [tabFilters, setTabFilters] = useState(OFFER_ADMIN_FILTERS_DATA);
@@ -52,10 +50,14 @@ const LesOpportunites = () => {
   const {
     filters,
     setFilters,
+    search,
+    setSearch,
     numberOfResults,
     setNumberOfResults,
     resetFilters,
-  } = useFilters(OPPORTUNITY_FILTERS_DATA);
+  } = useFilters(OPPORTUNITY_FILTERS_DATA, undefined, {
+    href: '/backoffice/admin/offres',
+  });
 
   useEffect(() => {
     if (user && user !== prevUser) {

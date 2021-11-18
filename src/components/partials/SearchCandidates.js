@@ -9,15 +9,11 @@ import { useMount } from 'src/hooks/utils';
 import SearchBar from 'src/components/filters/SearchBar';
 
 const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
-  const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
-
-  const [search, setSearch] = useState();
-
-  const { getData, storeData } = useContext(DataContext);
-
   const {
     filters,
     setFilters,
+    search,
+    setSearch,
     numberOfResults,
     setNumberOfResults,
     resetFilters,
@@ -25,29 +21,9 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
     CV_FILTERS_DATA,
     defaultHideEmployed
       ? { [CV_FILTERS_DATA[0].key]: CV_FILTERS_DATA[0].constants }
-      : null
+      : null,
+    { href: '/candidats' }
   );
-
-  useMount(() => {
-    const storageItem = getData(
-      isCompany
-        ? STORAGE_KEYS.CV_FILTERS_COMPANY
-        : STORAGE_KEYS.CV_FILTERS_PUBLIC
-    );
-    if (storageItem) {
-      setFilters(storageItem);
-    }
-    setLoadingDefaultFilters(false);
-  });
-
-  useEffect(() => {
-    storeData(
-      isCompany
-        ? STORAGE_KEYS.CV_FILTERS_COMPANY
-        : STORAGE_KEYS.CV_FILTERS_PUBLIC,
-      filters
-    );
-  }, [isCompany, filters, storeData]);
 
   return (
     <Section style={style}>
@@ -78,13 +54,11 @@ const SearchCandidates = ({ defaultHideEmployed, style, isCompany }) => {
           setFilters={setFilters}
           placeholder="Chercher un secteur d’activité, une compétence, un profil..."
         />
-        {!loadingDefaultFilters && (
-          <CVList
-            search={search}
-            filters={filters}
-            updateNumberOfResults={setNumberOfResults}
-          />
-        )}
+        <CVList
+          search={search}
+          filters={filters}
+          updateNumberOfResults={setNumberOfResults}
+        />
       </Grid>
     </Section>
   );

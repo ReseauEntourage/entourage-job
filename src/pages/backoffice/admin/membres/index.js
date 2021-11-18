@@ -62,13 +62,11 @@ const MembersAdmin = () => {
   const prevUser = usePrevious(user);
 
   const [members, setMembers] = useState([]);
-  const [searchQuery, setSearchQuery] = useState();
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [allLoaded, setAllLoaded] = useState(false);
   const [offset, setOffset] = useState(0);
   const [filtersConst, setFiltersConst] = useState(MEMBER_FILTERS_DATA);
-  const prevSearchQuery = usePrevious(searchQuery);
 
   const {
     push,
@@ -82,10 +80,16 @@ const MembersAdmin = () => {
   const {
     filters,
     setFilters,
+    search,
+    setSearch,
     numberOfResults,
     setNumberOfResults,
     resetFilters,
-  } = useFilters(filtersConst);
+  } = useFilters(filtersConst, undefined, {
+    href: '/backoffice/admin/membres',
+  });
+
+  const prevSearch = usePrevious(search);
 
   useEffect(() => {
     if (!role) {
@@ -184,7 +188,7 @@ const MembersAdmin = () => {
             limit: LIMIT,
             offset: doReset ? 0 : offset,
             role,
-            query: searchQuery,
+            query: search,
             ...filtersToQueryParams(filters),
           },
         });
@@ -215,7 +219,7 @@ const MembersAdmin = () => {
         setLoading(false);
       }
     },
-    [filters, offset, role, searchQuery, setNumberOfResults]
+    [filters, offset, role, search, setNumberOfResults]
   );
 
   useEffect(() => {
@@ -223,7 +227,7 @@ const MembersAdmin = () => {
       !loadingDefaultFilters &&
       (loadingDefaultFilters !== prevLoadingDefaultFilters ||
         filters !== prevFilters ||
-        prevSearchQuery !== searchQuery)
+        prevSearch !== search)
     ) {
       fetchData(true);
     }
@@ -233,8 +237,8 @@ const MembersAdmin = () => {
     loadingDefaultFilters,
     prevFilters,
     prevLoadingDefaultFilters,
-    prevSearchQuery,
-    searchQuery,
+    prevSearch,
+    search,
   ]);
 
   return (
@@ -365,8 +369,8 @@ const MembersAdmin = () => {
                 filters={filters}
                 numberOfResults={numberOfResults}
                 resetFilters={resetFilters}
-                search={searchQuery}
-                setSearch={setSearchQuery}
+                search={search}
+                setSearch={setSearch}
                 setFilters={setFilters}
                 placeholder="Rechercher..."
               />

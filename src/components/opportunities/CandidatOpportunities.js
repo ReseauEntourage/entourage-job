@@ -6,15 +6,18 @@ import { useFilters } from 'src/hooks';
 import SearchBar from 'src/components/filters/SearchBar';
 
 const CandidatOpportunities = ({ candidatId }) => {
-  const [search, setSearch] = useState();
-
   const {
     filters,
     setFilters,
+    search,
+    setSearch,
     numberOfResults,
     setNumberOfResults,
     resetFilters,
-  } = useFilters(OPPORTUNITY_FILTERS_DATA);
+  } = useFilters(OPPORTUNITY_FILTERS_DATA, undefined, {
+    href: '/backoffice/admin/membres/[memberId]',
+    as: `/backoffice/admin/membres/${candidatId}`,
+  });
 
   return (
     <div>

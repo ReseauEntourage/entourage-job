@@ -65,6 +65,7 @@ SimpleLink.propTypes = {
   toggle: PropTypes.string,
 };
 SimpleLink.defaultProps = {
+  href: undefined,
   as: undefined,
   className: '',
   visible: undefined,

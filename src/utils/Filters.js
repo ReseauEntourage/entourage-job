@@ -90,11 +90,35 @@ const initializeFilters = (filtersConst, defaults) => {
 const filtersToQueryParams = (filters) => {
   const params = {};
   _.forEach(Object.keys(filters), (filter) => {
-    params[filter] = filters[filter].map((f) => {
-      return f.value;
-    });
+    params[filter] =
+      filters[filter].length > 0
+        ? filters[filter].map((f) => {
+            return f.value;
+          })
+        : undefined;
   });
   return params;
+};
+
+const getFiltersObjectsFromQueryParamsFront = (params, filtersConst) => {
+  const filters = {};
+  if (filtersConst) {
+    _.forEach(filtersConst, (filterConst) => {
+      if (params[filterConst.key] && params[filterConst.key] !== 'false') {
+        const value = params[filterConst.key];
+        if (Array.isArray(value)) {
+          filters[filterConst.key] = _.map(value, (val) => {
+            return { value: val };
+          });
+        } else {
+          filters[filterConst.key] = [{ value }];
+        }
+      } else {
+        filters[filterConst.key] = [];
+      }
+    });
+  }
+  return filters;
 };
 
 export {
@@ -104,4 +128,5 @@ export {
   findFilter,
   initializeFilters,
   filtersToQueryParams,
+  getFiltersObjectsFromQueryParamsFront,
 };

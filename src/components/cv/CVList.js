@@ -38,8 +38,10 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
   const [nbOfCVToDisplay, setNbOfCVToDisplay] = useState(defaultNbOfCVs);
 
   const displayMoreCVs = useCallback(() => {
-    return setNbOfCVToDisplay(nbOfCVToDisplay + INITIAL_NB_OF_CV_TO_DISPLAY);
-  }, [nbOfCVToDisplay]);
+    return setNbOfCVToDisplay((prevNbOfCVToDisplay) => {
+      return prevNbOfCVToDisplay + INITIAL_NB_OF_CV_TO_DISPLAY;
+    });
+  }, []);
 
   const prevSearch = usePrevious(search);
   const prevFilters = usePrevious(filters);
@@ -101,14 +103,10 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
   ]);
 
   useEffect(() => {
-    const hasFiltersActivated = Object.keys(filters).some((filter) => {
-      return filters[filter].length > 0;
-    });
-
-    if (hasFiltersActivated && cvs) {
+    if (cvs) {
       updateNumberOfResults(cvs.length);
     }
-  }, [cvs, filters, updateNumberOfResults]);
+  }, [cvs, updateNumberOfResults]);
 
   const renderCvList = (items) => {
     return (
@@ -147,8 +145,10 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
             <ButtonPost
               text="Voir plus"
               style="primary"
-              action={async () => {
-                displayMoreCVs();
+              action={() => {
+                setNbOfCVToDisplay((prevNbOfCV) => {
+                  return prevNbOfCV + INITIAL_NB_OF_CV_TO_DISPLAY;
+                });
               }}
             />
           </div>
