@@ -7,9 +7,7 @@ import { usePrevious } from 'src/hooks/utils';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 
-export function usePostOpportunity(modalPrefix) {
-  const modalId = `${modalPrefix}-${Date.now()}`;
-
+export function usePostOpportunity(modalId) {
   const [lastFilledForm, setLastFilledForm] = useState({});
 
   const prevLastFilledForm = usePrevious(lastFilledForm);
@@ -77,6 +75,5 @@ export function usePostOpportunity(modalPrefix) {
     setLastFilledForm,
     prevLastFilledForm,
     postOpportunity,
-    modalId,
   };
 }
