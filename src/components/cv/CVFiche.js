@@ -23,15 +23,15 @@ import { usePostOpportunity, useUpdateSharesCount } from 'src/hooks';
 import { IconNoSSR } from 'src/components/utils/Icon';
 import _ from 'lodash';
 
+const modalId = 'modal-send-opportunity';
+
 /**
  * Le cv en public et en preview
  */
 const CVFiche = ({ cv, actionDisabled }) => {
   const updateSharesCount = useUpdateSharesCount();
 
-  const { lastFilledForm, postOpportunity, modalId } = usePostOpportunity(
-    'modal-send-opportunity'
-  );
+  const { lastFilledForm, postOpportunity } = usePostOpportunity(modalId);
 
   const router = useRouter();
   const hostname = process.env.SERVER_URL;

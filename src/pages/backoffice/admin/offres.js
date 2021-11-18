@@ -21,14 +21,14 @@ import { usePrevious } from 'src/hooks/utils';
 import SearchBar from 'src/components/filters/SearchBar';
 import { IconNoSSR } from 'src/components/utils/Icon';
 
+const modalId = 'add-opportunity';
+
 const LesOpportunites = () => {
   const { user } = useContext(UserContext);
   const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
   const prevUser = usePrevious(user);
 
-  const { lastFilledForm, postOpportunity, modalId } = usePostOpportunity(
-    'add-opportunity'
-  );
+  const { lastFilledForm, postOpportunity } = usePostOpportunity(modalId);
 
   // desactivation du champ de disclaimer
   const mutatedSchema = mutateFormSchema(schema, [
