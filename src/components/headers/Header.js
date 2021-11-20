@@ -92,7 +92,13 @@ const Header = ({ isHome }) => {
               }),
               // separateurs en css .ent-nav
               <div className="uk-navbar-item uk-visible@m">
-                <Button href="/candidats" style="primary">
+                <Button
+                  href={{
+                    pathname: '/candidats',
+                    query: { hideEmployed: true },
+                  }}
+                  style="primary"
+                >
                   Découvrir les CV&nbsp;
                   <IconNoSSR name="chevron-right" />
                 </Button>
@@ -136,7 +142,7 @@ const Header = ({ isHome }) => {
           ]}
           <li className="uk-margin-small-top uk-flex uk-flex-center uk-padding-small">
             <Button
-              href="/candidats"
+              href={{ pathname: '/candidats', query: { hideEmployed: true } }}
               onClick={() => {
                 return UIkit.offcanvas('#offcanvas-guest').hide();
               }}

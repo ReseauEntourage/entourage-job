@@ -2,7 +2,6 @@
 import moment from 'moment';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { PropTypes } from 'prop-types';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { Grid, Section, SimpleLink } from 'src/components/utils';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';

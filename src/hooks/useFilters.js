@@ -1,16 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import {
   filtersToQueryParams,
   getFiltersObjectsFromQueryParamsFront,
-  initializeFilters,
 } from 'src/utils';
 import { useRouter } from 'next/router';
-import { useMount } from 'src/hooks/utils';
 import _ from 'lodash';
 
-export function useFilters(filtersData, defaults, path) {
-  const [numberOfResults, setNumberOfResults] = useState(0);
-
+export function useFilters(filtersData, path) {
   const {
     push,
     query: { search, ...params },
@@ -25,44 +21,9 @@ export function useFilters(filtersData, defaults, path) {
 
   const filters = getFiltersObjectsFromQueryParamsFront(params, filtersData);
 
-  console.log('filters from params', filters);
-
-  /* // TODO default params
-  useMount(() => {
-    console.log(search, Object.keys(params));
-    if (!search && Object.keys(params).length === 0) {
-      const query = {
-        ...params,
-        ..._.omitBy(
-          filtersToQueryParams(initializeFilters(filtersData, defaults)),
-          _.isNil
-        ),
-      };
-
-      push(
-        {
-          pathname: path.href,
-          query,
-        },
-        path.as
-          ? {
-              pathname: path.as,
-              query,
-            }
-          : undefined
-      );
-    }
-  }); */
-
   const resetFilters = useCallback(() => {
-    console.log('reset');
-
     const query = {
       ...otherParams,
-      ..._.omitBy(
-        filtersToQueryParams(initializeFilters(filtersData)),
-        _.isNil
-      ),
     };
 
     push(
@@ -75,9 +36,12 @@ export function useFilters(filtersData, defaults, path) {
             pathname: path.as,
             query,
           }
-        : undefined
+        : undefined,
+      {
+        shallow: true,
+      }
     );
-  }, [filtersData, otherParams, path.as, path.href, push]);
+  }, [otherParams, path.as, path.href, push]);
 
   const setFilters = useCallback(
     (updatedFilters) => {
@@ -99,7 +63,10 @@ export function useFilters(filtersData, defaults, path) {
               pathname: path.as,
               query,
             }
-          : undefined
+          : undefined,
+        {
+          shallow: true,
+        }
       );
     },
     [otherParams, path.as, path.href, push, search]
@@ -122,7 +89,10 @@ export function useFilters(filtersData, defaults, path) {
               pathname: path.as,
               query,
             }
-          : undefined
+          : undefined,
+        {
+          shallow: true,
+        }
       );
     },
     [params, path.as, path.href, push]
@@ -133,8 +103,6 @@ export function useFilters(filtersData, defaults, path) {
     setFilters,
     search,
     setSearch,
-    numberOfResults,
-    setNumberOfResults,
     resetFilters,
   };
 }

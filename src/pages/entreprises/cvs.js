@@ -23,7 +23,7 @@ const CVEntreprises = () => {
           </span>
         }
       />
-      <SearchCandidates style="muted" defaultHideEmployed isCompany />
+      <SearchCandidates style="muted" />
       <Section style="default">
         <div className="uk-flex uk-flex-middle uk-flex-center uk-flex-column">
           <h3 className="uk-text-bold uk-margin-medium-bottom">

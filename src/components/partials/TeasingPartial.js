@@ -10,7 +10,10 @@ import { IconNoSSR } from 'src/components/utils/Icon';
 const CountDown = ({ days, hours, minutes, seconds, completed }) => {
   if (completed) {
     return (
-      <Button href="/candidats" style="default">
+      <Button
+        href={{ pathname: '/candidats', query: { hideEmployed: true } }}
+        style="default"
+      >
         Découvrir les candidats
         <IconNoSSR name="chevron-right" />
       </Button>

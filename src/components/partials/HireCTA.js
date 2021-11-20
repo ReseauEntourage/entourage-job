@@ -39,6 +39,7 @@ const HireCTA = () => {
             </div>
           </div>
           <CVList
+            hideSearchBar
             nb={3}
             filters={{
               [CV_FILTERS_DATA[0].key]: CV_FILTERS_DATA[0].constants,

@@ -16,40 +16,37 @@ import { usePrevious } from 'src/hooks/utils';
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const router = useRouter();
+  const { push, asPath, pathname } = useRouter();
 
   const [user, setUser] = useState(null);
   const [isAuthentificated, setIsAuthentificated] = useState(false);
 
   const previousUser = usePrevious(user);
-  const previousChildren = usePrevious(children);
+  const previousPathname = usePrevious(pathname);
 
   const resetAndRedirect = useCallback(() => {
     localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     setIsAuthentificated(false);
     setUser(null);
-    router.push('/login');
-  }, [router]);
+    push('/login');
+  }, [push]);
 
   // la restriction devrait etre faite des le serveur !
   const restrictAccessByRole = useCallback(
     (role) => {
-      if (
-        router.asPath.includes('/backoffice/admin') &&
-        role !== USER_ROLES.ADMIN
-      ) {
-        router.push('/login');
+      if (pathname.includes('/backoffice/admin') && role !== USER_ROLES.ADMIN) {
+        push('/login');
       } else if (
-        router.asPath.includes('/backoffice/candidat') &&
+        pathname.includes('/backoffice/candidat') &&
         role === USER_ROLES.ADMIN
       ) {
-        router.push(
-          router.pathname.replace('candidat', 'admin'),
-          router.asPath.replace('candidat', 'admin')
+        push(
+          pathname.replace('candidat', 'admin'),
+          asPath.replace('candidat', 'admin')
         );
       }
     },
-    [router]
+    [asPath, pathname, push]
   );
 
   const logout = useCallback(async () => {
@@ -74,7 +71,7 @@ const UserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (children !== previousChildren) {
+    if (pathname !== previousPathname) {
       const accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
       if (accessToken) {
         Api.get('/api/v1/auth/current')
@@ -90,18 +87,17 @@ const UserProvider = ({ children }) => {
           });
       } else {
         console.log('no token');
-        if (router.asPath.includes('/backoffice')) {
+        if (pathname.includes('/backoffice')) {
           resetAndRedirect();
         }
       }
     }
   }, [
-    children,
-    previousChildren,
+    pathname,
+    previousPathname,
     previousUser,
     resetAndRedirect,
     restrictAccessByRole,
-    router.asPath,
     user,
   ]);
 

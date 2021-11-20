@@ -25,7 +25,7 @@ const FiltersDropdowns = ({
       const isFilterSelected = indexInSelectedFilters > -1;
 
       const onFilterClick = () => {
-        const updatedFilters = { ...filters };
+        const updatedFilters = JSON.parse(JSON.stringify(filters));
         if (isFilterSelected) {
           // remove filter
           updatedFilters[key].splice(indexInSelectedFilters, 1);

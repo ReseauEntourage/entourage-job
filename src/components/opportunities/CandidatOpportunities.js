@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
 import { OPPORTUNITY_FILTERS_DATA } from 'src/constants';
