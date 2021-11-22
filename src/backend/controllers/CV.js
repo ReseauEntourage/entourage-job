@@ -169,10 +169,10 @@ const getPublishedCVQuery = (employed) => {
         and "User_Candidats"."candidatId" = "CVs"."UserId"
         and "User_Candidats".hidden = false
        ${
-         employed
+         employed && employed[Op.or]
            ? `and (${employed[Op.or].map((value, index) => {
                return `${
-                 index !== 0 ? 'or ' : ''
+                 index > 0 ? 'or ' : ''
                }"User_Candidats".employed = ${value}`;
              })})`
            : ''

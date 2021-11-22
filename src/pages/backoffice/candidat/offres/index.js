@@ -8,7 +8,7 @@ import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { Section } from 'src/components/utils';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import Api from 'src/Axios';
-import Filter from 'src/components/utils/Filter';
+import FiltersTabs from 'src/components/utils/FiltersTabs';
 import {
   OFFER_CANDIDATE_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
@@ -126,10 +126,10 @@ const Opportunities = () => {
           <OpportunityError />
         ) : (
           <>
-            <Filter
+            <FiltersTabs
               loading={loading}
-              filters={tabFilters}
-              setFilters={setTabFilters}
+              tabFilters={tabFilters}
+              setTabFilters={setTabFilters}
               otherFilterComponent={
                 <SearchBar
                   filtersConstants={candidateFilters}
@@ -156,7 +156,7 @@ const Opportunities = () => {
                   updateNumberOfResults={setNumberOfResults}
                 />
               )}
-            </Filter>
+            </FiltersTabs>
           </>
         )}
       </Section>

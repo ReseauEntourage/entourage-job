@@ -203,8 +203,11 @@ const Member = ({ member, role }) => {
 
 Member.propTypes = {
   member: MemberPropTypes.isRequired,
-  role: PropTypes.oneOf(['All', USER_ROLES.CANDIDAT, USER_ROLES.COACH])
-    .isRequired,
+  role: PropTypes.oneOf(['All', USER_ROLES.CANDIDAT, USER_ROLES.COACH]),
+};
+
+Member.defaultProps = {
+  role: 'All',
 };
 
 const MemberList = ({
@@ -291,7 +294,7 @@ const MemberList = ({
 
   useDeepCompareEffect(() => {
     fetchData(search, filters, role, offset, true);
-  }, [search, filters]);
+  }, [search, filters, role]);
 
   return (
     <>

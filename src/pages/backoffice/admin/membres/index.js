@@ -29,12 +29,14 @@ const MembersAdmin = () => {
         if (user && user.zone) {
           params.zone = user.zone;
         }
-        push({
-          pathname: '/backoffice/admin/membres',
-          query: {
-            ...params,
+        push(
+          {
+            pathname: '/backoffice/admin/membres',
+            query: params,
           },
-        });
+          undefined,
+          { shallow: true }
+        );
       } else {
         setLoadingDefaultFilters(false);
       }

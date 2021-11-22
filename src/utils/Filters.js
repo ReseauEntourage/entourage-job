@@ -118,6 +118,19 @@ const getFiltersObjectsFromQueryParamsFront = (params, filtersConst) => {
   return filters;
 };
 
+const getFiltersTagsFromQueryParamsFront = (tag, filters) => {
+  const updatedFilters = JSON.parse(JSON.stringify(filters));
+  const filterToDeActivate = updatedFilters.find((filter) => {
+    return filter.active;
+  });
+  const filterToActivate = updatedFilters.find((filter) => {
+    return filter.tag === tag;
+  });
+  filterToDeActivate.active = false;
+  filterToActivate.active = true;
+  return updatedFilters;
+};
+
 export {
   getUserOpportunityFromOffer,
   getChildrenFilters,
@@ -126,4 +139,5 @@ export {
   initializeFilters,
   filtersToQueryParams,
   getFiltersObjectsFromQueryParamsFront,
+  getFiltersTagsFromQueryParamsFront,
 };

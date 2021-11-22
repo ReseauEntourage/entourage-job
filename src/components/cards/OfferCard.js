@@ -106,7 +106,7 @@ const OfferCard = ({
                       userOpportunity.map((userOpp) => {
                         return (
                           <div
-                            key={userOpp.OpportunityId + userOpp.UserId}
+                            key={userOpp.id + userOpp.UserId}
                             className="uk-flex uk-flex-column"
                             style={{ marginTop: 5 }}
                           >

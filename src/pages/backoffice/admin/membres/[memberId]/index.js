@@ -33,12 +33,14 @@ const CVPage = () => {
     if (memberId && !tab) {
       push(
         '/backoffice/admin/membres/[memberId]/[tab]',
-        `/backoffice/admin/membres/${memberId}/cv`
+        `/backoffice/admin/membres/${memberId}/cv`,
+        { shallow: true }
       );
     } else if (offerId && tab !== 'offres') {
       push(
         '/backoffice/admin/membres/[memberId]/[tab]',
-        `/backoffice/admin/membres/${memberId}/${tab}`
+        `/backoffice/admin/membres/${memberId}/${tab}`,
+        { shallow: true }
       );
     }
   }, [memberId, offerId, push, tab]);
@@ -232,6 +234,8 @@ const CVPage = () => {
       </LayoutBackOffice>
     );
   }
+
+  // TODO make back
 
   return (
     <LayoutBackOffice title={`${user.firstName} - Gestion des membres`}>

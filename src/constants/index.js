@@ -276,6 +276,9 @@ const OPPORTUNITY_FILTERS_DATA = [
   {
     key: 'department',
     constants: DEPARTMENTS_FILTERS,
+    priority: DEPARTMENTS_FILTERS.filter((dept) => {
+      return dept.zone !== ADMIN_ZONES.HZ;
+    }),
     title: 'Département',
   },
 ];
@@ -410,7 +413,6 @@ const REDIS_KEYS = {
 };
 
 const STORAGE_KEYS = {
-  MEMBERS_FILTERS: 'members-filters',
   ACCESS_TOKEN: 'access-token',
 };
 
