@@ -14,7 +14,7 @@ const CandidatOpportunities = ({ candidatId }) => {
     numberOfResults,
     setNumberOfResults,
     resetFilters,
-  } = useFilters(OPPORTUNITY_FILTERS_DATA, undefined, {
+  } = useFilters(OPPORTUNITY_FILTERS_DATA, {
     href: '/backoffice/admin/membres/[memberId]',
     as: `/backoffice/admin/membres/${candidatId}`,
   });

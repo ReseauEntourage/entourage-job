@@ -30,7 +30,7 @@ import { models, sequelize } from 'src/backend/db/models';
 import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import _ from 'lodash';
-import { getUser } from './User';
+import { getUser } from 'src/backend/controllers/User';
 
 const offerTable = process.env.AIRTABLE_OFFERS;
 const {

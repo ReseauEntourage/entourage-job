@@ -55,7 +55,7 @@ const LesOpportunites = () => {
     numberOfResults,
     setNumberOfResults,
     resetFilters,
-  } = useFilters(OPPORTUNITY_FILTERS_DATA, undefined, {
+  } = useFilters(OPPORTUNITY_FILTERS_DATA, {
     href: '/backoffice/admin/offres',
   });
 

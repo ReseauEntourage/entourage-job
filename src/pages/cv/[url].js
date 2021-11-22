@@ -55,7 +55,7 @@ const CVPage = ({ cv, exists, router, hideShareOptions }) => {
             <h4 className="uk-margin-medium-bottom">
               Soutenez un autre candidat&nbsp;:
               <SimpleLink
-                href={{ pathname: '/candidats', query: { hideEmployed: true } }}
+                href={{ pathname: '/candidats', query: { employed: false } }}
                 className="uk-text-bold"
               >
                 {' '}
@@ -71,7 +71,7 @@ const CVPage = ({ cv, exists, router, hideShareOptions }) => {
             />
             <Grid middle column gap="collapse">
               <Button
-                href={{ pathname: '/candidats', query: { hideEmployed: true } }}
+                href={{ pathname: '/candidats', query: { employed: false } }}
                 style="secondary"
                 className="uk-margin-large-top"
               >

@@ -93,7 +93,7 @@ const getFiltersObjectsFromQueryParamsFront = (params, filtersConst) => {
   const filters = {};
   if (filtersConst) {
     _.forEach(filtersConst, (filterConst) => {
-      if (params[filterConst.key] && params[filterConst.key] !== 'false') {
+      if (params[filterConst.key]) {
         const value = params[filterConst.key];
         if (Array.isArray(value)) {
           filters[filterConst.key] = [

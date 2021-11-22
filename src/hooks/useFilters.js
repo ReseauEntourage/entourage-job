@@ -19,6 +19,8 @@ export function useFilters(filtersData, path) {
     })
   );
 
+  console.log('Other Params ', otherParams);
+
   const filters = getFiltersObjectsFromQueryParamsFront(params, filtersData);
 
   const resetFilters = useCallback(() => {

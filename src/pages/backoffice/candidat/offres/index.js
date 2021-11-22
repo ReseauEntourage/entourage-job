@@ -37,7 +37,7 @@ const Opportunities = () => {
     numberOfResults,
     setNumberOfResults,
     resetFilters,
-  } = useFilters(candidateFilters, undefined, {
+  } = useFilters(candidateFilters, {
     href: '/backoffice/candidats/offres',
   });
 

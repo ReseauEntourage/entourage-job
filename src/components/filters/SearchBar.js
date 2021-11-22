@@ -37,7 +37,7 @@ const SearchBar = ({
   }, [searchBuffer, setSearch, startSearchEvent]);
 
   return (
-    <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-medium-bottom">
+    <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-small-bottom">
       <div
         style={{ maxWidth: MAX_WIDTH }}
         className="uk-width-expand ent-search-bar"

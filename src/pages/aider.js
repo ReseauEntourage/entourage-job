@@ -35,7 +35,7 @@ const Aider = () => {
           </p>
           <div className="uk-flex-center uk-flex uk-flex-middle">
             <Button
-              href={{ pathname: '/candidats', query: { hideEmployed: true } }}
+              href={{ pathname: '/candidats', query: { employed: false } }}
               style="secondary"
             >
               Partager un CV <IconNoSSR name="chevron-right" />

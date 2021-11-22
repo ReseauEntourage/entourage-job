@@ -12,7 +12,9 @@ const FiltersCheckboxes = ({
 }) => {
   return (
     <div
-      className={`uk-flex uk-flex-middle ${hideOnMobile ? 'uk-visible@m' : ''}`}
+      className={`uk-flex uk-flex-middle ${
+        hideOnMobile ? 'uk-visible@m' : ''
+      } uk-margin-small-bottom`}
     >
       {filterData.map(({ title, constants, key, tag, type, disabled }) => {
         if (filters[key]) {
@@ -31,9 +33,11 @@ const FiltersCheckboxes = ({
                     style={{ marginTop: 2 }}
                     type="checkbox"
                     className="uk-checkbox uk-margin-small-left"
-                    checked={filters[key].length > 0}
+                    checked={filters[key].length > 0 && !filters[key][0].value}
                     onChange={(e) => {
-                      const updatedFilters = { ...filters };
+                      const updatedFilters = JSON.parse(
+                        JSON.stringify(filters)
+                      );
                       updatedFilters[key] = e.target.checked
                         ? [constants[0]]
                         : [];

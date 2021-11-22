@@ -95,7 +95,7 @@ const Header = ({ isHome }) => {
                 <Button
                   href={{
                     pathname: '/candidats',
-                    query: { hideEmployed: true },
+                    query: { employed: false },
                   }}
                   style="primary"
                 >
@@ -142,7 +142,7 @@ const Header = ({ isHome }) => {
           ]}
           <li className="uk-margin-small-top uk-flex uk-flex-center uk-padding-small">
             <Button
-              href={{ pathname: '/candidats', query: { hideEmployed: true } }}
+              href={{ pathname: '/candidats', query: { employed: false } }}
               onClick={() => {
                 return UIkit.offcanvas('#offcanvas-guest').hide();
               }}

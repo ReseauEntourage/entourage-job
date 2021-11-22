@@ -60,7 +60,7 @@ const DiscoverPartial = ({ style }) => {
       <div className="uk-flex uk-flex-center">
         <Button
           style="primary"
-          href={{ pathname: '/candidats', query: { hideEmployed: true } }}
+          href={{ pathname: '/candidats', query: { employed: false } }}
           className="uk-margin-large-top"
         >
           Voir tous les candidats <IconNoSSR name="chevron-right" />

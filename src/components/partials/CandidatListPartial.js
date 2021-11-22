@@ -83,7 +83,7 @@ const CandidatListPartial = () => {
         <CVList hideSearchBar nb={INITIAL_NB_OF_CV_TO_DISPLAY} />
         <Grid middle column gap="collapse">
           <Button
-            href={{ pathname: '/candidats', query: { hideEmployed: true } }}
+            href={{ pathname: '/candidats', query: { employed: false } }}
             style="secondary"
           >
             Voir tous les candidats <IconNoSSR name="chevron-right" />

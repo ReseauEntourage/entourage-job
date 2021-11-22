@@ -2,8 +2,8 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { Offcanvas } from 'src/components/utils';
-import FiltersDropdowns from './FiltersDropdowns';
-import FiltersCheckboxes from './FiltersCheckboxes';
+import FiltersDropdowns from 'src/components/filters/FiltersDropdowns';
+import FiltersCheckboxes from 'src/components/filters/FiltersCheckboxes';
 
 const FiltersSideBar = ({ filterData, filters, setFilters }) => {
   return (

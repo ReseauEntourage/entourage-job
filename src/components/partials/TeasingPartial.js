@@ -11,7 +11,7 @@ const CountDown = ({ days, hours, minutes, seconds, completed }) => {
   if (completed) {
     return (
       <Button
-        href={{ pathname: '/candidats', query: { hideEmployed: true } }}
+        href={{ pathname: '/candidats', query: { employed: false } }}
         style="default"
       >
         Découvrir les candidats
