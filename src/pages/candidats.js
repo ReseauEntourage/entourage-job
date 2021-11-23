@@ -8,7 +8,7 @@ import CandidateTestimoniesOrientation from 'src/components/partials/CandidateTe
 const Candidats = () => {
   return (
     <Layout title="Les candidats - LinkedOut">
-      <SearchCandidates defaultHideEmployed />
+      <SearchCandidates />
       <ShareCandidatesCVTutorial />
       <CandidateTestimoniesOrientation style="default" />
     </Layout>

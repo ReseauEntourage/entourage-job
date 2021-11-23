@@ -12,6 +12,7 @@ const Button = ({
   style,
   size,
   href,
+  as,
   disabled,
   widths,
   children,
@@ -20,6 +21,8 @@ const Button = ({
   newTab,
   onClick,
   toggle,
+  shallow,
+  scroll,
 }) => {
   let classBuffer = 'uk-button';
   if (visible) classBuffer += ` uk-visible@${visible}`;
@@ -51,7 +54,9 @@ const Button = ({
         {buttonComponent}
       </a>
     ) : (
-      <Link href={href}>{buttonComponent}</Link>
+      <Link href={href} as={as} shallow={shallow} scroll={scroll}>
+        {buttonComponent}
+      </Link>
     );
   }
   return buttonComponent;
@@ -61,7 +66,14 @@ Button.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
-  href: PropTypes.string,
+  href: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({ pathname: PropTypes.string, query: PropTypes.shape() }),
+  ]),
+  as: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({ pathname: PropTypes.string, query: PropTypes.shape() }),
+  ]),
   disabled: PropTypes.bool,
   visible: PropTypes.oneOf(UIKIT_SCREENS),
   style: PropTypes.oneOf(UIKIT_BUTTON_STYLES_SPEC),
@@ -72,19 +84,24 @@ Button.propTypes = {
   className: PropTypes.string,
   onClick: PropTypes.func,
   toggle: PropTypes.string,
+  shallow: PropTypes.bool,
+  scroll: PropTypes.bool,
 };
 Button.defaultProps = {
   disabled: false,
+  shallow: false,
   visible: undefined,
   style: undefined,
   size: undefined,
   href: undefined,
+  as: undefined,
   widths: [],
   isExternal: false,
   newTab: false,
   className: undefined,
   onClick: () => {},
   toggle: undefined,
+  scroll: false,
 };
 
 export default Button;

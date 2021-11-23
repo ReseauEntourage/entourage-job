@@ -18,7 +18,7 @@ import {
 
 import _ from 'lodash';
 
-import { col, fn, QueryTypes } from 'sequelize';
+import { col, fn, Op, QueryTypes } from 'sequelize';
 import fs from 'fs';
 import puppeteer from 'puppeteer-core';
 import { PDFDocument } from 'pdf-lib';
@@ -153,7 +153,7 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE = [
   INCLUDE_ALL_USERS_PRIVATE,
 ];
 
-const getPublishedCVQuery = (hideEmployed) => {
+const getPublishedCVQuery = (employed) => {
   return `
     /* CV par recherche */
 
@@ -168,7 +168,15 @@ const getPublishedCVQuery = (hideEmployed) => {
         and "CVs"."deletedAt" IS NULL
         and "User_Candidats"."candidatId" = "CVs"."UserId"
         and "User_Candidats".hidden = false
-       ${hideEmployed ? 'and "User_Candidats".employed = false' : ''}
+       ${
+         employed && employed[Op.or]
+           ? `and (${employed[Op.or].map((value, index) => {
+               return `${
+                 index > 0 ? 'or ' : ''
+               }"User_Candidats".employed = ${value}`;
+             })})`
+           : ''
+       }
       group by
         "UserId", "employed")
     select
@@ -549,14 +557,11 @@ const getCVs = async () => {
 };
 
 const getAndCacheAllCVs = async (dbQuery, cache, options = {}) => {
-  const { hideEmployed, ...restOptions } = options;
+  const { employed, ...restOptions } = options;
 
-  const cvs = await sequelize.query(
-    dbQuery || getPublishedCVQuery(hideEmployed),
-    {
-      type: QueryTypes.SELECT,
-    }
-  );
+  const cvs = await sequelize.query(dbQuery || getPublishedCVQuery(employed), {
+    type: QueryTypes.SELECT,
+  });
 
   const cvList = await models.CV.findAll({
     where: {
@@ -641,10 +646,10 @@ const getRandomShortCVs = async (nb, query, params) => {
       modelCVs = await getAndCacheAllCVs(getPublishedCVQuery(), true);
     }
   } else {
-    const { hideEmployed, ...restOptions } = options;
+    const { employed, ...restOptions } = options;
     const dbQuery = escapedQuery
       ? `
-      with publishedCVs as (${getPublishedCVQuery(hideEmployed)})
+      with publishedCVs as (${getPublishedCVQuery(employed)})
       SELECT cvSearches."CVId" as id
       FROM "CV_Searches" cvSearches
         INNER JOIN publishedCVs on cvSearches."CVId" = publishedCVs."id"
@@ -675,10 +680,7 @@ const getRandomShortCVs = async (nb, query, params) => {
           };
           const newOptions = getCVOptions(newFiltersObj);
 
-          const {
-            hideEmployed: newHideEmployed,
-            ...newRestOptions
-          } = newOptions;
+          const { employed: newEmployed, ...newRestOptions } = newOptions;
 
           const filteredOtherCvs = await getAndCacheAllCVs(
             dbQuery,

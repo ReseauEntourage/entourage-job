@@ -4,50 +4,51 @@ import 'static/css/styles.less';
 import 'static/css/Forms.less';
 import 'static/css/Toggle.less';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Router, { useRouter } from 'next/router';
 import * as Sentry from '@sentry/react';
 import UserProvider from 'src/components/store/UserProvider';
 import DataProvider from 'src/components/store/DataProvider';
-import SessionProvider, {
-  SessionContext,
-} from 'src/components/store/SessionProvider';
+
 import SharesCountProvider from 'src/components/store/SharesCountProvider';
 
 import * as gtag from 'src/lib/gtag';
 import SplashScreen from 'src/components/SplashScreen';
+import { useMount } from 'src/hooks/utils';
 
 Sentry.init({
   enabled: process.env.NODE_ENV === 'production',
   dsn: process.env.SENTRY_DSN,
 });
 
-const Container = ({ Component, pageProps, err }) => {
+const SplashScreenContainer = ({ loading, fading }) => {
   const router = useRouter();
 
+  return !router.asPath.includes('/pdf/') ? (
+    <div
+      style={{ height: '100vh', zIndex: 9999 }}
+      className={`${loading ? 'uk-visible' : 'uk-hidden'} ${
+        fading ? 'uk-animation-fade uk-animation-reverse' : ''
+      } uk-position-cover uk-background-default`}
+    >
+      <SplashScreen />
+    </div>
+  ) : undefined;
+};
+
+const Container = ({ Component, pageProps, err }) => {
   const [loading, setLoading] = useState(true);
   const [fading, setFading] = useState(false);
 
-  const { isFirstLoad, setIsFirstLoad } = useContext(SessionContext);
-
-  useEffect(() => {
-    /*
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-      }
-    */
-
+  useMount(() => {
     Router.events.on('routeChangeComplete', (url) => {
-      if (isFirstLoad) {
-        setIsFirstLoad(false);
-      }
       gtag.pageview(url);
-      window.scrollTo(0, 0);
+      /* window.scrollTo(0, 0); */
     });
     setTimeout(() => {
       setFading(true);
     }, 1000);
-  }, [isFirstLoad, setIsFirstLoad]);
+  });
 
   useEffect(() => {
     if (fading) {
@@ -63,16 +64,7 @@ const Container = ({ Component, pageProps, err }) => {
       className="uk-inline uk-width-expand uk-overflow-hidden"
     >
       <Component {...pageProps} err={err} />
-      {!router.asPath.includes('/pdf/') && (
-        <div
-          style={{ height: '100vh', zIndex: 9999 }}
-          className={`${loading ? 'uk-visible' : 'uk-hidden'} ${
-            fading ? 'uk-animation-fade uk-animation-reverse' : ''
-          } uk-position-cover uk-background-default`}
-        >
-          <SplashScreen />
-        </div>
-      )}
+      <SplashScreenContainer loading={loading} fading={fading} />
     </div>
   );
 };
@@ -80,19 +72,13 @@ const Container = ({ Component, pageProps, err }) => {
 const EntourageApp = ({ Component, pageProps, err }) => {
   return (
     <Sentry.ErrorBoundary fallback="An error has occurred">
-      <SessionProvider>
-        <SharesCountProvider>
-          <DataProvider>
-            <UserProvider>
-              <Container
-                Component={Component}
-                pageProps={pageProps}
-                err={err}
-              />
-            </UserProvider>
-          </DataProvider>
-        </SharesCountProvider>
-      </SessionProvider>
+      <SharesCountProvider>
+        <DataProvider>
+          <UserProvider>
+            <Container Component={Component} pageProps={pageProps} err={err} />
+          </UserProvider>
+        </DataProvider>
+      </SharesCountProvider>
     </Sentry.ErrorBoundary>
   );
 };

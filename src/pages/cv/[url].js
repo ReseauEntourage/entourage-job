@@ -54,12 +54,16 @@ const CVPage = ({ cv, exists, router, hideShareOptions }) => {
             </h4>
             <h4 className="uk-margin-medium-bottom">
               Soutenez un autre candidat&nbsp;:
-              <SimpleLink href="/candidats" className="uk-text-bold">
+              <SimpleLink
+                href={{ pathname: '/candidats', query: { employed: false } }}
+                className="uk-text-bold"
+              >
                 {' '}
                 partagez son CV&nbsp;!
               </SimpleLink>
             </h4>
             <CVList
+              hideSearchBar
               nb={3}
               filters={{
                 [CV_FILTERS_DATA[0].key]: CV_FILTERS_DATA[0].constants,
@@ -67,7 +71,7 @@ const CVPage = ({ cv, exists, router, hideShareOptions }) => {
             />
             <Grid middle column gap="collapse">
               <Button
-                href="/candidats"
+                href={{ pathname: '/candidats', query: { employed: false } }}
                 style="secondary"
                 className="uk-margin-large-top"
               >

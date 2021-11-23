@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import Api from 'src/Axios';
 import schema, {
   adminMutation,
@@ -10,21 +9,24 @@ import { Button, CloseButton, Grid, SimpleLink } from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import { IconNoSSR } from 'src/components/utils/Icon';
 
-import {
-  List,
-  OfferInfoContainer,
-  translateCategory,
-} from 'src/components/modals/ModalOffer';
+import { List, OfferInfoContainer } from 'src/components/modals/ModalOffer';
 import { useRemoveModal, useResetForm } from 'src/hooks/utils';
 
-import { findOfferStatus, formatParagraph, mutateFormSchema } from 'src/utils';
+import {
+  findOfferStatus,
+  formatParagraph,
+  getUserOpportunityFromOffer,
+  mutateFormSchema,
+} from 'src/utils';
 import { OFFER_STATUS } from 'src/constants';
-import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
+import ModalOfferInfo from 'src/components/modals/ModalOfferInfo';
 
-const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
-  if (!currentOffer) {
-    currentOffer = { userOpportunity: [], businessLines: [] };
-  }
+const ModalOfferAdmin = ({
+  currentOffer,
+  setCurrentOffer,
+  navigateBackToList,
+  selectedCandidateId,
+}) => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -86,6 +88,10 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
     setError(false);
     setIsEditing(false);
   }, [currentOffer]);
+
+  if (!currentOffer) {
+    return null;
+  }
 
   const contentBuilder = () => {
     // error
@@ -152,37 +158,48 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
       );
     }
 
-    const userOpportunitiesWithoutDefaultStatus = Array.isArray(
-      currentOffer.userOpportunity
-    )
-      ? currentOffer.userOpportunity.filter((userOpp) => {
-          return userOpp.status !== OFFER_STATUS[0].value;
-        })
-      : null;
+    const getUsersToShow = () => {
+      if (Array.isArray(currentOffer.userOpportunity)) {
+        if (selectedCandidateId) {
+          return [
+            getUserOpportunityFromOffer(currentOffer, selectedCandidateId),
+          ];
+        }
+        if (currentOffer.isPublic) {
+          return currentOffer.userOpportunity.filter((userOpp) => {
+            return userOpp.status !== OFFER_STATUS[0].value;
+          });
+        }
+        return currentOffer.userOpportunity;
+      }
+      return [currentOffer.userOpportunity];
+    };
+
+    const mutatedOfferStatus = [
+      {
+        ...OFFER_STATUS[0],
+        label: currentOffer.isPublic
+          ? OFFER_STATUS[0].alt
+          : OFFER_STATUS[0].label,
+      },
+      ...OFFER_STATUS.slice(1),
+    ];
 
     // view
     return (
       <div>
         <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
-          <Grid gap="collapse" column>
-            <h3 className="uk-text-bold uk-margin-remove-bottom">
-              {currentOffer.title}
-            </h3>
-            <span>{translateCategory(currentOffer.isPublic)}</span>
-            <ContractLabel
-              contract={currentOffer.contract}
-              endOfContract={currentOffer.endOfContract}
-              startOfContract={currentOffer.startOfContract}
-            />
-            <span className="uk-text-small">
-              {currentOffer.numberOfPositions} poste
-              {currentOffer.numberOfPositions > 1 ? 's' : ''} -{' '}
-              {currentOffer.isPartTime ? 'Temps partiel' : 'Temps plein'}
-            </span>
-            <span className="uk-text-italic uk-text-small">
-              offre soumise le {moment(currentOffer.date).format('DD/MM/YYYY')}
-            </span>
-          </Grid>
+          <ModalOfferInfo
+            startOfContract={currentOffer.startOfContract}
+            isPublic={currentOffer.isPublic}
+            numberOfPositions={currentOffer.numberOfPositions}
+            contract={currentOffer.contract}
+            date={currentOffer.date}
+            title={currentOffer.title}
+            isPartTime={currentOffer.isPartTime}
+            endOfContract={currentOffer.endOfContract}
+            offerId={currentOffer.id}
+          />
           <div>
             <div className="uk-margin-small-top uk-margin-small-bottom">
               {(() => {
@@ -272,72 +289,72 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
                 }`}
               >
                 <div className="uk-height-max-medium uk-overflow-auto">
-                  {(currentOffer.isPublic
-                    ? userOpportunitiesWithoutDefaultStatus
-                    : currentOffer.userOpportunity
-                  ).map((userOpp) => {
-                    const offerStatus = findOfferStatus(userOpp.status);
+                  {getUsersToShow().map((userOpp) => {
+                    if (userOpp.User) {
+                      const offerStatus = findOfferStatus(userOpp.status);
 
-                    return (
-                      <div
-                        key={userOpp.OpportunityId + userOpp.UserId}
-                        className="uk-flex uk-flex-column"
-                        style={{ marginTop: 5 }}
-                      >
-                        <SimpleLink
-                          as={`/backoffice/admin/membres/${userOpp.User.id}`}
-                          href="/backoffice/admin/membres/[id]"
-                          className="uk-link-muted"
-                          target="_blank"
+                      return (
+                        <div
+                          key={userOpp.OpportunityId + userOpp.User.id}
+                          className="uk-flex uk-flex-column"
+                          style={{ marginTop: 5 }}
                         >
-                          <span>
-                            {`${userOpp.User.firstName} ${userOpp.User.lastName}`}
-                            &nbsp;
-                          </span>
-                          <IconNoSSR name="link" ratio={0.8} />
-                        </SimpleLink>
-                        <div uk-form-custom="target: true">
-                          <select
-                            className="uk-select"
-                            onChange={(event) => {
-                              setLoading(true);
-                              const userOpportunity = userOpp;
-                              userOpportunity.status = Number(
-                                event.target.value
-                              );
-                              updateOpportunityUser(userOpportunity);
-                              setLoading(false);
-                            }}
-                            value={userOpp.status}
-                            style={{
-                              height: 'auto',
-                            }}
+                          <SimpleLink
+                            as={`/backoffice/admin/membres/${userOpp.User.id}`}
+                            href="/backoffice/admin/membres/[id]"
+                            className="uk-link-muted"
+                            target="_blank"
                           >
-                            {OFFER_STATUS.map((item, i) => {
-                              return (
-                                <option value={item.value} key={i}>
-                                  {item.label}
-                                </option>
-                              );
-                            })}
-                          </select>
-                          <div className="uk-flex uk-flex-middle">
-                            <span
-                              className={`uk-text-meta uk-text-${offerStatus.color}`}
-                            >
-                              {currentOffer.isPublic && offerStatus.alt
-                                ? offerStatus.alt
-                                : offerStatus.label}
+                            <span>
+                              {`${userOpp.User.firstName} ${userOpp.User.lastName}`}
+                              &nbsp;
                             </span>
-                            <IconNoSSR
-                              ratio={0.8}
-                              className="uk-margin-small-left uk-text-muted"
-                              name="triangle-down"
-                            />
+                            <IconNoSSR name="link" ratio={0.8} />
+                          </SimpleLink>
+                          <div uk-form-custom="target: true">
+                            <select
+                              className="uk-select"
+                              onChange={(event) => {
+                                setLoading(true);
+                                const userOpportunity = userOpp;
+                                userOpportunity.status = Number(
+                                  event.target.value
+                                );
+                                updateOpportunityUser(userOpportunity);
+                                setLoading(false);
+                              }}
+                              value={userOpp.status}
+                              style={{
+                                height: 'auto',
+                              }}
+                            >
+                              {mutatedOfferStatus.map((item, i) => {
+                                return (
+                                  <option value={item.value} key={i}>
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                            <div className="uk-flex uk-flex-middle">
+                              <span
+                                className={`uk-text-meta uk-text-${offerStatus.color}`}
+                              >
+                                {currentOffer.isPublic && offerStatus.alt
+                                  ? offerStatus.alt
+                                  : offerStatus.label}
+                              </span>
+                              <IconNoSSR
+                                ratio={0.8}
+                                className="uk-margin-small-left uk-text-muted"
+                                name="triangle-down"
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
+                      );
+                    }
+                    return undefined;
                   })}
                 </div>
               </OfferInfoContainer>
@@ -438,6 +455,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
               setIsEditing(false);
             }
             resetForm();
+            navigateBackToList();
           }}
         />
         <div className="uk-modal-body">{contentBuilder()}</div>
@@ -447,6 +465,7 @@ const ModalOfferAdmin = ({ currentOffer, setCurrentOffer }) => {
 };
 ModalOfferAdmin.propTypes = {
   currentOffer: PropTypes.shape({
+    id: PropTypes.string,
     message: PropTypes.string,
     title: PropTypes.string,
     company: PropTypes.string,
@@ -483,8 +502,11 @@ ModalOfferAdmin.propTypes = {
     beContacted: PropTypes.bool,
   }),
   setCurrentOffer: PropTypes.func.isRequired,
+  navigateBackToList: PropTypes.func.isRequired,
+  selectedCandidateId: PropTypes.string,
 };
 ModalOfferAdmin.defaultProps = {
+  selectedCandidateId: undefined,
   currentOffer: { userOpportunity: {}, businessLines: [] },
 };
 

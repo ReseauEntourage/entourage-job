@@ -10,6 +10,8 @@ import { CV_FILTERS_DATA, INITIAL_NB_OF_CV_TO_DISPLAY } from 'src/constants';
 import PostJobAdModal from 'src/components/modals/PostJobAdModal';
 import SimpleLink from 'src/components/utils/SimpleLink';
 import { usePrevious } from 'src/hooks/utils';
+import useDeepCompareEffect from 'use-deep-compare-effect';
+import SearchBar from 'src/components/filters/SearchBar';
 
 const NoCVInThisArea = () => {
   return (
@@ -29,29 +31,36 @@ const NoCVInThisArea = () => {
   );
 };
 
-const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
+const CVList = ({
+  hideSearchBar,
+  nb,
+  search,
+  filters,
+  setFilters,
+  setSearch,
+  resetFilters,
+}) => {
+  const [numberOfResults, setNumberOfResults] = useState(0);
+
   const [cvs, setCVs] = useState(undefined);
+  const [loading, setLoading] = useState(false);
   const [hasSuggestions, setHasSuggestions] = useState(false);
 
   const [error, setError] = useState(undefined);
   const defaultNbOfCVs = nb || INITIAL_NB_OF_CV_TO_DISPLAY;
   const [nbOfCVToDisplay, setNbOfCVToDisplay] = useState(defaultNbOfCVs);
 
-  const displayMoreCVs = useCallback(() => {
-    return setNbOfCVToDisplay(nbOfCVToDisplay + INITIAL_NB_OF_CV_TO_DISPLAY);
-  }, [nbOfCVToDisplay]);
-
-  const prevSearch = usePrevious(search);
-  const prevFilters = usePrevious(filters);
-  const prevNbOfCVToDisplay = usePrevious(nbOfCVToDisplay);
+  const cvsLength = cvs?.length;
+  const prevCVsLength = usePrevious(cvsLength);
 
   const fetchData = useCallback(
-    (isPagination) => {
+    (searchValue, filtersValue, nbOfCVToDisplayValue, isPagination) => {
+      setLoading(true);
       Api.get(`/api/v1/cv/cards/random`, {
         params: {
-          q: search,
-          nb: nbOfCVToDisplay,
-          ...filtersToQueryParams(filters),
+          q: searchValue,
+          nb: nbOfCVToDisplayValue,
+          ...filtersToQueryParams(filtersValue),
         },
       })
         .then(({ data }) => {
@@ -72,43 +81,30 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
         .catch((err) => {
           console.error(err);
           setError('Impossible de récupérer les CVs.');
+        })
+        .finally(() => {
+          setLoading(false);
         });
     },
-    [filters, nbOfCVToDisplay, search]
+    []
   );
 
-  useEffect(() => {
-    if (search !== prevSearch || filters !== prevFilters) {
+  useDeepCompareEffect(() => {
+    if (nbOfCVToDisplay > defaultNbOfCVs) {
       setError(undefined);
-      setCVs(undefined);
-      fetchData();
-    } else if (
-      nbOfCVToDisplay !== prevNbOfCVToDisplay &&
-      nbOfCVToDisplay > defaultNbOfCVs
-    ) {
+      fetchData(search, filters, nbOfCVToDisplay, true);
+    } else {
       setError(undefined);
-      fetchData(true);
+      setLoading(true);
+      fetchData(search, filters, nbOfCVToDisplay);
     }
-  }, [
-    defaultNbOfCVs,
-    fetchData,
-    filters,
-    nbOfCVToDisplay,
-    prevFilters,
-    prevNbOfCVToDisplay,
-    prevSearch,
-    search,
-  ]);
+  }, [fetchData, search, filters, nbOfCVToDisplay]);
 
   useEffect(() => {
-    const hasFiltersActivated = Object.keys(filters).some((filter) => {
-      return filters[filter].length > 0;
-    });
-
-    if (hasFiltersActivated && cvs) {
-      updateNumberOfResults(cvs.length);
+    if (cvsLength !== prevCVsLength) {
+      setNumberOfResults(cvsLength);
     }
-  }, [cvs, filters, updateNumberOfResults]);
+  }, [cvsLength, prevCVsLength, setNumberOfResults]);
 
   const renderCvList = (items) => {
     return (
@@ -148,7 +144,9 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
               text="Voir plus"
               style="primary"
               action={async () => {
-                displayMoreCVs();
+                return setNbOfCVToDisplay((prevNbOfCV) => {
+                  return prevNbOfCV + INITIAL_NB_OF_CV_TO_DISPLAY;
+                });
               }}
             />
           </div>
@@ -157,70 +155,99 @@ const CVList = ({ nb, search, filters, updateNumberOfResults }) => {
     );
   };
 
-  if (error) {
-    return <p className="uk-text-center uk-text-italic">{error}</p>;
-  }
-
-  if (cvs && filters) {
-    if (hasSuggestions) {
+  const getContent = () => {
+    if (loading) {
       return (
-        <div>
-          <p className="uk-text-center uk-text-italic">
-            Nous n’avons aucun résultat pour votre recherche. Voici d’autres
-            candidats dans la zone géographique sélectionnée qui pourraient
-            correspondre.
-          </p>
-          <p className="uk-text-center uk-text-italic uk-margin-medium-bottom">
-            Vous êtes recruteur&nbsp;?{' '}
-            <a
-              style={{
-                textDecoration: 'underline',
-              }}
-              className="uk-link-text"
-              data-uk-toggle="#modal-offer-add-search"
-            >
-              Publier une offre d’emploi
-            </a>{' '}
-            qui sera visible par tous les candidats LinkedOut, certains
-            pourraient être intéressés&nbsp;!{' '}
-          </p>
-          {renderCvList(cvs)}
-          <PostJobAdModal />
+        <div className="uk-text-center">
+          <div data-uk-spinner />
         </div>
       );
     }
 
-    if (cvs.length <= 0) {
-      if (
-        filters &&
-        filters[CV_FILTERS_DATA[1].key] &&
-        filters[CV_FILTERS_DATA[1].key].length > 0
-      ) {
-        return <NoCVInThisArea />;
-      }
-      return <p className="uk-text-center uk-text-italic">Aucun CV trouvé</p>;
+    if (error) {
+      return <p className="uk-text-center uk-text-italic">{error}</p>;
     }
-    return renderCvList(cvs);
-  }
+
+    if (cvs && filters) {
+      if (hasSuggestions) {
+        return (
+          <div>
+            <p className="uk-text-center uk-text-italic">
+              Nous n’avons aucun résultat pour votre recherche. Voici d’autres
+              candidats dans la zone géographique sélectionnée qui pourraient
+              correspondre.
+            </p>
+            <p className="uk-text-center uk-text-italic uk-margin-medium-bottom">
+              Vous êtes recruteur&nbsp;?{' '}
+              <a
+                style={{
+                  textDecoration: 'underline',
+                }}
+                className="uk-link-text"
+                data-uk-toggle="#modal-offer-add-search"
+              >
+                Publier une offre d’emploi
+              </a>{' '}
+              qui sera visible par tous les candidats LinkedOut, certains
+              pourraient être intéressés&nbsp;!{' '}
+            </p>
+            {renderCvList(cvs)}
+            <PostJobAdModal />
+          </div>
+        );
+      }
+
+      if (cvs.length <= 0) {
+        if (
+          filters &&
+          filters[CV_FILTERS_DATA[1].key] &&
+          filters[CV_FILTERS_DATA[1].key].length > 0
+        ) {
+          return <NoCVInThisArea />;
+        }
+        return <p className="uk-text-center uk-text-italic">Aucun CV trouvé</p>;
+      }
+      return renderCvList(cvs);
+    }
+  };
 
   return (
-    <div className="uk-text-center">
-      <div data-uk-spinner />
-    </div>
+    <>
+      {!hideSearchBar && (
+        <SearchBar
+          filtersConstants={CV_FILTERS_DATA}
+          filters={filters}
+          numberOfResults={numberOfResults}
+          resetFilters={resetFilters}
+          search={search}
+          setSearch={setSearch}
+          setFilters={setFilters}
+          placeholder="Chercher un secteur d’activité, une compétence, un profil..."
+        />
+      )}
+
+      {getContent()}
+    </>
   );
 };
 
 CVList.propTypes = {
+  hideSearchBar: PropTypes.bool,
   nb: PropTypes.number,
   search: PropTypes.string,
   filters: PropTypes.shape(),
-  updateNumberOfResults: PropTypes.func,
+  setFilters: PropTypes.func,
+  setSearch: PropTypes.func,
+  resetFilters: PropTypes.func,
 };
 
 CVList.defaultProps = {
   nb: undefined,
   search: undefined,
   filters: {},
-  updateNumberOfResults: () => {},
+  hideSearchBar: false,
+  setFilters: () => {},
+  setSearch: () => {},
+  resetFilters: () => {},
 };
 export default CVList;

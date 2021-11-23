@@ -4,7 +4,7 @@
 // store/UserProvider.js
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import Api from 'src/Axios';
 import { STORAGE_KEYS, USER_ROLES } from 'src/constants';
 import { usePrevious } from 'src/hooks/utils';
@@ -16,31 +16,41 @@ import { usePrevious } from 'src/hooks/utils';
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
+  const { push, replace, asPath, pathname } = useRouter();
+
   const [user, setUser] = useState(null);
   const [isAuthentificated, setIsAuthentificated] = useState(false);
 
   const previousUser = usePrevious(user);
-  const previousChildren = usePrevious(children);
+  const previousPathname = usePrevious(pathname);
 
   const resetAndRedirect = useCallback(() => {
     localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     setIsAuthentificated(false);
     setUser(null);
-    Router.push('/login');
-  }, []);
+    replace('/login');
+  }, [replace]);
 
   // la restriction devrait etre faite des le serveur !
-  const restrictAccessByRole = useCallback((role) => {
-    if (
-      (Router.pathname.includes('/backoffice/admin') &&
-        role !== USER_ROLES.ADMIN) ||
-      (Router.pathname.includes('/backoffice/candidat') &&
-        role !== USER_ROLES.CANDIDAT &&
-        role !== USER_ROLES.COACH)
-    ) {
-      Router.push('/login');
-    }
-  }, []);
+  const restrictAccessByRole = useCallback(
+    (role) => {
+      if (pathname.includes('/backoffice/admin') && role !== USER_ROLES.ADMIN) {
+        push(
+          pathname.replace('admin', 'candidat'),
+          asPath.replace('admin', 'candidat')
+        );
+      } else if (
+        pathname.includes('/backoffice/candidat') &&
+        role === USER_ROLES.ADMIN
+      ) {
+        push(
+          pathname.replace('candidat', 'admin'),
+          asPath.replace('candidat', 'admin')
+        );
+      }
+    },
+    [asPath, pathname, push]
+  );
 
   const logout = useCallback(async () => {
     try {
@@ -64,7 +74,7 @@ const UserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (children !== previousChildren) {
+    if (pathname !== previousPathname) {
       const accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
       if (accessToken) {
         Api.get('/api/v1/auth/current')
@@ -80,14 +90,14 @@ const UserProvider = ({ children }) => {
           });
       } else {
         console.log('no token');
-        if (Router.pathname.includes('/backoffice')) {
+        if (pathname.includes('/backoffice')) {
           resetAndRedirect();
         }
       }
     }
   }, [
-    children,
-    previousChildren,
+    pathname,
+    previousPathname,
     previousUser,
     resetAndRedirect,
     restrictAccessByRole,

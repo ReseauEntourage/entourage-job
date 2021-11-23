@@ -2,7 +2,6 @@
 import React, {
   forwardRef,
   useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
   useState,
@@ -12,12 +11,15 @@ import { useRouter } from 'next/router';
 import { getUserOpportunityFromOffer } from 'src/utils';
 import Api from 'src/Axios';
 import ModalOffer from 'src/components/modals/ModalOffer';
-import { Grid } from 'src/components/utils';
+import { Grid, SimpleLink } from 'src/components/utils';
 import OfferCard from 'src/components/cards/OfferCard';
-import { UserContext } from 'src/components/store/UserProvider';
 import ModalOfferAdmin from 'src/components/modals/ModalOfferAdmin';
 import OpportunityError from 'src/components/opportunities/OpportunityError';
 import { useOpportunityList } from 'src/hooks/useOpportunityList';
+import useDeepCompareEffect from 'use-deep-compare-effect';
+import { OPPORTUNITY_FILTERS_DATA } from 'src/constants';
+import FiltersTabs from 'src/components/utils/FiltersTabs';
+import SearchBar from 'src/components/filters/SearchBar';
 
 const OpportunityList = forwardRef(
   (
@@ -25,17 +27,25 @@ const OpportunityList = forwardRef(
       candidatId,
       search,
       filters,
-      tabFilter,
-      updateNumberOfResults,
       userRole: role,
+      setFilters,
+      setSearch,
+      resetFilters,
+      tabFilters,
+      setTabFilters,
     },
     ref
   ) => {
     const {
-      query: { q: opportunityId },
+      push,
+      query: { offerId: opportunityId, memberId, tab, ...restQuery },
     } = useRouter();
 
-    const { user } = useContext(UserContext);
+    const tabFilterTag = tabFilters?.find((filter) => {
+      return filter.active;
+    }).tag;
+
+    const [numberOfResults, setNumberOfResults] = useState(0);
 
     const [currentOffer, setCurrentOffer] = useState(null);
     const [offers, setOffers] = useState(undefined);
@@ -44,21 +54,31 @@ const OpportunityList = forwardRef(
 
     const isAdmin = role === 'admin' || role === 'candidateAsAdmin';
 
+    const currentPath = {
+      href: `/backoffice/${
+        role === 'candidateAsAdmin'
+          ? 'admin/membres/[memberId]/[tab]'
+          : `${role}/offres`
+      }`,
+      as: `/backoffice/${
+        role === 'candidateAsAdmin'
+          ? `admin/membres/${candidatId}/offres`
+          : `${role}/offres`
+      }`,
+    };
+
     const fetchData = useOpportunityList(
-      user,
-      candidatId,
-      role,
-      search,
-      tabFilter,
-      filters,
       setOffers,
+      setNumberOfResults,
       setLoading,
       setHasError
     );
 
     useImperativeHandle(ref, () => {
       return {
-        fetchData,
+        fetchData: () => {
+          return fetchData(role, search, tabFilterTag, filters, candidatId);
+        },
       };
     });
 
@@ -119,26 +139,29 @@ const OpportunityList = forwardRef(
       }
     }, [getOpportunity, openOffer, opportunityId]);
 
-    useEffect(() => {
+    useDeepCompareEffect(() => {
       setHasError(false);
-      setLoading(true);
-      fetchData();
-    }, [fetchData]);
+      fetchData(role, search, tabFilterTag, filters, candidatId);
+    }, [role, search, tabFilters, filters, candidatId]);
 
-    useEffect(() => {
-      const hasFiltersActivated = Object.keys(filters).some((filter) => {
-        return filters[filter].length > 0;
-      });
-      if (hasFiltersActivated && offers) {
-        updateNumberOfResults(offers.length);
-        setLoading(false);
-      }
-    }, [filters, offers, updateNumberOfResults]);
+    const navigateBackToList = () => {
+      push(
+        {
+          pathname: currentPath.href,
+          query: restQuery,
+        },
+        {
+          pathname: currentPath.as,
+          query: restQuery,
+        },
+        {
+          shallow: true,
+        }
+      );
+    };
 
-    if (!user) return null;
-
-    return (
-      <div className="uk-margin-medium-top">
+    const content = (
+      <div>
         {loading && (
           <div className="uk-text-center">
             <div data-uk-spinner />
@@ -154,14 +177,19 @@ const OpportunityList = forwardRef(
                     role === 'candidateAsAdmin'
                       ? getUserOpportunityFromOffer(offer, candidatId)
                       : offer.userOpportunity;
+
                   return (
                     <li key={i}>
-                      <a
-                        aria-hidden
-                        role="button"
+                      <SimpleLink
+                        shallow
                         className="uk-link-reset"
-                        onClick={() => {
-                          return openOffer(offer);
+                        href={{
+                          pathname: `${currentPath.href}/[offerId]`,
+                          query: restQuery,
+                        }}
+                        as={{
+                          pathname: `${currentPath.as}/${offer.id}`,
+                          query: restQuery,
                         }}
                       >
                         {isAdmin ? (
@@ -201,7 +229,7 @@ const OpportunityList = forwardRef(
                             department={offer.department}
                           />
                         )}
-                      </a>
+                      </SimpleLink>
                     </li>
                   );
                 })}
@@ -225,25 +253,69 @@ const OpportunityList = forwardRef(
             )}
           </div>
         )}
-        <div>
-          {isAdmin ? (
-            <ModalOfferAdmin
-              currentOffer={currentOffer}
-              setCurrentOffer={(offer) => {
-                setCurrentOffer({ ...offer });
-                fetchData();
-              }}
+      </div>
+    );
+
+    return (
+      <div>
+        {tabFilters ? (
+          <FiltersTabs
+            path={currentPath}
+            tabFilters={tabFilters}
+            setTabFilters={setTabFilters}
+            otherPathParams={['offerId']}
+            otherFilterComponent={
+              <SearchBar
+                filtersConstants={OPPORTUNITY_FILTERS_DATA}
+                filters={filters}
+                numberOfResults={numberOfResults}
+                resetFilters={resetFilters}
+                search={search}
+                setSearch={setSearch}
+                setFilters={setFilters}
+                placeholder="Rechercher..."
+              />
+            }
+          >
+            {content}
+          </FiltersTabs>
+        ) : (
+          <>
+            <SearchBar
+              filtersConstants={OPPORTUNITY_FILTERS_DATA}
+              filters={filters}
+              numberOfResults={numberOfResults}
+              resetFilters={resetFilters}
+              search={search}
+              setSearch={setSearch}
+              setFilters={setFilters}
+              placeholder="Rechercher..."
             />
-          ) : (
-            <ModalOffer
-              currentOffer={currentOffer}
-              setCurrentOffer={(offer) => {
-                setCurrentOffer({ ...offer });
-                fetchData();
-              }}
-            />
-          )}
-        </div>
+            {content}
+          </>
+        )}
+        {isAdmin ? (
+          <ModalOfferAdmin
+            currentOffer={currentOffer}
+            setCurrentOffer={(offer) => {
+              setCurrentOffer({ ...offer });
+              fetchData(role, search, tabFilterTag, filters, candidatId);
+            }}
+            selectedCandidateId={
+              role === 'candidateAsAdmin' ? candidatId : undefined
+            }
+            navigateBackToList={navigateBackToList}
+          />
+        ) : (
+          <ModalOffer
+            currentOffer={currentOffer}
+            setCurrentOffer={(offer) => {
+              setCurrentOffer({ ...offer });
+              fetchData(role, search, tabFilterTag, filters, candidatId);
+            }}
+            navigateBackToList={navigateBackToList}
+          />
+        )}
       </div>
     );
   }
@@ -253,18 +325,24 @@ OpportunityList.propTypes = {
   candidatId: PropTypes.string,
   filters: PropTypes.shape(),
   search: PropTypes.string,
-  tabFilter: PropTypes.string,
-  updateNumberOfResults: PropTypes.func,
-  userRole: PropTypes.oneOf(['admin', 'candidateAsAdmin', 'candidate']),
+  userRole: PropTypes.oneOf(['admin', 'candidateAsAdmin', 'candidat']),
+  setFilters: PropTypes.func,
+  setSearch: PropTypes.func,
+  resetFilters: PropTypes.func,
+  tabFilters: PropTypes.shape(),
+  setTabFilters: PropTypes.func,
 };
 
 OpportunityList.defaultProps = {
   candidatId: undefined,
   filters: undefined,
-  tabFilter: undefined,
-  userRole: 'candidate',
+  userRole: 'candidat',
   search: undefined,
-  updateNumberOfResults: () => {},
+  tabFilters: undefined,
+  setFilters: () => {},
+  setSearch: () => {},
+  resetFilters: () => {},
+  setTabFilters: () => {},
 };
 
 export default OpportunityList;

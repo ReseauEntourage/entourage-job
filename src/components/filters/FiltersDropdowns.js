@@ -25,7 +25,7 @@ const FiltersDropdowns = ({
       const isFilterSelected = indexInSelectedFilters > -1;
 
       const onFilterClick = () => {
-        const updatedFilters = { ...filters };
+        const updatedFilters = JSON.parse(JSON.stringify(filters));
         if (isFilterSelected) {
           // remove filter
           updatedFilters[key].splice(indexInSelectedFilters, 1);
@@ -73,66 +73,68 @@ const FiltersDropdowns = ({
     <div className={hideOnMobile ? 'uk-visible@m' : ''}>
       {filterData.map(
         ({ title, constants, priority, key, tag, type, disabled }) => {
-          if (type && type === 'checkbox') {
-            return null;
-          }
-          return (
-            <div
-              key={key}
-              style={{ minWidth: 150 }}
-              className={`uk-inline ${
-                fullWidth ? 'uk-width-expand uk-margin-small-bottom' : ''
-              }`}
-            >
-              <div
-                className={`ent-select-search ${
-                  showSeparator ? 'ent-select-separator' : ''
-                }`}
-                style={{ opacity: disabled ? 0.6 : 1 }}
-              >
-                <Button
-                  disabled={disabled}
-                  style="text"
-                  className={`uk-width-expand ${
-                    filters[key].length === 0 ? 'uk-text-muted' : ''
+          if (filters[key]) {
+            if (!type || type !== 'checkbox') {
+              return (
+                <div
+                  key={key}
+                  style={{ minWidth: 150 }}
+                  className={`uk-inline ${
+                    fullWidth ? 'uk-width-expand uk-margin-small-bottom' : ''
                   }`}
                 >
-                  {/* {icon && (
+                  <div
+                    className={`ent-select-search ${
+                      showSeparator ? 'ent-select-separator' : ''
+                    }`}
+                    style={{ opacity: disabled ? 0.6 : 1 }}
+                  >
+                    <Button
+                      disabled={disabled}
+                      style="text"
+                      className={`uk-width-expand ${
+                        filters[key].length === 0 ? 'uk-text-muted' : ''
+                      }`}
+                    >
+                      {/* {icon && (
                   <IconNoSSR
                     name={icon}
                     ratio={0.7}
                     className="uk-margin-small-right"
                   />
                 )} */}
-                  <span className="uk-width-expand uk-text-left uk-flex uk-flex-middle">
-                    {title}
-                  </span>
-                  {filters[key].length > 0 && (
-                    <div>
-                      &nbsp;
-                      <div className="uk-badge">{filters[key].length}</div>
+                      <span className="uk-width-expand uk-text-left uk-flex uk-flex-middle">
+                        {title}
+                      </span>
+                      {filters[key].length > 0 && (
+                        <div>
+                          &nbsp;
+                          <div className="uk-badge">{filters[key].length}</div>
+                        </div>
+                      )}
+                      <IconNoSSR
+                        name="triangle-down"
+                        className="uk-margin-small-left"
+                      />
+                    </Button>
+                    <div
+                      data-uk-dropdown="mode: click;"
+                      className="uk-height-max-medium uk-overflow-auto uk-width-medium"
+                    >
+                      {priority && priority.length > 0 && (
+                        <>
+                          {renderFilters(priority, key, tag)}
+                          <hr />
+                        </>
+                      )}
+                      {renderFilters(constants, key, tag)}
                     </div>
-                  )}
-                  <IconNoSSR
-                    name="triangle-down"
-                    className="uk-margin-small-left"
-                  />
-                </Button>
-                <div
-                  data-uk-dropdown="mode: click;"
-                  className="uk-height-max-medium uk-overflow-auto uk-width-medium"
-                >
-                  {priority && priority.length > 0 && (
-                    <>
-                      {renderFilters(priority, key, tag)}
-                      <hr />
-                    </>
-                  )}
-                  {renderFilters(constants, key, tag)}
+                  </div>
                 </div>
-              </div>
-            </div>
-          );
+              );
+            }
+          }
+          return undefined;
         }
       )}
     </div>

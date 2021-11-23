@@ -233,9 +233,12 @@ const OFFER_ADMIN_FILTERS_DATA = [
 
 const CV_FILTERS_DATA = [
   {
-    key: 'hideEmployed',
+    key: 'employed',
     type: 'checkbox',
-    constants: [{ label: 'Masquer les candidats employés', value: true }],
+    constants: [
+      { label: "Recherche d'emploi", value: false },
+      { label: 'En emploi', value: true },
+    ],
     title: 'Masquer les candidats en emploi',
   },
   {
@@ -273,6 +276,9 @@ const OPPORTUNITY_FILTERS_DATA = [
   {
     key: 'department',
     constants: DEPARTMENTS_FILTERS,
+    priority: DEPARTMENTS_FILTERS.filter((dept) => {
+      return dept.zone !== ADMIN_ZONES.HZ;
+    }),
     title: 'Département',
   },
 ];
@@ -407,9 +413,6 @@ const REDIS_KEYS = {
 };
 
 const STORAGE_KEYS = {
-  CV_FILTERS_PUBLIC: 'cv-filters-public',
-  CV_FILTERS_COMPANY: 'cv-filters-company',
-  MEMBERS_FILTERS: 'members-filters',
   ACCESS_TOKEN: 'access-token',
 };
 

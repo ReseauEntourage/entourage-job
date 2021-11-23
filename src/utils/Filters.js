@@ -18,31 +18,20 @@ const getUserOpportunityFromOffer = (offer, candidatId) => {
 
 const getChildrenFilters = (filters) => {
   return filters.reduce((acc, curr) => {
+    const { children, ...restProps } = curr;
     const accToReturn = [...acc];
-    if (curr.children && curr.children.length > 0) {
+    if (children && children.length > 0) {
       return [...accToReturn, ...getChildrenFilters(curr.children)];
     }
-    return [
-      ...accToReturn,
-      {
-        value: curr.value,
-        label: curr.label,
-      },
-    ];
+    return [...accToReturn, restProps];
   }, []);
 };
 
 const getAllFilters = (filters, zone) => {
   const filtersToShow = filters.reduce((acc, curr) => {
-    const accToReturn = [
-      ...acc,
-      {
-        value: curr.value,
-        label: curr.label,
-        zone: curr.zone,
-      },
-    ];
-    if (curr.children && curr.children.length > 0) {
+    const { children, ...restProps } = curr;
+    const accToReturn = [...acc, restProps];
+    if (children && children.length > 0) {
       return [...accToReturn, ...getAllFilters(curr.children)];
     }
     return accToReturn;
@@ -90,11 +79,57 @@ const initializeFilters = (filtersConst, defaults) => {
 const filtersToQueryParams = (filters) => {
   const params = {};
   _.forEach(Object.keys(filters), (filter) => {
-    params[filter] = filters[filter].map((f) => {
-      return f.value;
-    });
+    params[filter] =
+      filters[filter].length > 0
+        ? filters[filter].map((f) => {
+            return f.value;
+          })
+        : undefined;
   });
   return params;
+};
+
+const getFiltersObjectsFromQueryParamsFront = (params, filtersConst) => {
+  const filters = {};
+  if (filtersConst) {
+    _.forEach(filtersConst, (filterConst) => {
+      if (params[filterConst.key]) {
+        const value = params[filterConst.key];
+        if (Array.isArray(value)) {
+          filters[filterConst.key] = [
+            ..._.map(value, (val) => {
+              return filterConst.constants.find((constantValue) => {
+                return constantValue.value.toString() === val;
+              });
+            }),
+          ];
+        } else {
+          filters[filterConst.key] = [
+            filterConst.constants.find((constantValue) => {
+              return constantValue.value.toString() === value;
+            }),
+          ];
+        }
+      } else {
+        filters[filterConst.key] = [];
+      }
+    });
+  }
+  return filters;
+};
+
+const getFiltersTagsFromQueryParamsFront = (tag, filters) => {
+  console.log(tag, filters);
+  const updatedFilters = JSON.parse(JSON.stringify(filters));
+  const filterToDeActivate = updatedFilters.find((filter) => {
+    return filter.active;
+  });
+  const filterToActivate = updatedFilters.find((filter) => {
+    return filter.tag === tag;
+  });
+  filterToDeActivate.active = false;
+  filterToActivate.active = true;
+  return updatedFilters;
 };
 
 export {
@@ -104,4 +139,6 @@ export {
   findFilter,
   initializeFilters,
   filtersToQueryParams,
+  getFiltersObjectsFromQueryParamsFront,
+  getFiltersTagsFromQueryParamsFront,
 };

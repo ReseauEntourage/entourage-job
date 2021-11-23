@@ -15,25 +15,40 @@ import ModalEdit from 'src/components/modals/ModalEdit';
 import { USER_ROLES } from 'src/constants';
 import ToggleWithConfirmationModal from 'src/components/backoffice/ToggleWithConfirmationModal';
 import { mutateFormSchema } from 'src/utils';
-import CandidatOpportunities from 'src/components/opportunities/CandidatOpportunities';
+import AdminCandidateOpportunities from 'src/components/opportunities/AdminCandidateOpportunities';
 import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
 import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CVPage = () => {
-  const [onglet, setOnglet] = useState('cv');
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const {
-    query: { id },
-    push,
+    replace,
+    query: { memberId, tab, offerId },
   } = useRouter();
 
-  const prevId = usePrevious(id);
+  useEffect(() => {
+    if (memberId && !tab) {
+      replace(
+        '/backoffice/admin/membres/[memberId]/[tab]',
+        `/backoffice/admin/membres/${memberId}/cv`,
+        { shallow: true }
+      );
+    } else if (offerId && tab !== 'offres') {
+      replace(
+        '/backoffice/admin/membres/[memberId]/[tab]',
+        `/backoffice/admin/membres/${memberId}/${tab}`,
+        { shallow: true }
+      );
+    }
+  }, [memberId, offerId, replace, tab]);
+
+  const prevId = usePrevious(memberId);
 
   const getUser = useCallback(() => {
-    Api.get(`/api/v1/user/${id}`)
+    Api.get(`/api/v1/user/${memberId}`)
       .then(({ data }) => {
         setUser(data);
         setLoading(false);
@@ -42,16 +57,16 @@ const CVPage = () => {
         console.log(err);
         setLoading(false);
       });
-  }, [id]);
+  }, [memberId]);
 
   useEffect(() => {
-    if (id !== prevId) {
+    if (memberId !== prevId) {
       setLoading(true);
       getUser();
-    } else if (onglet === 'settings') {
+    } else if (tab === 'parametres') {
       getUser();
     }
-  }, [onglet, getUser, id, prevId]);
+  }, [tab, getUser, memberId, prevId]);
 
   let mutatedSchema = mutateFormSchema(schemaEditUser, [
     {
@@ -95,12 +110,12 @@ const CVPage = () => {
   const deleteUser = async (fields, closeModal) => {
     try {
       if (fields.confirmation === 'SUPPRIMER') {
-        await Api.delete(`/api/v1/user/${id}`);
+        await Api.delete(`/api/v1/user/${memberId}`);
         closeModal();
         UIkit.notification("L'utilisateur a bien été supprimé", 'success');
-        push('/backoffice/admin/membres');
+        replace('/backoffice/admin/membres');
       } else {
-        throw new Error();
+        UIkit.notification('Erreur de confirmation', 'danger');
       }
     } catch {
       UIkit.notification('Une erreur est survenue', 'danger');
@@ -172,7 +187,7 @@ const CVPage = () => {
 
   const isCandidat = user && user.candidat && user.role === USER_ROLES.CANDIDAT;
 
-  if (loading) {
+  if (loading || !tab) {
     return (
       <LayoutBackOffice title="Chargement - Gestion des membres">
         <Section>
@@ -225,7 +240,7 @@ const CVPage = () => {
       <Section>
         <Grid column gap="medium">
           <SimpleLink
-            href={`/backoffice/admin/membres?role=${user.role}`}
+            href={`/backoffice/admin/membres?role=${user.role}&zone=${user.zone}`}
             className="uk-link-reset uk-flex uk-flex-middle"
           >
             <IconNoSSR name="chevron-left" />
@@ -236,46 +251,42 @@ const CVPage = () => {
             <hr className="ent-divier-backoffice uk-margin-medium-top" />
           </div>
           <ul className="uk-subnav">
-            <li className={onglet === 'cv' ? 'uk-active' : ''}>
-              <a
-                aria-hidden="true"
-                onClick={() => {
-                  setOnglet('cv');
-                }}
+            <li className={tab === 'cv' ? 'uk-active' : ''}>
+              <SimpleLink
+                href="/backoffice/admin/membres/[memberId]/[tab]"
+                as={`/backoffice/admin/membres/${memberId}/cv`}
               >
                 CV
-              </a>
+              </SimpleLink>
             </li>
-            <li className={onglet === 'opportunities' ? 'uk-active' : ''}>
-              <a
-                aria-hidden="true"
-                onClick={() => {
-                  setOnglet('opportunities');
-                }}
+            <li className={tab === 'offres' ? 'uk-active' : ''}>
+              <SimpleLink
+                href="/backoffice/admin/membres/[memberId]/[tab]"
+                as={`/backoffice/admin/membres/${memberId}/offres`}
               >
                 Opportunités
-              </a>
+              </SimpleLink>
             </li>
-            <li className={onglet === 'settings' ? 'uk-active' : ''}>
-              <a
-                aria-hidden="true"
-                onClick={() => {
-                  setOnglet('settings');
-                }}
+            <li className={tab === 'parametres' ? 'uk-active' : ''}>
+              <SimpleLink
+                href="/backoffice/admin/membres/[memberId]/[tab]"
+                as={`/backoffice/admin/membres/${memberId}/parametres`}
               >
                 Paramètres
-              </a>
+              </SimpleLink>
             </li>
           </ul>
-          {onglet !== 'settings' &&
+          {tab !== 'parametres' &&
             user.role === USER_ROLES.COACH &&
             (user.coach ? (
               <div>
-                {onglet === 'cv' && (
+                {tab === 'cv' && (
                   <CVPageContent candidatId={user.coach.candidat.id} />
                 )}
-                {onglet === 'opportunities' && (
-                  <CandidatOpportunities candidatId={user.coach.candidat.id} />
+                {tab === 'offres' && (
+                  <AdminCandidateOpportunities
+                    candidatId={user.coach.candidat.id}
+                  />
                 )}
               </div>
             ) : (
@@ -290,15 +301,15 @@ const CVPage = () => {
                 </p>
               </div>
             ))}
-          {onglet !== 'settings' && user.role === USER_ROLES.CANDIDAT && (
+          {tab !== 'parametres' && user.role === USER_ROLES.CANDIDAT && (
             <div>
-              {onglet === 'cv' && <CVPageContent candidatId={user.id} />}
-              {onglet === 'opportunities' && (
-                <CandidatOpportunities candidatId={user.id} />
+              {tab === 'cv' && <CVPageContent candidatId={user.id} />}
+              {tab === 'offres' && (
+                <AdminCandidateOpportunities candidatId={user.id} />
               )}
             </div>
           )}
-          {onglet === 'settings' && (
+          {tab === 'parametres' && (
             <Grid childWidths={['1-2@m']}>
               {(user.role === USER_ROLES.CANDIDAT ||
                 user.role === USER_ROLES.COACH) && (

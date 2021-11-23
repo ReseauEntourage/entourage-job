@@ -172,10 +172,10 @@ const SiteMap = ({ isMobile }) => {
       childWidths={['1-3@m']}
       className={isMobile ? 'uk-hidden@m' : 'uk-visible@m'}
     >
-      {pages.map(({ title, children }) => {
+      {pages.map(({ title, children }, index) => {
         return (
           <div
-            key={title}
+            key={title + index}
             className="uk-flex uk-flex-column uk-flex-middle uk-margin-small-bottom"
           >
             <div
@@ -188,17 +188,25 @@ const SiteMap = ({ isMobile }) => {
               )}
               {children &&
                 children.map(
-                  ({
-                    component: childrenComponent,
-                    title: childrenTitle,
-                    path: childrenPath,
-                    toggle: childrenToggle,
-                    children: childrenChildren,
-                    props: childrenProps = {},
-                  }) => {
+                  (
+                    {
+                      component: childrenComponent,
+                      title: childrenTitle,
+                      path: childrenPath,
+                      toggle: childrenToggle,
+                      children: childrenChildren,
+                      props: childrenProps = {},
+                    },
+                    childrenIndex
+                  ) => {
                     if (childrenComponent) {
                       return (
-                        <div className="ent-site-map">{childrenComponent}</div>
+                        <div
+                          key={`component${childrenIndex}`}
+                          className="ent-site-map"
+                        >
+                          {childrenComponent}
+                        </div>
                       );
                     }
                     const toggleProps = { href: childrenPath };
@@ -206,9 +214,8 @@ const SiteMap = ({ isMobile }) => {
                       toggleProps.toggle = `target: ${childrenToggle}`;
                     }
                     return (
-                      <>
+                      <React.Fragment key={childrenPath + index}>
                         <SimpleLink
-                          key={childrenPath}
                           className={
                             title
                               ? 'uk-text-muted uk-margin-small-top'
@@ -221,14 +228,19 @@ const SiteMap = ({ isMobile }) => {
                         </SimpleLink>
                         {childrenChildren &&
                           childrenChildren.map(
-                            ({
-                              title: childrenChildrenTitle,
-                              path: childrenChildrenPath,
-                              props: childrenChildrenProps = {},
-                            }) => {
+                            (
+                              {
+                                title: childrenChildrenTitle,
+                                path: childrenChildrenPath,
+                                props: childrenChildrenProps = {},
+                              },
+                              childrenChildrenIndex
+                            ) => {
                               return (
                                 <SimpleLink
-                                  key={childrenChildrenPath}
+                                  key={
+                                    childrenChildrenPath + childrenChildrenIndex
+                                  }
                                   href={childrenChildrenPath}
                                   className={`${
                                     isMobile ? '' : 'uk-margin-small-left'
@@ -240,7 +252,7 @@ const SiteMap = ({ isMobile }) => {
                               );
                             }
                           )}
-                      </>
+                      </React.Fragment>
                     );
                   }
                 )}
