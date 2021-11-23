@@ -16,7 +16,7 @@ import { usePrevious } from 'src/hooks/utils';
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const { push, asPath, pathname } = useRouter();
+  const { push, replace, asPath, pathname } = useRouter();
 
   const [user, setUser] = useState(null);
   const [isAuthentificated, setIsAuthentificated] = useState(false);
@@ -28,14 +28,17 @@ const UserProvider = ({ children }) => {
     localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     setIsAuthentificated(false);
     setUser(null);
-    push('/login');
-  }, [push]);
+    replace('/login');
+  }, [replace]);
 
   // la restriction devrait etre faite des le serveur !
   const restrictAccessByRole = useCallback(
     (role) => {
       if (pathname.includes('/backoffice/admin') && role !== USER_ROLES.ADMIN) {
-        push('/login');
+        push(
+          pathname.replace('admin', 'candidat'),
+          asPath.replace('admin', 'candidat')
+        );
       } else if (
         pathname.includes('/backoffice/candidat') &&
         role === USER_ROLES.ADMIN

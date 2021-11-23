@@ -4,9 +4,8 @@ import {
 } from 'src/constants';
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from 'src/components/store/UserProvider';
-import { usePrevious } from 'src/hooks/utils';
 import { useFilters } from 'src/hooks';
-import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import { ADMIN_ZONES, DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { Section } from 'src/components/utils';
 import AdminOpportunityList from 'src/components/backoffice/admin/AdminOpportunityList';
@@ -15,12 +14,12 @@ import { useRouter } from 'next/router';
 const LesOpportunites = () => {
   const {
     push,
+    replace,
     query: { offerId, tag, ...restParams },
   } = useRouter();
 
   const { user } = useContext(UserContext);
   const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
-  const prevUser = usePrevious(user);
 
   const { filters, setFilters, search, setSearch, resetFilters } = useFilters(
     OPPORTUNITY_FILTERS_DATA,
@@ -34,7 +33,7 @@ const LesOpportunites = () => {
       if (!tag) {
         const params = { tag: OFFER_ADMIN_FILTERS_DATA[1].tag, ...restParams };
 
-        if (user && user.zone) {
+        if (user.zone && user.zone !== ADMIN_ZONES.HZ) {
           const defaultDepartmentsForAdmin = DEPARTMENTS_FILTERS.filter(
             (dept) => {
               return user.zone === dept.zone;
@@ -46,7 +45,7 @@ const LesOpportunites = () => {
           });
         }
         if (offerId) {
-          push(
+          replace(
             {
               pathname: '/backoffice/admin/offres/[offerId]',
               query: params,
@@ -60,7 +59,7 @@ const LesOpportunites = () => {
             }
           );
         } else {
-          push(
+          replace(
             {
               pathname: '/backoffice/admin/offres',
               query: params,
@@ -75,14 +74,12 @@ const LesOpportunites = () => {
         setLoadingDefaultFilters(false);
       }
     }
-  }, [offerId, prevUser, push, restParams, tag, user]);
-
-  if (!user) return null;
+  }, [offerId, push, replace, restParams, tag, user]);
 
   return (
     <LayoutBackOffice title="Modération des offres d'emploi">
       <Section>
-        {loadingDefaultFilters ? (
+        {!user || loadingDefaultFilters ? (
           <div className="uk-text-center">
             <div data-uk-spinner />
           </div>

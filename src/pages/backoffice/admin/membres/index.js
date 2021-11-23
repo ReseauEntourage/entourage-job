@@ -10,7 +10,7 @@ import MemberList from 'src/components/backoffice/admin/MemberList';
 
 const MembersAdmin = () => {
   const {
-    push,
+    replace,
     query: { role, ...restParams },
   } = useRouter();
 
@@ -29,7 +29,7 @@ const MembersAdmin = () => {
         if (user && user.zone) {
           params.zone = user.zone;
         }
-        push(
+        replace(
           {
             pathname: '/backoffice/admin/membres',
             query: params,
@@ -41,7 +41,7 @@ const MembersAdmin = () => {
         setLoadingDefaultFilters(false);
       }
     }
-  }, [push, restParams, role, user]);
+  }, [replace, restParams, role, user]);
 
   const { filters, setFilters, search, setSearch, resetFilters } = useFilters(
     filtersConst,

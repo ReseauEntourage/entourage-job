@@ -4,7 +4,7 @@ import OpportunityList from 'src/components/opportunities/OpportunityList';
 import { OPPORTUNITY_FILTERS_DATA } from 'src/constants';
 import { useFilters } from 'src/hooks';
 
-const CandidatOpportunities = ({ candidatId }) => {
+const AdminCandidateOpportunities = ({ candidatId }) => {
   const { filters, setFilters, search, setSearch, resetFilters } = useFilters(
     OPPORTUNITY_FILTERS_DATA,
     {
@@ -29,10 +29,10 @@ const CandidatOpportunities = ({ candidatId }) => {
   );
 };
 
-CandidatOpportunities.propTypes = {
+AdminCandidateOpportunities.propTypes = {
   candidatId: PropTypes.string.isRequired,
 };
 
-CandidatOpportunities.defaultProps = {};
+AdminCandidateOpportunities.defaultProps = {};
 
-export default CandidatOpportunities;
+export default AdminCandidateOpportunities;

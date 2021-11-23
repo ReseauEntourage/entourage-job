@@ -73,7 +73,8 @@ OfferInfoContainer.defaultProps = {
 };
 
 const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
-  const { status, bookmarked, note, archived } = currentOffer.userOpportunity;
+  const { status, bookmarked, note, archived } =
+    currentOffer?.userOpportunity ?? {};
 
   const [loadingIcon, setLoadingIcon] = useState(false);
   const [loadingStatus, setLoadingStatus] = useState(false);
@@ -97,6 +98,10 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
 
   useEffect(resetNoteBuffer, [currentOffer, note]);
 
+  if (!currentOffer) {
+    return null;
+  }
+
   const mutatedOfferStatus = [
     {
       ...OFFER_STATUS[0],
@@ -106,10 +111,6 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
     },
     ...OFFER_STATUS.slice(1),
   ];
-
-  if (!currentOffer) {
-    return null;
-  }
 
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">
@@ -326,7 +327,7 @@ ModalOffer.propTypes = {
     company: PropTypes.string,
     description: PropTypes.string,
     companyDescription: PropTypes.string,
-    numberOfPositions: PropTypes.string,
+    numberOfPositions: PropTypes.number,
     prerequisites: PropTypes.string,
     skills: PropTypes.string,
     contract: PropTypes.string,
@@ -343,7 +344,7 @@ ModalOffer.propTypes = {
     location: PropTypes.string,
     department: PropTypes.string,
     userOpportunity: PropTypes.shape({
-      status: PropTypes.string,
+      status: PropTypes.number,
       bookmarked: PropTypes.bool,
       note: PropTypes.string,
       archived: PropTypes.bool,

@@ -17,7 +17,7 @@ const CustomError = ({ statusCode, hasGetInitialPropsRun, err }) => {
 
   useEffect(() => {
     if (statusCode === 404) {
-      router.push('/');
+      router.replace('/');
     }
   }, [router, statusCode]);
 

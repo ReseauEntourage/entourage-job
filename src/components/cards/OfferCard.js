@@ -166,7 +166,7 @@ OfferCard.propTypes = {
     PropTypes.shape(),
     PropTypes.arrayOf(PropTypes.shape()),
   ]),
-  isValidated: PropTypes.bool.isRequired,
+  isValidated: PropTypes.bool,
   isAdmin: PropTypes.bool,
   department: PropTypes.string,
 };
@@ -176,6 +176,7 @@ OfferCard.defaultProps = {
   isNew: undefined,
   archived: undefined,
   isPublic: undefined,
+  isValidated: undefined,
   date: undefined,
   userOpportunity: undefined,
   isAdmin: false,

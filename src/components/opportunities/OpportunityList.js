@@ -263,6 +263,7 @@ const OpportunityList = forwardRef(
             path={currentPath}
             tabFilters={tabFilters}
             setTabFilters={setTabFilters}
+            otherPathParams={['offerId']}
             otherFilterComponent={
               <SearchBar
                 filtersConstants={OPPORTUNITY_FILTERS_DATA}

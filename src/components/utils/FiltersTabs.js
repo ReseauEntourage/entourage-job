@@ -4,6 +4,7 @@ import Grid from 'src/components/utils/Grid';
 import { useRouter } from 'next/router';
 import { getFiltersTagsFromQueryParamsFront } from 'src/utils';
 import { usePrevious } from 'src/hooks/utils';
+import _ from 'lodash';
 
 const FiltersTabs = ({
   tabFilters,
@@ -11,16 +12,18 @@ const FiltersTabs = ({
   setTabFilters,
   otherFilterComponent,
   path,
+  otherPathParams,
 }) => {
-  const {
-    push,
-    query: { tag: queryTag, ...otherParams },
-  } = useRouter();
+  const { push, query: originalQuery } = useRouter();
+
+  const { tag: queryTag, ...otherParams } = otherPathParams
+    ? _.omit(originalQuery, otherPathParams)
+    : originalQuery;
 
   const prevTag = usePrevious(queryTag);
 
   useEffect(() => {
-    if (queryTag !== prevTag) {
+    if (queryTag && queryTag !== prevTag) {
       const updatedFilter = getFiltersTagsFromQueryParamsFront(
         queryTag,
         tabFilters
@@ -96,12 +99,14 @@ FiltersTabs.propTypes = {
       PropTypes.shape({ pathname: PropTypes.string, query: PropTypes.shape() }),
     ]),
   }).isRequired,
+  otherPathParams: PropTypes.arrayOf(PropTypes.string),
 };
 
 FiltersTabs.defaultProps = {
   children: [],
   otherFilterComponent: undefined,
   tabFilters: [],
+  otherPathParams: undefined,
 };
 
 export default FiltersTabs;

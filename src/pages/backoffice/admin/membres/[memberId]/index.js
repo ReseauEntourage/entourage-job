@@ -15,7 +15,7 @@ import ModalEdit from 'src/components/modals/ModalEdit';
 import { USER_ROLES } from 'src/constants';
 import ToggleWithConfirmationModal from 'src/components/backoffice/ToggleWithConfirmationModal';
 import { mutateFormSchema } from 'src/utils';
-import CandidatOpportunities from 'src/components/opportunities/CandidatOpportunities';
+import AdminCandidateOpportunities from 'src/components/opportunities/AdminCandidateOpportunities';
 import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
 import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 import { IconNoSSR } from 'src/components/utils/Icon';
@@ -25,25 +25,25 @@ const CVPage = () => {
   const [loading, setLoading] = useState(true);
 
   const {
+    replace,
     query: { memberId, tab, offerId },
-    push,
   } = useRouter();
 
   useEffect(() => {
     if (memberId && !tab) {
-      push(
+      replace(
         '/backoffice/admin/membres/[memberId]/[tab]',
         `/backoffice/admin/membres/${memberId}/cv`,
         { shallow: true }
       );
     } else if (offerId && tab !== 'offres') {
-      push(
+      replace(
         '/backoffice/admin/membres/[memberId]/[tab]',
         `/backoffice/admin/membres/${memberId}/${tab}`,
         { shallow: true }
       );
     }
-  }, [memberId, offerId, push, tab]);
+  }, [memberId, offerId, replace, tab]);
 
   const prevId = usePrevious(memberId);
 
@@ -113,7 +113,7 @@ const CVPage = () => {
         await Api.delete(`/api/v1/user/${memberId}`);
         closeModal();
         UIkit.notification("L'utilisateur a bien été supprimé", 'success');
-        push('/backoffice/admin/membres');
+        replace('/backoffice/admin/membres');
       } else {
         UIkit.notification('Erreur de confirmation', 'danger');
       }
@@ -235,14 +235,12 @@ const CVPage = () => {
     );
   }
 
-  // TODO make back
-
   return (
     <LayoutBackOffice title={`${user.firstName} - Gestion des membres`}>
       <Section>
         <Grid column gap="medium">
           <SimpleLink
-            href={`/backoffice/admin/membres?role=${user.role}`}
+            href={`/backoffice/admin/membres?role=${user.role}&zone=${user.zone}`}
             className="uk-link-reset uk-flex uk-flex-middle"
           >
             <IconNoSSR name="chevron-left" />
@@ -286,7 +284,9 @@ const CVPage = () => {
                   <CVPageContent candidatId={user.coach.candidat.id} />
                 )}
                 {tab === 'offres' && (
-                  <CandidatOpportunities candidatId={user.coach.candidat.id} />
+                  <AdminCandidateOpportunities
+                    candidatId={user.coach.candidat.id}
+                  />
                 )}
               </div>
             ) : (
@@ -305,7 +305,7 @@ const CVPage = () => {
             <div>
               {tab === 'cv' && <CVPageContent candidatId={user.id} />}
               {tab === 'offres' && (
-                <CandidatOpportunities candidatId={user.id} />
+                <AdminCandidateOpportunities candidatId={user.id} />
               )}
             </div>
           )}
