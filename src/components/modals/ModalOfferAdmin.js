@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import Api from 'src/Axios';
 import schema, {
   adminMutation,
@@ -10,11 +9,7 @@ import { Button, CloseButton, Grid, SimpleLink } from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import { IconNoSSR } from 'src/components/utils/Icon';
 
-import {
-  List,
-  OfferInfoContainer,
-  translateCategory,
-} from 'src/components/modals/ModalOffer';
+import { List, OfferInfoContainer } from 'src/components/modals/ModalOffer';
 import { useRemoveModal, useResetForm } from 'src/hooks/utils';
 
 import {
@@ -24,7 +19,7 @@ import {
   mutateFormSchema,
 } from 'src/utils';
 import { OFFER_STATUS } from 'src/constants';
-import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
+import ModalOfferInfo from './ModalOfferInfo';
 
 const ModalOfferAdmin = ({
   currentOffer,
@@ -193,25 +188,17 @@ const ModalOfferAdmin = ({
     return (
       <div>
         <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
-          <Grid gap="collapse" column>
-            <h3 className="uk-text-bold uk-margin-remove-bottom">
-              {currentOffer.title}
-            </h3>
-            <span>{translateCategory(currentOffer.isPublic)}</span>
-            <ContractLabel
-              contract={currentOffer.contract}
-              endOfContract={currentOffer.endOfContract}
-              startOfContract={currentOffer.startOfContract}
-            />
-            <span className="uk-text-small">
-              {currentOffer.numberOfPositions} poste
-              {currentOffer.numberOfPositions > 1 ? 's' : ''} -{' '}
-              {currentOffer.isPartTime ? 'Temps partiel' : 'Temps plein'}
-            </span>
-            <span className="uk-text-italic uk-text-small">
-              offre soumise le {moment(currentOffer.date).format('DD/MM/YYYY')}
-            </span>
-          </Grid>
+          <ModalOfferInfo
+            startOfContract={currentOffer.startOfContract}
+            isPublic={currentOffer.isPublic}
+            numberOfPositions={currentOffer.numberOfPositions}
+            contract={currentOffer.contract}
+            date={currentOffer.date}
+            title={currentOffer.title}
+            isPartTime={currentOffer.isPartTime}
+            endOfContract={currentOffer.endOfContract}
+            offerId={currentOffer.id}
+          />
           <div>
             <div className="uk-margin-small-top uk-margin-small-bottom">
               {(() => {
@@ -477,6 +464,7 @@ const ModalOfferAdmin = ({
 };
 ModalOfferAdmin.propTypes = {
   currentOffer: PropTypes.shape({
+    id: PropTypes.string,
     message: PropTypes.string,
     title: PropTypes.string,
     company: PropTypes.string,

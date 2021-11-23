@@ -115,7 +115,7 @@ const CVPage = () => {
         UIkit.notification("L'utilisateur a bien été supprimé", 'success');
         push('/backoffice/admin/membres');
       } else {
-        throw new Error();
+        UIkit.notification('Erreur de confirmation', 'danger');
       }
     } catch {
       UIkit.notification('Une erreur est survenue', 'danger');
