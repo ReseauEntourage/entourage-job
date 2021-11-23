@@ -75,11 +75,17 @@ ModalOfferInfo.propTypes = {
   title: PropTypes.string.isRequired,
   isPublic: PropTypes.bool.isRequired,
   date: PropTypes.string.isRequired,
-  contract: PropTypes.string.isRequired,
-  endOfContract: PropTypes.string.isRequired,
-  startOfContract: PropTypes.string.isRequired,
+  contract: PropTypes.string,
+  endOfContract: PropTypes.string,
+  startOfContract: PropTypes.string,
   isPartTime: PropTypes.bool.isRequired,
   numberOfPositions: PropTypes.number.isRequired,
+};
+
+ModalOfferInfo.defaultProps = {
+  contract: undefined,
+  endOfContract: undefined,
+  startOfContract: undefined,
 };
 
 export default ModalOfferInfo;

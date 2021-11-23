@@ -3,40 +3,27 @@ import PropTypes from 'prop-types';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
 import { OPPORTUNITY_FILTERS_DATA } from 'src/constants';
 import { useFilters } from 'src/hooks';
-import SearchBar from 'src/components/filters/SearchBar';
 
 const CandidatOpportunities = ({ candidatId }) => {
-  const {
-    filters,
-    setFilters,
-    search,
-    setSearch,
-    numberOfResults,
-    setNumberOfResults,
-    resetFilters,
-  } = useFilters(OPPORTUNITY_FILTERS_DATA, {
-    href: '/backoffice/admin/membres/[memberId]',
-    as: `/backoffice/admin/membres/${candidatId}`,
-  });
+  const { filters, setFilters, search, setSearch, resetFilters } = useFilters(
+    OPPORTUNITY_FILTERS_DATA,
+    {
+      href: '/backoffice/admin/membres/[memberId]/[tab]',
+      as: `/backoffice/admin/membres/${candidatId}/offres`,
+    },
+    ['memberId', 'tab']
+  );
 
   return (
     <div>
-      <SearchBar
-        filtersConstants={OPPORTUNITY_FILTERS_DATA}
-        filters={filters}
-        numberOfResults={numberOfResults}
-        resetFilters={resetFilters}
+      <OpportunityList
+        candidatId={candidatId}
         search={search}
+        filters={filters}
+        resetFilters={resetFilters}
         setSearch={setSearch}
         setFilters={setFilters}
-        placeholder="Rechercher..."
-      />
-      <OpportunityList
-        search={search}
         userRole="candidateAsAdmin"
-        candidatId={candidatId}
-        filters={filters}
-        updateNumberOfResults={setNumberOfResults}
       />
     </div>
   );

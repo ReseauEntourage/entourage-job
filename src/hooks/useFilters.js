@@ -6,11 +6,12 @@ import {
 import { useRouter } from 'next/router';
 import _ from 'lodash';
 
-export function useFilters(filtersData, path) {
-  const {
-    push,
-    query: { search, ...params },
-  } = useRouter();
+export function useFilters(filtersData, path, otherPathParams) {
+  const { push, query: originalQuery } = useRouter();
+
+  const { search, ...params } = otherPathParams
+    ? _.omit(originalQuery, otherPathParams)
+    : originalQuery;
 
   const otherParams = _.omit(
     params,

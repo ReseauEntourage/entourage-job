@@ -19,7 +19,7 @@ import {
   mutateFormSchema,
 } from 'src/utils';
 import { OFFER_STATUS } from 'src/constants';
-import ModalOfferInfo from './ModalOfferInfo';
+import ModalOfferInfo from 'src/components/modals/ModalOfferInfo';
 
 const ModalOfferAdmin = ({
   currentOffer,
@@ -27,9 +27,6 @@ const ModalOfferAdmin = ({
   navigateBackToList,
   selectedCandidateId,
 }) => {
-  if (!currentOffer) {
-    currentOffer = { userOpportunity: [], businessLines: [] };
-  }
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -91,6 +88,10 @@ const ModalOfferAdmin = ({
     setError(false);
     setIsEditing(false);
   }, [currentOffer]);
+
+  if (!currentOffer) {
+    return null;
+  }
 
   const contentBuilder = () => {
     // error

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { usePostOpportunity } from 'src/hooks';
 import { mutateFormSchema } from 'src/utils';
 import schema, {
@@ -10,6 +10,7 @@ import { IconNoSSR } from 'src/components/utils/Icon';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
 import PropTypes from 'prop-types';
+import { OFFER_ADMIN_FILTERS_DATA } from 'src/constants';
 
 const modalId = 'add-opportunity';
 
@@ -37,6 +38,8 @@ const AdminOpportunityList = ({
   ]);
 
   const opportunityListRef = useRef();
+
+  const [tabFilters, setTabFilters] = useState(OFFER_ADMIN_FILTERS_DATA);
 
   return (
     <>
@@ -75,6 +78,8 @@ const AdminOpportunityList = ({
       </HeaderBackoffice>
       <OpportunityList
         ref={opportunityListRef}
+        tabFilters={tabFilters}
+        setTabFilters={setTabFilters}
         search={search}
         filters={filters}
         resetFilters={resetFilters}

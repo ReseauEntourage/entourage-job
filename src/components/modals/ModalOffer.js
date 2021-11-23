@@ -10,7 +10,7 @@ import Api from 'src/Axios';
 import { OFFER_STATUS } from 'src/constants';
 import { formatParagraph } from 'src/utils';
 import { useRemoveModal } from 'src/hooks/utils';
-import ModalOfferInfo from './ModalOfferInfo';
+import ModalOfferInfo from 'src/components/modals/ModalOfferInfo';
 
 export const List = ({ className, children }) => {
   return (
@@ -73,9 +73,6 @@ OfferInfoContainer.defaultProps = {
 };
 
 const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
-  if (!currentOffer) {
-    currentOffer = { userOpportunity: {}, businessLines: [] };
-  }
   const { status, bookmarked, note, archived } = currentOffer.userOpportunity;
 
   const [loadingIcon, setLoadingIcon] = useState(false);
@@ -109,6 +106,10 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
     },
     ...OFFER_STATUS.slice(1),
   ];
+
+  if (!currentOffer) {
+    return null;
+  }
 
   return (
     <div id="modal-offer" data-uk-modal="bg-close:false">
@@ -316,6 +317,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
     </div>
   );
 };
+
 ModalOffer.propTypes = {
   currentOffer: PropTypes.shape({
     id: PropTypes.string,

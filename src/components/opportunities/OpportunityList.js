@@ -17,10 +17,7 @@ import ModalOfferAdmin from 'src/components/modals/ModalOfferAdmin';
 import OpportunityError from 'src/components/opportunities/OpportunityError';
 import { useOpportunityList } from 'src/hooks/useOpportunityList';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import {
-  OFFER_ADMIN_FILTERS_DATA,
-  OPPORTUNITY_FILTERS_DATA,
-} from 'src/constants';
+import { OPPORTUNITY_FILTERS_DATA } from 'src/constants';
 import FiltersTabs from 'src/components/utils/FiltersTabs';
 import SearchBar from 'src/components/filters/SearchBar';
 
@@ -34,16 +31,21 @@ const OpportunityList = forwardRef(
       setFilters,
       setSearch,
       resetFilters,
+      tabFilters,
+      setTabFilters,
     },
     ref
   ) => {
     const {
       push,
-      query: { offerId: opportunityId, ...restQuery },
+      query: { offerId: opportunityId, memberId, tab, ...restQuery },
     } = useRouter();
 
+    const tabFilterTag = tabFilters?.find((filter) => {
+      return filter.active;
+    }).tag;
+
     const [numberOfResults, setNumberOfResults] = useState(0);
-    const [tabFilters, setTabFilters] = useState(OFFER_ADMIN_FILTERS_DATA);
 
     const [currentOffer, setCurrentOffer] = useState(null);
     const [offers, setOffers] = useState(undefined);
@@ -53,14 +55,14 @@ const OpportunityList = forwardRef(
     const isAdmin = role === 'admin' || role === 'candidateAsAdmin';
 
     const currentPath = {
-      as: `/backoffice/${
-        role === 'candidateAsAdmin'
-          ? `admin/membres/${candidatId}/offres`
-          : `${role}/offres`
-      }`,
       href: `/backoffice/${
         role === 'candidateAsAdmin'
           ? 'admin/membres/[memberId]/[tab]'
+          : `${role}/offres`
+      }`,
+      as: `/backoffice/${
+        role === 'candidateAsAdmin'
+          ? `admin/membres/${candidatId}/offres`
           : `${role}/offres`
       }`,
     };
@@ -75,15 +77,7 @@ const OpportunityList = forwardRef(
     useImperativeHandle(ref, () => {
       return {
         fetchData: () => {
-          return fetchData(
-            candidatId,
-            role,
-            search,
-            tabFilters.find((filter) => {
-              return filter.active;
-            }).tag,
-            filters
-          );
+          return fetchData(role, search, tabFilterTag, filters, candidatId);
         },
       };
     });
@@ -147,16 +141,8 @@ const OpportunityList = forwardRef(
 
     useDeepCompareEffect(() => {
       setHasError(false);
-      fetchData(
-        candidatId,
-        role,
-        search,
-        tabFilters.find((filter) => {
-          return filter.active;
-        }).tag,
-        filters
-      );
-    }, [candidatId, role, search, tabFilters, filters]);
+      fetchData(role, search, tabFilterTag, filters, candidatId);
+    }, [role, search, tabFilters, filters, candidatId]);
 
     const navigateBackToList = () => {
       push(
@@ -174,13 +160,126 @@ const OpportunityList = forwardRef(
       );
     };
 
+    const content = (
+      <div>
+        {loading && (
+          <div className="uk-text-center">
+            <div data-uk-spinner />
+          </div>
+        )}
+        {!loading && hasError && <OpportunityError />}
+        {!loading && !hasError && (
+          <div>
+            {offers && offers.length > 0 ? (
+              <Grid childWidths={['1-4@l', '1-3@m', '1-2@s']} left top>
+                {offers.map((offer, i) => {
+                  const userOpportunity =
+                    role === 'candidateAsAdmin'
+                      ? getUserOpportunityFromOffer(offer, candidatId)
+                      : offer.userOpportunity;
+
+                  return (
+                    <li key={i}>
+                      <SimpleLink
+                        shallow
+                        className="uk-link-reset"
+                        href={{
+                          pathname: `${currentPath.href}/[offerId]`,
+                          query: restQuery,
+                        }}
+                        as={{
+                          pathname: `${currentPath.as}/${offer.id}`,
+                          query: restQuery,
+                        }}
+                      >
+                        {isAdmin ? (
+                          <OfferCard
+                            title={offer.title}
+                            from={offer.recruiterName}
+                            shortDescription={offer.company}
+                            date={offer.date}
+                            archived={offer.isArchived}
+                            isPublic={offer.isPublic}
+                            isValidated={offer.isValidated}
+                            department={offer.department}
+                            userOpportunity={userOpportunity}
+                            isAdmin
+                          />
+                        ) : (
+                          <OfferCard
+                            title={offer.title}
+                            from={offer.recruiterName}
+                            shortDescription={offer.company}
+                            date={offer.date}
+                            isValidated={offer.isValidated}
+                            isPublic={offer.isPublic}
+                            userOpportunity={offer.userOpportunity}
+                            archived={
+                              offer.userOpportunity &&
+                              offer.userOpportunity.archived
+                            }
+                            isNew={
+                              !offer.userOpportunity ||
+                              !offer.userOpportunity.seen
+                            }
+                            isStared={
+                              offer.userOpportunity &&
+                              offer.userOpportunity.bookmarked
+                            }
+                            department={offer.department}
+                          />
+                        )}
+                      </SimpleLink>
+                    </li>
+                  );
+                })}
+              </Grid>
+            ) : (
+              <div className=" uk-text-center uk-flex uk-flex-center uk-margin-medium-top">
+                <div className="uk-width-xlarge">
+                  <p className="uk-text-italic">
+                    {Object.values(filters).reduce((acc, curr) => {
+                      return acc + curr.length;
+                    }, 0) > 0 || search
+                      ? 'Aucun résultat.'
+                      : `${
+                          role === 'admin'
+                            ? "Aucune offre d'emploi."
+                            : "Aucune proposition n'a été faite au candidat."
+                        }`}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+
     return (
       <div>
-        <FiltersTabs
-          path={currentPath}
-          tabFilters={tabFilters}
-          setTabFilters={setTabFilters}
-          otherFilterComponent={
+        {tabFilters ? (
+          <FiltersTabs
+            path={currentPath}
+            tabFilters={tabFilters}
+            setTabFilters={setTabFilters}
+            otherFilterComponent={
+              <SearchBar
+                filtersConstants={OPPORTUNITY_FILTERS_DATA}
+                filters={filters}
+                numberOfResults={numberOfResults}
+                resetFilters={resetFilters}
+                search={search}
+                setSearch={setSearch}
+                setFilters={setFilters}
+                placeholder="Rechercher..."
+              />
+            }
+          >
+            {content}
+          </FiltersTabs>
+        ) : (
+          <>
             <SearchBar
               filtersConstants={OPPORTUNITY_FILTERS_DATA}
               filters={filters}
@@ -191,114 +290,15 @@ const OpportunityList = forwardRef(
               setFilters={setFilters}
               placeholder="Rechercher..."
             />
-          }
-        >
-          {loading && (
-            <div className="uk-text-center">
-              <div data-uk-spinner />
-            </div>
-          )}
-          {!loading && hasError && <OpportunityError />}
-          {!loading && !hasError && (
-            <div>
-              {offers && offers.length > 0 ? (
-                <Grid childWidths={['1-4@l', '1-3@m', '1-2@s']} left top>
-                  {offers.map((offer, i) => {
-                    const userOpportunity =
-                      role === 'candidateAsAdmin'
-                        ? getUserOpportunityFromOffer(offer, candidatId)
-                        : offer.userOpportunity;
-
-                    return (
-                      <li key={i}>
-                        <SimpleLink
-                          shallow
-                          className="uk-link-reset"
-                          href={{
-                            pathname: `${currentPath.href}/[offerId]`,
-                            query: restQuery,
-                          }}
-                          as={{
-                            pathname: `${currentPath.as}/${offer.id}`,
-                            query: restQuery,
-                          }}
-                        >
-                          {isAdmin ? (
-                            <OfferCard
-                              title={offer.title}
-                              from={offer.recruiterName}
-                              shortDescription={offer.company}
-                              date={offer.date}
-                              archived={offer.isArchived}
-                              isPublic={offer.isPublic}
-                              isValidated={offer.isValidated}
-                              department={offer.department}
-                              userOpportunity={userOpportunity}
-                              isAdmin
-                            />
-                          ) : (
-                            <OfferCard
-                              title={offer.title}
-                              from={offer.recruiterName}
-                              shortDescription={offer.company}
-                              date={offer.date}
-                              isValidated={offer.isValidated}
-                              isPublic={offer.isPublic}
-                              userOpportunity={offer.userOpportunity}
-                              archived={
-                                offer.userOpportunity &&
-                                offer.userOpportunity.archived
-                              }
-                              isNew={
-                                !offer.userOpportunity ||
-                                !offer.userOpportunity.seen
-                              }
-                              isStared={
-                                offer.userOpportunity &&
-                                offer.userOpportunity.bookmarked
-                              }
-                              department={offer.department}
-                            />
-                          )}
-                        </SimpleLink>
-                      </li>
-                    );
-                  })}
-                </Grid>
-              ) : (
-                <div className=" uk-text-center uk-flex uk-flex-center uk-margin-medium-top">
-                  <div className="uk-width-xlarge">
-                    <p className="uk-text-italic">
-                      {Object.values(filters).reduce((acc, curr) => {
-                        return acc + curr.length;
-                      }, 0) > 0 || search
-                        ? 'Aucun résultat.'
-                        : `${
-                            role === 'admin'
-                              ? "Aucune offre d'emploi."
-                              : "Aucune proposition n'a été faite au candidat."
-                          }`}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </FiltersTabs>
+            {content}
+          </>
+        )}
         {isAdmin ? (
           <ModalOfferAdmin
             currentOffer={currentOffer}
             setCurrentOffer={(offer) => {
               setCurrentOffer({ ...offer });
-              fetchData(
-                candidatId,
-                role,
-                search,
-                tabFilters.find((filter) => {
-                  return filter.active;
-                }).tag,
-                filters
-              );
+              fetchData(role, search, tabFilterTag, filters, candidatId);
             }}
             selectedCandidateId={
               role === 'candidateAsAdmin' ? candidatId : undefined
@@ -310,15 +310,7 @@ const OpportunityList = forwardRef(
             currentOffer={currentOffer}
             setCurrentOffer={(offer) => {
               setCurrentOffer({ ...offer });
-              fetchData(
-                candidatId,
-                role,
-                search,
-                tabFilters.find((filter) => {
-                  return filter.active;
-                }).tag,
-                filters
-              );
+              fetchData(role, search, tabFilterTag, filters, candidatId);
             }}
             navigateBackToList={navigateBackToList}
           />
@@ -336,6 +328,8 @@ OpportunityList.propTypes = {
   setFilters: PropTypes.func,
   setSearch: PropTypes.func,
   resetFilters: PropTypes.func,
+  tabFilters: PropTypes.shape(),
+  setTabFilters: PropTypes.func,
 };
 
 OpportunityList.defaultProps = {
@@ -343,9 +337,11 @@ OpportunityList.defaultProps = {
   filters: undefined,
   userRole: 'candidat',
   search: undefined,
+  tabFilters: undefined,
   setFilters: () => {},
   setSearch: () => {},
   resetFilters: () => {},
+  setTabFilters: () => {},
 };
 
 export default OpportunityList;

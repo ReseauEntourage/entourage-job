@@ -32,7 +32,7 @@ const LesOpportunites = () => {
   useEffect(() => {
     if (user) {
       if (!tag) {
-        const params = { tag: OFFER_ADMIN_FILTERS_DATA[0].tag, ...restParams };
+        const params = { tag: OFFER_ADMIN_FILTERS_DATA[1].tag, ...restParams };
 
         if (user && user.zone) {
           const defaultDepartmentsForAdmin = DEPARTMENTS_FILTERS.filter(

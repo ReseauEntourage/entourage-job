@@ -9,7 +9,7 @@ export function useOpportunityList(
   setHasError
 ) {
   return useCallback(
-    async (candidatId, role, search, tabFilter, filters) => {
+    async (role, search, tabFilter, filters, candidatId) => {
       try {
         setLoading(true);
 
