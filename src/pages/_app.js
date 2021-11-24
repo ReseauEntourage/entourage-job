@@ -43,7 +43,6 @@ const Container = ({ Component, pageProps, err }) => {
   useMount(() => {
     Router.events.on('routeChangeComplete', (url) => {
       gtag.pageview(url);
-      /* window.scrollTo(0, 0); */
     });
     setTimeout(() => {
       setFading(true);
