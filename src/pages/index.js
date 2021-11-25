@@ -27,7 +27,9 @@ const Index = ({ query }) => {
     if (query) {
       router.replace('/');
     }
-    UIkit.modal(`#modal-contest`).show();
+    setTimeout(() => {
+      UIkit.modal(`#modal-sail-info`).show();
+    }, 1000);
   });
 
   return (

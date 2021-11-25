@@ -1,5 +1,3 @@
-/* global UIkit */
-
 import React from 'react';
 import { Button } from 'src/components/utils';
 import { EXTERNAL_LINKS } from 'src/constants';
@@ -11,23 +9,18 @@ const SailInfoModal = () => {
   const modalContent = (
     <>
       <div className="uk-light uk-flex uk-flex-column uk-flex-middle">
-        <h2 className="uk-text-center">
-          Défie Thomas sur
-          <span className="uk-text-bold" style={{ color: '#FF5101' }}>
-            Virtual Regatta
-          </span>{' '}
-          et
+        <h2 className="uk-text-center uk-text-bold uk-box-shadow-small">
+          Le bateau LinkedOut{' '}
           <span className="uk-text-bold" style={{ color: '#00B9EF' }}>
-            gagne une navigation
-          </span>{' '}
-          sur le bateau LinkedOut&nbsp;!
+            vainqueur de la Transat Jacques Vabre&nbsp;!
+          </span>
         </h2>
-        <h3 className="uk-text-center">
+        {/* <h3 className="uk-text-center">
           Top&nbsp;départ&nbsp;:
           <span className="uk-text-bold" style={{ color: '#00B9EF' }}>
             Bravo !
           </span>
-        </h3>
+        </h3> */}
       </div>
       <Button
         href={EXTERNAL_LINKS.ARTICLE_TJV}
@@ -36,7 +29,7 @@ const SailInfoModal = () => {
         style="secondary"
         className="uk-margin-medium-top"
       >
-        C&apos;est parti !&nbsp;
+        Lire l&apos;histoire&nbsp;
         <IconNoSSR name="chevron-right" />
       </Button>
     </>
@@ -54,7 +47,10 @@ const SailInfoModal = () => {
             aria-label="close"
           />
           <div className="uk-inline uk-visible@m">
-            <Img src="../../../static/img/thomas.jpg" alt="Thomas Ruyant" />
+            <Img
+              src="../../../static/img/boat-tjv.jpeg"
+              alt="Bateau LinkedOut Transat Jacques Vabre"
+            />
             <div
               style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
               className="uk-position-cover"
@@ -67,7 +63,7 @@ const SailInfoModal = () => {
             className="uk-hidden@m uk-flex uk-flex-column uk-flex-middle uk-padding-small uk-background-center-center uk-background-cover uk-background-blend-overlay"
             style={{
               backgroundImage: `url("${addPrefix(
-                '../../static/img/thomas.jpg'
+                '../../../static/img/boat-tjv.jpeg'
               )}")`,
               backgroundColor: '#444',
             }}
