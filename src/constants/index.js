@@ -401,9 +401,43 @@ const EXTERNAL_LINKS = {
   RECRUITMENTS: 'https://www.welcometothejungle.com/fr/companies/entourage',
 };
 
-const NEWSLETTER_ORIGINS = {
-  LKO: 'LKO',
-  LKO_ENTREPRISES: 'LKO_ENTREPRISES',
+const NEWSLETTER_TAGS = {
+  ZONE: [
+    {
+      label: 'Région parisienne',
+      tag: ADMIN_ZONES.PARIS,
+    },
+    {
+      label: 'Lyon',
+      tag: ADMIN_ZONES.LYON,
+    },
+    {
+      label: 'Lille',
+      tag: ADMIN_ZONES.LILLE,
+    },
+    {
+      label: 'Autre',
+      tag: ADMIN_ZONES.HZ,
+    },
+  ],
+  STATUS: [
+    {
+      label: 'un particulier',
+      tag: 'PARTICULIER',
+    },
+    {
+      label: 'une entreprise',
+      tag: 'ENTREPRISE',
+    },
+    {
+      label: "une structure d'insertion",
+      tag: 'STRUCTURE_INSERTION',
+    },
+    {
+      label: 'un candidat potentiel',
+      tag: 'CANDIDAT_POTENTIEL',
+    },
+  ],
 };
 
 const REDIS_KEYS = {
@@ -512,7 +546,7 @@ export {
   OFFER_CANDIDATE_FILTERS_DATA,
   OFFER_ADMIN_FILTERS_DATA,
   MEMBER_FILTERS_DATA,
-  NEWSLETTER_ORIGINS,
+  NEWSLETTER_TAGS,
   REDIS_KEYS,
   JOBS,
   CONTACT_INFO,

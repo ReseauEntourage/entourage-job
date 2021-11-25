@@ -5,9 +5,9 @@ import ImageTitle from 'src/components/partials/ImageTitle';
 import { CONTACT_INFO, EXTERNAL_LINKS } from 'src/constants';
 import MultipleCTA from 'src/components/partials/MultipleCTA';
 import HowToBeInclusive from 'src/components/partials/HowToBeInclusive';
-import CorporateNewsletter from 'src/components/partials/CorporateNewsletterPartial';
 import CandidateTestimonies from 'src/components/partials/CandidateTestimonies';
 import CompanyTestimonies from 'src/components/partials/CompanyTestimonies';
+import { NewsletterPartial } from 'src/components/partials';
 
 const Sinformer = () => {
   return (
@@ -137,7 +137,7 @@ const Sinformer = () => {
           showHorizontalDividers
         />
       </Section>
-      <CorporateNewsletter />
+      <NewsletterPartial />
     </Layout>
   );
 };
