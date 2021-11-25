@@ -79,9 +79,10 @@ const CVPage = ({ cv, exists, router, hideShareOptions }) => {
               </Button>
             </Grid>
           </Section>
-          <Section style="muted">
-            <NewsletterPartial tag={TAGS.PAGE_CV_INSCRIPTION_NEWSLETTER_CLIC} />
-          </Section>
+          <NewsletterPartial
+            style="muted"
+            tag={TAGS.PAGE_CV_INSCRIPTION_NEWSLETTER_CLIC}
+          />
         </Layout>
       );
     }
@@ -94,7 +95,10 @@ const CVPage = ({ cv, exists, router, hideShareOptions }) => {
             supprimée.
           </p>
         </Section>
-        <NewsletterPartial tag={TAGS.PAGE_CV_INSCRIPTION_NEWSLETTER_CLIC} />
+        <NewsletterPartial
+          padding={false}
+          tag={TAGS.PAGE_CV_INSCRIPTION_NEWSLETTER_CLIC}
+        />
         <DiscoverPartial />
       </Layout>
     );

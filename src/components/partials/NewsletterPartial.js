@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import validator from 'validator';
-import { Grid } from 'src/components/utils';
+import { Grid, Section } from 'src/components/utils';
 import Api from 'src/Axios';
 import Button from 'src/components/utils/Button';
 import { event } from 'src/lib/gtag';
@@ -11,7 +11,7 @@ import { NEWSLETTER_TAGS } from 'src/constants';
 import { IconNoSSR } from 'src/components/utils/Icon';
 import Checkbox from 'src/components/forms/fields/Checkbox';
 
-const NewsletterPartial = ({ padding, tag }) => {
+const NewsletterPartial = ({ style, padding, tag }) => {
   const [email, setEmail] = useState('');
   const [zone, setZone] = useState('');
   const [status, setStatus] = useState('');
@@ -47,8 +47,9 @@ const NewsletterPartial = ({ padding, tag }) => {
   };
 
   return (
-    <div
+    <Section
       id="newsletterForm"
+      style={style}
       className={!padding ? 'uk-padding-remove-vertical' : ''}
     >
       <div className="uk-text-center">
@@ -151,18 +152,20 @@ const NewsletterPartial = ({ padding, tag }) => {
           </div>
         </Grid>
       </div>
-    </div>
+    </Section>
   );
 };
 
 NewsletterPartial.propTypes = {
   padding: PropTypes.bool,
   tag: PropTypes.shape(),
+  style: PropTypes.oneOf(['default', 'muted']),
 };
 
 NewsletterPartial.defaultProps = {
   padding: true,
   tag: undefined,
+  style: 'default',
 };
 
 export default NewsletterPartial;

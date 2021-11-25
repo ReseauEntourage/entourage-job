@@ -23,7 +23,7 @@ const Index = ({ query }) => {
   const router = useRouter();
 
   useMount(() => {
-    // Fix because the site would'nt load right if there was a query param on the root page
+    // Fix because the site wouldn't load right if there was a query param on the root page
     if (query) {
       router.replace('/');
     }
