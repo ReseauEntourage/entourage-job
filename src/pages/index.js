@@ -1,3 +1,4 @@
+/* global UIkit */
 import React from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
@@ -15,6 +16,7 @@ import HowItWorks from 'src/components/partials/HowItWorks';
 import AnnouncementPartial from 'src/components/partials/AnnouncementPartial';
 import { useMount } from 'src/hooks/utils';
 import LinkedInPartial from 'src/components/partials/LinkedInPartial';
+import SailInfoModal from 'src/components/modals/SailInfoModal';
 
 const Index = ({ query }) => {
   const router = useRouter();
@@ -26,7 +28,7 @@ const Index = ({ query }) => {
     }
     setTimeout(() => {
       UIkit.modal(`#modal-sail-info`).show();
-    }, 1000);
+    }, 1500);
   });
 
   return (
@@ -39,6 +41,7 @@ const Index = ({ query }) => {
       <NumberPartial />
       <ActionPartial style="default" />
       <LinkedInPartial />
+      <SailInfoModal />
     </Layout>
   );
 };
