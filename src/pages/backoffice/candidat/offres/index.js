@@ -34,7 +34,8 @@ const Opportunities = () => {
     candidateFilters,
     {
       href: '/backoffice/candidat/offres',
-    }
+    },
+    ['offerId']
   );
 
   const setCandidatZone = useCallback(

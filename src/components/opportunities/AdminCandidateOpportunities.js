@@ -11,7 +11,7 @@ const AdminCandidateOpportunities = ({ candidatId }) => {
       href: '/backoffice/admin/membres/[memberId]/[tab]',
       as: `/backoffice/admin/membres/${candidatId}/offres`,
     },
-    ['memberId', 'tab']
+    ['memberId', 'tab', 'offerId']
   );
 
   return (

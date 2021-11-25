@@ -119,7 +119,6 @@ const getFiltersObjectsFromQueryParamsFront = (params, filtersConst) => {
 };
 
 const getFiltersTagsFromQueryParamsFront = (tag, filters) => {
-  console.log(tag, filters);
   const updatedFilters = JSON.parse(JSON.stringify(filters));
   const filterToDeActivate = updatedFilters.find((filter) => {
     return filter.active;

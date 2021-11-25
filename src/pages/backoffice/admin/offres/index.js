@@ -25,7 +25,8 @@ const LesOpportunites = () => {
     OPPORTUNITY_FILTERS_DATA,
     {
       href: '/backoffice/admin/offres',
-    }
+    },
+    ['offerId']
   );
 
   useEffect(() => {
