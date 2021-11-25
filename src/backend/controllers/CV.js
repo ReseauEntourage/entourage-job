@@ -170,11 +170,13 @@ const getPublishedCVQuery = (employed) => {
         and "User_Candidats".hidden = false
        ${
          employed && employed[Op.or]
-           ? `and (${employed[Op.or].map((value, index) => {
-               return `${
-                 index > 0 ? 'or ' : ''
-               }"User_Candidats".employed = ${value}`;
-             })})`
+           ? `and (${employed[Op.or]
+               .map((value, index) => {
+                 return `${
+                   index > 0 ? 'or ' : ''
+                 }"User_Candidats".employed = ${value}`;
+               })
+               .join(' ')})`
            : ''
        }
       group by

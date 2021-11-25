@@ -4,7 +4,7 @@ import { Section } from 'src/components/utils';
 import PartnersMap from 'src/components/partials/PartnersMap';
 import MultipleCTA from 'src/components/partials/MultipleCTA';
 import { EXTERNAL_LINKS } from 'src/constants';
-import CorporateNewsletter from 'src/components/partials/CorporateNewsletterPartial';
+import NewsletterPartial from 'src/components/partials/NewsletterPartial';
 
 const RecruterHorsLinkedOut = () => {
   return (
@@ -67,7 +67,7 @@ const RecruterHorsLinkedOut = () => {
           ]}
         />
       </Section>
-      <CorporateNewsletter />
+      <NewsletterPartial style="muted" />
     </Layout>
   );
 };

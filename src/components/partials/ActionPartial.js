@@ -49,13 +49,16 @@ const ActionPartial = ({ style }) => {
             grâce aux multiples partages.
           </p>
         </div>
-
         <MultipleCTA
           data={datas}
           spacing="small"
           className="uk-margin-large-bottom"
         />
-        <NewsletterPartial tag={TAGS.HOME_INSCRIPTION_NEWSLETTER_CLIC} />
+        <NewsletterPartial
+          padding={false}
+          style={style}
+          tag={TAGS.HOME_INSCRIPTION_NEWSLETTER_CLIC}
+        />
         <SharePartial />
       </Grid>
     </Section>

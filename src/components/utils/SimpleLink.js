@@ -79,7 +79,7 @@ SimpleLink.defaultProps = {
   visible: undefined,
   target: undefined,
   isExternal: false,
-  scroll: false,
+  scroll: true,
   onClick: () => {},
   toggle: undefined,
   shallow: false,

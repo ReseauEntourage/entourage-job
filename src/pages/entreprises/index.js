@@ -11,7 +11,7 @@ import ImageTitle from 'src/components/partials/ImageTitle';
 import HireCTA from 'src/components/partials/HireCTA';
 import Reviews from 'src/components/partials/Reviews';
 import HowToCommitDifferently from 'src/components/partials/HowToCommitDifferently';
-import CorporateNewsletter from 'src/components/partials/CorporateNewsletterPartial';
+import NewsletterPartial from 'src/components/partials/NewsletterPartial';
 import PARTNERS from 'src/constants/partners';
 import { addPrefix } from 'src/utils';
 
@@ -115,7 +115,7 @@ const Entreprises = () => {
       </Section>
       <Reviews />
       <HowToCommitDifferently />
-      <CorporateNewsletter style="muted" />
+      <NewsletterPartial style="muted" />
     </Layout>
   );
 };

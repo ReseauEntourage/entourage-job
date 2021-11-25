@@ -372,20 +372,6 @@ export default {
       message: 'Obligatoire',
     },
     {
-      field: 'startOfContract',
-      method: 'isBefore',
-      args: [moment().format('YYYY-MM-DD')],
-      validWhen: false,
-      message: "Date antérieure à aujourd'hui",
-    },
-    {
-      field: 'endOfContract',
-      method: 'isBefore',
-      args: [moment().format('YYYY-MM-DD')],
-      validWhen: false,
-      message: "Date antérieure à aujourd'hui",
-    },
-    {
       field: 'endOfContract',
       method: (fieldValue, state) => {
         return (
