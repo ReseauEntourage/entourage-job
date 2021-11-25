@@ -388,6 +388,8 @@ const EXTERNAL_LINKS = {
   LEGAL_MENTIONS:
     'https://docs.google.com/document/d/1a1IU9Y6qVDr4pvWJRE5XMVZ2fNhg0rhXMTL_lqY_f1M/pub',
   ARTICLE_BC: 'https://blog.entourage.social/2020/06/22/benevole-coach/',
+  ARTICLE_TJV:
+    'https://blog.linkedout.fr/2021/11/25/le-bateau-linkedout-vainqueur-de-la-transat-jacques-vabre/',
   CAMPUS_INCLUSION: 'https://campus-inclusion.fr',
   FRANCE_UNE_CHANCE:
     'https://lafrance-unechance.fr/carte-des-clubs-la-france-une-chance/',

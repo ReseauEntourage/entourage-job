@@ -101,7 +101,7 @@ Button.defaultProps = {
   className: undefined,
   onClick: () => {},
   toggle: undefined,
-  scroll: false,
+  scroll: true,
 };
 
 export default Button;
