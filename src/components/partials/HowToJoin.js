@@ -8,6 +8,16 @@ const HowToJoin = () => {
     {
       text: (
         <div>
+          Résider à{' '}
+          <span className="uk-text-bold">
+            Paris, dans le 92, 93, à Lille ou à Lyon
+          </span>
+        </div>
+      ),
+    },
+    {
+      text: (
+        <div>
           Être{' '}
           <span className="uk-text-bold">
             disponible pour vous investir dans votre recherche d’emploi
@@ -64,13 +74,6 @@ const HowToJoin = () => {
         spacing="small"
         className="uk-margin-large-bottom uk-container-small"
       />
-      <div className="uk-flex uk-flex-center">
-        <Img
-          src="/static/img/cover-linkedout.jpg"
-          alt="Binôme"
-          className="uk-height-max-large"
-        />
-      </div>
     </Section>
   );
 };

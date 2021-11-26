@@ -58,7 +58,7 @@ const CVList = ({
       setLoading(true);
       Api.get(`/api/v1/cv/cards/random`, {
         params: {
-          q: searchValue,
+          search: searchValue,
           nb: nbOfCVToDisplayValue,
           ...filtersToQueryParams(filtersValue),
         },

@@ -10,6 +10,8 @@ import SimpleSection from 'src/components/partials/SimpleSection';
 import Button from 'src/components/utils/Button';
 import ImageTitle from 'src/components/partials/ImageTitle';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import { event } from 'src/lib/gtag';
+import TAGS from 'src/constants/tags';
 
 const steps = [
   {
@@ -20,6 +22,7 @@ const steps = [
       href: `${process.env.WEBINAR_URL}`,
       external: true,
       newTab: true,
+      tag: TAGS.PAGE_ORIENTER_WEBINAIRE_CLIC,
     },
   },
   {
@@ -29,6 +32,7 @@ const steps = [
       href: `${process.env.AIRTABLE_LINK_PROFESSIONAL_REINTEGRATION}`,
       external: true,
       newTab: true,
+      tag: TAGS.PAGE_ORIENTER_INSCRIPTION_CLIC,
     },
   },
 ];
@@ -83,6 +87,9 @@ const Orienter = () => {
             </span>
           </h4>
           <Button
+            onClick={() => {
+              event(TAGS.PAGE_ORIENTER_WEBINAIRE_CLIC);
+            }}
             uk-scrollspy="cls:uk-animation-slide-bottom; delay: 200;"
             className="uk-margin-medium-top"
             href={process.env.WEBINAR_URL}
@@ -113,8 +120,7 @@ const Orienter = () => {
           <>
             <div>
               Nous accompagnons plusieurs promotions par an à Paris, dans le 92
-              et le 93, à Lille et Lyon. Les prochaines promotions débuteront en
-              septembre 2021 sur ces territoires.
+              et le 93, à Lille et Lyon.
               <br />
               <br />
               <span className="uk-text-bold">
@@ -129,7 +135,7 @@ const Orienter = () => {
         <div>
           {steps.map((step, index, array) => {
             return (
-              <div key={step.toString()}>
+              <div key={index}>
                 <div className="uk-flex uk-flex-column uk-flex-center uk-flex-middle uk-padding">
                   <div className="uk-flex uk-flex-middle uk-flex-center">
                     <div
@@ -146,6 +152,9 @@ const Orienter = () => {
                     style="secondary"
                     isExternal={step.button.external}
                     newTab={step.button.external}
+                    onClick={() => {
+                      event(step.button.tag);
+                    }}
                   >
                     {step.button.label}
                     &nbsp;
