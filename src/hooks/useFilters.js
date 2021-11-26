@@ -40,6 +40,7 @@ export function useFilters(filtersData, path, otherPathParams) {
         : undefined,
       {
         shallow: true,
+        scroll: false,
       }
     );
   }, [otherParams, path.as, path.href, push]);
@@ -67,6 +68,7 @@ export function useFilters(filtersData, path, otherPathParams) {
           : undefined,
         {
           shallow: true,
+          scroll: false,
         }
       );
     },
@@ -93,6 +95,7 @@ export function useFilters(filtersData, path, otherPathParams) {
           : undefined,
         {
           shallow: true,
+          scroll: false,
         }
       );
     },

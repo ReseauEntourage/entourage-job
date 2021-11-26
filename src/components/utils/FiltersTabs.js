@@ -51,6 +51,7 @@ const FiltersTabs = ({
           : undefined,
         {
           shallow: true,
+          scroll: false,
         }
       );
     },

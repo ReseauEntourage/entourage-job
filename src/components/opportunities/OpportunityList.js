@@ -182,6 +182,7 @@ const OpportunityList = forwardRef(
                     <li key={i}>
                       <SimpleLink
                         shallow
+                        scroll={false}
                         className="uk-link-reset"
                         href={{
                           pathname: `${currentPath.href}/[offerId]`,

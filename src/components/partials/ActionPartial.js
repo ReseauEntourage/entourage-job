@@ -45,8 +45,9 @@ const ActionPartial = ({ style }) => {
             <span className="uk-text-primary">Agissez</span> avec LinkedOut
           </h2>
           <p>
-            Depuis son lancement en juin 2019, de belles rencontres ont emergé
-            grâce aux multiples partages.
+            Depuis son lancement en juin 2019, le programme LinkedOut a permis
+            aux bénéficiaires mais aussi aux bénévoles et aux entreprises de
+            faire des rencontres qui ont changé leur vie.
           </p>
         </div>
         <MultipleCTA
