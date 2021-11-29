@@ -7,8 +7,9 @@
       "component": "textarea",
       "type": "text",
       "placeholder": "Tapez votre texte",
-      "title": "Mon histoire (1500 caractères maximum)",
-      "rows": 14
+      "title": "Mon histoire",
+      "rows": 14,
+      "maxLength": 1500
     }
   ],
   "rules": [

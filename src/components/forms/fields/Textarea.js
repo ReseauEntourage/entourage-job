@@ -69,7 +69,14 @@ const Textarea = ({
           valid !== undefined && valid.isInvalid ? 'uk-form-danger' : ''
         }`}
       />
-      <FormValidatorErrorMessage validObj={valid} />
+      <div className="uk-flex uk-flex-between">
+        <FormValidatorErrorMessage validObj={valid} />
+        {maxLength && (
+          <span className="uk-text-meta uk-text-right uk-flex-1">
+            {maxLength - value.length} caractère(s) restant(s)
+          </span>
+        )}
+      </div>
     </div>
   );
 };
