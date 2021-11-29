@@ -12813,3 +12813,6 @@ iframe.uk-cover {
   display: flex;
   align-items: center;
 }
+.uk-checkbox {
+  background-color: white;
+}
