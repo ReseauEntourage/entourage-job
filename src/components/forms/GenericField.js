@@ -160,6 +160,7 @@ const GenericField = ({
         onChange={onChangeCustom}
         disabled={data.disable ? data.disable(getValue) : data.disabled}
         hidden={data.hide ? data.hide(getValue) : data.hidden}
+        maxLength={data.maxLength}
       />
     );
   }

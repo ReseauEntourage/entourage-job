@@ -170,10 +170,21 @@ const getOfferSearchOptions = (search) => {
     return {
       [Op.or]: [
         searchInColumnWhereOption('Opportunity.title', search),
+        searchInColumnWhereOption('Opportunity.company', search),
         searchInColumnWhereOption('Opportunity.recruiterName', search),
+        searchInColumnWhereOption('Opportunity.recruiterFirstName', search),
+        searchInColumnWhereOption('Opportunity.recruiterMail', search),
+        searchInColumnWhereOption('Opportunity.recruiterPosition', search),
+        searchInColumnWhereOption('Opportunity.recruiterPhone', search),
+        searchInColumnWhereOption('Opportunity.description', search),
+        searchInColumnWhereOption('Opportunity.companyDescription', search),
+        searchInColumnWhereOption('Opportunity.skills', search),
+        searchInColumnWhereOption('Opportunity.prerequisites', search),
+        searchInColumnWhereOption('Opportunity.department', search),
+        searchInColumnWhereOption('Opportunity.contract', search),
+        searchInColumnWhereOption('Opportunity.message', search),
         searchInColumnWhereOption('Opportunity.location', search),
         searchInColumnWhereOption('Opportunity.department', search),
-        searchInColumnWhereOption('Opportunity.company', search),
       ],
     };
   }

@@ -872,7 +872,9 @@ const createSearchString = async (userId) => {
         return [reviews.text, reviews.status, reviews.name].join(' ');
       })
       .join(' '),
-  ].join(' ');
+  ]
+    .join(' ')
+    .replace(/\s\s+/g, ' ');
 
   await models.CV_Search.create({
     CVId: cv.id,

@@ -13,18 +13,18 @@ import Checkbox from 'src/components/forms/fields/Checkbox';
 
 const NewsletterPartial = ({ style, padding, tag }) => {
   const [email, setEmail] = useState('');
-  const [zone, setZone] = useState('');
-  const [status, setStatus] = useState('');
+  const [zone, setZone] = useState();
+  const [status, setStatus] = useState();
   const [isMailValid, setIsMailValid] = useState(true);
   const [isTagsValid, setIsTagsValid] = useState(true);
 
   const onSubmit = async () => {
     const mailValid = validator.isEmail(email);
-    const tagsValid = !validator.isEmpty(zone) && !validator.isEmpty(status);
+    // const tagsValid = !validator.isEmpty(zone) && !validator.isEmpty(status);
 
-    if (!mailValid || !tagsValid) {
+    if (!mailValid /* || !tagsValid */) {
       setIsMailValid(mailValid);
-      setIsTagsValid(tagsValid);
+      // setIsTagsValid(tagsValid);
     } else {
       event(tag);
       try {
@@ -89,9 +89,7 @@ const NewsletterPartial = ({ style, padding, tag }) => {
             />
           </div>
           {!isMailValid && (
-            <div className="uk-text-danger uk-text-center">
-              Adresse mail invalide.
-            </div>
+            <div className="uk-text-danger">Adresse mail invalide.</div>
           )}
           <div>
             <Grid
@@ -104,15 +102,21 @@ const NewsletterPartial = ({ style, padding, tag }) => {
                 <span className="uk-text-bold">Je suis</span>
                 <div className="uk-margin-small-top">
                   {NEWSLETTER_TAGS.STATUS.map(({ tag: tagConst, label }) => {
+                    const id = `newsletterStatus-${tagConst}`;
                     return (
                       <Checkbox
                         removePadding
                         value={tagConst === status}
                         onChange={() => {
-                          setStatus(tagConst);
+                          if (status === tagConst) {
+                            setStatus();
+                          } else {
+                            setStatus(tagConst);
+                          }
                         }}
-                        name="newsletterStatus"
-                        id="newsletterStatus"
+                        name={id}
+                        id={id}
+                        key={id}
                         title={label}
                       />
                     );
@@ -123,15 +127,21 @@ const NewsletterPartial = ({ style, padding, tag }) => {
                 <span className="uk-text-bold">J&apos;habite</span>
                 <div className="uk-margin-small-top">
                   {NEWSLETTER_TAGS.ZONE.map(({ tag: tagConst, label }) => {
+                    const id = `newsletterZone-${tagConst}`;
                     return (
                       <Checkbox
                         removePadding
                         value={tagConst === zone}
                         onChange={() => {
-                          setZone(tagConst);
+                          if (zone === tagConst) {
+                            setZone();
+                          } else {
+                            setZone(tagConst);
+                          }
                         }}
-                        name="newsletterZone"
-                        id="newsletterZone"
+                        name={id}
+                        id={id}
+                        key={id}
                         title={label}
                       />
                     );
