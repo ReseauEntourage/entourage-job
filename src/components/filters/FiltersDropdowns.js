@@ -19,7 +19,7 @@ const FiltersDropdowns = ({
 
     return reducedFilters.map((filterConst, index) => {
       const indexInSelectedFilters = filters[key].findIndex((filter) => {
-        return filter.value === filterConst.value;
+        return filter && filter.value === filterConst.value;
       });
 
       const isFilterSelected = indexInSelectedFilters > -1;

@@ -82,7 +82,7 @@ const filtersToQueryParams = (filters) => {
     params[filter] =
       filters[filter].length > 0
         ? filters[filter].map((f) => {
-            return f.value;
+            return f?.value;
           })
         : undefined;
   });

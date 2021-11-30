@@ -43,7 +43,7 @@ const OpportunityList = forwardRef(
 
     const tabFilterTag = tabFilters?.find((filter) => {
       return filter.active;
-    }).tag;
+    })?.tag;
 
     const [numberOfResults, setNumberOfResults] = useState(0);
 
