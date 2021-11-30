@@ -1,6 +1,7 @@
 import {
   OFFER_ADMIN_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
+  USER_ROLES,
 } from 'src/constants';
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from 'src/components/store/UserProvider';
@@ -13,9 +14,8 @@ import { useRouter } from 'next/router';
 
 const LesOpportunites = () => {
   const {
-    push,
     replace,
-    query: { offerId, tag, ...restParams },
+    query: { q, offerId, tag, ...restParams },
   } = useRouter();
 
   const { user } = useContext(UserContext);
@@ -30,8 +30,48 @@ const LesOpportunites = () => {
   );
 
   useEffect(() => {
-    if (user) {
-      if (!tag) {
+    const redirectParams = tag
+      ? {
+          tag,
+          ...restParams,
+        }
+      : restParams;
+
+    // For retrocompatibility
+    if (q) {
+      replace(
+        {
+          pathname: '/backoffice/admin/offres/[offerId]',
+          query: redirectParams,
+        },
+        {
+          pathname: `/backoffice/admin/offres/${q}`,
+          query: redirectParams,
+        },
+        {
+          shallow: true,
+        }
+      );
+    } else if (user) {
+      if (user.role !== USER_ROLES.ADMIN) {
+        replace(
+          {
+            pathname: `/backoffice/candidat/offres${
+              offerId ? '/[offerId]' : ''
+            }`,
+            query: redirectParams,
+          },
+          {
+            pathname: `/backoffice/candidat/offres${
+              offerId ? `/${offerId}` : ''
+            }`,
+            query: redirectParams,
+          },
+          {
+            shallow: true,
+          }
+        );
+      } else if (!tag) {
         const params = { tag: OFFER_ADMIN_FILTERS_DATA[1].tag, ...restParams };
 
         if (user.zone && user.zone !== ADMIN_ZONES.HZ) {
@@ -75,7 +115,7 @@ const LesOpportunites = () => {
         setLoadingDefaultFilters(false);
       }
     }
-  }, [offerId, push, replace, restParams, tag, user]);
+  }, [q, offerId, replace, restParams, tag, user]);
 
   return (
     <LayoutBackOffice title="Modération des offres d'emploi">

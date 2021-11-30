@@ -19,7 +19,7 @@ const candidateFilters = OPPORTUNITY_FILTERS_DATA.slice(1);
 const Opportunities = () => {
   const {
     replace,
-    query: { offerId, tag, ...restParams },
+    query: { q, offerId, tag, ...restParams },
   } = useRouter();
 
   const { user } = useContext(UserContext);
@@ -91,35 +91,73 @@ const Opportunities = () => {
   );
 
   useEffect(() => {
-    if (user) {
-      setLoading(true);
+    const redirectParams = tag
+      ? {
+          tag,
+          ...restParams,
+        }
+      : restParams;
 
-      if (user.role === USER_ROLES.CANDIDAT) {
-        setCandidatId(user.id);
-        setCandidatZone(user.zone);
-        setLoading(false);
-      } else if (user.role === USER_ROLES.COACH) {
-        Api.get(`/api/v1/user/candidat/`, {
-          params: {
-            coachId: user.id,
+    // For retrocompatibility
+    if (q) {
+      replace(
+        {
+          pathname: '/backoffice/candidat/offres/[offerId]',
+          query: redirectParams,
+        },
+        {
+          pathname: `/backoffice/candidat/offres/${q}`,
+          query: redirectParams,
+        },
+        {
+          shallow: true,
+        }
+      );
+    } else if (user) {
+      if (user.role !== USER_ROLES.COACH && user.role !== USER_ROLES.CANDIDAT) {
+        replace(
+          {
+            pathname: `/backoffice/admin/offres${offerId ? '/[offerId]' : ''}`,
+            query: redirectParams,
           },
-        })
-          .then(({ data }) => {
-            if (data) {
-              setCandidatId(data.candidat.id);
-              setCandidatZone(data.candidat.zone);
-            } else {
-              setHasError(true);
-            }
-            setLoading(false);
+          {
+            pathname: `/backoffice/admin/offres${offerId ? `/${offerId}` : ''}`,
+            query: redirectParams,
+          },
+          {
+            shallow: true,
+          }
+        );
+      } else {
+        setLoading(true);
+
+        if (user.role === USER_ROLES.CANDIDAT) {
+          setCandidatId(user.id);
+          setCandidatZone(user.zone);
+          setLoading(false);
+        } else if (user.role === USER_ROLES.COACH) {
+          Api.get(`/api/v1/user/candidat/`, {
+            params: {
+              coachId: user.id,
+            },
           })
-          .catch(() => {
-            setLoading(false);
-            return setHasError(true);
-          });
+            .then(({ data }) => {
+              if (data) {
+                setCandidatId(data.candidat.id);
+                setCandidatZone(data.candidat.zone);
+              } else {
+                setHasError(true);
+              }
+              setLoading(false);
+            })
+            .catch(() => {
+              setLoading(false);
+              return setHasError(true);
+            });
+        }
       }
     }
-  }, [setCandidatZone, user]);
+  }, [offerId, q, replace, restParams, setCandidatZone, tag, user]);
 
   return (
     <LayoutBackOffice

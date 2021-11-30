@@ -16,7 +16,7 @@ import { usePrevious } from 'src/hooks/utils';
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const { push, replace, asPath, pathname } = useRouter();
+  const { push, replace, asPath, pathname, query } = useRouter();
 
   const [user, setUser] = useState(null);
   const [isAuthentificated, setIsAuthentificated] = useState(false);
@@ -34,22 +34,19 @@ const UserProvider = ({ children }) => {
   // la restriction devrait etre faite des le serveur !
   const restrictAccessByRole = useCallback(
     (role) => {
-      if (pathname.includes('/backoffice/admin') && role !== USER_ROLES.ADMIN) {
-        push(
-          pathname.replace('admin', 'candidat'),
-          asPath.replace('admin', 'candidat')
-        );
-      } else if (
-        pathname.includes('/backoffice/candidat') &&
-        role === USER_ROLES.ADMIN
+      if (
+        (pathname.includes('/backoffice/admin') &&
+          !pathname.includes('/backoffice/admin/offres') &&
+          role !== USER_ROLES.ADMIN) ||
+        (pathname.includes('/backoffice/candidat') &&
+          !pathname.includes('/backoffice/candidat/offres') &&
+          role !== USER_ROLES.CANDIDAT &&
+          role !== USER_ROLES.COACH)
       ) {
-        push(
-          pathname.replace('candidat', 'admin'),
-          asPath.replace('candidat', 'admin')
-        );
+        push('/login');
       }
     },
-    [asPath, pathname, push]
+    [pathname, push]
   );
 
   const logout = useCallback(async () => {
