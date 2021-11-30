@@ -233,9 +233,12 @@ const OFFER_ADMIN_FILTERS_DATA = [
 
 const CV_FILTERS_DATA = [
   {
-    key: 'hideEmployed',
+    key: 'employed',
     type: 'checkbox',
-    constants: [{ label: 'Masquer les candidats employés', value: true }],
+    constants: [
+      { label: "Recherche d'emploi", value: false },
+      { label: 'En emploi', value: true },
+    ],
     title: 'Masquer les candidats en emploi',
   },
   {
@@ -273,6 +276,9 @@ const OPPORTUNITY_FILTERS_DATA = [
   {
     key: 'department',
     constants: DEPARTMENTS_FILTERS,
+    priority: DEPARTMENTS_FILTERS.filter((dept) => {
+      return dept.zone !== ADMIN_ZONES.HZ;
+    }),
     title: 'Département',
   },
 ];
@@ -395,9 +401,43 @@ const EXTERNAL_LINKS = {
   RECRUITMENTS: 'https://www.welcometothejungle.com/fr/companies/entourage',
 };
 
-const NEWSLETTER_ORIGINS = {
-  LKO: 'LKO',
-  LKO_ENTREPRISES: 'LKO_ENTREPRISES',
+const NEWSLETTER_TAGS = {
+  ZONE: [
+    {
+      label: 'Région parisienne',
+      tag: ADMIN_ZONES.PARIS,
+    },
+    {
+      label: 'Lyon',
+      tag: ADMIN_ZONES.LYON,
+    },
+    {
+      label: 'Lille',
+      tag: ADMIN_ZONES.LILLE,
+    },
+    {
+      label: 'Autre',
+      tag: ADMIN_ZONES.HZ,
+    },
+  ],
+  STATUS: [
+    {
+      label: 'un particulier',
+      tag: 'PARTICULIER',
+    },
+    {
+      label: 'une entreprise',
+      tag: 'ENTREPRISE',
+    },
+    {
+      label: "une structure d'insertion",
+      tag: 'STRUCTURE_INSERTION',
+    },
+    {
+      label: 'un candidat potentiel',
+      tag: 'CANDIDAT_POTENTIEL',
+    },
+  ],
 };
 
 const REDIS_KEYS = {
@@ -409,9 +449,6 @@ const REDIS_KEYS = {
 };
 
 const STORAGE_KEYS = {
-  CV_FILTERS_PUBLIC: 'cv-filters-public',
-  CV_FILTERS_COMPANY: 'cv-filters-company',
-  MEMBERS_FILTERS: 'members-filters',
   ACCESS_TOKEN: 'access-token',
 };
 
@@ -509,7 +546,7 @@ export {
   OFFER_CANDIDATE_FILTERS_DATA,
   OFFER_ADMIN_FILTERS_DATA,
   MEMBER_FILTERS_DATA,
-  NEWSLETTER_ORIGINS,
+  NEWSLETTER_TAGS,
   REDIS_KEYS,
   JOBS,
   CONTACT_INFO,

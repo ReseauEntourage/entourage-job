@@ -7,7 +7,7 @@ import Layout from 'src/components/Layout';
 import ImageTitle from 'src/components/partials/ImageTitle';
 import SearchCandidates from 'src/components/partials/SearchCandidates';
 import CorporateContact from 'src/components/partials/CorporateContactPartial';
-import CorporateNewsletter from 'src/components/partials/CorporateNewsletterPartial';
+import NewsletterPartial from 'src/components/partials/NewsletterPartial';
 import { IconNoSSR } from 'src/components/utils/Icon';
 
 const CVEntreprises = () => {
@@ -23,7 +23,7 @@ const CVEntreprises = () => {
           </span>
         }
       />
-      <SearchCandidates style="muted" defaultHideEmployed isCompany />
+      <SearchCandidates style="muted" />
       <Section style="default">
         <div className="uk-flex uk-flex-middle uk-flex-center uk-flex-column">
           <h3 className="uk-text-bold uk-margin-medium-bottom">
@@ -76,7 +76,7 @@ const CVEntreprises = () => {
       </Section>
       <PostJobAdModal />
       <CorporateContact />
-      <CorporateNewsletter style="default" />
+      <NewsletterPartial style="default" />
     </Layout>
   );
 };

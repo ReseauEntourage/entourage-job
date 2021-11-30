@@ -1,4 +1,5 @@
 /* global UIkit */
+
 import React from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
@@ -22,13 +23,15 @@ const Index = ({ query }) => {
   const router = useRouter();
 
   useMount(() => {
-    // Fix because the site would'nt load right if there was a query param on the root page
+    // Fix because the site wouldn't load right if there was a query param on the root page
     if (query) {
       router.replace('/');
     }
-    setTimeout(() => {
-      UIkit.modal(`#modal-sail-info`).show();
-    }, 1500);
+    if (!process.env.HIDE_HOME_POPUP) {
+      setTimeout(() => {
+        UIkit.modal(`#modal-sail-info`).show();
+      }, 1500);
+    }
   });
 
   return (

@@ -39,23 +39,27 @@ const datas = [
 const ActionPartial = ({ style }) => {
   return (
     <Section style={style} id="actions">
-      <Grid gap="large" column>
-        <div className="uk-text-center">
+      <Grid gap="large" column center>
+        <div className="uk-text-center uk-flex uk-flex-column uk-flex-middle">
           <h2 className="uk-text-bold">
             <span className="uk-text-primary">Agissez</span> avec LinkedOut
           </h2>
-          <p>
-            Depuis son lancement en juin 2019, de belles rencontres ont emergé
-            grâce aux multiples partages.
-          </p>
+          <div className="uk-container-small">
+            Depuis son lancement en juin 2019, le programme LinkedOut a permis
+            aux bénéficiaires mais aussi aux bénévoles et aux entreprises de
+            faire des rencontres qui ont changé leur vie.
+          </div>
         </div>
-
         <MultipleCTA
           data={datas}
           spacing="small"
           className="uk-margin-large-bottom"
         />
-        <NewsletterPartial tag={TAGS.HOME_INSCRIPTION_NEWSLETTER_CLIC} />
+        <NewsletterPartial
+          padding={false}
+          style={style}
+          tag={TAGS.HOME_INSCRIPTION_NEWSLETTER_CLIC}
+        />
         <SharePartial />
       </Grid>
     </Section>

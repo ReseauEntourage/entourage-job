@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import { Button, CloseButton, Grid, SimpleLink } from 'src/components/utils';
 import Textarea from 'src/components/forms/fields/Textarea';
 import Select from 'src/components/forms/fields/Select';
@@ -11,7 +10,7 @@ import Api from 'src/Axios';
 import { OFFER_STATUS } from 'src/constants';
 import { formatParagraph } from 'src/utils';
 import { useRemoveModal } from 'src/hooks/utils';
-import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
+import ModalOfferInfo from 'src/components/modals/ModalOfferInfo';
 
 export const List = ({ className, children }) => {
   return (
@@ -73,17 +72,9 @@ OfferInfoContainer.defaultProps = {
   children: [],
 };
 
-export function translateCategory(isPublic) {
-  if (!isPublic) return 'Offre privée';
-  if (isPublic) return 'Offre générale';
-  return 'Offre inconnue';
-}
-
-const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
-  if (!currentOffer) {
-    currentOffer = { userOpportunity: {}, businessLines: [] };
-  }
-  const { status, bookmarked, note, archived } = currentOffer.userOpportunity;
+const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
+  const { status, bookmarked, note, archived } =
+    currentOffer?.userOpportunity ?? {};
 
   const [loadingIcon, setLoadingIcon] = useState(false);
   const [loadingStatus, setLoadingStatus] = useState(false);
@@ -107,6 +98,10 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
 
   useEffect(resetNoteBuffer, [currentOffer, note]);
 
+  if (!currentOffer) {
+    return null;
+  }
+
   const mutatedOfferStatus = [
     {
       ...OFFER_STATUS[0],
@@ -126,31 +121,25 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
       >
         <CloseButton
           className="uk-modal-close-default"
-          onClick={resetNoteBuffer}
+          onClick={() => {
+            resetNoteBuffer();
+            navigateBackToList();
+          }}
         />
         {!currentOffer ? null : (
           <div className="uk-modal-body">
             <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
-              <div className="uk-flex uk-flex-column">
-                <h3 className="uk-flex-1 uk-text-bold uk-margin-remove-bottom">
-                  {currentOffer.title}
-                </h3>
-                <span>{translateCategory(currentOffer.isPublic)}</span>
-                <ContractLabel
-                  contract={currentOffer.contract}
-                  endOfContract={currentOffer.endOfContract}
-                  startOfContract={currentOffer.startOfContract}
-                />
-                <span className="uk-text-small">
-                  {currentOffer.numberOfPositions} poste
-                  {currentOffer.numberOfPositions > 1 ? 's' : ''} -{' '}
-                  {currentOffer.isPartTime ? 'Temps partiel' : 'Temps plein'}
-                </span>
-                <span className="uk-text-italic uk-text-small">
-                  offre soumise le{' '}
-                  {moment(currentOffer.date).format('DD/MM/YYYY')}
-                </span>
-              </div>
+              <ModalOfferInfo
+                startOfContract={currentOffer.startOfContract}
+                isPublic={currentOffer.isPublic}
+                numberOfPositions={currentOffer.numberOfPositions}
+                contract={currentOffer.contract}
+                date={currentOffer.date}
+                title={currentOffer.title}
+                isPartTime={currentOffer.isPartTime}
+                endOfContract={currentOffer.endOfContract}
+                offerId={currentOffer.id}
+              />
               <div>
                 <Grid eachWidths={['expand', 'auto']} row middle>
                   {loadingStatus && <div data-uk-spinner="" />}
@@ -329,14 +318,16 @@ const ModalOffer = ({ currentOffer, setCurrentOffer }) => {
     </div>
   );
 };
+
 ModalOffer.propTypes = {
   currentOffer: PropTypes.shape({
+    id: PropTypes.string,
     message: PropTypes.string,
     title: PropTypes.string,
     company: PropTypes.string,
     description: PropTypes.string,
     companyDescription: PropTypes.string,
-    numberOfPositions: PropTypes.string,
+    numberOfPositions: PropTypes.number,
     prerequisites: PropTypes.string,
     skills: PropTypes.string,
     contract: PropTypes.string,
@@ -353,13 +344,14 @@ ModalOffer.propTypes = {
     location: PropTypes.string,
     department: PropTypes.string,
     userOpportunity: PropTypes.shape({
-      status: PropTypes.string,
+      status: PropTypes.number,
       bookmarked: PropTypes.bool,
       note: PropTypes.string,
       archived: PropTypes.bool,
     }),
   }),
   setCurrentOffer: PropTypes.func.isRequired,
+  navigateBackToList: PropTypes.func.isRequired,
 };
 ModalOffer.defaultProps = {
   currentOffer: { userOpportunity: {}, businessLines: [] },

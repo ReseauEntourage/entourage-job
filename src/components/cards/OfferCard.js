@@ -106,7 +106,7 @@ const OfferCard = ({
                       userOpportunity.map((userOpp) => {
                         return (
                           <div
-                            key={userOpp.OpportunityId + userOpp.UserId}
+                            key={userOpp.id + userOpp.UserId}
                             className="uk-flex uk-flex-column"
                             style={{ marginTop: 5 }}
                           >
@@ -166,7 +166,7 @@ OfferCard.propTypes = {
     PropTypes.shape(),
     PropTypes.arrayOf(PropTypes.shape()),
   ]),
-  isValidated: PropTypes.bool.isRequired,
+  isValidated: PropTypes.bool,
   isAdmin: PropTypes.bool,
   department: PropTypes.string,
 };
@@ -176,6 +176,7 @@ OfferCard.defaultProps = {
   isNew: undefined,
   archived: undefined,
   isPublic: undefined,
+  isValidated: undefined,
   date: undefined,
   userOpportunity: undefined,
   isAdmin: false,

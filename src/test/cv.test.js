@@ -283,7 +283,7 @@ describe('CV', () => {
       });
     });
     describe('R - Read List of CVs', () => {
-      describe('Get a list n random cv matching a search - /cards/random/?nb=&q=', () => {
+      describe('Get a list n random cv matching a search - /cards/random/?nb=&search=', () => {
         it('Should return 200, and 1 cv', async () => {
           const response = await request(serverTest).get(
             `${route}/cards/random/?nb=2`
@@ -302,7 +302,7 @@ describe('CV', () => {
             firstName: newUser.firstName,
           });
           const response = await request(serverTest).get(
-            `${route}/cards/random/?nb=1&q=xxxxKnownFirstNamexxxx`
+            `${route}/cards/random/?nb=1&search=xxxxKnownFirstNamexxxx`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(1);
@@ -310,7 +310,7 @@ describe('CV', () => {
         });
         it('Should return 200 and empty list, if no result found', async () => {
           const response = await request(serverTest).get(
-            `${route}/cards/random/?nb=1&q=zzzzzzz`
+            `${route}/cards/random/?nb=1&search=zzzzzzz`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(0);
@@ -428,7 +428,7 @@ describe('CV', () => {
             firstName: newUser3.firstName,
           });
           const response = await request(serverTest).get(
-            `${route}/cards/random/?hideEmployed[]=true`
+            `${route}/cards/random/?employed[]=false`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(8);
@@ -572,7 +572,7 @@ describe('CV', () => {
             }
           );
           const response = await request(serverTest).get(
-            `${route}/cards/random/?businessLines[]=Associatif&businessLines[]=Informatique&hideEmployed[]=true&locations[]=Rhône (69)&locations[]=Nord (59)&locations[]=Paris (75)`
+            `${route}/cards/random/?businessLines[]=Associatif&businessLines[]=Informatique&employed[]=false&locations[]=Rhône (69)&locations[]=Nord (59)&locations[]=Paris (75)`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(1);
@@ -653,7 +653,7 @@ describe('CV', () => {
             }
           );
           const response = await request(serverTest).get(
-            `${route}/cards/random/?businessLines[]=Artisanat&hideEmployed[]=true&locations[]=Paris (75)`
+            `${route}/cards/random/?businessLines[]=Artisanat&employed[]=false&locations[]=Paris (75)`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(5);

@@ -1,6 +1,6 @@
 {
   "name": "linkedout",
-  "version": "1.13.4",
+  "version": "1.14.0",
   "description": "",
   "main": "index.js",
   "engines": {
@@ -104,6 +104,7 @@
     "text-to-svg": "^3.1.5",
     "throng": "^5.0.0",
     "uikit": "^3.5.4",
+    "use-deep-compare-effect": "^1.8.1",
     "uuid": "^3.4.0",
     "validator": "^11.1.0",
     "webpack": "^4.41.6"

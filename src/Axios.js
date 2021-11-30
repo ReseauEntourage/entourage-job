@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { STORAGE_KEYS } from './constants';
+import { STORAGE_KEYS } from 'src/constants';
 
 const Axios = axios.create({
   baseURL: `${process.env.SERVER_URL}`,

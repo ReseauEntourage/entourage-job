@@ -1,7 +1,6 @@
 /* global UIkit */
 
 import React from 'react';
-import { CONTRACTS } from 'src/constants';
 import schemaEditEmployed from 'src/components/forms/schema/formEditEmployed';
 import Api from 'src/Axios';
 import PropTypes from 'prop-types';

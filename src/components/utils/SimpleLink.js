@@ -12,6 +12,7 @@ const SimpleLink = ({
   target,
   scroll,
   isExternal,
+  shallow,
   onClick,
   toggle,
 }) => {
@@ -37,7 +38,7 @@ const SimpleLink = ({
       {children}
     </a>
   ) : (
-    <Link scroll={scroll} href={href} as={as}>
+    <Link scroll={scroll} href={href} as={as} shallow={shallow}>
       <a
         onClick={onClick}
         target={target}
@@ -50,8 +51,14 @@ const SimpleLink = ({
   );
 };
 SimpleLink.propTypes = {
-  href: PropTypes.string,
-  as: PropTypes.string,
+  href: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({ pathname: PropTypes.string, query: PropTypes.shape() }),
+  ]),
+  as: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({ pathname: PropTypes.string, query: PropTypes.shape() }),
+  ]),
   visible: PropTypes.oneOf(UIKIT_SCREENS),
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -63,15 +70,18 @@ SimpleLink.propTypes = {
   scroll: PropTypes.bool,
   onClick: PropTypes.func,
   toggle: PropTypes.string,
+  shallow: PropTypes.bool,
 };
 SimpleLink.defaultProps = {
+  href: undefined,
   as: undefined,
   className: '',
   visible: undefined,
   target: undefined,
   isExternal: false,
-  scroll: undefined,
+  scroll: true,
   onClick: () => {},
   toggle: undefined,
+  shallow: false,
 };
 export default SimpleLink;

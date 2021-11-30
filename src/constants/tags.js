@@ -158,6 +158,12 @@ const TAGS = {
   PAGE_ORIENTER_CARROUSEL_CLIC: {
     action: 'Page_Orienter_Carrousel_Clic',
   },
+  PAGE_ORIENTER_WEBINAIRE_CLIC: {
+    action: 'Page_Orienter_Webinaire_Clic',
+  },
+  PAGE_ORIENTER_INSCRIPTION_CLIC: {
+    action: 'Page_Orienter_Inscription_Clic',
+  },
   PAGE_PARTENAIRES_NOUS_ECRIRE_CLIC: {
     action: 'Page_Partenaires_Nous_ecrire_Clic',
   },

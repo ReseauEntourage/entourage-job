@@ -30,7 +30,7 @@ import { models, sequelize } from 'src/backend/db/models';
 import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import _ from 'lodash';
-import { getUser } from './User';
+import { getUser } from 'src/backend/controllers/User';
 
 const offerTable = process.env.AIRTABLE_OFFERS;
 const {
@@ -170,10 +170,21 @@ const getOfferSearchOptions = (search) => {
     return {
       [Op.or]: [
         searchInColumnWhereOption('Opportunity.title', search),
+        searchInColumnWhereOption('Opportunity.company', search),
         searchInColumnWhereOption('Opportunity.recruiterName', search),
+        searchInColumnWhereOption('Opportunity.recruiterFirstName', search),
+        searchInColumnWhereOption('Opportunity.recruiterMail', search),
+        searchInColumnWhereOption('Opportunity.recruiterPosition', search),
+        searchInColumnWhereOption('Opportunity.recruiterPhone', search),
+        searchInColumnWhereOption('Opportunity.description', search),
+        searchInColumnWhereOption('Opportunity.companyDescription', search),
+        searchInColumnWhereOption('Opportunity.skills', search),
+        searchInColumnWhereOption('Opportunity.prerequisites', search),
+        searchInColumnWhereOption('Opportunity.department', search),
+        searchInColumnWhereOption('Opportunity.contract', search),
+        searchInColumnWhereOption('Opportunity.message', search),
         searchInColumnWhereOption('Opportunity.location', search),
         searchInColumnWhereOption('Opportunity.department', search),
-        searchInColumnWhereOption('Opportunity.company', search),
       ],
     };
   }

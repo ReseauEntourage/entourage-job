@@ -8,7 +8,6 @@ import { IconNoSSR } from 'src/components/utils/Icon';
 import { event } from 'src/lib/gtag';
 import FiltersDropdowns from 'src/components/filters/FiltersDropdowns';
 
-let debounceTimeoutId;
 const MAX_WIDTH = 1100;
 
 const SearchBar = ({
@@ -22,31 +21,23 @@ const SearchBar = ({
   placeholder,
   startSearchEvent,
 }) => {
-  const [searchBuffer, setSearchBuffer] = useState();
-
-  const startSearch = useCallback(
-    (searchString) => {
-      if (searchString) {
-        if (startSearchEvent) event(startSearchEvent);
-        setSearch(searchString);
-      } else {
-        setSearch();
-      }
-    },
-    [setSearch, startSearchEvent]
-  );
+  const [searchBuffer, setSearchBuffer] = useState(search ?? '');
 
   useEffect(() => {
-    if (process.env.DISABLE_SEARCH_ON_THE_FLY !== 'true') {
-      clearTimeout(debounceTimeoutId);
-      debounceTimeoutId = setTimeout(() => {
-        return startSearch(searchBuffer);
-      }, 1000);
+    setSearchBuffer(search ?? '');
+  }, [search]);
+
+  const startSearch = useCallback(() => {
+    if (searchBuffer) {
+      if (startSearchEvent) event(startSearchEvent);
+      setSearch(searchBuffer);
+    } else {
+      setSearch();
     }
-  }, [searchBuffer, startSearch]);
+  }, [searchBuffer, setSearch, startSearchEvent]);
 
   return (
-    <div className="uk-flex uk-flex-column uk-flex-middle">
+    <div className="uk-flex uk-flex-column uk-flex-middle uk-margin-small-bottom">
       <div
         style={{ maxWidth: MAX_WIDTH }}
         className="uk-width-expand ent-search-bar"
@@ -56,11 +47,11 @@ const SearchBar = ({
             className="uk-search-input"
             type="search"
             placeholder={placeholder}
+            value={searchBuffer}
             onKeyDown={(ev) => {
               if (ev.key === 'Enter') {
                 ev.preventDefault();
-                clearTimeout(debounceTimeoutId);
-                startSearch(searchBuffer);
+                startSearch();
               }
             }}
             onChange={(ev) => {
@@ -77,10 +68,7 @@ const SearchBar = ({
         />
         <a
           className="ent-search-icon uk-background-primary uk-light"
-          onClick={() => {
-            clearTimeout(debounceTimeoutId);
-            startSearch(searchBuffer);
-          }}
+          onClick={startSearch}
         >
           <IconNoSSR name="search" className="uk-text-secondary" />
         </a>
@@ -104,7 +92,10 @@ const SearchBar = ({
           numberOfResults={numberOfResults}
           filters={filters}
           search={search}
-          resetFilters={resetFilters}
+          resetFilters={() => {
+            resetFilters();
+            setSearchBuffer('');
+          }}
         />
       </div>
     </div>

@@ -56,9 +56,8 @@ const Travailler = () => {
             <br />
             <br />
             <span>
-              Nous lançons les prochaines promotions à Paris, dans le 92 et 93,
-              à Lille et Lyon en septembre 2021&nbsp;: rejoignez le
-              programme&nbsp;!
+              Candidatez au programme à Paris, dans le 92 et 93, à Lille et
+              Lyon.
             </span>
           </h4>
         </div>

@@ -1,25 +1,37 @@
 /* global UIkit */
+
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import validator from 'validator';
-import { Grid } from 'src/components/utils';
+import { Grid, Section } from 'src/components/utils';
 import Api from 'src/Axios';
 import Button from 'src/components/utils/Button';
 import { event } from 'src/lib/gtag';
-import { NEWSLETTER_ORIGINS } from 'src/constants';
+import { NEWSLETTER_TAGS } from 'src/constants';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import Checkbox from 'src/components/forms/fields/Checkbox';
 
-const NewsletterPartial = ({ padding, tag }) => {
+const NewsletterPartial = ({ style, padding, tag }) => {
   const [email, setEmail] = useState('');
-  const [isValid, setIsValid] = useState(true);
+  const [zone, setZone] = useState();
+  const [status, setStatus] = useState();
+  const [isMailValid, setIsMailValid] = useState(true);
+  const [isTagsValid, setIsTagsValid] = useState(true);
 
   const onSubmit = async () => {
-    if (validator.isEmail(email)) {
+    const mailValid = validator.isEmail(email);
+    // const tagsValid = !validator.isEmpty(zone) && !validator.isEmpty(status);
+
+    if (!mailValid /* || !tagsValid */) {
+      setIsMailValid(mailValid);
+      // setIsTagsValid(tagsValid);
+    } else {
       event(tag);
       try {
         await Api.post('/api/v1/mail/newsletter', {
           email,
-          origin: NEWSLETTER_ORIGINS.LKO,
+          zone,
+          status,
         });
         UIkit.notification(
           'Votre inscription à la newsletter a bien été prise en compte !',
@@ -29,34 +41,40 @@ const NewsletterPartial = ({ padding, tag }) => {
       } catch {
         UIkit.notification('Une erreur est survenue', 'danger');
       }
-      setIsValid(true);
-    } else {
-      setIsValid(false);
+      setIsMailValid(true);
+      setIsTagsValid(true);
     }
   };
 
   return (
-    <div id="profiles" className={!padding ? 'uk-padding-remove-vertical' : ''}>
+    <Section
+      id="newsletterForm"
+      style={style}
+      className={!padding ? 'uk-padding-remove-vertical' : ''}
+    >
       <div className="uk-text-center">
         <h4 className="uk-align-center uk-text-bold uk-width-1-2@m">
           Inscrivez-vous à la newsletter pour avoir des nouvelles des candidats
-          et être informé·e de l&apos;évolution du projet
+          et être informé·e de l&apos;évolution du projet&nbsp;!
         </h4>
       </div>
-      {/* input */}
       <div className="uk-flex uk-flex-center uk-flex-middle uk-flex-column">
         <Grid
-          eachWidths={['expand', 'auto']}
-          className="uk-width-1-2@s"
+          className="uk-width-1-2@m"
           gap="collapse"
           middle
+          column
+          childWidths={['1-1']}
         >
-          <div data-uk-form-custom="target: true" className="uk-width-1-1">
+          <div
+            data-uk-form-custom="target: false"
+            className="uk-width-1-1 uk-margin-small-bottom"
+          >
             <a className="uk-form-icon" disabled>
               <IconNoSSR name="mail" />
             </a>
             <input
-              className="uk-input"
+              className="uk-input ent-newsletter-input"
               type="email"
               placeholder="Votre adresse mail..."
               style={{
@@ -70,26 +88,94 @@ const NewsletterPartial = ({ padding, tag }) => {
               value={email}
             />
           </div>
-          <Button style="primary" onClick={onSubmit}>
-            S&apos;abonner&nbsp;!
-          </Button>
+          {!isMailValid && (
+            <div className="uk-text-danger">Adresse mail invalide.</div>
+          )}
+          <div>
+            <Grid
+              childWidths={['1-2', '1-3@m']}
+              gap="small"
+              center
+              className="uk-margin-small-top uk-margin-small-bottom"
+            >
+              <div>
+                <span className="uk-text-bold">Je suis</span>
+                <div className="uk-margin-small-top">
+                  {NEWSLETTER_TAGS.STATUS.map(({ tag: tagConst, label }) => {
+                    const id = `newsletterStatus-${tagConst}`;
+                    return (
+                      <Checkbox
+                        removePadding
+                        value={tagConst === status}
+                        onChange={() => {
+                          if (status === tagConst) {
+                            setStatus();
+                          } else {
+                            setStatus(tagConst);
+                          }
+                        }}
+                        name={id}
+                        id={id}
+                        key={id}
+                        title={label}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+              <div>
+                <span className="uk-text-bold">J&apos;habite</span>
+                <div className="uk-margin-small-top">
+                  {NEWSLETTER_TAGS.ZONE.map(({ tag: tagConst, label }) => {
+                    const id = `newsletterZone-${tagConst}`;
+                    return (
+                      <Checkbox
+                        removePadding
+                        value={tagConst === zone}
+                        onChange={() => {
+                          if (zone === tagConst) {
+                            setZone();
+                          } else {
+                            setZone(tagConst);
+                          }
+                        }}
+                        name={id}
+                        id={id}
+                        key={id}
+                        title={label}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </Grid>
+          </div>
+          {!isTagsValid && (
+            <div className="uk-text-danger uk-text-center">
+              Veuillez renseigner les informations.
+            </div>
+          )}
+          <div className="uk-flex uk-flex-center uk-margin-small-top">
+            <Button style="primary" onClick={onSubmit}>
+              S&apos;abonner&nbsp;!
+            </Button>
+          </div>
         </Grid>
-        <span className="uk-text-danger uk-padding-small">
-          {!isValid && 'Adresse mail invalide'}
-        </span>
       </div>
-    </div>
+    </Section>
   );
 };
 
 NewsletterPartial.propTypes = {
   padding: PropTypes.bool,
   tag: PropTypes.shape(),
+  style: PropTypes.oneOf(['default', 'muted']),
 };
 
 NewsletterPartial.defaultProps = {
   padding: true,
   tag: undefined,
+  style: 'default',
 };
 
 export default NewsletterPartial;

@@ -4,7 +4,7 @@ import {
   JOBS,
   MAILJET_TEMPLATES,
   HEARD_ABOUT,
-  NEWSLETTER_ORIGINS,
+  NEWSLETTER_TAGS,
 } from 'src/constants';
 import { logger } from 'src/backend/utils/Logger';
 
@@ -15,7 +15,6 @@ import Mailchimp from 'src/backend/controllers/Mailchimp';
 const router = express.Router();
 
 router.post('/contact-us', auth(), (req, res) => {
-  // todo verification de champs
   const {
     firstName,
     lastName,
@@ -61,11 +60,16 @@ router.post('/contact-us', auth(), (req, res) => {
 });
 
 router.post('/newsletter', auth(), (req, res) => {
+  const { zone, status } = req.body;
+
+  const zoneTag = Array.isArray(zone) ? zone : [zone];
+  const statusTag = Array.isArray(status) ? status : [status];
+
   Mailchimp.lists
     .setListMember(process.env.MAILCHIMP_AUDIENCE_ID, req.body.email, {
       email_address: req.body.email,
       status_if_new: 'subscribed',
-      tags: [req.body.origin || NEWSLETTER_ORIGINS.LKO],
+      tags: [...zoneTag, ...statusTag],
     })
     .then(() => {
       res.status(200).json();

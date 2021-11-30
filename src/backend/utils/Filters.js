@@ -138,7 +138,11 @@ const getCVOptions = (filtersObj) => {
         for (let i = 0; i < keys.length; i += 1) {
           if (filtersObj[keys[i]].length > 0) {
             if (keys[i] === CV_FILTERS_DATA[0].key) {
-              whereOptions[keys[i]] = true;
+              whereOptions[keys[i]] = {
+                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value === 'true';
+                }),
+              };
             } else {
               whereOptions[keys[i]] = {
                 [Op.or]: filtersObj[keys[i]].map((currentFilter) => {

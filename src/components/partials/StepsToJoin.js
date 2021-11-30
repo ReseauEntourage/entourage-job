@@ -13,12 +13,8 @@ const StepsToJoin = () => {
         Comment <span className="uk-text-primary">s&apos;inscrire&nbsp;?</span>
       </h2>
       <h4 className="uk-text-bold uk-text-center uk-margin-large-top">
-        Vous répondez aux critères ci dessus, résidez à Paris, dans le 92, 93, à
-        Lille ou à Lyon&nbsp;?
-        <br />
-        <br />
-        Les prochaines promotions auront lieu en septembre 2021. Envoyez-nous
-        votre candidature&nbsp;!
+        Vous répondez aux critères ci dessus&nbsp;? Envoyez nous votre
+        candidature&nbsp;!
       </h4>
       <div className="uk-flex uk-flex-top uk-flex-center uk-padding-small">
         <Button
@@ -50,7 +46,7 @@ const StepsToJoin = () => {
         Nous en sommes désolés et nous faisons tout pour ouvrir rapidement de
         nouvelles antennes.
       </p>
-      <h4 className="uk-text-center">
+      <h4 className="uk-text-center uk-margin-large-top">
         Pour être tenu au courant des actualités sur projet, suivez l’aventure
         sur nos réseaux !
       </h4>

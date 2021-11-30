@@ -22,8 +22,8 @@ import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
 import {
   filterMembersByAssociatedUser,
   filterMembersByCVStatus,
-  getFiltersObjectsFromQueryParams,
   getMemberOptions,
+  getFiltersObjectsFromQueryParams,
 } from 'src/backend/utils/Filters';
 
 const { User, User_Candidat, CV, Opportunity_User, Revision } = models;
@@ -421,9 +421,12 @@ const searchUsers = (query, role) => {
 };
 
 const searchCandidates = async (query) => {
-  const publishedCVs = await sequelize.query(getPublishedCVQuery(true), {
-    type: QueryTypes.SELECT,
-  });
+  const publishedCVs = await sequelize.query(
+    getPublishedCVQuery({ [Op.or]: [false] }),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
   const options = {
     attributes: ATTRIBUTES_USER_PUBLIC,
     where: {
@@ -443,9 +446,12 @@ const searchCandidates = async (query) => {
 };
 
 const getAllCandidates = async () => {
-  const publishedCVs = await sequelize.query(getPublishedCVQuery(true), {
-    type: QueryTypes.SELECT,
-  });
+  const publishedCVs = await sequelize.query(
+    getPublishedCVQuery({ [Op.or]: [false] }),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
 
   const options = {
     attributes: ATTRIBUTES_USER,
