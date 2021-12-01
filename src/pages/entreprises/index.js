@@ -1,3 +1,5 @@
+/* global UIkit */
+
 import React from 'react';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
@@ -6,7 +8,7 @@ import Img from 'src/components/utils/Img';
 import LogoList from 'src/components/partials/LogoList';
 import WhatItBringsToCompanies from 'src/components/partials/WhatItBringsToCompanies';
 import Layout from 'src/components/Layout';
-import { Button, Grid, Section } from 'src/components/utils';
+import { Button, CloseButton, Grid, Section } from 'src/components/utils';
 import ImageTitle from 'src/components/partials/ImageTitle';
 import HireCTA from 'src/components/partials/HireCTA';
 import Reviews from 'src/components/partials/Reviews';
@@ -14,39 +16,10 @@ import HowToCommitDifferently from 'src/components/partials/HowToCommitDifferent
 import NewsletterPartial from 'src/components/partials/NewsletterPartial';
 import PARTNERS from 'src/constants/partners';
 import { addPrefix } from 'src/utils';
+import ModalGeneric from 'src/components/modals/ModalGeneric';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const Entreprises = () => {
-  const content = (
-    <div className="uk-flex uk-flex-column uk-flex-middle uk-flex-center">
-      <div className="uk-light uk-flex uk-flex-column uk-flex-middle">
-        <h2 className="uk-text-bold uk-text-center uk-margin-bottom uk-margin-remove-top">
-          Une nouvelle promotion arrive à l&apos;automne 2021&nbsp;!
-        </h2>
-        <h3
-          className="uk-text-center uk-margin-remove-top"
-          style={{ color: 'white' }}
-        >
-          Plus de 160 candidats s&apos;apprêtent à se lancer dans la recherche
-          d&apos;une nouvelle expérience professionnelle&nbsp;!
-          <br />
-          Laissez-nous votre contact pour être tenus informés.
-        </h3>
-      </div>
-      <Grid middle column gap="collapse">
-        <Button
-          style="secondary"
-          toggle="target: #modal-interest-linkedOut"
-          onClick={() => {
-            return event(TAGS.PAGE_AIDER_CONTACT_RECRUTEUR_CLIC);
-          }}
-        >
-          Nous contacter
-        </Button>
-      </Grid>
-      <ModalInterestLinkedOut />
-    </div>
-  );
-
   return (
     <Layout title="Entreprises - LinkedOut">
       <ImageTitle
@@ -79,34 +52,52 @@ const Entreprises = () => {
           </span>
         </h4>
       </Section>
+      <Section container="small">
+        <h2 className="uk-text-center uk-text-bold">
+          Vous souhaitez vous engager vers un recrutement{' '}
+          <span className="uk-text-primary">plus inclusif&nbsp;?</span>
+        </h2>
+        <h4 className="uk-text-center uk-margin-remove-top">
+          Contactez le référent LinkedOut de votre région pour échanger sur
+          votre projet avant de vous lancer&nbsp;!
+        </h4>
+        <div className="uk-flex uk-flex-center">
+          <Button
+            onClick={() => {
+              UIkit.modal('#modal-company-help').show();
+            }}
+            style="secondary"
+            className="uk-margin-small-top"
+          >
+            Contacter un référent&nbsp;
+            <IconNoSSR name="chevron-right" />
+          </Button>
+        </div>
+
+        <ModalGeneric id="modal-company-help">
+          {() => {
+            return (
+              <>
+                <CloseButton className="uk-modal-close-default" />
+                <iframe
+                  className="airtable-embed"
+                  src={`${process.env.AIRTABLE_LINK_COMPANY_HELP}?backgroundColor=blue`}
+                  frameBorder="0"
+                  title="modal-company-help"
+                  width="100%"
+                  height="533"
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid #ccc;',
+                  }}
+                />
+              </>
+            );
+          }}
+        </ModalGeneric>
+      </Section>
       <HireCTA />
       <WhatItBringsToCompanies />
-      <Section container="small" style="default">
-        <div className="uk-inline uk-visible@m">
-          <Img
-            width="1500"
-            height="1000"
-            src="/static/img/candidats.jpg"
-            alt="Visages LinkedOut"
-          />
-          <div
-            style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}
-            className="uk-position-cover"
-          />
-          <div className="uk-overlay uk-position-center uk-flex uk-flex-column uk-flex-center uk-flex-middle uk-padding-large">
-            {content}
-          </div>
-        </div>
-        <div
-          className="uk-hidden@m uk-flex uk-flex-column uk-flex-middle uk-padding-small uk-background-center-center uk-background-cover uk-background-blend-overlay"
-          style={{
-            backgroundImage: `url(${addPrefix('/static/img/candidats.jpg')})`,
-            backgroundColor: 'rgba(0,0,0,0.7)',
-          }}
-        >
-          {content}
-        </div>
-      </Section>
       <Section style="muted">
         <h2 className="uk-text-center uk-text-bold">
           Ils ont <span className="uk-text-primary">déjà recruté</span>
@@ -115,7 +106,7 @@ const Entreprises = () => {
       </Section>
       <Reviews />
       <HowToCommitDifferently />
-      <NewsletterPartial style="muted" />
+      <NewsletterPartial style="default" />
     </Layout>
   );
 };
