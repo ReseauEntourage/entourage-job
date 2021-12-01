@@ -106,7 +106,7 @@
     "uikit": "^3.5.4",
     "use-deep-compare-effect": "^1.8.1",
     "uuid": "^3.4.0",
-    "validator": "^11.1.0",
+    "validator": "^13.7.0",
     "webpack": "^4.41.6"
   },
   "devDependencies": {
