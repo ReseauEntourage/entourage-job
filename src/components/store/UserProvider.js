@@ -16,7 +16,7 @@ import { usePrevious } from 'src/hooks/utils';
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const { push, replace, asPath, pathname, query } = useRouter();
+  const { push, replace, pathname } = useRouter();
 
   const [user, setUser] = useState(null);
   const [isAuthentificated, setIsAuthentificated] = useState(false);

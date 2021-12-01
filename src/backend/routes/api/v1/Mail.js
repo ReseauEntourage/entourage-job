@@ -1,11 +1,6 @@
 import { auth } from 'src/backend/controllers/Auth';
 import { addToWorkQueue } from 'src/backend/jobs';
-import {
-  JOBS,
-  MAILJET_TEMPLATES,
-  HEARD_ABOUT,
-  NEWSLETTER_TAGS,
-} from 'src/constants';
+import { JOBS, MAILJET_TEMPLATES, HEARD_ABOUT } from 'src/constants';
 import { logger } from 'src/backend/utils/Logger';
 
 import express from 'express';
