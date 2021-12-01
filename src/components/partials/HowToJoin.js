@@ -1,7 +1,6 @@
 import React from 'react';
 import MultipleCTA from 'src/components/partials/MultipleCTA';
 import { Section } from 'src/components/utils';
-import Img from 'src/components/utils/Img';
 
 const HowToJoin = () => {
   const content = [
