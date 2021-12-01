@@ -13,6 +13,7 @@ import {
 import OpportunityError from 'src/components/opportunities/OpportunityError';
 import { useRouter } from 'next/router';
 import CandidateOpportunityList from 'src/components/backoffice/candidate/CandidateOpportunityList';
+import { usePrevious } from 'src/hooks/utils';
 
 const candidateFilters = OPPORTUNITY_FILTERS_DATA.slice(1);
 
@@ -23,6 +24,7 @@ const Opportunities = () => {
   } = useRouter();
 
   const { user } = useContext(UserContext);
+  const prevUser = usePrevious(user);
 
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -57,32 +59,23 @@ const Opportunities = () => {
             return dept.value;
           });
         }
-        if (offerId) {
-          replace(
-            {
-              pathname: '/backoffice/candidat/offres/[offerId]',
-              query: params,
-            },
-            {
-              pathname: `/backoffice/candidat/offres/${offerId}`,
-              query: params,
-            },
-            {
-              shallow: true,
-            }
-          );
-        } else {
-          replace(
-            {
-              pathname: '/backoffice/candidat/offres',
-              query: params,
-            },
-            undefined,
-            {
-              shallow: true,
-            }
-          );
-        }
+        replace(
+          {
+            pathname: `/backoffice/candidat/offres${
+              offerId ? '/[offerId]' : ''
+            }`,
+            query: params,
+          },
+          {
+            pathname: `/backoffice/candidat/offres${
+              offerId ? `/${offerId}` : ''
+            }`,
+            query: params,
+          },
+          {
+            shallow: true,
+          }
+        );
       } else {
         setLoadingDefaultFilters(false);
       }
@@ -128,7 +121,7 @@ const Opportunities = () => {
             shallow: true,
           }
         );
-      } else {
+      } else if (user !== prevUser) {
         setLoading(true);
 
         if (user.role === USER_ROLES.CANDIDAT) {
@@ -144,7 +137,7 @@ const Opportunities = () => {
             .then(({ data }) => {
               if (data) {
                 setCandidatId(data.candidat.id);
-                setCandidatZone(data.candidat.zone);
+                setCandidatZone(user.zone);
               } else {
                 setHasError(true);
               }
@@ -152,12 +145,14 @@ const Opportunities = () => {
             })
             .catch(() => {
               setLoading(false);
-              return setHasError(true);
+              setHasError(true);
             });
         }
+      } else {
+        setLoadingDefaultFilters(false);
       }
     }
-  }, [offerId, q, replace, restParams, setCandidatZone, tag, user]);
+  }, [offerId, prevUser, q, replace, restParams, setCandidatZone, tag, user]);
 
   return (
     <LayoutBackOffice
