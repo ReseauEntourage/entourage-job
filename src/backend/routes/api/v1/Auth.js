@@ -48,7 +48,7 @@ router.post('/login', authLimiter, auth(), (req, res) => {
         )
       ) {
         return res
-          .status(400)
+          .status(401)
           .send("L'adresse email ou le mot de passe est invalide");
       }
       const userWithToken = user;
