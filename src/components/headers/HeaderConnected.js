@@ -9,7 +9,7 @@ import {
   Offcanvas,
   SimpleLink,
 } from 'src/components/utils';
-import 'src/components/headers/Header.less';
+
 import { UserContext } from 'src/components/store/UserProvider';
 import ImgProfile from 'src/components/headers/ImgProfile';
 import Dropdown from 'src/components/utils/Dropdown';

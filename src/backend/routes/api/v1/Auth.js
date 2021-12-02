@@ -8,7 +8,6 @@ import { addToWorkQueue } from 'src/backend/jobs';
 import { logger } from 'src/backend/utils/Logger';
 
 import express from 'express';
-import passport from 'passport';
 import _ from 'lodash';
 
 const router = express.Router();
@@ -38,31 +37,31 @@ router.post('/login', authLimiter, auth(), (req, res, next) => {
     });
   }
 
-  return passport.authenticate(
-    'local',
-    {
-      session: false,
-    },
-    (err, passportUser, info) => {
-      if (err) {
-        logger(res).error('error while auth');
-        return next(err);
+  return UserController.getUserByEmail(email)
+    .then((user) => {
+      if (
+        !user ||
+        !AuthController.validatePassword(
+          password,
+          user.dataValues.password,
+          user.dataValues.salt
+        )
+      ) {
+        return res
+          .status(401)
+          .send("L'adresse email ou le mot de passe est invalide");
       }
+      const userWithToken = user;
+      userWithToken.token = AuthController.generateJWT(user);
 
-      if (passportUser) {
-        const user = passportUser;
-        user.token = AuthController.generateJWT(passportUser);
-
-        return res.json({
-          user: AuthController.toAuthJSON(user),
-        });
-      }
-
-      return res.status(400).json({
-        error: info.error,
+      return res.status(200).json({
+        user: AuthController.toAuthJSON(userWithToken),
       });
-    }
-  )(req, res, next);
+    })
+    .catch((err) => {
+      logger(res).error(err);
+      return res.status(401).send(`Une erreur est survenue`);
+    });
 });
 
 router.post(
@@ -106,8 +105,7 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
         `Demande de réinitialisation du mot de passe : user.id = ${user.id}`
       );
 
-      const endDate = Date.now() + 1000 * 60 * 60 * 24;
-      token = AuthController.generateJWT(user, endDate);
+      token = AuthController.generateJWT(user, '1 day');
       const { hash, salt } = AuthController.encryptPassword(token);
 
       return UserController.setUser(user.id, {

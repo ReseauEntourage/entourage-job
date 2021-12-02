@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
-import 'static/dist/css/uikit.entourage.min.css';
-import 'static/css/styles.less';
-import 'static/css/Forms.less';
-import 'static/css/Toggle.less';
+import 'public/static/dist/css/uikit.entourage.min.css';
+import 'public/static/css/styles.less';
+import 'public/static/css/Forms.less';
+import 'public/static/css/Toggle.less';
+import 'src/components/headers/Header.less';
+import 'src/components/partials/HireCTA.less';
 
 import React, { useEffect, useState } from 'react';
 import Router, { useRouter } from 'next/router';

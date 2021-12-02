@@ -31,7 +31,7 @@ const CVEntreprises = () => {
             <span className="uk-text-primary">à plusieurs profils&nbsp;?</span>
           </h3>
           <div className="uk-height-medium">
-            <img
+            <Img
               style={{ height: '100%' }}
               src="/static/img/new_candidates.jpg"
               alt="Visages LinkedOut"

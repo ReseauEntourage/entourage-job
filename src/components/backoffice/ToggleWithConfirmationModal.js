@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Button, CloseButton, Grid } from 'src/components/utils';
 import ModalGeneric from 'src/components/modals/ModalGeneric';
 import HeaderModal from 'src/components/modals/HeaderModal';
-import 'static/css/Toggle.less';
 import ModalEdit from 'src/components/modals/ModalEdit';
 
 const ToggleWithConfirmationModal = ({

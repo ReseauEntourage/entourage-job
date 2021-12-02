@@ -48,7 +48,7 @@ const SailInfoModal = () => {
           />
           <div className="uk-inline uk-visible@m">
             <Img
-              src="../../../static/img/boat-tjv.jpeg"
+              src="/static/img/boat-tjv.jpeg"
               alt="Bateau LinkedOut Transat Jacques Vabre"
             />
             <div
@@ -63,7 +63,7 @@ const SailInfoModal = () => {
             className="uk-hidden@m uk-flex uk-flex-column uk-flex-middle uk-padding-small uk-background-center-center uk-background-cover uk-background-blend-overlay"
             style={{
               backgroundImage: `url("${addPrefix(
-                '../../../static/img/boat-tjv.jpeg'
+                '/static/img/boat-tjv.jpeg'
               )}")`,
               backgroundColor: '#444',
             }}

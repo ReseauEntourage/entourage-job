@@ -13,8 +13,7 @@ import * as UserController from 'src/backend/controllers/User';
  */
 const getResetLinkAndUser = async (user) => {
   let updatedUser = null;
-  const endDate = Date.now() + 1000 * 60 * 60 * 24;
-  const token = AuthController.generateJWT(user, endDate);
+  const token = AuthController.generateJWT(user, '1 day');
   const { hash, salt } = AuthController.encryptPassword(token);
 
   try {

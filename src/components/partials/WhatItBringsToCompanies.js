@@ -1,11 +1,12 @@
 import React from 'react';
 import Section from 'src/components/utils/Section';
-import Img from '../utils/Img';
-import { addPrefix } from '../../utils';
-import { Button, Grid } from '../utils';
-import { event } from '../../lib/gtag';
-import TAGS from '../../constants/tags';
-import ModalInterestLinkedOut from '../modals/ModalInterestLinkedOut';
+import Img from 'src/components/utils/Img';
+import { Button, Grid } from 'src/components/utils';
+
+import { event } from 'src/lib/gtag';
+import TAGS from 'src/constants/tags';
+import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
+import { addPrefix } from 'src/utils';
 
 const WhatItBringsToCompanies = () => {
   const content = (

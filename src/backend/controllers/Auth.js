@@ -25,10 +25,6 @@ function validatePassword(password, hash, salt) {
 
 // param expiration est la date de fin en secondes
 function generateJWT(user, expiration) {
-  const today = new Date();
-  const expirationDate = new Date(today);
-  expirationDate.setDate(today.getDate() + 60);
-
   let candidatId = null;
   if (user.coach && user.coach.candidat) {
     candidatId = user.coach.candidat.id;
@@ -50,11 +46,13 @@ function generateJWT(user, expiration) {
       zone: user.zone,
       gender: user.gender,
       role: user.role,
-      exp: parseInt((expiration || expirationDate.getTime()) / 1000, 10),
       candidatId,
       coachId,
     },
-    process.env.JWT_SECRET
+    process.env.JWT_SECRET,
+    {
+      expiresIn: expiration || '60 days',
+    }
   );
 }
 

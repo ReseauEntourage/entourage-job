@@ -223,7 +223,7 @@ const CVPage = () => {
             </SimpleLink>
             <div>
               <hr className="ent-divier-backoffice" />
-              <h2>Ce profil n’est pas disponible</h2>
+              <h3 className="uk-text-bold">Ce profil n’est pas disponible</h3>
               <p>
                 Le lien que vous avez suivi est peut-être rompu, ou la page a
                 été supprimée.

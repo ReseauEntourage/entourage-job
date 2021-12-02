@@ -11,7 +11,7 @@ const CVPDFPage = ({ cv, page, router }) => {
     return (
       <Layout title="Page introuvable - LinkedOut">
         <Section className="uk-text-center" size="large">
-          <h2>Ce profil n’est pas disponible</h2>
+          <h3 className="uk-text-bold">Ce profil n’est pas disponible</h3>
           <p>
             Le lien que vous avez suivi est peut-être rompu, ou la page a été
             supprimée.

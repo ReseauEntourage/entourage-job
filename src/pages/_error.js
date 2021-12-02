@@ -1,25 +1,16 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useRouter } from 'next/router';
 
 import NextErrorComponent from 'next/error';
 import * as Sentry from '@sentry/node';
 
 const CustomError = ({ statusCode, hasGetInitialPropsRun, err }) => {
-  const router = useRouter();
-
   if (!hasGetInitialPropsRun && err) {
     // getInitialProps is not called in case of
     // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
     // err via _app.js so it can be captured
     Sentry.captureException(err);
   }
-
-  useEffect(() => {
-    if (statusCode === 404) {
-      router.replace('/');
-    }
-  }, [router, statusCode]);
 
   return <NextErrorComponent statusCode={statusCode} />;
 };

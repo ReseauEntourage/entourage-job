@@ -2,7 +2,7 @@
 
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import 'static/css/Toggle.less';
+
 import {
   FacebookShareButton,
   LinkedinShareButton,

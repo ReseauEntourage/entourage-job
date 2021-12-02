@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button, Grid, Section } from 'src/components/utils';
+import { Button, Grid, Section, Img } from 'src/components/utils';
 import { IconNoSSR } from 'src/components/utils/Icon';
 
-import 'src/components/partials/HireCTA.less';
 import CVList from 'src/components/cv/CVList';
 import PostJobAdModal, { modalId } from 'src/components/modals/PostJobAdModal';
 import { event } from 'src/lib/gtag';
@@ -75,13 +74,7 @@ const HireCTA = () => {
                 Votre offre peut correspondre à plusieurs profils&nbsp;?
               </h4>
             </div>
-            <div className="uk-height-medium">
-              <img
-                style={{ height: '100%' }}
-                src="/static/img/new_candidates.jpg"
-                alt="Visages LinkedOut"
-              />
-            </div>
+            <Img src="/static/img/new_candidates.jpg" alt="Visages LinkedOut" />
             <Grid middle column gap="collapse">
               <Button
                 className="uk-margin-medium-top"

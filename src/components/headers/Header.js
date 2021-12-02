@@ -10,7 +10,7 @@ import {
   NavbarLogo,
   Offcanvas,
 } from 'src/components/utils';
-import 'src/components/headers/Header.less';
+
 import Button from 'src/components/utils/Button';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { event } from 'src/lib/gtag';

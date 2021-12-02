@@ -176,7 +176,7 @@ const Linkedout = () => {
             confiance en elles et rebondir&nbsp;!
           </>
         }
-        imgSrc="../static/img/why_1.jpg"
+        imgSrc="/static/img/why_1.jpg"
         animate
         direction="column"
       />
@@ -245,7 +245,7 @@ const Linkedout = () => {
             </ul>
           </>
         }
-        imgSrc="../static/img/why_2.jpg"
+        imgSrc="/static/img/why_2.jpg"
         animate={false}
         direction="column"
       />
@@ -300,7 +300,7 @@ const Linkedout = () => {
             </ul>
           </>
         }
-        imgSrc="../static/img/why_3.jpg"
+        imgSrc="/static/img/why_3.jpg"
         animate={false}
         direction="left"
       />
@@ -328,7 +328,7 @@ const Linkedout = () => {
             essentiel à la réussite du projet.
           </>
         }
-        imgSrc="../static/img/why_4.jpg"
+        imgSrc="/static/img/why_4.jpg"
         animate
         direction="right"
       />
