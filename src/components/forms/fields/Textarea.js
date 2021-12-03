@@ -73,7 +73,7 @@ const Textarea = ({
         <FormValidatorErrorMessage validObj={valid} />
         {maxLength && (
           <span className="uk-text-meta uk-text-right uk-flex-1">
-            {maxLength - value.length} caractère(s) restant(s)
+            {maxLength - (value?.length ?? 0)} caractère(s) restant(s)
           </span>
         )}
       </div>
