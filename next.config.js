@@ -58,11 +58,7 @@ module.exports = withLess({
 
     config.module.rules.push({
       test: require.resolve('uikit'),
-      use: [
-        {
-          loader: 'expose-loader?UIkit',
-        },
-      ],
+      use: ['expose-loader?UIkit'],
     });
     return config;
   },
