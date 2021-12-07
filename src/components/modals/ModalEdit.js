@@ -9,7 +9,6 @@ import { CloseButton } from 'src/components/utils';
 import { useResetForm } from 'src/hooks/utils';
 
 const ModalEdit = ({
-  id,
   title,
   description,
   formSchema,
@@ -20,7 +19,7 @@ const ModalEdit = ({
   const [form, resetForm] = useResetForm();
 
   return (
-    <ModalGeneric id={id} resetForm={resetForm}>
+    <ModalGeneric resetForm={resetForm}>
       {(closeModal) => {
         return (
           <>
@@ -49,7 +48,6 @@ const ModalEdit = ({
 };
 
 ModalEdit.propTypes = {
-  id: PropTypes.string.isRequired,
   title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   formSchema: PropTypes.shape({
     id: PropTypes.string,

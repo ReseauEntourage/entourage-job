@@ -17,6 +17,7 @@ import SharesCountProvider from 'src/components/store/SharesCountProvider';
 import * as gtag from 'src/lib/gtag';
 import SplashScreen from 'src/components/SplashScreen';
 import { useMount } from 'src/hooks/utils';
+import { ModalsListener } from 'src/components/modals/Modal';
 
 Sentry.init({
   enabled: process.env.NODE_ENV === 'production',
@@ -65,6 +66,7 @@ const Container = ({ Component, pageProps, err }) => {
       className="uk-inline uk-width-expand uk-overflow-hidden"
     >
       <Component {...pageProps} err={err} />
+      <ModalsListener />
       <SplashScreenContainer loading={loading} fading={fading} />
     </div>
   );

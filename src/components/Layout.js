@@ -80,6 +80,7 @@ const Layout = ({
       )}
       {children}
       {!isPDF && <Footer />}
+      {/* <div id="modal-root" /> */}
     </>
   );
 };

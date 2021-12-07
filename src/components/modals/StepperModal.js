@@ -3,8 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { CloseButton } from 'src/components/utils';
-import { useRemoveModal } from 'src/hooks/utils';
 import HeaderModal from 'src/components/modals/HeaderModal';
+import { Modal } from './Modal';
 
 /**
  * Ce composant fournit une modal à contenu variable selon l'index ou l'on s'y trouve
@@ -44,19 +44,24 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
     }
   }, [close, composers, next, previous]);
 
-  // Fix because of bug where multiple modals with the same id are created
-  useRemoveModal(id);
-
   return (
-    <div id={id} className="uk-flex-top" data-uk-modal="bg-close:false">
-      <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-2-3@m uk-width-1-2@l">
-        <CloseButton className="uk-modal-close-default" onClick={resetForm} />
-        <div className="uk-modal-body uk-padding-large">
-          <HeaderModal>{title}</HeaderModal>
-          {wrappedComponents && wrappedComponents[index]}
+    <Modal>
+      <div id={id} className="uk-flex" data-uk-modal="bg-close:false">
+        <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-2-3@m uk-width-1-2@l">
+          <CloseButton
+            className="uk-modal-close-default"
+            onClick={() => {
+              resetForm();
+              setIndex(0);
+            }}
+          />
+          <div className="uk-modal-body uk-padding-large">
+            <HeaderModal>{title}</HeaderModal>
+            {wrappedComponents && wrappedComponents[index]}
+          </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

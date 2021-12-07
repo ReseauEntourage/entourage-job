@@ -6,7 +6,7 @@ import { Button, Grid } from 'src/components/utils';
 
 const ModalConfirm = ({ id, onConfirm, text, buttonText }) => {
   return (
-    <ModalGeneric id={id} classNameSize="uk-width-1-2@m">
+    <ModalGeneric id={id}>
       {(close) => {
         return (
           <>

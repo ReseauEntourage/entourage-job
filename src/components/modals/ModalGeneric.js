@@ -1,43 +1,30 @@
-/* global UIkit */
-
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useRemoveModal } from 'src/hooks/utils';
+import { Modal, useModalContext } from 'src/components/modals/Modal';
 
-const ModalGeneric = ({
-  children,
-  classNameSize: className,
-  id,
-  param,
-  resetForm,
-}) => {
-  // Fix because of bug where multiple modals with the same id are created
-  useRemoveModal(id);
+const ModalGeneric = ({ children, resetForm }) => {
+  const { onClose } = useModalContext();
 
   return (
-    <div id={id} className="uk-flex-top" data-uk-modal={param}>
-      <div className={`uk-modal-dialog uk-margin-auto-vertical ${className}`}>
+    <Modal>
+      <div className="uk-margin-auto-vertical">
         <div className="uk-modal-body uk-padding-large">
           {children(() => {
-            UIkit.modal(`#${id}`).hide();
+            onClose();
             resetForm();
           })}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
+
 ModalGeneric.propTypes = {
   children: PropTypes.func.isRequired,
-  id: PropTypes.string.isRequired,
-  param: PropTypes.string,
-  classNameSize: PropTypes.string,
   resetForm: PropTypes.func,
 };
 
 ModalGeneric.defaultProps = {
-  param: 'bg-close:false',
-  classNameSize: 'uk-width-1-1 uk-width-2-3@l uk-width-1-2@xl',
   resetForm: () => {},
 };
 

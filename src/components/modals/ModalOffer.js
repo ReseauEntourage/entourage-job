@@ -9,8 +9,8 @@ import { IconNoSSR } from 'src/components/utils/Icon';
 import Api from 'src/Axios';
 import { OFFER_STATUS } from 'src/constants';
 import { formatParagraph } from 'src/utils';
-import { useRemoveModal } from 'src/hooks/utils';
 import ModalOfferInfo from 'src/components/modals/ModalOfferInfo';
+import { Modal } from './Modal';
 
 export const List = ({ className, children }) => {
   return (
@@ -81,9 +81,6 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
   const [noteBuffer, setNoteBuffer] = useState(note);
   const [loading, setLoading] = useState(false);
 
-  // Fix because of bug where multiple modals with the same id are created
-  useRemoveModal('modal-offer');
-
   const updateOpportunityUser = async (opportunityUser) => {
     await Api.put(
       `${process.env.SERVER_URL}/api/v1/opportunity/join`,
@@ -113,7 +110,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
   ];
 
   return (
-    <div id="modal-offer" data-uk-modal="bg-close:false">
+    <Modal id="modal-offer">
       <div
         className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
           archived && 'uk-light uk-background-secondary'
@@ -219,10 +216,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
                       isExternal
                       newTab
                     >
-                      <span>
-                        {currentOffer.recruiterMail}
-                        &nbsp;
-                      </span>
+                      <span>{currentOffer.recruiterMail}&nbsp;</span>
                       <IconNoSSR name="mail" ratio={0.8} />
                     </SimpleLink>
                   </OfferInfoContainer>
@@ -315,7 +309,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
           </div>
         )}
       </div>
-    </div>
+    </Modal>
   );
 };
 

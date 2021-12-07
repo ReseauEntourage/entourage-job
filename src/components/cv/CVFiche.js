@@ -22,6 +22,7 @@ import TAGS from 'src/constants/tags';
 import { usePostOpportunity, useUpdateSharesCount } from 'src/hooks';
 import { IconNoSSR } from 'src/components/utils/Icon';
 import _ from 'lodash';
+import { openModal } from 'src/components/modals/Modal';
 
 const modalId = 'modal-send-opportunity';
 
@@ -49,7 +50,12 @@ const CVFiche = ({ cv, actionDisabled }) => {
     : '';
 
   const openNewsletterModal = () => {
-    return UIkit.modal(`#info-share-${cv.UserId}`).show();
+    openModal(
+      <ModalShareCV
+        id={`info-share-${cv.UserId}`}
+        firstName={cv.user.candidat.firstName}
+      />
+    );
   };
 
   const experiences = sortExperiences(cv.experiences);
@@ -149,36 +155,34 @@ const CVFiche = ({ cv, actionDisabled }) => {
           disabled={actionDisabled}
           style="secondary"
           onClick={() => {
-            return event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC);
+            event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC);
+            openModal(
+              <ModalEdit
+                title="Proposer une opportunité à un candidat"
+                description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
+                submitText="Envoyer"
+                defaultValues={{
+                  isPublic: false,
+                  ...lastFilledForm,
+                  candidatesId: _.isEmpty(lastFilledForm)
+                    ? [
+                        {
+                          label: `${cv.user.candidat.firstName} ${cv.user.candidat.lastName}`,
+                          value: cv.UserId,
+                        },
+                      ]
+                    : lastFilledForm.candidatesId,
+                }}
+                formSchema={schema}
+                onSubmit={async (fields, closeModal) => {
+                  await postOpportunity(fields, closeModal);
+                }}
+              />
+            );
           }}
-          toggle={`target: #${modalId}`}
         >
           Contactez-moi <IconNoSSR name="chevron-right" />
         </Button>
-      </div>
-      <div>
-        <ModalEdit
-          id={modalId}
-          title="Proposer une opportunité à un candidat"
-          description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
-          submitText="Envoyer"
-          defaultValues={{
-            isPublic: false,
-            ...lastFilledForm,
-            candidatesId: _.isEmpty(lastFilledForm)
-              ? [
-                  {
-                    label: `${cv.user.candidat.firstName} ${cv.user.candidat.lastName}`,
-                    value: cv.UserId,
-                  },
-                ]
-              : lastFilledForm.candidatesId,
-          }}
-          formSchema={schema}
-          onSubmit={async (fields, closeModal) => {
-            await postOpportunity(fields, closeModal);
-          }}
-        />
       </div>
     </div>
   );
@@ -283,10 +287,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 {contactSection}
                 {shareSection}
               </Grid>
-              <ModalShareCV
-                id={`info-share-${cv.UserId}`}
-                firstName={cv.user.candidat.firstName}
-              />
             </div>
           </div>
           <Grid gap="large" eachWidths={['expand', '1-3@m']}>

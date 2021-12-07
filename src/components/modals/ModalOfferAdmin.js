@@ -10,7 +10,7 @@ import ButtonIcon from 'src/components/utils/ButtonIcon';
 import { IconNoSSR } from 'src/components/utils/Icon';
 
 import { List, OfferInfoContainer } from 'src/components/modals/ModalOffer';
-import { useRemoveModal, useResetForm } from 'src/hooks/utils';
+import { useResetForm } from 'src/hooks/utils';
 
 import {
   findOfferStatus,
@@ -20,6 +20,7 @@ import {
 } from 'src/utils';
 import { OFFER_STATUS } from 'src/constants';
 import ModalOfferInfo from 'src/components/modals/ModalOfferInfo';
+import { Modal } from './Modal';
 
 const ModalOfferAdmin = ({
   currentOffer,
@@ -59,9 +60,6 @@ const ModalOfferAdmin = ({
   ]);
 
   const [form, resetForm] = useResetForm();
-
-  // Fix because of bug where multiple modals with the same id are created
-  useRemoveModal('modal-offer-admin');
 
   const updateOpportunity = async (opportunity) => {
     setError(false);
@@ -442,7 +440,7 @@ const ModalOfferAdmin = ({
 
   // Modal
   return (
-    <div id="modal-offer-admin" data-uk-modal="bg-close:false">
+    <Modal id="modal-offer-admin">
       <div
         className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
           currentOffer.isArchived && 'uk-light uk-background-secondary'
@@ -460,7 +458,7 @@ const ModalOfferAdmin = ({
         />
         <div className="uk-modal-body">{contentBuilder()}</div>
       </div>
-    </div>
+    </Modal>
   );
 };
 ModalOfferAdmin.propTypes = {
