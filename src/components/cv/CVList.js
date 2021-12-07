@@ -16,9 +16,9 @@ import SearchBar from 'src/components/filters/SearchBar';
 const NoCVInThisArea = () => {
   return (
     <p className="uk-text-center uk-text-italic">
-      LinkedOut se déploie d’ici septembre 2021 dans les régions de Paris, de
-      Lille et de Lyon. Vous ne trouvez pas de candidats LinkedOut dans votre
-      région&nbsp;? Contactez-nous à{' '}
+      LinkedOut se déploie dans les régions de Paris, de Lille et de Lyon. Vous
+      ne trouvez pas de candidats LinkedOut dans votre région&nbsp;?
+      Contactez-nous à{' '}
       <SimpleLink
         isExternal
         newTab

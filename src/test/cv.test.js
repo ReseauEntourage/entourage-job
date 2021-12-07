@@ -365,7 +365,7 @@ describe('CV', () => {
             }
           );
           const response = await request(serverTest).get(
-            `${route}/cards/random/?locations[]=Paris (75)&locations[]=Rhône (69)`
+            `${route}/cards/random/?locations[]=Île-de-France&locations[]=Auvergne-Rhône-Alpes`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(2);
@@ -474,7 +474,7 @@ describe('CV', () => {
               firstName: newUser2.firstName,
             },
             {
-              businessLines: ['BTP'],
+              businessLines: ['Bâtiment'],
             }
           );
           const newUser3 = await userFactory({
@@ -491,7 +491,7 @@ describe('CV', () => {
             }
           );
           const response = await request(serverTest).get(
-            `${route}/cards/random/?businessLines[]=BTP&businessLines[]=Informatique`
+            `${route}/cards/random/?businessLines[]=Bâtiment&businessLines[]=Informatique`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(2);
@@ -548,7 +548,7 @@ describe('CV', () => {
               firstName: newUser2.firstName,
             },
             {
-              businessLines: ['BTP'],
+              businessLines: ['Bâtiment'],
               locations: ['Rhône (69)'],
             }
           );
@@ -572,7 +572,7 @@ describe('CV', () => {
             }
           );
           const response = await request(serverTest).get(
-            `${route}/cards/random/?businessLines[]=Associatif&businessLines[]=Informatique&employed[]=false&locations[]=Rhône (69)&locations[]=Nord (59)&locations[]=Paris (75)`
+            `${route}/cards/random/?businessLines[]=Associatif&businessLines[]=Informatique&employed[]=false&locations[]=Auvergne-Rhône-Alpes&locations[]=Hauts-de-France&locations[]=Île-de-France`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(1);
@@ -629,7 +629,7 @@ describe('CV', () => {
               firstName: newUser2.firstName,
             },
             {
-              businessLines: ['BTP'],
+              businessLines: ['Bâtiment'],
               locations: ['Paris (75)'],
             }
           );
@@ -653,7 +653,7 @@ describe('CV', () => {
             }
           );
           const response = await request(serverTest).get(
-            `${route}/cards/random/?businessLines[]=Artisanat&employed[]=false&locations[]=Paris (75)`
+            `${route}/cards/random/?businessLines[]=Électronique&employed[]=false&locations[]=Île-de-France`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(5);
@@ -675,7 +675,7 @@ describe('CV', () => {
 
         it('Should return 200 and empty list, if no result found', async () => {
           const response = await request(serverTest).get(
-            `${route}/cards/random/?locations[]=Midi-Pyrénées (31)`
+            `${route}/cards/random/?locations[]=Bretagne`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(0);

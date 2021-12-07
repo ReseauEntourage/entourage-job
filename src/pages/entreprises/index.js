@@ -1,21 +1,16 @@
 /* global UIkit */
 
 import React from 'react';
-import { event } from 'src/lib/gtag';
-import TAGS from 'src/constants/tags';
-import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
-import Img from 'src/components/utils/Img';
 import LogoList from 'src/components/partials/LogoList';
 import WhatItBringsToCompanies from 'src/components/partials/WhatItBringsToCompanies';
 import Layout from 'src/components/Layout';
-import { Button, CloseButton, Grid, Section } from 'src/components/utils';
+import { Button, CloseButton, Section } from 'src/components/utils';
 import ImageTitle from 'src/components/partials/ImageTitle';
 import HireCTA from 'src/components/partials/HireCTA';
 import Reviews from 'src/components/partials/Reviews';
 import HowToCommitDifferently from 'src/components/partials/HowToCommitDifferently';
 import NewsletterPartial from 'src/components/partials/NewsletterPartial';
 import PARTNERS from 'src/constants/partners';
-import { addPrefix } from 'src/utils';
 import ModalGeneric from 'src/components/modals/ModalGeneric';
 import { IconNoSSR } from 'src/components/utils/Icon';
 

@@ -17,17 +17,17 @@ const ADMIN_ZONES_FILTERS = [
 const DEPARTMENTS = [
   {
     name: 'Ain (01)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
     name: 'Aisne (02)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LILLE,
     region: 'Hauts-de-France',
   },
   {
     name: 'Allier (03)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
@@ -47,7 +47,7 @@ const DEPARTMENTS = [
   },
   {
     name: 'Ardèche (07)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
@@ -87,7 +87,7 @@ const DEPARTMENTS = [
   },
   {
     name: 'Cantal (15)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
@@ -137,7 +137,7 @@ const DEPARTMENTS = [
   },
   {
     name: 'Drôme (26)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
@@ -207,7 +207,7 @@ const DEPARTMENTS = [
   },
   {
     name: 'Isère (38)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
@@ -227,12 +227,12 @@ const DEPARTMENTS = [
   },
   {
     name: 'Loire (42)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
     name: 'Haute-Loire (43)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
@@ -317,7 +317,7 @@ const DEPARTMENTS = [
   },
   {
     name: 'Oise (60)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LILLE,
     region: 'Hauts-de-France',
   },
   {
@@ -327,12 +327,12 @@ const DEPARTMENTS = [
   },
   {
     name: 'Pas-de-Calais (62)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LILLE,
     region: 'Hauts-de-France',
   },
   {
     name: 'Puy-de-Dôme (63)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
@@ -382,12 +382,12 @@ const DEPARTMENTS = [
   },
   {
     name: 'Savoie (73)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
     name: 'Haute-Savoie (74)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LYON,
     region: 'Auvergne-Rhône-Alpes',
   },
   {
@@ -417,7 +417,7 @@ const DEPARTMENTS = [
   },
   {
     name: 'Somme (80)',
-    zone: ADMIN_ZONES.HZ,
+    zone: ADMIN_ZONES.LILLE,
     region: 'Hauts-de-France',
   },
   {
@@ -523,6 +523,32 @@ const DEPARTMENTS = [
   },
 ];
 
+const REGIONS_FILTERS = _.sortBy(
+  Object.values(
+    DEPARTMENTS.reduce((acc, curr) => {
+      if (acc[curr.region]) {
+        return {
+          ...acc,
+          [curr.region]: {
+            ...acc[curr.region],
+            children: [...acc[curr.region].children, curr.name],
+          },
+        };
+      }
+      return {
+        ...acc,
+        [curr.region]: {
+          value: curr.region,
+          label: curr.region,
+          zone: curr.zone,
+          children: [curr.name],
+        },
+      };
+    }, {})
+  ),
+  'value'
+);
+
 const DEPARTMENTS_FILTERS = [
   ...DEPARTMENTS.map(({ name, zone }) => {
     return {
@@ -551,5 +577,6 @@ export {
   ADMIN_ZONES,
   FORMATTED_DEPARTMENTS,
   DEPARTMENTS_FILTERS,
+  REGIONS_FILTERS,
   ADMIN_ZONES_FILTERS,
 };
