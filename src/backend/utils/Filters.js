@@ -174,18 +174,19 @@ const getMemberOptions = (filtersObj) => {
                 }),
               };
             } else if (keys[i] === MEMBER_FILTERS_DATA[1].key) {
+              // These options don't work
               whereOptions[keys[i]] = {
                 coach: filtersObj[keys[i]].map((currentFilter) => {
                   return where(
                     col(`coach.candidatId`),
-                    currentFilter.value === 'true' ? Op.is : Op.not,
+                    currentFilter.value ? Op.is : Op.not,
                     null
                   );
                 }),
                 candidat: filtersObj[keys[i]].map((currentFilter) => {
                   return where(
                     col(`candidat.coachId`),
-                    currentFilter.value === 'true' ? Op.is : Op.not,
+                    currentFilter.value ? Op.is : Op.not,
                     null
                   );
                 }),
@@ -230,12 +231,12 @@ const filterMembersByAssociatedUser = (members, associatedUsers) => {
     filteredList = members.filter((member) => {
       return associatedUsers.some((currentFilter) => {
         if (member.candidat) {
-          return !!member.candidat.coach === (currentFilter.value === 'true');
+          return !!member.candidat.coach === currentFilter.value;
         }
         if (member.coach) {
-          return !!member.coach.candidat === (currentFilter.value === 'true');
+          return !!member.coach.candidat === currentFilter.value;
         }
-        return !(currentFilter.value === 'true');
+        return !currentFilter.value;
       });
     });
   }
