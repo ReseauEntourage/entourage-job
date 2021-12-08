@@ -4,6 +4,7 @@ import {
   ADMIN_ZONES,
   ADMIN_ZONES_FILTERS,
   DEPARTMENTS_FILTERS,
+  REGIONS_FILTERS,
 } from 'src/constants/departements';
 
 const OFFER_STATUS = [
@@ -243,9 +244,9 @@ const CV_FILTERS_DATA = [
   },
   {
     key: 'locations',
-    constants: DEPARTMENTS_FILTERS,
-    priority: DEPARTMENTS_FILTERS.filter((dept) => {
-      return dept.zone !== ADMIN_ZONES.HZ;
+    constants: REGIONS_FILTERS,
+    priority: REGIONS_FILTERS.filter((region) => {
+      return region.zone !== ADMIN_ZONES.HZ;
     }),
     title: 'Où ?',
     tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,

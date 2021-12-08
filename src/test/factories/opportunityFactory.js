@@ -1,6 +1,7 @@
 import faker from 'faker';
 
 import { models } from 'src/backend/db/models';
+import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 
 const { Opportunity } = models;
 
@@ -45,7 +46,10 @@ const generateOpportunity = async (props) => {
     recruiterMail: faker.internet.email(),
     recruiterPhone: faker.phone.phoneNumber(),
     recruiterPosition: faker.lorem.words(2),
-    department: faker.address.zipCode(),
+    department:
+      DEPARTMENTS_FILTERS[
+        faker.random.number({ min: 0, max: DEPARTMENTS_FILTERS.length - 1 })
+      ].value,
     date: faker.date.past(),
     description: faker.lorem.paragraphs(3),
     prerequisites: faker.lorem.paragraphs(3),

@@ -67,14 +67,14 @@ const filterOffersByStatus = (offers, status, candidatId) => {
         const userOpportunity = getUserOpportunityFromOffer(offer, candidatId);
         return userOpportunity
           ? status.some((currentFilter) => {
-              return currentFilter.value === userOpportunity.status.toString();
+              return currentFilter.value === userOpportunity.status;
             })
           : false;
       }
       return status.some((currentFilter) => {
         if (offer.userOpportunity && offer.userOpportunity.length > 0) {
           return offer.userOpportunity.some((userOpp) => {
-            return currentFilter.value === userOpp.status.toString();
+            return currentFilter.value === userOpp.status;
           });
         }
 
@@ -100,19 +100,11 @@ const getOfferOptions = (filtersObj) => {
       if (totalFilters > 0) {
         for (let i = 0; i < keys.length; i += 1) {
           if (filtersObj[keys[i]].length > 0) {
-            if (keys[i] === OPPORTUNITY_FILTERS_DATA[0].key) {
-              whereOptions[keys[i]] = {
-                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
-                  return currentFilter.value === 'true';
-                }),
-              };
-            } else {
-              whereOptions[keys[i]] = {
-                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
-                  return currentFilter.value;
-                }),
-              };
-            }
+            whereOptions[keys[i]] = {
+              [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
+                return currentFilter.value;
+              }),
+            };
           }
         }
       }
@@ -137,19 +129,17 @@ const getCVOptions = (filtersObj) => {
       if (totalFilters > 0) {
         for (let i = 0; i < keys.length; i += 1) {
           if (filtersObj[keys[i]].length > 0) {
-            if (keys[i] === CV_FILTERS_DATA[0].key) {
-              whereOptions[keys[i]] = {
-                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
-                  return currentFilter.value === 'true';
-                }),
-              };
-            } else {
-              whereOptions[keys[i]] = {
-                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
-                  return currentFilter.value;
-                }),
-              };
-            }
+            whereOptions[keys[i]] = {
+              [Op.or]: filtersObj[keys[i]].reduce((acc, currentFilter) => {
+                if (currentFilter) {
+                  if (currentFilter.children) {
+                    return [...acc, ...currentFilter.children];
+                  }
+                  return [...acc, currentFilter.value];
+                }
+                return [...acc];
+              }, []),
+            };
           }
         }
       }
@@ -180,22 +170,23 @@ const getMemberOptions = (filtersObj) => {
             ) {
               whereOptions[keys[i]] = {
                 [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
-                  return currentFilter.value === 'true';
+                  return currentFilter.value;
                 }),
               };
             } else if (keys[i] === MEMBER_FILTERS_DATA[1].key) {
+              // These options don't work
               whereOptions[keys[i]] = {
                 coach: filtersObj[keys[i]].map((currentFilter) => {
                   return where(
                     col(`coach.candidatId`),
-                    currentFilter.value === 'true' ? Op.is : Op.not,
+                    currentFilter.value ? Op.is : Op.not,
                     null
                   );
                 }),
                 candidat: filtersObj[keys[i]].map((currentFilter) => {
                   return where(
                     col(`candidat.coachId`),
-                    currentFilter.value === 'true' ? Op.is : Op.not,
+                    currentFilter.value ? Op.is : Op.not,
                     null
                   );
                 }),
@@ -240,12 +231,12 @@ const filterMembersByAssociatedUser = (members, associatedUsers) => {
     filteredList = members.filter((member) => {
       return associatedUsers.some((currentFilter) => {
         if (member.candidat) {
-          return !!member.candidat.coach === (currentFilter.value === 'true');
+          return !!member.candidat.coach === currentFilter.value;
         }
         if (member.coach) {
-          return !!member.coach.candidat === (currentFilter.value === 'true');
+          return !!member.coach.candidat === currentFilter.value;
         }
-        return !(currentFilter.value === 'true');
+        return !currentFilter.value;
       });
     });
   }
@@ -258,15 +249,16 @@ const getFiltersObjectsFromQueryParams = (params, filtersConst) => {
   const filters = {};
   if (filtersConst) {
     _.forEach(Object.keys(params), (paramKey) => {
-      if (
-        filtersConst.find((filterData) => {
-          return filterData.key === paramKey;
-        })
-      ) {
+      const filter = filtersConst.find((filterData) => {
+        return filterData.key === paramKey;
+      });
+      if (filter) {
         const valueArray = params[paramKey];
         if (valueArray.length > 0) {
           filters[paramKey] = _.map(valueArray, (val) => {
-            return { value: val };
+            return filter.constants.find((constantValue) => {
+              return constantValue.value.toString() === val;
+            });
           });
         }
       }

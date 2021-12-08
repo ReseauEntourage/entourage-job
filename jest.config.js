@@ -13,4 +13,5 @@ module.exports = {
   collectCoverageFrom: ['src/backend/**/*.js'],
   verbose: true,
   setupFiles: ['<rootDir>/jest.setupTests.js'],
+  testTimeout: 60000,
 };
