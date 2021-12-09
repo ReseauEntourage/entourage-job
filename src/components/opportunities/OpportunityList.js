@@ -21,6 +21,89 @@ import { OPPORTUNITY_FILTERS_DATA } from 'src/constants';
 import FiltersTabs from 'src/components/utils/FiltersTabs';
 import SearchBar from 'src/components/filters/SearchBar';
 
+const OfferList = ({
+  candidatId,
+  role,
+  offers,
+  isAdmin,
+  currentPath,
+  query,
+}) => {
+  return (
+    <Grid childWidths={['1-4@l', '1-3@m', '1-2@s']} left top>
+      {offers.map((offer, i) => {
+        const userOpportunity =
+          role === 'candidateAsAdmin'
+            ? getUserOpportunityFromOffer(offer, candidatId)
+            : offer.userOpportunity;
+
+        return (
+          <li key={i}>
+            <SimpleLink
+              shallow
+              scroll={false}
+              className="uk-link-reset"
+              href={{
+                pathname: `${currentPath.href}/[offerId]`,
+                query,
+              }}
+              as={{
+                pathname: `${currentPath.as}/${offer.id}`,
+                query,
+              }}
+            >
+              {isAdmin ? (
+                <OfferCard
+                  title={offer.title}
+                  from={offer.recruiterName}
+                  shortDescription={offer.company}
+                  date={offer.date}
+                  archived={offer.isArchived}
+                  isPublic={offer.isPublic}
+                  isValidated={offer.isValidated}
+                  department={offer.department}
+                  userOpportunity={userOpportunity}
+                  isAdmin
+                />
+              ) : (
+                <OfferCard
+                  title={offer.title}
+                  from={offer.recruiterName}
+                  shortDescription={offer.company}
+                  date={offer.date}
+                  isValidated={offer.isValidated}
+                  isPublic={offer.isPublic}
+                  userOpportunity={offer.userOpportunity}
+                  archived={
+                    offer.userOpportunity && offer.userOpportunity.archived
+                  }
+                  isNew={!offer.userOpportunity || !offer.userOpportunity.seen}
+                  isStared={
+                    offer.userOpportunity && offer.userOpportunity.bookmarked
+                  }
+                  department={offer.department}
+                />
+              )}
+            </SimpleLink>
+          </li>
+        );
+      })}
+    </Grid>
+  );
+};
+
+OfferList.propTypes = {
+  offers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  candidatId: PropTypes.string.isRequired,
+  role: PropTypes.oneOf(['admin', 'candidateAsAdmin', 'candidat']).isRequired,
+  isAdmin: PropTypes.bool.isRequired,
+  currentPath: PropTypes.shape({
+    href: PropTypes.string,
+    as: PropTypes.string,
+  }).isRequired,
+  query: PropTypes.shape().isRequired,
+};
+
 const OpportunityList = forwardRef(
   (
     {
@@ -49,6 +132,7 @@ const OpportunityList = forwardRef(
 
     const [currentOffer, setCurrentOffer] = useState(null);
     const [offers, setOffers] = useState(undefined);
+    const [otherOffers, setOtherOffers] = useState(undefined);
     const [hasError, setHasError] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -69,6 +153,7 @@ const OpportunityList = forwardRef(
 
     const fetchData = useOpportunityList(
       setOffers,
+      setOtherOffers,
       setNumberOfResults,
       setLoading,
       setHasError
@@ -171,70 +256,14 @@ const OpportunityList = forwardRef(
         {!loading && !hasError && (
           <div>
             {offers && offers.length > 0 ? (
-              <Grid childWidths={['1-4@l', '1-3@m', '1-2@s']} left top>
-                {offers.map((offer, i) => {
-                  const userOpportunity =
-                    role === 'candidateAsAdmin'
-                      ? getUserOpportunityFromOffer(offer, candidatId)
-                      : offer.userOpportunity;
-
-                  return (
-                    <li key={i}>
-                      <SimpleLink
-                        shallow
-                        scroll={false}
-                        className="uk-link-reset"
-                        href={{
-                          pathname: `${currentPath.href}/[offerId]`,
-                          query: restQuery,
-                        }}
-                        as={{
-                          pathname: `${currentPath.as}/${offer.id}`,
-                          query: restQuery,
-                        }}
-                      >
-                        {isAdmin ? (
-                          <OfferCard
-                            title={offer.title}
-                            from={offer.recruiterName}
-                            shortDescription={offer.company}
-                            date={offer.date}
-                            archived={offer.isArchived}
-                            isPublic={offer.isPublic}
-                            isValidated={offer.isValidated}
-                            department={offer.department}
-                            userOpportunity={userOpportunity}
-                            isAdmin
-                          />
-                        ) : (
-                          <OfferCard
-                            title={offer.title}
-                            from={offer.recruiterName}
-                            shortDescription={offer.company}
-                            date={offer.date}
-                            isValidated={offer.isValidated}
-                            isPublic={offer.isPublic}
-                            userOpportunity={offer.userOpportunity}
-                            archived={
-                              offer.userOpportunity &&
-                              offer.userOpportunity.archived
-                            }
-                            isNew={
-                              !offer.userOpportunity ||
-                              !offer.userOpportunity.seen
-                            }
-                            isStared={
-                              offer.userOpportunity &&
-                              offer.userOpportunity.bookmarked
-                            }
-                            department={offer.department}
-                          />
-                        )}
-                      </SimpleLink>
-                    </li>
-                  );
-                })}
-              </Grid>
+              <OfferList
+                candidatId={candidatId}
+                query={restQuery}
+                role={role}
+                isAdmin={isAdmin}
+                offers={offers}
+                currentPath={currentPath}
+              />
             ) : (
               <div className=" uk-text-center uk-flex uk-flex-center uk-margin-medium-top">
                 <div className="uk-width-xlarge">
@@ -251,6 +280,23 @@ const OpportunityList = forwardRef(
                   </p>
                 </div>
               </div>
+            )}
+            {otherOffers && otherOffers.length > 0 && (
+              <>
+                <hr />
+                <p className="uk-text-center uk-text-italic uk-padding-small">
+                  Voici d&apos;autres offres qui vous ont été adressé hors des
+                  départements sélectionnés&nbsp;:
+                </p>
+                <OfferList
+                  candidatId={candidatId}
+                  query={restQuery}
+                  role={role}
+                  isAdmin={isAdmin}
+                  offers={otherOffers}
+                  currentPath={currentPath}
+                />
+              </>
             )}
           </div>
         )}

@@ -1,10 +1,11 @@
 import { auth } from 'src/backend/controllers/Auth';
 import * as OpportunityController from 'src/backend/controllers/Opportunity';
-import { USER_ROLES } from 'src/constants';
+import { OFFER_CANDIDATE_FILTERS_DATA, USER_ROLES } from 'src/constants';
 import { checkCandidatOrCoachAuthorization } from 'src/backend/utils';
 import { logger } from 'src/backend/utils/Logger';
 
 import express from 'express';
+import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 
 const router = express.Router();
 
@@ -131,9 +132,31 @@ router.get(
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
+      const { department, type, ...restQuery } = req.query;
       OpportunityController.getAllUserOpportunities(req.params.id, req.query)
-        .then((listeOpportunities) => {
-          res.status(200).json(listeOpportunities);
+        .then((zoneOpportunities) => {
+          if (!department || type !== OFFER_CANDIDATE_FILTERS_DATA[1].tag) {
+            res.status(200).json({
+              offers: zoneOpportunities,
+              otherOffers: [],
+            });
+          } else {
+            const otherDepartments = DEPARTMENTS_FILTERS.filter((dept) => {
+              return !department.includes(dept.value);
+            });
+            OpportunityController.getAllUserOpportunities(req.params.id, {
+              department: otherDepartments.map((dept) => {
+                return dept.value;
+              }),
+              type,
+              ...restQuery,
+            }).then((otherOpportunities) => {
+              res.status(200).json({
+                offers: zoneOpportunities,
+                otherOffers: otherOpportunities,
+              });
+            });
+          }
         })
         .catch((err) => {
           logger(res).error(err);

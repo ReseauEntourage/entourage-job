@@ -4,6 +4,7 @@ import { filtersToQueryParams } from 'src/utils';
 
 export function useOpportunityList(
   setOffers,
+  setOtherOffers,
   setNumberOfResults,
   setLoading,
   setHasError
@@ -25,11 +26,12 @@ export function useOpportunityList(
               }
             );
             setOffers(
-              data.sort((a, b) => {
+              data.offers.sort((a, b) => {
                 return new Date(b.date) - new Date(a.date);
               })
             );
-            setNumberOfResults(data.length);
+            setOtherOffers(undefined);
+            setNumberOfResults(data.offers.length);
             break;
           }
           case 'admin': {
@@ -44,11 +46,12 @@ export function useOpportunityList(
               }
             );
             setOffers(
-              data.sort((a, b) => {
+              data.offers.sort((a, b) => {
                 return new Date(b.date) - new Date(a.date);
               })
             );
-            setNumberOfResults(data.length);
+            setOtherOffers(undefined);
+            setNumberOfResults(data.offers.length);
             break;
           }
           default: {
@@ -62,8 +65,9 @@ export function useOpportunityList(
                 },
               }
             );
-            setOffers(data);
-            setNumberOfResults(data.length);
+            setOffers(data.offers);
+            setOtherOffers(data.otherOffers);
+            setNumberOfResults(data.offers.length);
             break;
           }
         }
