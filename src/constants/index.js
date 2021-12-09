@@ -6,6 +6,7 @@ import {
   DEPARTMENTS_FILTERS,
   REGIONS_FILTERS,
 } from 'src/constants/departements';
+import _ from 'lodash';
 
 const OFFER_STATUS = [
   {
@@ -112,79 +113,6 @@ const BUSINESS_LINES = [
   },
 ];
 
-const LOCATIONS = [
-  {
-    value: 'France entière',
-    label: 'France entière',
-    children: [
-      {
-        value: 'Île-de-France',
-        label: 'Île-de-France',
-        zone: ADMIN_ZONES.PARIS,
-        children: [
-          {
-            value: 'Paris & proche banlieue',
-            label: 'Paris & proche banlieue',
-            zone: ADMIN_ZONES.PARIS,
-            children: [
-              {
-                value: 'Val-de-Marne (94)',
-                label: 'Val-de-Marne (94)',
-                zone: ADMIN_ZONES.PARIS,
-              },
-              {
-                value: 'Seine-Saint-Denis (93)',
-                label: 'Seine-Saint-Denis (93)',
-                zone: ADMIN_ZONES.PARIS,
-              },
-              {
-                value: 'Hauts-de-Seine (92)',
-                label: 'Hauts-de-Seine (92)',
-                zone: ADMIN_ZONES.PARIS,
-              },
-              {
-                value: 'Paris (75)',
-                label: 'Paris (75)',
-                zone: ADMIN_ZONES.PARIS,
-              },
-            ],
-          },
-          {
-            value: "Val-d'Oise (95)",
-            label: "Val-d'Oise (95)",
-            zone: ADMIN_ZONES.PARIS,
-          },
-          {
-            value: 'Essonne (91)',
-            label: 'Essonne (91)',
-            zone: ADMIN_ZONES.PARIS,
-          },
-          {
-            value: 'Yvelines (78)',
-            label: 'Yvelines (78)',
-            zone: ADMIN_ZONES.PARIS,
-          },
-          {
-            value: 'Seine-et-Marne (77)',
-            label: 'Seine-et-Marne (77)',
-            zone: ADMIN_ZONES.PARIS,
-          },
-        ],
-      },
-      {
-        value: 'Lille (59)',
-        label: 'Lille (59)',
-        zone: ADMIN_ZONES.LILLE,
-      },
-      {
-        value: 'Lyon (69)',
-        label: 'Lyon (69)',
-        zone: ADMIN_ZONES.LYON,
-      },
-    ],
-  },
-];
-
 const CV_STATUS = {
   Published: {
     label: 'Publié',
@@ -245,9 +173,13 @@ const CV_FILTERS_DATA = [
   {
     key: 'locations',
     constants: REGIONS_FILTERS,
-    priority: REGIONS_FILTERS.filter((region) => {
-      return region.zone !== ADMIN_ZONES.HZ;
-    }),
+    priority: _.orderBy(
+      REGIONS_FILTERS.filter((region) => {
+        return region.zone !== ADMIN_ZONES.HZ;
+      }),
+      'label',
+      'desc'
+    ),
     title: 'Où ?',
     tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
     icon: 'location',
@@ -541,7 +473,6 @@ export {
   BUSINESS_LINES,
   EXTERNAL_LINKS,
   VALUES,
-  LOCATIONS,
   CV_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,

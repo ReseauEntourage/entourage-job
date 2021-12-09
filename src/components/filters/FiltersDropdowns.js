@@ -120,13 +120,25 @@ const FiltersDropdowns = ({
                       data-uk-dropdown="mode: click;"
                       className="uk-height-max-medium uk-overflow-auto uk-width-medium"
                     >
-                      {priority && priority.length > 0 && (
+                      {priority && priority.length > 0 ? (
                         <>
                           {renderFilters(priority, key, tag)}
                           <hr />
+                          {renderFilters(
+                            constants.filter((filterConst) => {
+                              return !priority
+                                .map((prioConst) => {
+                                  return prioConst.value;
+                                })
+                                .includes(filterConst.value);
+                            }),
+                            key,
+                            tag
+                          )}
                         </>
+                      ) : (
+                        renderFilters(constants, key, tag)
                       )}
-                      {renderFilters(constants, key, tag)}
                     </div>
                   </div>
                 </div>

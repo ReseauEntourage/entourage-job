@@ -523,6 +523,12 @@ const DEPARTMENTS = [
   },
 ];
 
+const REGIONS_LABELS = {
+  'Île-de-France': 'Paris et sa région',
+  'Auvergne-Rhône-Alpes': 'Lyon et sa région',
+  'Hauts-de-France': 'Lille et sa région',
+};
+
 const REGIONS_FILTERS = _.sortBy(
   Object.values(
     DEPARTMENTS.reduce((acc, curr) => {
@@ -539,14 +545,14 @@ const REGIONS_FILTERS = _.sortBy(
         ...acc,
         [curr.region]: {
           value: curr.region,
-          label: curr.region,
+          label: REGIONS_LABELS[curr.region] ?? curr.region,
           zone: curr.zone,
           children: [curr.name],
         },
       };
     }, {})
   ),
-  'value'
+  'label'
 );
 
 const DEPARTMENTS_FILTERS = [
