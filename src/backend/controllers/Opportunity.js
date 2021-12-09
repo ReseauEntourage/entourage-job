@@ -434,7 +434,9 @@ const getOpportunities = async (params) => {
     typeParams
   );
 
-  return filterOffersByStatus(filteredTypeOpportunites, statusParams);
+  return {
+    offers: filterOffersByStatus(filteredTypeOpportunites, statusParams),
+  };
 };
 
 const countPendingOpportunitiesCount = async (zone) => {
@@ -492,9 +494,11 @@ const getPublicOpportunities = async () => {
     },
   });
 
-  return opportunities.map((model) => {
-    return cleanOpportunity(model);
-  });
+  return {
+    offers: opportunities.map((model) => {
+      return cleanOpportunity(model);
+    }),
+  };
 };
 
 const getPrivateUserOpportunities = async (userId, params) => {
@@ -525,7 +529,9 @@ const getPrivateUserOpportunities = async (userId, params) => {
     return cleanOpportunity(model);
   });
 
-  return filterOffersByStatus(cleanedOpportunities, statusParams, userId);
+  return {
+    offers: filterOffersByStatus(cleanedOpportunities, statusParams, userId),
+  };
 };
 
 const getAllUserOpportunities = async (userId, params = {}) => {

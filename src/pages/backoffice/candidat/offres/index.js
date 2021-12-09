@@ -31,6 +31,7 @@ const Opportunities = () => {
   const [loadingDefaultFilters, setLoadingDefaultFilters] = useState(true);
 
   const [candidatId, setCandidatId] = useState();
+  const prevCandidatId = usePrevious(candidatId);
 
   const { filters, setFilters, search, setSearch, resetFilters } = useFilters(
     candidateFilters,
@@ -40,43 +41,56 @@ const Opportunities = () => {
     ['offerId']
   );
 
-  const setCandidatZone = useCallback(
-    (candidatZone) => {
+  const setCandidatDepartments = useCallback(
+    (candId, candidatZone) => {
       if (!tag) {
         const params = {
           tag: OFFER_CANDIDATE_FILTERS_DATA[1].tag,
           ...restParams,
         };
 
-        if (candidatZone && candidatZone !== ADMIN_ZONES) {
-          const defaultDepartmentsForCandidate = DEPARTMENTS_FILTERS.filter(
-            (dept) => {
-              return candidatZone === dept.zone;
-            }
-          );
+        Api.get(`/api/v1/cv/`, {
+          params: {
+            userId: candId,
+          },
+        })
+          .then(({ data }) => {
+            if (data.locations && data.locations.length > 0) {
+              params.department = data.locations;
+            } else if (candidatZone && candidatZone !== ADMIN_ZONES.HZ) {
+              const defaultDepartmentsForCandidate = DEPARTMENTS_FILTERS.filter(
+                (dept) => {
+                  return candidatZone === dept.zone;
+                }
+              );
 
-          params.department = defaultDepartmentsForCandidate.map((dept) => {
-            return dept.value;
+              params.department = defaultDepartmentsForCandidate.map((dept) => {
+                return dept.value;
+              });
+            }
+            replace(
+              {
+                pathname: `/backoffice/candidat/offres${
+                  offerId ? '/[offerId]' : ''
+                }`,
+                query: params,
+              },
+              {
+                pathname: `/backoffice/candidat/offres${
+                  offerId ? `/${offerId}` : ''
+                }`,
+                query: params,
+              },
+              {
+                shallow: true,
+              }
+            );
+          })
+          .catch(() => {
+            setHasError(true);
           });
-        }
-        replace(
-          {
-            pathname: `/backoffice/candidat/offres${
-              offerId ? '/[offerId]' : ''
-            }`,
-            query: params,
-          },
-          {
-            pathname: `/backoffice/candidat/offres${
-              offerId ? `/${offerId}` : ''
-            }`,
-            query: params,
-          },
-          {
-            shallow: true,
-          }
-        );
       } else {
+        setCandidatId(candId);
         setLoadingDefaultFilters(false);
       }
     },
@@ -121,12 +135,10 @@ const Opportunities = () => {
             shallow: true,
           }
         );
-      } else if (user !== prevUser) {
+      } else if (user !== prevUser || !candidatId) {
         setLoading(true);
-
         if (user.role === USER_ROLES.CANDIDAT) {
-          setCandidatId(user.id);
-          setCandidatZone(user.zone);
+          setCandidatDepartments(user.id, user.zone);
           setLoading(false);
         } else if (user.role === USER_ROLES.COACH) {
           Api.get(`/api/v1/user/candidat/`, {
@@ -136,23 +148,34 @@ const Opportunities = () => {
           })
             .then(({ data }) => {
               if (data) {
-                setCandidatId(data.candidat.id);
-                setCandidatZone(user.zone);
+                setCandidatDepartments(data.candidat.id, user.zone);
               } else {
                 setHasError(true);
               }
               setLoading(false);
             })
             .catch(() => {
-              setLoading(false);
               setHasError(true);
+              setLoading(false);
             });
         }
       } else {
-        setLoadingDefaultFilters(false);
+        setLoadingDefaultFilters(true);
+        setCandidatDepartments(candidatId, user.zone);
       }
     }
-  }, [offerId, prevUser, q, replace, restParams, setCandidatZone, tag, user]);
+  }, [
+    candidatId,
+    offerId,
+    prevCandidatId,
+    prevUser,
+    q,
+    replace,
+    restParams,
+    setCandidatDepartments,
+    tag,
+    user,
+  ]);
 
   return (
     <LayoutBackOffice
