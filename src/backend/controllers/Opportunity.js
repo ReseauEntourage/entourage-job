@@ -31,6 +31,7 @@ import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import _ from 'lodash';
 import { getUser } from 'src/backend/controllers/User';
+import { getCVbyUserId } from 'src/backend/controllers/CV';
 
 const offerTable = process.env.AIRTABLE_OFFERS;
 const {
@@ -646,9 +647,12 @@ const getAllUserOpportunities = async (userId, params = {}) => {
 
 const getUnseenUserOpportunitiesCount = async (candidatId) => {
   const user = await getUser(candidatId);
+  const cv = await getCVbyUserId(candidatId);
 
   const locationFilters = DEPARTMENTS_FILTERS.filter((dept) => {
-    return user.zone === dept.zone;
+    return cv.locations && cv.locations.length > 0
+      ? cv.locations.includes(dept.value)
+      : user.zone === dept.zone;
   });
 
   const filterOptions =
