@@ -455,6 +455,12 @@ const CVPage = () => {
                               `api/v1/user/${user.id}`,
                               {
                                 ...fields,
+                                firstName: user.firstName
+                                  .trim()
+                                  .replace(/\s\s+/g, ' '),
+                                lastName: user.lastName
+                                  .trim()
+                                  .replace(/\s\s+/g, ' '),
                                 email: fields.email.toLowerCase(),
                               }
                             );
