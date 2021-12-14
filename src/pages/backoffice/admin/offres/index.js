@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 const LesOpportunites = () => {
   const {
     replace,
+    /* isReady, */
     query: { q, offerId, tag, ...restParams },
   } = useRouter();
 
@@ -30,89 +31,95 @@ const LesOpportunites = () => {
   );
 
   useEffect(() => {
-    const redirectParams = tag
-      ? {
-          tag,
-          ...restParams,
-        }
-      : restParams;
+    // TODO use isReady after Next.js upgrade
+    if (true /* isReady */) {
+      const redirectParams = tag
+        ? {
+            tag,
+            ...restParams,
+          }
+        : restParams;
 
-    // For retrocompatibility
-    if (q) {
-      replace(
-        {
-          pathname: '/backoffice/admin/offres/[offerId]',
-          query: redirectParams,
-        },
-        {
-          pathname: `/backoffice/admin/offres/${q}`,
-          query: redirectParams,
-        },
-        {
-          shallow: true,
-        }
-      );
-    } else if (user) {
-      if (user.role !== USER_ROLES.ADMIN) {
+      // For retrocompatibility
+      if (q) {
         replace(
           {
-            pathname: `/backoffice/candidat/offres${
-              offerId ? '/[offerId]' : ''
-            }`,
+            pathname: '/backoffice/admin/offres/[offerId]',
             query: redirectParams,
           },
           {
-            pathname: `/backoffice/candidat/offres${
-              offerId ? `/${offerId}` : ''
-            }`,
+            pathname: `/backoffice/admin/offres/${q}`,
             query: redirectParams,
           },
           {
             shallow: true,
           }
         );
-      } else if (!tag) {
-        const params = { tag: OFFER_ADMIN_FILTERS_DATA[1].tag, ...restParams };
-
-        if (user.zone && user.zone !== ADMIN_ZONES.HZ) {
-          const defaultDepartmentsForAdmin = DEPARTMENTS_FILTERS.filter(
-            (dept) => {
-              return user.zone === dept.zone;
-            }
-          );
-
-          params.department = defaultDepartmentsForAdmin.map((dept) => {
-            return dept.value;
-          });
-        }
-        if (offerId) {
+      } else if (user) {
+        if (user.role !== USER_ROLES.ADMIN) {
           replace(
             {
-              pathname: '/backoffice/admin/offres/[offerId]',
-              query: params,
+              pathname: `/backoffice/candidat/offres${
+                offerId ? '/[offerId]' : ''
+              }`,
+              query: redirectParams,
             },
             {
-              pathname: `/backoffice/admin/offres/${offerId}`,
-              query: params,
+              pathname: `/backoffice/candidat/offres${
+                offerId ? `/${offerId}` : ''
+              }`,
+              query: redirectParams,
             },
             {
               shallow: true,
             }
           );
+        } else if (!tag) {
+          const params = {
+            tag: OFFER_ADMIN_FILTERS_DATA[1].tag,
+            ...restParams,
+          };
+
+          if (user.zone && user.zone !== ADMIN_ZONES.HZ) {
+            const defaultDepartmentsForAdmin = DEPARTMENTS_FILTERS.filter(
+              (dept) => {
+                return user.zone === dept.zone;
+              }
+            );
+
+            params.department = defaultDepartmentsForAdmin.map((dept) => {
+              return dept.value;
+            });
+          }
+          if (offerId) {
+            replace(
+              {
+                pathname: '/backoffice/admin/offres/[offerId]',
+                query: params,
+              },
+              {
+                pathname: `/backoffice/admin/offres/${offerId}`,
+                query: params,
+              },
+              {
+                shallow: true,
+              }
+            );
+          } else {
+            replace(
+              {
+                pathname: '/backoffice/admin/offres',
+                query: params,
+              },
+              undefined,
+              {
+                shallow: true,
+              }
+            );
+          }
         } else {
-          replace(
-            {
-              pathname: '/backoffice/admin/offres',
-              query: params,
-            },
-            undefined,
-            {
-              shallow: true,
-            }
-          );
+          setLoadingDefaultFilters(false);
         }
-      } else {
-        setLoadingDefaultFilters(false);
       }
     }
   }, [q, offerId, replace, restParams, tag, user]);

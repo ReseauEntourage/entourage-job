@@ -86,7 +86,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
       `${process.env.SERVER_URL}/api/v1/opportunity/join`,
       opportunityUser
     );
-    setCurrentOffer({ ...currentOffer, opportunityUser });
+    await setCurrentOffer({ ...currentOffer, opportunityUser });
   };
 
   const resetNoteBuffer = () => {

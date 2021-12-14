@@ -1,3 +1,5 @@
+/* global UIkit */
+
 import React, {
   forwardRef,
   useCallback,
@@ -202,9 +204,9 @@ const OpportunityList = forwardRef(
         openModal(
           <ModalOffer
             currentOffer={currentOffer}
-            setCurrentOffer={(offerToSet) => {
+            setCurrentOffer={async (offerToSet) => {
               setCurrentOffer({ ...offerToSet });
-              fetchData(role, search, tabFilterTag, filters, candidatId);
+              await fetchData(role, search, tabFilterTag, filters, candidatId);
             }}
             navigateBackToList={navigateBackToList}
           />
@@ -231,14 +233,37 @@ const OpportunityList = forwardRef(
           openModal(
             <ModalOfferAdmin
               currentOffer={currentOffer}
-              setCurrentOffer={(offerToSet) => {
+              setCurrentOffer={async (offerToSet) => {
                 setCurrentOffer({ ...offerToSet });
-                fetchData(role, search, tabFilterTag, filters, candidatId);
+                await fetchData(role, search, tabFilterTag, filters, candidatId);
               }}
               selectedCandidateId={
                 role === 'candidateAsAdmin' ? candidatId : undefined
               }
               navigateBackToList={navigateBackToList}
+              duplicateOffer={async () => {
+                const { id, userOpportunity, ...restOpportunity } = currentOffer;
+                const { data } = await Api.post(`/api/v1/opportunity/`, {
+                  ...restOpportunity,
+                  title: `${restOpportunity.title} (copie)`,
+                  isAdmin: true,
+                  isValidated: false,
+                });
+                UIkit.notification("L'offre a bien été dupliqué", 'success');
+                push(
+                  {
+                    pathname: `${currentPath.href}/[offerId]`,
+                    query: restQuery,
+                  },
+                  {
+                    pathname: `${currentPath.as}/${data.id}`,
+                    query: restQuery,
+                  },
+                  {
+                    shallow: true,
+                  }
+                );
+              }}
             />
           );
         } else {

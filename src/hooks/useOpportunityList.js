@@ -16,7 +16,9 @@ export function useOpportunityList(
 
         switch (role) {
           case 'candidateAsAdmin': {
-            const { data } = await Api.get(
+            const {
+              data: { offers },
+            } = await Api.get(
               `${process.env.SERVER_URL}/api/v1/opportunity/user/private/${candidatId}`,
               {
                 params: {
@@ -25,17 +27,20 @@ export function useOpportunityList(
                 },
               }
             );
-            setOffers(
-              data.offers.sort((a, b) => {
-                return new Date(b.date) - new Date(a.date);
-              })
-            );
+            const sortedOffers = offers.sort((a, b) => {
+              return new Date(b.date) - new Date(a.date);
+            });
+
+            setOffers(sortedOffers);
             setOtherOffers(undefined);
-            setNumberOfResults(data.offers.length);
+            setNumberOfResults(sortedOffers.length);
+
             break;
           }
           case 'admin': {
-            const { data } = await Api.get(
+            const {
+              data: { offers },
+            } = await Api.get(
               `${process.env.SERVER_URL}/api/v1/opportunity/admin`,
               {
                 params: {
@@ -45,17 +50,26 @@ export function useOpportunityList(
                 },
               }
             );
-            setOffers(
-              data.offers.sort((a, b) => {
-                return new Date(b.date) - new Date(a.date);
+            /* console.log(
+              offers.map((offer) => {
+                return offer.isValidated;
               })
-            );
+            ); */
+
+            const sortedOffers = offers.sort((a, b) => {
+              return new Date(b.date) - new Date(a.date);
+            });
+
+            setOffers(sortedOffers);
             setOtherOffers(undefined);
-            setNumberOfResults(data.offers.length);
+            setNumberOfResults(sortedOffers.length);
+
             break;
           }
           default: {
-            const { data } = await Api.get(
+            const {
+              data: { offers },
+            } = await Api.get(
               `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${candidatId}`,
               {
                 params: {
@@ -65,9 +79,11 @@ export function useOpportunityList(
                 },
               }
             );
-            setOffers(data.offers);
-            setOtherOffers(data.otherOffers);
-            setNumberOfResults(data.offers.length);
+
+            setOffers(offers);
+            setOtherOffers(undefined);
+            setNumberOfResults(offers.length);
+
             break;
           }
         }
@@ -78,6 +94,6 @@ export function useOpportunityList(
         setHasError(true);
       }
     },
-    [setHasError, setLoading, setNumberOfResults, setOffers]
+    [setHasError, setLoading, setNumberOfResults, setOffers, setOtherOffers]
   );
 }

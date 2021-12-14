@@ -55,7 +55,7 @@ export function usePostOpportunity({
             : `Merci pour votre offre, le(s) candidat(s) et coach(s) associés reviendront bientôt vers vous.`,
           'success'
         );
-        if (adminCallback) adminCallback();
+        if (adminCallback) await adminCallback();
         if (openNewForm) {
           setLastFilledForm(fields);
         } else {

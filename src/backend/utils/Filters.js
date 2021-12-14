@@ -4,11 +4,9 @@ import { col, Op, where } from 'sequelize';
 import _ from 'lodash';
 
 import {
-  CV_FILTERS_DATA,
   MEMBER_FILTERS_DATA,
   OFFER_ADMIN_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,
-  OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
 
 // OFFER FILTERS

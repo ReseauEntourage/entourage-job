@@ -24,6 +24,7 @@ import ModalGeneric from 'src/components/modals/ModalGeneric';
 const ModalOfferAdmin = ({
   currentOffer,
   setCurrentOffer,
+  duplicateOffer,
   navigateBackToList,
   selectedCandidateId,
 }) => {
@@ -63,7 +64,7 @@ const ModalOfferAdmin = ({
     setLoading(true);
     try {
       const { data } = await Api.put(`/api/v1/opportunity/`, opportunity);
-      setCurrentOffer({ ...data });
+      await setCurrentOffer({ ...data });
     } catch (err) {
       setError(true);
     } finally {
@@ -76,7 +77,7 @@ const ModalOfferAdmin = ({
       `${process.env.SERVER_URL}/api/v1/opportunity/join`,
       opportunityUser
     );
-    setCurrentOffer({ ...currentOffer });
+    await setCurrentOffer({ ...currentOffer });
   };
 
   useEffect(() => {
@@ -213,9 +214,15 @@ const ModalOfferAdmin = ({
             <List className="uk-iconnav uk-flex-right">
               <ButtonIcon
                 name="pencil"
+                tooltip="Modifier l'offre"
                 onClick={() => {
                   setIsEditing(true);
                 }}
+              />
+              <ButtonIcon
+                name="copy"
+                tooltip="Dupliquer l'offre"
+                onClick={duplicateOffer}
               />
             </List>
           </div>
@@ -495,6 +502,7 @@ ModalOfferAdmin.propTypes = {
     beContacted: PropTypes.bool,
   }),
   setCurrentOffer: PropTypes.func.isRequired,
+  duplicateOffer: PropTypes.func.isRequired,
   navigateBackToList: PropTypes.func.isRequired,
   selectedCandidateId: PropTypes.string,
 };
