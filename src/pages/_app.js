@@ -33,7 +33,7 @@ const SplashScreenContainer = ({ loading, fading }) => {
     >
       <SplashScreen />
     </div>
-  ) : undefined;
+  ) : null;
 };
 
 const Container = ({ Component, pageProps, err }) => {
