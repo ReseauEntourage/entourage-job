@@ -60,6 +60,7 @@ const ToggleWithConfirmationModal = ({
   onToggle,
   formSchema,
 }) => {
+  const { onClose } = useModalContext();
   const [toggle, setToggle] = useState(defaultValue);
   useEffect(() => {
     setToggle(defaultValue);

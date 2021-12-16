@@ -8,6 +8,7 @@ import { useModalContext } from 'src/components/modals/Modal';
 import ModalGeneric from './ModalGeneric';
 
 const SailInfoModal = () => {
+  const { onClose } = useModalContext();
   const modalContent = (
     <>
       <div className="uk-light uk-flex uk-flex-column uk-flex-middle">

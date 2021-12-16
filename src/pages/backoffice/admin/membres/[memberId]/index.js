@@ -128,7 +128,6 @@ const EditUserModal = ({ user, setUser }) => {
 
   return (
     <ModalEdit
-      id="edit-user"
       formSchema={mutatedSchema}
       title="Edition d'un membre"
       description="Merci de modifier les informations que vous souhaitez concernant le membre."
@@ -143,13 +142,12 @@ const EditUserModal = ({ user, setUser }) => {
             const { data } = await Api.put(`api/v1/user/${user.id}`, {
               ...fields,
               email: fields.email.toLowerCase(),
-              firstName: user.firstName
+              firstName: fields.firstName
                 .trim()
                 .replace(/\s\s+/g, ' '),
-              lastName: user.lastName
+              lastName: fields.lastName
                 .trim()
                 .replace(/\s\s+/g, ' '),
-              email: fields.email.toLowerCase(),
             });
             if (data) {
               closeModal();
