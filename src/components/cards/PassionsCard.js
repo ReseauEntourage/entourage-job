@@ -1,4 +1,3 @@
-/* global UIkit */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid } from 'src/components/utils';
@@ -6,6 +5,7 @@ import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaformEditPassions from 'src/components/forms/schema/formEditPassions.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import { openModal } from 'src/components/modals/Modal';
 
 const PassionsCard = ({ list, onChange }) => {
   return (
@@ -23,7 +23,26 @@ const PassionsCard = ({ list, onChange }) => {
           <ButtonIcon
             name="pencil"
             onClick={() => {
-              UIkit.modal(`#modal-passions`).show();
+              openModal(
+                <ModalEdit
+                  id="modal-passions"
+                  title="Édition - Mes passions (6 maximum)"
+                  formSchema={schemaformEditPassions}
+                  defaultValues={list.reduce((acc, value, i) => {
+                    acc[`passion${i + 1}`] = value;
+                    return acc;
+                  }, {})}
+                  onSubmit={(fields, closeModal) => {
+                    closeModal();
+                    const fieldsTransform = {
+                      passions: Object.values(fields).filter((val) => {
+                        return typeof val === 'string' && val !== '';
+                      }),
+                    };
+                    onChange(fieldsTransform);
+                  }}
+                />
+              );
             }}
           />
         )}
@@ -41,28 +60,6 @@ const PassionsCard = ({ list, onChange }) => {
           <li>Aucune passion renseignée</li>
         )}
       </ul>
-      {onChange && (
-        <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand uk-margin-remove">
-          <ModalEdit
-            id="modal-passions"
-            title="Édition - Mes passions (6 maximum)"
-            formSchema={schemaformEditPassions}
-            defaultValues={list.reduce((acc, value, i) => {
-              acc[`passion${i + 1}`] = value;
-              return acc;
-            }, {})}
-            onSubmit={(fields, closeModal) => {
-              closeModal();
-              const fieldsTransform = {
-                passions: Object.values(fields).filter((val) => {
-                  return typeof val === 'string' && val !== '';
-                }),
-              };
-              onChange(fieldsTransform);
-            }}
-          />
-        </h3>
-      )}
     </div>
   );
 };

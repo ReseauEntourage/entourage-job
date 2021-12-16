@@ -1,10 +1,8 @@
-/* global UIkit */
-
 import React from 'react';
 import LogoList from 'src/components/partials/LogoList';
 import WhatItBringsToCompanies from 'src/components/partials/WhatItBringsToCompanies';
 import Layout from 'src/components/Layout';
-import { Button, CloseButton, Section } from 'src/components/utils';
+import { Button, Section } from 'src/components/utils';
 import ImageTitle from 'src/components/partials/ImageTitle';
 import HireCTA from 'src/components/partials/HireCTA';
 import Reviews from 'src/components/partials/Reviews';
@@ -13,6 +11,7 @@ import NewsletterPartial from 'src/components/partials/NewsletterPartial';
 import PARTNERS from 'src/constants/partners';
 import ModalGeneric from 'src/components/modals/ModalGeneric';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import { openModal } from 'src/components/modals/Modal';
 
 const Entreprises = () => {
   return (
@@ -59,7 +58,22 @@ const Entreprises = () => {
         <div className="uk-flex uk-flex-center">
           <Button
             onClick={() => {
-              UIkit.modal('#modal-company-help').show();
+              openModal(
+                <ModalGeneric>
+                  <iframe
+                    className="airtable-embed"
+                    src={`${process.env.AIRTABLE_LINK_COMPANY_HELP}?backgroundColor=blue`}
+                    frameBorder="0"
+                    title="modal-company-help"
+                    width="100%"
+                    height="533"
+                    style={{
+                      background: 'transparent',
+                      border: '1px solid #ccc;',
+                    }}
+                  />
+                </ModalGeneric>
+              );
             }}
             style="secondary"
             className="uk-margin-small-top"
@@ -68,28 +82,6 @@ const Entreprises = () => {
             <IconNoSSR name="chevron-right" />
           </Button>
         </div>
-
-        <ModalGeneric id="modal-company-help">
-          {() => {
-            return (
-              <>
-                <CloseButton className="uk-modal-close-default" />
-                <iframe
-                  className="airtable-embed"
-                  src={`${process.env.AIRTABLE_LINK_COMPANY_HELP}?backgroundColor=blue`}
-                  frameBorder="0"
-                  title="modal-company-help"
-                  width="100%"
-                  height="533"
-                  style={{
-                    background: 'transparent',
-                    border: '1px solid #ccc;',
-                  }}
-                />
-              </>
-            );
-          }}
-        </ModalGeneric>
       </Section>
       <HireCTA />
       <WhatItBringsToCompanies />

@@ -5,6 +5,7 @@ import 'public/static/css/Forms.less';
 import 'public/static/css/Toggle.less';
 import 'src/components/headers/Header.less';
 import 'src/components/partials/HireCTA.less';
+import 'src/components/modals/Modal/Modal.less';
 
 import React, { useEffect, useState } from 'react';
 import Router, { useRouter } from 'next/router';

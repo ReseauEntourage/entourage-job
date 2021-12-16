@@ -18,7 +18,7 @@ const authLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_AUTH, 10);
  * Utilisation d'un "custom callback" pour mieux gérer l'echec d'authentification
  * Source : http://www.passportjs.org/docs/downloads/html/#custom-callback
  */
-router.post('/login', authLimiter, auth(), (req, res, next) => {
+router.post('/login', authLimiter, auth(), (req, res) => {
   const { email, password } = req.body;
 
   if (!email) {

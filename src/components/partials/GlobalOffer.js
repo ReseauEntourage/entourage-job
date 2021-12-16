@@ -1,9 +1,11 @@
 import React from 'react';
-import PostJobAdModal, { modalId } from 'src/components/modals/PostJobAdModal';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import { openModal } from 'src/components/modals/Modal';
+import usePostPublicOfferModal from 'src/components/modals/usePostPublicOfferModal';
 
 const GlobalOffer = () => {
+  const publicOfferModal = usePostPublicOfferModal();
   return (
     <h4 className="uk-text-bold uk-margin-large-top uk-text-center">
       Vous n&apos;avez pas trouvé de profils qui correspondent à vos besoins de
@@ -14,14 +16,13 @@ const GlobalOffer = () => {
       <br />
       <a
         style={{ textDecoration: 'underline' }}
-        data-uk-toggle={`target: #${modalId}`}
         onClick={() => {
-          return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
+          openModal(publicOfferModal);
+          event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
         }}
       >
         Laissez-nous votre contact ou votre besoin et nous revenons vers vous.
       </a>
-      <PostJobAdModal />
     </h4>
   );
 };

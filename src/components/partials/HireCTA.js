@@ -3,12 +3,15 @@ import { Button, Grid, Section, Img } from 'src/components/utils';
 import { IconNoSSR } from 'src/components/utils/Icon';
 
 import CVList from 'src/components/cv/CVList';
-import PostJobAdModal, { modalId } from 'src/components/modals/PostJobAdModal';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 import { CV_FILTERS_DATA } from 'src/constants';
+import { openModal } from 'src/components/modals/Modal';
+import usePostPublicOfferModal from 'src/components/modals/usePostPublicOfferModal';
 
 const HireCTA = () => {
+  const publicOfferModal = usePostPublicOfferModal();
+
   return (
     <Section style="muted">
       <div className="uk-margin-medium-bottom">
@@ -79,16 +82,15 @@ const HireCTA = () => {
               <Button
                 className="uk-margin-medium-top"
                 style="secondary"
-                toggle={`target: #${modalId}`}
                 onClick={() => {
-                  return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
+                  event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
+                  openModal(publicOfferModal);
                 }}
               >
                 Déposez votre offre&nbsp;
                 <IconNoSSR name="chevron-right" />
               </Button>
             </Grid>
-            <PostJobAdModal />
           </div>
         </div>
       </div>

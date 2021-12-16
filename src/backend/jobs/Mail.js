@@ -11,7 +11,7 @@ import {
 } from 'src/backend/controllers/Opportunity';
 import { JOBS, MAILJET_TEMPLATES } from 'src/constants';
 import { getZoneSuffix } from 'src/utils';
-import { addToWorkQueue } from './index';
+import { addToWorkQueue } from 'src/backend/jobs';
 
 const sendMailBackground = async ({
   toEmail,

@@ -1,7 +1,6 @@
 import React from 'react';
 import { event } from 'src/lib/gtag';
-import { Button, Grid, Section } from 'src/components/utils';
-import PostJobAdModal, { modalId } from 'src/components/modals/PostJobAdModal';
+import { Button, Grid, Img, Section } from 'src/components/utils';
 import TAGS from 'src/constants/tags';
 import Layout from 'src/components/Layout';
 import ImageTitle from 'src/components/partials/ImageTitle';
@@ -9,8 +8,12 @@ import SearchCandidates from 'src/components/partials/SearchCandidates';
 import CorporateContact from 'src/components/partials/CorporateContactPartial';
 import NewsletterPartial from 'src/components/partials/NewsletterPartial';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import { openModal } from 'src/components/modals/Modal';
+import usePostPublicOfferModal from 'src/components/modals/usePostPublicOfferModal';
 
 const CVEntreprises = () => {
+  const publicOfferModal = usePostPublicOfferModal();
+
   return (
     <Layout title="CVs Entreprises - LinkedOut">
       <ImageTitle
@@ -41,9 +44,9 @@ const CVEntreprises = () => {
             <Button
               className="uk-margin-medium-top"
               style="secondary"
-              toggle={`target: #${modalId}`}
               onClick={() => {
-                return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
+                event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
+                openModal(publicOfferModal);
               }}
             >
               Déposez votre offre <IconNoSSR name="chevron-right" />
@@ -74,7 +77,6 @@ const CVEntreprises = () => {
           </Grid>
         </div>
       </Section>
-      <PostJobAdModal />
       <CorporateContact />
       <NewsletterPartial style="default" />
     </Layout>

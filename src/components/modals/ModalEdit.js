@@ -1,12 +1,9 @@
-/* eslint-disable no-undef */
 import React from 'react';
 import PropTypes from 'prop-types';
 import ModalGeneric from 'src/components/modals/ModalGeneric';
-import HeaderModal from 'src/components/modals/HeaderModal';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
 
-import { CloseButton } from 'src/components/utils';
-import { useResetForm } from 'src/hooks/utils';
+import { useModalContext } from 'src/components/modals/Modal';
 
 const ModalEdit = ({
   title,
@@ -16,33 +13,19 @@ const ModalEdit = ({
   onSubmit,
   submitText,
 }) => {
-  const [form, resetForm] = useResetForm();
+  const { onClose } = useModalContext();
 
   return (
-    <ModalGeneric resetForm={resetForm}>
-      {(closeModal) => {
-        return (
-          <>
-            <CloseButton
-              className="uk-modal-close-default"
-              onClick={resetForm}
-            />
-            <HeaderModal>{title}</HeaderModal>
-            {description ? <p className="uk-text-lead">{description}</p> : null}
-
-            <FormWithValidation
-              ref={form}
-              submitText={submitText}
-              formSchema={formSchema}
-              defaultValues={defaultValues}
-              onCancel={closeModal}
-              onSubmit={(fields, setError) => {
-                onSubmit(fields, closeModal, setError);
-              }}
-            />
-          </>
-        );
-      }}
+    <ModalGeneric title={title} description={description}>
+      <FormWithValidation
+        submitText={submitText}
+        formSchema={formSchema}
+        defaultValues={defaultValues}
+        onCancel={onClose}
+        onSubmit={(fields, setError) => {
+          onSubmit(fields, onClose, setError);
+        }}
+      />
     </ModalGeneric>
   );
 };

@@ -7,11 +7,12 @@ import { Grid } from 'src/components/utils';
 import { CandidatCard } from 'src/components/cards';
 import Api from 'src/Axios';
 import { CV_FILTERS_DATA, INITIAL_NB_OF_CV_TO_DISPLAY } from 'src/constants';
-import PostJobAdModal from 'src/components/modals/PostJobAdModal';
 import SimpleLink from 'src/components/utils/SimpleLink';
 import { usePrevious } from 'src/hooks/utils';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import SearchBar from 'src/components/filters/SearchBar';
+import { openModal } from 'src/components/modals/Modal';
+import usePostPublicOfferModal from 'src/components/modals/usePostPublicOfferModal';
 
 const NoCVInThisArea = () => {
   return (
@@ -40,6 +41,8 @@ const CVList = ({
   setSearch,
   resetFilters,
 }) => {
+  const publicOfferModal = usePostPublicOfferModal();
+
   const [numberOfResults, setNumberOfResults] = useState(0);
 
   const [cvs, setCVs] = useState(undefined);
@@ -184,7 +187,9 @@ const CVList = ({
                   textDecoration: 'underline',
                 }}
                 className="uk-link-text"
-                data-uk-toggle="#modal-offer-add-search"
+                onClick={() => {
+                  openModal(publicOfferModal);
+                }}
               >
                 Publier une offre d’emploi
               </a>{' '}
@@ -192,7 +197,6 @@ const CVList = ({
               pourraient être intéressés&nbsp;!{' '}
             </p>
             {renderCvList(cvs)}
-            <PostJobAdModal />
           </div>
         );
       }

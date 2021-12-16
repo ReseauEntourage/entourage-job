@@ -1,19 +1,16 @@
 import { Subject } from 'rxjs';
 import React, { useState, useEffect, useMemo } from 'react';
 import uuid from 'uuid/v4';
-import { ModalContext } from './ModalContext';
+import { ModalContext } from 'src/components/modals/Modal/ModalContext';
 
 const modalsSubject = new Subject();
 
 export function openModal(modal) {
-  console.log(modal);
   modalsSubject.next(modal);
 }
 
 export function ModalsListener() {
   const [modals, setModals] = useState({});
-
-  console.log(modals);
 
   const subscription = useMemo(() => {
     // @ts-ignore

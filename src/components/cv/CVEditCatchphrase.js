@@ -1,10 +1,10 @@
-/* global UIkit */
 import React from 'react';
 import PropTypes from 'prop-types';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaCatchphrase from 'src/components/forms/schema/formEditCatchphrase.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import { Grid } from 'src/components/utils';
+import { openModal } from 'src/components/modals/Modal';
 
 const CVEditCatchphrase = ({ catchphrase, onChange }) => {
   return (
@@ -17,7 +17,19 @@ const CVEditCatchphrase = ({ catchphrase, onChange }) => {
           <ButtonIcon
             name="pencil"
             onClick={() => {
-              UIkit.modal(`#modal-catchphrase`).show();
+              openModal(
+                <ModalEdit
+                  title="Édition - Ma phrase d'accroche"
+                  formSchema={schemaCatchphrase}
+                  defaultValues={{ catchphrase }}
+                  onSubmit={(fields, closeModal) => {
+                    closeModal();
+                    onChange({
+                      ...fields,
+                    });
+                  }}
+                />
+              );
             }}
           />
         )}
@@ -28,22 +40,6 @@ const CVEditCatchphrase = ({ catchphrase, onChange }) => {
         <p className="uk-text-italic">
           Aucune phrase d&apos;accroche n&apos;a encore été créé
         </p>
-      )}
-      {onChange && (
-        <div>
-          <ModalEdit
-            id="modal-catchphrase"
-            title="Édition - Ma phrase d'accroche"
-            formSchema={schemaCatchphrase}
-            defaultValues={{ catchphrase }}
-            onSubmit={(fields, closeModal) => {
-              closeModal();
-              onChange({
-                ...fields,
-              });
-            }}
-          />
-        </div>
       )}
     </div>
   );

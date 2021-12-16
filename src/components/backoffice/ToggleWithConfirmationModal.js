@@ -1,10 +1,9 @@
-/* global UIkit */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, CloseButton, Grid } from 'src/components/utils';
+import { Button, Grid } from 'src/components/utils';
 import ModalGeneric from 'src/components/modals/ModalGeneric';
-import HeaderModal from 'src/components/modals/HeaderModal';
 import ModalEdit from 'src/components/modals/ModalEdit';
+import { openModal, useModalContext } from 'src/components/modals/Modal';
 
 const ToggleWithConfirmationModal = ({
   id,
@@ -17,6 +16,7 @@ const ToggleWithConfirmationModal = ({
   onToggle,
   formSchema,
 }) => {
+  const { onClose } = useModalContext();
   const [toggle, setToggle] = useState(defaultValue);
   useEffect(() => {
     setToggle(defaultValue);
@@ -37,8 +37,46 @@ const ToggleWithConfirmationModal = ({
                     onToggle(false).then(() => {
                       return setToggle(false);
                     });
+                  } else if (formSchema) {
+                    openModal(
+                      <ModalEdit
+                        title={modalTitle}
+                        description={modalDescription}
+                        formSchema={formSchema}
+                        submitText={modalConfirmation}
+                        onSubmit={(fields, closeModal) => {
+                          onToggle(true, fields).then(() => {
+                            return setToggle(true);
+                          });
+                          closeModal();
+                        }}
+                        id={`modal-confirm-${id}`}
+                      />
+                    );
                   } else {
-                    UIkit.modal(`#modal-confirm-${id}`).show();
+                    openModal(
+                      <ModalGeneric
+                        title={modalTitle}
+                        description={modalDescription}
+                      >
+                        <Grid className="uk-grid-small uk-flex-center uk-margin-large-top">
+                          <Button style="default" onClick={onClose}>
+                            Annuler
+                          </Button>
+                          <Button
+                            style="primary"
+                            onClick={() => {
+                              onToggle(true).then(() => {
+                                return setToggle(true);
+                              });
+                              onClose();
+                            }}
+                          >
+                            {modalConfirmation}
+                          </Button>
+                        </Grid>
+                      </ModalGeneric>
+                    );
                   }
                 }}
               />
@@ -50,53 +88,6 @@ const ToggleWithConfirmationModal = ({
             {subtitle}
           </div>
         </div>
-      </div>
-      <div>
-        {formSchema ? (
-          <ModalEdit
-            title={modalTitle}
-            description={modalDescription}
-            formSchema={formSchema}
-            submitText={modalConfirmation}
-            onSubmit={(fields, closeModal) => {
-              onToggle(true, fields).then(() => {
-                return setToggle(true);
-              });
-              closeModal();
-            }}
-            id={`modal-confirm-${id}`}
-          />
-        ) : (
-          <ModalGeneric id={`modal-confirm-${id}`}>
-            {(closeModal) => {
-              return (
-                <>
-                  <CloseButton className="uk-modal-close-default" />
-                  <HeaderModal>{modalTitle}</HeaderModal>
-                  {modalDescription && (
-                    <p className="uk-text-lead">{modalDescription}</p>
-                  )}
-                  <Grid className="uk-grid-small uk-flex-center uk-margin-large-top">
-                    <Button style="default" onClick={closeModal}>
-                      Annuler
-                    </Button>
-                    <Button
-                      style="primary"
-                      onClick={() => {
-                        onToggle(true).then(() => {
-                          return setToggle(true);
-                        });
-                        closeModal();
-                      }}
-                    >
-                      {modalConfirmation}
-                    </Button>
-                  </Grid>
-                </>
-              );
-            }}
-          </ModalGeneric>
-        )}
       </div>
     </>
   );

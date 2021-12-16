@@ -5,12 +5,11 @@ import schema, {
   adminMutation,
 } from 'src/components/forms/schema/formEditOpportunity';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
-import { Button, CloseButton, Grid, SimpleLink } from 'src/components/utils';
+import { Button, Grid, SimpleLink } from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import { IconNoSSR } from 'src/components/utils/Icon';
 
 import { List, OfferInfoContainer } from 'src/components/modals/ModalOffer';
-import { useResetForm } from 'src/hooks/utils';
 
 import {
   findOfferStatus,
@@ -20,7 +19,7 @@ import {
 } from 'src/utils';
 import { OFFER_STATUS } from 'src/constants';
 import ModalOfferInfo from 'src/components/modals/ModalOfferInfo';
-import { Modal } from './Modal';
+import ModalGeneric from 'src/components/modals/ModalGeneric';
 
 const ModalOfferAdmin = ({
   currentOffer,
@@ -58,8 +57,6 @@ const ModalOfferAdmin = ({
     },
     adminMutation,
   ]);
-
-  const [form, resetForm] = useResetForm();
 
   const updateOpportunity = async (opportunity) => {
     setError(false);
@@ -112,7 +109,6 @@ const ModalOfferAdmin = ({
         <div>
           <h3>Modification de l&apos;offres d&apos;emploi</h3>
           <FormWithValidation
-            ref={form}
             formSchema={mutatedSchema}
             defaultValues={{
               ...currentOffer,
@@ -440,25 +436,24 @@ const ModalOfferAdmin = ({
 
   // Modal
   return (
-    <Modal id="modal-offer-admin">
+    <ModalGeneric
+      onClose={(onClose) => {
+        if (isEditing) {
+          setIsEditing(false);
+        } else {
+          onClose();
+          navigateBackToList();
+        }
+      }}
+    >
       <div
-        className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
+        className={`uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
           currentOffer.isArchived && 'uk-light uk-background-secondary'
         }`}
       >
-        <CloseButton
-          className="uk-modal-close-default"
-          onClick={() => {
-            if (isEditing) {
-              setIsEditing(false);
-            }
-            resetForm();
-            navigateBackToList();
-          }}
-        />
-        <div className="uk-modal-body">{contentBuilder()}</div>
+        {contentBuilder()}
       </div>
-    </Modal>
+    </ModalGeneric>
   );
 };
 ModalOfferAdmin.propTypes = {

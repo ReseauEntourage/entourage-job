@@ -1,4 +1,5 @@
 /* global UIkit */
+
 import React, { useContext, useEffect, useState } from 'react';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { UserContext } from 'src/components/store/UserProvider';
@@ -19,6 +20,7 @@ import _ from 'lodash';
 import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
 import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import { openModal } from 'src/components/modals/Modal';
 
 const Parametres = () => {
   const { user, setUser } = useContext(UserContext);
@@ -271,7 +273,123 @@ const Parametres = () => {
                   <ButtonIcon
                     name="pencil"
                     onClick={() => {
-                      return UIkit.modal(`#modal-personal-data`).show();
+                      openModal(
+                        <ModalEdit
+                          submitText="Envoyer"
+                          title="Édition - Informations personnelles"
+                          defaultValues={{
+                            firstName: userData.firstName,
+                            lastName: userData.lastName,
+                            gender: userData && userData.gender.toString(),
+                            phone: userData.phone,
+                            address: userData.address,
+                            zone: userData.zone,
+                            adminRole: userData.adminRole,
+                          }}
+                          formSchema={mutatedSchema}
+                          onSubmit={(
+                            {
+                              firstName,
+                              lastName,
+                              zone,
+                              adminRole,
+                              gender,
+                              phone,
+                              address,
+                              oldEmail,
+                              newEmail0,
+                              newEmail1,
+                            },
+                            closeModal,
+                            setError
+                          ) => {
+                            const updateUser = (newUserData) => {
+                              setLoadingPersonal(true);
+                              Api.put(
+                                `/api/v1/user/${userData.id}`,
+                                newUserData
+                              )
+                                .then(() => {
+                                  closeModal();
+                                  setUserData((prevUserData) => {
+                                    return { ...prevUserData, ...newUserData };
+                                  });
+                                  setUser((prevUser) => {
+                                    return {
+                                      ...prevUser,
+                                      ...newUserData,
+                                    };
+                                  });
+                                  UIkit.notification(
+                                    'Vos informations personnelles ont bien été mises à jour',
+                                    'success'
+                                  );
+                                })
+                                .catch((err) => {
+                                  console.error(err);
+                                  UIkit.notification(
+                                    "Une erreur c'est produite lors de la mise à jour de vos informations personnelles",
+                                    'danger'
+                                  );
+                                })
+                                .finally(() => {
+                                  return setLoadingPersonal(false);
+                                });
+                            };
+
+                            let newUserData = {};
+                            if (userData.role === USER_ROLES.ADMIN) {
+                              newUserData = {
+                                firstName,
+                                lastName,
+                                gender,
+                                zone,
+                                adminRole,
+                              };
+                              if (phone !== userData.phone) {
+                                newUserData.phone = phone;
+                              }
+                              if (address !== userData.address) {
+                                newUserData.address = address;
+                              }
+                              if (
+                                userData.email === oldEmail &&
+                                newEmail0 === newEmail1
+                              ) {
+                                newUserData.email = newEmail0.toLowerCase();
+                              }
+                              updateUser(newUserData);
+                            } else {
+                              if (phone !== userData.phone) {
+                                newUserData.phone = phone;
+                              }
+                              if (address !== userData.address) {
+                                newUserData.address = address;
+                              }
+                              if (oldEmail || newEmail0 || newEmail1) {
+                                if (userData.email !== oldEmail.toLowerCase()) {
+                                  setError(
+                                    "L'ancienne adresse email n'est pas valide"
+                                  );
+                                } else if (
+                                  newEmail0.length === 0 ||
+                                  newEmail0 !== newEmail1
+                                ) {
+                                  setError(
+                                    'Les deux adresses email ne sont pas indentiques'
+                                  );
+                                } else {
+                                  newUserData.email = newEmail0.toLowerCase();
+                                  updateUser(newUserData);
+                                  setError('');
+                                }
+                              } else {
+                                updateUser(newUserData);
+                              }
+                            }
+                          }}
+                        />
+                      );
                     }}
                   />
                 )}
@@ -391,108 +509,6 @@ const Parametres = () => {
             />
           </div>
         </Grid>
-        <div>
-          <ModalEdit
-            submitText="Envoyer"
-            id="modal-personal-data"
-            title="Édition - Informations personnelles"
-            defaultValues={{
-              firstName: userData.firstName,
-              lastName: userData.lastName,
-              gender: userData && userData.gender.toString(),
-              phone: userData.phone,
-              address: userData.address,
-              zone: userData.zone,
-              adminRole: userData.adminRole,
-            }}
-            formSchema={mutatedSchema}
-            onSubmit={(
-              {
-                firstName,
-                lastName,
-                zone,
-                adminRole,
-                gender,
-                phone,
-                address,
-                oldEmail,
-                newEmail0,
-                newEmail1,
-              },
-              closeModal,
-              setError
-            ) => {
-              const updateUser = (newUserData) => {
-                setLoadingPersonal(true);
-                Api.put(`/api/v1/user/${userData.id}`, newUserData)
-                  .then(() => {
-                    closeModal();
-                    setUserData((prevUserData) => {
-                      return { ...prevUserData, ...newUserData };
-                    });
-                    setUser((prevUser) => {
-                      return {
-                        ...prevUser,
-                        ...newUserData,
-                      };
-                    });
-                    UIkit.notification(
-                      'Vos informations personnelles ont bien été mises à jour',
-                      'success'
-                    );
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                    UIkit.notification(
-                      "Une erreur c'est produite lors de la mise à jour de vos informations personnelles",
-                      'danger'
-                    );
-                  })
-                  .finally(() => {
-                    return setLoadingPersonal(false);
-                  });
-              };
-
-              let newUserData = {};
-              if (userData.role === USER_ROLES.ADMIN) {
-                newUserData = { firstName, lastName, gender, zone, adminRole };
-                if (phone !== userData.phone) {
-                  newUserData.phone = phone;
-                }
-                if (address !== userData.address) {
-                  newUserData.address = address;
-                }
-                if (userData.email === oldEmail && newEmail0 === newEmail1) {
-                  newUserData.email = newEmail0.toLowerCase();
-                }
-                updateUser(newUserData);
-              } else {
-                if (phone !== userData.phone) {
-                  newUserData.phone = phone;
-                }
-                if (address !== userData.address) {
-                  newUserData.address = address;
-                }
-                if (oldEmail || newEmail0 || newEmail1) {
-                  if (userData.email !== oldEmail.toLowerCase()) {
-                    setError("L'ancienne adresse email n'est pas valide");
-                  } else if (
-                    newEmail0.length === 0 ||
-                    newEmail0 !== newEmail1
-                  ) {
-                    setError('Les deux adresses email ne sont pas indentiques');
-                  } else {
-                    newUserData.email = newEmail0.toLowerCase();
-                    updateUser(newUserData);
-                    setError('');
-                  }
-                } else {
-                  updateUser(newUserData);
-                }
-              }
-            }}
-          />
-        </div>
       </Section>
     </LayoutBackOffice>
   );

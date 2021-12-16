@@ -1,6 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Img } from './utils';
+import { Img } from 'src/components/utils';
 
 const SplashScreen = () => {
   return (

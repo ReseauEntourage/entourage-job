@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, CloseButton, Grid, SimpleLink } from 'src/components/utils';
+import { Button, Grid, SimpleLink } from 'src/components/utils';
 import Textarea from 'src/components/forms/fields/Textarea';
 import Select from 'src/components/forms/fields/Select';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
@@ -10,7 +10,7 @@ import Api from 'src/Axios';
 import { OFFER_STATUS } from 'src/constants';
 import { formatParagraph } from 'src/utils';
 import ModalOfferInfo from 'src/components/modals/ModalOfferInfo';
-import { Modal } from './Modal';
+import ModalGeneric from 'src/components/modals/ModalGeneric';
 
 export const List = ({ className, children }) => {
   return (
@@ -110,21 +110,19 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
   ];
 
   return (
-    <Modal id="modal-offer">
+    <ModalGeneric
+      onClose={(onClose) => {
+        onClose();
+        navigateBackToList();
+      }}
+    >
       <div
-        className={`uk-modal-dialog uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
+        className={`uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
           archived && 'uk-light uk-background-secondary'
         }`}
       >
-        <CloseButton
-          className="uk-modal-close-default"
-          onClick={() => {
-            resetNoteBuffer();
-            navigateBackToList();
-          }}
-        />
         {!currentOffer ? null : (
-          <div className="uk-modal-body">
+          <div>
             <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
               <ModalOfferInfo
                 startOfContract={currentOffer.startOfContract}
@@ -309,7 +307,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
           </div>
         )}
       </div>
-    </Modal>
+    </ModalGeneric>
   );
 };
 

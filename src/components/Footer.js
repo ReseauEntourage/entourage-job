@@ -10,7 +10,7 @@ import TAGS from 'src/constants/tags';
 import { IconNoSSR } from 'src/components/utils/Icon';
 import PropTypes from 'prop-types';
 import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
-import { openModal } from './modals/Modal';
+import { openModal } from 'src/components/modals/Modal';
 
 const pages = [
   {
@@ -34,6 +34,9 @@ const pages = [
         title: 'Devenir partenaire',
         onClick: () => {
           openModal(<ModalInterestLinkedOut />);
+        },
+        props: {
+          isExternal: true,
         },
       },
       /*
@@ -216,8 +219,7 @@ const SiteMap = ({ isMobile }) => {
                       <React.Fragment key={childrenPath + index}>
                         <SimpleLink
                           onClick={childrenOnClick}
-                          href={childrenPath || ''}
-                          scroll={!childrenPath}
+                          href={childrenPath}
                           className={
                             title
                               ? 'uk-text-muted uk-margin-small-top'

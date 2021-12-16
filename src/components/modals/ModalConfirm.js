@@ -3,36 +3,30 @@ import PropTypes from 'prop-types';
 
 import ModalGeneric from 'src/components/modals/ModalGeneric';
 import { Button, Grid } from 'src/components/utils';
+import { useModalContext } from 'src/components/modals/Modal';
 
-const ModalConfirm = ({ id, onConfirm, text, buttonText }) => {
+const ModalConfirm = ({ onConfirm, text, buttonText }) => {
+  const { onClose } = useModalContext();
   return (
-    <ModalGeneric id={id}>
-      {(close) => {
-        return (
-          <>
-            <p className="uk-text-center uk-text-lead">{text}</p>
-            <Grid gap="small" center>
-              <Button style="default" onClick={close}>
-                Annuler
-              </Button>
-              <Button
-                style="primary"
-                onClick={() => {
-                  close();
-                  onConfirm();
-                }}
-              >
-                {buttonText}
-              </Button>
-            </Grid>
-          </>
-        );
-      }}
+    <ModalGeneric title={text}>
+      <Grid gap="small" center>
+        <Button style="default" onClick={onClose}>
+          Annuler
+        </Button>
+        <Button
+          style="primary"
+          onClick={() => {
+            onClose();
+            onConfirm();
+          }}
+        >
+          {buttonText}
+        </Button>
+      </Grid>
     </ModalGeneric>
   );
 };
 ModalConfirm.propTypes = {
-  id: PropTypes.string.isRequired,
   onConfirm: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,
   buttonText: PropTypes.string.isRequired,

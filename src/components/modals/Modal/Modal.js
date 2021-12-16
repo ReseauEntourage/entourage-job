@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
-import { useModalContext } from './ModalContext';
+import { useModalContext } from 'src/components/modals/Modal/ModalContext';
 
 Modal.setAppElement('#__next');
 
@@ -16,15 +16,18 @@ const CustomModal = ({ children, closeOnNextRender }) => {
 
   return (
     <Modal
+      closeTimeoutMS={200}
       style={{
         overlay: {
           zIndex: 1000,
           backgroundColor: 'rgba(0,0,0,.6)',
           display: 'flex',
-          alignItems: 'center',
           justifyContent: 'center',
+          overflowY: 'auto',
         },
         content: {
+          top: 'auto',
+          bottom: 'auto',
           left: 'auto',
           right: 'auto',
           borderRadius: 0,
@@ -33,6 +36,7 @@ const CustomModal = ({ children, closeOnNextRender }) => {
           alignItems: 'center',
           justifyContent: 'center',
           padding: 0,
+          backgroundColor: 'transparent',
         },
       }}
       shouldCloseOnOverlayClick={false}
@@ -44,7 +48,11 @@ const CustomModal = ({ children, closeOnNextRender }) => {
         onClose();
       }}
     >
-      {children}
+      <div
+        style={{ backgroundColor: '#FFF', margin: 15, position: 'relative' }}
+      >
+        {children}
+      </div>
     </Modal>
   );
 };

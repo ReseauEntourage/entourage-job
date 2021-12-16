@@ -1,26 +1,25 @@
-/* global UIkit */
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { CloseButton } from 'src/components/utils';
 import HeaderModal from 'src/components/modals/HeaderModal';
-import { Modal } from './Modal';
+import { Modal, useModalContext } from 'src/components/modals/Modal';
 
 /**
  * Ce composant fournit une modal à contenu variable selon l'index ou l'on s'y trouve
  * composers est un tableau de functions attendant 3 fonctions (action: close, next, previous) et retournant un composant
  * cela permet de gérer le flux/ la modale depuis ses composant internes
  */
-const StepperModal = ({ composers, title, id, resetForm }) => {
+const StepperModal = ({ composers, title }) => {
   const [index, setIndex] = useState(0);
   const [wrappedComponents, setWrappedComponents] = useState();
 
+  const { onClose } = useModalContext();
+
   const close = useCallback(() => {
-    resetForm();
-    UIkit.modal(`#${id}`).hide();
-    // TODO: Probleme car il est possible que la modale se ferme par un moyen autre qu'ici (uk-close-icon~)
+    onClose();
     setIndex(0);
-  }, [id, resetForm]);
+  }, [onClose]);
 
   const next = useCallback(() => {
     setIndex((prevIndex) => {
@@ -46,19 +45,17 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
 
   return (
     <Modal>
-      <div id={id} className="uk-flex" data-uk-modal="bg-close:false">
-        <div className="uk-modal-dialog uk-margin-auto-vertical uk-width-2-3@m uk-width-1-2@l">
+      <div className="uk-margin-auto-vertical">
+        <div className="uk-modal-body uk-padding-large">
           <CloseButton
             className="uk-modal-close-default"
             onClick={() => {
-              resetForm();
               setIndex(0);
+              onClose();
             }}
           />
-          <div className="uk-modal-body uk-padding-large">
-            <HeaderModal>{title}</HeaderModal>
-            {wrappedComponents && wrappedComponents[index]}
-          </div>
+          <HeaderModal>{title}</HeaderModal>
+          {wrappedComponents && wrappedComponents[index]}
         </div>
       </div>
     </Modal>
@@ -66,14 +63,10 @@ const StepperModal = ({ composers, title, id, resetForm }) => {
 };
 
 StepperModal.propTypes = {
-  id: PropTypes.string.isRequired,
   title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   composers: PropTypes.arrayOf(PropTypes.func).isRequired,
-  resetForm: PropTypes.func,
 };
 
-StepperModal.defaultProps = {
-  resetForm: () => {},
-};
+StepperModal.defaultProps = {};
 
 export default StepperModal;

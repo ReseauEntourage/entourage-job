@@ -17,6 +17,7 @@ import Api from 'src/Axios';
 import SearchBar from 'src/components/filters/SearchBar';
 import { filtersToQueryParams, mutateFormSchema } from 'src/utils';
 import schemaCreateUser from 'src/components/forms/schema/formEditUser';
+import { openModal } from 'src/components/modals/Modal';
 
 const translateStatusCV = (status) => {
   const cvStatus = CV_STATUS[status] ? CV_STATUS[status] : CV_STATUS.Unknown;
@@ -305,7 +306,51 @@ const MemberList = ({
         <Button
           style="primary"
           onClick={() => {
-            UIkit.modal('#add-user').show();
+            openModal(
+              <ModalEdit
+                formSchema={mutatedSchema}
+                title="Création de membre"
+                description="Merci de renseigner quelques informations afin de créer le membre"
+                submitText="Créer le membre"
+                onSubmit={async (fields, closeModal) => {
+                  try {
+                    const { data } = await Api.post('api/v1/user', {
+                      ...fields,
+                      adminRole:
+                        fields.role === USER_ROLES.ADMIN
+                          ? fields.adminRole
+                          : null,
+                    });
+                    if (data) {
+                      closeModal();
+                      UIkit.notification(
+                        'Le membre a bien été créé',
+                        'success'
+                      );
+                      await fetchData(search, filters, role, offset, true);
+                    } else {
+                      UIkit.notification(
+                        "Une erreur s'est produite lors de la création du membre",
+                        'danger'
+                      );
+                    }
+                  } catch (error) {
+                    console.error(error);
+                    if (error?.response?.status === 409) {
+                      UIkit.notification(
+                        'Cette adresse email est déjà utilisée',
+                        'danger'
+                      );
+                    } else {
+                      UIkit.notification(
+                        "Une erreur s'est produite lors de la création du membre",
+                        'danger'
+                      );
+                    }
+                  }
+                }}
+              />
+            );
           }}
         >
           <IconNoSSR
@@ -315,45 +360,6 @@ const MemberList = ({
           />
           Nouveau membre
         </Button>
-        <ModalEdit
-          id="add-user"
-          formSchema={mutatedSchema}
-          title="Création de membre"
-          description="Merci de renseigner quelques informations afin de créer le membre"
-          submitText="Créer le membre"
-          onSubmit={async (fields, closeModal) => {
-            try {
-              const { data } = await Api.post('api/v1/user', {
-                ...fields,
-                adminRole:
-                  fields.role === USER_ROLES.ADMIN ? fields.adminRole : null,
-              });
-              if (data) {
-                closeModal();
-                UIkit.notification('Le membre a bien été créé', 'success');
-                await fetchData(search, filters, role, offset, true);
-              } else {
-                UIkit.notification(
-                  "Une erreur s'est produite lors de la création du membre",
-                  'danger'
-                );
-              }
-            } catch (error) {
-              console.error(error);
-              if (error?.response?.status === 409) {
-                UIkit.notification(
-                  'Cette adresse email est déjà utilisée',
-                  'danger'
-                );
-              } else {
-                UIkit.notification(
-                  "Une erreur s'est produite lors de la création du membre",
-                  'danger'
-                );
-              }
-            }
-          }}
-        />
       </HeaderBackoffice>
       {hasError ? (
         <Section className="uk-width-1-1">

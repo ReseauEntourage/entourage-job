@@ -1,4 +1,3 @@
-/* global UIkit */
 import React, {
   forwardRef,
   useCallback,
@@ -20,6 +19,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { OPPORTUNITY_FILTERS_DATA } from 'src/constants';
 import FiltersTabs from 'src/components/utils/FiltersTabs';
 import SearchBar from 'src/components/filters/SearchBar';
+import { openModal } from 'src/components/modals/Modal';
 
 const OfferList = ({
   candidatId,
@@ -151,6 +151,22 @@ const OpportunityList = forwardRef(
       }`,
     };
 
+    const navigateBackToList = useCallback(() => {
+      push(
+        {
+          pathname: currentPath.href,
+          query: restQuery,
+        },
+        {
+          pathname: currentPath.as,
+          query: restQuery,
+        },
+        {
+          shallow: true,
+        }
+      );
+    }, [currentPath.as, currentPath.href, push, restQuery]);
+
     const fetchData = useOpportunityList(
       setOffers,
       setOtherOffers,
@@ -183,9 +199,27 @@ const OpportunityList = forwardRef(
           opportunity.userOpportunity = data;
         }
         setCurrentOffer({ ...opportunity });
-        UIkit.modal('#modal-offer').show();
+        openModal(
+          <ModalOffer
+            currentOffer={currentOffer}
+            setCurrentOffer={(offerToSet) => {
+              setCurrentOffer({ ...offerToSet });
+              fetchData(role, search, tabFilterTag, filters, candidatId);
+            }}
+            navigateBackToList={navigateBackToList}
+          />
+        );
       },
-      [candidatId]
+      [
+        candidatId,
+        currentOffer,
+        fetchData,
+        filters,
+        navigateBackToList,
+        role,
+        search,
+        tabFilterTag,
+      ]
     );
 
     const openOffer = useCallback(
@@ -194,12 +228,35 @@ const OpportunityList = forwardRef(
           setCurrentOffer({
             ...offer,
           });
-          UIkit.modal('#modal-offer-admin').show();
+          openModal(
+            <ModalOfferAdmin
+              currentOffer={currentOffer}
+              setCurrentOffer={(offerToSet) => {
+                setCurrentOffer({ ...offerToSet });
+                fetchData(role, search, tabFilterTag, filters, candidatId);
+              }}
+              selectedCandidateId={
+                role === 'candidateAsAdmin' ? candidatId : undefined
+              }
+              navigateBackToList={navigateBackToList}
+            />
+          );
         } else {
           onClickOpportunityCardAsUser(offer);
         }
       },
-      [isAdmin, onClickOpportunityCardAsUser]
+      [
+        candidatId,
+        currentOffer,
+        fetchData,
+        filters,
+        isAdmin,
+        navigateBackToList,
+        onClickOpportunityCardAsUser,
+        role,
+        search,
+        tabFilterTag,
+      ]
     );
 
     const getOpportunity = useCallback(async () => {
@@ -228,22 +285,6 @@ const OpportunityList = forwardRef(
       setHasError(false);
       fetchData(role, search, tabFilterTag, filters, candidatId);
     }, [role, search, tabFilters, filters, candidatId]);
-
-    const navigateBackToList = () => {
-      push(
-        {
-          pathname: currentPath.href,
-          query: restQuery,
-        },
-        {
-          pathname: currentPath.as,
-          query: restQuery,
-        },
-        {
-          shallow: true,
-        }
-      );
-    };
 
     const content = (
       <div>
@@ -340,28 +381,6 @@ const OpportunityList = forwardRef(
             />
             {content}
           </>
-        )}
-        {isAdmin ? (
-          <ModalOfferAdmin
-            currentOffer={currentOffer}
-            setCurrentOffer={(offer) => {
-              setCurrentOffer({ ...offer });
-              fetchData(role, search, tabFilterTag, filters, candidatId);
-            }}
-            selectedCandidateId={
-              role === 'candidateAsAdmin' ? candidatId : undefined
-            }
-            navigateBackToList={navigateBackToList}
-          />
-        ) : (
-          <ModalOffer
-            currentOffer={currentOffer}
-            setCurrentOffer={(offer) => {
-              setCurrentOffer({ ...offer });
-              fetchData(role, search, tabFilterTag, filters, candidatId);
-            }}
-            navigateBackToList={navigateBackToList}
-          />
         )}
       </div>
     );

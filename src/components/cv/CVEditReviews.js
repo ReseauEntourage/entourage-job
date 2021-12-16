@@ -1,4 +1,3 @@
-/* global UIkit */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Grid } from 'src/components/utils';
@@ -8,6 +7,7 @@ import ButtonIcon from 'src/components/utils/ButtonIcon';
 import ModalConfirm from 'src/components/modals/ModalConfirm';
 import { formatParagraph, sortReviews } from 'src/utils';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import { openModal } from 'src/components/modals/Modal';
 
 const CVEditReviews = ({ reviews, onChange }) => {
   const MAX_REVIEWS = 3;
@@ -25,7 +25,18 @@ const CVEditReviews = ({ reviews, onChange }) => {
         {sortedReviews.length < MAX_REVIEWS && (
           <ButtonIcon
             onClick={() => {
-              UIkit.modal(`#modal-testimonial-add`).show();
+              openModal(
+                <ModalEdit
+                  title="Ajout - Ils me recommandent"
+                  formSchema={schemaTestimonial}
+                  onSubmit={(fields, closeModal) => {
+                    closeModal();
+                    onChange({
+                      reviews: [...reviews, fields],
+                    });
+                  }}
+                />
+              );
             }}
             name="plus"
           />
@@ -61,14 +72,34 @@ const CVEditReviews = ({ reviews, onChange }) => {
                         onClick={() => {
                           setCurrentIndex(i);
                           setCurrentDefaultValue(review);
-                          UIkit.modal(`#modal-testimonial-edit`).show();
+                          openModal(
+                            <ModalEdit
+                              title="Édition - Ils me recommandent"
+                              formSchema={schemaTestimonial}
+                              defaultValues={currentDefaultValue}
+                              onSubmit={(fields, closeModal) => {
+                                closeModal();
+                                sortedReviews[currentIndex] = fields;
+                                onChange({ reviews: sortedReviews });
+                              }}
+                            />
+                          );
                         }}
                       />
                       <ButtonIcon
                         name="trash"
                         onClick={() => {
                           setCurrentIndex(i);
-                          UIkit.modal(`#modal-testimonial-remove`).show();
+                          openModal(
+                            <ModalConfirm
+                              text="Êtes-vous sûr(e) de vouloir supprimer cette recommandation ?"
+                              buttonText="Supprimer"
+                              onConfirm={() => {
+                                sortedReviews.splice(currentIndex, 1);
+                                onChange({ reviews: sortedReviews });
+                              }}
+                            />
+                          );
                         }}
                       />
                     </div>
@@ -83,37 +114,6 @@ const CVEditReviews = ({ reviews, onChange }) => {
           </li>
         )}
       </ul>
-      <ModalEdit
-        id="modal-testimonial-add"
-        title="Ajout - Ils me recommandent"
-        formSchema={schemaTestimonial}
-        onSubmit={(fields, closeModal) => {
-          closeModal();
-          onChange({
-            reviews: [...reviews, fields],
-          });
-        }}
-      />
-      <ModalEdit
-        id="modal-testimonial-edit"
-        title="Édition - Ils me recommandent"
-        formSchema={schemaTestimonial}
-        defaultValues={currentDefaultValue}
-        onSubmit={(fields, closeModal) => {
-          closeModal();
-          sortedReviews[currentIndex] = fields;
-          onChange({ reviews: sortedReviews });
-        }}
-      />
-      <ModalConfirm
-        id="modal-testimonial-remove"
-        text="Êtes-vous sûr(e) de vouloir supprimer cette recommandation ?"
-        buttonText="Supprimer"
-        onConfirm={() => {
-          sortedReviews.splice(currentIndex, 1);
-          onChange({ reviews: sortedReviews });
-        }}
-      />
     </div>
   );
 };

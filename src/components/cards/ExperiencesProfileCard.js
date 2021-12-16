@@ -1,4 +1,3 @@
-/* global UIkit */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
@@ -10,9 +9,20 @@ import { Grid } from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import ModalConfirm from 'src/components/modals/ModalConfirm';
 import { formatParagraph, sortExperiences } from 'src/utils';
+import { openModal } from 'src/components/modals/Modal';
 
 const Experience = SortableElement(
-  ({ value, sortIndex, onChange, setCurrentIndex, setCurrentDefaultValue }) => {
+  ({
+    value,
+    sortIndex,
+    onChange,
+    setCurrentIndex,
+    setCurrentDefaultValue,
+    currentIndex,
+    currentDefaultValue,
+    updateOrder,
+    itemList,
+  }) => {
     return (
       <li style={{ cursor: 'move', listStyleType: 'none' }}>
         <Grid
@@ -45,14 +55,40 @@ const Experience = SortableElement(
                 onClick={() => {
                   setCurrentIndex(sortIndex);
                   setCurrentDefaultValue(value);
-                  UIkit.modal(`#modal-experience-edit`).show();
+                  openModal(
+                    <ModalEdit
+                      title="Édition - Mes expériences et compétences"
+                      formSchema={schemaformEditExperience}
+                      defaultValues={currentDefaultValue}
+                      onSubmit={(fields, closeModal) => {
+                        closeModal();
+                        itemList[currentIndex] = {
+                          ...itemList[currentIndex],
+                          ...fields,
+                        };
+                        onChange({ experiences: itemList });
+                      }}
+                    />
+                  );
                 }}
               />
               <ButtonIcon
                 name="trash"
                 onClick={() => {
                   setCurrentIndex(sortIndex);
-                  UIkit.modal(`#modal-experience-remove`).show();
+                  openModal(
+                    <ModalConfirm
+                      text="Êtes-vous sûr(e) de vouloir supprimer cette expérience ?"
+                      buttonText="Supprimer"
+                      onConfirm={() => {
+                        const experiencesToSort = JSON.parse(
+                          JSON.stringify(itemList)
+                        );
+                        experiencesToSort.splice(currentIndex, 1);
+                        updateOrder(experiencesToSort);
+                      }}
+                    />
+                  );
                 }}
               />
             </div>
@@ -63,41 +99,43 @@ const Experience = SortableElement(
   }
 );
 
-const ExperienceList = SortableContainer(
-  ({ items, onChange, setCurrentIndex, setCurrentDefaultValue }) => {
-    return (
-      <ul
-        id="experiences"
-        className={`uk-list${items.length > 0 ? ' ent-list' : ''}`}
-      >
-        {items.length <= 0 ? (
-          <li className="uk-text-italic">
-            Aucune expérience n&apos;a encore été ajoutée
-          </li>
-        ) : (
-          items.map((value, index) => {
-            return (
-              <Experience
-                key={`item-${index}`}
-                index={index}
-                sortIndex={index}
-                value={value}
-                onChange={onChange}
-                setCurrentIndex={setCurrentIndex}
-                setCurrentDefaultValue={setCurrentDefaultValue}
-              />
-            );
-          })
-        )}
-      </ul>
-    );
-  }
-);
-
-const ExperiencesProfileCard = ({ experiences, onChange }) => {
+const ExperienceList = SortableContainer(({ items, onChange, updateOrder }) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentDefaultValue, setCurrentDefaultValue] = useState({});
 
+  return (
+    <ul
+      id="experiences"
+      className={`uk-list${items.length > 0 ? ' ent-list' : ''}`}
+    >
+      {items.length <= 0 ? (
+        <li className="uk-text-italic">
+          Aucune expérience n&apos;a encore été ajoutée
+        </li>
+      ) : (
+        items.map((value, index) => {
+          return (
+            <Experience
+              key={`item-${index}`}
+              index={index}
+              sortIndex={index}
+              value={value}
+              onChange={onChange}
+              setCurrentIndex={setCurrentIndex}
+              setCurrentDefaultValue={setCurrentDefaultValue}
+              currentIndex={currentIndex}
+              currentDefaultValue={currentDefaultValue}
+              updateOrder={updateOrder}
+              itemList={items}
+            />
+          );
+        })
+      )}
+    </ul>
+  );
+});
+
+const ExperiencesProfileCard = ({ experiences, onChange }) => {
   const sortedExperiences = sortExperiences(experiences);
 
   const updateExperiencesOrder = (reorderedExperiences) => {
@@ -134,7 +172,29 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           {onChange && (
             <ButtonIcon
               onClick={() => {
-                return UIkit.modal(`#modal-experience-add`).show();
+                openModal(
+                  <ModalEdit
+                    title="Ajout - Mes expériences et compétences"
+                    formSchema={schemaformEditExperience}
+                    onSubmit={(fields, closeModal) => {
+                      closeModal();
+                      onChange({
+                        experiences: [
+                          ...sortedExperiences,
+                          {
+                            ...fields,
+                            order:
+                              experiences.reduce((acc, val) => {
+                                return acc === undefined || val.order > acc
+                                  ? val.order
+                                  : acc;
+                              }, []) + 1,
+                          },
+                        ],
+                      });
+                    }}
+                  />
+                );
               }}
               name="plus"
             />
@@ -145,66 +205,9 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
           items={sortedExperiences}
           onSortEnd={onSortEnd}
           onChange={onChange}
-          setCurrentIndex={setCurrentIndex}
-          setCurrentDefaultValue={setCurrentDefaultValue}
+          updateOrder={updateExperiencesOrder}
         />
       </div>
-      {onChange && (
-        <div>
-          <div>
-            <ModalEdit
-              id="modal-experience-add"
-              title="Ajout - Mes expériences et compétences"
-              formSchema={schemaformEditExperience}
-              onSubmit={(fields, closeModal) => {
-                closeModal();
-                onChange({
-                  experiences: [
-                    ...sortedExperiences,
-                    {
-                      ...fields,
-                      order:
-                        experiences.reduce((acc, val) => {
-                          return acc === undefined || val.order > acc
-                            ? val.order
-                            : acc;
-                        }, []) + 1,
-                    },
-                  ],
-                });
-              }}
-            />
-          </div>
-          <div>
-            <ModalEdit
-              id="modal-experience-edit"
-              title="Édition - Mes expériences et compétences"
-              formSchema={schemaformEditExperience}
-              defaultValues={currentDefaultValue}
-              onSubmit={(fields, closeModal) => {
-                closeModal();
-                sortedExperiences[currentIndex] = {
-                  ...sortedExperiences[currentIndex],
-                  ...fields,
-                };
-                onChange({ experiences: sortedExperiences });
-              }}
-            />
-          </div>
-          <div>
-            <ModalConfirm
-              id="modal-experience-remove"
-              text="Êtes-vous sûr(e) de vouloir supprimer cette expérience ?"
-              buttonText="Supprimer"
-              onConfirm={() => {
-                const experiencesToSort = [...sortedExperiences];
-                experiencesToSort.splice(currentIndex, 1);
-                updateExperiencesOrder(experiencesToSort);
-              }}
-            />
-          </div>
-        </div>
-      )}
     </>
   );
 };
