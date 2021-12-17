@@ -68,8 +68,6 @@ ModalPreview.propTypes = {
 };
 
 const CVPageContent = ({ candidatId }) => {
-  const { onClose } = useModalContext();
-
   const [cv, setCV] = useState(undefined);
   const [cvVersion, setCvVersion] = useState(undefined);
   const [imageUrl, setImageUrl] = useState(undefined);
