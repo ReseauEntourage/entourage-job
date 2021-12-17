@@ -21,6 +21,7 @@ import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 import { IconNoSSR } from 'src/components/utils/Icon';
 import PropTypes from 'prop-types';
 import { openModal } from 'src/components/modals/Modal';
+import ModalConfirm from 'src/components/modals/ModalConfirm';
 
 const EditUserModal = ({ user, setUser }) => {
   let mutatedSchema = mutateFormSchema(schemaEditUser, [
@@ -175,21 +176,17 @@ const EditUserModal = ({ user, setUser }) => {
         };
 
         if (fields.role !== user.role) {
-          UIkit.modal
-            .confirm(
-              "Attention, si vous modifiez le rôle d'un candidat, tout son suivi sera perdu et son CV sera dépublié. Êtes-vous sûr de vouloir continuer ?",
-              {
-                labels: {
-                  ok: 'Valider',
-                  cancel: 'Annuler',
-                },
-              }
-            )
-            .then(async () => {
-              await updateUser(() => {
-                openModal(<EditUserModal user={user} setUser={setUser} />);
-              });
-            });
+          openModal(
+            <ModalConfirm
+              text="Attention, si vous modifiez le rôle d'un candidat, tout son suivi sera perdu et son CV sera dépublié. Êtes-vous sûr de vouloir continuer ?"
+              buttonText="Valider"
+              onConfirm={async () => {
+                await updateUser(() => {
+                  openModal(<EditUserModal user={user} setUser={setUser} />);
+                });
+              }}
+            />
+          );
         } else {
           await updateUser();
         }
@@ -412,7 +409,6 @@ const CVPage = () => {
                     {isCandidat && (
                       <Card title="Préférences du CV">
                         <CandidateEmployedToggle
-                          id="employed"
                           title="A retrouvé un emploi"
                           modalTitle="Le candidat a retrouvé un emploi ?"
                           modalConfirmation="Valider"

@@ -194,7 +194,6 @@ const Parametres = () => {
             {userData.role === USER_ROLES.CANDIDAT && (
               <Card title="Préférences du CV">
                 <CandidateEmployedToggle
-                  id="employed"
                   title="J'ai retrouvé un emploi"
                   modalTitle="Vous avez retrouvé un emploi ?"
                   modalConfirmation="Valider"

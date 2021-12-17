@@ -80,7 +80,7 @@ export default {
     {
       id: 'phoneLabel',
       title: 'Modifier le numéro de téléphone',
-      component: 'text',
+      component: 'heading',
     },
     {
       id: 'phone',
@@ -93,7 +93,7 @@ export default {
     {
       id: 'addressLabel',
       title: "Modifier l'adresse postale",
-      component: 'text',
+      component: 'heading',
     },
     {
       id: 'address',

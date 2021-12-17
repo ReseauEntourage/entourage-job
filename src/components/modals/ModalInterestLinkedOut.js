@@ -4,7 +4,6 @@ import StepperModal from 'src/components/modals/StepperModal';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
 import interestLinkedOutSchema from 'src/components/forms/schema/formInterestLinkedOut';
 import Api from 'src/Axios';
-import { useResetForm } from 'src/hooks/utils';
 
 const ModalInterestLinkedOut = () => {
   return (

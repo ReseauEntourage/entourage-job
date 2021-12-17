@@ -151,7 +151,6 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
         !linkedUser.deletedAt && (
           <Card style="secondary" title="Préférences du CV">
             <CandidateEmployedToggle
-              id="employedLinked"
               title="A retrouvé un emploi"
               modalTitle="Le candidat a retrouvé un emploi ?"
               modalConfirmation="Valider"
@@ -174,7 +173,6 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
               candidatId={linkedUser.id}
             />
             <ToggleWithConfirmationModal
-              id="hiddenLinked"
               title="Masquer le CV"
               modalTitle="Changer la visibilité du CV en ligne ?"
               modalConfirmation="Oui, masquer le CV"

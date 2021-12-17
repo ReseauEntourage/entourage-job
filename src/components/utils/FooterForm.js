@@ -10,25 +10,20 @@ const FooterForm = ({ error, onSubmit, onCancel, submitText }) => {
           <span className="uk-text-danger uk-margin-small-bottom">{error}</span>
         </div>
       )}
-      <div className="uk-flex uk-flex-1 uk-flex-column">
-        <div className="uk-width-auto@s">
+      <div className="uk-flex uk-flex-1 uk-flex-column uk-margin-medium-top">
+        <div className="uk-width-auto@s uk-margin-small-bottom">
           <span className="uk-text-meta">* : Mentions obligatoires</span>
         </div>
-        <div className="uk-modal-footer uk-text-right uk-margin-medium-top">
-          <div className="uk-flex uk-flex-right uk-flex-middle uk-flex-wrap-reverse">
-            {onCancel && (
-              <div>
-                <Button style="default" onClick={onCancel}>
-                  Annuler
-                </Button>
-              </div>
-            )}
-            <div style={{ marginLeft: 15 }}>
-              <Button style="primary" onClick={onSubmit}>
-                {submitText || 'Envoyer'}
-              </Button>
-            </div>
-          </div>
+
+        <div className="uk-modal-footer">
+          {onCancel && (
+            <Button style="default" onClick={onCancel}>
+              Annuler
+            </Button>
+          )}
+          <Button style="primary" onClick={onSubmit}>
+            {submitText || 'Envoyer'}
+          </Button>
         </div>
       </div>
     </div>

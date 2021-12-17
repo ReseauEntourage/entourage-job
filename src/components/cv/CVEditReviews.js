@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid } from 'src/components/utils';
 import ModalEdit from 'src/components/modals/ModalEdit';
@@ -11,8 +11,6 @@ import { openModal } from 'src/components/modals/Modal';
 
 const CVEditReviews = ({ reviews, onChange }) => {
   const MAX_REVIEWS = 3;
-  const [currentIndex, setCurrentIndex] = useState(-1);
-  const [currentDefaultValue, setCurrentDefaultValue] = useState({});
 
   const sortedReviews = sortReviews(reviews);
 
@@ -42,11 +40,7 @@ const CVEditReviews = ({ reviews, onChange }) => {
           />
         )}
       </Grid>
-      {/* todo terminer linterface graphique. alignement des informaiton */}
       <ul className="uk-list uk-list-divider">
-        {/* Il y avait un probleme lors de lapparition de la liste */}
-        {/* NotFoundError: Failed to execute 'insertBefore' on 'Node':
-        The node before which the new node is to be inserted is not a child of this node. */}
         {sortedReviews.length > 0 ? (
           sortedReviews.map((review, i) => {
             return (
@@ -70,16 +64,14 @@ const CVEditReviews = ({ reviews, onChange }) => {
                       <ButtonIcon
                         name="pencil"
                         onClick={() => {
-                          setCurrentIndex(i);
-                          setCurrentDefaultValue(review);
                           openModal(
                             <ModalEdit
                               title="Édition - Ils me recommandent"
                               formSchema={schemaTestimonial}
-                              defaultValues={currentDefaultValue}
+                              defaultValues={review}
                               onSubmit={(fields, closeModal) => {
                                 closeModal();
-                                sortedReviews[currentIndex] = fields;
+                                sortedReviews[i] = fields;
                                 onChange({ reviews: sortedReviews });
                               }}
                             />
@@ -89,13 +81,12 @@ const CVEditReviews = ({ reviews, onChange }) => {
                       <ButtonIcon
                         name="trash"
                         onClick={() => {
-                          setCurrentIndex(i);
                           openModal(
                             <ModalConfirm
                               text="Êtes-vous sûr(e) de vouloir supprimer cette recommandation ?"
                               buttonText="Supprimer"
                               onConfirm={() => {
-                                sortedReviews.splice(currentIndex, 1);
+                                sortedReviews.splice(i, 1);
                                 onChange({ reviews: sortedReviews });
                               }}
                             />

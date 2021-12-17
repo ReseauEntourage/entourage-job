@@ -15,7 +15,7 @@ const ModalGeneric = ({
   return (
     <Modal>
       <div className={`uk-margin-auto-vertical ${className}`}>
-        <div className="uk-modal-body uk-padding-large">
+        <div className="uk-modal-body uk-padding">
           <CloseButton
             className="uk-modal-close-default"
             onClick={() => {
@@ -36,7 +36,10 @@ const ModalGeneric = ({
 };
 
 ModalGeneric.propTypes = {
-  children: PropTypes.func.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]).isRequired,
   classNameSize: PropTypes.string,
   title: PropTypes.string,
   description: PropTypes.string,
@@ -44,10 +47,10 @@ ModalGeneric.propTypes = {
 };
 
 ModalGeneric.defaultProps = {
-  classNameSize: 'uk-width-1-1 uk-width-2-3@l uk-width-1-2@xl',
+  classNameSize: '',
   description: undefined,
   title: undefined,
-  onClose: () => {},
+  onClose: undefined,
 };
 
 export default ModalGeneric;

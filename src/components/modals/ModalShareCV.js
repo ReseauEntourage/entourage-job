@@ -7,7 +7,6 @@ import FormWithValidation from 'src/components/forms/FormWithValidation';
 import schemaGetEmail from 'src/components/forms/schema/formGetEmail.json';
 import Api from 'src/Axios';
 import { Button, Img } from 'src/components/utils';
-import { useResetForm } from 'src/hooks/utils';
 import { EXTERNAL_LINKS } from 'src/constants';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';

@@ -53,12 +53,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
     : '';
 
   const openNewsletterModal = () => {
-    openModal(
-      <ModalShareCV
-        id={`info-share-${cv.UserId}`}
-        firstName={cv.user.candidat.firstName}
-      />
-    );
+    openModal(<ModalShareCV firstName={cv.user.candidat.firstName} />);
   };
 
   const experiences = sortExperiences(cv.experiences);

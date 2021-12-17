@@ -8,7 +8,6 @@ import ToggleWithConfirmationModal from 'src/components/backoffice/ToggleWithCon
 import { findContractType } from 'src/utils';
 
 const CandidateEmployedToggle = ({
-  id,
   candidatId,
   title,
   subtitle,
@@ -20,7 +19,7 @@ const CandidateEmployedToggle = ({
 }) => {
   return (
     <ToggleWithConfirmationModal
-      id={id}
+      id="employedToggle"
       title={title}
       modalTitle={modalTitle}
       modalConfirmation={modalConfirmation}
@@ -58,7 +57,6 @@ const CandidateEmployedToggle = ({
 };
 
 CandidateEmployedToggle.propTypes = {
-  id: PropTypes.string.isRequired,
   candidatId: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   subtitle: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),

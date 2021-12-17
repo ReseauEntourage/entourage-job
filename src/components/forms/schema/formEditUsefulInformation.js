@@ -33,7 +33,7 @@ export default {
       name: 'private',
       component: 'text',
       title:
-        "* L'adresse mail, le numéro de téléphone et l'adresse postale ne seront visibles que sur la version PDF du CV",
+        "L'adresse mail, le numéro de téléphone et l'adresse postale ne seront visibles que sur la version PDF du CV",
     },
     {
       id: 'contracts',
