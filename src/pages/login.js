@@ -19,10 +19,10 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       if (user.role === USER_ROLES.ADMIN) {
-        router.push('/backoffice/admin/offres');
+        router.replace('/backoffice/admin/offres');
       }
       if (user.role === USER_ROLES.CANDIDAT || user.role === USER_ROLES.COACH) {
-        router.push('/backoffice/candidat/offres');
+        router.replace('/backoffice/candidat/offres');
       }
     }
   }, [router, user]);

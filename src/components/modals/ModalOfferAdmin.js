@@ -23,7 +23,7 @@ import ModalGeneric from 'src/components/modals/ModalGeneric';
 
 const ModalOfferAdmin = ({
   currentOffer,
-  setCurrentOffer,
+  onOfferUpdated,
   duplicateOffer,
   navigateBackToList,
   selectedCandidateId,
@@ -63,8 +63,9 @@ const ModalOfferAdmin = ({
     setError(false);
     setLoading(true);
     try {
-      const { data } = await Api.put(`/api/v1/opportunity/`, opportunity);
-      await setCurrentOffer({ ...data });
+      await Api.put(`/api/v1/opportunity/`, opportunity);
+      // TODO CHECK IF UPDATE
+      await onOfferUpdated();
     } catch (err) {
       setError(true);
     } finally {
@@ -77,7 +78,7 @@ const ModalOfferAdmin = ({
       `${process.env.SERVER_URL}/api/v1/opportunity/join`,
       opportunityUser
     );
-    await setCurrentOffer({ ...currentOffer });
+    await onOfferUpdated();
   };
 
   useEffect(() => {
@@ -394,7 +395,7 @@ const ModalOfferAdmin = ({
             )}
           </Grid>
         </Grid>
-        <Grid className="uk-flex-right" gap="small" row>
+        <div className="uk-modal-footer">
           {!currentOffer.isArchived ? (
             <Button
               style="default"
@@ -436,7 +437,7 @@ const ModalOfferAdmin = ({
               Valider l&apos;offre
             </Button>
           )}
-        </Grid>
+        </div>
       </div>
     );
   };
@@ -454,9 +455,9 @@ const ModalOfferAdmin = ({
       }}
     >
       <div
-        className={`uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
-          currentOffer.isArchived && 'uk-light uk-background-secondary'
-        }`}
+        className={
+          currentOffer.isArchived ? 'uk-light uk-background-secondary' : ''
+        }
       >
         {contentBuilder()}
       </div>
@@ -501,7 +502,7 @@ ModalOfferAdmin.propTypes = {
     numberOfPositions: PropTypes.number,
     beContacted: PropTypes.bool,
   }),
-  setCurrentOffer: PropTypes.func.isRequired,
+  onOfferUpdated: PropTypes.func.isRequired,
   duplicateOffer: PropTypes.func.isRequired,
   navigateBackToList: PropTypes.func.isRequired,
   selectedCandidateId: PropTypes.string,

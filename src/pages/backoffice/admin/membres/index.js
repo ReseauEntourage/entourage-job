@@ -10,6 +10,7 @@ import MemberList from 'src/components/backoffice/admin/MemberList';
 
 const MembersAdmin = () => {
   const {
+    isReady,
     replace,
     query: { role, ...restParams },
   } = useRouter();
@@ -22,26 +23,28 @@ const MembersAdmin = () => {
   const prevUser = usePrevious(user);
 
   useEffect(() => {
-    if (user) {
-      if (!role) {
-        const params = { role: 'All', ...restParams };
+    if (isReady) {
+      if (user) {
+        if (!role) {
+          const params = { role: 'All', ...restParams };
 
-        if (user && user.zone) {
-          params.zone = user.zone;
+          if (user && user.zone) {
+            params.zone = user.zone;
+          }
+          replace(
+            {
+              pathname: '/backoffice/admin/membres',
+              query: params,
+            },
+            undefined,
+            { shallow: true }
+          );
+        } else {
+          setLoadingDefaultFilters(false);
         }
-        replace(
-          {
-            pathname: '/backoffice/admin/membres',
-            query: params,
-          },
-          undefined,
-          { shallow: true }
-        );
-      } else {
-        setLoadingDefaultFilters(false);
       }
     }
-  }, [replace, restParams, role, user]);
+  }, [isReady, replace, restParams, role, user]);
 
   const { filters, setFilters, search, setSearch, resetFilters } = useFilters(
     filtersConst,

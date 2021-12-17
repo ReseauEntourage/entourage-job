@@ -72,7 +72,7 @@ OfferInfoContainer.defaultProps = {
   children: [],
 };
 
-const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
+const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
   const { status, bookmarked, note, archived } =
     currentOffer?.userOpportunity ?? {};
 
@@ -86,7 +86,8 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
       `${process.env.SERVER_URL}/api/v1/opportunity/join`,
       opportunityUser
     );
-    await setCurrentOffer({ ...currentOffer, opportunityUser });
+    // TODO CHECK IF UPDATE
+    await onOfferUpdated();
   };
 
   const resetNoteBuffer = () => {
@@ -116,11 +117,7 @@ const ModalOffer = ({ currentOffer, setCurrentOffer, navigateBackToList }) => {
         navigateBackToList();
       }}
     >
-      <div
-        className={`uk-width-1-1 uk-width-3-4@m uk-width-2-3@l uk-width-1-2@xl ${
-          archived && 'uk-light uk-background-secondary'
-        }`}
-      >
+      <div className={archived ? 'uk-light uk-background-secondary' : ''}>
         {!currentOffer ? null : (
           <div>
             <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
@@ -342,7 +339,7 @@ ModalOffer.propTypes = {
       archived: PropTypes.bool,
     }),
   }),
-  setCurrentOffer: PropTypes.func.isRequired,
+  onOfferUpdated: PropTypes.func.isRequired,
   navigateBackToList: PropTypes.func.isRequired,
 };
 ModalOffer.defaultProps = {

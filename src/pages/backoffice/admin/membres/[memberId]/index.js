@@ -22,6 +22,7 @@ import { IconNoSSR } from 'src/components/utils/Icon';
 import PropTypes from 'prop-types';
 import { openModal } from 'src/components/modals/Modal';
 import ModalConfirm from 'src/components/modals/ModalConfirm';
+import { isRequired } from 'nodemon/lib/utils';
 
 const EditUserModal = ({ user, setUser }) => {
   let mutatedSchema = mutateFormSchema(schemaEditUser, [
@@ -212,23 +213,26 @@ const CVPage = () => {
   const [loading, setLoading] = useState(true);
 
   const {
+    isReady,
     replace,
     query: { memberId, tab, offerId },
   } = useRouter();
 
   useEffect(() => {
-    if (memberId && !tab) {
-      replace(
-        '/backoffice/admin/membres/[memberId]/[tab]',
-        `/backoffice/admin/membres/${memberId}/cv`,
-        { shallow: true }
-      );
-    } else if (offerId && tab !== 'offres') {
-      replace(
-        '/backoffice/admin/membres/[memberId]/[tab]',
-        `/backoffice/admin/membres/${memberId}/${tab}`,
-        { shallow: true }
-      );
+    if (isReady) {
+      if (memberId && !tab) {
+        replace(
+          '/backoffice/admin/membres/[memberId]/[tab]',
+          `/backoffice/admin/membres/${memberId}/cv`,
+          { shallow: true }
+        );
+      } else if (offerId && tab !== 'offres') {
+        replace(
+          '/backoffice/admin/membres/[memberId]/[tab]',
+          `/backoffice/admin/membres/${memberId}/${tab}`,
+          { shallow: true }
+        );
+      }
     }
   }, [memberId, offerId, replace, tab]);
 

@@ -96,7 +96,7 @@ const OfferList = ({
 
 OfferList.propTypes = {
   offers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  candidatId: PropTypes.string.isRequired,
+  candidatId: PropTypes.string,
   role: PropTypes.oneOf(['admin', 'candidateAsAdmin', 'candidat']).isRequired,
   isAdmin: PropTypes.bool.isRequired,
   currentPath: PropTypes.shape({
@@ -104,6 +104,10 @@ OfferList.propTypes = {
     as: PropTypes.string,
   }).isRequired,
   query: PropTypes.shape().isRequired,
+};
+
+OfferList.defaultProps = {
+  candidatId: undefined,
 };
 
 const OpportunityList = forwardRef(
@@ -126,13 +130,8 @@ const OpportunityList = forwardRef(
       query: { offerId: opportunityId, memberId, tab, ...restQuery },
     } = useRouter();
 
-    const tabFilterTag = tabFilters?.find((filter) => {
-      return filter.active;
-    })?.tag;
-
     const [numberOfResults, setNumberOfResults] = useState(0);
 
-    const [currentOffer, setCurrentOffer] = useState(null);
     const [offers, setOffers] = useState(undefined);
     const [otherOffers, setOtherOffers] = useState(undefined);
     const [hasError, setHasError] = useState(false);
@@ -177,6 +176,10 @@ const OpportunityList = forwardRef(
       setHasError
     );
 
+    const tabFilterTag = tabFilters?.find((filter) => {
+      return filter.active;
+    })?.tag;
+
     useImperativeHandle(ref, () => {
       return {
         fetchData: () => {
@@ -187,7 +190,7 @@ const OpportunityList = forwardRef(
 
     const onClickOpportunityCardAsUser = useCallback(
       async (offer) => {
-        const opportunity = offer;
+        const opportunity = { ...offer };
         // si jamais ouvert
         if (!opportunity.userOpportunity || !opportunity.userOpportunity.seen) {
           const { data } = await Api.post(
@@ -200,12 +203,10 @@ const OpportunityList = forwardRef(
           );
           opportunity.userOpportunity = data;
         }
-        setCurrentOffer({ ...opportunity });
         openModal(
           <ModalOffer
-            currentOffer={currentOffer}
-            setCurrentOffer={async (offerToSet) => {
-              setCurrentOffer({ ...offerToSet });
+            currentOffer={opportunity}
+            setCurrentOffer={async () => {
               await fetchData(role, search, tabFilterTag, filters, candidatId);
             }}
             navigateBackToList={navigateBackToList}
@@ -227,22 +228,24 @@ const OpportunityList = forwardRef(
     const openOffer = useCallback(
       (offer) => {
         if (isAdmin) {
-          setCurrentOffer({
-            ...offer,
-          });
           openModal(
             <ModalOfferAdmin
-              currentOffer={currentOffer}
+              currentOffer={offer}
               setCurrentOffer={async (offerToSet) => {
-                setCurrentOffer({ ...offerToSet });
-                await fetchData(role, search, tabFilterTag, filters, candidatId);
+                await fetchData(
+                  role,
+                  search,
+                  tabFilterTag,
+                  filters,
+                  candidatId
+                );
               }}
               selectedCandidateId={
                 role === 'candidateAsAdmin' ? candidatId : undefined
               }
               navigateBackToList={navigateBackToList}
               duplicateOffer={async () => {
-                const { id, userOpportunity, ...restOpportunity } = currentOffer;
+                const { id, userOpportunity, ...restOpportunity } = offer;
                 const { data } = await Api.post(`/api/v1/opportunity/`, {
                   ...restOpportunity,
                   title: `${restOpportunity.title} (copie)`,
@@ -273,11 +276,15 @@ const OpportunityList = forwardRef(
       [
         candidatId,
         currentOffer,
+        currentPath.as,
+        currentPath.href,
         fetchData,
         filters,
         isAdmin,
         navigateBackToList,
         onClickOpportunityCardAsUser,
+        push,
+        restQuery,
         role,
         search,
         tabFilterTag,
@@ -300,7 +307,7 @@ const OpportunityList = forwardRef(
       if (opportunityId) {
         getOpportunity().then((offer) => {
           if (offer) {
-            openOffer(offer);
+            openOffer({ ...offer });
           }
         });
       }
@@ -420,7 +427,7 @@ OpportunityList.propTypes = {
   setFilters: PropTypes.func,
   setSearch: PropTypes.func,
   resetFilters: PropTypes.func,
-  tabFilters: PropTypes.shape(),
+  tabFilters: PropTypes.arrayOf(PropTypes.shape()),
   setTabFilters: PropTypes.func,
 };
 

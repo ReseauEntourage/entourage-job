@@ -5,7 +5,7 @@ import {
 } from 'src/constants';
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from 'src/components/store/UserProvider';
-import { useFilters } from 'src/hooks';
+import { useFilters, useTabFilters } from 'src/hooks';
 import { ADMIN_ZONES, DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { Section } from 'src/components/utils';
@@ -14,8 +14,8 @@ import { useRouter } from 'next/router';
 
 const LesOpportunites = () => {
   const {
+    isReady,
     replace,
-    /* isReady, */
     query: { q, offerId, tag, ...restParams },
   } = useRouter();
 
@@ -30,9 +30,16 @@ const LesOpportunites = () => {
     ['offerId']
   );
 
+  const { tabFilters, setTabFilters } = useTabFilters(
+    OFFER_ADMIN_FILTERS_DATA,
+    {
+      href: '/backoffice/admin/offres',
+    },
+    ['offerId']
+  );
+
   useEffect(() => {
-    // TODO use isReady after Next.js upgrade
-    if (true /* isReady */) {
+    if (isReady) {
       const redirectParams = tag
         ? {
             tag,
@@ -122,7 +129,7 @@ const LesOpportunites = () => {
         }
       }
     }
-  }, [q, offerId, replace, restParams, tag, user]);
+  }, [q, offerId, replace, restParams, tag, user, isReady]);
 
   return (
     <LayoutBackOffice title="Modération des offres d'emploi">
@@ -138,6 +145,8 @@ const LesOpportunites = () => {
             resetFilters={resetFilters}
             setSearch={setSearch}
             setFilters={setFilters}
+            tabFilters={tabFilters}
+            setTabFilters={setTabFilters}
           />
         )}
       </Section>
