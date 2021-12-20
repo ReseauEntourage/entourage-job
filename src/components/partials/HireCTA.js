@@ -11,7 +11,7 @@ import { CV_FILTERS_DATA } from 'src/constants';
 
 const HireCTA = () => {
   return (
-    <Section>
+    <Section style="muted">
       <div className="uk-margin-medium-bottom">
         <h2 className="uk-text-center uk-text-bold">
           Prêts à diffuser{' '}
@@ -59,7 +59,8 @@ const HireCTA = () => {
                 style="secondary"
                 className="uk-margin-small-top"
               >
-                Découvrez tous les CV <IconNoSSR name="chevron-right" />
+                Découvrez tous les CV&nbsp;
+                <IconNoSSR name="chevron-right" />
               </Button>
             </Grid>
             <hr className="uk-margin-large-top uk-width-1-1" />
@@ -90,7 +91,8 @@ const HireCTA = () => {
                   return event(TAGS.PAGE_RECRUTER_DEPOSER_OFFRE_CLIC);
                 }}
               >
-                Déposez votre offre <IconNoSSR name="chevron-right" />
+                Déposez votre offre&nbsp;
+                <IconNoSSR name="chevron-right" />
               </Button>
             </Grid>
             <PostJobAdModal />

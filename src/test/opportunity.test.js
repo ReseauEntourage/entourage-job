@@ -297,7 +297,7 @@ describe('Opportunity', () => {
             .get(`${route}/admin`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.length).toBe(totalOpp);
+          expect(response.body.offers.length).toBe(totalOpp);
         });
         it('Should return 200 and a list of searched opportunities, if logged in admin', async () => {
           const response = await request(serverTest)
@@ -317,8 +317,8 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=pending`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isValidated: true,
@@ -331,8 +331,8 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=validated`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isValidated: false,
@@ -345,8 +345,8 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=archived`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isArchived: false,
@@ -354,13 +354,13 @@ describe('Opportunity', () => {
               ])
             );
           });
-          it('should return 200, and all the opportunities that matches the locations filters', async () => {
+          it('should return 200, and all the opportunities that matches the department filters', async () => {
             const response = await request(serverTest)
-              .get(`${route}/admin?locations[]=Rhône (69)`)
+              .get(`${route}/admin?department[]=Rhône (69)`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   department: 'Rhône (69)',
@@ -373,8 +373,8 @@ describe('Opportunity', () => {
               .get(`${route}/admin?isPublic[]=true`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   isPublic: true,
@@ -387,8 +387,8 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?status[]=1`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBe(2);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBe(2);
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   userOpportunity: expect.objectContaining({
@@ -403,8 +403,8 @@ describe('Opportunity', () => {
               .get(`${route}/admin?search=Rhône`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBe(13);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBe(13);
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   department: 'Rhône (69)',
@@ -415,26 +415,26 @@ describe('Opportunity', () => {
           it('should return 200, and all the opportunities that matches the multiple filters (AND between different filters, OR inside each filters)', async () => {
             const response = await request(serverTest)
               .get(
-                `${route}/admin?locations[]=Rhône (69)&locations[]=Paris (75)&isPublic[]=true&type=validated`
+                `${route}/admin?department[]=Rhône (69)&department[]=Paris (75)&isPublic[]=true&type=validated`
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isValidated: false,
                 }),
               ])
             );
-            expect(response.body).not.toEqual(
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: false,
                 }),
               ])
             );
-            expect(response.body).not.toEqual(
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   department: 'Rhône (69)',
@@ -469,21 +469,21 @@ describe('Opportunity', () => {
             .get(`${route}/user/private/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
         });
         it('should return 200, if a coach read his associated candidat opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/private/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCoach.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
         });
         it('should return 200, if a admin reads candidat opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/private/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
         });
         it('should return 401, if invalid user id', async () => {
           const response = await request(serverTest)
@@ -511,8 +511,8 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: false,
@@ -520,15 +520,15 @@ describe('Opportunity', () => {
               ])
             );
           });
-          it('should return 200, and all the opportunities that matches the locations filters', async () => {
+          it('should return 200, and all the opportunities that matches the department filters', async () => {
             const response = await request(serverTest)
               .get(
-                `${route}/user/private/${loggedInCandidat.user.id}?locations[]=Rhône (69)`
+                `${route}/user/private/${loggedInCandidat.user.id}?department[]=Rhône (69)`
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   department: 'Rhône (69)',
@@ -543,8 +543,8 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBe(2);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBe(2);
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   userOpportunity: expect.arrayContaining([
@@ -563,8 +563,8 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   department: 'Rhône (69)',
@@ -575,26 +575,26 @@ describe('Opportunity', () => {
           it('should return 200, and all the opportunities that matches the multiple filters (AND between different filters, OR inside each filters)', async () => {
             const response = await request(serverTest)
               .get(
-                `${route}/user/private/${loggedInCandidat.user.id}?locations[]=Rhône (69)&status[]=0&status[]=1&isPublic[]=true`
+                `${route}/user/private/${loggedInCandidat.user.id}?department[]=Rhône (69)&status[]=0&status[]=1&isPublic[]=true`
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBe(2);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBe(2);
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: false,
                 }),
               ])
             );
-            expect(response.body).not.toEqual(
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   department: 'Rhône (69)',
                 }),
               ])
             );
-            expect(response.body).not.toEqual(
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   userOpportunity: expect.arrayContaining([
@@ -617,21 +617,21 @@ describe('Opportunity', () => {
             .get(`${route}/user/all/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
         });
         it('should return 200, if a coach read his associated candidat opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/all/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCoach.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
         });
         it('should return 200, if a admin read a candidates opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/all/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
         });
         it('should return 401, if invalid user id', async () => {
           const response = await request(serverTest)
@@ -658,8 +658,8 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?type=private`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBe(3);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBe(3);
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: true,
@@ -672,8 +672,8 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?type=public`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: false,
@@ -688,8 +688,8 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBeGreaterThanOrEqual(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   userOpportunity: expect.objectContaining({
@@ -699,18 +699,49 @@ describe('Opportunity', () => {
               ])
             );
           });
-          it('should return 200, and all the opportunities that matches the locations filters', async () => {
+          it('should return 200, and all the opportunities that matches the department filters', async () => {
             const response = await request(serverTest)
               .get(
-                `${route}/user/all/${loggedInCandidat.user.id}?locations[]=Rhône (69)`
+                `${route}/user/all/${loggedInCandidat.user.id}?department[]=Rhône (69)`
               )
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBe(22);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBe(13);
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   department: 'Rhône (69)',
+                }),
+              ])
+            );
+          });
+          it("Should return 200, and offers suggestions of different location if the department filters don't match", async () => {
+            const response = await request(serverTest)
+              .get(
+                `${route}/user/all/${loggedInCandidat.user.id}?department[]=Rhône (69)&type=private`
+              )
+              .set('authorization', `Token ${loggedInCandidat.token}`);
+            expect(response.status).toBe(200);
+            expect(response.body.offers.length).toBe(1);
+            expect(response.body.otherOffers.length).toBe(2);
+            expect(response.body.offers).not.toEqual(
+              expect.not.arrayContaining([
+                expect.objectContaining({
+                  department: 'Rhône (69)',
+                }),
+              ])
+            );
+            expect(response.body.otherOffers).not.toEqual(
+              expect.arrayContaining([
+                expect.objectContaining({
+                  department: 'Rhône (69)',
+                }),
+              ])
+            );
+            expect(response.body.otherOffers).not.toEqual(
+              expect.not.arrayContaining([
+                expect.objectContaining({
+                  department: 'Paris (75)',
                 }),
               ])
             );
@@ -720,8 +751,8 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?status[]=1`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBe(2);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBe(2);
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   userOpportunity: expect.objectContaining({
@@ -736,8 +767,8 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?search=Rhône`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBe(13);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBe(13);
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   department: 'Rhône (69)',
@@ -748,27 +779,26 @@ describe('Opportunity', () => {
           it('should return 200, and all the opportunities that matches the multiple filters (AND between different filters, OR inside each filters)', async () => {
             const response = await request(serverTest)
               .get(
-                `${route}/user/all/${loggedInCandidat.user.id}?locations[]=Rhône (69)&status[]=0&status[]=1&type=public`
+                `${route}/user/all/${loggedInCandidat.user.id}?department[]=Rhône (69)&status[]=0&status[]=1&type=public`
               )
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.length).toBe(1);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers.length).toBe(1);
+            expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: false,
                 }),
               ])
             );
-            console.log(response.body);
-            expect(response.body).not.toEqual(
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   department: 'Rhône (69)',
                 }),
               ])
             );
-            expect(response.body).not.toEqual(
+            expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
                   userOpportunity:

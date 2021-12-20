@@ -1,7 +1,6 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { getChildrenFilters } from 'src/utils';
 import { IconNoSSR } from 'src/components/utils/Icon';
 import { event } from 'src/lib/gtag';
 import { Button } from 'src/components/utils';
@@ -15,7 +14,7 @@ const FiltersDropdowns = ({
   showSeparator,
 }) => {
   const renderFilters = (filterConstants, key, tag) => {
-    const reducedFilters = getChildrenFilters(filterConstants);
+    const reducedFilters = Object.values(filterConstants);
 
     return reducedFilters.map((filterConst, index) => {
       const indexInSelectedFilters = filters[key].findIndex((filter) => {
@@ -121,13 +120,25 @@ const FiltersDropdowns = ({
                       data-uk-dropdown="mode: click;"
                       className="uk-height-max-medium uk-overflow-auto uk-width-medium"
                     >
-                      {priority && priority.length > 0 && (
+                      {priority && priority.length > 0 ? (
                         <>
                           {renderFilters(priority, key, tag)}
                           <hr />
+                          {renderFilters(
+                            constants.filter((filterConst) => {
+                              return !priority
+                                .map((prioConst) => {
+                                  return prioConst.value;
+                                })
+                                .includes(filterConst.value);
+                            }),
+                            key,
+                            tag
+                          )}
                         </>
+                      ) : (
+                        renderFilters(constants, key, tag)
                       )}
-                      {renderFilters(constants, key, tag)}
                     </div>
                   </div>
                 </div>

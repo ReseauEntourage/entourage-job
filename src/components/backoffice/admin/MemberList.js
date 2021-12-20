@@ -331,7 +331,7 @@ const MemberList = ({
               if (data) {
                 closeModal();
                 UIkit.notification('Le membre a bien été créé', 'success');
-                await fetchData();
+                await fetchData(search, filters, role, offset, true);
               } else {
                 UIkit.notification(
                   "Une erreur s'est produite lors de la création du membre",
@@ -340,7 +340,7 @@ const MemberList = ({
               }
             } catch (error) {
               console.error(error);
-              if (error.response.status === 409) {
+              if (error?.response?.status === 409) {
                 UIkit.notification(
                   'Cette adresse email est déjà utilisée',
                   'danger'

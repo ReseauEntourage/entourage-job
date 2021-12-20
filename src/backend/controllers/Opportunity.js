@@ -31,6 +31,7 @@ import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import _ from 'lodash';
 import { getUser } from 'src/backend/controllers/User';
+import { getCVbyUserId } from 'src/backend/controllers/CV';
 
 const offerTable = process.env.AIRTABLE_OFFERS;
 const {
@@ -434,7 +435,9 @@ const getOpportunities = async (params) => {
     typeParams
   );
 
-  return filterOffersByStatus(filteredTypeOpportunites, statusParams);
+  return {
+    offers: filterOffersByStatus(filteredTypeOpportunites, statusParams),
+  };
 };
 
 const countPendingOpportunitiesCount = async (zone) => {
@@ -492,9 +495,11 @@ const getPublicOpportunities = async () => {
     },
   });
 
-  return opportunities.map((model) => {
-    return cleanOpportunity(model);
-  });
+  return {
+    offers: opportunities.map((model) => {
+      return cleanOpportunity(model);
+    }),
+  };
 };
 
 const getPrivateUserOpportunities = async (userId, params) => {
@@ -525,7 +530,9 @@ const getPrivateUserOpportunities = async (userId, params) => {
     return cleanOpportunity(model);
   });
 
-  return filterOffersByStatus(cleanedOpportunities, statusParams, userId);
+  return {
+    offers: filterOffersByStatus(cleanedOpportunities, statusParams, userId),
+  };
 };
 
 const getAllUserOpportunities = async (userId, params = {}) => {
@@ -640,9 +647,12 @@ const getAllUserOpportunities = async (userId, params = {}) => {
 
 const getUnseenUserOpportunitiesCount = async (candidatId) => {
   const user = await getUser(candidatId);
+  const cv = await getCVbyUserId(candidatId);
 
   const locationFilters = DEPARTMENTS_FILTERS.filter((dept) => {
-    return user.zone === dept.zone;
+    return cv.locations && cv.locations.length > 0
+      ? cv.locations.includes(dept.value)
+      : user.zone === dept.zone;
   });
 
   const filterOptions =

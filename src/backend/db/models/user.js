@@ -131,6 +131,8 @@ export default (sequelize, DataTypes) => {
       const user = u;
       user.id = uuid();
       user.email = user.email.toLowerCase();
+      user.firstName = user.firstName.trim().replace(/\s\s+/g, ' ');
+      user.lastName = user.lastName.trim().replace(/\s\s+/g, ' ');
       return user;
     });
 

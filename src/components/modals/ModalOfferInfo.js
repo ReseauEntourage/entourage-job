@@ -26,6 +26,7 @@ const ModalOfferInfo = ({
     copyToClipboard,
     hasBeenCopied,
     setHasBeenCopied,
+    fade,
   } = useCopyToClipboard();
 
   return (
@@ -47,7 +48,11 @@ const ModalOfferInfo = ({
           }}
         />
         {hasBeenCopied && (
-          <span className="uk-text-meta uk-text-italic uk-margin-small-left">
+          <span
+            className={`uk-text-meta uk-text-italic uk-margin-small-left ${
+              fade ? 'uk-animation-fade uk-animation-reverse' : ''
+            }`}
+          >
             Lien copié&nbsp;!
           </span>
         )}
