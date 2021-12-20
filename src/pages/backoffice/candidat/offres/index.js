@@ -50,13 +50,6 @@ const Opportunities = () => {
     ['offerId']
   );
 
-  useEffect(() => {
-    const updatedFilterConsts = [...OFFER_CANDIDATE_FILTERS_DATA];
-    updatedFilterConsts[1].title =
-      user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat';
-    setTabFilters(updatedFilterConsts);
-  }, [setTabFilters, user.role]);
-
   const setCandidatDepartments = useCallback(
     (candId, candidatZone) => {
       if (!tag) {
@@ -191,6 +184,7 @@ const Opportunities = () => {
     }
   }, [
     candidatId,
+    isReady,
     offerId,
     prevCandidatId,
     prevUser,

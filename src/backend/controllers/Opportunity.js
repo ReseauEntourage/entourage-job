@@ -881,7 +881,7 @@ const updateOpportunity = async (opportunity) => {
         transaction: t,
       });
 
-      t.commit();
+      await t.commit();
     } catch (error) {
       await t.rollback();
       throw error;

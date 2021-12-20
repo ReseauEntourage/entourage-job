@@ -8,13 +8,12 @@ const ModalGeneric = ({
   title,
   description,
   children,
-  classNameSize: className,
   onClose: customOnClose,
 }) => {
   const { onClose } = useModalContext();
   return (
     <Modal>
-      <div className={`uk-margin-auto-vertical ${className}`}>
+      <div className="uk-margin-auto-vertical uk-width-2xlarge@m">
         <div className="uk-modal-body uk-padding">
           <CloseButton
             className="uk-modal-close-default"
@@ -40,14 +39,12 @@ ModalGeneric.propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
-  classNameSize: PropTypes.string,
   title: PropTypes.string,
   description: PropTypes.string,
   onClose: PropTypes.func,
 };
 
 ModalGeneric.defaultProps = {
-  classNameSize: '',
   description: undefined,
   title: undefined,
   onClose: undefined,

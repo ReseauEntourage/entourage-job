@@ -69,8 +69,6 @@ router.post(
   authLimiter,
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res /* , next */) => {
-    req.logout();
-
     // const {AUTH0_DOMAIN, AUTH0_CLIENT_ID, BASE_URL} = process.env;
     res.redirect(process.env.SERVER_URL);
   }

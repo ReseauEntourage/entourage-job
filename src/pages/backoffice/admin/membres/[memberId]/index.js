@@ -22,7 +22,6 @@ import { IconNoSSR } from 'src/components/utils/Icon';
 import PropTypes from 'prop-types';
 import { openModal } from 'src/components/modals/Modal';
 import ModalConfirm from 'src/components/modals/ModalConfirm';
-import { isRequired } from 'nodemon/lib/utils';
 
 const EditUserModal = ({ user, setUser }) => {
   let mutatedSchema = mutateFormSchema(schemaEditUser, [
@@ -143,12 +142,8 @@ const EditUserModal = ({ user, setUser }) => {
             const { data } = await Api.put(`api/v1/user/${user.id}`, {
               ...fields,
               email: fields.email.toLowerCase(),
-              firstName: fields.firstName
-                .trim()
-                .replace(/\s\s+/g, ' '),
-              lastName: fields.lastName
-                .trim()
-                .replace(/\s\s+/g, ' '),
+              firstName: fields.firstName.trim().replace(/\s\s+/g, ' '),
+              lastName: fields.lastName.trim().replace(/\s\s+/g, ' '),
             });
             if (data) {
               closeModal();
@@ -234,7 +229,7 @@ const CVPage = () => {
         );
       }
     }
-  }, [memberId, offerId, replace, tab]);
+  }, [isReady, memberId, offerId, replace, tab]);
 
   const prevId = usePrevious(memberId);
 

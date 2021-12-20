@@ -81,12 +81,14 @@ const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
   const [noteBuffer, setNoteBuffer] = useState(note);
   const [loading, setLoading] = useState(false);
 
+  const [offer, setOffer] = useState(currentOffer);
+
   const updateOpportunityUser = async (opportunityUser) => {
-    await Api.put(
+    const { data } = await Api.put(
       `${process.env.SERVER_URL}/api/v1/opportunity/join`,
       opportunityUser
     );
-    // TODO CHECK IF UPDATE
+    setOffer(data);
     await onOfferUpdated();
   };
 
@@ -94,18 +96,16 @@ const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
     return setNoteBuffer(note);
   };
 
-  useEffect(resetNoteBuffer, [currentOffer, note]);
+  useEffect(resetNoteBuffer, [offer, note]);
 
-  if (!currentOffer) {
+  if (!offer) {
     return null;
   }
 
   const mutatedOfferStatus = [
     {
       ...OFFER_STATUS[0],
-      label: currentOffer.isPublic
-        ? OFFER_STATUS[0].alt
-        : OFFER_STATUS[0].label,
+      label: offer.isPublic ? OFFER_STATUS[0].alt : OFFER_STATUS[0].label,
     },
     ...OFFER_STATUS.slice(1),
   ];
@@ -118,19 +118,19 @@ const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
       }}
     >
       <div className={archived ? 'uk-light uk-background-secondary' : ''}>
-        {!currentOffer ? null : (
+        {!offer ? null : (
           <div>
             <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
               <ModalOfferInfo
-                startOfContract={currentOffer.startOfContract}
-                isPublic={currentOffer.isPublic}
-                numberOfPositions={currentOffer.numberOfPositions}
-                contract={currentOffer.contract}
-                date={currentOffer.date}
-                title={currentOffer.title}
-                isPartTime={currentOffer.isPartTime}
-                endOfContract={currentOffer.endOfContract}
-                offerId={currentOffer.id}
+                startOfContract={offer.startOfContract}
+                isPublic={offer.isPublic}
+                numberOfPositions={offer.numberOfPositions}
+                contract={offer.contract}
+                date={offer.date}
+                title={offer.title}
+                isPartTime={offer.isPartTime}
+                endOfContract={offer.endOfContract}
+                offerId={offer.id}
               />
               <div>
                 <Grid eachWidths={['expand', 'auto']} row middle>
@@ -144,7 +144,7 @@ const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
                     value={status}
                     onChange={async (event) => {
                       setLoadingStatus(true);
-                      const { userOpportunity } = currentOffer;
+                      const { userOpportunity } = offer;
                       userOpportunity.status = Number(event.target.value);
                       await updateOpportunityUser(userOpportunity);
                       setLoadingStatus(false);
@@ -158,7 +158,7 @@ const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
                     className={archived ? 'ent-color-amber' : undefined}
                     onClick={() => {
                       setLoadingIcon(true);
-                      const { userOpportunity } = currentOffer;
+                      const { userOpportunity } = offer;
                       userOpportunity.archived = !archived;
                       updateOpportunityUser(userOpportunity);
                       setLoadingIcon(false);
@@ -169,7 +169,7 @@ const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
                     className={bookmarked ? 'ent-color-amber' : undefined}
                     onClick={() => {
                       setLoadingIcon(true);
-                      const { userOpportunity } = currentOffer;
+                      const { userOpportunity } = offer;
                       userOpportunity.bookmarked = !bookmarked;
                       updateOpportunityUser(userOpportunity);
                       setLoadingIcon(false);
@@ -179,11 +179,11 @@ const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
               </div>
             </Grid>
             <hr />
-            {currentOffer.message && (
+            {offer.message && (
               <>
                 <Grid>
                   <OfferInfoContainer icon="commenting">
-                    <div>{formatParagraph(currentOffer.message)}</div>
+                    <div>{formatParagraph(offer.message)}</div>
                   </OfferInfoContainer>
                 </Grid>
                 <hr />
@@ -195,62 +195,59 @@ const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
               items={[
                 <Grid column gap="medium">
                   <OfferInfoContainer icon="home" title="Entreprise">
-                    {currentOffer.company}
+                    {offer.company}
                   </OfferInfoContainer>
                   <OfferInfoContainer icon="user" title="Recruteur">
                     <span>
-                      {currentOffer.recruiterFirstName}{' '}
-                      {currentOffer.recruiterName}
+                      {offer.recruiterFirstName} {offer.recruiterName}
                     </span>
                     <span className="uk-text-muted">
-                      {currentOffer.recruiterPosition}
+                      {offer.recruiterPosition}
                     </span>
                     <SimpleLink
-                      href={`mailto:${currentOffer.recruiterMail}`}
+                      href={`mailto:${offer.recruiterMail}`}
                       className="uk-link-muted"
                       isExternal
                       newTab
                     >
-                      <span>{currentOffer.recruiterMail}&nbsp;</span>
+                      <span>{offer.recruiterMail}&nbsp;</span>
                       <IconNoSSR name="mail" ratio={0.8} />
                     </SimpleLink>
                   </OfferInfoContainer>
                   <OfferInfoContainer
                     icon="location"
-                    title={currentOffer.department}
+                    title={offer.department}
                   />
                 </Grid>,
                 <Grid gap="medium" childWidths={['1-1']}>
-                  {currentOffer.companyDescription && (
+                  {offer.companyDescription && (
                     <OfferInfoContainer
                       icon="comment"
                       title="Description de l'entreprise"
                     >
-                      <div>
-                        {formatParagraph(currentOffer.companyDescription)}
-                      </div>
+                      <div>{formatParagraph(offer.companyDescription)}</div>
                     </OfferInfoContainer>
                   )}
                   <OfferInfoContainer
                     icon="comment"
                     title="Description de l'offre"
                   >
-                    <div>{formatParagraph(currentOffer.description)}</div>
+                    <div>{formatParagraph(offer.description)}</div>
                   </OfferInfoContainer>
                   <OfferInfoContainer
                     icon="check"
                     title="Compétences importantes"
                   >
-                    <div>{formatParagraph(currentOffer.skills)}</div>
+                    <div>{formatParagraph(offer.skills)}</div>
                   </OfferInfoContainer>
-                  {currentOffer.prerequisites && (
+                  {offer.prerequisites && (
                     <OfferInfoContainer icon="check" title="Pré-requis">
-                      <div>{formatParagraph(currentOffer.prerequisites)}</div>
+                      <div>{formatParagraph(offer.prerequisites)}</div>
                     </OfferInfoContainer>
                   )}
-                  {currentOffer.businessLines && (
+                  {offer.businessLines && (
                     <Grid gap="small">
-                      {currentOffer.businessLines.map((businessLine, index) => {
+                      {offer.businessLines.map((businessLine, index) => {
                         return (
                           <Button key={index} disabled>
                             <span style={{ color: '#666' }}>
@@ -285,7 +282,7 @@ const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
                   onClick={async () => {
                     setLoading(true);
                     console.log('update offer note', noteBuffer);
-                    const { userOpportunity } = currentOffer;
+                    const { userOpportunity } = offer;
                     userOpportunity.note = noteBuffer;
                     await updateOpportunityUser(userOpportunity);
                     setLoading(false);

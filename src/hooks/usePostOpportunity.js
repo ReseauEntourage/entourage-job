@@ -14,6 +14,7 @@ export function usePostOpportunity({
   modalTitle,
   modalDesc,
   isAdmin,
+  candidateId,
   callback,
   defaultValues = {},
   schema = defaultSchema,
@@ -75,7 +76,7 @@ export function usePostOpportunity({
         ? [
             {
               label: `${mutatedDefaultValue.firstName} ${mutatedDefaultValue.lastName}`,
-              value: mutatedDefaultValue.candidatId,
+              value: candidateId,
             },
           ]
         : lastFilledForm.candidatesId;
@@ -110,6 +111,7 @@ export function usePostOpportunity({
     modalDesc,
     lastFilledForm,
     schema,
+    candidateId,
     postOpportunity,
     isAdmin,
     callback,

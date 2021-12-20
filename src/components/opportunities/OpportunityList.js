@@ -22,6 +22,7 @@ import { OPPORTUNITY_FILTERS_DATA } from 'src/constants';
 import FiltersTabs from 'src/components/utils/FiltersTabs';
 import SearchBar from 'src/components/filters/SearchBar';
 import { openModal } from 'src/components/modals/Modal';
+import { usePrevious } from 'src/hooks/utils';
 
 const OfferList = ({
   candidatId,
@@ -164,6 +165,7 @@ const OpportunityList = forwardRef(
         },
         {
           shallow: true,
+          scroll: false,
         }
       );
     }, [currentPath.as, currentPath.href, push, restQuery]);
@@ -206,7 +208,7 @@ const OpportunityList = forwardRef(
         openModal(
           <ModalOffer
             currentOffer={opportunity}
-            setCurrentOffer={async () => {
+            onOfferUpdated={async () => {
               await fetchData(role, search, tabFilterTag, filters, candidatId);
             }}
             navigateBackToList={navigateBackToList}
@@ -215,7 +217,6 @@ const OpportunityList = forwardRef(
       },
       [
         candidatId,
-        currentOffer,
         fetchData,
         filters,
         navigateBackToList,
@@ -231,7 +232,7 @@ const OpportunityList = forwardRef(
           openModal(
             <ModalOfferAdmin
               currentOffer={offer}
-              setCurrentOffer={async (offerToSet) => {
+              onOfferUpdated={async () => {
                 await fetchData(
                   role,
                   search,
@@ -244,7 +245,7 @@ const OpportunityList = forwardRef(
                 role === 'candidateAsAdmin' ? candidatId : undefined
               }
               navigateBackToList={navigateBackToList}
-              duplicateOffer={async () => {
+              duplicateOffer={async (closeModal) => {
                 const { id, userOpportunity, ...restOpportunity } = offer;
                 const { data } = await Api.post(`/api/v1/opportunity/`, {
                   ...restOpportunity,
@@ -252,6 +253,7 @@ const OpportunityList = forwardRef(
                   isAdmin: true,
                   isValidated: false,
                 });
+                closeModal();
                 UIkit.notification("L'offre a bien été dupliqué", 'success');
                 push(
                   {
@@ -264,7 +266,15 @@ const OpportunityList = forwardRef(
                   },
                   {
                     shallow: true,
+                    scroll: false,
                   }
+                );
+                await fetchData(
+                  role,
+                  search,
+                  tabFilterTag,
+                  filters,
+                  candidatId
                 );
               }}
             />
@@ -275,7 +285,6 @@ const OpportunityList = forwardRef(
       },
       [
         candidatId,
-        currentOffer,
         currentPath.as,
         currentPath.href,
         fetchData,
@@ -291,27 +300,29 @@ const OpportunityList = forwardRef(
       ]
     );
 
-    const getOpportunity = useCallback(async () => {
+    const getOpportunity = useCallback(async (oppId) => {
       try {
         const { data: offer } = await Api.get(
-          `${process.env.SERVER_URL}/api/v1/opportunity/${opportunityId}`
+          `${process.env.SERVER_URL}/api/v1/opportunity/${oppId}`
         );
         return offer;
       } catch (err) {
         console.error(err);
         return null;
       }
-    }, [opportunityId]);
+    }, []);
+
+    const prevOpportunityId = usePrevious(opportunityId);
 
     useEffect(() => {
-      if (opportunityId) {
-        getOpportunity().then((offer) => {
+      if (opportunityId && opportunityId !== prevOpportunityId) {
+        getOpportunity(opportunityId).then((offer) => {
           if (offer) {
             openOffer({ ...offer });
           }
         });
       }
-    }, [getOpportunity, openOffer, opportunityId]);
+    }, [getOpportunity, openOffer, opportunityId, prevOpportunityId]);
 
     useDeepCompareEffect(() => {
       setHasError(false);
