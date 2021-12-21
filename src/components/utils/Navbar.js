@@ -37,7 +37,7 @@ Navbar.defaultProps = {
 
 export const NavbarNoSSR = dynamic(
   () => {
-    return import('src/components/utils/Navbar.js');
+    return import('src/components/utils/Navbar');
   },
   { ssr: false }
 );

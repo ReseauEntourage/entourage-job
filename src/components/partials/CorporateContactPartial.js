@@ -3,6 +3,7 @@ import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 import { Button, Grid, Section } from 'src/components/utils';
+import { openModal } from 'src/components/modals/Modal';
 
 const CorporateContact = () => {
   return (
@@ -18,15 +19,14 @@ const CorporateContact = () => {
         <Button
           style="secondary"
           className="uk-margin-small-top"
-          toggle="target: #modal-interest-linkedOut"
           onClick={() => {
-            return event(TAGS.PAGE_AIDER_CONTACT_RECRUTEUR_CLIC);
+            openModal(<ModalInterestLinkedOut />);
+            event(TAGS.PAGE_AIDER_CONTACT_RECRUTEUR_CLIC);
           }}
         >
           Nous contacter
         </Button>
       </Grid>
-      <ModalInterestLinkedOut />
     </Section>
   );
 };

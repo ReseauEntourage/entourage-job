@@ -5,15 +5,17 @@ import { IconNoSSR } from 'src/components/utils/Icon';
 
 const SuccessModalContent = ({ text, closeModal }) => {
   return (
-    <div className="uk-text-center ">
-      <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
-      <p className="uk-text-lead">{text}</p>
-      <div className="uk-flex uk-flex-right uk-margin-medium-top">
-        <Button style="primary" onClick={closeModal}>
+    <>
+      <div className="uk-text-center uk-flex uk-flex-column uk-flex-center">
+        <IconNoSSR name="check" ratio={4} className="uk-text-primary" />
+        {text}
+      </div>
+      <div className="uk-modal-footer uk-padding-remove-horizontal uk-padding-remove-bottom uk-margin-medium-top">
+        <Button style="default" onClick={closeModal}>
           Fermer
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 SuccessModalContent.propTypes = {

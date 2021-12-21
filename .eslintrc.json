@@ -77,6 +77,7 @@
     "airbnb",
     "prettier",
     "eslint:recommended",
+    "plugin:@next/next/recommended",
     "plugin:prettier/recommended" // should always be the last element in the array
   ],
   "settings": {

@@ -10,6 +10,7 @@ import SimpleSection from 'src/components/partials/SimpleSection';
 import SimpleLink from 'src/components/utils/SimpleLink';
 import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
+import { openModal } from 'src/components/modals/Modal';
 
 const Partenaires = () => {
   const viewportHeightWithoutHeader = 'calc(100vh - 80px)';
@@ -293,9 +294,9 @@ const Partenaires = () => {
         style="muted"
         button={{
           label: 'Nous écrire',
-          modal: 'target: #modal-interest-linkedOut',
           onClick: () => {
-            return event(TAGS.PAGE_PARTENAIRES_NOUS_ECRIRE_CLIC);
+            openModal(<ModalInterestLinkedOut />);
+            event(TAGS.PAGE_PARTENAIRES_NOUS_ECRIRE_CLIC);
           },
         }}
       />

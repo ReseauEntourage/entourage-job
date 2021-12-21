@@ -5,7 +5,7 @@ import Img from 'src/components/utils/Img';
 
 const NavbarLogo = ({ href, src, alt, style, alwaysVisible }) => {
   return (
-    <Link href={href}>
+    <Link href={href} passHref>
       <div style={{ width: 180 }}>
         <a // info: regle css sur uk-logo
           className={`uk-navbar-item ${

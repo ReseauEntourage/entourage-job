@@ -71,7 +71,8 @@ const ModalShareCV = ({ firstName }) => {
                   href={EXTERNAL_LINKS.ENTOURAGE}
                   style="primary"
                 >
-                  En savoir plus <IconNoSSR name="chevron-right" />
+                  En savoir plus&nbsp;
+                  <IconNoSSR name="chevron-right" />
                 </Button>
               </div>
 

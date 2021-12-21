@@ -50,7 +50,7 @@ const Partners = ({ showOrientationPartners }) => {
             <LogoList logos={PARTNERS.finance} />
             <div className="uk-flex uk-flex-center uk-flex-middle uk-margin-large-top">
               <Button style="primary" href="/partenaires">
-                En savoir plus &nbsp;
+                En savoir plus&nbsp;
                 <IconNoSSR name="arrow-right" />
               </Button>
             </div>

@@ -53,8 +53,8 @@ function usePostPublicOfferModal() {
     defaultValues: {
       isPublic: false,
     },
-    title: 'Proposer une opportunité',
-    description:
+    modalTitle: 'Proposer une opportunité',
+    modalDesc:
       'Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité visible par tous les candidats.',
     schema: mutatedSchema,
   });

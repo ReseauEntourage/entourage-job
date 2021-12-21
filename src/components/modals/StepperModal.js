@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { CloseButton } from 'src/components/utils';
-import HeaderModal from 'src/components/modals/HeaderModal';
-import { Modal, useModalContext } from 'src/components/modals/Modal';
+import { useModalContext } from 'src/components/modals/Modal';
+import ModalGeneric from './ModalGeneric';
 
 /**
  * Ce composant fournit une modal à contenu variable selon l'index ou l'on s'y trouve
@@ -44,21 +43,15 @@ const StepperModal = ({ composers, title }) => {
   }, [close, composers, next, previous]);
 
   return (
-    <Modal>
-      <div className="uk-margin-auto-vertical">
-        <div className="uk-modal-body uk-padding-large">
-          <CloseButton
-            className="uk-modal-close-default"
-            onClick={() => {
-              setIndex(0);
-              onClose();
-            }}
-          />
-          <HeaderModal>{title}</HeaderModal>
-          {wrappedComponents && wrappedComponents[index]}
-        </div>
-      </div>
-    </Modal>
+    <ModalGeneric
+      title={title}
+      onClose={() => {
+        setIndex(0);
+        onClose();
+      }}
+    >
+      {wrappedComponents && wrappedComponents[index]}
+    </ModalGeneric>
   );
 };
 

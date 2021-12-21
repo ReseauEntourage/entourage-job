@@ -63,6 +63,7 @@ const CVPDF = ({ cv, page }) => {
             style={{ height: 150 }}
           >
             {/* Can't use <Img /> component because doesn't work for PDF */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               style={{ marginTop: 75 }}
               className="uk-box-shadow-small uk-width-expand"
@@ -446,8 +447,9 @@ const CVPDF = ({ cv, page }) => {
                 </SimpleLink>
               </p>
               {/* Can't use <Img /> component because doesn't work for PDF */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                alt="logo linkedout"
+                alt="Logo linkedout"
                 className="uk-width-small"
                 src={addPrefix('/static/img/linkedout_logo_orange_small.png')}
               />
