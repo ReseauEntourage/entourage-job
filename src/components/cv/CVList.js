@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import ButtonPost from 'src/components/backoffice/cv/ButtonPost';
 import { filtersToQueryParams } from 'src/utils';
-import { Grid } from 'src/components/utils';
+import { Button, Grid } from 'src/components/utils';
 import { CandidatCard } from 'src/components/cards';
 import Api from 'src/Axios';
 import { CV_FILTERS_DATA, INITIAL_NB_OF_CV_TO_DISPLAY } from 'src/constants';
@@ -13,6 +12,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import SearchBar from 'src/components/filters/SearchBar';
 import { openModal } from 'src/components/modals/Modal';
 import usePostPublicOfferModal from 'src/components/modals/usePostPublicOfferModal';
+import { IconNoSSR } from 'src/components/utils/Icon';
 
 const NoCVInThisArea = () => {
   return (
@@ -47,6 +47,7 @@ const CVList = ({
 
   const [cvs, setCVs] = useState(undefined);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [hasSuggestions, setHasSuggestions] = useState(false);
 
   const [error, setError] = useState(undefined);
@@ -58,7 +59,13 @@ const CVList = ({
 
   const fetchData = useCallback(
     (searchValue, filtersValue, nbOfCVToDisplayValue, isPagination) => {
-      setLoading(true);
+      setError(undefined);
+
+      if (isPagination) {
+        setLoadingMore(true);
+      } else {
+        setLoading(true);
+      }
       Api.get(`/api/v1/cv/cards/random`, {
         params: {
           search: searchValue,
@@ -87,6 +94,7 @@ const CVList = ({
         })
         .finally(() => {
           setLoading(false);
+          setLoadingMore(false);
         });
     },
     []
@@ -94,11 +102,8 @@ const CVList = ({
 
   useDeepCompareEffect(() => {
     if (nbOfCVToDisplay > defaultNbOfCVs) {
-      setError(undefined);
       fetchData(search, filters, nbOfCVToDisplay, true);
     } else {
-      setError(undefined);
-      setLoading(true);
       fetchData(search, filters, nbOfCVToDisplay);
     }
   }, [fetchData, search, filters, nbOfCVToDisplay]);
@@ -143,15 +148,27 @@ const CVList = ({
         />
         {!nb && (
           <div className="uk-flex uk-flex-center uk-margin-top">
-            <ButtonPost
-              text="Voir plus"
+            <Button
               style="primary"
-              action={async () => {
-                return setNbOfCVToDisplay((prevNbOfCV) => {
+              onClick={() => {
+                setNbOfCVToDisplay((prevNbOfCV) => {
                   return prevNbOfCV + INITIAL_NB_OF_CV_TO_DISPLAY;
                 });
               }}
-            />
+            >
+              Voir plus
+              {loadingMore ? (
+                <div
+                  className="uk-margin-small-left"
+                  data-uk-spinner="ratio: .6"
+                />
+              ) : (
+                <IconNoSSR
+                  className="uk-margin-small-left"
+                  name="plus-circle"
+                />
+              )}
+            </Button>
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { ADMIN_ZONES, DEPARTMENTS_FILTERS } from 'src/constants/departements';
-import { useFilters } from 'src/hooks';
+import { useFilters, useTabFilters } from 'src/hooks';
 import { UserContext } from 'src/components/store/UserProvider';
 import LayoutBackOffice from 'src/components/backoffice/LayoutBackOffice';
 import { Section } from 'src/components/utils';
@@ -19,6 +19,7 @@ const candidateFilters = OPPORTUNITY_FILTERS_DATA.slice(1);
 
 const Opportunities = () => {
   const {
+    isReady,
     replace,
     query: { q, offerId, tag, ...restParams },
   } = useRouter();
@@ -35,6 +36,14 @@ const Opportunities = () => {
 
   const { filters, setFilters, search, setSearch, resetFilters } = useFilters(
     candidateFilters,
+    {
+      href: '/backoffice/candidat/offres',
+    },
+    ['offerId']
+  );
+
+  const { tabFilters, setTabFilters } = useTabFilters(
+    OFFER_CANDIDATE_FILTERS_DATA,
     {
       href: '/backoffice/candidat/offres',
     },
@@ -98,74 +107,84 @@ const Opportunities = () => {
   );
 
   useEffect(() => {
-    const redirectParams = tag
-      ? {
-          tag,
-          ...restParams,
-        }
-      : restParams;
+    if (isReady) {
+      const redirectParams = tag
+        ? {
+            tag,
+            ...restParams,
+          }
+        : restParams;
 
-    // For retrocompatibility
-    if (q) {
-      replace(
-        {
-          pathname: '/backoffice/candidat/offres/[offerId]',
-          query: redirectParams,
-        },
-        {
-          pathname: `/backoffice/candidat/offres/${q}`,
-          query: redirectParams,
-        },
-        {
-          shallow: true,
-        }
-      );
-    } else if (user) {
-      if (user.role !== USER_ROLES.COACH && user.role !== USER_ROLES.CANDIDAT) {
+      // For retrocompatibility
+      if (q) {
         replace(
           {
-            pathname: `/backoffice/admin/offres${offerId ? '/[offerId]' : ''}`,
+            pathname: '/backoffice/candidat/offres/[offerId]',
             query: redirectParams,
           },
           {
-            pathname: `/backoffice/admin/offres${offerId ? `/${offerId}` : ''}`,
+            pathname: `/backoffice/candidat/offres/${q}`,
             query: redirectParams,
           },
           {
             shallow: true,
           }
         );
-      } else if (user !== prevUser || !candidatId) {
-        setLoading(true);
-        if (user.role === USER_ROLES.CANDIDAT) {
-          setCandidatDepartments(user.id, user.zone);
-          setLoading(false);
-        } else if (user.role === USER_ROLES.COACH) {
-          Api.get(`/api/v1/user/candidat/`, {
-            params: {
-              coachId: user.id,
+      } else if (user) {
+        if (
+          user.role !== USER_ROLES.COACH &&
+          user.role !== USER_ROLES.CANDIDAT
+        ) {
+          replace(
+            {
+              pathname: `/backoffice/admin/offres${
+                offerId ? '/[offerId]' : ''
+              }`,
+              query: redirectParams,
             },
-          })
-            .then(({ data }) => {
-              if (data) {
-                setCandidatDepartments(data.candidat.id, user.zone);
-              } else {
-                setHasError(true);
-              }
-              setLoading(false);
+            {
+              pathname: `/backoffice/admin/offres${
+                offerId ? `/${offerId}` : ''
+              }`,
+              query: redirectParams,
+            },
+            {
+              shallow: true,
+            }
+          );
+        } else if (user !== prevUser || !candidatId) {
+          setLoading(true);
+          if (user.role === USER_ROLES.CANDIDAT) {
+            setCandidatDepartments(user.id, user.zone);
+            setLoading(false);
+          } else if (user.role === USER_ROLES.COACH) {
+            Api.get(`/api/v1/user/candidat/`, {
+              params: {
+                coachId: user.id,
+              },
             })
-            .catch(() => {
-              setHasError(true);
-              setLoading(false);
-            });
+              .then(({ data }) => {
+                if (data) {
+                  setCandidatDepartments(data.candidat.id, user.zone);
+                } else {
+                  setHasError(true);
+                }
+                setLoading(false);
+              })
+              .catch(() => {
+                setHasError(true);
+                setLoading(false);
+              });
+          }
+        } else {
+          setLoadingDefaultFilters(true);
+          setCandidatDepartments(candidatId, user.zone);
         }
-      } else {
-        setLoadingDefaultFilters(true);
-        setCandidatDepartments(candidatId, user.zone);
       }
     }
   }, [
     candidatId,
+    isReady,
     offerId,
     prevCandidatId,
     prevUser,
@@ -200,6 +219,8 @@ const Opportunities = () => {
               setSearch={setSearch}
               setFilters={setFilters}
               candidatId={candidatId}
+              tabFilters={tabFilters}
+              setTabFilters={setTabFilters}
             />
           )}
         </>

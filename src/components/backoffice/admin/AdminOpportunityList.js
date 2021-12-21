@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { usePostOpportunity } from 'src/hooks';
 import { mutateFormSchema } from 'src/utils';
 import schema, {
@@ -9,13 +9,14 @@ import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import { IconNoSSR } from 'src/components/utils/Icon';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
 import PropTypes from 'prop-types';
-import { OFFER_ADMIN_FILTERS_DATA } from 'src/constants';
 import { openModal } from 'src/components/modals/Modal';
 
 const AdminOpportunityList = ({
   search,
   filters,
   setFilters,
+  tabFilters,
+  setTabFilters,
   setSearch,
   resetFilters,
 }) => {
@@ -43,8 +44,6 @@ const AdminOpportunityList = ({
     modalTitle: 'Ajouter une opportunité',
     schema: mutatedSchema,
   });
-
-  const [tabFilters, setTabFilters] = useState(OFFER_ADMIN_FILTERS_DATA);
 
   return (
     <>
@@ -85,6 +84,8 @@ AdminOpportunityList.propTypes = {
   search: PropTypes.string,
   filters: PropTypes.shape(),
   setFilters: PropTypes.func,
+  tabFilters: PropTypes.arrayOf(PropTypes.shape()),
+  setTabFilters: PropTypes.func,
   setSearch: PropTypes.func,
   resetFilters: PropTypes.func,
 };
@@ -93,6 +94,8 @@ AdminOpportunityList.defaultProps = {
   search: undefined,
   filters: {},
   setFilters: () => {},
+  tabFilters: {},
+  setTabFilters: () => {},
   setSearch: () => {},
   resetFilters: () => {},
 };

@@ -97,20 +97,13 @@ describe('Auth', () => {
       expect(response.status).toBe(422);
     });
   });
-  describe.skip('Logout - logout/', () => {
-    // TODO: Rediretion or logout?
+  describe('Logout - logout/', () => {
     it(`Should logout the user`, async () => {
-      await request(serverTest)
+      const response = await request(serverTest)
         .post(`${route}/logout`)
         .set('authorization', `Token ${loggedInCandidat.token}`);
 
-      const response = await request(serverTest)
-        .get(`/api/v1/user/candidat`)
-        .set('authorization', `Token ${loggedInCandidat.token}`)
-        .query({
-          candidatId: loggedInCandidat.user.id,
-        });
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(302);
     });
   });
   describe('Forgot - forgot/', () => {

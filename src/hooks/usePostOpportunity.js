@@ -14,6 +14,7 @@ export function usePostOpportunity({
   modalTitle,
   modalDesc,
   isAdmin,
+  candidateId,
   callback,
   defaultValues = {},
   schema = defaultSchema,
@@ -55,7 +56,7 @@ export function usePostOpportunity({
             : `Merci pour votre offre, le(s) candidat(s) et coach(s) associés reviendront bientôt vers vous.`,
           'success'
         );
-        if (adminCallback) adminCallback();
+        if (adminCallback) await adminCallback();
         if (openNewForm) {
           setLastFilledForm(fields);
         } else {
@@ -75,7 +76,7 @@ export function usePostOpportunity({
         ? [
             {
               label: `${mutatedDefaultValue.firstName} ${mutatedDefaultValue.lastName}`,
-              value: mutatedDefaultValue.candidatId,
+              value: candidateId,
             },
           ]
         : lastFilledForm.candidatesId;
@@ -110,6 +111,7 @@ export function usePostOpportunity({
     modalDesc,
     lastFilledForm,
     schema,
+    candidateId,
     postOpportunity,
     isAdmin,
     callback,

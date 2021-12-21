@@ -34,7 +34,7 @@ const ModalPreview = ({ imageUrl, cv }) => {
         />
       )}
       <CVFiche cv={cv} actionDisabled />
-      <div className="uk-modal-footer uk-text-right uk-margin-medium-top">
+      <div className="uk-modal-footer uk-padding-remove-horizontal uk-padding-remove-bottom uk-margin-medium-top">
         <Button onClick={onClose} style="default">
           Fermer
         </Button>

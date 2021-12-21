@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ModalGeneric from 'src/components/modals/ModalGeneric';
-import { Button, Grid } from 'src/components/utils';
+import { Button } from 'src/components/utils';
 import { useModalContext } from 'src/components/modals/Modal';
 
 const ModalConfirm = ({ onConfirm, text, buttonText }) => {
   const { onClose } = useModalContext();
   return (
-    <ModalGeneric title={text}>
-      <Grid gap="small" center>
+    <ModalGeneric description={text}>
+      <div className="uk-modal-footer uk-padding-remove-horizontal uk-padding-remove-bottom">
         <Button style="default" onClick={onClose}>
           Annuler
         </Button>
@@ -22,7 +22,7 @@ const ModalConfirm = ({ onConfirm, text, buttonText }) => {
         >
           {buttonText}
         </Button>
-      </Grid>
+      </div>
     </ModalGeneric>
   );
 };

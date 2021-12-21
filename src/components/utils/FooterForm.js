@@ -15,7 +15,7 @@ const FooterForm = ({ error, onSubmit, onCancel, submitText }) => {
           <span className="uk-text-meta">* : Mentions obligatoires</span>
         </div>
 
-        <div className="uk-modal-footer">
+        <div className="uk-modal-footer uk-padding-remove-horizontal uk-padding-remove-bottom">
           {onCancel && (
             <Button style="default" onClick={onCancel}>
               Annuler

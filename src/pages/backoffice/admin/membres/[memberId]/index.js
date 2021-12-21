@@ -128,7 +128,6 @@ const EditUserModal = ({ user, setUser }) => {
 
   return (
     <ModalEdit
-      id="edit-user"
       formSchema={mutatedSchema}
       title="Edition d'un membre"
       description="Merci de modifier les informations que vous souhaitez concernant le membre."
@@ -143,13 +142,8 @@ const EditUserModal = ({ user, setUser }) => {
             const { data } = await Api.put(`api/v1/user/${user.id}`, {
               ...fields,
               email: fields.email.toLowerCase(),
-              firstName: user.firstName
-                .trim()
-                .replace(/\s\s+/g, ' '),
-              lastName: user.lastName
-                .trim()
-                .replace(/\s\s+/g, ' '),
-              email: fields.email.toLowerCase(),
+              firstName: fields.firstName.trim().replace(/\s\s+/g, ' '),
+              lastName: fields.lastName.trim().replace(/\s\s+/g, ' '),
             });
             if (data) {
               closeModal();
@@ -214,25 +208,28 @@ const CVPage = () => {
   const [loading, setLoading] = useState(true);
 
   const {
+    isReady,
     replace,
     query: { memberId, tab, offerId },
   } = useRouter();
 
   useEffect(() => {
-    if (memberId && !tab) {
-      replace(
-        '/backoffice/admin/membres/[memberId]/[tab]',
-        `/backoffice/admin/membres/${memberId}/cv`,
-        { shallow: true }
-      );
-    } else if (offerId && tab !== 'offres') {
-      replace(
-        '/backoffice/admin/membres/[memberId]/[tab]',
-        `/backoffice/admin/membres/${memberId}/${tab}`,
-        { shallow: true }
-      );
+    if (isReady) {
+      if (memberId && !tab) {
+        replace(
+          '/backoffice/admin/membres/[memberId]/[tab]',
+          `/backoffice/admin/membres/${memberId}/cv`,
+          { shallow: true }
+        );
+      } else if (offerId && tab !== 'offres') {
+        replace(
+          '/backoffice/admin/membres/[memberId]/[tab]',
+          `/backoffice/admin/membres/${memberId}/${tab}`,
+          { shallow: true }
+        );
+      }
     }
-  }, [memberId, offerId, replace, tab]);
+  }, [isReady, memberId, offerId, replace, tab]);
 
   const prevId = usePrevious(memberId);
 

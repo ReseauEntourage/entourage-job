@@ -33,20 +33,22 @@ const ModalOfferInfo = ({
     <div className="uk-flex uk-flex-column">
       <div className="uk-flex uk-flex-middle">
         <h3 className="uk-text-bold uk-margin-remove-bottom">{title}</h3>
-        <ButtonIcon
-          className="uk-margin-small-left"
-          ratio={0.8}
-          tooltip="Copier le lien"
-          name="copy"
-          onMouseLeave={() => {
-            return setHasBeenCopied(false);
-          }}
-          onClick={() => {
-            copyToClipboard(
-              `${process.env.SERVER_URL}/backoffice/candidat/offres/${offerId}`
-            );
-          }}
-        />
+        <div style={{ width: 30 }}>
+          <ButtonIcon
+            className="uk-margin-small-left"
+            ratio={0.8}
+            tooltip="Copier le lien"
+            name="link"
+            onMouseLeave={() => {
+              return setHasBeenCopied(false);
+            }}
+            onClick={() => {
+              copyToClipboard(
+                `${process.env.SERVER_URL}/backoffice/candidat/offres/${offerId}`
+              );
+            }}
+          />
+        </div>
         {hasBeenCopied && (
           <span
             className={`uk-text-meta uk-text-italic uk-margin-small-left ${

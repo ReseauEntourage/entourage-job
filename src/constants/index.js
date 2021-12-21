@@ -148,7 +148,7 @@ const CV_STATUS = {
 
 const OFFER_CANDIDATE_FILTERS_DATA = [
   { tag: 'all', title: 'Toutes les offres' },
-  { tag: 'private', title: 'Offres du candidat', active: true },
+  { tag: 'private', title: 'Offres personnelles', active: true },
   { tag: 'public', title: 'Offres générales' },
   { tag: 'archived', title: 'Offres archivées' },
 ];

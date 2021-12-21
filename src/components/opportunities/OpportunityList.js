@@ -1,3 +1,5 @@
+/* global UIkit */
+
 import React, {
   forwardRef,
   useCallback,
@@ -20,6 +22,7 @@ import { OPPORTUNITY_FILTERS_DATA } from 'src/constants';
 import FiltersTabs from 'src/components/utils/FiltersTabs';
 import SearchBar from 'src/components/filters/SearchBar';
 import { openModal } from 'src/components/modals/Modal';
+import { usePrevious } from 'src/hooks/utils';
 
 const OfferList = ({
   candidatId,
@@ -94,7 +97,7 @@ const OfferList = ({
 
 OfferList.propTypes = {
   offers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  candidatId: PropTypes.string.isRequired,
+  candidatId: PropTypes.string,
   role: PropTypes.oneOf(['admin', 'candidateAsAdmin', 'candidat']).isRequired,
   isAdmin: PropTypes.bool.isRequired,
   currentPath: PropTypes.shape({
@@ -102,6 +105,10 @@ OfferList.propTypes = {
     as: PropTypes.string,
   }).isRequired,
   query: PropTypes.shape().isRequired,
+};
+
+OfferList.defaultProps = {
+  candidatId: undefined,
 };
 
 const OpportunityList = forwardRef(
@@ -124,13 +131,8 @@ const OpportunityList = forwardRef(
       query: { offerId: opportunityId, memberId, tab, ...restQuery },
     } = useRouter();
 
-    const tabFilterTag = tabFilters?.find((filter) => {
-      return filter.active;
-    })?.tag;
-
     const [numberOfResults, setNumberOfResults] = useState(0);
 
-    const [currentOffer, setCurrentOffer] = useState(null);
     const [offers, setOffers] = useState(undefined);
     const [otherOffers, setOtherOffers] = useState(undefined);
     const [hasError, setHasError] = useState(false);
@@ -163,6 +165,7 @@ const OpportunityList = forwardRef(
         },
         {
           shallow: true,
+          scroll: false,
         }
       );
     }, [currentPath.as, currentPath.href, push, restQuery]);
@@ -175,6 +178,10 @@ const OpportunityList = forwardRef(
       setHasError
     );
 
+    const tabFilterTag = tabFilters?.find((filter) => {
+      return filter.active;
+    })?.tag;
+
     useImperativeHandle(ref, () => {
       return {
         fetchData: () => {
@@ -185,7 +192,7 @@ const OpportunityList = forwardRef(
 
     const onClickOpportunityCardAsUser = useCallback(
       async (offer) => {
-        const opportunity = offer;
+        const opportunity = { ...offer };
         // si jamais ouvert
         if (!opportunity.userOpportunity || !opportunity.userOpportunity.seen) {
           const { data } = await Api.post(
@@ -198,13 +205,11 @@ const OpportunityList = forwardRef(
           );
           opportunity.userOpportunity = data;
         }
-        setCurrentOffer({ ...opportunity });
         openModal(
           <ModalOffer
-            currentOffer={currentOffer}
-            setCurrentOffer={(offerToSet) => {
-              setCurrentOffer({ ...offerToSet });
-              fetchData(role, search, tabFilterTag, filters, candidatId);
+            currentOffer={opportunity}
+            onOfferUpdated={async () => {
+              await fetchData(role, search, tabFilterTag, filters, candidatId);
             }}
             navigateBackToList={navigateBackToList}
           />
@@ -212,7 +217,6 @@ const OpportunityList = forwardRef(
       },
       [
         candidatId,
-        currentOffer,
         fetchData,
         filters,
         navigateBackToList,
@@ -225,20 +229,54 @@ const OpportunityList = forwardRef(
     const openOffer = useCallback(
       (offer) => {
         if (isAdmin) {
-          setCurrentOffer({
-            ...offer,
-          });
           openModal(
             <ModalOfferAdmin
-              currentOffer={currentOffer}
-              setCurrentOffer={(offerToSet) => {
-                setCurrentOffer({ ...offerToSet });
-                fetchData(role, search, tabFilterTag, filters, candidatId);
+              currentOffer={offer}
+              onOfferUpdated={async () => {
+                await fetchData(
+                  role,
+                  search,
+                  tabFilterTag,
+                  filters,
+                  candidatId
+                );
               }}
               selectedCandidateId={
                 role === 'candidateAsAdmin' ? candidatId : undefined
               }
               navigateBackToList={navigateBackToList}
+              duplicateOffer={async (closeModal) => {
+                const { id, userOpportunity, ...restOpportunity } = offer;
+                const { data } = await Api.post(`/api/v1/opportunity/`, {
+                  ...restOpportunity,
+                  title: `${restOpportunity.title} (copie)`,
+                  isAdmin: true,
+                  isValidated: false,
+                });
+                closeModal();
+                UIkit.notification("L'offre a bien été dupliqué", 'success');
+                push(
+                  {
+                    pathname: `${currentPath.href}/[offerId]`,
+                    query: restQuery,
+                  },
+                  {
+                    pathname: `${currentPath.as}/${data.id}`,
+                    query: restQuery,
+                  },
+                  {
+                    shallow: true,
+                    scroll: false,
+                  }
+                );
+                await fetchData(
+                  role,
+                  search,
+                  tabFilterTag,
+                  filters,
+                  candidatId
+                );
+              }}
             />
           );
         } else {
@@ -247,39 +285,44 @@ const OpportunityList = forwardRef(
       },
       [
         candidatId,
-        currentOffer,
+        currentPath.as,
+        currentPath.href,
         fetchData,
         filters,
         isAdmin,
         navigateBackToList,
         onClickOpportunityCardAsUser,
+        push,
+        restQuery,
         role,
         search,
         tabFilterTag,
       ]
     );
 
-    const getOpportunity = useCallback(async () => {
+    const getOpportunity = useCallback(async (oppId) => {
       try {
         const { data: offer } = await Api.get(
-          `${process.env.SERVER_URL}/api/v1/opportunity/${opportunityId}`
+          `${process.env.SERVER_URL}/api/v1/opportunity/${oppId}`
         );
         return offer;
       } catch (err) {
         console.error(err);
         return null;
       }
-    }, [opportunityId]);
+    }, []);
+
+    const prevOpportunityId = usePrevious(opportunityId);
 
     useEffect(() => {
-      if (opportunityId) {
-        getOpportunity().then((offer) => {
+      if (opportunityId && opportunityId !== prevOpportunityId) {
+        getOpportunity(opportunityId).then((offer) => {
           if (offer) {
-            openOffer(offer);
+            openOffer({ ...offer });
           }
         });
       }
-    }, [getOpportunity, openOffer, opportunityId]);
+    }, [getOpportunity, openOffer, opportunityId, prevOpportunityId]);
 
     useDeepCompareEffect(() => {
       setHasError(false);
@@ -395,7 +438,7 @@ OpportunityList.propTypes = {
   setFilters: PropTypes.func,
   setSearch: PropTypes.func,
   resetFilters: PropTypes.func,
-  tabFilters: PropTypes.shape(),
+  tabFilters: PropTypes.arrayOf(PropTypes.shape()),
   setTabFilters: PropTypes.func,
 };
 

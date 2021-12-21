@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
-import { USER_ROLES, OFFER_CANDIDATE_FILTERS_DATA } from 'src//constants';
+import { USER_ROLES } from 'src//constants';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
 import PropTypes from 'prop-types';
 
@@ -13,17 +13,10 @@ const CandidateOpportunityList = ({
   setSearch,
   resetFilters,
   candidatId,
+  tabFilters,
+  setTabFilters,
 }) => {
   const { user } = useContext(UserContext);
-
-  const [tabFilters, setTabFilters] = useState(OFFER_CANDIDATE_FILTERS_DATA);
-
-  useEffect(() => {
-    const updatedFilterConsts = [...OFFER_CANDIDATE_FILTERS_DATA];
-    updatedFilterConsts[1].title =
-      user.role === USER_ROLES.CANDIDAT ? 'Mes offres' : 'Offres du candidat';
-    setTabFilters(updatedFilterConsts);
-  }, [user.role]);
 
   return (
     <>
@@ -61,6 +54,8 @@ CandidateOpportunityList.propTypes = {
   setFilters: PropTypes.func,
   setSearch: PropTypes.func,
   resetFilters: PropTypes.func,
+  tabFilters: PropTypes.arrayOf(PropTypes.shape()),
+  setTabFilters: PropTypes.func,
 };
 
 CandidateOpportunityList.defaultProps = {
@@ -69,6 +64,8 @@ CandidateOpportunityList.defaultProps = {
   setFilters: () => {},
   setSearch: () => {},
   resetFilters: () => {},
+  tabFilters: {},
+  setTabFilters: () => {},
 };
 
 export default CandidateOpportunityList;

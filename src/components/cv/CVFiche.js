@@ -29,7 +29,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
     modalTitle: 'Proposer une opportunité à un candidat',
     modalDescription:
       'Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique.',
-    candidatId: cv.UserId,
+    candidateId: cv.UserId,
     defaultValues: {
       firstName: cv.user.candidat.firstName,
       lastName: cv.user.candidat.lastName,
