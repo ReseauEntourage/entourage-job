@@ -4,14 +4,17 @@ import { IconNoSSR } from 'src/components/utils/Icon';
 
 const HeaderModal = ({ children }) => {
   return (
-    <div className="uk-flex">
-      <div className="uk-margin-medium-right">
+    <div className="uk-flex uk-flex-middle uk-margin-medium-bottom">
+      <div
+        className="uk-margin-small-right uk-flex uk-flex-center uk-flex-middle"
+        style={{ width: 30 }}
+      >
         <span className="uk-text-primary">
-          <IconNoSSR name="linkedout-contract" ratio={1.5} />
+          <IconNoSSR name="linkedout-contract" ratio={1.2} />
         </span>
       </div>
       <div className="">
-        <h3 className="uk-text-bold">{children}</h3>
+        <h3 className="uk-text-bold uk-margin-remove">{children}</h3>
       </div>
     </div>
   );

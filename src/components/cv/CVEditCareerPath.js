@@ -1,10 +1,10 @@
-/* global UIkit */
 import React from 'react';
 import PropTypes from 'prop-types';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaCareerPath from 'src/components/forms/schema/formEditCareerPath.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import { Grid } from 'src/components/utils';
+import { openModal } from 'src/components/modals/Modal';
 
 const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
   const ContentByGender = () => {
@@ -54,40 +54,36 @@ const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
           <ButtonIcon
             name="pencil"
             onClick={() => {
-              return UIkit.modal(`#modal-career-path`).show();
+              openModal(
+                <ModalEdit
+                  title="Édition - Projet professionnel"
+                  formSchema={schemaCareerPath}
+                  defaultValues={{
+                    careerPath0:
+                      ambitions && ambitions.length > 0 ? ambitions[0] : null,
+                    careerPath1:
+                      ambitions && ambitions.length > 1 ? ambitions[1] : null,
+                    careerPathOpen,
+                  }}
+                  onSubmit={(
+                    { careerPathOpen: isOpen, careerPath0, careerPath1 },
+                    closeModal
+                  ) => {
+                    closeModal();
+                    onChange({
+                      ambitions: [careerPath0, careerPath1].filter((a) => {
+                        return a || null;
+                      }),
+                      careerPathOpen: isOpen,
+                    });
+                  }}
+                />
+              );
             }}
           />
         )}
       </Grid>
       <ContentByGender />
-      {onChange && (
-        <div>
-          <ModalEdit
-            id="modal-career-path"
-            title="Édition - Projet professionnel"
-            formSchema={schemaCareerPath}
-            defaultValues={{
-              careerPath0:
-                ambitions && ambitions.length > 0 ? ambitions[0] : null,
-              careerPath1:
-                ambitions && ambitions.length > 1 ? ambitions[1] : null,
-              careerPathOpen,
-            }}
-            onSubmit={(
-              { careerPathOpen: isOpen, careerPath0, careerPath1 },
-              closeModal
-            ) => {
-              closeModal();
-              onChange({
-                ambitions: [careerPath0, careerPath1].filter((a) => {
-                  return a || null;
-                }),
-                careerPathOpen: isOpen,
-              });
-            }}
-          />
-        </div>
-      )}
     </div>
   );
 };

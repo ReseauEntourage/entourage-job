@@ -19,55 +19,11 @@ import AdminCandidateOpportunities from 'src/components/opportunities/AdminCandi
 import CandidateEmployedToggle from 'src/components/backoffice/candidate/CandidateEmployedToggle';
 import ContractLabel from 'src/components/backoffice/candidate/ContractLabel';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import PropTypes from 'prop-types';
+import { openModal } from 'src/components/modals/Modal';
+import ModalConfirm from 'src/components/modals/ModalConfirm';
 
-const CVPage = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const {
-    replace,
-    query: { memberId, tab, offerId },
-  } = useRouter();
-
-  useEffect(() => {
-    if (memberId && !tab) {
-      replace(
-        '/backoffice/admin/membres/[memberId]/[tab]',
-        `/backoffice/admin/membres/${memberId}/cv`,
-        { shallow: true }
-      );
-    } else if (offerId && tab !== 'offres') {
-      replace(
-        '/backoffice/admin/membres/[memberId]/[tab]',
-        `/backoffice/admin/membres/${memberId}/${tab}`,
-        { shallow: true }
-      );
-    }
-  }, [memberId, offerId, replace, tab]);
-
-  const prevId = usePrevious(memberId);
-
-  const getUser = useCallback(() => {
-    Api.get(`/api/v1/user/${memberId}`)
-      .then(({ data }) => {
-        setUser(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, [memberId]);
-
-  useEffect(() => {
-    if (memberId !== prevId) {
-      setLoading(true);
-      getUser();
-    } else if (tab === 'parametres') {
-      getUser();
-    }
-  }, [tab, getUser, memberId, prevId]);
-
+const EditUserModal = ({ user, setUser }) => {
   let mutatedSchema = mutateFormSchema(schemaEditUser, [
     {
       fieldId: 'userToCoach',
@@ -106,21 +62,6 @@ const CVPage = () => {
       ],
     },
   ]);
-
-  const deleteUser = async (fields, closeModal) => {
-    try {
-      if (fields.confirmation === 'SUPPRIMER') {
-        await Api.delete(`/api/v1/user/${memberId}`);
-        closeModal();
-        UIkit.notification("L'utilisateur a bien été supprimé", 'success');
-        replace('/backoffice/admin/membres');
-      } else {
-        UIkit.notification('Erreur de confirmation', 'danger');
-      }
-    } catch {
-      UIkit.notification('Une erreur est survenue', 'danger');
-    }
-  };
 
   if (user) {
     if (user.role !== USER_ROLES.CANDIDAT) {
@@ -185,6 +126,152 @@ const CVPage = () => {
     }
   }
 
+  return (
+    <ModalEdit
+      id="edit-user"
+      formSchema={mutatedSchema}
+      title="Edition d'un membre"
+      description="Merci de modifier les informations que vous souhaitez concernant le membre."
+      submitText="Modifier le membre"
+      defaultValues={{
+        ...user,
+        gender: user.gender.toString(),
+      }}
+      onSubmit={async (fields, closeModal) => {
+        const updateUser = async (onError) => {
+          try {
+            const { data } = await Api.put(`api/v1/user/${user.id}`, {
+              ...fields,
+              email: fields.email.toLowerCase(),
+              firstName: user.firstName
+                .trim()
+                .replace(/\s\s+/g, ' '),
+              lastName: user.lastName
+                .trim()
+                .replace(/\s\s+/g, ' '),
+              email: fields.email.toLowerCase(),
+            });
+            if (data) {
+              closeModal();
+              UIkit.notification('Le membre a bien été modifié', 'success');
+              setUser(data);
+            } else {
+              throw new Error('réponse de la requete vide');
+            }
+          } catch (error) {
+            console.error(error);
+            if (onError) onError();
+            if (error.response.status === 409) {
+              UIkit.notification(
+                'Cette adresse email est déjà utilisée',
+                'danger'
+              );
+            } else {
+              UIkit.notification(
+                "Une erreur s'est produite lors de la modification du membre",
+                'danger'
+              );
+            }
+          }
+        };
+
+        if (fields.role !== user.role) {
+          openModal(
+            <ModalConfirm
+              text="Attention, si vous modifiez le rôle d'un candidat, tout son suivi sera perdu et son CV sera dépublié. Êtes-vous sûr de vouloir continuer ?"
+              buttonText="Valider"
+              onConfirm={async () => {
+                await updateUser(() => {
+                  openModal(<EditUserModal user={user} setUser={setUser} />);
+                });
+              }}
+            />
+          );
+        } else {
+          await updateUser();
+        }
+      }}
+    />
+  );
+};
+
+EditUserModal.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    role: PropTypes.oneOf([
+      USER_ROLES.COACH,
+      USER_ROLES.ADMIN,
+      USER_ROLES.CANDIDAT,
+    ]).isRequired,
+    gender: PropTypes.number.isRequired,
+    ...PropTypes.shape(),
+  }).isRequired,
+  setUser: PropTypes.func.isRequired,
+};
+
+const CVPage = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const {
+    replace,
+    query: { memberId, tab, offerId },
+  } = useRouter();
+
+  useEffect(() => {
+    if (memberId && !tab) {
+      replace(
+        '/backoffice/admin/membres/[memberId]/[tab]',
+        `/backoffice/admin/membres/${memberId}/cv`,
+        { shallow: true }
+      );
+    } else if (offerId && tab !== 'offres') {
+      replace(
+        '/backoffice/admin/membres/[memberId]/[tab]',
+        `/backoffice/admin/membres/${memberId}/${tab}`,
+        { shallow: true }
+      );
+    }
+  }, [memberId, offerId, replace, tab]);
+
+  const prevId = usePrevious(memberId);
+
+  const getUser = useCallback(() => {
+    Api.get(`/api/v1/user/${memberId}`)
+      .then(({ data }) => {
+        setUser(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }, [memberId]);
+
+  useEffect(() => {
+    if (memberId !== prevId) {
+      setLoading(true);
+      getUser();
+    } else if (tab === 'parametres') {
+      getUser();
+    }
+  }, [tab, getUser, memberId, prevId]);
+
+  const deleteUser = async (fields, closeModal) => {
+    try {
+      if (fields.confirmation === 'SUPPRIMER') {
+        await Api.delete(`/api/v1/user/${memberId}`);
+        closeModal();
+        UIkit.notification("L'utilisateur a bien été supprimé", 'success');
+        replace('/backoffice/admin/membres');
+      } else {
+        UIkit.notification('Erreur de confirmation', 'danger');
+      }
+    } catch {
+      UIkit.notification('Une erreur est survenue', 'danger');
+    }
+  };
+
   const isCandidat = user && user.candidat && user.role === USER_ROLES.CANDIDAT;
 
   if (loading || !tab) {
@@ -223,7 +310,7 @@ const CVPage = () => {
             </SimpleLink>
             <div>
               <hr className="ent-divier-backoffice" />
-              <h2>Ce profil n’est pas disponible</h2>
+              <h3 className="uk-text-bold">Ce profil n’est pas disponible</h3>
               <p>
                 Le lien que vous avez suivi est peut-être rompu, ou la page a
                 été supprimée.
@@ -322,7 +409,6 @@ const CVPage = () => {
                     {isCandidat && (
                       <Card title="Préférences du CV">
                         <CandidateEmployedToggle
-                          id="employed"
                           title="A retrouvé un emploi"
                           modalTitle="Le candidat a retrouvé un emploi ?"
                           modalConfirmation="Valider"
@@ -392,7 +478,9 @@ const CVPage = () => {
                       <ButtonIcon
                         name="pencil"
                         onClick={() => {
-                          return UIkit.modal(`#edit-user`).show();
+                          openModal(
+                            <EditUserModal user={user} setUser={setUser} />
+                          );
                         }}
                       />
                     </Grid>
@@ -437,87 +525,6 @@ const CVPage = () => {
                       </Grid>
                     ) : undefined}
                   </div>
-                  <div>
-                    <ModalEdit
-                      id="edit-user"
-                      formSchema={mutatedSchema}
-                      title="Edition d'un membre"
-                      description="Merci de modifier les informations que vous souhaitez concernant le membre."
-                      submitText="Modifier le membre"
-                      defaultValues={{
-                        ...user,
-                        gender: user.gender.toString(),
-                      }}
-                      onSubmit={async (fields, closeModal) => {
-                        const updateUser = async (onError) => {
-                          try {
-                            const { data } = await Api.put(
-                              `api/v1/user/${user.id}`,
-                              {
-                                ...fields,
-                                firstName: user.firstName
-                                  .trim()
-                                  .replace(/\s\s+/g, ' '),
-                                lastName: user.lastName
-                                  .trim()
-                                  .replace(/\s\s+/g, ' '),
-                                email: fields.email.toLowerCase(),
-                              }
-                            );
-                            if (data) {
-                              closeModal();
-                              UIkit.notification(
-                                'Le membre a bien été modifié',
-                                'success'
-                              );
-                              setUser(data);
-                            } else {
-                              throw new Error('réponse de la requete vide');
-                            }
-                          } catch (error) {
-                            console.error(error);
-                            if (onError) onError();
-                            if (error.response.status === 409) {
-                              UIkit.notification(
-                                'Cette adresse email est déjà utilisée',
-                                'danger'
-                              );
-                            } else {
-                              UIkit.notification(
-                                "Une erreur s'est produite lors de la modification du membre",
-                                'danger'
-                              );
-                            }
-                          }
-                        };
-
-                        if (fields.role !== user.role) {
-                          UIkit.modal
-                            .confirm(
-                              "Attention, si vous modifiez le rôle d'un candidat, tout son suivi sera perdu et son CV sera dépublié. Êtes-vous sûr de vouloir continuer ?",
-                              {
-                                labels: {
-                                  ok: 'Valider',
-                                  cancel: 'Annuler',
-                                },
-                              }
-                            )
-                            .then(
-                              async () => {
-                                await updateUser(() => {
-                                  return UIkit.modal(`#edit-user`).show();
-                                });
-                              },
-                              () => {
-                                UIkit.modal(`#edit-user`).show();
-                              }
-                            );
-                        } else {
-                          await updateUser();
-                        }
-                      }}
-                    />
-                  </div>
                 </Grid>
               )}
               <Grid childWidths={['1-1']} gap="medium">
@@ -536,7 +543,16 @@ const CVPage = () => {
                     style="danger"
                     size="large"
                     onClick={() => {
-                      return UIkit.modal('#delete-user').show();
+                      openModal(
+                        <ModalEdit
+                          id="delete-user"
+                          title="Supprimer un membre"
+                          description="Attention, si vous supprimer ce membre, toutes les données qui lui sont associées seront définitivement perdues. Êtes-vous sûr de vouloir continuer ?"
+                          submitText="Supprimer le membre"
+                          formSchema={schemaDeleteUser}
+                          onSubmit={deleteUser}
+                        />
+                      );
                     }}
                   >
                     <span className="uk-margin-small-right">
@@ -544,14 +560,6 @@ const CVPage = () => {
                     </span>
                     <IconNoSSR name="trash" />
                   </Button>
-                  <ModalEdit
-                    id="delete-user"
-                    title="Supprimer un membre"
-                    description="Attention, si vous supprimer ce membre, toutes les données qui lui sont associées seront définitivement perdues. Êtes-vous sûr de vouloir continuer ?"
-                    submitText="Supprimer le membre"
-                    formSchema={schemaDeleteUser}
-                    onSubmit={deleteUser}
-                  />
                 </div>
               </Grid>
             </Grid>

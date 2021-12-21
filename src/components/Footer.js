@@ -10,6 +10,7 @@ import TAGS from 'src/constants/tags';
 import { IconNoSSR } from 'src/components/utils/Icon';
 import PropTypes from 'prop-types';
 import ModalInterestLinkedOut from 'src/components/modals/ModalInterestLinkedOut';
+import { openModal } from 'src/components/modals/Modal';
 
 const pages = [
   {
@@ -31,7 +32,12 @@ const pages = [
       */
       {
         title: 'Devenir partenaire',
-        toggle: '#modal-interest-linkedOut',
+        onClick: () => {
+          openModal(<ModalInterestLinkedOut />);
+        },
+        props: {
+          isExternal: true,
+        },
       },
       /*
         {
@@ -193,7 +199,7 @@ const SiteMap = ({ isMobile }) => {
                       component: childrenComponent,
                       title: childrenTitle,
                       path: childrenPath,
-                      toggle: childrenToggle,
+                      onClick: childrenOnClick,
                       children: childrenChildren,
                       props: childrenProps = {},
                     },
@@ -209,23 +215,21 @@ const SiteMap = ({ isMobile }) => {
                         </div>
                       );
                     }
-                    const toggleProps = { href: childrenPath };
-                    if (childrenToggle) {
-                      toggleProps.toggle = `target: ${childrenToggle}`;
-                    }
                     return (
                       <React.Fragment key={childrenPath + index}>
                         <SimpleLink
+                          onClick={childrenOnClick}
+                          href={childrenPath}
                           className={
                             title
                               ? 'uk-text-muted uk-margin-small-top'
                               : 'uk-text-bold ent-site-map'
                           }
                           {...childrenProps}
-                          {...toggleProps}
                         >
                           {childrenTitle}
                         </SimpleLink>
+
                         {childrenChildren &&
                           childrenChildren.map(
                             (
@@ -306,7 +310,6 @@ const Footer = () => {
           </Grid>
         </Grid>
       </Section>
-      <ModalInterestLinkedOut />
     </footer>
   );
 };

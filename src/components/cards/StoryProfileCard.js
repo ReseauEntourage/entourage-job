@@ -1,4 +1,3 @@
-/* global UIkit */
 import React from 'react';
 import PropTypes from 'prop-types';
 import ModalEdit from 'src/components/modals/ModalEdit';
@@ -6,6 +5,7 @@ import schemaStory from 'src/components/forms/schema/formEditStory.json';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
 import { Grid } from 'src/components/utils';
 import { formatParagraph } from 'src/utils';
+import { openModal } from 'src/components/modals/Modal';
 
 const StoryProfileCard = ({ description, onChange }) => {
   return (
@@ -18,7 +18,17 @@ const StoryProfileCard = ({ description, onChange }) => {
           <ButtonIcon
             name="pencil"
             onClick={() => {
-              UIkit.modal(`#modal-story`).show();
+              openModal(
+                <ModalEdit
+                  title="Édition - Mon histoire"
+                  formSchema={schemaStory}
+                  defaultValues={{ story: description }}
+                  onSubmit={(fields, closeModal) => {
+                    closeModal();
+                    onChange({ ...fields });
+                  }}
+                />
+              );
             }}
           />
         )}
@@ -30,20 +40,6 @@ const StoryProfileCard = ({ description, onChange }) => {
         <p className="uk-text-italic">
           Aucune histoire n&apos;a encore été ajoutée
         </p>
-      )}
-      {onChange && (
-        <h3 className="uk-card-title uk-align-right uk-text-right uk-width-expand">
-          <ModalEdit
-            id="modal-story"
-            title="Édition - Mon histoire"
-            formSchema={schemaStory}
-            defaultValues={{ story: description }}
-            onSubmit={(fields, closeModal) => {
-              closeModal();
-              onChange({ ...fields });
-            }}
-          />
-        </h3>
       )}
     </div>
   );

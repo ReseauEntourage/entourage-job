@@ -1,4 +1,3 @@
-/* global UIkit */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid } from 'src/components/utils';
@@ -10,6 +9,7 @@ import { IconNoSSR } from 'src/components/utils/Icon';
 import { getAllFilters, mutateFormSchema } from 'src/utils';
 
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import { openModal } from 'src/components/modals/Modal';
 
 const InfoProfileCard = ({
   contracts,
@@ -59,7 +59,28 @@ const InfoProfileCard = ({
           <ButtonIcon
             name="pencil"
             onClick={() => {
-              UIkit.modal(`#modal-usefulinformation`).show();
+              openModal(
+                <ModalEdit
+                  title="Édition - Informations utiles"
+                  formSchema={mutatedSchema}
+                  defaultValues={{
+                    locations,
+                    availability,
+                    transport,
+                    contracts,
+                    languages,
+                    email,
+                    phone,
+                    address,
+                  }}
+                  onSubmit={(fields, closeModal) => {
+                    closeModal();
+                    onChange({
+                      ...fields,
+                    });
+                  }}
+                />
+              );
             }}
           />
         )}
@@ -108,29 +129,6 @@ const InfoProfileCard = ({
             : 'Moyen de transport non renseigné'}
         </Grid>
       </Grid>
-      {onChange && (
-        <ModalEdit
-          id="modal-usefulinformation"
-          title="Édition - Informations utiles"
-          formSchema={mutatedSchema}
-          defaultValues={{
-            locations,
-            availability,
-            transport,
-            contracts,
-            languages,
-            email,
-            phone,
-            address,
-          }}
-          onSubmit={(fields, closeModal) => {
-            closeModal();
-            onChange({
-              ...fields,
-            });
-          }}
-        />
-      )}
     </div>
   );
 };

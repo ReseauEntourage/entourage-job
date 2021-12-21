@@ -1,12 +1,12 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
+import Document, { Head, Main, NextScript, Html } from 'next/document';
 import { addPrefix } from 'src/utils';
 
 export default class MyDocument extends Document {
   render() {
     return (
-      <html lang="fr">
+      <Html lang="fr">
         <Head>
           {/* Google Analytics */}
           <script
@@ -108,7 +108,7 @@ export default class MyDocument extends Document {
             />
           </noscript>
         </body>
-      </html>
+      </Html>
     );
   }
 }

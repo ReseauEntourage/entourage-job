@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from 'src/components/Layout';
-import { Section } from 'src/components/utils';
+import { Section, SimpleLink } from 'src/components/utils';
 import schemaLogin from 'src/components/forms/schema/formLogin.json';
 import schemaLostPwd from 'src/components/forms/schema/formLostPwd.json';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
@@ -10,12 +10,11 @@ import Api from 'src/Axios';
 import { USER_ROLES } from 'src/constants';
 import StepperModal from 'src/components/modals/StepperModal';
 import SuccessModalContent from 'src/components/modals/SuccessModalContent';
-import { useResetForm } from 'src/hooks/utils';
+import { openModal } from 'src/components/modals/Modal';
 
 const Login = () => {
   const { login, user } = useContext(UserContext);
   const router = useRouter();
-  const [form, resetForm] = useResetForm();
 
   useEffect(() => {
     if (user) {
@@ -51,58 +50,58 @@ const Login = () => {
                 });
               }}
             />
-            <a
+            <SimpleLink
+              isExternal
               className="uk-text-small uk-margin-remove"
-              href="#"
-              data-uk-toggle="target: #modal-lost-pwd"
+              onClick={() => {
+                openModal(
+                  <StepperModal
+                    title="Mot de passe oublié ?"
+                    composers={[
+                      (closeModal, nextStep) => {
+                        return (
+                          <FormWithValidation
+                            submitText="Envoyer"
+                            formSchema={schemaLostPwd}
+                            onCancel={closeModal}
+                            onSubmit={({ email }, setError) => {
+                              Api.post('/api/v1/auth/forgot', {
+                                email: email.toLowerCase(),
+                              })
+                                .then(() => {
+                                  return nextStep();
+                                })
+                                .catch((err) => {
+                                  const errorMessage =
+                                    err &&
+                                    err.response &&
+                                    err.response.status === 429
+                                      ? rateLimitErrorMessage
+                                      : "L'adresse mail ne correspond à aucun utilisateur";
+                                  setError(errorMessage);
+                                });
+                            }}
+                          />
+                        );
+                      },
+                      (closeModal) => {
+                        return (
+                          <SuccessModalContent
+                            closeModal={closeModal}
+                            text="Un e-mail vient d'être envoyé à l'adresse indiquée."
+                          />
+                        );
+                      },
+                    ]}
+                  />
+                );
+              }}
             >
               Mot de passe oublié ?
-            </a>
+            </SimpleLink>
           </div>
         </div>
       </Section>
-      <div>
-        <StepperModal
-          id="modal-lost-pwd"
-          title="Mot de passe oublié ?"
-          resetForm={resetForm}
-          composers={[
-            (closeModal, nextStep) => {
-              return (
-                <FormWithValidation
-                  ref={form}
-                  submitText="Envoyer"
-                  formSchema={schemaLostPwd}
-                  onCancel={closeModal}
-                  onSubmit={({ email }, setError) => {
-                    Api.post('/api/v1/auth/forgot', {
-                      email: email.toLowerCase(),
-                    })
-                      .then(() => {
-                        return nextStep();
-                      })
-                      .catch((err) => {
-                        const errorMessage =
-                          err && err.response && err.response.status === 429
-                            ? rateLimitErrorMessage
-                            : "L'adresse mail ne correspond à aucun utilisateur";
-                        setError(errorMessage);
-                      });
-                  }}
-                />
-              );
-            },
-            (closeModal) => {
-              return (
-                <SuccessModalContent
-                  closeModal={closeModal}
-                  text="Un e-mail vient d'être envoyé à l'adresse indiquée."
-                />
-              );
-            },
-          ]}
-        />
-      </div>
     </Layout>
   );
 };

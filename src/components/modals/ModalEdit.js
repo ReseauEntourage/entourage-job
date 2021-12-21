@@ -1,15 +1,11 @@
-/* eslint-disable no-undef */
 import React from 'react';
 import PropTypes from 'prop-types';
 import ModalGeneric from 'src/components/modals/ModalGeneric';
-import HeaderModal from 'src/components/modals/HeaderModal';
 import FormWithValidation from 'src/components/forms/FormWithValidation';
 
-import { CloseButton } from 'src/components/utils';
-import { useResetForm } from 'src/hooks/utils';
+import { useModalContext } from 'src/components/modals/Modal';
 
 const ModalEdit = ({
-  id,
   title,
   description,
   formSchema,
@@ -17,39 +13,24 @@ const ModalEdit = ({
   onSubmit,
   submitText,
 }) => {
-  const [form, resetForm] = useResetForm();
+  const { onClose } = useModalContext();
 
   return (
-    <ModalGeneric id={id} resetForm={resetForm}>
-      {(closeModal) => {
-        return (
-          <>
-            <CloseButton
-              className="uk-modal-close-default"
-              onClick={resetForm}
-            />
-            <HeaderModal>{title}</HeaderModal>
-            {description ? <p className="uk-text-lead">{description}</p> : null}
-
-            <FormWithValidation
-              ref={form}
-              submitText={submitText}
-              formSchema={formSchema}
-              defaultValues={defaultValues}
-              onCancel={closeModal}
-              onSubmit={(fields, setError) => {
-                onSubmit(fields, closeModal, setError);
-              }}
-            />
-          </>
-        );
-      }}
+    <ModalGeneric title={title} description={description}>
+      <FormWithValidation
+        submitText={submitText}
+        formSchema={formSchema}
+        defaultValues={defaultValues}
+        onCancel={onClose}
+        onSubmit={(fields, setError) => {
+          onSubmit(fields, onClose, setError);
+        }}
+      />
     </ModalGeneric>
   );
 };
 
 ModalEdit.propTypes = {
-  id: PropTypes.string.isRequired,
   title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   formSchema: PropTypes.shape({
     id: PropTypes.string,

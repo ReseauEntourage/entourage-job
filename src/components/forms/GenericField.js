@@ -352,11 +352,16 @@ const GenericField = ({
     );
   }
 
-  if (data.component === 'text') {
+  if (data.component === 'heading') {
     return (
       <p className="uk-heading-divider uk-margin-top uk-margin-remove-bottom">
         {data.title}
       </p>
+    );
+  }
+  if (data.component === 'text') {
+    return (
+      <p className="uk-margin-top uk-text-bold uk-text-italic">{data.title}</p>
     );
   }
   throw `component ${data.component} does not exist`; // eslint-disable-line no-throw-literal

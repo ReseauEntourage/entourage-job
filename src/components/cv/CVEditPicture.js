@@ -99,7 +99,7 @@ CVEditPicture.propTypes = {
   imageUploading: PropTypes.bool,
 };
 CVEditPicture.defaultProps = {
-  urlImg: '../../static/img/arthur-background.jpg',
+  urlImg: '/static/img/arthur-background.jpg',
   disablePicture: false,
   imageUploading: false,
 };

@@ -7,12 +7,10 @@ import schema, {
 import { Button } from 'src/components/utils';
 import HeaderBackoffice from 'src/components/headers/HeaderBackoffice';
 import { IconNoSSR } from 'src/components/utils/Icon';
-import ModalEdit from 'src/components/modals/ModalEdit';
 import OpportunityList from 'src/components/opportunities/OpportunityList';
 import PropTypes from 'prop-types';
 import { OFFER_ADMIN_FILTERS_DATA } from 'src/constants';
-
-const modalId = 'add-opportunity';
+import { openModal } from 'src/components/modals/Modal';
 
 const AdminOpportunityList = ({
   search,
@@ -21,8 +19,6 @@ const AdminOpportunityList = ({
   setSearch,
   resetFilters,
 }) => {
-  const { lastFilledForm, postOpportunity } = usePostOpportunity(modalId);
-
   // desactivation du champ de disclaimer
   const mutatedSchema = mutateFormSchema(schema, [
     {
@@ -39,6 +35,15 @@ const AdminOpportunityList = ({
 
   const opportunityListRef = useRef();
 
+  const { modal } = usePostOpportunity({
+    defaultValues: {
+      isPublic: true,
+    },
+    callback: opportunityListRef?.current?.fetchData,
+    modalTitle: 'Ajouter une opportunité',
+    schema: mutatedSchema,
+  });
+
   const [tabFilters, setTabFilters] = useState(OFFER_ADMIN_FILTERS_DATA);
 
   return (
@@ -47,7 +52,12 @@ const AdminOpportunityList = ({
         title="Modération des offres d'emploi"
         description="Ici vous pouvez accéder à toutes les opportunités et valider les offres envoyées par les recruteurs !"
       >
-        <Button style="primary" toggle={`target: #${modalId}`}>
+        <Button
+          style="primary"
+          onClick={() => {
+            openModal(modal);
+          }}
+        >
           <IconNoSSR
             name="plus"
             ratio="0.8"
@@ -55,26 +65,6 @@ const AdminOpportunityList = ({
           />
           Nouvelle opportunité
         </Button>
-        <ModalEdit
-          id={modalId}
-          title="Ajouter une opportunité"
-          submitText="Envoyer"
-          formSchema={mutatedSchema}
-          defaultValues={{
-            isPublic: true,
-            ...lastFilledForm,
-          }}
-          onSubmit={async (fields, closeModal) => {
-            await postOpportunity(
-              {
-                ...fields,
-                isAdmin: true,
-              },
-              closeModal,
-              opportunityListRef.current.fetchData
-            );
-          }}
-        />
       </HeaderBackoffice>
       <OpportunityList
         ref={opportunityListRef}

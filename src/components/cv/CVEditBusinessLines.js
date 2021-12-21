@@ -1,5 +1,3 @@
-/* global UIkit */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid } from 'src/components/utils/';
@@ -8,6 +6,7 @@ import ButtonIcon from 'src/components/utils/ButtonIcon';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaEditCVBusinessLines from 'src/components/forms/schema/formEditCVBusinessLines';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import { openModal } from 'src/components/modals/Modal';
 
 const CVEditBusinessLines = ({ businessLines, onChange }) => {
   return (
@@ -25,7 +24,22 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => {
           <ButtonIcon
             name="pencil"
             onClick={() => {
-              UIkit.modal(`#modal-cv-businesslines`).show();
+              openModal(
+                <ModalEdit
+                  title="Édition - Secteurs d'activité"
+                  formSchema={schemaEditCVBusinessLines}
+                  defaultValues={{
+                    businessLines,
+                  }}
+                  description="Ces valeurs ne seront pas affichées sur le CV mais serviront aux recruteurs à filtrer les candidats."
+                  onSubmit={(fields, closeModal) => {
+                    closeModal();
+                    onChange({
+                      ...fields,
+                    });
+                  }}
+                />
+              );
             }}
           />
         )}
@@ -45,25 +59,6 @@ const CVEditBusinessLines = ({ businessLines, onChange }) => {
           </p>
         )}
       </p>
-      {onChange && (
-        <div>
-          <ModalEdit
-            id="modal-cv-businesslines"
-            title="Édition - Secteurs d'activité"
-            formSchema={schemaEditCVBusinessLines}
-            defaultValues={{
-              businessLines,
-            }}
-            description="Ces valeurs ne seront pas affichées sur le CV mais serviront aux recruteurs à filtrer les candidats."
-            onSubmit={(fields, closeModal) => {
-              closeModal();
-              onChange({
-                ...fields,
-              });
-            }}
-          />
-        </div>
-      )}
     </div>
   );
 };

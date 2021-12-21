@@ -1,8 +1,6 @@
-/* global UIkit */
-
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import 'static/css/Toggle.less';
+
 import {
   FacebookShareButton,
   LinkedinShareButton,
@@ -18,6 +16,7 @@ import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 import moment from 'moment';
 import { IconNoSSR } from 'src/components/utils/Icon';
+import { openModal } from 'src/components/modals/Modal';
 
 const CandidatCard = ({
   url,
@@ -51,15 +50,10 @@ const CandidatCard = ({
   const sharedDescription = `La précarité n'exclut pas les compétences\xa0! Avec LinkedOut, aidons ${firstName} à retrouver un emploi en lui proposant un job ou en diffusant son CV\xa0!`;
   const title = `LinkedOut\xa0: Aidez ${firstName} à retrouver un emploi`;
 
-  // petit systeme pour ne pas avoir a afficher la modal a chaque carte
-  // optimisation possible
-  const [showModal, setShowModal] = useState(false);
-
   const { incrementSharesCount } = useContext(SharesCountContext);
 
   const openNewsletterModal = () => {
-    setShowModal(true);
-    UIkit.modal(`#info-share-${id}`).show();
+    openModal(<ModalShareCV firstName={firstName} />);
   };
 
   const updateShareCount = (candidatId, type) => {
@@ -372,13 +366,6 @@ const CandidatCard = ({
           </SimpleLink>
         </div>
       )}
-      <div>
-        {showModal && (
-          <div>
-            <ModalShareCV id={`info-share-${id}`} firstName={firstName} />
-          </div>
-        )}
-      </div>
     </div>
   );
 };

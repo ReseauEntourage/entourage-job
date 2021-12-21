@@ -1,5 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
+import { Img } from 'src/components/utils';
 
 const SplashScreen = () => {
   return (
@@ -8,7 +9,7 @@ const SplashScreen = () => {
       className="uk-position-cover uk-background-default uk-flex uk-flex-column uk-flex-center uk-flex-middle"
     >
       <div style={{ opacity: 0 }} className="uk-animation-fade">
-        <img
+        <Img
           src="/static/img/linkedout_logo_orange_small.png"
           alt="LinkedOut by entourage"
           className="uk-width-medium uk-margin-medium-bottom"

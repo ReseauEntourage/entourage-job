@@ -1,5 +1,3 @@
-/* global UIkit */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
@@ -12,8 +10,6 @@ import {
 
 import { Grid, Img, SimpleLink } from 'src/components/utils';
 
-import ModalEdit from 'src/components/modals/ModalEdit';
-import schema from 'src/components/forms/schema/formEditOpportunity';
 import ModalShareCV from 'src/components/modals/ModalShareCV';
 import Button from 'src/components/utils/Button';
 import { formatParagraph, sortExperiences, sortReviews } from 'src/utils';
@@ -21,9 +17,7 @@ import { event } from 'src/lib/gtag';
 import TAGS from 'src/constants/tags';
 import { usePostOpportunity, useUpdateSharesCount } from 'src/hooks';
 import { IconNoSSR } from 'src/components/utils/Icon';
-import _ from 'lodash';
-
-const modalId = 'modal-send-opportunity';
+import { openModal } from 'src/components/modals/Modal';
 
 /**
  * Le cv en public et en preview
@@ -31,7 +25,17 @@ const modalId = 'modal-send-opportunity';
 const CVFiche = ({ cv, actionDisabled }) => {
   const updateSharesCount = useUpdateSharesCount();
 
-  const { lastFilledForm, postOpportunity } = usePostOpportunity(modalId);
+  const { modal } = usePostOpportunity({
+    modalTitle: 'Proposer une opportunité à un candidat',
+    modalDescription:
+      'Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique.',
+    candidatId: cv.UserId,
+    defaultValues: {
+      firstName: cv.user.candidat.firstName,
+      lastName: cv.user.candidat.lastName,
+      isPublic: false,
+    },
+  });
 
   const router = useRouter();
   const hostname = process.env.SERVER_URL;
@@ -49,7 +53,7 @@ const CVFiche = ({ cv, actionDisabled }) => {
     : '';
 
   const openNewsletterModal = () => {
-    return UIkit.modal(`#info-share-${cv.UserId}`).show();
+    openModal(<ModalShareCV firstName={cv.user.candidat.firstName} />);
   };
 
   const experiences = sortExperiences(cv.experiences);
@@ -149,36 +153,12 @@ const CVFiche = ({ cv, actionDisabled }) => {
           disabled={actionDisabled}
           style="secondary"
           onClick={() => {
-            return event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC);
+            event(TAGS.PAGE_CV_CONTACTEZ_MOI_CLIC);
+            openModal(modal);
           }}
-          toggle={`target: #${modalId}`}
         >
           Contactez-moi <IconNoSSR name="chevron-right" />
         </Button>
-      </div>
-      <div>
-        <ModalEdit
-          id={modalId}
-          title="Proposer une opportunité à un candidat"
-          description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité à un candidat spécifique."
-          submitText="Envoyer"
-          defaultValues={{
-            isPublic: false,
-            ...lastFilledForm,
-            candidatesId: _.isEmpty(lastFilledForm)
-              ? [
-                  {
-                    label: `${cv.user.candidat.firstName} ${cv.user.candidat.lastName}`,
-                    value: cv.UserId,
-                  },
-                ]
-              : lastFilledForm.candidatesId,
-          }}
-          formSchema={schema}
-          onSubmit={async (fields, closeModal) => {
-            await postOpportunity(fields, closeModal);
-          }}
-        />
       </div>
     </div>
   );
@@ -283,10 +263,6 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 {contactSection}
                 {shareSection}
               </Grid>
-              <ModalShareCV
-                id={`info-share-${cv.UserId}`}
-                firstName={cv.user.candidat.firstName}
-              />
             </div>
           </div>
           <Grid gap="large" eachWidths={['expand', '1-3@m']}>

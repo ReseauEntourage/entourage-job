@@ -139,66 +139,68 @@ const FormWithValidation = forwardRef(
     }, [initializeForm]);
 
     return (
-      <form
-        id={id}
-        className="uk-form-stacked uk-grid-small uk-width-1-1 uk-child-width-1-1"
-        data-uk-grid
-        onSubmit={submitForm}
-        onKeyDown={(ev) => {
-          if (enterToSubmit) {
-            if (ev.key === 'Enter') {
-              submitForm(ev);
+      <>
+        <form
+          id={id}
+          className="uk-form-stacked uk-grid-small uk-width-1-1 uk-child-width-1-1"
+          data-uk-grid
+          onSubmit={submitForm}
+          onKeyDown={(ev) => {
+            if (enterToSubmit) {
+              if (ev.key === 'Enter') {
+                submitForm(ev);
+              }
             }
-          }
-        }}
-      >
-        <fieldset className="uk-fieldset">
-          {fields.map((value, i) => {
-            if (value.component === 'fieldgroup') {
-              const { fields: childrenFields, title, id: childrenId } = value;
+          }}
+        >
+          <fieldset className="uk-fieldset">
+            {fields.map((value, i) => {
+              if (value.component === 'fieldgroup') {
+                const { fields: childrenFields, title, id: childrenId } = value;
+                return (
+                  <li key={i} hidden={!!value.hidden}>
+                    <FieldGroup
+                      id={childrenId}
+                      title={title}
+                      fields={childrenFields.map((field) => {
+                        return (
+                          <GenericField
+                            data={field}
+                            formId={id}
+                            value={fieldValues[field.id]}
+                            onChange={updateForm}
+                            getValid={(name) => {
+                              return fieldValidations[`valid_${name}`];
+                            }}
+                            getValue={(name) => {
+                              return fieldValues[name];
+                            }}
+                          />
+                        );
+                      })}
+                    />
+                  </li>
+                );
+              }
               return (
                 <li key={i} hidden={!!value.hidden}>
-                  <FieldGroup
-                    id={childrenId}
-                    title={title}
-                    fields={childrenFields.map((field) => {
-                      return (
-                        <GenericField
-                          data={field}
-                          formId={id}
-                          value={fieldValues[field.id]}
-                          onChange={updateForm}
-                          getValid={(name) => {
-                            return fieldValidations[`valid_${name}`];
-                          }}
-                          getValue={(name) => {
-                            return fieldValues[name];
-                          }}
-                        />
-                      );
-                    })}
+                  <GenericField
+                    data={value}
+                    formId={id}
+                    value={fieldValues[value.id]}
+                    onChange={updateForm}
+                    getValid={(name) => {
+                      return fieldValidations[`valid_${name}`];
+                    }}
+                    getValue={(name) => {
+                      return fieldValues[name];
+                    }}
                   />
                 </li>
               );
-            }
-            return (
-              <li key={i} hidden={!!value.hidden}>
-                <GenericField
-                  data={value}
-                  formId={id}
-                  value={fieldValues[value.id]}
-                  onChange={updateForm}
-                  getValid={(name) => {
-                    return fieldValidations[`valid_${name}`];
-                  }}
-                  getValue={(name) => {
-                    return fieldValues[name];
-                  }}
-                />
-              </li>
-            );
-          })}
-        </fieldset>
+            })}
+          </fieldset>
+        </form>
         <FooterForm
           error={error}
           submitText={submitText}
@@ -211,7 +213,7 @@ const FormWithValidation = forwardRef(
             })
           }
         />
-      </form>
+      </>
     );
   }
 );

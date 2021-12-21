@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
-import 'static/dist/css/uikit.entourage.min.css';
-import 'static/css/styles.less';
-import 'static/css/Forms.less';
-import 'static/css/Toggle.less';
+import 'public/static/dist/css/uikit.entourage.min.css';
+import 'public/static/css/styles.less';
+import 'public/static/css/Forms.less';
+import 'public/static/css/Toggle.less';
+import 'src/components/headers/Header.less';
+import 'src/components/partials/HireCTA.less';
+import 'src/components/modals/Modal/Modal.less';
 
 import React, { useEffect, useState } from 'react';
 import Router, { useRouter } from 'next/router';
@@ -15,6 +18,7 @@ import SharesCountProvider from 'src/components/store/SharesCountProvider';
 import * as gtag from 'src/lib/gtag';
 import SplashScreen from 'src/components/SplashScreen';
 import { useMount } from 'src/hooks/utils';
+import { ModalsListener } from 'src/components/modals/Modal';
 
 Sentry.init({
   enabled: process.env.NODE_ENV === 'production',
@@ -63,6 +67,7 @@ const Container = ({ Component, pageProps, err }) => {
       className="uk-inline uk-width-expand uk-overflow-hidden"
     >
       <Component {...pageProps} err={err} />
+      <ModalsListener />
       <SplashScreenContainer loading={loading} fading={fading} />
     </div>
   );

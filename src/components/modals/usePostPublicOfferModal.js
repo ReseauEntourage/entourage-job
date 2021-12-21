@@ -1,15 +1,8 @@
-import React from 'react';
 import schema from 'src/components/forms/schema/formEditOpportunity';
 import { mutateFormSchema } from 'src/utils';
-import ModalEdit from 'src/components/modals/ModalEdit';
 import { usePostOpportunity } from 'src/hooks';
 
-const formId = 'post-job-ad';
-export const modalId = `modal-${formId}`;
-
-const PostJobAdModal = () => {
-  const { lastFilledForm, postOpportunity } = usePostOpportunity(modalId);
-
+function usePostPublicOfferModal() {
   const mutatedSchema = mutateFormSchema(
     schema,
     [
@@ -53,25 +46,20 @@ const PostJobAdModal = () => {
         ],
       },
     ],
-    formId
+    'post-job-ad'
   );
 
-  return (
-    <ModalEdit
-      id={modalId}
-      title="Proposer une opportunité"
-      description="Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité visible par tous les candidats."
-      submitText="Envoyer"
-      defaultValues={{
-        isPublic: true,
-        ...lastFilledForm,
-      }}
-      formSchema={mutatedSchema}
-      onSubmit={async (fields, closeModal) => {
-        await postOpportunity(fields, closeModal);
-      }}
-    />
-  );
-};
+  const { modal } = usePostOpportunity({
+    defaultValues: {
+      isPublic: false,
+    },
+    title: 'Proposer une opportunité',
+    description:
+      'Cet espace est dédié aux potentiels recruteurs qui souhaitent proposer une opportunité visible par tous les candidats.',
+    schema: mutatedSchema,
+  });
 
-export default PostJobAdModal;
+  return modal;
+}
+
+export default usePostPublicOfferModal;

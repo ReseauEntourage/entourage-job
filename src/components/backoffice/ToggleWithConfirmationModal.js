@@ -1,11 +1,53 @@
-/* global UIkit */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, CloseButton, Grid } from 'src/components/utils';
+import { Button, Grid } from 'src/components/utils';
 import ModalGeneric from 'src/components/modals/ModalGeneric';
-import HeaderModal from 'src/components/modals/HeaderModal';
-import 'static/css/Toggle.less';
 import ModalEdit from 'src/components/modals/ModalEdit';
+import { openModal, useModalContext } from 'src/components/modals/Modal';
+
+const ModalToggle = ({
+  modalTitle,
+  modalDescription,
+  onToggle,
+  setToggle,
+  modalConfirmation,
+}) => {
+  const { onClose } = useModalContext();
+
+  return (
+    <ModalGeneric title={modalTitle} description={modalDescription}>
+      <Grid className="uk-grid-small uk-flex-center uk-margin-large-top">
+        <Button style="default" onClick={onClose}>
+          Annuler
+        </Button>
+        <Button
+          style="primary"
+          onClick={() => {
+            onToggle(true).then(() => {
+              return setToggle(true);
+            });
+            onClose();
+          }}
+        >
+          {modalConfirmation}
+        </Button>
+      </Grid>
+    </ModalGeneric>
+  );
+};
+
+ModalToggle.propTypes = {
+  modalTitle: PropTypes.string.isRequired,
+  modalDescription: PropTypes.element,
+  modalConfirmation: PropTypes.string,
+  onToggle: PropTypes.func.isRequired,
+  setToggle: PropTypes.func.isRequired,
+};
+
+ModalToggle.defaultProps = {
+  modalDescription: undefined,
+  modalConfirmation: 'Oui',
+};
 
 const ToggleWithConfirmationModal = ({
   id,
@@ -38,8 +80,31 @@ const ToggleWithConfirmationModal = ({
                     onToggle(false).then(() => {
                       return setToggle(false);
                     });
+                  } else if (formSchema) {
+                    openModal(
+                      <ModalEdit
+                        title={modalTitle}
+                        description={modalDescription}
+                        formSchema={formSchema}
+                        submitText={modalConfirmation}
+                        onSubmit={(fields, closeModal) => {
+                          onToggle(true, fields).then(() => {
+                            return setToggle(true);
+                          });
+                          closeModal();
+                        }}
+                      />
+                    );
                   } else {
-                    UIkit.modal(`#modal-confirm-${id}`).show();
+                    openModal(
+                      <ModalToggle
+                        modalTitle={modalTitle}
+                        modalDescription={modalDescription}
+                        modalConfirmation={modalConfirmation}
+                        onToggle={onToggle}
+                        setToggle={setToggle}
+                      />
+                    );
                   }
                 }}
               />
@@ -47,61 +112,15 @@ const ToggleWithConfirmationModal = ({
             </label>
           </div>
           <div className="uk-flex uk-flex-column uk-margin-small-left">
-            <span className="">{title}</span>
+            <span>{title}</span>
             {subtitle}
           </div>
         </div>
       </div>
-      <div>
-        {formSchema ? (
-          <ModalEdit
-            title={modalTitle}
-            description={modalDescription}
-            formSchema={formSchema}
-            submitText={modalConfirmation}
-            onSubmit={(fields, closeModal) => {
-              onToggle(true, fields).then(() => {
-                return setToggle(true);
-              });
-              closeModal();
-            }}
-            id={`modal-confirm-${id}`}
-          />
-        ) : (
-          <ModalGeneric id={`modal-confirm-${id}`}>
-            {(closeModal) => {
-              return (
-                <>
-                  <CloseButton className="uk-modal-close-default" />
-                  <HeaderModal>{modalTitle}</HeaderModal>
-                  {modalDescription && (
-                    <p className="uk-text-lead">{modalDescription}</p>
-                  )}
-                  <Grid className="uk-grid-small uk-flex-center uk-margin-large-top">
-                    <Button style="default" onClick={closeModal}>
-                      Annuler
-                    </Button>
-                    <Button
-                      style="primary"
-                      onClick={() => {
-                        onToggle(true).then(() => {
-                          return setToggle(true);
-                        });
-                        closeModal();
-                      }}
-                    >
-                      {modalConfirmation}
-                    </Button>
-                  </Grid>
-                </>
-              );
-            }}
-          </ModalGeneric>
-        )}
-      </div>
     </>
   );
 };
+
 ToggleWithConfirmationModal.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
@@ -117,6 +136,7 @@ ToggleWithConfirmationModal.propTypes = {
     rules: PropTypes.arrayOf(PropTypes.object),
   }),
 };
+
 ToggleWithConfirmationModal.defaultProps = {
   defaultValue: undefined,
   subtitle: undefined,

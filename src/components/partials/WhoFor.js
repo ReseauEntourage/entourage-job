@@ -71,7 +71,7 @@ const WhoFor = () => {
             trouver du travail par leurs propres moyens.
           </div>
           <Img
-            src="../../../static/img/new_candidates.jpg"
+            src="/static/img/new_candidates.jpg"
             alt="Candidats LinkedOut"
             className="uk-padding-large uk-padding-remove-vertical uk-margin-medium-top"
           />

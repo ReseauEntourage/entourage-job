@@ -1,5 +1,4 @@
 import RedisManager from 'src/backend/utils/RedisManager';
-import passport from 'src/backend/config/passport';
 
 import routeCV from 'src/backend/routes/api/v1/CV';
 import routeAuth from 'src/backend/routes/api/v1/Auth';
@@ -52,9 +51,6 @@ export default {
     app.set('trust proxy', 1);
 
     app.use(express.json());
-
-    // adding Passport
-    app.use(passport.initialize());
 
     const apiTimeout = process.env.SERVER_TIMEOUT
       ? parseInt(process.env.SERVER_TIMEOUT, 10)

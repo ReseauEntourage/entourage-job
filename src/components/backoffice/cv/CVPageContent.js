@@ -15,11 +15,57 @@ import LoadingScreen from 'src/components/backoffice/cv/LoadingScreen';
 import { CV_STATUS, SOCKETS, USER_ROLES } from 'src/constants';
 import NoCV from 'src/components/backoffice/cv/NoCV';
 import ButtonDownload from 'src/components/backoffice/cv/ButtonDownload';
+import { openModal, useModalContext } from 'src/components/modals/Modal';
+import ModalGeneric from 'src/components/modals/ModalGeneric';
 
 const pusher = new Pusher(process.env.PUSHER_API_KEY, {
   cluster: 'eu',
   forceTLS: true,
 });
+
+const ModalPreview = ({ imageUrl, cv }) => {
+  const { onClose } = useModalContext();
+
+  return (
+    <ModalGeneric title="Prévisualisation du CV">
+      {cv.urlImg && (
+        <CVBackground
+          url={cv.profileImageObjectUrl ? cv.profileImageObjectUrl : imageUrl}
+        />
+      )}
+      <CVFiche cv={cv} actionDisabled />
+      <div className="uk-modal-footer uk-text-right uk-margin-medium-top">
+        <Button onClick={onClose} style="default">
+          Fermer
+        </Button>
+      </div>
+    </ModalGeneric>
+  );
+};
+
+ModalPreview.propTypes = {
+  cv: PropTypes.shape({
+    catchphrase: PropTypes.string,
+    story: PropTypes.string,
+    locations: PropTypes.array,
+    availability: PropTypes.string,
+    urlImg: PropTypes.string,
+    careerPathOpen: PropTypes.bool,
+    contracts: PropTypes.array,
+    ambitions: PropTypes.array,
+    languages: PropTypes.array,
+    transport: PropTypes.string,
+    skills: PropTypes.array,
+    passions: PropTypes.array,
+    businessLines: PropTypes.array,
+    reviews: PropTypes.array,
+    experiences: PropTypes.array,
+    status: PropTypes.string,
+    UserId: PropTypes.string,
+    profileImageObjectUrl: PropTypes.string,
+  }).isRequired,
+  imageUrl: PropTypes.string.isRequired,
+};
 
 const CVPageContent = ({ candidatId }) => {
   const [cv, setCV] = useState(undefined);
@@ -291,7 +337,12 @@ const CVPageContent = ({ candidatId }) => {
             firstName={cv.user.candidat.firstName}
             lastName={cv.user.candidat.lastName}
           />
-          <Button toggle="target: #preview-modal" style="default">
+          <Button
+            onClick={() => {
+              openModal(<ModalPreview imageUrl={imageUrl} cv={cv} />);
+            }}
+            style="default"
+          >
             Prévisualiser
           </Button>
           <ButtonPost
@@ -337,42 +388,10 @@ const CVPageContent = ({ candidatId }) => {
         }}
         userZone={cv.user.candidat.zone}
       />
-
-      {/* preview modal */}
-      <div id="preview-modal" className="uk-modal-container" data-uk-modal>
-        <div className="uk-modal-dialog">
-          <button
-            className="uk-modal-close-default"
-            type="button"
-            data-uk-close
-            aria-label="close"
-          />
-          <div className="uk-modal-header">
-            <h2 className="uk-modal-title">Prévisualisation du CV</h2>
-          </div>
-          <div
-            className="uk-modal-body uk-background-muted"
-            data-uk-overflow-auto
-          >
-            {cv.urlImg && (
-              <CVBackground
-                url={
-                  cv.profileImageObjectUrl ? cv.profileImageObjectUrl : imageUrl
-                }
-              />
-            )}
-            <CVFiche cv={cv} actionDisabled />
-          </div>
-          <div className="uk-modal-footer uk-text-right">
-            <Button className="uk-modal-close" style="default">
-              Fermer
-            </Button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
+
 CVPageContent.propTypes = {
   candidatId: PropTypes.string.isRequired,
 };

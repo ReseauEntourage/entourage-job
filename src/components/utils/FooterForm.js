@@ -1,51 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'src/components/utils/Button';
-import { Grid } from 'src/components/utils/index';
 
 const FooterForm = ({ error, onSubmit, onCancel, submitText }) => {
   return (
-    <>
+    <div className="uk-flex uk-flex-column uk-flex-left">
       {error && (
-        <div className="uk-width-1-1">
-          <span
-            className="uk-text-danger uk-margin-right"
-            style={{ alignSelf: 'center' }}
-          >
-            {error}
-          </span>
+        <div className="uk-flex uk-flex-1">
+          <span className="uk-text-danger uk-margin-small-bottom">{error}</span>
         </div>
       )}
-      <Grid
-        className="uk-margin uk-grid-small"
-        between
-        childWidths={['auto']}
-        items={[
-          <div className="uk-width-auto@s">
-            <span className="uk-text-meta" style={{ alignSelf: 'center' }}>
-              * : Mentions obligatoires
-            </span>
-          </div>,
-          <div className="uk-text-right">
-            <Grid
-              className="uk-grid-small"
-              items={[
-                onCancel ? (
-                  <Button style="default" onClick={onCancel}>
-                    Annuler
-                  </Button>
-                ) : (
-                  <></>
-                ),
-                <Button style="primary" onClick={onSubmit}>
-                  {submitText || 'Envoyer'}
-                </Button>,
-              ]}
-            />
-          </div>,
-        ]}
-      />
-    </>
+      <div className="uk-flex uk-flex-1 uk-flex-column uk-margin-medium-top">
+        <div className="uk-width-auto@s uk-margin-small-bottom">
+          <span className="uk-text-meta">* : Mentions obligatoires</span>
+        </div>
+
+        <div className="uk-modal-footer">
+          {onCancel && (
+            <Button style="default" onClick={onCancel}>
+              Annuler
+            </Button>
+          )}
+          <Button style="primary" onClick={onSubmit}>
+            {submitText || 'Envoyer'}
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 

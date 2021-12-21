@@ -1,44 +1,56 @@
-/* global UIkit */
-
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useRemoveModal } from 'src/hooks/utils';
+import { Modal, useModalContext } from 'src/components/modals/Modal';
+import { CloseButton } from 'src/components/utils';
+import HeaderModal from './HeaderModal';
 
 const ModalGeneric = ({
+  title,
+  description,
   children,
   classNameSize: className,
-  id,
-  param,
-  resetForm,
+  onClose: customOnClose,
 }) => {
-  // Fix because of bug where multiple modals with the same id are created
-  useRemoveModal(id);
-
+  const { onClose } = useModalContext();
   return (
-    <div id={id} className="uk-flex-top" data-uk-modal={param}>
-      <div className={`uk-modal-dialog uk-margin-auto-vertical ${className}`}>
-        <div className="uk-modal-body uk-padding-large">
-          {children(() => {
-            UIkit.modal(`#${id}`).hide();
-            resetForm();
-          })}
+    <Modal>
+      <div className={`uk-margin-auto-vertical ${className}`}>
+        <div className="uk-modal-body uk-padding">
+          <CloseButton
+            className="uk-modal-close-default"
+            onClick={() => {
+              if (customOnClose) {
+                customOnClose(onClose);
+              } else {
+                onClose();
+              }
+            }}
+          />
+          <HeaderModal>{title}</HeaderModal>
+          {description ? <p className="uk-text-lead">{description}</p> : null}
+          {children}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
+
 ModalGeneric.propTypes = {
-  children: PropTypes.func.isRequired,
-  id: PropTypes.string.isRequired,
-  param: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]).isRequired,
   classNameSize: PropTypes.string,
-  resetForm: PropTypes.func,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  onClose: PropTypes.func,
 };
 
 ModalGeneric.defaultProps = {
-  param: 'bg-close:false',
-  classNameSize: 'uk-width-1-1 uk-width-2-3@l uk-width-1-2@xl',
-  resetForm: () => {},
+  classNameSize: '',
+  description: undefined,
+  title: undefined,
+  onClose: undefined,
 };
 
 export default ModalGeneric;
