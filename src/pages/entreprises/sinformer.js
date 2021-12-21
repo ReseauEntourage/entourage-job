@@ -87,8 +87,7 @@ const Sinformer = () => {
           data={[
             {
               title: 'Se former à l’inclusion',
-              text:
-                'Le Campus de l’inclusion propose des formations aux dirigeants d’organisations et vous aide à construire un plan d’action adapté à votre organisation.',
+              text: 'Le Campus de l’inclusion propose des formations aux dirigeants d’organisations et vous aide à construire un plan d’action adapté à votre organisation.',
               button: {
                 label: "Plus d'infos ici",
                 href: EXTERNAL_LINKS.CAMPUS_INCLUSION,
@@ -98,8 +97,7 @@ const Sinformer = () => {
             },
             {
               title: <div>Sensibiliser ses collaborateurs</div>,
-              text:
-                'Nous proposons des ateliers pour ouvrir le dialogue autour de ce sujet dans votre entreprise et initier une démarche parmi vos collaborateurs.',
+              text: 'Nous proposons des ateliers pour ouvrir le dialogue autour de ce sujet dans votre entreprise et initier une démarche parmi vos collaborateurs.',
               button: {
                 label: 'Contactez-nous',
                 href: `mailto:${CONTACT_INFO.CORPORATE_CONTACT}`,
@@ -109,8 +107,7 @@ const Sinformer = () => {
             },
             {
               title: 'Agir dans son territoire',
-              text:
-                'Les clubs La France Une Chance rassemblent dans chaque territoire les entreprises inclusives. Rejoignez votre club et découvrez les formes d’engagement locales.',
+              text: 'Les clubs La France Une Chance rassemblent dans chaque territoire les entreprises inclusives. Rejoignez votre club et découvrez les formes d’engagement locales.',
               button: {
                 label: 'Retrouvez les clubs ici',
                 href: EXTERNAL_LINKS.FRANCE_UNE_CHANCE,
@@ -125,8 +122,7 @@ const Sinformer = () => {
                   recruter&nbsp;?
                 </div>
               ),
-              text:
-                'Découvrez si un candidat LinkedOut correspond à votre besoin ; ou contactez nos partenaires qui cherchent aussi des emplois pour leurs candidats.',
+              text: 'Découvrez si un candidat LinkedOut correspond à votre besoin ; ou contactez nos partenaires qui cherchent aussi des emplois pour leurs candidats.',
               button: {
                 label: 'Je recrute',
                 href: '/entreprises/cvs',

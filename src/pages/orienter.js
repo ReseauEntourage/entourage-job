@@ -15,8 +15,7 @@ import TAGS from 'src/constants/tags';
 
 const steps = [
   {
-    text:
-      "Participez à un webinaire d'information LinkedOut pour confirmer la pertinence du dispositif LinkedOut pour la personne que vous souhaitez orienter",
+    text: "Participez à un webinaire d'information LinkedOut pour confirmer la pertinence du dispositif LinkedOut pour la personne que vous souhaitez orienter",
     button: {
       label: 'Je participe au webinaire de présentation',
       href: `${process.env.WEBINAR_URL}`,

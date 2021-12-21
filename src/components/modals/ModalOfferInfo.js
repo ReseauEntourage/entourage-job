@@ -22,12 +22,8 @@ const ModalOfferInfo = ({
   isPartTime,
   date,
 }) => {
-  const {
-    copyToClipboard,
-    hasBeenCopied,
-    setHasBeenCopied,
-    fade,
-  } = useCopyToClipboard();
+  const { copyToClipboard, hasBeenCopied, setHasBeenCopied, fade } =
+    useCopyToClipboard();
 
   return (
     <div className="uk-flex uk-flex-column">

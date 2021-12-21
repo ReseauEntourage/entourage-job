@@ -6,13 +6,10 @@ import { CV_FILTERS_DATA } from 'src/constants';
 import { useFilters } from 'src/hooks';
 
 const SearchCandidates = ({ style }) => {
-  const {
-    filters,
-    setFilters,
-    search,
-    setSearch,
-    resetFilters,
-  } = useFilters(CV_FILTERS_DATA, { href: '/candidats' });
+  const { filters, setFilters, search, setSearch, resetFilters } = useFilters(
+    CV_FILTERS_DATA,
+    { href: '/candidats' }
+  );
 
   return (
     <Section style={style}>

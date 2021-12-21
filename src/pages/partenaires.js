@@ -300,7 +300,6 @@ const Partenaires = () => {
           },
         }}
       />
-      <ModalInterestLinkedOut />
     </Layout>
   );
 };

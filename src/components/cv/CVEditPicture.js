@@ -71,9 +71,8 @@ const CVEditPicture = ({
                         }
 
                         const image = await resizeFile(file);
-                        const profileImageObjectUrl = URL.createObjectURL(
-                          image
-                        );
+                        const profileImageObjectUrl =
+                          URL.createObjectURL(image);
                         onChange({
                           profileImage: image,
                           profileImageObjectUrl,

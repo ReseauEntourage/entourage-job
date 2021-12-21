@@ -6,4 +6,3 @@ export { default as ShareCandidatesCVTutorial } from 'src/components/partials/Sh
 export { default as LandingPagePartial } from 'src/components/partials/LandingPagePartial';
 export { default as NumberPartial } from 'src/components/partials/NumberPartial';
 export { default as SharePartial } from 'src/components/partials/SharePartial';
-export { default as TeasingPartial } from 'src/components/partials/TeasingPartial';

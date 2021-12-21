@@ -357,8 +357,7 @@ const partnersPlaces = [
     contactNumber: '0609475489',
     contactFunction: 'Chargée de Partenariats Emploi',
     contactMail: 'iitic@cvgce.org',
-    link:
-      'https://www.ursiea.org/index.php/structures/ateliers_chantiers_insertion/206',
+    link: 'https://www.ursiea.org/index.php/structures/ateliers_chantiers_insertion/206',
   },
   {
     title: 'Les jardins de la montagne verte',
