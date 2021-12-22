@@ -1,18 +1,14 @@
 import React from 'react';
-import Head from 'next/head';
 import PropTypes from 'prop-types';
 import HeaderConnected from 'src/components/headers/HeaderConnected';
+import Layout from 'src/components/Layout';
 
 const LayoutBackOffice = ({ children, title }) => {
   return (
-    <>
-      <Head>
-        <title>{`${title} - LinkedOut`}</title>
-        <link rel="icon" type="image/png" href="/static/img/fav.png" />
-      </Head>
+    <Layout title={`${title} - LinkedOut`} noIndex>
       <HeaderConnected />
       {children}
-    </>
+    </Layout>
   );
 };
 LayoutBackOffice.propTypes = {
