@@ -1,4 +1,4 @@
-import loadEnvironementVariables from 'src/backend/utils/env';
+const loadEnvironementVariables = require('src/backend/utils/env');
 
 loadEnvironementVariables();
 

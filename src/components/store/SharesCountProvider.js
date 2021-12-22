@@ -1,5 +1,4 @@
-// store/SharesCount.js
-import React, { createContext, useCallback, useState } from 'react';
+import React, { createContext, useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Api from 'src/Axios';
 import { VALUES } from 'src/constants';
@@ -27,8 +26,12 @@ const SharesCountProvider = ({ children }) => {
       });
   });
 
+  const value = useMemo(() => {
+    return { totalShares, incrementSharesCount };
+  }, [incrementSharesCount, totalShares]);
+
   return (
-    <SharesCountContext.Provider value={{ totalShares, incrementSharesCount }}>
+    <SharesCountContext.Provider value={value}>
       {children}
     </SharesCountContext.Provider>
   );

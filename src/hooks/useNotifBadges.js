@@ -49,10 +49,8 @@ export function useNotifBadges(user, path) {
         )
           .then((data) => {
             if (data) {
-              const {
-                pendingCVs,
-                pendingOpportunities,
-              } = reducePromisesResults(data);
+              const { pendingCVs, pendingOpportunities } =
+                reducePromisesResults(data);
 
               setBadges((prevBadges) => {
                 return {

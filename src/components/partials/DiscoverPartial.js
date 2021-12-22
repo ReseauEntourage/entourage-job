@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Section } from 'src/components/utils';
 import { CandidatCard } from 'src/components/cards';
@@ -21,7 +21,7 @@ const DiscoverPartial = ({ style }) => {
       });
   }, []);
 
-  const Content = () => {
+  const Content = useMemo(() => {
     if (error) return <p className="uk-text-italic">{error}</p>;
     if (cvs === undefined) return <div data-uk-spinner="" />;
     return (
@@ -50,7 +50,8 @@ const DiscoverPartial = ({ style }) => {
         })}
       />
     );
-  };
+  }, [cvs, error]);
+
   return (
     <Section id="discover" style={style}>
       <h2 className="uk-text-bold uk-align-center uk-text-center uk-margin-medium-bottom uk-margin-remove-top">

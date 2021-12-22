@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaCareerPath from 'src/components/forms/schema/formEditCareerPath.json';
@@ -7,7 +7,7 @@ import { Grid } from 'src/components/utils';
 import { openModal } from 'src/components/modals/Modal';
 
 const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
-  const ContentByGender = () => {
+  const ContentByGender = useMemo(() => {
     if (!ambitions || ambitions.length === 0) {
       if (!careerPathOpen) {
         return (
@@ -43,7 +43,8 @@ const CVEditCareerPath = ({ ambitions, careerPathOpen, onChange, gender }) => {
           : '.'}
       </p>
     );
-  };
+  }, [ambitions, careerPathOpen, gender]);
+
   return (
     <div className="uk-card uk-card-default uk-card-body">
       <Grid gap="small" between eachWidths={['expand', 'auto']}>

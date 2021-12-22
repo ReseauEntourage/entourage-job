@@ -148,122 +148,134 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
 /**
  * GET Vérification lien de réinitialisation mot de passe
  */
-router.get('/reset/:userId/:token', authLimiter, auth(), (
-  req,
-  res /* , next */
-) => {
-  const infoLog = 'GET /reset/:userId/:token -';
+router.get(
+  '/reset/:userId/:token',
+  authLimiter,
+  auth(),
+  (req, res /* , next */) => {
+    const infoLog = 'GET /reset/:userId/:token -';
 
-  const { userId, token } = req.params;
-  logger(res).log(
-    `${infoLog} Vérification du lien de réinitialisation de mot de passe`
-  );
-  logger(res).log(`${infoLog} userId : ${userId} , token : ${token}`);
+    const { userId, token } = req.params;
+    logger(res).log(
+      `${infoLog} Vérification du lien de réinitialisation de mot de passe`
+    );
+    logger(res).log(`${infoLog} userId : ${userId} , token : ${token}`);
 
-  UserController.getCompleteUser(userId)
-    .then((userFound) => {
-      const user = userFound;
+    UserController.getCompleteUser(userId)
+      .then((userFound) => {
+        const user = userFound;
 
-      if (!user) {
-        logger(res).log(
-          `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
-        );
-        return res.status(403).send({
-          error: 'Lien non valide',
-        });
-      }
-      /* logger(res).log(`${infoLog} DEBUG :`);
+        if (!user) {
+          logger(res).log(
+            `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
+          );
+          return res.status(403).send({
+            error: 'Lien non valide',
+          });
+        }
+        /* logger(res).log(`${infoLog} DEBUG :`);
       logger(res).log(user); */
-      if (
-        !AuthController.validatePassword(token, user.hashReset, user.saltReset)
-      ) {
-        logger(res).error(` ${infoLog} Token invalide`);
-        return res.status(403).send({
-          error: 'Lien non valide',
-        });
-      }
-      return res.status(200).send('Lien valide');
-    })
-    .catch((err) => {
-      logger(res).log(err);
-      return res.status(401).send(`Une erreur est survenue`);
-    });
-});
+        if (
+          !AuthController.validatePassword(
+            token,
+            user.hashReset,
+            user.saltReset
+          )
+        ) {
+          logger(res).error(` ${infoLog} Token invalide`);
+          return res.status(403).send({
+            error: 'Lien non valide',
+          });
+        }
+        return res.status(200).send('Lien valide');
+      })
+      .catch((err) => {
+        logger(res).log(err);
+        return res.status(401).send(`Une erreur est survenue`);
+      });
+  }
+);
 
 /**
  * POST Réinitialisation mot de passe
  */
-router.post('/reset/:userId/:token', authLimiter, auth(), (
-  req,
-  res /* , next */
-) => {
-  const infoLog = 'POST /reset/:userId/:token -';
-  const { userId, token } = req.params;
-  const { newPassword, confirmPassword } = req.body;
-  logger(res).log(
-    `${infoLog} Vérification du lien de réinitialisation de mot de passe`
-  );
-  logger(res).log(`${infoLog} userId : ${userId} , token : ${token}`);
+router.post(
+  '/reset/:userId/:token',
+  authLimiter,
+  auth(),
+  (req, res /* , next */) => {
+    const infoLog = 'POST /reset/:userId/:token -';
+    const { userId, token } = req.params;
+    const { newPassword, confirmPassword } = req.body;
+    logger(res).log(
+      `${infoLog} Vérification du lien de réinitialisation de mot de passe`
+    );
+    logger(res).log(`${infoLog} userId : ${userId} , token : ${token}`);
 
-  UserController.getCompleteUser(userId)
-    .then((userFound) => {
-      const user = userFound;
-      if (!user) {
-        logger(res).error(
-          `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
-        );
-        return res.status(403).send({
-          error: 'Lien non valide',
-        });
-      }
-      /* logger(res).log(`${infoLog} DEBUG :`);
-      logger(res).log(user); */
-      if (
-        !(
-          user.hashReset &&
-          user.saltReset &&
-          AuthController.validatePassword(token, user.hashReset, user.saltReset)
-        )
-      ) {
-        logger(res).error(`${infoLog} Token invalide`);
-        return res.status(403).send({
-          error: 'Lien non valide',
-        });
-      }
-      logger(res).log(`${infoLog} Lien valide`);
-      if (newPassword !== confirmPassword) {
-        logger(res).error(
-          `${infoLog} La confirmation de mot de passe est incorrecte`
-        );
-        return res.status(400).send({
-          error: `La confirmation du mot de passe est incorrecte`,
-        });
-      }
-      logger(res).log(`${infoLog} Les 2 mots de passe sont valides`);
-      logger(res).log(`${infoLog} Chiffrement du nouveau mot de passe`);
-      const { hash, salt } = AuthController.encryptPassword(newPassword);
-      logger(res).log(
-        `${infoLog} Mise à jour du mot de passe de l'utilisateur`
-      );
-      return UserController.setUser(user.id, {
-        password: hash,
-        salt,
-        hashReset: null,
-        saltReset: null,
-      }).then((userUpdated) => {
-        if (userUpdated) {
-          logger(res).log(`${infoLog} Mise à jour réussie`);
-          return res.status(200).json(userUpdated);
+    UserController.getCompleteUser(userId)
+      .then((userFound) => {
+        const user = userFound;
+        if (!user) {
+          logger(res).error(
+            `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
+          );
+          return res.status(403).send({
+            error: 'Lien non valide',
+          });
         }
-        logger(res).error(`${infoLog} Erreur de réinitialisation`);
-        return res.status(401).send(`Une erreur inconnue est survenue`);
+        /* logger(res).log(`${infoLog} DEBUG :`);
+      logger(res).log(user); */
+        if (
+          !(
+            user.hashReset &&
+            user.saltReset &&
+            AuthController.validatePassword(
+              token,
+              user.hashReset,
+              user.saltReset
+            )
+          )
+        ) {
+          logger(res).error(`${infoLog} Token invalide`);
+          return res.status(403).send({
+            error: 'Lien non valide',
+          });
+        }
+        logger(res).log(`${infoLog} Lien valide`);
+        if (newPassword !== confirmPassword) {
+          logger(res).error(
+            `${infoLog} La confirmation de mot de passe est incorrecte`
+          );
+          return res.status(400).send({
+            error: `La confirmation du mot de passe est incorrecte`,
+          });
+        }
+        logger(res).log(`${infoLog} Les 2 mots de passe sont valides`);
+        logger(res).log(`${infoLog} Chiffrement du nouveau mot de passe`);
+        const { hash, salt } = AuthController.encryptPassword(newPassword);
+        logger(res).log(
+          `${infoLog} Mise à jour du mot de passe de l'utilisateur`
+        );
+        return UserController.setUser(user.id, {
+          password: hash,
+          salt,
+          hashReset: null,
+          saltReset: null,
+        }).then((userUpdated) => {
+          if (userUpdated) {
+            logger(res).log(`${infoLog} Mise à jour réussie`);
+            return res.status(200).json(userUpdated);
+          }
+          logger(res).error(`${infoLog} Erreur de réinitialisation`);
+          return res.status(401).send(`Une erreur inconnue est survenue`);
+        });
+      })
+      .catch((err) => {
+        logger(res).error(err);
+        return res.status(401).send(`Une erreur est survenue`);
       });
-    })
-    .catch((err) => {
-      logger(res).error(err);
-      return res.status(401).send(`Une erreur est survenue`);
-    });
-});
+  }
+);
 
 /**
  * GET current route (required, only authenticated users have access)

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactSelect, { components } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import PropTypes from 'prop-types';
@@ -22,6 +22,10 @@ const GenericField = ({
   getValid,
   getValue,
 }) => {
+  const DropdownIndicator = useMemo((props) => {
+    return <components.DropdownIndicator {...props} />;
+  }, []);
+
   const onChangeCustom = (event) => {
     let events = [event];
     if (data.fieldsToReset) {
@@ -300,10 +304,6 @@ const GenericField = ({
   }
   if (data.component === 'select-request-creatable') {
     const hasOptions = data.options && data.options.length > 0;
-
-    const DropdownIndicator = (props) => {
-      return <components.DropdownIndicator {...props} />;
-    };
 
     const customComponents = {
       DropdownIndicator: hasOptions ? DropdownIndicator : null,

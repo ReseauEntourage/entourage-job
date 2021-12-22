@@ -19,8 +19,7 @@ export default {
     {
       key: 'advens',
       title: 'Advens',
-      desc:
-        'Advens est le 1er pure player français de la cybersécurité et accompagne les entreprises, territoires et établissements publics pour les aider à prendre de l’avance et faire de la sécurité un actif différenciateur\xa0!',
+      desc: 'Advens est le 1er pure player français de la cybersécurité et accompagne les entreprises, territoires et établissements publics pour les aider à prendre de l’avance et faire de la sécurité un actif différenciateur\xa0!',
       question:
         'Comment décrire le partenariat, la collaboration entre votre structure et LinkedOut\xa0?',
       answer:
@@ -42,8 +41,7 @@ export default {
     {
       key: 'randstad',
       title: 'Institut Randstad',
-      desc:
-        'L’Institut Randstad est le laboratoire de l’innovation sociale du Groupe Randstad, pour le retour durable à l’emploi. Il soutient et co–construit avec ses partenaires, des programmes pour accompagner vers l’emploi, les publics fragilisés des territoires vulnérables en France.',
+      desc: 'L’Institut Randstad est le laboratoire de l’innovation sociale du Groupe Randstad, pour le retour durable à l’emploi. Il soutient et co–construit avec ses partenaires, des programmes pour accompagner vers l’emploi, les publics fragilisés des territoires vulnérables en France.',
       question: 'Quelle est l’expertise que vous apportez au projet\xa0?',
       answer:
         'Randstad apporte son expertise RH et sa parfaite connaissance des bassins d’emploi, pour structurer et sécuriser les parcours des candidats LinkedOut vers l’emploi durable\xa0: de l’accueil  à l’intégration et de l’accompagnement au maintien en emploi.',
@@ -52,8 +50,7 @@ export default {
     {
       key: 'ares',
       title: 'Ares',
-      desc:
-        'Ares est un groupe de structures d’insertion par l’activité économique. Ares propose à des personnes en situation d’exclusion, un travail et un accompagnement individualisé afin d’aider la personne à lever les freins à l’emploi et à se réinsérer vers un emploi durable.',
+      desc: 'Ares est un groupe de structures d’insertion par l’activité économique. Ares propose à des personnes en situation d’exclusion, un travail et un accompagnement individualisé afin d’aider la personne à lever les freins à l’emploi et à se réinsérer vers un emploi durable.',
       question:
         'Pourquoi avoir eu envie de vous engager aux côtés de LinkedOut\xa0?',
       answer:
@@ -63,8 +60,7 @@ export default {
     {
       key: 'shareit',
       title: 'Share it',
-      desc:
-        'Share it est un accélérateur Tech for Good créé par Ashoka et des entrepreneurs convaincus que la technologie peut aider certaines organisations sociales à démultiplier leur impact. Nous codons gratuitement des solutions digitales complexes pour des associations et entreprises sociales.',
+      desc: 'Share it est un accélérateur Tech for Good créé par Ashoka et des entrepreneurs convaincus que la technologie peut aider certaines organisations sociales à démultiplier leur impact. Nous codons gratuitement des solutions digitales complexes pour des associations et entreprises sociales.',
       question: 'Que représente pour vous le projet LinkedOut\xa0?',
       answer:
         'LinkedOut c’est un tremplin vers l’inclusion\xa0: pour les entreprises qui cherchent à recruter des profils variés, pour les candidats qui pourront s’épanouir dans leur travail, et pour nous toutes et tous, qui pouvons agir simplement, en partageant un CV.',
@@ -100,14 +96,12 @@ export default {
     {
       key: 'cera',
       title: 'Fondation CERA',
-      link:
-        'https://www.caissedepargnerhonealpes.fr/fondation-caisse-depargne-rhone-alpes',
+      link: 'https://www.caissedepargnerhonealpes.fr/fondation-caisse-depargne-rhone-alpes',
     },
     {
       key: 'suez',
       title: 'Fondation Suez',
-      link:
-        'https://www.suez.com/fr/notre-groupe/un-groupe-engage/la-fondation-suez',
+      link: 'https://www.suez.com/fr/notre-groupe/un-groupe-engage/la-fondation-suez',
     },
     {
       key: 'transdev',
@@ -117,8 +111,7 @@ export default {
     {
       key: 'neoxia',
       title: 'Neoxia',
-      desc:
-        "Ensemble, créons l'Internet of People, not Things... où la complexité des technologies s'efface devant la simplicité de l'expérience\xa0!\nPur player du Numérique, NEOXIA vous accompagne pour imaginer, construire et opérer la version digitale de votre coeur de métier.",
+      desc: "Ensemble, créons l'Internet of People, not Things... où la complexité des technologies s'efface devant la simplicité de l'expérience\xa0!\nPur player du Numérique, NEOXIA vous accompagne pour imaginer, construire et opérer la version digitale de votre coeur de métier.",
       question: 'Qu’est-ce que l’inclusion pour vous\xa0?',
       answer:
         'Pour dire une évidence, c’est l’inverse de l’exclusion qui est un mot plus couramment utilisé et compris\xa0! Pour inclure, il faut faire parfois l’effort d’aller vers celui qui exclus. Ce n’est pas un exercice si simple que cela mais c’est super important et valorisant.',

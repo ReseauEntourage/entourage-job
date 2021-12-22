@@ -232,15 +232,11 @@ const CVFiche = ({ cv, actionDisabled }) => {
                 ) : (
                   ''
                 )}
-                {cv.careerPathOpen ? (
-                  <>
-                    {` mais reste ${
+                {cv.careerPathOpen
+                  ? ` mais reste ${
                       cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
-                    } à toutes autres propositions.`}
-                  </>
-                ) : (
-                  '.'
-                )}
+                    } à toutes autres propositions.`
+                  : '.'}
               </h4>
             )}
             <div className="uk-position-relative">

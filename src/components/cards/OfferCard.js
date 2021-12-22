@@ -53,9 +53,7 @@ const OfferCard = ({
       >
         <Grid eachWidths={['expand', 'auto']}>
           <h5 className="uk-text-bold">{title}</h5>
-          {isStared === undefined ? (
-            <></>
-          ) : (
+          {isStared && (
             <IconNoSSR
               name="star"
               className={`${isStared ? 'ent-color-amber' : undefined}`}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Api from 'src/Axios';
 import schema, {
@@ -63,40 +63,42 @@ const ModalOfferAdmin = ({
     adminMutation,
   ]);
 
-  const updateOpportunity = async (opportunity) => {
-    setError(false);
-    setLoading(true);
-    try {
-      const { data } = await Api.put(`/api/v1/opportunity/`, opportunity);
-      await setOffer(data);
-      await onOfferUpdated();
-    } catch (err) {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const updateOpportunity = useMemo(
+    async (opportunity) => {
+      setError(false);
+      setLoading(true);
+      try {
+        const { data } = await Api.put(`/api/v1/opportunity/`, opportunity);
+        await setOffer(data);
+        await onOfferUpdated();
+      } catch (err) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [onOfferUpdated]
+  );
 
-  const updateOpportunityUser = async (opportunityUser) => {
-    await Api.put(
-      `${process.env.SERVER_URL}/api/v1/opportunity/join`,
-      opportunityUser
-    );
-    await onOfferUpdated();
-  };
+  const updateOpportunityUser = useMemo(
+    async (opportunityUser) => {
+      await Api.put(
+        `${process.env.SERVER_URL}/api/v1/opportunity/join`,
+        opportunityUser
+      );
+      await onOfferUpdated();
+    },
+    [onOfferUpdated]
+  );
 
   useEffect(() => {
     setError(false);
     setIsEditing(false);
   }, [offer]);
 
-  if (!offer) {
-    return null;
-  }
-
-  const contentBuilder = () => {
+  const Content = useMemo(() => {
     // error
-    if (error) {
+    if (error || !offer) {
       return <div>Une erreur c&lsquo;est produite</div>;
     }
 
@@ -156,6 +158,10 @@ const ModalOfferAdmin = ({
           />
         </div>
       );
+    }
+
+    if (!offer) {
+      return null;
     }
 
     const getUsersToShow = () => {
@@ -435,7 +441,18 @@ const ModalOfferAdmin = ({
         </div>
       </div>
     );
-  };
+  }, [
+    duplicateOffer,
+    error,
+    isEditing,
+    loading,
+    mutatedSchema,
+    offer,
+    onClose,
+    selectedCandidateId,
+    updateOpportunity,
+    updateOpportunityUser,
+  ]);
 
   // Modal
   return (
@@ -452,11 +469,12 @@ const ModalOfferAdmin = ({
       <div
         className={offer.isArchived ? 'uk-light uk-background-secondary' : ''}
       >
-        {contentBuilder()}
+        <Content />
       </div>
     </ModalGeneric>
   );
 };
+
 ModalOfferAdmin.propTypes = {
   currentOffer: PropTypes.shape({
     id: PropTypes.string,

@@ -10,15 +10,8 @@ import Mailchimp from 'src/backend/controllers/Mailchimp';
 const router = express.Router();
 
 router.post('/contact-us', auth(), (req, res) => {
-  const {
-    firstName,
-    lastName,
-    phone,
-    email,
-    structure,
-    message,
-    heardAbout,
-  } = req.body;
+  const { firstName, lastName, phone, email, structure, message, heardAbout } =
+    req.body;
   if (email && email.length > 0 && message && message.length > 0) {
     addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,

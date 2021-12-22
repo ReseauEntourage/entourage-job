@@ -13,7 +13,6 @@ export function ModalsListener() {
   const [modals, setModals] = useState({});
 
   const subscription = useMemo(() => {
-    // @ts-ignore
     return modalsSubject.subscribe((modal) => {
       const modalKey = uuid();
       setModals((prevModals) => {
@@ -31,6 +30,19 @@ export function ModalsListener() {
     };
   }, [subscription]);
 
+  const modalContextValue = useMemo((key) => {
+    return {
+      onClose: () => {
+        return setModals((prevModals) => {
+          return {
+            ...prevModals,
+            [key]: null,
+          };
+        });
+      },
+    };
+  }, []);
+
   return (
     <>
       {Object.entries(modals)
@@ -38,19 +50,8 @@ export function ModalsListener() {
           return value;
         })
         .map(([key, modal]) => {
-          const modalContextValue = {
-            onClose: () => {
-              return setModals((prevModals) => {
-                return {
-                  ...prevModals,
-                  [key]: null,
-                };
-              });
-            },
-          };
-
           return (
-            <ModalContext.Provider key={key} value={modalContextValue}>
+            <ModalContext.Provider key={key} value={modalContextValue(key)}>
               {modal}
             </ModalContext.Provider>
           );

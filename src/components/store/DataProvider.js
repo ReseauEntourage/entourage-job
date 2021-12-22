@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState } from 'react';
+import React, { createContext, useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 export const DataContext = createContext({});
@@ -37,11 +37,11 @@ const DataProvider = ({ children }) => {
     [data]
   );
 
-  return (
-    <DataContext.Provider value={{ storeData, getData }}>
-      {children}
-    </DataContext.Provider>
-  );
+  const value = useMemo(() => {
+    return { storeData, getData };
+  }, [getData, storeData]);
+
+  return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };
 
 DataProvider.propTypes = {

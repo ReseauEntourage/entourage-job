@@ -467,7 +467,7 @@ const Parametres = () => {
           <div className="uk-card uk-card-default uk-card-body">
             <Grid gap="small" between eachWidths={['expand', 'auto']}>
               <h3 className="uk-card-title">Changer de mot de passe</h3>
-              {loadingPassword ? <div data-uk-spinner="ratio: .8" /> : <></>}
+              {loadingPassword ? <div data-uk-spinner="ratio: .8" /> : null}
             </Grid>
             <FormWithValidation
               ref={form}

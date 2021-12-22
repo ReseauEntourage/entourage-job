@@ -31,7 +31,7 @@ const insertAirtable = async (tableName, fields) => {
   return Promise.all(
     valuesToInsert.map((values) => {
       return new Promise((res, rej) => {
-        return airtable(tableName).create(
+        airtable(tableName).create(
           [values],
           { typecast: true },
           (error, records) => {
@@ -68,7 +68,7 @@ const updateOpportunityAirtable = async (tableName, fields) => {
         : `AND({OpportunityUserId}='${opportunityUserId}', {OpportunityId}='${values.fields.OpportunityId}')`;
 
       return new Promise((res, rej) => {
-        return airtable(tableName)
+        airtable(tableName)
           .select({
             filterByFormula: formula,
           })

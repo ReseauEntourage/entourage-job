@@ -133,31 +133,29 @@ const Member = ({ member, role }) => {
         <>
           <td className="uk-text-center">
             {member.role === USER_ROLES.CANDIDAT ? (
-              <>
-                {getCandidateFromCoachOrCandidate(member) && (
-                  <>
-                    <span className="uk-hidden@m">
-                      {getCandidateFromCoachOrCandidate(member).employed
-                        ? 'A trouvé un emploi'
-                        : "En recherche d'emploi"}
-                    </span>
-                    {getCandidateFromCoachOrCandidate(member).employed && (
-                      <IconNoSSR
-                        name="check"
-                        ratio={1.2}
-                        className="uk-text-primary uk-visible@m"
-                      />
-                    )}
-                  </>
-                )}
-              </>
+              getCandidateFromCoachOrCandidate(member) && (
+                <>
+                  <span className="uk-hidden@m">
+                    {getCandidateFromCoachOrCandidate(member).employed
+                      ? 'A trouvé un emploi'
+                      : "En recherche d'emploi"}
+                  </span>
+                  {getCandidateFromCoachOrCandidate(member).employed && (
+                    <IconNoSSR
+                      name="check"
+                      ratio={1.2}
+                      className="uk-text-primary uk-visible@m"
+                    />
+                  )}
+                </>
+              )
             ) : (
               <span>-</span>
             )}
           </td>
           <td className="uk-text-center">
             {member.role === USER_ROLES.CANDIDAT ? (
-              <>
+              <div>
                 {getCandidateFromCoachOrCandidate(member) &&
                 getCandidateFromCoachOrCandidate(member).cvs &&
                 getCandidateFromCoachOrCandidate(member).cvs.length > 0 ? (
@@ -167,31 +165,29 @@ const Member = ({ member, role }) => {
                 ) : (
                   <span className="uk-text-italic uk-text-info">Aucun CV</span>
                 )}
-              </>
+              </div>
             ) : (
               <span>-</span>
             )}
           </td>
           <td className="uk-text-center">
             {member.role === USER_ROLES.CANDIDAT ? (
-              <>
-                {getCandidateFromCoachOrCandidate(member) && (
-                  <>
-                    <span className="uk-hidden@m">
-                      {getCandidateFromCoachOrCandidate(member).hidden
-                        ? 'Masqué'
-                        : 'Visible'}
-                    </span>
-                    {getCandidateFromCoachOrCandidate(member).hidden && (
-                      <IconNoSSR
-                        name="check"
-                        ratio={1.2}
-                        className="uk-text-primary uk-visible@m"
-                      />
-                    )}
-                  </>
-                )}
-              </>
+              getCandidateFromCoachOrCandidate(member) && (
+                <>
+                  <span className="uk-hidden@m">
+                    {getCandidateFromCoachOrCandidate(member).hidden
+                      ? 'Masqué'
+                      : 'Visible'}
+                  </span>
+                  {getCandidateFromCoachOrCandidate(member).hidden && (
+                    <IconNoSSR
+                      name="check"
+                      ratio={1.2}
+                      className="uk-text-primary uk-visible@m"
+                    />
+                  )}
+                </>
+              )
             ) : (
               <span>-</span>
             )}

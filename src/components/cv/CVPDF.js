@@ -135,15 +135,11 @@ const CVPDF = ({ cv, page }) => {
                   ) : (
                     ''
                   )}
-                  {cv.careerPathOpen ? (
-                    <>
-                      {` mais reste ${
+                  {cv.careerPathOpen
+                    ? ` mais reste ${
                         cv.user.candidat.gender === 1 ? 'ouverte' : 'ouvert'
-                      } à toutes autres propositions.`}
-                    </>
-                  ) : (
-                    '.'
-                  )}
+                      } à toutes autres propositions.`
+                    : '.'}
                 </p>
               )}
             </div>

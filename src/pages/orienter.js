@@ -116,19 +116,17 @@ const Orienter = () => {
         }
         fontSize="small"
         text={
-          <>
-            <div>
-              Nous accompagnons plusieurs promotions par an à Paris, dans le 92
-              et le 93, à Lille et Lyon.
-              <br />
-              <br />
-              <span className="uk-text-bold">
-                Vous accompagnez une personne qui répond aux critères ci-dessus,
-                motivée pour travailler et disponible pour participer au
-                programme&nbsp;?
-              </span>
-            </div>
-          </>
+          <div>
+            Nous accompagnons plusieurs promotions par an à Paris, dans le 92 et
+            le 93, à Lille et Lyon.
+            <br />
+            <br />
+            <span className="uk-text-bold">
+              Vous accompagnez une personne qui répond aux critères ci-dessus,
+              motivée pour travailler et disponible pour participer au
+              programme&nbsp;?
+            </span>
+          </div>
         }
       >
         <div>

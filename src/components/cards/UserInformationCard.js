@@ -1,5 +1,5 @@
 /* global UIkit */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { Card, Grid, SimpleLink } from 'src/components/utils';
 import ButtonIcon from 'src/components/utils/ButtonIcon';
@@ -140,6 +140,99 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
     <span className="uk-text-italic">Aucun membre lié</span>
   );
 
+  const Badge = useMemo(() => {
+    if (isAdmin) {
+      if (loading) {
+        return <div data-uk-spinner="ratio: .8" />;
+      }
+      return (
+        <ButtonIcon
+          name="pencil"
+          onClick={() => {
+            openModal(
+              <ModalEdit
+                submitText="Envoyer"
+                title={
+                  user.role === USER_ROLES.CANDIDAT
+                    ? 'Bénévole coach lié'
+                    : 'Candidat lié'
+                }
+                defaultValues={{
+                  role:
+                    user.role === USER_ROLES.COACH
+                      ? USER_ROLES.CANDIDAT
+                      : USER_ROLES.COACH,
+                  linkedUser: linkedUser
+                    ? {
+                        value: linkedUser.id,
+                        label: `${linkedUser.firstName} ${linkedUser.lastName}`,
+                      }
+                    : undefined,
+                }}
+                formSchema={schema}
+                onSubmit={({ linkedUser: linkedUserId }, closeModal) => {
+                  setLoading(true);
+                  let promise = null;
+                  if (user.role === USER_ROLES.CANDIDAT) {
+                    // on lui assigne ou eleve un coach
+                    promise = Api.put(`api/v1/user/candidat/${user.id}`, {
+                      coachId: linkedUserId || null,
+                    });
+                  }
+                  if (user.role === USER_ROLES.COACH) {
+                    // on l'assigne à un candidat
+                    if (linkedUserId) {
+                      promise = Api.put(
+                        `api/v1/user/candidat/${linkedUserId}`,
+                        {
+                          coachId: user.id,
+                        }
+                      );
+                    } else {
+                      // on lui enleve son candidat
+                      promise = Api.put(
+                        `api/v1/user/candidat/${linkedUser.id}`,
+                        {
+                          coachId: null,
+                        }
+                      );
+                    }
+                  }
+                  if (promise) {
+                    promise
+                      .then(() => {
+                        return Api.get(`/api/v1/user/${user.id}`);
+                      })
+                      .then(({ data }) => {
+                        closeModal();
+                        assignUser(data);
+                        onChange(data);
+                        UIkit.notification(
+                          'Le membre a bien été lié',
+                          'success'
+                        );
+                      })
+                      .catch((error) => {
+                        console.error(error);
+                        UIkit.notification(
+                          "Une erreur c'est produite lors du lien etre les membres",
+                          'danger'
+                        );
+                      })
+                      .finally(() => {
+                        return setLoading(false);
+                      });
+                  }
+                }}
+              />
+            );
+          }}
+        />
+      );
+    }
+    return null;
+  }, [isAdmin, linkedUser, loading, onChange, user.id, user.role]);
+
   return (
     <Grid
       gap={user.role === USER_ROLES.COACH ? 'medium' : 'collapse'}
@@ -208,98 +301,7 @@ const UserInformationCard = ({ isAdmin, user, onChange }) => {
         title={`Information du${
           user.role === USER_ROLES.COACH ? ' candidat' : ' coach'
         }`}
-        badge={(() => {
-          if (isAdmin) {
-            if (loading) {
-              return <div data-uk-spinner="ratio: .8" />;
-            }
-            return (
-              <ButtonIcon
-                name="pencil"
-                onClick={() => {
-                  openModal(
-                    <ModalEdit
-                      submitText="Envoyer"
-                      title={
-                        user.role === USER_ROLES.CANDIDAT
-                          ? 'Bénévole coach lié'
-                          : 'Candidat lié'
-                      }
-                      defaultValues={{
-                        role:
-                          user.role === USER_ROLES.COACH
-                            ? USER_ROLES.CANDIDAT
-                            : USER_ROLES.COACH,
-                        linkedUser: linkedUser
-                          ? {
-                              value: linkedUser.id,
-                              label: `${linkedUser.firstName} ${linkedUser.lastName}`,
-                            }
-                          : undefined,
-                      }}
-                      formSchema={schema}
-                      onSubmit={({ linkedUser: linkedUserId }, closeModal) => {
-                        setLoading(true);
-                        let promise = null;
-                        if (user.role === USER_ROLES.CANDIDAT) {
-                          // on lui assigne ou eleve un coach
-                          promise = Api.put(`api/v1/user/candidat/${user.id}`, {
-                            coachId: linkedUserId || null,
-                          });
-                        }
-                        if (user.role === USER_ROLES.COACH) {
-                          // on l'assigne à un candidat
-                          if (linkedUserId) {
-                            promise = Api.put(
-                              `api/v1/user/candidat/${linkedUserId}`,
-                              {
-                                coachId: user.id,
-                              }
-                            );
-                          } else {
-                            // on lui enleve son candidat
-                            promise = Api.put(
-                              `api/v1/user/candidat/${linkedUser.id}`,
-                              {
-                                coachId: null,
-                              }
-                            );
-                          }
-                        }
-                        if (promise) {
-                          promise
-                            .then(() => {
-                              return Api.get(`/api/v1/user/${user.id}`);
-                            })
-                            .then(({ data }) => {
-                              closeModal();
-                              assignUser(data);
-                              onChange(data);
-                              UIkit.notification(
-                                'Le membre a bien été lié',
-                                'success'
-                              );
-                            })
-                            .catch((error) => {
-                              console.error(error);
-                              UIkit.notification(
-                                "Une erreur c'est produite lors du lien etre les membres",
-                                'danger'
-                              );
-                            })
-                            .finally(() => {
-                              return setLoading(false);
-                            });
-                        }
-                      }}
-                    />
-                  );
-                }}
-              />
-            );
-          }
-          return null;
-        })()}
+        badge={<Badge />}
       >
         {cardContent}
       </Card>

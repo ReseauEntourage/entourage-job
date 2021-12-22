@@ -66,58 +66,56 @@ const ToggleWithConfirmationModal = ({
   }, [defaultValue]);
 
   return (
-    <>
-      <div className="uk-form-controls uk-margin-top">
-        <div className="uk-flex uk-flex-middle">
-          <div className="ent-toggle">
-            <label htmlFor={`ent-toggle-${id}`}>
-              <input
-                id={`ent-toggle-${id}`}
-                type="checkbox"
-                checked={toggle}
-                onChange={() => {
-                  if (toggle) {
-                    onToggle(false).then(() => {
-                      return setToggle(false);
-                    });
-                  } else if (formSchema) {
-                    openModal(
-                      <ModalEdit
-                        title={modalTitle}
-                        description={modalDescription}
-                        formSchema={formSchema}
-                        submitText={modalConfirmation}
-                        onSubmit={(fields, closeModal) => {
-                          onToggle(true, fields).then(() => {
-                            return setToggle(true);
-                          });
-                          closeModal();
-                        }}
-                      />
-                    );
-                  } else {
-                    openModal(
-                      <ModalToggle
-                        modalTitle={modalTitle}
-                        modalDescription={modalDescription}
-                        modalConfirmation={modalConfirmation}
-                        onToggle={onToggle}
-                        setToggle={setToggle}
-                      />
-                    );
-                  }
-                }}
-              />
-              <span className="ent-slider round" />
-            </label>
-          </div>
-          <div className="uk-flex uk-flex-column uk-margin-small-left">
-            <span>{title}</span>
-            {subtitle}
-          </div>
+    <div className="uk-form-controls uk-margin-top">
+      <div className="uk-flex uk-flex-middle">
+        <div className="ent-toggle">
+          <label htmlFor={`ent-toggle-${id}`}>
+            <input
+              id={`ent-toggle-${id}`}
+              type="checkbox"
+              checked={toggle}
+              onChange={() => {
+                if (toggle) {
+                  onToggle(false).then(() => {
+                    return setToggle(false);
+                  });
+                } else if (formSchema) {
+                  openModal(
+                    <ModalEdit
+                      title={modalTitle}
+                      description={modalDescription}
+                      formSchema={formSchema}
+                      submitText={modalConfirmation}
+                      onSubmit={(fields, closeModal) => {
+                        onToggle(true, fields).then(() => {
+                          return setToggle(true);
+                        });
+                        closeModal();
+                      }}
+                    />
+                  );
+                } else {
+                  openModal(
+                    <ModalToggle
+                      modalTitle={modalTitle}
+                      modalDescription={modalDescription}
+                      modalConfirmation={modalConfirmation}
+                      onToggle={onToggle}
+                      setToggle={setToggle}
+                    />
+                  );
+                }
+              }}
+            />
+            <span className="ent-slider round" />
+          </label>
+        </div>
+        <div className="uk-flex uk-flex-column uk-margin-small-left">
+          <span>{title}</span>
+          {subtitle}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

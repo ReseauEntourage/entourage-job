@@ -406,12 +406,8 @@ const deleteOpportunity = (id) => {
 };
 
 const getOpportunities = async (params) => {
-  const {
-    typeParams,
-    statusParams,
-    searchOptions,
-    filterOptions,
-  } = destructureOptionsAndParams(params);
+  const { typeParams, statusParams, searchOptions, filterOptions } =
+    destructureOptionsAndParams(params);
 
   const options = {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
@@ -503,11 +499,8 @@ const getPublicOpportunities = async () => {
 };
 
 const getPrivateUserOpportunities = async (userId, params) => {
-  const {
-    statusParams,
-    searchOptions,
-    filterOptions,
-  } = destructureOptionsAndParams(params);
+  const { statusParams, searchOptions, filterOptions } =
+    destructureOptionsAndParams(params);
 
   console.log(`getOpportunities - Récupérer les opportunités`);
   const opportunityUsers = await Opportunity_User.findAll({
@@ -536,12 +529,8 @@ const getPrivateUserOpportunities = async (userId, params) => {
 };
 
 const getAllUserOpportunities = async (userId, params = {}) => {
-  const {
-    typeParams,
-    statusParams,
-    searchOptions,
-    filterOptions,
-  } = destructureOptionsAndParams(params);
+  const { typeParams, statusParams, searchOptions, filterOptions } =
+    destructureOptionsAndParams(params);
 
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
