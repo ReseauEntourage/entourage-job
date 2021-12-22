@@ -3,7 +3,7 @@ import { CV_STATUS } from 'src/constants';
 import { models } from 'src/backend/db/models';
 
 import fakerStatic from 'faker';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import _ from 'lodash';
 
 /**

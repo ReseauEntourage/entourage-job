@@ -15,7 +15,7 @@ import { getPublishedCVQuery } from 'src/backend/controllers/CV';
 
 import { Op, QueryTypes } from 'sequelize';
 
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 
 import { models, sequelize } from 'src/backend/db/models';
 import { searchInColumnWhereOption } from 'src/backend/utils/DatabaseQueries';

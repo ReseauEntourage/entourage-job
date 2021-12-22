@@ -1,7 +1,7 @@
 import { CV_STATUS } from 'src/constants';
 import { paranoidDeleteCascade } from 'src/backend/utils/Sequelize';
 
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 
 export default (sequelize, DataTypes) => {
   const CV = sequelize.define(

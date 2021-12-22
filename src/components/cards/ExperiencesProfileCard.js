@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
-import arrayMove from 'array-move';
 
 import ModalEdit from 'src/components/modals/ModalEdit';
 import schemaformEditExperience from 'src/components/forms/schema/formEditExperience.json';
@@ -10,6 +9,23 @@ import ButtonIcon from 'src/components/utils/ButtonIcon';
 import ModalConfirm from 'src/components/modals/ModalConfirm';
 import { formatParagraph, sortExperiences } from 'src/utils';
 import { openModal } from 'src/components/modals/Modal';
+
+function arrayMoveMutable(array, fromIndex, toIndex) {
+  const startIndex = fromIndex < 0 ? array.length + fromIndex : fromIndex;
+
+  if (startIndex >= 0 && startIndex < array.length) {
+    const endIndex = toIndex < 0 ? array.length + toIndex : toIndex;
+
+    const [item] = array.splice(fromIndex, 1);
+    array.splice(endIndex, 0, item);
+  }
+}
+
+function arrayMoveImmutable(array, fromIndex, toIndex) {
+  array = [...array];
+  arrayMoveMutable(array, fromIndex, toIndex);
+  return array;
+}
 
 const Experience = SortableElement(
   ({ value, sortIndex, items, onChange, updateOrder }) => {
@@ -131,7 +147,7 @@ const ExperiencesProfileCard = ({ experiences, onChange }) => {
   };
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    const reorderedExperiences = arrayMove(
+    const reorderedExperiences = arrayMoveImmutable(
       sortedExperiences,
       oldIndex,
       newIndex

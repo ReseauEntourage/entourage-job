@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import React, { useState, useEffect, useMemo } from 'react';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { ModalContext } from 'src/components/modals/Modal/ModalContext';
 
 const modalsSubject = new Subject();
