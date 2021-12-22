@@ -96,6 +96,7 @@
     "react-sortable-hoc": "^1.11.0",
     "rxjs": "^7.4.0",
     "sequelize": "^6.5.1",
+    "sequelize-cli": "^6.3.0",
     "sequelize-paper-trail": "^3.0.1",
     "sharp": "^0.28.3",
     "text-to-svg": "^3.1.5",
