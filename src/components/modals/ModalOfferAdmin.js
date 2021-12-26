@@ -440,6 +440,7 @@ const ModalOfferAdmin = ({
   // Modal
   return (
     <ModalGeneric
+      className={offer.isArchived ? 'uk-light uk-background-secondary' : ''}
       onClose={(closeModal) => {
         if (isEditing) {
           setIsEditing(false);
@@ -449,11 +450,7 @@ const ModalOfferAdmin = ({
         }
       }}
     >
-      <div
-        className={offer.isArchived ? 'uk-light uk-background-secondary' : ''}
-      >
-        {contentBuilder()}
-      </div>
+      {contentBuilder()}
     </ModalGeneric>
   );
 };

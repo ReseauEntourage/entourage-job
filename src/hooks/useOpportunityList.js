@@ -68,7 +68,7 @@ export function useOpportunityList(
           }
           default: {
             const {
-              data: { offers },
+              data: { offers, otherOffers },
             } = await Api.get(
               `${process.env.SERVER_URL}/api/v1/opportunity/user/all/${candidatId}`,
               {
@@ -81,7 +81,7 @@ export function useOpportunityList(
             );
 
             setOffers(offers);
-            setOtherOffers(undefined);
+            setOtherOffers(otherOffers);
             setNumberOfResults(offers.length);
 
             break;

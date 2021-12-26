@@ -73,22 +73,25 @@ OfferInfoContainer.defaultProps = {
 };
 
 const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
-  const { status, bookmarked, note, archived } =
-    currentOffer?.userOpportunity ?? {};
-
   const [loadingIcon, setLoadingIcon] = useState(false);
   const [loadingStatus, setLoadingStatus] = useState(false);
-  const [noteBuffer, setNoteBuffer] = useState(note);
   const [loading, setLoading] = useState(false);
 
   const [offer, setOffer] = useState(currentOffer);
+  const { status, bookmarked, note, archived } = offer?.userOpportunity ?? {};
+  const [noteBuffer, setNoteBuffer] = useState(note);
 
   const updateOpportunityUser = async (opportunityUser) => {
     const { data } = await Api.put(
       `${process.env.SERVER_URL}/api/v1/opportunity/join`,
       opportunityUser
     );
-    setOffer(data);
+    setOffer((prevOffer) => {
+      return {
+        ...prevOffer,
+        userOpportunity: data,
+      };
+    });
     await onOfferUpdated();
   };
 
@@ -112,194 +115,190 @@ const ModalOffer = ({ currentOffer, onOfferUpdated, navigateBackToList }) => {
 
   return (
     <ModalGeneric
+      className={archived ? 'uk-light uk-background-secondary' : ''}
       onClose={(onClose) => {
         onClose();
         navigateBackToList();
       }}
     >
-      <div className={archived ? 'uk-light uk-background-secondary' : ''}>
-        {!offer ? null : (
+      <div>
+        <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
+          <ModalOfferInfo
+            startOfContract={offer.startOfContract}
+            isPublic={offer.isPublic}
+            numberOfPositions={offer.numberOfPositions}
+            contract={offer.contract}
+            date={offer.date}
+            title={offer.title}
+            isPartTime={offer.isPartTime}
+            endOfContract={offer.endOfContract}
+            offerId={offer.id}
+          />
           <div>
-            <Grid gap="small" between middle eachWidths={['expand', 'auto']}>
-              <ModalOfferInfo
-                startOfContract={offer.startOfContract}
-                isPublic={offer.isPublic}
-                numberOfPositions={offer.numberOfPositions}
-                contract={offer.contract}
-                date={offer.date}
-                title={offer.title}
-                isPartTime={offer.isPartTime}
-                endOfContract={offer.endOfContract}
-                offerId={offer.id}
-              />
-              <div>
-                <Grid eachWidths={['expand', 'auto']} row middle>
-                  {loadingStatus && <div data-uk-spinner="" />}
-                  <Select
-                    id="modal-offer-status"
-                    title="Statut"
-                    name="status"
-                    placeholder="statut"
-                    options={mutatedOfferStatus}
-                    value={status}
-                    onChange={async (event) => {
-                      setLoadingStatus(true);
-                      const { userOpportunity } = offer;
-                      userOpportunity.status = Number(event.target.value);
-                      await updateOpportunityUser(userOpportunity);
-                      setLoadingStatus(false);
-                    }}
-                  />
-                </Grid>
-                <List className="uk-iconnav uk-flex-right">
-                  {loadingIcon && <div data-uk-spinner="" />}
-                  <ButtonIcon
-                    name="archive"
-                    className={archived ? 'ent-color-amber' : undefined}
-                    onClick={() => {
-                      setLoadingIcon(true);
-                      const { userOpportunity } = offer;
-                      userOpportunity.archived = !archived;
-                      updateOpportunityUser(userOpportunity);
-                      setLoadingIcon(false);
-                    }}
-                  />
-                  <ButtonIcon
-                    name="star"
-                    className={bookmarked ? 'ent-color-amber' : undefined}
-                    onClick={() => {
-                      setLoadingIcon(true);
-                      const { userOpportunity } = offer;
-                      userOpportunity.bookmarked = !bookmarked;
-                      updateOpportunityUser(userOpportunity);
-                      setLoadingIcon(false);
-                    }}
-                  />
-                </List>
-              </div>
-            </Grid>
-            <hr />
-            {offer.message && (
-              <>
-                <Grid>
-                  <OfferInfoContainer icon="commenting">
-                    <div>{formatParagraph(offer.message)}</div>
-                  </OfferInfoContainer>
-                </Grid>
-                <hr />
-              </>
-            )}
-            <Grid
-              className="uk-margin-bottom"
-              eachWidths={['1-3@s', '2-3@s']}
-              items={[
-                <Grid column gap="medium">
-                  <OfferInfoContainer icon="home" title="Entreprise">
-                    {offer.company}
-                  </OfferInfoContainer>
-                  <OfferInfoContainer icon="user" title="Recruteur">
-                    <span>
-                      {offer.recruiterFirstName} {offer.recruiterName}
-                    </span>
-                    <span className="uk-text-muted">
-                      {offer.recruiterPosition}
-                    </span>
-                    <SimpleLink
-                      href={`mailto:${offer.recruiterMail}`}
-                      className="uk-link-muted"
-                      isExternal
-                      newTab
-                    >
-                      <span>{offer.recruiterMail}&nbsp;</span>
-                      <IconNoSSR name="mail" ratio={0.8} />
-                    </SimpleLink>
-                  </OfferInfoContainer>
-                  <OfferInfoContainer
-                    icon="location"
-                    title={offer.department}
-                  />
-                </Grid>,
-                <Grid gap="medium" childWidths={['1-1']}>
-                  {offer.companyDescription && (
-                    <OfferInfoContainer
-                      icon="comment"
-                      title="Description de l'entreprise"
-                    >
-                      <div>{formatParagraph(offer.companyDescription)}</div>
-                    </OfferInfoContainer>
-                  )}
-                  <OfferInfoContainer
-                    icon="comment"
-                    title="Description de l'offre"
-                  >
-                    <div>{formatParagraph(offer.description)}</div>
-                  </OfferInfoContainer>
-                  <OfferInfoContainer
-                    icon="check"
-                    title="Compétences importantes"
-                  >
-                    <div>{formatParagraph(offer.skills)}</div>
-                  </OfferInfoContainer>
-                  {offer.prerequisites && (
-                    <OfferInfoContainer icon="check" title="Pré-requis">
-                      <div>{formatParagraph(offer.prerequisites)}</div>
-                    </OfferInfoContainer>
-                  )}
-                  {offer.businessLines && (
-                    <Grid gap="small">
-                      {offer.businessLines.map((businessLine, index) => {
-                        return (
-                          <Button key={index} disabled>
-                            <span style={{ color: '#666' }}>
-                              {businessLine}
-                            </span>
-                          </Button>
-                        );
-                      })}
-                    </Grid>
-                  )}
-                </Grid>,
-              ]}
-            />
-            <div>
-              <Textarea
-                id="modal-offer-comment"
-                name="modal-offer-comment"
-                title="Ecrivez un commentaire à propos de cette opportunité..."
-                type="text"
-                value={noteBuffer}
-                onChange={(e) => {
-                  return setNoteBuffer(e.target.value);
+            <Grid eachWidths={['expand', 'auto']} row middle>
+              {loadingStatus && <div data-uk-spinner="" />}
+              <Select
+                id="modal-offer-status"
+                title="Statut"
+                name="status"
+                placeholder="statut"
+                options={mutatedOfferStatus}
+                value={status}
+                onChange={async (event) => {
+                  setLoadingStatus(true);
+                  const { userOpportunity } = offer;
+                  await updateOpportunityUser({
+                    ...userOpportunity,
+                    status: Number(event.target.value),
+                  });
+                  setLoadingStatus(false);
                 }}
               />
-              {noteBuffer === note || (note === null && noteBuffer === '') ? (
-                <Button style="default" disabled>
-                  Enregistré
-                </Button>
-              ) : (
-                <Button
-                  style="default"
-                  onClick={async () => {
-                    setLoading(true);
-                    console.log('update offer note', noteBuffer);
-                    const { userOpportunity } = offer;
-                    userOpportunity.note = noteBuffer;
-                    await updateOpportunityUser(userOpportunity);
-                    setLoading(false);
-                  }}
-                >
-                  Enregistrer
-                  {loading ? (
-                    <div
-                      data-uk-spinner="ratio: 0.5"
-                      className="uk-margin-small-left"
-                    />
-                  ) : null}
-                </Button>
+            </Grid>
+            <List className="uk-iconnav uk-flex uk-flex-right uk-flex-middle">
+              {loadingIcon && (
+                <div className="uk-flex uk-flex-center uk-flex-middle">
+                  <div data-uk-spinner="" />
+                </div>
               )}
-            </div>
+              <ButtonIcon
+                name="archive"
+                className={archived ? 'ent-color-amber' : undefined}
+                onClick={async () => {
+                  setLoadingIcon(true);
+                  const { userOpportunity } = offer;
+                  await updateOpportunityUser({
+                    ...userOpportunity,
+                    archived: !archived,
+                  });
+                  setLoadingIcon(false);
+                }}
+              />
+              <ButtonIcon
+                name="star"
+                className={bookmarked ? 'ent-color-amber' : undefined}
+                onClick={async () => {
+                  setLoadingIcon(true);
+                  const { userOpportunity } = offer;
+                  await updateOpportunityUser({
+                    ...userOpportunity,
+                    bookmarked: !bookmarked,
+                  });
+                  setLoadingIcon(false);
+                }}
+              />
+            </List>
           </div>
+        </Grid>
+        <hr />
+        {offer.message && (
+          <>
+            <Grid>
+              <OfferInfoContainer icon="commenting">
+                <div>{formatParagraph(offer.message)}</div>
+              </OfferInfoContainer>
+            </Grid>
+            <hr />
+          </>
         )}
+        <Grid
+          className="uk-margin-bottom"
+          eachWidths={['1-3@s', '2-3@s']}
+          items={[
+            <Grid column gap="medium">
+              <OfferInfoContainer icon="home" title="Entreprise">
+                {offer.company}
+              </OfferInfoContainer>
+              <OfferInfoContainer icon="user" title="Recruteur">
+                <span>
+                  {offer.recruiterFirstName} {offer.recruiterName}
+                </span>
+                <span className="uk-text-muted">{offer.recruiterPosition}</span>
+                <SimpleLink
+                  href={`mailto:${offer.recruiterMail}`}
+                  className="uk-link-muted"
+                  isExternal
+                  newTab
+                >
+                  <span>{offer.recruiterMail}&nbsp;</span>
+                  <IconNoSSR name="mail" ratio={0.8} />
+                </SimpleLink>
+              </OfferInfoContainer>
+              <OfferInfoContainer icon="location" title={offer.department} />
+            </Grid>,
+            <Grid gap="medium" childWidths={['1-1']}>
+              {offer.companyDescription && (
+                <OfferInfoContainer
+                  icon="comment"
+                  title="Description de l'entreprise"
+                >
+                  <div>{formatParagraph(offer.companyDescription)}</div>
+                </OfferInfoContainer>
+              )}
+              <OfferInfoContainer icon="comment" title="Description de l'offre">
+                <div>{formatParagraph(offer.description)}</div>
+              </OfferInfoContainer>
+              <OfferInfoContainer icon="check" title="Compétences importantes">
+                <div>{formatParagraph(offer.skills)}</div>
+              </OfferInfoContainer>
+              {offer.prerequisites && (
+                <OfferInfoContainer icon="check" title="Pré-requis">
+                  <div>{formatParagraph(offer.prerequisites)}</div>
+                </OfferInfoContainer>
+              )}
+              {offer.businessLines && (
+                <Grid gap="small">
+                  {offer.businessLines.map((businessLine, index) => {
+                    return (
+                      <Button key={index} disabled>
+                        <span style={{ color: '#666' }}>{businessLine}</span>
+                      </Button>
+                    );
+                  })}
+                </Grid>
+              )}
+            </Grid>,
+          ]}
+        />
+        <div>
+          <Textarea
+            id="modal-offer-comment"
+            name="modal-offer-comment"
+            title="Ecrivez un commentaire à propos de cette opportunité..."
+            type="text"
+            value={noteBuffer}
+            onChange={(e) => {
+              return setNoteBuffer(e.target.value);
+            }}
+          />
+          {noteBuffer === note || (note === null && noteBuffer === '') ? (
+            <Button style="default" disabled>
+              Enregistré
+            </Button>
+          ) : (
+            <Button
+              style="default"
+              onClick={async () => {
+                setLoading(true);
+                console.log('update offer note', noteBuffer);
+                const { userOpportunity } = offer;
+                await updateOpportunityUser({
+                  ...userOpportunity,
+                  note: noteBuffer,
+                });
+                setLoading(false);
+              }}
+            >
+              Enregistrer
+              {loading ? (
+                <div
+                  data-uk-spinner="ratio: 0.5"
+                  className="uk-margin-small-left"
+                />
+              ) : null}
+            </Button>
+          )}
+        </div>
       </div>
     </ModalGeneric>
   );

@@ -20,6 +20,7 @@ const Layout = ({
   metaType,
   router,
   noIndex,
+  isBackoffice,
 }) => {
   const shouldShowAuthHeader =
     router.asPath.includes('/aider') &&
@@ -70,7 +71,7 @@ const Layout = ({
           content={process.env.FB_DOMAIN_VERIFICATION}
         />
       </Head>
-      {!isPDF && (
+      {!isPDF && !isBackoffice && (
         <UserContext.Consumer>
           {({ isAuthentificated }) => {
             return isAuthentificated && shouldShowAuthHeader ? (
@@ -82,7 +83,7 @@ const Layout = ({
         </UserContext.Consumer>
       )}
       {children}
-      {!isPDF && <Footer />}
+      {!isPDF && !isBackoffice && <Footer />}
       {/* Google Analytics */}
       <Script
         strategy="afterInteractive"
@@ -195,6 +196,7 @@ Layout.propTypes = {
     asPath: PropTypes.string,
   }).isRequired,
   noIndex: PropTypes.bool,
+  isBackoffice: PropTypes.bool,
 };
 
 Layout.defaultProps = {
@@ -206,5 +208,6 @@ Layout.defaultProps = {
   metaUrl: process.env.SERVER_URL,
   metaType: 'website',
   noIndex: false,
+  isBackoffice: false,
 };
 export default withRouter(Layout);

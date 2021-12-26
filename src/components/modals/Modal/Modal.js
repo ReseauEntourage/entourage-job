@@ -5,7 +5,7 @@ import { useModalContext } from 'src/components/modals/Modal/ModalContext';
 
 Modal.setAppElement('#__next');
 
-const CustomModal = ({ children, closeOnNextRender }) => {
+const CustomModal = ({ children, closeOnNextRender, className }) => {
   const { onClose } = useModalContext();
 
   useEffect(() => {
@@ -49,7 +49,8 @@ const CustomModal = ({ children, closeOnNextRender }) => {
       }}
     >
       <div
-        style={{ backgroundColor: '#FFF', margin: 15, position: 'relative' }}
+        className={`uk-background-default ${className}`}
+        style={{ margin: 15, position: 'relative' }}
       >
         {children}
       </div>
@@ -60,10 +61,12 @@ const CustomModal = ({ children, closeOnNextRender }) => {
 CustomModal.propTypes = {
   children: PropTypes.element.isRequired,
   closeOnNextRender: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 CustomModal.defaultProps = {
   closeOnNextRender: false,
+  className: '',
 };
 
 export { CustomModal as Modal };

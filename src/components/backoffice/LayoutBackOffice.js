@@ -5,7 +5,7 @@ import Layout from 'src/components/Layout';
 
 const LayoutBackOffice = ({ children, title }) => {
   return (
-    <Layout title={`${title} - LinkedOut`} noIndex>
+    <Layout title={`${title} - LinkedOut`} noIndex isBackoffice>
       <HeaderConnected />
       {children}
     </Layout>
