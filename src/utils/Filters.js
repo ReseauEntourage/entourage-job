@@ -1,4 +1,11 @@
+import { col, Op, where } from 'sequelize';
 import _ from 'lodash';
+
+import {
+  MEMBER_FILTERS_DATA,
+  OFFER_ADMIN_FILTERS_DATA,
+  OFFER_CANDIDATE_FILTERS_DATA,
+} from 'src/constants';
 
 const getUserOpportunityFromOffer = (offer, candidatId) => {
   let userOpportunity;
@@ -16,15 +23,260 @@ const getUserOpportunityFromOffer = (offer, candidatId) => {
   return userOpportunity;
 };
 
-const getChildrenFilters = (filters) => {
-  return filters.reduce((acc, curr) => {
-    const { children, ...restProps } = curr;
-    const accToReturn = [...acc];
-    if (children && children.length > 0) {
-      return [...accToReturn, ...getChildrenFilters(curr.children)];
+// OFFER FILTERS
+const filterCandidateOffersByType = (offers, type) => {
+  let filteredList = offers;
+  if (offers) {
+    filteredList = filteredList.filter((offer) => {
+      const isArchived =
+        offer.userOpportunity && offer.userOpportunity.archived;
+      switch (type) {
+        case OFFER_CANDIDATE_FILTERS_DATA[0].tag:
+          return true;
+        case OFFER_CANDIDATE_FILTERS_DATA[1].tag:
+          return !offer.isPublic && !isArchived;
+        case OFFER_CANDIDATE_FILTERS_DATA[2].tag:
+          return offer.isPublic && !isArchived;
+        case OFFER_CANDIDATE_FILTERS_DATA[3].tag:
+          return offer.userOpportunity && offer.userOpportunity.archived;
+        default:
+          return true;
+      }
+    });
+  }
+
+  return filteredList;
+};
+
+const filterAdminOffersByType = (offers, type) => {
+  let filteredList = offers;
+  if (offers) {
+    filteredList = filteredList.filter((offer) => {
+      switch (type) {
+        case OFFER_ADMIN_FILTERS_DATA[0].tag:
+          return true;
+        case OFFER_ADMIN_FILTERS_DATA[1].tag:
+          return !offer.isValidated && !offer.isArchived;
+        case OFFER_ADMIN_FILTERS_DATA[2].tag:
+          return offer.isValidated && !offer.isArchived;
+        case OFFER_ADMIN_FILTERS_DATA[3].tag:
+          return offer.isArchived;
+        default:
+          return true;
+      }
+    });
+  }
+
+  return filteredList;
+};
+
+const filterOffersByStatus = (offers, status, candidatId) => {
+  let filteredList = offers;
+
+  if (offers && status) {
+    filteredList = offers.filter((offer) => {
+      if (candidatId) {
+        const userOpportunity = getUserOpportunityFromOffer(offer, candidatId);
+        return userOpportunity
+          ? status.some((currentFilter) => {
+              return currentFilter.value === userOpportunity.status;
+            })
+          : false;
+      }
+      return status.some((currentFilter) => {
+        if (offer.userOpportunity && offer.userOpportunity.length > 0) {
+          return offer.userOpportunity.some((userOpp) => {
+            return currentFilter.value === userOpp.status;
+          });
+        }
+
+        return false;
+      });
+    });
+  }
+
+  return filteredList;
+};
+
+const getOfferOptions = (filtersObj) => {
+  const whereOptions = {};
+
+  if (filtersObj) {
+    const keys = Object.keys(filtersObj);
+
+    if (keys.length > 0) {
+      const totalFilters = keys.reduce((acc, curr) => {
+        return acc + filtersObj[curr].length;
+      }, 0);
+
+      if (totalFilters > 0) {
+        for (let i = 0; i < keys.length; i += 1) {
+          if (filtersObj[keys[i]].length > 0) {
+            whereOptions[keys[i]] = {
+              [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
+                return currentFilter.value;
+              }),
+            };
+          }
+        }
+      }
     }
-    return [...accToReturn, restProps];
-  }, []);
+  }
+
+  return whereOptions;
+};
+
+// CVS FILTERS
+const getCVOptions = (filtersObj) => {
+  const whereOptions = {};
+
+  if (filtersObj) {
+    const keys = Object.keys(filtersObj);
+
+    if (keys.length > 0) {
+      const totalFilters = keys.reduce((acc, curr) => {
+        return acc + filtersObj[curr].length;
+      }, 0);
+
+      if (totalFilters > 0) {
+        for (let i = 0; i < keys.length; i += 1) {
+          if (filtersObj[keys[i]].length > 0) {
+            whereOptions[keys[i]] = {
+              [Op.or]: filtersObj[keys[i]].reduce((acc, currentFilter) => {
+                if (currentFilter) {
+                  if (currentFilter.children) {
+                    return [...acc, ...currentFilter.children];
+                  }
+                  return [...acc, currentFilter.value];
+                }
+                return [...acc];
+              }, []),
+            };
+          }
+        }
+      }
+    }
+  }
+
+  return whereOptions;
+};
+
+// MEMBERS FILTERS
+const getMemberOptions = (filtersObj) => {
+  const whereOptions = {};
+
+  if (filtersObj) {
+    const keys = Object.keys(filtersObj);
+
+    if (keys.length > 0) {
+      const totalFilters = keys.reduce((acc, curr) => {
+        return acc + filtersObj[curr].length;
+      }, 0);
+
+      if (totalFilters > 0) {
+        for (let i = 0; i < keys.length; i += 1) {
+          if (filtersObj[keys[i]].length > 0) {
+            if (
+              keys[i] === MEMBER_FILTERS_DATA[2].key ||
+              keys[i] === MEMBER_FILTERS_DATA[3].key
+            ) {
+              whereOptions[keys[i]] = {
+                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value;
+                }),
+              };
+            } else if (keys[i] === MEMBER_FILTERS_DATA[1].key) {
+              // These options don't work
+              whereOptions[keys[i]] = {
+                coach: filtersObj[keys[i]].map((currentFilter) => {
+                  return where(
+                    col(`coach.candidatId`),
+                    currentFilter.value ? Op.is : Op.not,
+                    null
+                  );
+                }),
+                candidat: filtersObj[keys[i]].map((currentFilter) => {
+                  return where(
+                    col(`candidat.coachId`),
+                    currentFilter.value ? Op.is : Op.not,
+                    null
+                  );
+                }),
+              };
+            } else {
+              whereOptions[keys[i]] = {
+                [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
+                  return currentFilter.value;
+                }),
+              };
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return whereOptions;
+};
+
+const filterMembersByCVStatus = (members, status) => {
+  let filteredList = members;
+
+  if (members && status) {
+    filteredList = members.filter((member) => {
+      return status.some((currentFilter) => {
+        if (member.candidat && member.candidat.cvs.length > 0) {
+          return currentFilter.value === member.candidat.cvs[0].status;
+        }
+        return false;
+      });
+    });
+  }
+
+  return filteredList;
+};
+
+const filterMembersByAssociatedUser = (members, associatedUsers) => {
+  let filteredList = members;
+
+  if (members && associatedUsers && associatedUsers.length > 0) {
+    filteredList = members.filter((member) => {
+      return associatedUsers.some((currentFilter) => {
+        if (member.candidat) {
+          return !!member.candidat.coach === currentFilter.value;
+        }
+        if (member.coach) {
+          return !!member.coach.candidat === currentFilter.value;
+        }
+        return !currentFilter.value;
+      });
+    });
+  }
+
+  return filteredList;
+};
+
+// UTILS
+const getFiltersObjectsFromQueryParams = (params, filtersConst) => {
+  const filters = {};
+  if (filtersConst) {
+    _.forEach(Object.keys(params), (paramKey) => {
+      const filter = filtersConst.find((filterData) => {
+        return filterData.key === paramKey;
+      });
+      if (filter) {
+        const valueArray = params[paramKey];
+        if (valueArray.length > 0) {
+          filters[paramKey] = _.map(valueArray, (val) => {
+            return filter.constants.find((constantValue) => {
+              return constantValue.value.toString() === val;
+            });
+          });
+        }
+      }
+    });
+  }
+  return filters;
 };
 
 const getAllFilters = (filters, zone) => {
@@ -46,98 +298,15 @@ const getAllFilters = (filters, zone) => {
   return filtersToShow;
 };
 
-const findFilter = (filters, value) => {
-  return filters.reduce((acc, curr) => {
-    if (!acc || acc.value !== value) {
-      if (curr.value !== value) {
-        if (curr.children && curr.children.length > 0) {
-          return findFilter(curr.children, value);
-        }
-        return null;
-      }
-      return curr;
-    }
-    return acc;
-  }, null);
-};
-
-const initializeFilters = (filtersConst, defaults) => {
-  let hasDefaults = false;
-  if (defaults && Object.keys(defaults).length > 0) {
-    hasDefaults = true;
-  }
-  return filtersConst.reduce((acc, curr) => {
-    if (hasDefaults && defaults[curr.key]) {
-      acc[curr.key] = defaults[curr.key];
-    } else {
-      acc[curr.key] = [];
-    }
-    return acc;
-  }, {});
-};
-
-const filtersToQueryParams = (filters) => {
-  const params = {};
-  _.forEach(Object.keys(filters), (filter) => {
-    params[filter] =
-      filters[filter].length > 0
-        ? filters[filter].map((f) => {
-            return f?.value;
-          })
-        : undefined;
-  });
-  return params;
-};
-
-const getFiltersObjectsFromQueryParamsFront = (params, filtersConst) => {
-  const filters = {};
-  if (filtersConst) {
-    _.forEach(filtersConst, (filterConst) => {
-      if (params[filterConst.key]) {
-        const value = params[filterConst.key];
-        if (Array.isArray(value)) {
-          filters[filterConst.key] = [
-            ..._.map(value, (val) => {
-              return filterConst.constants.find((constantValue) => {
-                return constantValue.value.toString() === val;
-              });
-            }),
-          ];
-        } else {
-          filters[filterConst.key] = [
-            filterConst.constants.find((constantValue) => {
-              return constantValue.value.toString() === value;
-            }),
-          ];
-        }
-      } else {
-        filters[filterConst.key] = [];
-      }
-    });
-  }
-  return filters;
-};
-
-const getFiltersTagsFromQueryParamsFront = (tag, filters) => {
-  const updatedFilters = JSON.parse(JSON.stringify(filters));
-  const filterToDeActivate = updatedFilters.find((filter) => {
-    return filter.active;
-  });
-  const filterToActivate = updatedFilters.find((filter) => {
-    return filter.tag === tag;
-  });
-  if (filterToDeActivate) filterToDeActivate.active = false;
-  if (filterToActivate) filterToActivate.active = true;
-  return updatedFilters;
-};
-
 export {
-  getUserOpportunityFromOffer,
-  getChildrenFilters,
+  filterCandidateOffersByType,
+  filterAdminOffersByType,
+  filterOffersByStatus,
+  getOfferOptions,
+  getCVOptions,
+  filterMembersByCVStatus,
+  filterMembersByAssociatedUser,
+  getMemberOptions,
+  getFiltersObjectsFromQueryParams,
   getAllFilters,
-  findFilter,
-  initializeFilters,
-  filtersToQueryParams,
-  getFiltersObjectsFromQueryParamsFront,
-  getFiltersTagsFromQueryParamsFront,
 };

@@ -1,4 +1,4 @@
-name: LinkedOut Test
+name: LinkedOut Backend Test
 
 on:
   push:
@@ -28,7 +28,6 @@ jobs:
       CI: true
       NODE_ENV: test
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      SERVER_URL: ${{ secrets.SERVER_URL }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       AWSS3_BUCKET_NAME: ${{ secrets.AWSS3_BUCKET_NAME }}
       AWSS3_ID: ${{ secrets.AWSS3_ID }}
@@ -41,7 +40,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
+        node-version: '14.x'
     - run: npm install
     - run: npm run db-create
     - run: npm run db-migrate

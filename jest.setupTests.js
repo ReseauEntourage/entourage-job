@@ -1,3 +1,3 @@
-import loadEnvironementVariables from 'src/backend/utils/env';
+import loadEnvironementVariables from 'src/utils/env';
 
 loadEnvironementVariables();

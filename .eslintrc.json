@@ -11,17 +11,15 @@
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
     "ecmaVersion": 2018,
     "sourceType": "module",
     "allowImportExportEverywhere": false,
-    "codeFrame": false
+    "codeFrame": false,
+    "requireConfigFile": false
   },
-  "plugins": ["react", "react-hooks", "prettier"],
+  "plugins": ["prettier"],
   "root": true,
   "rules": {
     "camelcase": "off",
@@ -31,40 +29,16 @@
     "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": [
       "error",
-      { "devDependencies": ["./src/test/**"] }
+      { "devDependencies": ["./tests/**"] }
     ],
     "no-return-assign": "off",
     "no-case-declarations": "off",
     "no-console": "off",
-    "no-unused-vars": "warn",
+    "no-unused-vars": ["warn", { "ignoreRestSiblings": true }],
     "no-param-reassign": "off",
     "consistent-return": "off",
     "no-underscore-dangle": "off",
     "arrow-body-style": ["error", "always"],
-    "jsx-a11y/anchor-is-valid": "off",
-    "jsx-a11y/anchor-has-content": "off",
-    "jsx-a11y/click-events-have-key-events": "off",
-    "jsx-a11y/no-static-element-interactions": "off",
-    "jsx-a11y/no-noninteractive-element-interactions": "off",
-    "jsx-a11y/control-has-associated-label": "off",
-    "react/jsx-one-expression-per-line": "off",
-    "react/no-array-index-key": "off",
-    "react/jsx-uses-react": "error",
-    "react/jsx-uses-vars": "error",
-    "react/prop-types": "error",
-    "react/style-prop-object": "off",
-    "react/forbid-prop-types": "warn",
-    "react/jsx-props-no-spreading": "off",
-    "react/jsx-wrap-multilines": "off",
-    "react/static-property-placement": ["warn", "static getter"],
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "error",
-    "react/jsx-filename-extension": [
-      "warn",
-      {
-        "extensions": [".js", ".jsx"]
-      }
-    ],
     "prettier/prettier": [
       "error",
       {},
@@ -74,10 +48,9 @@
     ]
   },
   "extends": [
-    "airbnb",
     "prettier",
     "eslint:recommended",
-    "plugin:@next/next/recommended",
+    "plugin:import/recommended",
     "plugin:prettier/recommended" // should always be the last element in the array
   ],
   "settings": {

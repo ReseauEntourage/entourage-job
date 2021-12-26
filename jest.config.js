@@ -2,7 +2,7 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
-  roots: ['<rootDir>/src/test'],
+  roots: ['<rootDir>/tests'],
   testRegex: '.+\\.(test|spec)\\.js?$',
   testEnvironment: 'node',
   maxConcurrency: 5,
@@ -10,7 +10,7 @@ module.exports = {
   moduleNameMapper: {
     '@/(.*)': '<rootDir>/src/$1',
   },
-  collectCoverageFrom: ['src/backend/**/*.js'],
+  collectCoverageFrom: ['src/**/*.js'],
   verbose: true,
   setupFiles: ['<rootDir>/jest.setupTests.js'],
   testTimeout: 60000,

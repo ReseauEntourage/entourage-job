@@ -6,7 +6,7 @@ if (dev) {
 
 const path = require('path');
 
-const backendPath = __dirname + (dev ? '/src/backend/db' : '/build/backend/db')
+const backendPath = __dirname + (dev ? '/src/db' : '/build/db')
 
 module.exports = {
   'config': path.resolve(backendPath + '/config', 'database.js'),

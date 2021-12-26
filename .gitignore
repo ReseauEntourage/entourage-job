@@ -1,11 +1,8 @@
 .env*
-.next
 node_modules
 uploads
 .idea
 .vscode
-assets/uikit
-_next
 .DS_Store
-coverage/
+coverage
 build

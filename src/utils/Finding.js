@@ -5,7 +5,9 @@ const findOfferStatus = (status) => {
   const currentStatus = OFFER_STATUS.find((oStatus) => {
     return oStatus.value === status;
   });
-  if (currentStatus) return currentStatus;
+  if (currentStatus) {
+    return currentStatus;
+  }
   return { label: 'Non défini', color: 'muted' };
 };
 

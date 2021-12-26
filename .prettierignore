@@ -1,6 +1,4 @@
 node_modules/
-static/
-.next/
-yarn.lock
-assets/
+public/
+package.lock
 
