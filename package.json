@@ -15,12 +15,13 @@
     "start": "NODE_ENV=production node -r dotenv/config build/app.js",
     "test": "NODE_ENV=test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
     "dev-test": "NODE_ENV=dev-test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
-    "lint": "eslint .",
+    "lint": "npx eslint src --ext js,jsx,ts,tsx --max-warnings=0",
     "format": "prettier --write './**/*.{js,jsx,md,json}' --config .prettierrc.json",
     "build": "babel src -d build",
     "db-create": "npx sequelize db:create",
     "db-migrate": "npx sequelize db:migrate",
-    "heroku-cleanup": "rm -rf src"
+    "heroku-cleanup": "rm -rf src",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -29,21 +30,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "precommit": "NODE_ENV=production lint-staged",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,jsx,md,json,html}": [
-      "prettier --write",
-      "git add"
-    ],
-    "yarn.lock": [
-      "git rm --cached"
-    ]
-  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.31.0",
     "@aws-sdk/s3-request-presigner": "^3.31.0",
@@ -98,9 +84,8 @@
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-prettier": "^3.1.4",
     "faker": "^4.1.0",
-    "husky": "^4.3.8",
+    "husky": "^7.0.4",
     "jest": "^26.4.1",
-    "lint-staged": "^11.2.3",
     "prettier": "^2.1.2",
     "supertest": "^4.0.2"
   }

@@ -125,6 +125,7 @@ const createUser = async (newUser) => {
         { candidatId: userToCreate.userToCoach, coachId: res.id },
         {
           where: { candidatId: userToCreate.userToCoach },
+          individualHooks: true,
         }
       );
     }
@@ -133,6 +134,7 @@ const createUser = async (newUser) => {
         { candidatId: res.id, coachId: userToCreate.userToCoach },
         {
           where: { candidatId: res.id },
+          individualHooks: true,
         }
       );
     }

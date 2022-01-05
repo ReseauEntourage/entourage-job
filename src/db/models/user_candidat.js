@@ -89,9 +89,7 @@ export default (sequelize, DataTypes) => {
         0,
         8
       )}`;
-      if (userCandidat.coachId) {
-        await clearCoachBindings(userCandidat.coachId);
-      }
+
       return userCandidat;
     });
 
