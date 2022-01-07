@@ -39,6 +39,7 @@ const getAdminMailsFromDepartment = (dep) => {
 export {
   findOfferStatus,
   getAdminMailsFromDepartment,
+  getZoneFromDepartment,
   getZoneSuffix,
   findContractType,
 };
