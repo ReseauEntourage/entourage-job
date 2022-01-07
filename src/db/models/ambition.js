@@ -5,6 +5,16 @@ export default (sequelize, DataTypes) => {
     'Ambition',
     {
       name: DataTypes.STRING,
+      prefix: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        defaultValue: 'dans',
+      },
+      order: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        defaultValue: -1,
+      },
     },
     {}
   );

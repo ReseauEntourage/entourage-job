@@ -62,11 +62,6 @@ export default (sequelize, DataTypes) => {
         }, */
       },
       catchphrase: DataTypes.STRING,
-      careerPathOpen: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,
-      },
       status: {
         type: DataTypes.STRING,
         defaultValue: CV_STATUS.New.value,

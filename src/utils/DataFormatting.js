@@ -24,8 +24,8 @@ const cleanCV = (model) => {
     });
   }
   if (tmpCV.ambitions) {
-    tmpCV.ambitions = tmpCV.ambitions.map((o) => {
-      return o.name;
+    tmpCV.ambitions = tmpCV.ambitions.map(({ name, order, prefix }) => {
+      return { name, order, prefix };
     });
   }
   if (tmpCV.businessLines) {

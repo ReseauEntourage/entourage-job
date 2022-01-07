@@ -98,7 +98,7 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
     model: models.Ambition,
     as: 'ambitions',
     through: { attributes: [] },
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name', 'prefix', 'order'],
   },
   {
     model: models.BusinessLine,
@@ -336,9 +336,9 @@ const createCV = async (data, userId) => {
     promises.push(async () => {
       console.log(`createCV - Ambitions`);
       const ambitions = await Promise.all(
-        cvData.ambitions.map((name) => {
+        cvData.ambitions.map(({ name, order = -1, prefix = 'dans' }) => {
           return models.Ambition.findOrCreate({
-            where: { name }, // pas de controle sur les ambitions comme : 'l'information' si on veut mettre au nom propre dans le domaine.
+            where: { name, order, prefix },
           }).then((model) => {
             return model[0];
           });
@@ -510,11 +510,10 @@ const getCVbyUrl = async (url) => {
     },
   });
 
-  const cvResponse = {
+  return {
     cv,
     exists: cv ? true : !!userCandidat,
   };
-  return cvResponse;
 };
 
 // todo: revoir
@@ -572,7 +571,7 @@ const getAndCacheAllCVs = async (dbQuery, cache, options = {}) => {
         model: models.Ambition,
         as: 'ambitions',
         through: { attributes: [] },
-        attributes: ['name'],
+        attributes: ['name', 'order', 'prefix'],
       },
       {
         model: models.Skill,
@@ -850,7 +849,11 @@ const generatePdfFromCV = async (userId, token, paths) => {
 const createSearchString = async (userId) => {
   const cv = await getCVbyUserId(userId);
   const searchString = [
-    cv.ambitions.join(' '),
+    cv.ambitions
+      .map((ambition) => {
+        return ambition.name;
+      })
+      .join(' '),
     cv.businessLines.join(' '),
     cv.contracts.join(' '),
     cv.languages.join(' '),

@@ -30,7 +30,6 @@ const getCvStatusValues = (cvStatus) => {
  * @param {string} props.availability
  * @param {string} props.transport
  * @param {string} props.catchphrase
- * @param {boolean} props.careerPathOpen
  * @param {string} props.status
  * @param {number} props.version
  */
@@ -42,7 +41,6 @@ const generateCv = async (props = {}) => {
     availability: fakerStatic.lorem.sentence(),
     transport: fakerStatic.lorem.sentence(),
     catchphrase: fakerStatic.lorem.sentence(),
-    careerPathOpen: fakerStatic.random.boolean(),
     status: fakerStatic.random.arrayElement(getCvStatusValues(CV_STATUS)),
   };
 
@@ -64,7 +62,6 @@ const generateCv = async (props = {}) => {
  * @param {string} props.availability
  * @param {string} props.transport
  * @param {string} props.catchphrase
- * @param {boolean} props.careerPathOpen
  * @param {string} props.status
  * @param {number} props.version
  * @param {Object} components The ids of cv components:
