@@ -838,14 +838,7 @@ const updateOpportunity = async (opportunity) => {
 
   let newCandidatesIdsToSendMailTo;
 
-  if (opportunity.isPublic) {
-    // TODO do we want to delete the relations after changing from public to private ?
-    await Opportunity_User.destroy({
-      where: {
-        OpportunityId: modelOpportunity.id,
-      },
-    });
-  } else if (opportunity.candidatesId) {
+  if (opportunity.candidatesId) {
     const t = await sequelize.transaction();
     try {
       const opportunitiesUser = await Promise.all(
