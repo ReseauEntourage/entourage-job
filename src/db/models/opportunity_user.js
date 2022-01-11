@@ -89,6 +89,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    recommended: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   });
 
   Opportunity_User.associate = (models) => {

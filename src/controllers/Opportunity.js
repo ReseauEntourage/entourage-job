@@ -107,6 +107,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
       'archived',
       'note',
       'updatedAt',
+      'recommended',
     ],
     include: INCLUDE_OPPORTUNITY_CANDIDATE,
   },
@@ -124,6 +125,7 @@ const INCLUDE_OPPORTUNITY_USER = [
       'bookmarked',
       'archived',
       'note',
+      'recommended',
     ],
   },
 ];
@@ -161,6 +163,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
       'archived',
       'note',
       'seen',
+      'recommended',
     ],
   },
 ];
@@ -258,6 +261,7 @@ const getAirtableOpportunityFields = (
                 ? offerStatus.alt
                 : offerStatus.label,
             Commentaire: candidate.note,
+            'Recommandée ?': candidate.recommended,
           };
         }),
         commonFields,
@@ -308,7 +312,8 @@ const createOpportunity = async (data, isAdmin) => {
       data.candidatesId.map((candidatId) => {
         return Opportunity_User.create({
           OpportunityId: modelOpportunity.id,
-          UserId: candidatId, // to rename in userId
+          UserId: candidatId, // to rename in userId,
+          recommended: modelOpportunity.isPublic,
         }).then((model) => {
           return model[0];
         });
@@ -762,6 +767,7 @@ const addUserToOpportunity = async (opportunityId, userId, seen) => {
           'archived',
           'note',
           'seen',
+          'recommended',
         ],
       }
     ).then((model) => {
@@ -792,6 +798,7 @@ const updateOpportunityUser = async (opportunityUser) => {
       'archived',
       'note',
       'seen',
+      'recommended',
     ],
   }).then((model) => {
     return model && model.length > 1 && model[1][0];
@@ -854,17 +861,50 @@ const updateOpportunity = async (opportunity) => {
           });
         })
       );
-      await Opportunity_User.destroy({
-        where: {
-          OpportunityId: modelOpportunity.id,
-          UserId: {
-            [Op.not]: opportunitiesUser.map((opportunityUser) => {
-              return opportunityUser.UserId;
-            }),
+
+      if (opportunity.isPublic) {
+        await Opportunity_User.update(
+          {
+            recommended: true,
           },
-        },
-        transaction: t,
-      });
+          {
+            where: {
+              id: opportunitiesUser.map((opportunityUser) => {
+                return opportunityUser.id;
+              }),
+            },
+            transaction: t,
+          }
+        );
+        await Opportunity_User.update(
+          {
+            recommended: false,
+          },
+          {
+            where: {
+              OpportunityId: modelOpportunity.id,
+              UserId: {
+                [Op.not]: opportunitiesUser.map((opportunityUser) => {
+                  return opportunityUser.UserId;
+                }),
+              },
+            },
+            transaction: t,
+          }
+        );
+      } else {
+        await Opportunity_User.destroy({
+          where: {
+            OpportunityId: modelOpportunity.id,
+            UserId: {
+              [Op.not]: opportunitiesUser.map((opportunityUser) => {
+                return opportunityUser.UserId;
+              }),
+            },
+          },
+          transaction: t,
+        });
+      }
 
       await t.commit();
     } catch (error) {
