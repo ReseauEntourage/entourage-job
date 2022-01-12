@@ -1,7 +1,6 @@
 import {
   JOBS,
   MAILJET_TEMPLATES,
-  OFFER_STATUS,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
 
@@ -31,6 +30,7 @@ import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import _ from 'lodash';
 import { getUser } from 'src/controllers/User';
 import { getCVbyUserId } from 'src/controllers/CV';
+import { sortOpportunities } from 'src/utils/Sorting';
 
 const offerTable = process.env.AIRTABLE_OFFERS;
 const {
@@ -579,63 +579,10 @@ const getAllUserOpportunities = async (userId, params = {}) => {
     return opportunity;
   });
 
-  // order by bookmarked, then by new, then by status, then by date
-  finalOpportunities.sort((a, b) => {
-    if (a.userOpportunity || b.userOpportunity) {
-      if (a.userOpportunity && b.userOpportunity) {
-        if (a.userOpportunity.bookmarked === b.userOpportunity.bookmarked) {
-          if (a.userOpportunity.seen === b.userOpportunity.seen) {
-            if (a.userOpportunity.status === b.userOpportunity.status) {
-              return new Date(b.date) - new Date(a.date);
-            }
-            if (
-              a.userOpportunity.status >= OFFER_STATUS[4].value &&
-              b.userOpportunity.status >= OFFER_STATUS[4].value
-            ) {
-              return b.userOpportunity.status - a.userOpportunity.status;
-            }
-            if (
-              a.userOpportunity.status >= OFFER_STATUS[4].value &&
-              b.userOpportunity.status < OFFER_STATUS[4].value
-            ) {
-              return 1;
-            }
-            if (
-              a.userOpportunity.status < OFFER_STATUS[4].value &&
-              b.userOpportunity.status >= OFFER_STATUS[4].value
-            ) {
-              return -1;
-            }
-
-            return b.userOpportunity.status - a.userOpportunity.status;
-          }
-          if (a.userOpportunity.seen && !b.userOpportunity.seen) {
-            return -1;
-          }
-          if (!a.userOpportunity.seen && b.userOpportunity.seen) {
-            return 1;
-          }
-        }
-        if (a.userOpportunity.bookmarked && !b.userOpportunity.bookmarked) {
-          return -1;
-        }
-        if (!a.userOpportunity.bookmarked && b.userOpportunity.bookmarked) {
-          return 1;
-        }
-      }
-
-      if (b.userOpportunity) {
-        return -1;
-      }
-      if (a.userOpportunity) {
-        return 1;
-      }
-    }
-    return new Date(b.date) - new Date(a.date);
-  });
+  const sortedOpportunities = sortOpportunities(finalOpportunities);
 
   const filteredTypeOpportunities = filterCandidateOffersByType(
-    finalOpportunities,
+    sortedOpportunities,
     typeParams
   );
 
@@ -643,6 +590,7 @@ const getAllUserOpportunities = async (userId, params = {}) => {
 };
 
 const getUnseenUserOpportunitiesCount = async (candidatId) => {
+  // TODO manage recommended
   const user = await getUser(candidatId);
   const cv = await getCVbyUserId(candidatId);
 
@@ -843,8 +791,6 @@ const updateOpportunity = async (opportunity) => {
     });
   }
 
-  let newCandidatesIdsToSendMailTo;
-
   if (opportunity.candidatesId) {
     const t = await sequelize.transaction();
     try {
@@ -913,7 +859,9 @@ const updateOpportunity = async (opportunity) => {
     }
   }
 
-  // Check case where the opportunity has become private and has candidates, to see if there are any new candidates so send mail to
+  let newCandidatesIdsToSendMailTo;
+
+  // Check case where the opportunity has become private and has candidates, to see if there are any new candidates to send mail to
   const newCandidates =
     opportunity.candidatesId &&
     opportunity.candidatesId.length > 0 &&
@@ -933,25 +881,31 @@ const updateOpportunity = async (opportunity) => {
 
   const finalOpportunity = await getOpportunity(opportunity.id, true);
 
-  let candidatesToSendMailTo;
+  let candidatesToSendMailTo = null;
 
-  if (!finalOpportunity.isPublic && oldOpportunity) {
+  if (
+    oldOpportunity &&
+    finalOpportunity.userOpportunity &&
+    finalOpportunity.userOpportunity.length > 0
+  ) {
     // Case where the opportunity was not validated and has been validated, we send the mail to everybody
     if (!oldOpportunity.isValidated && finalOpportunity.isValidated) {
-      candidatesToSendMailTo =
-        finalOpportunity.userOpportunity &&
-        finalOpportunity.userOpportunity.length > 0
-          ? finalOpportunity.userOpportunity
-          : null;
+      candidatesToSendMailTo = finalOpportunity.isPublic
+        ? finalOpportunity.userOpportunity.filter((userOpp) => {
+            return userOpp.recommended;
+          })
+        : finalOpportunity.userOpportunity;
     } else if (newCandidatesIdsToSendMailTo) {
       // Case where the opportunity was already validated, and we just added new candidates to whom we have to send the mail
-      candidatesToSendMailTo =
-        finalOpportunity.userOpportunity &&
-        finalOpportunity.userOpportunity.length > 0
+      candidatesToSendMailTo = (
+        finalOpportunity.isPublic
           ? finalOpportunity.userOpportunity.filter((userOpp) => {
-              return newCandidatesIdsToSendMailTo.includes(userOpp.User.id);
+              return userOpp.recommended;
             })
-          : null;
+          : finalOpportunity.userOpportunity
+      ).filter((userOpp) => {
+        return newCandidatesIdsToSendMailTo.includes(userOpp.User.id);
+      });
     }
   }
 
@@ -978,7 +932,9 @@ const updateOpportunity = async (opportunity) => {
           toEmail: coach
             ? { to: candidat.User.email, cc: coach.email }
             : candidat.User.email,
-          templateId: MAILJET_TEMPLATES.OFFER_RECEIVED,
+          templateId: finalOpportunity.isPublic
+            ? MAILJET_TEMPLATES.OFFER_RECOMMENDED
+            : MAILJET_TEMPLATES.OFFER_RECEIVED,
           variables: {
             offer: _.omitBy(
               {
@@ -991,21 +947,23 @@ const updateOpportunity = async (opportunity) => {
           },
         });
 
-        await addToWorkQueue(
-          {
-            type: JOBS.JOB_TYPES.REMINDER_OFFER,
-            opportunityId: finalOpportunity.id,
-            candidatId: candidat.User.id,
-          },
-          {
-            delay:
-              (process.env.OFFER_REMINDER_DELAY
-                ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
-                : 5) *
-              3600000 *
-              24,
-          }
-        );
+        if (!finalOpportunity.isPublic) {
+          await addToWorkQueue(
+            {
+              type: JOBS.JOB_TYPES.REMINDER_OFFER,
+              opportunityId: finalOpportunity.id,
+              candidatId: candidat.User.id,
+            },
+            {
+              delay:
+                (process.env.OFFER_REMINDER_DELAY
+                  ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
+                  : 5) *
+                3600000 *
+                24,
+            }
+          );
+        }
       })
     );
   };

@@ -260,7 +260,7 @@ const getMembers = async (params) => {
   /*
     if (filterOptions.associatedUser) {
       userCandidatOptions.where = {
-        ...(userCandidatOptions.where ?? {}),
+        ...(userCandidatOptions.where || {}),
         ...filterOptions.associatedUser.candidat,
       };
     }

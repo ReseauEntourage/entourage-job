@@ -38,6 +38,7 @@ const associateManyOpportunitiesUser = async (opportunitiesId, userId) => {
     const opp = await associateOpportunityUser(opportunitiesId[i], userId, {
       status: (i % 4) - 1,
       archived: i % 2 === 0,
+      recommended: i % 2 === 0,
     });
     opportunitiesUser.push(opp);
   }
