@@ -5,6 +5,7 @@ import { encryptPassword } from 'src/controllers/Auth';
 import faker from 'faker';
 
 import { models } from 'src/db/models';
+import { ADMIN_ZONES } from 'src/constants/departements';
 
 const { User, User_Candidat } = models;
 
@@ -24,14 +25,14 @@ const generateUser = async (props = {}) => {
     email: props.email || faker.internet.email().toLowerCase(),
     firstName: props.firstName || faker.name.firstName(),
     lastName: props.lastName || faker.name.lastName(),
-    role: props.role || faker.random.objectElement(USER_ROLES),
+    role: props.role || USER_ROLES.CANDIDAT,
     password: hash,
     gender: props.gender || faker.random.arrayElement([0, 1]),
     salt,
     phone: props.phone || faker.phone.phoneNumber(),
     address: props.address || faker.address.streetAddress(),
     lastConnection: props.lastConnection || `${faker.date.past()}`,
-    zone: props.zone || faker.address.county(),
+    zone: props.zone || ADMIN_ZONES.PARIS,
   };
 };
 
@@ -47,8 +48,8 @@ const generateUserCandidat = async (candidatId, props = {}) => {
   return {
     candidatId,
     coachId: props.coachId || null,
-    employed: props.employed || faker.random.boolean(),
-    hidden: props.hidden || faker.random.boolean(),
+    employed: props.employed || false,
+    hidden: props.hidden || false,
     url: 'test - url',
   };
 };

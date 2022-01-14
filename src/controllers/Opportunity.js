@@ -1,6 +1,7 @@
 import {
   JOBS,
   MAILJET_TEMPLATES,
+  OFFER_CANDIDATE_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
 
@@ -527,8 +528,20 @@ const getPrivateUserOpportunities = async (userId, params) => {
     return cleanOpportunity(model);
   });
 
+  const filterOpportunitiesByStatus = filterOffersByStatus(
+    cleanedOpportunities,
+    statusParams,
+    userId
+  );
+
+  const sortedOpportunities = sortOpportunities(
+    filterOpportunitiesByStatus,
+    undefined,
+    userId
+  );
+
   return {
-    offers: filterOffersByStatus(cleanedOpportunities, statusParams, userId),
+    offers: sortedOpportunities,
   };
 };
 
@@ -579,7 +592,10 @@ const getAllUserOpportunities = async (userId, params = {}) => {
     return opportunity;
   });
 
-  const sortedOpportunities = sortOpportunities(finalOpportunities);
+  const sortedOpportunities = sortOpportunities(
+    finalOpportunities,
+    typeParams === OFFER_CANDIDATE_FILTERS_DATA[1].tag
+  );
 
   const filteredTypeOpportunities = filterCandidateOffersByType(
     sortedOpportunities,
@@ -590,7 +606,6 @@ const getAllUserOpportunities = async (userId, params = {}) => {
 };
 
 const getUnseenUserOpportunitiesCount = async (candidatId) => {
-  // TODO manage recommended
   const user = await getUser(candidatId);
   const cv = await getCVbyUserId(candidatId);
 

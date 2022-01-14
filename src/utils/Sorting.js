@@ -1,99 +1,65 @@
 import { firstBy } from 'thenby';
+import { getUserOpportunityFromOffer } from 'src/utils/Filters';
 
-const sortByUserOpportunity = (a, b, key) => {
-  if (a.userOpportunity || b.userOpportunity) {
-    if (a.userOpportunity && b.userOpportunity) {
-      return b.userOpportunity[key] - a.userOpportunity[key];
-    }
-    if (b.userOpportunity) {
-      return 1;
-    }
-    if (a.userOpportunity) {
-      return -1;
+const sortByUserOpportunity = (a, b, candidatId, key) => {
+  const userOpportunityA = getUserOpportunityFromOffer(a, candidatId);
+  const userOpportunityB = getUserOpportunityFromOffer(b, candidatId);
+  if (userOpportunityA || userOpportunityB) {
+    if (userOpportunityA && userOpportunityB) {
+      return userOpportunityB[key] - userOpportunityA[key];
     }
   }
   return 0;
 };
 
-const sortOpportunities = (opportunities) => {
-  // TODO FIX SORT
-
-  // order by new, then bookmarked, then recommended, then by status, then by date
+const sortOpportunities = (opportunities, isPrivate, candidateId) => {
+  // Public offers : order by recommended new, then new, then bookmarked, then recommended, then by status, then by date
+  // Private offers : order by private new, then public recommended new, then private bookmarked, then public recommended, then by status, then by date
   const sortedOpportunities = [...opportunities];
   sortedOpportunities.sort(
-    firstBy('isPublic')
+    firstBy('isArchived')
       .thenBy((a, b) => {
-        return sortByUserOpportunity(a, b, 'seen');
+        return sortByUserOpportunity(a, b, candidateId, 'archived');
       }, 'desc')
       .thenBy((a, b) => {
-        return sortByUserOpportunity(a, b, 'bookmarked');
+        const userOpportunityA = getUserOpportunityFromOffer(a, candidateId);
+        const userOpportunityB = getUserOpportunityFromOffer(b, candidateId);
+        if (userOpportunityA || userOpportunityB) {
+          if (userOpportunityA && userOpportunityB) {
+            return sortByUserOpportunity(a, b, candidateId, 'seen');
+          }
+          if (!userOpportunityB) {
+            return (isPrivate ? !a.isPublic : a.isPublic) &&
+              userOpportunityA.recommended &&
+              !userOpportunityA.seen
+              ? 1
+              : -1;
+          }
+
+          if (!userOpportunityA) {
+            return (isPrivate ? !b.isPublic : b.isPublic) &&
+              userOpportunityB.recommended &&
+              !userOpportunityB.seen
+              ? -1
+              : 1;
+          }
+        }
+        return sortByUserOpportunity(a, b, candidateId, 'seen');
+      }, 'desc')
+      .thenBy('isPublic')
+      .thenBy((a, b) => {
+        return sortByUserOpportunity(a, b, candidateId, 'bookmarked');
       })
       .thenBy((a, b) => {
-        return sortByUserOpportunity(a, b, 'recommended');
+        return sortByUserOpportunity(a, b, candidateId, 'recommended');
       })
       .thenBy((a, b) => {
-        return sortByUserOpportunity(a, b, 'status');
+        return sortByUserOpportunity(a, b, candidateId, 'status');
       })
       .thenBy((a, b) => {
         return new Date(b.date) - new Date(a.date);
       })
   );
-
-  /*
-  sortedOpportunities.sort((a, b) => {
-    if (a.userOpportunity || b.userOpportunity) {
-      if (a.userOpportunity && b.userOpportunity) {
-        if (a.userOpportunity.bookmarked === b.userOpportunity.bookmarked) {
-          if (a.userOpportunity.seen === b.userOpportunity.seen) {
-            if (a.userOpportunity.status === b.userOpportunity.status) {
-              return new Date(b.date) - new Date(a.date);
-            }
-            if (
-              a.userOpportunity.status >= OFFER_STATUS[4].value &&
-              b.userOpportunity.status >= OFFER_STATUS[4].value
-            ) {
-              return b.userOpportunity.status - a.userOpportunity.status;
-            }
-            if (
-              a.userOpportunity.status >= OFFER_STATUS[4].value &&
-              b.userOpportunity.status < OFFER_STATUS[4].value
-            ) {
-              return 1;
-            }
-            if (
-              a.userOpportunity.status < OFFER_STATUS[4].value &&
-              b.userOpportunity.status >= OFFER_STATUS[4].value
-            ) {
-              return -1;
-            }
-
-            return b.userOpportunity.status - a.userOpportunity.status;
-          }
-          if (a.userOpportunity.seen && !b.userOpportunity.seen) {
-            return -1;
-          }
-          if (!a.userOpportunity.seen && b.userOpportunity.seen) {
-            return 1;
-          }
-        }
-        if (a.userOpportunity.bookmarked && !b.userOpportunity.bookmarked) {
-          return -1;
-        }
-        if (!a.userOpportunity.bookmarked && b.userOpportunity.bookmarked) {
-          return 1;
-        }
-      }
-
-      if (b.userOpportunity) {
-        return -1;
-      }
-      if (a.userOpportunity) {
-        return 1;
-      }
-    }
-
-    return new Date(b.date) - new Date(a.date);
-  });*/
 
   return sortedOpportunities;
 };
