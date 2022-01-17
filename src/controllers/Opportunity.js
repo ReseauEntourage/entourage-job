@@ -1,6 +1,7 @@
 import {
   JOBS,
   MAILJET_TEMPLATES,
+  NEWSLETTER_TAGS,
   OFFER_CANDIDATE_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
@@ -12,6 +13,7 @@ import {
   findContractType,
   findOfferStatus,
   getAdminMailsFromDepartment,
+  getZoneFromDepartment,
 } from 'src/utils/Finding';
 
 import moment from 'moment';
@@ -32,6 +34,8 @@ import _ from 'lodash';
 import { getUser } from 'src/controllers/User';
 import { getCVbyUserId } from 'src/controllers/CV';
 import { sortOpportunities } from 'src/utils/Sorting';
+
+import { sendToMailchimp } from 'src/controllers/Mailchimp';
 
 const offerTable = process.env.AIRTABLE_OFFERS;
 const {
@@ -396,6 +400,17 @@ const createOpportunity = async (data, isAdmin) => {
         businessLines: businessLinesString,
       },
     });
+  }
+
+  try {
+    await sendToMailchimp(
+      finalOpportunity.recruiterMail,
+      getZoneFromDepartment(finalOpportunity.department),
+      NEWSLETTER_TAGS.ENTREPRISE
+    );
+  } catch (err) {
+    console.error(err);
+    console.log('Error while sending to Mailchimp');
   }
 
   return cleanedOpportunity;
