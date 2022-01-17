@@ -545,7 +545,7 @@ const REGIONS_FILTERS = _.sortBy(
         ...acc,
         [curr.region]: {
           value: curr.region,
-          label: REGIONS_LABELS[curr.region] ?? curr.region,
+          label: REGIONS_LABELS[curr.region] || curr.region,
           zone: curr.zone,
           children: [curr.name],
         },

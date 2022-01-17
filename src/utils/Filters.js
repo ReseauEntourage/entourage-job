@@ -7,13 +7,9 @@ import {
   OFFER_CANDIDATE_FILTERS_DATA,
 } from 'src/constants';
 
-const getUserOpportunityFromOffer = (offer, candidatId) => {
+export const getUserOpportunityFromOffer = (offer, candidatId) => {
   let userOpportunity;
-  if (
-    offer.userOpportunity &&
-    Array.isArray(offer.userOpportunity) &&
-    offer.userOpportunity.length > 0
-  ) {
+  if (offer.userOpportunity && Array.isArray(offer.userOpportunity)) {
     userOpportunity = offer.userOpportunity.find((userOpp) => {
       return userOpp.UserId === candidatId;
     });
@@ -30,11 +26,13 @@ const filterCandidateOffersByType = (offers, type) => {
     filteredList = filteredList.filter((offer) => {
       const isArchived =
         offer.userOpportunity && offer.userOpportunity.archived;
+      const isRecommended =
+        offer.userOpportunity && offer.userOpportunity.recommended;
       switch (type) {
         case OFFER_CANDIDATE_FILTERS_DATA[0].tag:
           return true;
         case OFFER_CANDIDATE_FILTERS_DATA[1].tag:
-          return !offer.isPublic && !isArchived;
+          return (!offer.isPublic || isRecommended) && !isArchived;
         case OFFER_CANDIDATE_FILTERS_DATA[2].tag:
           return offer.isPublic && !isArchived;
         case OFFER_CANDIDATE_FILTERS_DATA[3].tag:

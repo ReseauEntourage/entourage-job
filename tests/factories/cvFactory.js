@@ -41,7 +41,7 @@ const generateCv = async (props = {}) => {
     availability: fakerStatic.lorem.sentence(),
     transport: fakerStatic.lorem.sentence(),
     catchphrase: fakerStatic.lorem.sentence(),
-    status: fakerStatic.random.arrayElement(getCvStatusValues(CV_STATUS)),
+    status: getCvStatusValues(CV_STATUS)[0],
   };
 
   return {

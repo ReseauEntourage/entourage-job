@@ -1,7 +1,7 @@
 import {
   JOBS,
   MAILJET_TEMPLATES,
-  OFFER_STATUS,
+  OFFER_CANDIDATE_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
 
@@ -31,6 +31,7 @@ import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import _ from 'lodash';
 import { getUser } from 'src/controllers/User';
 import { getCVbyUserId } from 'src/controllers/CV';
+import { sortOpportunities } from 'src/utils/Sorting';
 
 const offerTable = process.env.AIRTABLE_OFFERS;
 const {
@@ -107,6 +108,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
       'archived',
       'note',
       'updatedAt',
+      'recommended',
     ],
     include: INCLUDE_OPPORTUNITY_CANDIDATE,
   },
@@ -124,6 +126,7 @@ const INCLUDE_OPPORTUNITY_USER = [
       'bookmarked',
       'archived',
       'note',
+      'recommended',
     ],
   },
 ];
@@ -161,6 +164,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
       'archived',
       'note',
       'seen',
+      'recommended',
     ],
   },
 ];
@@ -258,6 +262,7 @@ const getAirtableOpportunityFields = (
                 ? offerStatus.alt
                 : offerStatus.label,
             Commentaire: candidate.note,
+            'Recommandée ?': candidate.recommended,
           };
         }),
         commonFields,
@@ -308,7 +313,8 @@ const createOpportunity = async (data, isAdmin) => {
       data.candidatesId.map((candidatId) => {
         return Opportunity_User.create({
           OpportunityId: modelOpportunity.id,
-          UserId: candidatId, // to rename in userId
+          UserId: candidatId, // to rename in userId,
+          recommended: modelOpportunity.isPublic,
         }).then((model) => {
           return model[0];
         });
@@ -522,8 +528,20 @@ const getPrivateUserOpportunities = async (userId, params) => {
     return cleanOpportunity(model);
   });
 
+  const filterOpportunitiesByStatus = filterOffersByStatus(
+    cleanedOpportunities,
+    statusParams,
+    userId
+  );
+
+  const sortedOpportunities = sortOpportunities(
+    filterOpportunitiesByStatus,
+    undefined,
+    userId
+  );
+
   return {
-    offers: filterOffersByStatus(cleanedOpportunities, statusParams, userId),
+    offers: sortedOpportunities,
   };
 };
 
@@ -574,63 +592,13 @@ const getAllUserOpportunities = async (userId, params = {}) => {
     return opportunity;
   });
 
-  // order by bookmarked, then by new, then by status, then by date
-  finalOpportunities.sort((a, b) => {
-    if (a.userOpportunity || b.userOpportunity) {
-      if (a.userOpportunity && b.userOpportunity) {
-        if (a.userOpportunity.bookmarked === b.userOpportunity.bookmarked) {
-          if (a.userOpportunity.seen === b.userOpportunity.seen) {
-            if (a.userOpportunity.status === b.userOpportunity.status) {
-              return new Date(b.date) - new Date(a.date);
-            }
-            if (
-              a.userOpportunity.status >= OFFER_STATUS[4].value &&
-              b.userOpportunity.status >= OFFER_STATUS[4].value
-            ) {
-              return b.userOpportunity.status - a.userOpportunity.status;
-            }
-            if (
-              a.userOpportunity.status >= OFFER_STATUS[4].value &&
-              b.userOpportunity.status < OFFER_STATUS[4].value
-            ) {
-              return 1;
-            }
-            if (
-              a.userOpportunity.status < OFFER_STATUS[4].value &&
-              b.userOpportunity.status >= OFFER_STATUS[4].value
-            ) {
-              return -1;
-            }
-
-            return b.userOpportunity.status - a.userOpportunity.status;
-          }
-          if (a.userOpportunity.seen && !b.userOpportunity.seen) {
-            return -1;
-          }
-          if (!a.userOpportunity.seen && b.userOpportunity.seen) {
-            return 1;
-          }
-        }
-        if (a.userOpportunity.bookmarked && !b.userOpportunity.bookmarked) {
-          return -1;
-        }
-        if (!a.userOpportunity.bookmarked && b.userOpportunity.bookmarked) {
-          return 1;
-        }
-      }
-
-      if (b.userOpportunity) {
-        return -1;
-      }
-      if (a.userOpportunity) {
-        return 1;
-      }
-    }
-    return new Date(b.date) - new Date(a.date);
-  });
+  const sortedOpportunities = sortOpportunities(
+    finalOpportunities,
+    typeParams === OFFER_CANDIDATE_FILTERS_DATA[1].tag
+  );
 
   const filteredTypeOpportunities = filterCandidateOffersByType(
-    finalOpportunities,
+    sortedOpportunities,
     typeParams
   );
 
@@ -762,6 +730,7 @@ const addUserToOpportunity = async (opportunityId, userId, seen) => {
           'archived',
           'note',
           'seen',
+          'recommended',
         ],
       }
     ).then((model) => {
@@ -792,6 +761,7 @@ const updateOpportunityUser = async (opportunityUser) => {
       'archived',
       'note',
       'seen',
+      'recommended',
     ],
   }).then((model) => {
     return model && model.length > 1 && model[1][0];
@@ -836,8 +806,6 @@ const updateOpportunity = async (opportunity) => {
     });
   }
 
-  let newCandidatesIdsToSendMailTo;
-
   if (opportunity.candidatesId) {
     const t = await sequelize.transaction();
     try {
@@ -854,17 +822,50 @@ const updateOpportunity = async (opportunity) => {
           });
         })
       );
-      await Opportunity_User.destroy({
-        where: {
-          OpportunityId: modelOpportunity.id,
-          UserId: {
-            [Op.not]: opportunitiesUser.map((opportunityUser) => {
-              return opportunityUser.UserId;
-            }),
+
+      if (opportunity.isPublic) {
+        await Opportunity_User.update(
+          {
+            recommended: true,
           },
-        },
-        transaction: t,
-      });
+          {
+            where: {
+              id: opportunitiesUser.map((opportunityUser) => {
+                return opportunityUser.id;
+              }),
+            },
+            transaction: t,
+          }
+        );
+        await Opportunity_User.update(
+          {
+            recommended: false,
+          },
+          {
+            where: {
+              OpportunityId: modelOpportunity.id,
+              UserId: {
+                [Op.not]: opportunitiesUser.map((opportunityUser) => {
+                  return opportunityUser.UserId;
+                }),
+              },
+            },
+            transaction: t,
+          }
+        );
+      } else {
+        await Opportunity_User.destroy({
+          where: {
+            OpportunityId: modelOpportunity.id,
+            UserId: {
+              [Op.not]: opportunitiesUser.map((opportunityUser) => {
+                return opportunityUser.UserId;
+              }),
+            },
+          },
+          transaction: t,
+        });
+      }
 
       await t.commit();
     } catch (error) {
@@ -873,7 +874,9 @@ const updateOpportunity = async (opportunity) => {
     }
   }
 
-  // Check case where the opportunity has become private and has candidates, to see if there are any new candidates so send mail to
+  let newCandidatesIdsToSendMailTo;
+
+  // Check case where the opportunity has become private and has candidates, to see if there are any new candidates to send mail to
   const newCandidates =
     opportunity.candidatesId &&
     opportunity.candidatesId.length > 0 &&
@@ -893,25 +896,31 @@ const updateOpportunity = async (opportunity) => {
 
   const finalOpportunity = await getOpportunity(opportunity.id, true);
 
-  let candidatesToSendMailTo;
+  let candidatesToSendMailTo = null;
 
-  if (!finalOpportunity.isPublic && oldOpportunity) {
+  if (
+    oldOpportunity &&
+    finalOpportunity.userOpportunity &&
+    finalOpportunity.userOpportunity.length > 0
+  ) {
     // Case where the opportunity was not validated and has been validated, we send the mail to everybody
     if (!oldOpportunity.isValidated && finalOpportunity.isValidated) {
-      candidatesToSendMailTo =
-        finalOpportunity.userOpportunity &&
-        finalOpportunity.userOpportunity.length > 0
-          ? finalOpportunity.userOpportunity
-          : null;
+      candidatesToSendMailTo = finalOpportunity.isPublic
+        ? finalOpportunity.userOpportunity.filter((userOpp) => {
+            return userOpp.recommended;
+          })
+        : finalOpportunity.userOpportunity;
     } else if (newCandidatesIdsToSendMailTo) {
       // Case where the opportunity was already validated, and we just added new candidates to whom we have to send the mail
-      candidatesToSendMailTo =
-        finalOpportunity.userOpportunity &&
-        finalOpportunity.userOpportunity.length > 0
+      candidatesToSendMailTo = (
+        finalOpportunity.isPublic
           ? finalOpportunity.userOpportunity.filter((userOpp) => {
-              return newCandidatesIdsToSendMailTo.includes(userOpp.User.id);
+              return userOpp.recommended;
             })
-          : null;
+          : finalOpportunity.userOpportunity
+      ).filter((userOpp) => {
+        return newCandidatesIdsToSendMailTo.includes(userOpp.User.id);
+      });
     }
   }
 
@@ -938,7 +947,9 @@ const updateOpportunity = async (opportunity) => {
           toEmail: coach
             ? { to: candidat.User.email, cc: coach.email }
             : candidat.User.email,
-          templateId: MAILJET_TEMPLATES.OFFER_RECEIVED,
+          templateId: finalOpportunity.isPublic
+            ? MAILJET_TEMPLATES.OFFER_RECOMMENDED
+            : MAILJET_TEMPLATES.OFFER_RECEIVED,
           variables: {
             offer: _.omitBy(
               {
@@ -951,21 +962,23 @@ const updateOpportunity = async (opportunity) => {
           },
         });
 
-        await addToWorkQueue(
-          {
-            type: JOBS.JOB_TYPES.REMINDER_OFFER,
-            opportunityId: finalOpportunity.id,
-            candidatId: candidat.User.id,
-          },
-          {
-            delay:
-              (process.env.OFFER_REMINDER_DELAY
-                ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
-                : 5) *
-              3600000 *
-              24,
-          }
-        );
+        if (!finalOpportunity.isPublic) {
+          await addToWorkQueue(
+            {
+              type: JOBS.JOB_TYPES.REMINDER_OFFER,
+              opportunityId: finalOpportunity.id,
+              candidatId: candidat.User.id,
+            },
+            {
+              delay:
+                (process.env.OFFER_REMINDER_DELAY
+                  ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
+                  : 5) *
+                3600000 *
+                24,
+            }
+          );
+        }
       })
     );
   };

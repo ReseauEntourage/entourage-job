@@ -1,7 +1,7 @@
 import faker from 'faker';
 
 import { models } from 'src/db/models';
-import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import { DEPARTMENTS, DEPARTMENTS_FILTERS } from 'src/constants/departements';
 
 const { Opportunity } = models;
 
@@ -36,9 +36,9 @@ const { Opportunity } = models;
 const generateOpportunity = async (props) => {
   const data = {
     title: faker.lorem.words(2),
-    isPublic: faker.random.boolean(),
-    isValidated: faker.random.boolean(),
-    isArchived: faker.random.boolean(),
+    isPublic: true,
+    isValidated: true,
+    isArchived: false,
     company: faker.company.companyName(2),
     companyDescription: faker.lorem.paragraphs(3),
     recruiterName: faker.name.findName(),
@@ -46,10 +46,7 @@ const generateOpportunity = async (props) => {
     recruiterMail: faker.internet.email(),
     recruiterPhone: faker.phone.phoneNumber(),
     recruiterPosition: faker.lorem.words(2),
-    department:
-      DEPARTMENTS_FILTERS[
-        faker.random.number({ min: 0, max: DEPARTMENTS_FILTERS.length - 1 })
-      ].value,
+    department: DEPARTMENTS[0].name,
     date: faker.date.past(),
     description: faker.lorem.paragraphs(3),
     prerequisites: faker.lorem.paragraphs(3),
