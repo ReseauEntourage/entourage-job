@@ -685,7 +685,7 @@ describe('CV', () => {
             `${route}/cards/random/`
           );
           expect(response.status).toBe(200);
-          expect(response.body.cvs.length).toBe(3);
+          expect(response.body.cvs.length).toBe(18);
         });
       });
     });
