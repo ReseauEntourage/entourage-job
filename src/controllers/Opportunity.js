@@ -66,6 +66,8 @@ const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
   'recruiterFirstName',
   'recruiterPosition',
   'isPublic',
+  'isValidated',
+  'isExternal',
   'recruiterMail',
   'date',
   'department',
@@ -240,6 +242,7 @@ const getAirtableOpportunityFields = (
     'Pré-requis': opportunity.prerequisites,
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
+    Externe: opportunity.isExternal,
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
     'Date de création': opportunity.createdAt,
@@ -286,6 +289,41 @@ const updateTable = async (opportunity, candidates) => {
     tableName: offerTable,
     fields,
   });
+};
+
+const createExternalOpportunity = async (data, candidatId) => {
+  const modelOpportunity = await Opportunity.create({
+    ...data,
+    isExternal: true,
+    isPublic: false,
+    isArchived: false,
+    isValidated: true,
+  });
+
+  await Opportunity_User.create({
+    OpportunityId: modelOpportunity.id,
+    UserId: candidatId,
+  });
+
+  const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
+    attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
+  });
+
+  const cleanedOpportunity = cleanOpportunity(finalOpportunity);
+
+  const fields = getAirtableOpportunityFields(
+    finalOpportunity,
+    finalOpportunity.userOpportunity
+  );
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
+    tableName: offerTable,
+    fields,
+  });
+
+  return cleanedOpportunity;
 };
 
 const createOpportunity = async (data, isAdmin) => {
@@ -1051,8 +1089,41 @@ const updateOpportunity = async (opportunity) => {
   return finalOpportunity;
 };
 
+const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
+  const oldOpportunity = await getOpportunity(
+    opportunity.id,
+    isAdmin,
+    candidatId
+  );
+
+  if (oldOpportunity && oldOpportunity.isExternal) {
+    const modelOpportunity = await Opportunity.update(opportunity, {
+      where: { id: opportunity.id },
+      attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
+      include: INCLUDE_OPPORTUNITY_COMPLETE,
+      individualHooks: true,
+    }).then((model) => {
+      return model && model.length > 1 && model[1][0];
+    });
+
+    const cleanedOpportunity = cleanOpportunity(modelOpportunity);
+
+    try {
+      await updateTable(modelOpportunity, modelOpportunity.userOpportunity);
+      console.log('Updated table with modified offer.');
+    } catch (err) {
+      console.error(err);
+      console.log('Failed to update table with modified offer.');
+    }
+    return cleanedOpportunity;
+  }
+
+  return null;
+};
+
 export {
   createOpportunity,
+  createExternalOpportunity,
   deleteOpportunity,
   getOpportunity,
   getOpportunities,
@@ -1061,6 +1132,7 @@ export {
   getAllUserOpportunities,
   updateOpportunityUser,
   updateOpportunity,
+  updateExternalOpportunity,
   addUserToOpportunity,
   refreshAirtableOpportunities,
   getLatestOpportunities,

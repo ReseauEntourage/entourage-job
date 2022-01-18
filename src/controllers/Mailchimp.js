@@ -17,6 +17,10 @@ const sendToMailchimp = (email, zone, status) => {
     tags = [...tags, ...(Array.isArray(status) ? status : [status])];
   }
 
+  if (process.env.NODE_ENV.includes('test')) {
+    return;
+  }
+
   return mailchimp.lists.setListMember(
     process.env.MAILCHIMP_AUDIENCE_ID,
     email,

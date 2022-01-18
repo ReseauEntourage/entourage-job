@@ -1,9 +1,19 @@
 import faker from 'faker';
 
 import { models } from 'src/db/models';
-import { DEPARTMENTS, DEPARTMENTS_FILTERS } from 'src/constants/departements';
-
+import { DEPARTMENTS } from 'src/constants/departements';
+import moment from 'moment';
 const { Opportunity } = models;
+
+let totalOppsInDB = 0;
+
+const getTotalOppsInDB = () => {
+  return totalOppsInDB;
+};
+
+const incrTotalOppsInDB = () => {
+  totalOppsInDB += 1;
+};
 
 /**
  * an oject which contains the data necessary
@@ -12,6 +22,7 @@ const { Opportunity } = models;
  * @param {Object} props opportunity data
  * @param {string} props.title
  * @param {boolean} props.isPublic
+ * @param {boolean} props.isExternal
  * @param {boolean} props.isValidated
  * @param {boolean} props.isArchived
  * @param {string} props.company
@@ -37,6 +48,7 @@ const generateOpportunity = async (props) => {
   const data = {
     title: faker.lorem.words(2),
     isPublic: true,
+    isExternal: false,
     isValidated: true,
     isArchived: false,
     company: faker.company.companyName(2),
@@ -47,17 +59,18 @@ const generateOpportunity = async (props) => {
     recruiterPhone: faker.phone.phoneNumber(),
     recruiterPosition: faker.lorem.words(2),
     department: DEPARTMENTS[0].name,
-    date: faker.date.past(),
+    date: moment().toISOString(),
     description: faker.lorem.paragraphs(3),
     prerequisites: faker.lorem.paragraphs(3),
     skills: faker.lorem.paragraphs(3),
     contract: faker.lorem.words(2),
-    endOfContract: faker.date.future(),
-    startOfContract: faker.date.future(),
+    endOfContract: moment().format('YYYY-MM-DD'),
+    startOfContract: moment().format('YYYY-MM-DD'),
     isPartTime: faker.random.boolean(),
     beContacted: faker.random.boolean(),
     numberOfPositions: faker.random.number(),
-    createdAt: faker.date.past(),
+    createdAt: moment().toISOString(),
+    updatedAt: moment().toISOString(),
     message: faker.lorem.paragraphs(3),
   };
   return {
@@ -79,8 +92,10 @@ const opportunityFactory = async (props = {}, insertInDB = true) => {
   if (insertInDB) {
     const answer = await Opportunity.create(opportunityData);
     opportunityData = answer.dataValues;
+    incrTotalOppsInDB();
   }
   return opportunityData;
 };
 
 export default opportunityFactory;
+export { getTotalOppsInDB, incrTotalOppsInDB };

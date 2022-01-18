@@ -7,6 +7,17 @@ import { logger } from 'src/utils/Logger';
 import express from 'express';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 
+const authorizedExternalOpportunityKeys = [
+  'id',
+  'title',
+  'company',
+  'contract',
+  'startOfContract',
+  'endOfContract',
+  'isPartTime',
+  'department',
+];
+
 const router = express.Router();
 
 // Temp route to update the opportunities on Airtable
@@ -41,6 +52,43 @@ router.post('/', auth(), (req, res) => {
       res.status(401).send(`Une erreur est survenue`);
     });
 });
+
+/**
+ * Route : POST /api/<VERSION>/opportunity/external
+ * Description : Create an external opportunity
+ * Response:
+ * -  200 + created opportunity
+ * -  401
+ */
+router.post(
+  '/external',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    const { candidateId, ...restParams } = req.body;
+    checkCandidatOrCoachAuthorization(req, res, candidateId, () => {
+      const keys = Object.keys(restParams);
+      const isAdmin = req.payload.role === USER_ROLES.ADMIN;
+
+      if (
+        isAdmin ||
+        !keys.some((key) => {
+          return !authorizedExternalOpportunityKeys.includes(key);
+        })
+      ) {
+        OpportunityController.createExternalOpportunity(restParams, candidateId)
+          .then((opportunity) => {
+            return res.status(200).json(opportunity);
+          })
+          .catch((err) => {
+            logger(res).error(err);
+            res.status(401).send(`Une erreur est survenue`);
+          });
+      } else {
+        res.status(401).send({ message: 'Unauthorized' });
+      }
+    });
+  }
+);
 
 /**
  * Route : GET /api/<VERSION>/opportunity/admin/<QUERY>
@@ -276,6 +324,52 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       res.status(401).send(`Une erreur est survenue`);
     });
 });
+
+/**
+ * Route: PUT /api/<VERSION>/opportunity/external
+ * Description: Admins and users can update an external opportunity
+ * Body:
+ * - <Opportunity> : object containing ID and fields to update
+ * Responses:
+ * - 200 + updated opportunity
+ * - 401
+ */
+router.put(
+  '/external',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    const { candidateId, ...restParams } = req.body;
+    checkCandidatOrCoachAuthorization(req, res, candidateId, () => {
+      const keys = Object.keys(restParams);
+      const isAdmin = req.payload.role === USER_ROLES.ADMIN;
+      if (
+        isAdmin ||
+        !keys.some((key) => {
+          return !authorizedExternalOpportunityKeys.includes(key);
+        })
+      ) {
+        OpportunityController.updateExternalOpportunity(
+          restParams,
+          candidateId,
+          isAdmin
+        )
+          .then((opp) => {
+            if (opp) {
+              res.status(200).json(opp);
+            } else {
+              res.status(401).send({ message: 'Unauthorized' });
+            }
+          })
+          .catch((err) => {
+            logger(res).error(err);
+            res.status(401).send(`Une erreur est survenue`);
+          });
+      } else {
+        res.status(401).send({ message: 'Unauthorized' });
+      }
+    });
+  }
+);
 /**
  * Route: UPDATE /api/<VERSION>/opportunity/join
  * Description: Update an association between a user and an opporrtunity
