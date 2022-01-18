@@ -1,5 +1,5 @@
 import * as AuthController from 'src/controllers/Auth';
-import { auth } from 'src/controllers/Auth';
+import { auth, isTokenValid } from 'src/controllers/Auth';
 import * as UserController from 'src/controllers/User';
 import { JOBS, MAILJET_TEMPLATES, REDIS_KEYS, USER_ROLES } from 'src/constants';
 import RateLimiter from 'src/utils/RateLimiter';
@@ -74,47 +74,42 @@ router.post(
   }
 );
 
-router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
-  let token = null;
-  let user = null;
-  const { email } = req.body;
-  logger(res).log(
-    `Demande de réinitialisation du mot de passe du compte : ${email}`
-  );
-  if (!email) {
-    return res.status(422).json({
-      errors: {
-        email: 'is required',
-      },
-    });
-  }
-  return UserController.getUserByEmail(email)
-    .then((userFound) => {
-      user = userFound;
+router.post('/forgot', authLimiter, auth(), async (req, res /* , next */) => {
+  try {
+    const { email } = req.body;
+    logger(res).log(
+      `Demande de réinitialisation du mot de passe du compte : ${email}`
+    );
 
-      if (!user) {
-        logger(res).log(
-          `Aucun user rattaché à l'adresse mail suivante : ${email}`
-        );
-        return false;
-      }
-
-      logger(res).log(
-        `Demande de réinitialisation du mot de passe : user.id = ${user.id}`
-      );
-
-      token = AuthController.generateJWT(user, '1 day');
-      const { hash, salt } = AuthController.encryptPassword(token);
-
-      return UserController.setUser(user.id, {
-        hashReset: hash,
-        saltReset: salt,
+    if (!email) {
+      return res.status(422).json({
+        errors: {
+          email: 'is required',
+        },
       });
-    })
-    .then(async (updatedUser) => {
-      if (!updatedUser) {
-        return res.status(404).send(`Utilisateur inexistant`);
-      }
+    }
+    const user = await UserController.getUserByEmail(email);
+
+    if (!user) {
+      logger(res).log(
+        `Aucun user rattaché à l'adresse mail suivante : ${email}`
+      );
+      return res.status(404).send(`Utilisateur inexistant`);
+    }
+
+    logger(res).log(
+      `Demande de réinitialisation du mot de passe : user.id = ${user.id}`
+    );
+
+    const token = AuthController.generateJWT(user, '30s');
+    const { hash, salt } = AuthController.encryptPassword(token);
+
+    const updatedUser = await UserController.setUser(user.id, {
+      hashReset: hash,
+      saltReset: salt,
+    });
+
+    if (updatedUser) {
       logger(res).log('sending email');
 
       const {
@@ -138,11 +133,12 @@ router.post('/forgot', authLimiter, auth(), (req, res /* , next */) => {
       });
 
       return res.status(200).send('Demande envoyée');
-    })
-    .catch((err) => {
-      logger(res).error(err);
-      return res.status(401).send(`Une erreur est survenue`);
-    });
+    }
+    return res.status(404).send(`Utilisateur inexistant`);
+  } catch (err) {
+    logger(res).error(err);
+    return res.status(401).send(`Une erreur est survenue`);
+  }
 });
 
 /**
@@ -152,47 +148,45 @@ router.get(
   '/reset/:userId/:token',
   authLimiter,
   auth(),
-  (req, res /* , next */) => {
-    const infoLog = 'GET /reset/:userId/:token -';
+  async (req, res /* , next */) => {
+    try {
+      const infoLog = 'GET /reset/:userId/:token -';
 
-    const { userId, token } = req.params;
-    logger(res).log(
-      `${infoLog} Vérification du lien de réinitialisation de mot de passe`
-    );
-    logger(res).log(`${infoLog} userId : ${userId} , token : ${token}`);
+      const { userId, token } = req.params;
+      logger(res).log(
+        `${infoLog} Vérification du lien de réinitialisation de mot de passe`
+      );
+      logger(res).log(`${infoLog} userId : ${userId} , token : ${token}`);
 
-    UserController.getCompleteUser(userId)
-      .then((userFound) => {
-        const user = userFound;
+      const user = await UserController.getCompleteUser(userId);
 
-        if (!user) {
-          logger(res).log(
-            `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
-          );
-          return res.status(403).send({
-            error: 'Lien non valide',
-          });
-        }
-        /* logger(res).log(`${infoLog} DEBUG :`);
-      logger(res).log(user); */
-        if (
-          !AuthController.validatePassword(
-            token,
-            user.hashReset,
-            user.saltReset
-          )
-        ) {
-          logger(res).error(` ${infoLog} Token invalide`);
-          return res.status(403).send({
-            error: 'Lien non valide',
-          });
-        }
-        return res.status(200).send('Lien valide');
-      })
-      .catch((err) => {
-        logger(res).log(err);
-        return res.status(401).send(`Une erreur est survenue`);
-      });
+      if (!user) {
+        logger(res).log(
+          `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
+        );
+        return res.status(403).send({
+          error: 'Lien non valide',
+        });
+      }
+
+      if (
+        !AuthController.validatePassword(
+          token,
+          user.hashReset,
+          user.saltReset
+        ) ||
+        !isTokenValid(token)
+      ) {
+        logger(res).error(` ${infoLog} Token invalide`);
+        return res.status(403).send({
+          error: 'Lien non valide',
+        });
+      }
+      return res.status(200).send('Lien valide');
+    } catch (err) {
+      logger(res).log(err);
+      return res.status(401).send(`Une erreur est survenue`);
+    }
   }
 );
 
@@ -203,77 +197,81 @@ router.post(
   '/reset/:userId/:token',
   authLimiter,
   auth(),
-  (req, res /* , next */) => {
-    const infoLog = 'POST /reset/:userId/:token -';
-    const { userId, token } = req.params;
-    const { newPassword, confirmPassword } = req.body;
-    logger(res).log(
-      `${infoLog} Vérification du lien de réinitialisation de mot de passe`
-    );
-    logger(res).log(`${infoLog} userId : ${userId} , token : ${token}`);
+  async (req, res /* , next */) => {
+    try {
+      const infoLog = 'POST /reset/:userId/:token -';
+      const { userId, token } = req.params;
+      const { newPassword, confirmPassword } = req.body;
+      logger(res).log(
+        `${infoLog} Vérification du lien de réinitialisation de mot de passe`
+      );
+      logger(res).log(`${infoLog} userId : ${userId} , token : ${token}`);
 
-    UserController.getCompleteUser(userId)
-      .then((userFound) => {
-        const user = userFound;
-        if (!user) {
-          logger(res).error(
-            `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
-          );
-          return res.status(403).send({
-            error: 'Lien non valide',
-          });
-        }
-        /* logger(res).log(`${infoLog} DEBUG :`);
-      logger(res).log(user); */
-        if (
-          !(
-            user.hashReset &&
-            user.saltReset &&
-            AuthController.validatePassword(
-              token,
-              user.hashReset,
-              user.saltReset
-            )
-          )
-        ) {
-          logger(res).error(`${infoLog} Token invalide`);
-          return res.status(403).send({
-            error: 'Lien non valide',
-          });
-        }
-        logger(res).log(`${infoLog} Lien valide`);
-        if (newPassword !== confirmPassword) {
-          logger(res).error(
-            `${infoLog} La confirmation de mot de passe est incorrecte`
-          );
-          return res.status(400).send({
-            error: `La confirmation du mot de passe est incorrecte`,
-          });
-        }
-        logger(res).log(`${infoLog} Les 2 mots de passe sont valides`);
-        logger(res).log(`${infoLog} Chiffrement du nouveau mot de passe`);
-        const { hash, salt } = AuthController.encryptPassword(newPassword);
-        logger(res).log(
-          `${infoLog} Mise à jour du mot de passe de l'utilisateur`
+      const user = await UserController.getCompleteUser(userId);
+      if (!user) {
+        logger(res).error(
+          `${infoLog} Aucun user rattaché à l'id fournit : ${userId}`
         );
-        return UserController.setUser(user.id, {
-          password: hash,
-          salt,
-          hashReset: null,
-          saltReset: null,
-        }).then((userUpdated) => {
-          if (userUpdated) {
-            logger(res).log(`${infoLog} Mise à jour réussie`);
-            return res.status(200).json(userUpdated);
-          }
-          logger(res).error(`${infoLog} Erreur de réinitialisation`);
-          return res.status(401).send(`Une erreur inconnue est survenue`);
+        return res.status(403).send({
+          error: 'Lien non valide',
         });
-      })
-      .catch((err) => {
-        logger(res).error(err);
-        return res.status(401).send(`Une erreur est survenue`);
+      }
+
+      if (
+        !(
+          user.hashReset &&
+          user.saltReset &&
+          AuthController.validatePassword(
+            token,
+            user.hashReset,
+            user.saltReset
+          ) &&
+          isTokenValid(token)
+        )
+      ) {
+        logger(res).error(`${infoLog} Token invalide`);
+        return res.status(403).send({
+          error: 'Lien non valide',
+        });
+      }
+
+      logger(res).log(`${infoLog} Lien valide`);
+
+      if (newPassword !== confirmPassword) {
+        logger(res).error(
+          `${infoLog} La confirmation de mot de passe est incorrecte`
+        );
+        return res.status(400).send({
+          error: `La confirmation du mot de passe est incorrecte`,
+        });
+      }
+
+      logger(res).log(`${infoLog} Les 2 mots de passe sont valides`);
+      logger(res).log(`${infoLog} Chiffrement du nouveau mot de passe`);
+
+      const { hash, salt } = AuthController.encryptPassword(newPassword);
+
+      logger(res).log(
+        `${infoLog} Mise à jour du mot de passe de l'utilisateur`
+      );
+      const userUpdated = await UserController.setUser(user.id, {
+        password: hash,
+        salt,
+        hashReset: null,
+        saltReset: null,
       });
+
+      if (userUpdated) {
+        logger(res).log(`${infoLog} Mise à jour réussie`);
+        return res.status(200).json(userUpdated);
+      }
+
+      logger(res).error(`${infoLog} Erreur de réinitialisation`);
+      return res.status(401).send(`Une erreur inconnue est survenue`);
+    } catch (err) {
+      logger(res).error(err);
+      return res.status(401).send(`Une erreur est survenue`);
+    }
   }
 );
 

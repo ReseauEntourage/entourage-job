@@ -22,6 +22,16 @@ function validatePassword(password, hash, salt) {
   return passwordHash === hash;
 }
 
+function isTokenValid(token) {
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+    return true;
+  } catch (err) {
+    console.log('Token invalid : ', err);
+    return false;
+  }
+}
+
 // param expiration est la date de fin en secondes
 function generateJWT(user, expiration) {
   let candidatId = null;
@@ -123,6 +133,7 @@ export {
   auth,
   encryptPassword,
   generateJWT,
+  isTokenValid,
   toAuthJSON,
   validatePassword,
   getTokenFromHeaders,

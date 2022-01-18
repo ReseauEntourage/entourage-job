@@ -240,7 +240,6 @@ router.get(
  * Route : PUT /api/<VERSION>/user/<ID>
  * Description : Modifie le User associé à l'<ID> fournit
  */
-// TODO check
 router.put(
   '/change-pwd',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
