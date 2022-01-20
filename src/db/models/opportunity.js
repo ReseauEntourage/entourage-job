@@ -23,13 +23,26 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false,
       },
+      isExternal: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      link: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      externalOrigin: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       company: {
         type: DataTypes.STRING,
         allowNull: true,
       },
       recruiterName: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       recruiterFirstName: {
         type: DataTypes.STRING,
@@ -37,7 +50,7 @@ export default (sequelize, DataTypes) => {
       },
       recruiterMail: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       recruiterPosition: {
         type: DataTypes.STRING,
@@ -58,7 +71,7 @@ export default (sequelize, DataTypes) => {
       },
       description: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       companyDescription: {
         type: DataTypes.TEXT,

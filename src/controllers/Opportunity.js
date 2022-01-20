@@ -1,7 +1,9 @@
 import {
+  EXTERNAL_OFFERS_ORIGINS,
   JOBS,
   MAILJET_TEMPLATES,
   NEWSLETTER_TAGS,
+  OFFER_ADMIN_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
@@ -66,6 +68,10 @@ const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
   'recruiterFirstName',
   'recruiterPosition',
   'isPublic',
+  'isValidated',
+  'isExternal',
+  'link',
+  'externalOrigin',
   'recruiterMail',
   'date',
   'department',
@@ -240,6 +246,11 @@ const getAirtableOpportunityFields = (
     'Pré-requis': opportunity.prerequisites,
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
+    Externe: opportunity.isExternal,
+    'Lien externe': opportunity.link,
+    'Origine externe': EXTERNAL_OFFERS_ORIGINS.find((origin) => {
+      return opportunity.externalOrigin === origin.value;
+    })?.label,
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
     'Date de création': opportunity.createdAt,
@@ -286,6 +297,46 @@ const updateTable = async (opportunity, candidates) => {
     tableName: offerTable,
     fields,
   });
+};
+
+const createExternalOpportunity = async (data, candidatId) => {
+  const modelOpportunity = await Opportunity.create({
+    ...data,
+    isExternal: true,
+    isPublic: false,
+    isArchived: false,
+    isValidated: true,
+  });
+
+  await Opportunity_User.create({
+    OpportunityId: modelOpportunity.id,
+    UserId: candidatId,
+  });
+
+  const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
+    attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
+  });
+
+  const fields = getAirtableOpportunityFields(
+    finalOpportunity,
+    finalOpportunity.userOpportunity
+  );
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
+    tableName: offerTable,
+    fields,
+  });
+
+  const cleanedOpportunity = cleanOpportunity(finalOpportunity);
+
+  return {
+    ...cleanedOpportunity,
+    userOpportunity: cleanedOpportunity.userOpportunity.find((uo) => {
+      return uo.UserId === candidatId;
+    }),
+  };
 };
 
 const createOpportunity = async (data, isAdmin) => {
@@ -433,6 +484,10 @@ const getOpportunities = async (params) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     paranoid: false,
   };
+
+  if (typeParams && typeParams === OFFER_ADMIN_FILTERS_DATA[3].tag) {
+    delete filterOptions.isPublic;
+  }
 
   const opportunities = await Opportunity.findAll({
     ...options,
@@ -1051,8 +1106,50 @@ const updateOpportunity = async (opportunity) => {
   return finalOpportunity;
 };
 
+const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
+  const oldOpportunity = await getOpportunity(
+    opportunity.id,
+    isAdmin,
+    candidatId
+  );
+
+  if (oldOpportunity && oldOpportunity.isExternal) {
+    const modelOpportunity = await Opportunity.update(opportunity, {
+      where: { id: opportunity.id },
+      individualHooks: true,
+    }).then((model) => {
+      return model && model.length > 1 && model[1][0];
+    });
+
+    const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
+      attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
+      include: INCLUDE_OPPORTUNITY_COMPLETE,
+    });
+
+    try {
+      await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
+      console.log('Updated table with modified offer.');
+    } catch (err) {
+      console.error(err);
+      console.log('Failed to update table with modified offer.');
+    }
+
+    const cleanedOpportunity = cleanOpportunity(finalOpportunity);
+
+    return {
+      ...cleanedOpportunity,
+      userOpportunity: cleanedOpportunity.userOpportunity.find((uo) => {
+        return uo.UserId === candidatId;
+      }),
+    };
+  }
+
+  return null;
+};
+
 export {
   createOpportunity,
+  createExternalOpportunity,
   deleteOpportunity,
   getOpportunity,
   getOpportunities,
@@ -1061,6 +1158,7 @@ export {
   getAllUserOpportunities,
   updateOpportunityUser,
   updateOpportunity,
+  updateExternalOpportunity,
   addUserToOpportunity,
   refreshAirtableOpportunities,
   getLatestOpportunities,

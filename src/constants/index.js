@@ -157,6 +157,7 @@ const OFFER_ADMIN_FILTERS_DATA = [
   { tag: 'all', title: 'Toutes les offres' },
   { tag: 'pending', title: 'Offres à valider', active: true },
   { tag: 'validated', title: 'Offres publiées' },
+  { tag: 'external', title: 'Offres externes' },
   { tag: 'archived', title: 'Offres archivées' },
 ];
 
@@ -264,11 +265,6 @@ const USER_ROLES = {
   ADMIN: 'Admin',
 };
 
-const ADMIN_ROLES = {
-  CANDIDATES: 'Candidats',
-  COMPANIES: 'Entreprises',
-};
-
 const CONTRACTS = [
   {
     label: 'CDI',
@@ -312,27 +308,16 @@ const CONTRACTS = [
   },
 ];
 
-const EXTERNAL_LINKS = {
-  DONATION: 'https://entourage.iraiser.eu/linkedout/~mon-don',
-  LKO_VG: 'https://www.linkedout-vendeeglobe.com',
-  LKO_VG_CONTEST: 'https://www.linkedout-vendeeglobe.com/vendeearctique',
-  LKO_BLOG: 'https://blog.linkedout.fr',
-  ENTOURAGE: 'https://www.entourage.social',
-  LEGAL_MENTIONS:
-    'https://docs.google.com/document/d/1a1IU9Y6qVDr4pvWJRE5XMVZ2fNhg0rhXMTL_lqY_f1M/pub',
-  ARTICLE_BC: 'https://blog.entourage.social/2020/06/22/benevole-coach/',
-  ARTICLE_TJV:
-    'https://blog.linkedout.fr/2021/11/25/le-bateau-linkedout-vainqueur-de-la-transat-jacques-vabre/',
-  CAMPUS_INCLUSION: 'https://campus-inclusion.fr',
-  FRANCE_UNE_CHANCE:
-    'https://lafrance-unechance.fr/carte-des-clubs-la-france-une-chance/',
-  REPAIRS_75: 'https://www.repairs75.org/',
-  REDSTAR:
-    'https://blog.linkedout.fr/2021/07/21/apres-la-voile-le-foot-linkedout-nouveau-partenaire-maillot-du-red-star-fc-avec-le-soutien-de-randstad/',
-  TOOLBOX:
-    'https://drive.google.com/drive/folders/1fUhZtsdaAElpjWsC6Rz4Jw5ZJ94vBnSd?usp=sharing',
-  RECRUITMENTS: 'https://www.welcometothejungle.com/fr/companies/entourage',
-};
+const EXTERNAL_OFFERS_ORIGINS = [
+  {
+    label: 'Mon réseau',
+    value: 'network',
+  },
+  {
+    label: 'Recherches Internet',
+    value: 'internet',
+  },
+];
 
 const REDIS_KEYS = {
   CV_PREFIX: 'cv-',
@@ -428,7 +413,7 @@ export {
   CV_STATUS,
   USER_ROLES,
   BUSINESS_LINES,
-  EXTERNAL_LINKS,
+  EXTERNAL_OFFERS_ORIGINS,
   VALUES,
   CV_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
@@ -439,7 +424,6 @@ export {
   REDIS_KEYS,
   JOBS,
   SOCKETS,
-  ADMIN_ROLES,
   CONTRACTS,
   MAILJET_TEMPLATES,
   HEARD_ABOUT,
