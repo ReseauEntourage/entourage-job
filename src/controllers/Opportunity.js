@@ -1,4 +1,5 @@
 import {
+  EXTERNAL_OFFERS_ORIGINS,
   JOBS,
   MAILJET_TEMPLATES,
   NEWSLETTER_TAGS,
@@ -247,7 +248,9 @@ const getAirtableOpportunityFields = (
     Publique: opportunity.isPublic,
     Externe: opportunity.isExternal,
     'Lien externe': opportunity.link,
-    'Origine externe': opportunity.externalOrigin,
+    'Origine externe': EXTERNAL_OFFERS_ORIGINS.find((origin) => {
+      return opportunity.externalOrigin === origin.value;
+    })?.label,
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
     'Date de création': opportunity.createdAt,
