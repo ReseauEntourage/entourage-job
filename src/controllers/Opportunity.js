@@ -2,6 +2,7 @@ import {
   JOBS,
   MAILJET_TEMPLATES,
   NEWSLETTER_TAGS,
+  OFFER_ADMIN_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
@@ -68,6 +69,8 @@ const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
   'isPublic',
   'isValidated',
   'isExternal',
+  'link',
+  'externalOrigin',
   'recruiterMail',
   'date',
   'department',
@@ -243,6 +246,8 @@ const getAirtableOpportunityFields = (
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
     Externe: opportunity.isExternal,
+    'Lien externe': opportunity.link,
+    'Origine externe': opportunity.externalOrigin,
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
     'Date de création': opportunity.createdAt,
@@ -310,8 +315,6 @@ const createExternalOpportunity = async (data, candidatId) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE,
   });
 
-  const cleanedOpportunity = cleanOpportunity(finalOpportunity);
-
   const fields = getAirtableOpportunityFields(
     finalOpportunity,
     finalOpportunity.userOpportunity
@@ -323,7 +326,14 @@ const createExternalOpportunity = async (data, candidatId) => {
     fields,
   });
 
-  return cleanedOpportunity;
+  const cleanedOpportunity = cleanOpportunity(finalOpportunity);
+
+  return {
+    ...cleanedOpportunity,
+    userOpportunity: cleanedOpportunity.userOpportunity.find((uo) => {
+      return uo.UserId === candidatId;
+    }),
+  };
 };
 
 const createOpportunity = async (data, isAdmin) => {
@@ -471,6 +481,10 @@ const getOpportunities = async (params) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     paranoid: false,
   };
+
+  if (typeParams && typeParams === OFFER_ADMIN_FILTERS_DATA[3].tag) {
+    delete filterOptions.isPublic;
+  }
 
   const opportunities = await Opportunity.findAll({
     ...options,
@@ -1099,23 +1113,32 @@ const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
   if (oldOpportunity && oldOpportunity.isExternal) {
     const modelOpportunity = await Opportunity.update(opportunity, {
       where: { id: opportunity.id },
-      attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
-      include: INCLUDE_OPPORTUNITY_COMPLETE,
       individualHooks: true,
     }).then((model) => {
       return model && model.length > 1 && model[1][0];
     });
 
-    const cleanedOpportunity = cleanOpportunity(modelOpportunity);
+    const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
+      attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
+      include: INCLUDE_OPPORTUNITY_COMPLETE,
+    });
 
     try {
-      await updateTable(modelOpportunity, modelOpportunity.userOpportunity);
+      await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
       console.log('Updated table with modified offer.');
     } catch (err) {
       console.error(err);
       console.log('Failed to update table with modified offer.');
     }
-    return cleanedOpportunity;
+
+    const cleanedOpportunity = cleanOpportunity(finalOpportunity);
+
+    return {
+      ...cleanedOpportunity,
+      userOpportunity: cleanedOpportunity.userOpportunity.find((uo) => {
+        return uo.UserId === candidatId;
+      }),
+    };
   }
 
   return null;

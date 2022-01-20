@@ -32,6 +32,9 @@ const incrTotalOppsInDB = () => {
  * @param {string} props.recruiterMail
  * @param {string} props.recruiterPhone
  * @param {string} props.recruiterPosition
+ * @param {string} props.message
+ * @param {string} props.link
+ * @param {string} props.externalOrigin
  * @param {string} props.department
  * @param {string} props.date
  * @param {string} props.decription
@@ -41,7 +44,7 @@ const incrTotalOppsInDB = () => {
  * @param {string} props.endOfContract
  * @param {string} props.isPartTime
  * @param {string} props.numberOfPositions
- * @param {string} props.beContacter
+ * @param {string} props.beContacted
  * @param {string} props.createdAt
  */
 const generateOpportunity = async (props) => {
@@ -72,6 +75,8 @@ const generateOpportunity = async (props) => {
     createdAt: moment().toISOString(),
     updatedAt: moment().toISOString(),
     message: faker.lorem.paragraphs(3),
+    link: faker.lorem.words(2),
+    externalOrigin: faker.lorem.words(2),
   };
   return {
     ...data,

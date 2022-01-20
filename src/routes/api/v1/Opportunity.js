@@ -12,10 +12,14 @@ const authorizedExternalOpportunityKeys = [
   'title',
   'company',
   'contract',
+  'link',
+  'externalOrigin',
+  'description',
   'startOfContract',
   'endOfContract',
   'isPartTime',
   'department',
+  'date',
 ];
 
 const router = express.Router();

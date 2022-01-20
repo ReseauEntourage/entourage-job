@@ -157,6 +157,7 @@ const OFFER_ADMIN_FILTERS_DATA = [
   { tag: 'all', title: 'Toutes les offres' },
   { tag: 'pending', title: 'Offres à valider', active: true },
   { tag: 'validated', title: 'Offres publiées' },
+  { tag: 'external', title: 'Offres externes' },
   { tag: 'archived', title: 'Offres archivées' },
 ];
 

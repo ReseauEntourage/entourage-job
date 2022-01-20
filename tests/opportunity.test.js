@@ -372,7 +372,7 @@ describe('Opportunity', () => {
               updatedAt: response.body.updatedAt,
             })
           );
-          expect(response.body.userOpportunity[0].User.id).toMatch(candidateId);
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
           incrTotalOppsInDB();
         });
         it('Should return 401, if logged in as candidate and valid opportunity with unauthorized values', async () => {
@@ -445,7 +445,7 @@ describe('Opportunity', () => {
               updatedAt: response.body.updatedAt,
             })
           );
-          expect(response.body.userOpportunity[0].User.id).toMatch(candidateId);
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
           incrTotalOppsInDB();
         });
         it("Should return 401, if logged in as coach and creates another candidate's opportunity", async () => {
@@ -501,7 +501,7 @@ describe('Opportunity', () => {
               updatedAt: response.body.updatedAt,
             })
           );
-          expect(response.body.userOpportunity[0].User.id).toMatch(candidateId);
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
           incrTotalOppsInDB();
         });
         it('Should return 401, if logged in as admin invalid opportunity', async () => {
@@ -648,6 +648,12 @@ describe('Opportunity', () => {
                 expect.objectContaining({
                   isValidated: true,
                 }),
+                expect.objectContaining({
+                  isExternal: true,
+                }),
+                expect.objectContaining({
+                  isArchived: true,
+                }),
               ])
             );
           });
@@ -656,11 +662,37 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=validated`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(34);
+            expect(response.body.offers.length).toBe(29);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isValidated: false,
+                }),
+                expect.objectContaining({
+                  isExternal: true,
+                }),
+                expect.objectContaining({
+                  isArchived: true,
+                }),
+              ])
+            );
+          });
+          it('should return 200, and all the opportunities that matches the external filter', async () => {
+            const response = await request(serverTest)
+              .get(`${route}/admin?type=external`)
+              .set('authorization', `Token ${loggedInAdmin.token}`);
+            expect(response.status).toBe(200);
+            expect(response.body.offers.length).toBe(5);
+            expect(response.body.offers).not.toEqual(
+              expect.arrayContaining([
+                expect.objectContaining({
+                  isValidated: false,
+                }),
+                expect.objectContaining({
+                  isExternal: false,
+                }),
+                expect.objectContaining({
+                  isArchived: false,
                 }),
               ])
             );
@@ -994,6 +1026,11 @@ describe('Opportunity', () => {
                     recommended: false,
                   }),
                 }),
+                expect.objectContaining({
+                  userOpportunity: expect.objectContaining({
+                    archived: true,
+                  }),
+                }),
               ])
             );
           });
@@ -1007,6 +1044,11 @@ describe('Opportunity', () => {
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: false,
+                }),
+                expect.objectContaining({
+                  userOpportunity: expect.objectContaining({
+                    archived: true,
+                  }),
                 }),
               ])
             );
@@ -1023,7 +1065,7 @@ describe('Opportunity', () => {
               expect.arrayContaining([
                 expect.objectContaining({
                   userOpportunity: expect.objectContaining({
-                    isArchived: false,
+                    archived: false,
                   }),
                 }),
               ])
@@ -1118,6 +1160,11 @@ describe('Opportunity', () => {
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: false,
+                }),
+                expect.objectContaining({
+                  userOpportunity: expect.objectContaining({
+                    archived: true,
+                  }),
                 }),
               ])
             );
@@ -1255,7 +1302,7 @@ describe('Opportunity', () => {
             .set('authorization', `Token ${loggedInAdmin.token}`)
             .send(update);
           expect(response.status).toBe(200);
-          expect(response.body.userOpportunity[0].User.id).toBe(
+          expect(response.body.userOpportunity[0].UserId).toMatch(
             otherCandidat.user.id
           );
         });
@@ -1301,6 +1348,7 @@ describe('Opportunity', () => {
               updatedAt: response.body.updatedAt,
             })
           );
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
         });
         it('Should return 401, if logged in as candidate and updates own opportunity with unauthorized values', async () => {
           const newTitle = 'updated title';
@@ -1389,6 +1437,7 @@ describe('Opportunity', () => {
               updatedAt: response.body.updatedAt,
             })
           );
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
         });
         it("Should return 401, if logged in as coach and creates another candidate's opportunity", async () => {
           const newTitle = 'updated title';
@@ -1415,8 +1464,14 @@ describe('Opportunity', () => {
           const newTitle = 'updated title';
           const candidateId = loggedInCandidat.user.id;
           const updatedOpportunity = {
-            ...candidatExternalOpportunity,
+            id: candidatExternalOpportunity.id,
             title: newTitle,
+            company: candidatExternalOpportunity.company,
+            contract: candidatExternalOpportunity.contract,
+            startOfContract: candidatExternalOpportunity.startOfContract,
+            endOfContract: candidatExternalOpportunity.endOfContract,
+            isPartTime: candidatExternalOpportunity.isPartTime,
+            department: candidatExternalOpportunity.department,
           };
           const response = await request(serverTest)
             .put(`${route}/external`)
@@ -1434,6 +1489,7 @@ describe('Opportunity', () => {
               date: response.body.date,
             })
           );
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
         });
         it('Should return 401, if logged in as admin and updates non external opportunity', async () => {
           const newTitle = 'updated title';

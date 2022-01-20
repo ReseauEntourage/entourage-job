@@ -32,6 +32,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      externalOrigin: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       company: {
         type: DataTypes.STRING,
         allowNull: true,
