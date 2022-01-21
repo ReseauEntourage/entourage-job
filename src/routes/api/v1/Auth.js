@@ -101,7 +101,7 @@ router.post('/forgot', authLimiter, auth(), async (req, res /* , next */) => {
       `Demande de réinitialisation du mot de passe : user.id = ${user.id}`
     );
 
-    const token = AuthController.generateJWT(user, '30s');
+    const token = AuthController.generateJWT(user, '1d');
     const { hash, salt } = AuthController.encryptPassword(token);
 
     const updatedUser = await UserController.setUser(user.id, {
