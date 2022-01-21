@@ -318,7 +318,7 @@ describe('Opportunity', () => {
       describe('Anybody can create opportunities - /', () => {
         it('Should return 200, if valid opportunity', async () => {
           const opportunity = await opportunityFactory(
-            { isPublic: true, isValidated: true },
+            { isPublic: true, isValidated: false },
             false
           );
           const response = await request(serverTest)
@@ -642,7 +642,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=pending`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(5);
+            expect(response.body.offers.length).toBe(6);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
@@ -662,7 +662,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=validated`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(29);
+            expect(response.body.offers.length).toBe(28);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
@@ -970,7 +970,7 @@ describe('Opportunity', () => {
         });
       });
       describe("Read all user's opportunities - /user/all/:id", () => {
-        const userOpportunitiesCount = 32;
+        const userOpportunitiesCount = 31;
         it('should return 200, if candidat read his opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/all/${loggedInCandidat.user.id}`)
@@ -1039,7 +1039,7 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?type=public`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(20);
+            expect(response.body.offers.length).toBe(19);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
