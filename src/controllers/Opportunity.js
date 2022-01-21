@@ -343,7 +343,10 @@ const createOpportunity = async (data, isAdmin) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
   console.log(`Etape 1 - Création de l'opportunité de base`);
-  const modelOpportunity = await Opportunity.create(data);
+  const modelOpportunity = await Opportunity.create({
+    ...data,
+    isValidated: false,
+  });
 
   if (data.businessLines) {
     console.log(`Etape 2 - BusinessLine`);
@@ -875,10 +878,9 @@ const updateOpportunity = async (opportunity) => {
       },
     });
   }
-
-  if (opportunity.candidatesId) {
-    const t = await sequelize.transaction();
-    try {
+  const t = await sequelize.transaction();
+  try {
+    if (opportunity.candidatesId) {
       const opportunitiesUser = await Promise.all(
         opportunity.candidatesId.map((candidatId) => {
           return Opportunity_User.findOrCreate({
@@ -936,12 +938,23 @@ const updateOpportunity = async (opportunity) => {
           transaction: t,
         });
       }
-
-      await t.commit();
-    } catch (error) {
-      await t.rollback();
-      throw error;
+    } else if (opportunity.isPublic) {
+      await Opportunity_User.update(
+        {
+          recommended: false,
+        },
+        {
+          where: {
+            OpportunityId: modelOpportunity.id,
+          },
+          transaction: t,
+        }
+      );
     }
+    await t.commit();
+  } catch (error) {
+    await t.rollback();
+    throw error;
   }
 
   let newCandidatesIdsToSendMailTo;
