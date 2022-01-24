@@ -9,7 +9,7 @@ import _ from 'lodash';
 /**
  * Extract cv status values from CV_STATUS constant
  *
- * @param {Obect} cvStatus : CV_STATUS conctant
+ * @param {Object} cvStatus : CV_STATUS constant
  * @retrn array of status values
  */
 const getCvStatusValues = (cvStatus) => {

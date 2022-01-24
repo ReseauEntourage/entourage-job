@@ -76,6 +76,11 @@ const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
   'date',
   'department',
   'message',
+  'address',
+  'driversLicense',
+  'workingHours',
+  'salary',
+  'otherInfo',
 ];
 
 const INCLUDE_OPPORTUNITY_CANDIDATE = [
@@ -197,8 +202,11 @@ const getOfferSearchOptions = (search) => {
         searchInColumnWhereOption('Opportunity.department', search),
         searchInColumnWhereOption('Opportunity.contract', search),
         searchInColumnWhereOption('Opportunity.message', search),
-        searchInColumnWhereOption('Opportunity.location', search),
+        searchInColumnWhereOption('Opportunity.address', search),
         searchInColumnWhereOption('Opportunity.department', search),
+        searchInColumnWhereOption('Opportunity.workingHours', search),
+        searchInColumnWhereOption('Opportunity.salary', search),
+        searchInColumnWhereOption('Opportunity.otherInfo', search),
       ],
     };
   }
@@ -255,6 +263,7 @@ const getAirtableOpportunityFields = (
     Archivé: opportunity.isArchived,
     'Date de création': opportunity.createdAt,
     Département: opportunity.department,
+    Adresse: opportunity.address,
     Contrat: findContractType(opportunity.contract)?.label,
     'Début de contrat': opportunity.startOfContract,
     'Fin de contrat': opportunity.endOfContract,
@@ -262,6 +271,10 @@ const getAirtableOpportunityFields = (
     'Nombre de postes': opportunity.numberOfPositions,
     'Souhaite être recontacté': opportunity.beContacted,
     'Message personnalisé': opportunity.message,
+    'Permis de conduire': opportunity.driversLicense,
+    'Jours et horaires': opportunity.workingHours,
+    Salaire: opportunity.salary,
+    'Autres précisions': opportunity.otherInfo,
   };
 
   return candidates && candidates.length > 0

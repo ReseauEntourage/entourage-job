@@ -334,6 +334,27 @@ describe('Opportunity', () => {
           );
           incrTotalOppsInDB();
         });
+        it('Should return 200, if valid opportunity and multiple locations', async () => {
+          const { address, department, ...opportunity } =
+            await opportunityFactory(
+              { isPublic: true, isValidated: false },
+              false
+            );
+          const response = await request(serverTest)
+            .post(`${route}/`)
+            .send({ ...opportunity, locations: [{ address }] });
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                ...opportunity,
+                createdAt: response.body.createdAt,
+                updatedAt: response.body.updatedAt,
+              }),
+            ])
+          );
+          incrTotalOppsInDB();
+        });
         it('Should return 401, if invalid opportunity', async () => {
           const opportunity = await opportunityFactory({}, false);
           delete opportunity.title;
