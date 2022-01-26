@@ -12,7 +12,8 @@ const OFFER_STATUS = [
   {
     value: -1,
     label: 'Offre à traiter',
-    alt: 'Offre consultée',
+    public: 'Offre consultée',
+    recommended: 'Offre recommandée',
     color: 'muted',
   },
   { value: 0, label: 'Contacté', color: 'muted' },
