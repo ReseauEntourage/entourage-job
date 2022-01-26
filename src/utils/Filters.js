@@ -257,6 +257,8 @@ const filterMembersByAssociatedUser = (members, associatedUsers) => {
   return filteredList;
 };
 
+// TODO use zone if no departments
+
 // UTILS
 const getFiltersObjectsFromQueryParams = (params, filtersConst) => {
   const filters = {};

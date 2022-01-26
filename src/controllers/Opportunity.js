@@ -878,6 +878,7 @@ const updateOpportunity = async (opportunity) => {
       },
     });
   }
+
   const t = await sequelize.transaction();
   try {
     if (opportunity.candidatesId) {
@@ -938,19 +939,8 @@ const updateOpportunity = async (opportunity) => {
           transaction: t,
         });
       }
-    } else if (opportunity.isPublic) {
-      await Opportunity_User.update(
-        {
-          recommended: false,
-        },
-        {
-          where: {
-            OpportunityId: modelOpportunity.id,
-          },
-          transaction: t,
-        }
-      );
     }
+
     await t.commit();
   } catch (error) {
     await t.rollback();
