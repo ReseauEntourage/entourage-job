@@ -267,15 +267,17 @@ const getAirtableOpportunityFields = (
   return candidates && candidates.length > 0
     ? [
         ...candidates.map((candidate) => {
-          const offerStatus = findOfferStatus(candidate.status);
+          const offerStatus = findOfferStatus(
+            candidate.status,
+            opportunity.isPublic,
+            candidate.recommended
+          );
+
           return {
             ...commonFields,
             OpportunityUserId: candidate.id,
             Candidat: `${candidate.User.firstName} ${candidate.User.lastName}`,
-            Statut:
-              opportunity.isPublic && offerStatus.alt
-                ? offerStatus.alt
-                : offerStatus.label,
+            Statut: offerStatus.label,
             Commentaire: candidate.note,
             'Recommandée ?': candidate.recommended,
           };
