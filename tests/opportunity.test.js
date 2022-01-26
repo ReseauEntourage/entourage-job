@@ -1,5 +1,8 @@
-import { USER_ROLES } from 'src/constants';
-import opportunityFactory from 'tests/factories/opportunityFactory';
+import { OFFER_STATUS, USER_ROLES } from 'src/constants';
+import opportunityFactory, {
+  getTotalOppsInDB,
+  incrTotalOppsInDB,
+} from 'tests/factories/opportunityFactory';
 import userFactory from 'tests/factories/userFactory';
 
 import request from 'supertest';
@@ -7,6 +10,7 @@ import request from 'supertest';
 import {
   associateCoachAndCandidat,
   associateManyOpportunitiesUser,
+  associateOpportunityUser,
   createEntities,
   createLoggedInUser,
   recreateTestDB,
@@ -21,8 +25,7 @@ describe('Opportunity', () => {
   const nbOpportunity = 10;
   const nbPrivateOpportunity = 6;
   const nbPublicOpportunitiesToAssociate = 5;
-  let totalOpp =
-    nbOpportunity + nbPrivateOpportunity + nbPublicOpportunitiesToAssociate + 7;
+
   let opportunities;
   let opportunitiesId;
   let loggedInAdmin;
@@ -33,6 +36,9 @@ describe('Opportunity', () => {
   let opportunitiesCandidat;
   let opportunityOtherCandidat;
   let otherOpportunity;
+  let candidatExternalOpportunity;
+  let otherCandidatExternalOpportunity;
+
   beforeAll(async () => {
     serverTest = await startTestServer();
     await recreateTestDB();
@@ -150,6 +156,17 @@ describe('Opportunity', () => {
       isPublic: false,
     });
 
+    opportunityOtherCandidat = await opportunityFactory({
+      isValidated: true,
+      isPublished: true,
+      isPublic: true,
+    });
+
+    await associateOpportunityUser(
+      opportunityOtherCandidat.id,
+      otherCandidat.user.id
+    );
+
     await opportunityFactory({
       isValidated: false,
       isPublic: true,
@@ -166,21 +183,131 @@ describe('Opportunity', () => {
       isPublic: true,
       isArchived: true,
     });
+
     await opportunityFactory({
       isValidated: false,
       isPublic: false,
       isArchived: true,
     });
-    /*
-      opportunityOtherCandidat = await opportunityFactory({
-          isValidated: true,
-          isPublished: true,
-          isPublic: true,
-      });
-      console.log('opportunityOtherCandidat :>> ', opportunityOtherCandidat);
-      console.log('otherCandidat :>> ', otherCandidat);
-      await associateOpportunityUser(opportunityOtherCandidat.id, otherCandidat.user.id)
-    */
+
+    const opportunity1ForFilters = await opportunityFactory({
+      isValidated: true,
+      isPublic: false,
+      department: 'Rhône (69)',
+    });
+
+    await associateOpportunityUser(
+      opportunity1ForFilters.id,
+      loggedInCandidat.user.id,
+      {
+        status: OFFER_STATUS[2].value,
+        archived: false,
+        recommended: false,
+      }
+    );
+
+    const opportunity2ForFilters = await opportunityFactory({
+      isValidated: true,
+      isPublic: true,
+      department: 'Rhône (69)',
+    });
+
+    await associateOpportunityUser(
+      opportunity2ForFilters.id,
+      loggedInCandidat.user.id,
+      {
+        status: OFFER_STATUS[1].value,
+        archived: false,
+        recommended: false,
+      }
+    );
+    const opportunity3ForFilters = await opportunityFactory({
+      isValidated: true,
+      isPublic: true,
+      department: 'Rhône (69)',
+    });
+
+    await associateOpportunityUser(
+      opportunity3ForFilters.id,
+      loggedInCandidat.user.id,
+      {
+        status: OFFER_STATUS[2].value,
+        archived: false,
+        recommended: false,
+      }
+    );
+
+    const opportunity4ForFilters = await opportunityFactory({
+      isValidated: true,
+      isPublic: true,
+      department: 'Rhône (69)',
+    });
+
+    await associateOpportunityUser(
+      opportunity4ForFilters.id,
+      loggedInCandidat.user.id,
+      {
+        status: OFFER_STATUS[2].value,
+        archived: true,
+        recommended: false,
+      }
+    );
+
+    const opportunity5ForFilters = await opportunityFactory({
+      isValidated: false,
+      isPublic: false,
+      department: 'Rhône (69)',
+    });
+
+    await associateOpportunityUser(
+      opportunity5ForFilters.id,
+      loggedInCandidat.user.id,
+      {
+        status: OFFER_STATUS[2].value,
+        archived: false,
+        recommended: true,
+      }
+    );
+
+    const opportunity6ForFilters = await opportunityFactory({
+      isValidated: true,
+      isPublic: true,
+      department: 'Rhône (69)',
+    });
+
+    await associateOpportunityUser(
+      opportunity6ForFilters.id,
+      loggedInCandidat.user.id,
+      {
+        status: OFFER_STATUS[2].value,
+        archived: false,
+        recommended: false,
+      }
+    );
+
+    candidatExternalOpportunity = await opportunityFactory({
+      isValidated: true,
+      isPublic: false,
+      isArchived: false,
+      isExternal: true,
+    });
+
+    otherCandidatExternalOpportunity = await opportunityFactory({
+      isValidated: true,
+      isPublic: false,
+      isArchived: false,
+      isExternal: true,
+    });
+
+    await associateOpportunityUser(
+      candidatExternalOpportunity.id,
+      loggedInCandidat.user.id
+    );
+
+    await associateOpportunityUser(
+      otherCandidatExternalOpportunity.id,
+      otherCandidat.user.id
+    );
   });
   afterAll(async () => {
     await resetTestDB();
@@ -191,20 +318,217 @@ describe('Opportunity', () => {
       describe('Anybody can create opportunities - /', () => {
         it('Should return 200, if valid opportunity', async () => {
           const opportunity = await opportunityFactory(
-            { isPublic: true, isValidated: true },
+            { isPublic: true, isValidated: false },
             false
           );
           const response = await request(serverTest)
             .post(`${route}/`)
             .send(opportunity);
           expect(response.status).toBe(200);
-          totalOpp += 1;
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              ...opportunity,
+              createdAt: response.body.createdAt,
+              updatedAt: response.body.updatedAt,
+            })
+          );
+          incrTotalOppsInDB();
         });
         it('Should return 401, if invalid opportunity', async () => {
           const opportunity = await opportunityFactory({}, false);
-          delete opportunity.recruiterMail;
+          delete opportunity.title;
           const response = await request(serverTest)
             .post(`${route}/`)
+            .send(opportunity);
+          expect(response.status).toBe(401);
+        });
+      });
+      describe('Logged in users can create external opportunities - /external', () => {
+        it('Should return 200, if logged in as candidate and valid opportunity with authorized values', async () => {
+          const opportunity = await opportunityFactory({}, false);
+
+          const candidateId = loggedInCandidat.user.id;
+          const newOpportunity = {
+            title: opportunity.title,
+            company: opportunity.company,
+            contract: opportunity.contract,
+            startOfContract: opportunity.startOfContract,
+            endOfContract: opportunity.endOfContract,
+            isPartTime: opportunity.isPartTime,
+            department: opportunity.department,
+          };
+          const response = await request(serverTest)
+            .post(`${route}/external`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({ candidateId, ...newOpportunity });
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              ...newOpportunity,
+              isExternal: true,
+              isPublic: false,
+              isValidated: true,
+              createdAt: response.body.createdAt,
+              updatedAt: response.body.updatedAt,
+            })
+          );
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+          incrTotalOppsInDB();
+        });
+        it('Should return 401, if logged in as candidate and valid opportunity with unauthorized values', async () => {
+          const opportunity = await opportunityFactory({}, false);
+          const candidateId = loggedInCandidat.user.id;
+          const newOpportunity = {
+            title: opportunity.title,
+            company: opportunity.company,
+            contract: opportunity.contract,
+            startOfContract: opportunity.startOfContract,
+            endOfContract: opportunity.endOfContract,
+            isPartTime: opportunity.isPartTime,
+            department: opportunity.department,
+            isPublic: opportunity.isPublic,
+          };
+          const response = await request(serverTest)
+            .post(`${route}/external`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({ candidateId, ...newOpportunity });
+          expect(response.status).toBe(401);
+        });
+        it('Should return 401, if logged in as candidate and invalid opportunity', async () => {
+          const opportunity = await opportunityFactory({}, false);
+          const candidateId = loggedInCandidat.user.id;
+          const newOpportunity = {
+            title: opportunity.title,
+            company: opportunity.company,
+            contract: opportunity.contract,
+            startOfContract: opportunity.startOfContract,
+            endOfContract: opportunity.endOfContract,
+            isPartTime: opportunity.isPartTime,
+            department: opportunity.department,
+            isPublic: opportunity.isPublic,
+          };
+          delete newOpportunity.title;
+
+          const response = await request(serverTest)
+            .post(`${route}/external`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({ candidateId, ...newOpportunity });
+
+          expect(response.status).toBe(401);
+        });
+
+        it('Should return 200, if logged in as coach and valid opportunity with authorized values', async () => {
+          const opportunity = await opportunityFactory({}, false);
+
+          const candidateId = loggedInCandidat.user.id;
+          const newOpportunity = {
+            title: opportunity.title,
+            company: opportunity.company,
+            contract: opportunity.contract,
+            startOfContract: opportunity.startOfContract,
+            endOfContract: opportunity.endOfContract,
+            isPartTime: opportunity.isPartTime,
+            department: opportunity.department,
+          };
+          const response = await request(serverTest)
+            .post(`${route}/external`)
+            .set('authorization', `Token ${loggedInCoach.token}`)
+            .send({ candidateId, ...newOpportunity });
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              ...newOpportunity,
+              isExternal: true,
+              isPublic: false,
+              isValidated: true,
+              createdAt: response.body.createdAt,
+              updatedAt: response.body.updatedAt,
+            })
+          );
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+          incrTotalOppsInDB();
+        });
+        it("Should return 401, if logged in as coach and creates another candidate's opportunity", async () => {
+          const opportunity = await opportunityFactory({}, false);
+          const candidateId = otherCandidat.user.id;
+          const newOpportunity = {
+            title: opportunity.title,
+            company: opportunity.company,
+            contract: opportunity.contract,
+            startOfContract: opportunity.startOfContract,
+            endOfContract: opportunity.endOfContract,
+            isPartTime: opportunity.isPartTime,
+            department: opportunity.department,
+            isPublic: opportunity.isPublic,
+          };
+          delete newOpportunity.title;
+
+          const response = await request(serverTest)
+            .post(`${route}/external`)
+            .set('authorization', `Token ${loggedInCoach.token}`)
+            .send({ candidateId, newOpportunity });
+
+          expect(response.status).toBe(401);
+        });
+
+        it('Should return 200, if logged in as admin and valid opportunity', async () => {
+          const opportunity = await opportunityFactory({}, false);
+
+          const candidateId = loggedInCandidat.user.id;
+          const newOpportunity = {
+            title: opportunity.title,
+            company: opportunity.company,
+            contract: opportunity.contract,
+            startOfContract: opportunity.startOfContract,
+            endOfContract: opportunity.endOfContract,
+            isPartTime: opportunity.isPartTime,
+            department: opportunity.department,
+          };
+
+          const response = await request(serverTest)
+            .post(`${route}/external`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
+            .send({ candidateId, ...newOpportunity });
+
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              ...newOpportunity,
+              isExternal: true,
+              isPublic: false,
+              isValidated: true,
+              createdAt: response.body.createdAt,
+              updatedAt: response.body.updatedAt,
+            })
+          );
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+          incrTotalOppsInDB();
+        });
+        it('Should return 401, if logged in as admin invalid opportunity', async () => {
+          const opportunity = await opportunityFactory({}, false);
+
+          const newOpportunity = {
+            candidateId: loggedInCandidat.user.id,
+            title: opportunity.title,
+            company: opportunity.company,
+            contract: opportunity.contract,
+            startOfContract: opportunity.startOfContract,
+            endOfContract: opportunity.endOfContract,
+            isPartTime: opportunity.isPartTime,
+            department: opportunity.department,
+          };
+
+          delete newOpportunity.title;
+          const response = await request(serverTest)
+            .post(`${route}/external`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
+            .send(newOpportunity);
+          expect(response.status).toBe(401);
+        });
+        it('Should return 401, if not logged in', async () => {
+          const opportunity = await opportunityFactory({}, false);
+          const response = await request(serverTest)
+            .post(`${route}/external`)
             .send(opportunity);
           expect(response.status).toBe(401);
         });
@@ -297,8 +621,9 @@ describe('Opportunity', () => {
             .get(`${route}/admin`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.offers.length).toBe(totalOpp);
+          expect(response.body.offers.length).toBe(getTotalOppsInDB());
         });
+
         it('Should return 200 and a list of searched opportunities, if logged in admin', async () => {
           const response = await request(serverTest)
             .get(`${route}/admin?query='e'`)
@@ -317,11 +642,17 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=pending`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(6);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isValidated: true,
+                }),
+                expect.objectContaining({
+                  isExternal: true,
+                }),
+                expect.objectContaining({
+                  isArchived: true,
                 }),
               ])
             );
@@ -331,11 +662,37 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=validated`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(28);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isValidated: false,
+                }),
+                expect.objectContaining({
+                  isExternal: true,
+                }),
+                expect.objectContaining({
+                  isArchived: true,
+                }),
+              ])
+            );
+          });
+          it('should return 200, and all the opportunities that matches the external filter', async () => {
+            const response = await request(serverTest)
+              .get(`${route}/admin?type=external`)
+              .set('authorization', `Token ${loggedInAdmin.token}`);
+            expect(response.status).toBe(200);
+            expect(response.body.offers.length).toBe(5);
+            expect(response.body.offers).not.toEqual(
+              expect.arrayContaining([
+                expect.objectContaining({
+                  isValidated: false,
+                }),
+                expect.objectContaining({
+                  isExternal: false,
+                }),
+                expect.objectContaining({
+                  isArchived: false,
                 }),
               ])
             );
@@ -345,7 +702,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=archived`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(2);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
@@ -359,7 +716,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?department[]=Rhône (69)`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(19);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -373,7 +730,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?isPublic[]=true`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(23);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -387,7 +744,7 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?status[]=1`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(2);
+            expect(response.body.offers.length).toBe(4);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -403,7 +760,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?search=Rhône`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(13);
+            expect(response.body.offers.length).toBe(19);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -419,7 +776,7 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(19);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
@@ -453,7 +810,7 @@ describe('Opportunity', () => {
             .get(`${route}/admin/count`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.pendingOpportunities).toBeGreaterThanOrEqual(2);
+          expect(response.body.pendingOpportunities).toBe(2);
         });
         it('Should return 401, if not logged in admin', async () => {
           const response = await request(serverTest)
@@ -464,26 +821,27 @@ describe('Opportunity', () => {
       });
 
       describe("Read a user's private opportunities - /user/private/:id", () => {
+        const userOpportunitiesCount = 24;
         it('should return 200, if candidat read his opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/private/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBe(userOpportunitiesCount);
         });
         it('should return 200, if a coach read his associated candidat opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/private/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCoach.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBe(userOpportunitiesCount);
         });
         it('should return 200, if a admin reads candidat opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/private/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBe(userOpportunitiesCount);
         });
         it('should return 401, if invalid user id', async () => {
           const response = await request(serverTest)
@@ -511,7 +869,7 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(12);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
@@ -527,7 +885,7 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(17);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -543,7 +901,7 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(2);
+            expect(response.body.offers.length).toBe(5);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -563,7 +921,7 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(17);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -579,7 +937,7 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(2);
+            expect(response.body.offers.length).toBe(4);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
@@ -612,26 +970,27 @@ describe('Opportunity', () => {
         });
       });
       describe("Read all user's opportunities - /user/all/:id", () => {
+        const userOpportunitiesCount = 31;
         it('should return 200, if candidat read his opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/all/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBe(userOpportunitiesCount);
         });
         it('should return 200, if a coach read his associated candidat opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/all/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCoach.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBe(userOpportunitiesCount);
         });
         it('should return 200, if a admin read a candidates opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/all/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+          expect(response.body.offers.length).toBe(userOpportunitiesCount);
         });
         it('should return 401, if invalid user id', async () => {
           const response = await request(serverTest)
@@ -658,11 +1017,19 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?type=private`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(3);
+            expect(response.body.offers.length).toBe(11);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: true,
+                  userOpportunity: expect.objectContaining({
+                    recommended: false,
+                  }),
+                }),
+                expect.objectContaining({
+                  userOpportunity: expect.objectContaining({
+                    archived: true,
+                  }),
                 }),
               ])
             );
@@ -672,11 +1039,16 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?type=public`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(19);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: false,
+                }),
+                expect.objectContaining({
+                  userOpportunity: expect.objectContaining({
+                    archived: true,
+                  }),
                 }),
               ])
             );
@@ -688,12 +1060,12 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBeGreaterThanOrEqual(1);
+            expect(response.body.offers.length).toBe(1);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   userOpportunity: expect.objectContaining({
-                    isArchived: false,
+                    archived: false,
                   }),
                 }),
               ])
@@ -706,7 +1078,7 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(13);
+            expect(response.body.offers.length).toBe(18);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -722,8 +1094,8 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(1);
-            expect(response.body.otherOffers.length).toBe(2);
+            expect(response.body.offers.length).toBe(4);
+            expect(response.body.otherOffers.length).toBe(7);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -751,7 +1123,7 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?status[]=1`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(2);
+            expect(response.body.offers.length).toBe(4);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -767,7 +1139,7 @@ describe('Opportunity', () => {
               .get(`${route}/user/all/${loggedInCandidat.user.id}?search=Rhône`)
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(13);
+            expect(response.body.offers.length).toBe(19);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -783,11 +1155,16 @@ describe('Opportunity', () => {
               )
               .set('authorization', `Token ${loggedInCandidat.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(1);
+            expect(response.body.offers.length).toBe(3);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: false,
+                }),
+                expect.objectContaining({
+                  userOpportunity: expect.objectContaining({
+                    archived: true,
+                  }),
                 }),
               ])
             );
@@ -815,26 +1192,33 @@ describe('Opportunity', () => {
         });
       });
       describe("Count all user's opportunities - /user/count/:id", () => {
+        const userOpportunitiesCount = 8;
         it('should return 200, if candidat counts his opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/count/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCandidat.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.unseenOpportunities).toBeGreaterThanOrEqual(1);
+          expect(response.body.unseenOpportunities).toBe(
+            userOpportunitiesCount
+          );
         });
         it('should return 200, if a coach counts his associated candidat opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/count/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInCoach.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.unseenOpportunities).toBe(22);
+          expect(response.body.unseenOpportunities).toBe(
+            userOpportunitiesCount
+          );
         });
         it('should return 200, if a admin counts a candidate opportunities', async () => {
           const response = await request(serverTest)
             .get(`${route}/user/count/${loggedInCandidat.user.id}`)
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
-          expect(response.body.unseenOpportunities).toBe(22);
+          expect(response.body.unseenOpportunities).toBe(
+            userOpportunitiesCount
+          );
         });
         it('should return 401, if invalid user id', async () => {
           const response = await request(serverTest)
@@ -894,12 +1278,11 @@ describe('Opportunity', () => {
       });
     });
     describe('U - Update 1', () => {
-      describe('Update an oppotunity - /', () => {
+      describe('Update an opportunity - /', () => {
         it('Should return 200, if admin updates an opportunity', async () => {
           const update = {
             ...opportunities[0],
             isValidated: true,
-            isPublished: true,
             title: 'updated title',
           };
           const response = await request(serverTest)
@@ -909,17 +1292,241 @@ describe('Opportunity', () => {
           expect(response.status).toBe(200);
           expect(response.body.title).toBe('updated title');
         });
+        it('Should return 200, if admin adds a user to a public opportunity', async () => {
+          const update = {
+            ...opportunities[0],
+            candidatesId: [otherCandidat.user.id],
+          };
+          const response = await request(serverTest)
+            .put(`${route}/`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
+            .send(update);
+          expect(response.status).toBe(200);
+          expect(response.body.userOpportunity[0].UserId).toMatch(
+            otherCandidat.user.id
+          );
+        });
         it('Should return 401, if no an admin', async () => {
           const update = {
             ...opportunities[1],
             isValidated: true,
-            isPublished: true,
             title: 'updated title',
           };
           const response = await request(serverTest)
             .put(`${route}/`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
             .send(update);
+          expect(response.status).toBe(401);
+        });
+      });
+      describe('Update an external opportunity - /', () => {
+        it('Should return 200, if logged in as candidate and updates own opportunity with authorized values', async () => {
+          const newTitle = 'Updated title';
+          const candidateId = loggedInCandidat.user.id;
+          const updatedOpportunity = {
+            id: candidatExternalOpportunity.id,
+            title: newTitle,
+            company: candidatExternalOpportunity.company,
+            contract: candidatExternalOpportunity.contract,
+            startOfContract: candidatExternalOpportunity.startOfContract,
+            endOfContract: candidatExternalOpportunity.endOfContract,
+            isPartTime: candidatExternalOpportunity.isPartTime,
+            department: candidatExternalOpportunity.department,
+          };
+          const response = await request(serverTest)
+            .put(`${route}/external`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({ candidateId, ...updatedOpportunity });
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              ...updatedOpportunity,
+              isExternal: true,
+              isPublic: false,
+              isValidated: true,
+              createdAt: response.body.createdAt,
+              updatedAt: response.body.updatedAt,
+            })
+          );
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+        });
+        it('Should return 401, if logged in as candidate and updates own opportunity with unauthorized values', async () => {
+          const newTitle = 'updated title';
+          const candidateId = loggedInCandidat.user.id;
+          const updatedOpportunity = {
+            title: newTitle,
+            company: candidatExternalOpportunity.company,
+            contract: candidatExternalOpportunity.contract,
+            startOfContract: candidatExternalOpportunity.startOfContract,
+            endOfContract: candidatExternalOpportunity.endOfContract,
+            isPartTime: candidatExternalOpportunity.isPartTime,
+            department: candidatExternalOpportunity.department,
+            isPublic: true,
+          };
+          const response = await request(serverTest)
+            .put(`${route}/external`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({ candidateId, ...updatedOpportunity });
+          expect(response.status).toBe(401);
+        });
+        it('Should return 401, if logged in as candidate and updates somebody elses opportunity', async () => {
+          const newTitle = 'updated title';
+          const candidateId = otherCandidat.user.id;
+          const updatedOpportunity = {
+            id: otherCandidatExternalOpportunity.id,
+            title: newTitle,
+            company: otherCandidatExternalOpportunity.company,
+            contract: otherCandidatExternalOpportunity.contract,
+            startOfContract: otherCandidatExternalOpportunity.startOfContract,
+            endOfContract: otherCandidatExternalOpportunity.endOfContract,
+            isPartTime: otherCandidatExternalOpportunity.isPartTime,
+            department: otherCandidatExternalOpportunity.department,
+          };
+          const response = await request(serverTest)
+            .put(`${route}/external`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({ candidateId, ...updatedOpportunity });
+          expect(response.status).toBe(401);
+        });
+        it('Should return 401, if logged in as candidate and updates non external opportunity', async () => {
+          const newTitle = 'updated title';
+
+          const candidateId = loggedInCandidat.user.id;
+          const updatedOpportunity = {
+            id: opportunities[0].id,
+            title: newTitle,
+            company: opportunities[0].company,
+            contract: opportunities[0].contract,
+            startOfContract: opportunities[0].startOfContract,
+            endOfContract: opportunities[0].endOfContract,
+            isPartTime: opportunities[0].isPartTime,
+            department: opportunities[0].department,
+          };
+          const response = await request(serverTest)
+            .put(`${route}/external`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({ candidateId, ...updatedOpportunity });
+          expect(response.status).toBe(401);
+        });
+
+        it('Should return 200, if logged in as coach and updates own candidate opportunity with authorized values', async () => {
+          const newTitle = 'Updated title';
+          const candidateId = loggedInCandidat.user.id;
+          const updatedOpportunity = {
+            id: candidatExternalOpportunity.id,
+            title: newTitle,
+            company: candidatExternalOpportunity.company,
+            contract: candidatExternalOpportunity.contract,
+            startOfContract: candidatExternalOpportunity.startOfContract,
+            endOfContract: candidatExternalOpportunity.endOfContract,
+            isPartTime: candidatExternalOpportunity.isPartTime,
+            department: candidatExternalOpportunity.department,
+          };
+          const response = await request(serverTest)
+            .put(`${route}/external`)
+            .set('authorization', `Token ${loggedInCoach.token}`)
+            .send({ candidateId, ...updatedOpportunity });
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              ...updatedOpportunity,
+              isExternal: true,
+              isPublic: false,
+              isValidated: true,
+              createdAt: response.body.createdAt,
+              updatedAt: response.body.updatedAt,
+            })
+          );
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+        });
+        it("Should return 401, if logged in as coach and creates another candidate's opportunity", async () => {
+          const newTitle = 'updated title';
+
+          const candidateId = otherCandidat.user.id;
+          const updatedOpportunity = {
+            id: otherCandidatExternalOpportunity.id,
+            title: newTitle,
+            company: otherCandidatExternalOpportunity.company,
+            contract: otherCandidatExternalOpportunity.contract,
+            startOfContract: otherCandidatExternalOpportunity.startOfContract,
+            endOfContract: otherCandidatExternalOpportunity.endOfContract,
+            isPartTime: otherCandidatExternalOpportunity.isPartTime,
+            department: otherCandidatExternalOpportunity.department,
+          };
+          const response = await request(serverTest)
+            .put(`${route}/external`)
+            .set('authorization', `Token ${loggedInCoach.token}`)
+            .send({ candidateId, ...updatedOpportunity });
+          expect(response.status).toBe(401);
+        });
+
+        it('Should return 200, if logged in as admin and updates opportunity', async () => {
+          const newTitle = 'updated title';
+          const candidateId = loggedInCandidat.user.id;
+          const updatedOpportunity = {
+            id: candidatExternalOpportunity.id,
+            title: newTitle,
+            company: candidatExternalOpportunity.company,
+            contract: candidatExternalOpportunity.contract,
+            startOfContract: candidatExternalOpportunity.startOfContract,
+            endOfContract: candidatExternalOpportunity.endOfContract,
+            isPartTime: candidatExternalOpportunity.isPartTime,
+            department: candidatExternalOpportunity.department,
+          };
+          const response = await request(serverTest)
+            .put(`${route}/external`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
+            .send({ candidateId, ...updatedOpportunity });
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              ...updatedOpportunity,
+              isExternal: true,
+              isPublic: false,
+              isValidated: true,
+              createdAt: response.body.createdAt,
+              updatedAt: response.body.updatedAt,
+              date: response.body.date,
+            })
+          );
+          expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+        });
+        it('Should return 401, if logged in as admin and updates non external opportunity', async () => {
+          const newTitle = 'updated title';
+          const candidateId = loggedInCandidat.user.id;
+          const updatedOpportunity = {
+            ...opportunities[0],
+            title: newTitle,
+          };
+          const response = await request(serverTest)
+            .put(`${route}/external`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
+            .send({ candidateId, ...updatedOpportunity });
+          expect(response.status).toBe(401);
+        });
+        it('Should return 401, if logged in as admin and updates opportunity without candidateId', async () => {
+          const newTitle = 'updated title';
+          const updatedOpportunity = {
+            ...opportunities[0],
+            title: newTitle,
+          };
+          const response = await request(serverTest)
+            .put(`${route}/external`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
+            .send(updatedOpportunity);
+          expect(response.status).toBe(401);
+        });
+
+        it('Should return 401, if not logged in', async () => {
+          const newTitle = 'updated title';
+          const candidateId = loggedInCandidat.user.id;
+          const updatedOpportunity = {
+            ...opportunities[0],
+            title: newTitle,
+          };
+          const response = await request(serverTest)
+            .put(`${route}/external`)
+            .send({ candidateId, ...updatedOpportunity });
           expect(response.status).toBe(401);
         });
       });

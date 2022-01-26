@@ -157,6 +157,7 @@ const OFFER_ADMIN_FILTERS_DATA = [
   { tag: 'all', title: 'Toutes les offres' },
   { tag: 'pending', title: 'Offres à valider', active: true },
   { tag: 'validated', title: 'Offres publiées' },
+  { tag: 'external', title: 'Offres externes' },
   { tag: 'archived', title: 'Offres archivées' },
 ];
 
@@ -264,11 +265,6 @@ const USER_ROLES = {
   ADMIN: 'Admin',
 };
 
-const ADMIN_ROLES = {
-  CANDIDATES: 'Candidats',
-  COMPANIES: 'Entreprises',
-};
-
 const CONTRACTS = [
   {
     label: 'CDI',
@@ -312,66 +308,16 @@ const CONTRACTS = [
   },
 ];
 
-const EXTERNAL_LINKS = {
-  DONATION: 'https://entourage.iraiser.eu/linkedout/~mon-don',
-  LKO_VG: 'https://www.linkedout-vendeeglobe.com',
-  LKO_VG_CONTEST: 'https://www.linkedout-vendeeglobe.com/vendeearctique',
-  LKO_BLOG: 'https://blog.linkedout.fr',
-  ENTOURAGE: 'https://www.entourage.social',
-  LEGAL_MENTIONS:
-    'https://docs.google.com/document/d/1a1IU9Y6qVDr4pvWJRE5XMVZ2fNhg0rhXMTL_lqY_f1M/pub',
-  ARTICLE_BC: 'https://blog.entourage.social/2020/06/22/benevole-coach/',
-  ARTICLE_TJV:
-    'https://blog.linkedout.fr/2021/11/25/le-bateau-linkedout-vainqueur-de-la-transat-jacques-vabre/',
-  CAMPUS_INCLUSION: 'https://campus-inclusion.fr',
-  FRANCE_UNE_CHANCE:
-    'https://lafrance-unechance.fr/carte-des-clubs-la-france-une-chance/',
-  REPAIRS_75: 'https://www.repairs75.org/',
-  REDSTAR:
-    'https://blog.linkedout.fr/2021/07/21/apres-la-voile-le-foot-linkedout-nouveau-partenaire-maillot-du-red-star-fc-avec-le-soutien-de-randstad/',
-  TOOLBOX:
-    'https://drive.google.com/drive/folders/1fUhZtsdaAElpjWsC6Rz4Jw5ZJ94vBnSd?usp=sharing',
-  RECRUITMENTS: 'https://www.welcometothejungle.com/fr/companies/entourage',
-};
-
-const NEWSLETTER_TAGS = {
-  ZONE: [
-    {
-      label: 'Région parisienne',
-      tag: ADMIN_ZONES.PARIS,
-    },
-    {
-      label: 'Lyon',
-      tag: ADMIN_ZONES.LYON,
-    },
-    {
-      label: 'Lille',
-      tag: ADMIN_ZONES.LILLE,
-    },
-    {
-      label: 'Autre',
-      tag: ADMIN_ZONES.HZ,
-    },
-  ],
-  STATUS: [
-    {
-      label: 'un particulier',
-      tag: 'PARTICULIER',
-    },
-    {
-      label: 'une entreprise',
-      tag: 'ENTREPRISE',
-    },
-    {
-      label: "une structure d'insertion",
-      tag: 'STRUCTURE_INSERTION',
-    },
-    {
-      label: 'un candidat potentiel',
-      tag: 'CANDIDAT_POTENTIEL',
-    },
-  ],
-};
+const EXTERNAL_OFFERS_ORIGINS = [
+  {
+    label: 'Mon réseau',
+    value: 'network',
+  },
+  {
+    label: 'Recherches Internet',
+    value: 'internet',
+  },
+];
 
 const REDIS_KEYS = {
   CV_PREFIX: 'cv-',
@@ -379,10 +325,6 @@ const REDIS_KEYS = {
   CVS_TOTAL_SHARES: 'cvsTotalShares',
   RL_AUTH: 'rl-auth:',
   RL_GENERAL: 'rl-general:',
-};
-
-const STORAGE_KEYS = {
-  ACCESS_TOKEN: 'access-token',
 };
 
 const JOBS = {
@@ -424,6 +366,7 @@ const MAILJET_TEMPLATES = {
   STATUS_CHANGED: 3275058,
   OFFER_TO_VALIDATE: 3275461,
   OFFER_RECEIVED: 3275876,
+  OFFER_RECOMMENDED: 3489932,
   OFFER_SENT: 3276147,
   OFFER_VALIDATED: 3277863,
   OFFER_VALIDATED_ADMIN: 3320744,
@@ -458,12 +401,19 @@ const HEARD_ABOUT = [
   },
 ];
 
+const NEWSLETTER_TAGS = {
+  PARTICULER: 'PARTICULIER',
+  ENTREPRISE: 'ENTREPRISE',
+  STRUCTURE_INSERTION: 'STRUCTURE_INSERTION',
+  CANDIDAT_POTENTIEL: 'CANDIDAT_POTENTIEL',
+};
+
 export {
   OFFER_STATUS,
   CV_STATUS,
   USER_ROLES,
   BUSINESS_LINES,
-  EXTERNAL_LINKS,
+  EXTERNAL_OFFERS_ORIGINS,
   VALUES,
   CV_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
@@ -474,8 +424,6 @@ export {
   REDIS_KEYS,
   JOBS,
   SOCKETS,
-  STORAGE_KEYS,
-  ADMIN_ROLES,
   CONTRACTS,
   MAILJET_TEMPLATES,
   HEARD_ABOUT,

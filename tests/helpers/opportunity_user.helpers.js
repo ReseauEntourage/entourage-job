@@ -35,10 +35,7 @@ const associateManyOpportunitiesUser = async (opportunitiesId, userId) => {
   const opportunitiesUser = [];
   for (let i = 0; i < opportunitiesId.length; i += 1) {
     // eslint-disable-next-line no-await-in-loop
-    const opp = await associateOpportunityUser(opportunitiesId[i], userId, {
-      status: (i % 4) - 1,
-      archived: i % 2 === 0,
-    });
+    const opp = await associateOpportunityUser(opportunitiesId[i], userId);
     opportunitiesUser.push(opp);
   }
 

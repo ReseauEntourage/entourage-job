@@ -1,7 +1,10 @@
 import {
+  EXTERNAL_OFFERS_ORIGINS,
   JOBS,
   MAILJET_TEMPLATES,
-  OFFER_STATUS,
+  NEWSLETTER_TAGS,
+  OFFER_ADMIN_FILTERS_DATA,
+  OFFER_CANDIDATE_FILTERS_DATA,
   OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
 
@@ -12,6 +15,7 @@ import {
   findContractType,
   findOfferStatus,
   getAdminMailsFromDepartment,
+  getZoneFromDepartment,
 } from 'src/utils/Finding';
 
 import moment from 'moment';
@@ -31,6 +35,9 @@ import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import _ from 'lodash';
 import { getUser } from 'src/controllers/User';
 import { getCVbyUserId } from 'src/controllers/CV';
+import { sortOpportunities } from 'src/utils/Sorting';
+
+import { sendToMailchimp } from 'src/controllers/Mailchimp';
 
 const offerTable = process.env.AIRTABLE_OFFERS;
 const {
@@ -61,6 +68,10 @@ const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
   'recruiterFirstName',
   'recruiterPosition',
   'isPublic',
+  'isValidated',
+  'isExternal',
+  'link',
+  'externalOrigin',
   'recruiterMail',
   'date',
   'department',
@@ -107,6 +118,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
       'archived',
       'note',
       'updatedAt',
+      'recommended',
     ],
     include: INCLUDE_OPPORTUNITY_CANDIDATE,
   },
@@ -124,6 +136,7 @@ const INCLUDE_OPPORTUNITY_USER = [
       'bookmarked',
       'archived',
       'note',
+      'recommended',
     ],
   },
 ];
@@ -161,6 +174,7 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
       'archived',
       'note',
       'seen',
+      'recommended',
     ],
   },
 ];
@@ -232,6 +246,11 @@ const getAirtableOpportunityFields = (
     'Pré-requis': opportunity.prerequisites,
     "Secteur d'activité": businessLines,
     Publique: opportunity.isPublic,
+    Externe: opportunity.isExternal,
+    'Lien externe': opportunity.link,
+    'Origine externe': EXTERNAL_OFFERS_ORIGINS.find((origin) => {
+      return opportunity.externalOrigin === origin.value;
+    })?.label,
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
     'Date de création': opportunity.createdAt,
@@ -258,6 +277,7 @@ const getAirtableOpportunityFields = (
                 ? offerStatus.alt
                 : offerStatus.label,
             Commentaire: candidate.note,
+            'Recommandée ?': candidate.recommended,
           };
         }),
         commonFields,
@@ -279,11 +299,54 @@ const updateTable = async (opportunity, candidates) => {
   });
 };
 
+const createExternalOpportunity = async (data, candidatId) => {
+  const modelOpportunity = await Opportunity.create({
+    ...data,
+    isExternal: true,
+    isPublic: false,
+    isArchived: false,
+    isValidated: true,
+  });
+
+  await Opportunity_User.create({
+    OpportunityId: modelOpportunity.id,
+    UserId: candidatId,
+  });
+
+  const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
+    attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
+  });
+
+  const fields = getAirtableOpportunityFields(
+    finalOpportunity,
+    finalOpportunity.userOpportunity
+  );
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
+    tableName: offerTable,
+    fields,
+  });
+
+  const cleanedOpportunity = cleanOpportunity(finalOpportunity);
+
+  return {
+    ...cleanedOpportunity,
+    userOpportunity: cleanedOpportunity.userOpportunity.find((uo) => {
+      return uo.UserId === candidatId;
+    }),
+  };
+};
+
 const createOpportunity = async (data, isAdmin) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
   console.log(`Etape 1 - Création de l'opportunité de base`);
-  const modelOpportunity = await Opportunity.create(data);
+  const modelOpportunity = await Opportunity.create({
+    ...data,
+    isValidated: false,
+  });
 
   if (data.businessLines) {
     console.log(`Etape 2 - BusinessLine`);
@@ -308,7 +371,8 @@ const createOpportunity = async (data, isAdmin) => {
       data.candidatesId.map((candidatId) => {
         return Opportunity_User.create({
           OpportunityId: modelOpportunity.id,
-          UserId: candidatId, // to rename in userId
+          UserId: candidatId, // to rename in userId,
+          recommended: modelOpportunity.isPublic,
         }).then((model) => {
           return model[0];
         });
@@ -392,6 +456,17 @@ const createOpportunity = async (data, isAdmin) => {
     });
   }
 
+  try {
+    await sendToMailchimp(
+      finalOpportunity.recruiterMail,
+      getZoneFromDepartment(finalOpportunity.department),
+      NEWSLETTER_TAGS.ENTREPRISE
+    );
+  } catch (err) {
+    console.error(err);
+    console.log('Error while sending to Mailchimp');
+  }
+
   return cleanedOpportunity;
 };
 
@@ -412,6 +487,10 @@ const getOpportunities = async (params) => {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
     paranoid: false,
   };
+
+  if (typeParams && typeParams === OFFER_ADMIN_FILTERS_DATA[3].tag) {
+    delete filterOptions.isPublic;
+  }
 
   const opportunities = await Opportunity.findAll({
     ...options,
@@ -522,8 +601,20 @@ const getPrivateUserOpportunities = async (userId, params) => {
     return cleanOpportunity(model);
   });
 
+  const filterOpportunitiesByStatus = filterOffersByStatus(
+    cleanedOpportunities,
+    statusParams,
+    userId
+  );
+
+  const sortedOpportunities = sortOpportunities(
+    filterOpportunitiesByStatus,
+    undefined,
+    userId
+  );
+
   return {
-    offers: filterOffersByStatus(cleanedOpportunities, statusParams, userId),
+    offers: sortedOpportunities,
   };
 };
 
@@ -574,63 +665,13 @@ const getAllUserOpportunities = async (userId, params = {}) => {
     return opportunity;
   });
 
-  // order by bookmarked, then by new, then by status, then by date
-  finalOpportunities.sort((a, b) => {
-    if (a.userOpportunity || b.userOpportunity) {
-      if (a.userOpportunity && b.userOpportunity) {
-        if (a.userOpportunity.bookmarked === b.userOpportunity.bookmarked) {
-          if (a.userOpportunity.seen === b.userOpportunity.seen) {
-            if (a.userOpportunity.status === b.userOpportunity.status) {
-              return new Date(b.date) - new Date(a.date);
-            }
-            if (
-              a.userOpportunity.status >= OFFER_STATUS[4].value &&
-              b.userOpportunity.status >= OFFER_STATUS[4].value
-            ) {
-              return b.userOpportunity.status - a.userOpportunity.status;
-            }
-            if (
-              a.userOpportunity.status >= OFFER_STATUS[4].value &&
-              b.userOpportunity.status < OFFER_STATUS[4].value
-            ) {
-              return 1;
-            }
-            if (
-              a.userOpportunity.status < OFFER_STATUS[4].value &&
-              b.userOpportunity.status >= OFFER_STATUS[4].value
-            ) {
-              return -1;
-            }
-
-            return b.userOpportunity.status - a.userOpportunity.status;
-          }
-          if (a.userOpportunity.seen && !b.userOpportunity.seen) {
-            return -1;
-          }
-          if (!a.userOpportunity.seen && b.userOpportunity.seen) {
-            return 1;
-          }
-        }
-        if (a.userOpportunity.bookmarked && !b.userOpportunity.bookmarked) {
-          return -1;
-        }
-        if (!a.userOpportunity.bookmarked && b.userOpportunity.bookmarked) {
-          return 1;
-        }
-      }
-
-      if (b.userOpportunity) {
-        return -1;
-      }
-      if (a.userOpportunity) {
-        return 1;
-      }
-    }
-    return new Date(b.date) - new Date(a.date);
-  });
+  const sortedOpportunities = sortOpportunities(
+    finalOpportunities,
+    typeParams === OFFER_CANDIDATE_FILTERS_DATA[1].tag
+  );
 
   const filteredTypeOpportunities = filterCandidateOffersByType(
-    finalOpportunities,
+    sortedOpportunities,
     typeParams
   );
 
@@ -762,6 +803,7 @@ const addUserToOpportunity = async (opportunityId, userId, seen) => {
           'archived',
           'note',
           'seen',
+          'recommended',
         ],
       }
     ).then((model) => {
@@ -792,6 +834,7 @@ const updateOpportunityUser = async (opportunityUser) => {
       'archived',
       'note',
       'seen',
+      'recommended',
     ],
   }).then((model) => {
     return model && model.length > 1 && model[1][0];
@@ -836,11 +879,9 @@ const updateOpportunity = async (opportunity) => {
     });
   }
 
-  let newCandidatesIdsToSendMailTo;
-
-  if (opportunity.candidatesId) {
-    const t = await sequelize.transaction();
-    try {
+  const t = await sequelize.transaction();
+  try {
+    if (opportunity.candidatesId) {
       const opportunitiesUser = await Promise.all(
         opportunity.candidatesId.map((candidatId) => {
           return Opportunity_User.findOrCreate({
@@ -854,26 +895,61 @@ const updateOpportunity = async (opportunity) => {
           });
         })
       );
-      await Opportunity_User.destroy({
-        where: {
-          OpportunityId: modelOpportunity.id,
-          UserId: {
-            [Op.not]: opportunitiesUser.map((opportunityUser) => {
-              return opportunityUser.UserId;
-            }),
-          },
-        },
-        transaction: t,
-      });
 
-      await t.commit();
-    } catch (error) {
-      await t.rollback();
-      throw error;
+      if (opportunity.isPublic) {
+        await Opportunity_User.update(
+          {
+            recommended: true,
+          },
+          {
+            where: {
+              id: opportunitiesUser.map((opportunityUser) => {
+                return opportunityUser.id;
+              }),
+            },
+            transaction: t,
+          }
+        );
+        await Opportunity_User.update(
+          {
+            recommended: false,
+          },
+          {
+            where: {
+              OpportunityId: modelOpportunity.id,
+              UserId: {
+                [Op.not]: opportunitiesUser.map((opportunityUser) => {
+                  return opportunityUser.UserId;
+                }),
+              },
+            },
+            transaction: t,
+          }
+        );
+      } else {
+        await Opportunity_User.destroy({
+          where: {
+            OpportunityId: modelOpportunity.id,
+            UserId: {
+              [Op.not]: opportunitiesUser.map((opportunityUser) => {
+                return opportunityUser.UserId;
+              }),
+            },
+          },
+          transaction: t,
+        });
+      }
     }
+
+    await t.commit();
+  } catch (error) {
+    await t.rollback();
+    throw error;
   }
 
-  // Check case where the opportunity has become private and has candidates, to see if there are any new candidates so send mail to
+  let newCandidatesIdsToSendMailTo;
+
+  // Check case where the opportunity has become private and has candidates, to see if there are any new candidates to send mail to
   const newCandidates =
     opportunity.candidatesId &&
     opportunity.candidatesId.length > 0 &&
@@ -893,25 +969,31 @@ const updateOpportunity = async (opportunity) => {
 
   const finalOpportunity = await getOpportunity(opportunity.id, true);
 
-  let candidatesToSendMailTo;
+  let candidatesToSendMailTo = null;
 
-  if (!finalOpportunity.isPublic && oldOpportunity) {
+  if (
+    oldOpportunity &&
+    finalOpportunity.userOpportunity &&
+    finalOpportunity.userOpportunity.length > 0
+  ) {
     // Case where the opportunity was not validated and has been validated, we send the mail to everybody
     if (!oldOpportunity.isValidated && finalOpportunity.isValidated) {
-      candidatesToSendMailTo =
-        finalOpportunity.userOpportunity &&
-        finalOpportunity.userOpportunity.length > 0
-          ? finalOpportunity.userOpportunity
-          : null;
+      candidatesToSendMailTo = finalOpportunity.isPublic
+        ? finalOpportunity.userOpportunity.filter((userOpp) => {
+            return userOpp.recommended;
+          })
+        : finalOpportunity.userOpportunity;
     } else if (newCandidatesIdsToSendMailTo) {
       // Case where the opportunity was already validated, and we just added new candidates to whom we have to send the mail
-      candidatesToSendMailTo =
-        finalOpportunity.userOpportunity &&
-        finalOpportunity.userOpportunity.length > 0
+      candidatesToSendMailTo = (
+        finalOpportunity.isPublic
           ? finalOpportunity.userOpportunity.filter((userOpp) => {
-              return newCandidatesIdsToSendMailTo.includes(userOpp.User.id);
+              return userOpp.recommended;
             })
-          : null;
+          : finalOpportunity.userOpportunity
+      ).filter((userOpp) => {
+        return newCandidatesIdsToSendMailTo.includes(userOpp.User.id);
+      });
     }
   }
 
@@ -938,7 +1020,9 @@ const updateOpportunity = async (opportunity) => {
           toEmail: coach
             ? { to: candidat.User.email, cc: coach.email }
             : candidat.User.email,
-          templateId: MAILJET_TEMPLATES.OFFER_RECEIVED,
+          templateId: finalOpportunity.isPublic
+            ? MAILJET_TEMPLATES.OFFER_RECOMMENDED
+            : MAILJET_TEMPLATES.OFFER_RECEIVED,
           variables: {
             offer: _.omitBy(
               {
@@ -951,21 +1035,23 @@ const updateOpportunity = async (opportunity) => {
           },
         });
 
-        await addToWorkQueue(
-          {
-            type: JOBS.JOB_TYPES.REMINDER_OFFER,
-            opportunityId: finalOpportunity.id,
-            candidatId: candidat.User.id,
-          },
-          {
-            delay:
-              (process.env.OFFER_REMINDER_DELAY
-                ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
-                : 5) *
-              3600000 *
-              24,
-          }
-        );
+        if (!finalOpportunity.isPublic) {
+          await addToWorkQueue(
+            {
+              type: JOBS.JOB_TYPES.REMINDER_OFFER,
+              opportunityId: finalOpportunity.id,
+              candidatId: candidat.User.id,
+            },
+            {
+              delay:
+                (process.env.OFFER_REMINDER_DELAY
+                  ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
+                  : 5) *
+                3600000 *
+                24,
+            }
+          );
+        }
       })
     );
   };
@@ -1023,8 +1109,50 @@ const updateOpportunity = async (opportunity) => {
   return finalOpportunity;
 };
 
+const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
+  const oldOpportunity = await getOpportunity(
+    opportunity.id,
+    isAdmin,
+    candidatId
+  );
+
+  if (oldOpportunity && oldOpportunity.isExternal) {
+    const modelOpportunity = await Opportunity.update(opportunity, {
+      where: { id: opportunity.id },
+      individualHooks: true,
+    }).then((model) => {
+      return model && model.length > 1 && model[1][0];
+    });
+
+    const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
+      attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
+      include: INCLUDE_OPPORTUNITY_COMPLETE,
+    });
+
+    try {
+      await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
+      console.log('Updated table with modified offer.');
+    } catch (err) {
+      console.error(err);
+      console.log('Failed to update table with modified offer.');
+    }
+
+    const cleanedOpportunity = cleanOpportunity(finalOpportunity);
+
+    return {
+      ...cleanedOpportunity,
+      userOpportunity: cleanedOpportunity.userOpportunity.find((uo) => {
+        return uo.UserId === candidatId;
+      }),
+    };
+  }
+
+  return null;
+};
+
 export {
   createOpportunity,
+  createExternalOpportunity,
   deleteOpportunity,
   getOpportunity,
   getOpportunities,
@@ -1033,6 +1161,7 @@ export {
   getAllUserOpportunities,
   updateOpportunityUser,
   updateOpportunity,
+  updateExternalOpportunity,
   addUserToOpportunity,
   refreshAirtableOpportunities,
   getLatestOpportunities,

@@ -2,10 +2,9 @@ import { auth } from 'src/controllers/Auth';
 import { addToWorkQueue } from 'src/jobs';
 import { JOBS, MAILJET_TEMPLATES, HEARD_ABOUT } from 'src/constants';
 import { logger } from 'src/utils/Logger';
-
+import { sendToMailchimp } from 'src/controllers/Mailchimp';
 import express from 'express';
 import _ from 'lodash';
-import Mailchimp from 'src/controllers/Mailchimp';
 
 const router = express.Router();
 
@@ -50,15 +49,7 @@ router.post('/contact-us', auth(), (req, res) => {
 router.post('/newsletter', auth(), (req, res) => {
   const { zone, status } = req.body;
 
-  const zoneTag = Array.isArray(zone) ? zone : [zone];
-  const statusTag = Array.isArray(status) ? status : [status];
-
-  Mailchimp.lists
-    .setListMember(process.env.MAILCHIMP_AUDIENCE_ID, req.body.email, {
-      email_address: req.body.email,
-      status_if_new: 'subscribed',
-      tags: [...zoneTag, ...statusTag],
-    })
+  sendToMailchimp(req.body.email, zone, status)
     .then(() => {
       res.status(200).json();
     })
@@ -67,4 +58,5 @@ router.post('/newsletter', auth(), (req, res) => {
       res.status(401).send('Une erreur est survenue');
     });
 });
+
 export default router;

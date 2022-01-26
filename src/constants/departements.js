@@ -545,7 +545,7 @@ const REGIONS_FILTERS = _.sortBy(
         ...acc,
         [curr.region]: {
           value: curr.region,
-          label: REGIONS_LABELS[curr.region] ?? curr.region,
+          label: REGIONS_LABELS[curr.region] || curr.region,
           zone: curr.zone,
           children: [curr.name],
         },
@@ -565,23 +565,9 @@ const DEPARTMENTS_FILTERS = [
   }),
 ];
 
-const FORMATTED_DEPARTMENTS = [
-  {
-    value: -1,
-    label: 'Choisissez un département',
-  },
-  ...DEPARTMENTS.map(({ name }) => {
-    return {
-      value: name,
-      label: name,
-    };
-  }),
-];
-
 export {
   DEPARTMENTS,
   ADMIN_ZONES,
-  FORMATTED_DEPARTMENTS,
   DEPARTMENTS_FILTERS,
   REGIONS_FILTERS,
   ADMIN_ZONES_FILTERS,
