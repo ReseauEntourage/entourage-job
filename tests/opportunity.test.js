@@ -1602,7 +1602,7 @@ describe('Opportunity', () => {
         });
       });
     });
-    describe('D - Delete 1', () => {
+    describe.skip('D - Delete 1', () => {
       it('Should return 200, if admin', async () => {
         const response = await request(serverTest)
           .delete(`${route}/${opportunitiesId[9]}`)

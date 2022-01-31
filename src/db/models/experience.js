@@ -30,6 +30,7 @@ export default (sequelize, DataTypes) => {
     Experience.belongsToMany(models.Skill, {
       through: 'Experience_Skills',
       as: 'skills',
+      onDelete: 'CASCADE',
     });
   };
   return Experience;

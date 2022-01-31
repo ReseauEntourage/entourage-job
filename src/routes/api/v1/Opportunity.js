@@ -414,15 +414,17 @@ router.put(
  * -  200
  * -  401
  */
-router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
-  OpportunityController.deleteOpportunity(req.params.id)
-    .then((result) => {
-      res.status(200).json(result);
-    })
-    .catch((err) => {
-      logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
-    });
-});
+/*
+  router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
+    OpportunityController.deleteOpportunity(req.params.id)
+      .then((result) => {
+        res.status(200).json(result);
+      })
+      .catch((err) => {
+        logger(res).error(err);
+        res.status(401).send('Une erreur est survenue');
+      });
+  });
+*/
 
 export default router;
