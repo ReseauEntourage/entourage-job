@@ -447,15 +447,17 @@ router.get(
  * - id : ID du CV à supprimer
  * Exemple : <server_url>/api/v1/cv/27272727-aaaa-bbbb-cccc-012345678927
  */
-router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
-  CVController.deleteCV(req.params.id)
-    .then((result) => {
-      res.status(200).json(result);
-    })
-    .catch((err) => {
-      logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
-    });
-});
+/*
+  router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
+    CVController.deleteCV(req.params.id)
+      .then((result) => {
+        res.status(200).json(result);
+      })
+      .catch((err) => {
+        logger(res).error(err);
+        res.status(401).send('Une erreur est survenue');
+      });
+  });
+*/
 
 export default router;

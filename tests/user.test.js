@@ -1,7 +1,7 @@
 import { CV_STATUS, USER_ROLES } from 'src/constants';
 import userFactory from 'tests/factories/userFactory';
 import cvFactory from 'tests/factories/cvFactory';
-
+import uuid from 'uuid/v4';
 import request from 'supertest';
 
 import {
@@ -15,6 +15,8 @@ import {
 } from 'tests/helpers';
 
 import { ADMIN_ZONES } from 'src/constants/departements';
+import { models } from 'src/db/models';
+import { Op } from 'sequelize';
 
 const route = '/api/v1/user';
 const cvRoute = '/api/v1/cv';
@@ -821,10 +823,174 @@ describe('User', () => {
         expect(response.status).toBe(401);
       });
       it('Should return 200 if logged in as admin', async () => {
+        const uniqIdToFind = uuid();
+        const uniqId2ToFind = uuid();
+
+        const { id: cvId } = await cvFactory(
+          {
+            UserId: otherLoggedInCandidat.user.id,
+            urlImg: `images/${otherLoggedInCandidat.user.id}.Published.jpg`,
+            intro: null,
+            story: 'test',
+            location: 'Paris',
+            availability: 'En semaine',
+            transport: 'Permis B',
+            catchphrase: 'Helloooooo',
+            status: 'Progress',
+          },
+          {
+            contracts: [uniqIdToFind],
+            languages: [uniqIdToFind],
+            passions: [uniqIdToFind],
+            skills: [uniqIdToFind],
+            ambitions: [
+              { prefix: 'dans', name: uniqIdToFind, order: 0 },
+              { prefix: 'dans', name: uniqId2ToFind, order: 1 },
+            ],
+            businessLines: [uniqIdToFind],
+            locations: [uniqIdToFind],
+            experiences: [
+              {
+                description: uniqIdToFind,
+                skills: [uniqId2ToFind],
+                order: '0',
+              },
+            ],
+            reviews: [
+              {
+                text: uniqIdToFind,
+                status: uniqIdToFind,
+                name: uniqIdToFind,
+              },
+            ],
+          },
+          true
+        );
+
         const response = await request(serverTest)
           .delete(`${route}/${otherLoggedInCandidat.user.id}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
+
         expect(response.status).toBe(200);
+
+        const ambitionsCount = await models.Ambition.count({
+          where: {
+            [Op.or]: [{ name: uniqIdToFind }, { name: uniqId2ToFind }],
+          },
+        });
+        const cvAmbitionsCount = await models.CV_Ambition.count({
+          where: {
+            CVId: cvId,
+          },
+        });
+        expect(ambitionsCount).toBe(2);
+        expect(cvAmbitionsCount).toBe(0);
+
+        const businessLinesCount = await models.BusinessLine.count({
+          where: {
+            name: uniqIdToFind,
+          },
+        });
+        const cvBusinessLinesCount = await models.CV_BusinessLines.count({
+          where: {
+            CVId: cvId,
+          },
+        });
+        expect(businessLinesCount).toBe(1);
+        expect(cvBusinessLinesCount).toBe(0);
+
+        const contractsCount = await models.Contract.count({
+          where: {
+            name: uniqIdToFind,
+          },
+        });
+        const cvContractsCount = await models.CV_Contract.count({
+          where: {
+            CVId: cvId,
+          },
+        });
+        expect(contractsCount).toBe(1);
+        expect(cvContractsCount).toBe(0);
+
+        const languagesCount = await models.Language.count({
+          where: {
+            name: uniqIdToFind,
+          },
+        });
+        const cvLanguagesCount = await models.CV_Language.count({
+          where: {
+            CVId: cvId,
+          },
+        });
+        expect(languagesCount).toBe(1);
+        expect(cvLanguagesCount).toBe(0);
+
+        const passionsCount = await models.Passion.count({
+          where: {
+            name: uniqIdToFind,
+          },
+        });
+        const cvPassionsCount = await models.CV_Passion.count({
+          where: {
+            CVId: cvId,
+          },
+        });
+        expect(passionsCount).toBe(1);
+        expect(cvPassionsCount).toBe(0);
+
+        const skillsCount = await models.Skill.count({
+          where: {
+            name: uniqIdToFind,
+          },
+        });
+        const cvSkillsCount = await models.CV_Skill.count({
+          where: {
+            CVId: cvId,
+          },
+        });
+        expect(skillsCount).toBe(1);
+        expect(cvSkillsCount).toBe(0);
+
+        const locationsCount = await models.Location.count({
+          where: {
+            name: uniqIdToFind,
+          },
+        });
+        const cvLocationsCount = await models.CV_Locations.count({
+          where: {
+            CVId: cvId,
+          },
+        });
+        expect(locationsCount).toBe(1);
+        expect(cvLocationsCount).toBe(0);
+
+        const cvExperiencesCount = await models.Experience.count({
+          where: {
+            CVId: cvId,
+          },
+        });
+        const expSkillsCount = await models.Skill.count({
+          where: {
+            name: uniqId2ToFind,
+          },
+        });
+
+        expect(cvExperiencesCount).toBe(0);
+        expect(expSkillsCount).toBe(1);
+
+        const searchesCount = await models.CV_Search.count({
+          where: {
+            CVId: cvId,
+          },
+        });
+        expect(searchesCount).toBe(0);
+
+        const reviewsCount = await models.Review.count({
+          where: {
+            CVId: cvId,
+          },
+        });
+        expect(reviewsCount).toBe(0);
       });
       it('Should return 401 if try to get user after deletion', async () => {
         const response = await request(serverTest)
@@ -832,11 +998,12 @@ describe('User', () => {
           .set('authorization', `Token ${loggedInAdmin.token}`);
         expect(response.status).toBe(401);
       });
-      it("Should return 401 if try to get user's CV after deletion", async () => {
+      it("Should return 204 if try to get user's CV after deletion", async () => {
+        console.log(`${cvRoute}?userId=${otherLoggedInCandidat.user.id}`);
         const response = await request(serverTest)
-          .get(`${cvRoute}${otherLoggedInCandidat.user.id}`)
+          .get(`${cvRoute}?userId=${otherLoggedInCandidat.user.id}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
-        expect(response.status).toBe(404);
+        expect(response.status).toBe(204);
       });
     });
   });

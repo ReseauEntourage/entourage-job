@@ -79,7 +79,6 @@ describe('CV', () => {
           status: CV_STATUS.Progress.value,
         };
         delete cvResponse.status;
-        console.log('path :>> ', path);
         const response = await request(serverTest)
           .post(`${route}/`)
           .set('authorization', `Token ${loggedInCandidat.token}`)
@@ -696,7 +695,7 @@ describe('CV', () => {
         expect(response.body.total).toBeTruthy();
       });
     });
-    describe('D - Delete 1 CV', () => {
+    describe.skip('D - Delete 1 CV', () => {
       it('Should return 200, if logged in admin', async () => {
         const cv = await cvFactory({
           UserId: loggedInCandidat.user.id,

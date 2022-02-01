@@ -705,6 +705,7 @@ const deleteUser = async (id) => {
   console.log(`${infoLog} Soft deletion of user`, id);
   const usersDeleted = await User.destroy({
     where: { id },
+    individualHooks: true,
   });
 
   await addToWorkQueue({

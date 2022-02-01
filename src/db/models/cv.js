@@ -91,37 +91,64 @@ export default (sequelize, DataTypes) => {
     CV.belongsToMany(models.Ambition, {
       through: 'CV_Ambitions',
       as: 'ambitions',
+    });
+    CV.hasMany(models.CV_Ambition, {
+      as: 'cvAmbitions',
       onDelete: 'CASCADE',
     });
+
     CV.belongsToMany(models.Contract, {
       through: 'CV_Contracts',
       as: 'contracts',
+    });
+
+    CV.hasMany(models.CV_Contract, {
+      as: 'cvContracts',
       onDelete: 'CASCADE',
     });
+
     CV.belongsToMany(models.Language, {
       through: 'CV_Language',
       as: 'languages',
+    });
+    CV.hasMany(models.CV_Language, {
+      as: 'cvLanguages',
       onDelete: 'CASCADE',
     });
+
     CV.belongsToMany(models.Passion, {
       through: 'CV_Passions',
       as: 'passions',
+    });
+    CV.hasMany(models.CV_Passion, {
+      as: 'cvPassions',
       onDelete: 'CASCADE',
     });
+
     CV.belongsToMany(models.BusinessLine, {
       through: 'CV_BusinessLines',
       as: 'businessLines',
+    });
+    CV.hasMany(models.CV_BusinessLines, {
+      as: 'cvBusinessLines',
       onDelete: 'CASCADE',
     });
+
     CV.belongsToMany(models.Skill, {
       through: 'CV_Skills',
       as: 'skills',
+    });
+    CV.hasMany(models.CV_Skill, {
+      as: 'cvSkills',
       onDelete: 'CASCADE',
     });
 
     CV.belongsToMany(models.Location, {
       through: 'CV_Locations',
       as: 'locations',
+    });
+    CV.hasMany(models.CV_Locations, {
+      as: 'cvLocations',
       onDelete: 'CASCADE',
     });
 
@@ -129,6 +156,7 @@ export default (sequelize, DataTypes) => {
       as: 'experiences',
       onDelete: 'CASCADE',
     });
+
     CV.hasMany(models.Review, {
       as: 'reviews',
       onDelete: 'CASCADE',
