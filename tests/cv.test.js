@@ -79,7 +79,6 @@ describe('CV', () => {
           status: CV_STATUS.Progress.value,
         };
         delete cvResponse.status;
-        console.log('path :>> ', path);
         const response = await request(serverTest)
           .post(`${route}/`)
           .set('authorization', `Token ${loggedInCandidat.token}`)

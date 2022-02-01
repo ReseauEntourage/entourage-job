@@ -225,6 +225,21 @@ export default (sequelize, DataTypes) => {
         }
       }
     });
+
+    User.afterDestroy(async ({ dataValues: destroyedUser }) => {
+      await models.User_Candidat.update(
+        {
+          coachId: null,
+        },
+        {
+          where: {
+            [destroyedUser.role === USER_ROLES.COACH
+              ? 'coachId'
+              : 'candidatId']: destroyedUser.id,
+          },
+        }
+      );
+    });
   };
 
   User.Revisions = User.hasPaperTrail();
