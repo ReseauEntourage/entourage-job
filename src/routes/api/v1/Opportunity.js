@@ -48,19 +48,26 @@ router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
 router.post('/', auth(), (req, res) => {
   const { isAdmin, locations, ...restBody } = req.body;
 
-  // location object { department, address }
-  const locationsToTransform = !Array.isArray(locations)
-    ? [locations]
-    : locations;
+  let promises;
 
-  return Promise.all(
-    locationsToTransform.map(({ department, address }) => {
-      return OpportunityController.createOpportunity(
-        { ...restBody, department, address },
-        isAdmin
-      );
-    })
-  )
+  // location object { department, address }
+  if (locations) {
+    const locationsToTransform = !Array.isArray(locations)
+      ? [locations]
+      : locations;
+    promises = Promise.all(
+      locationsToTransform.map(({ department, address }) => {
+        return OpportunityController.createOpportunity(
+          { ...restBody, department, address },
+          isAdmin
+        );
+      })
+    );
+  } else {
+    promises = OpportunityController.createOpportunity(restBody, isAdmin);
+  }
+
+  return promises
     .then((opportunities) => {
       return res.status(200).json(opportunities);
     })
