@@ -65,7 +65,7 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: DataTypes.NOW,
       },
-      location: {
+      address: {
         type: DataTypes.STRING,
         allowNull: true,
       },
@@ -122,6 +122,23 @@ export default (sequelize, DataTypes) => {
       message: {
         type: DataTypes.TEXT,
         allowNull: true,
+      },
+      driversLicense: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      workingHours: {
+        allowNull: true,
+        type: DataTypes.STRING,
+      },
+      salary: {
+        allowNull: true,
+        type: DataTypes.STRING,
+      },
+      otherInfo: {
+        allowNull: true,
+        type: DataTypes.TEXT,
       },
     },
     {}

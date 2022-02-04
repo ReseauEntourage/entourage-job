@@ -334,6 +334,55 @@ describe('Opportunity', () => {
           );
           incrTotalOppsInDB();
         });
+        it('Should return 200, if valid opportunity and multiple locations', async () => {
+          const { address, department, ...opportunity } =
+            await opportunityFactory(
+              { isPublic: true, isValidated: false },
+              false
+            );
+
+          const locations = {
+            paris: { address: 'Rue de Paris', department: 'Paris dept' },
+            lyon: { address: 'Rue de Lyon', department: 'Lyon dept' },
+            lille: { address: 'Rue de Lille', department: 'Lille dept' },
+          };
+          const response = await request(serverTest)
+            .post(`${route}/`)
+            .send({
+              ...opportunity,
+              locations: [locations.paris, locations.lyon, locations.lille],
+            });
+          expect(response.status).toBe(200);
+          expect(response.body.length).toBe(3);
+          expect(response.body).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                ...opportunity,
+                address: locations.paris.address,
+                department: locations.paris.department,
+                createdAt: response.body[0].createdAt,
+                updatedAt: response.body[0].updatedAt,
+              }),
+              expect.objectContaining({
+                ...opportunity,
+                address: locations.lyon.address,
+                department: locations.lyon.department,
+                createdAt: response.body[1].createdAt,
+                updatedAt: response.body[1].updatedAt,
+              }),
+              expect.objectContaining({
+                ...opportunity,
+                address: locations.lille.address,
+                department: locations.lille.department,
+                createdAt: response.body[2].createdAt,
+                updatedAt: response.body[2].updatedAt,
+              }),
+            ])
+          );
+          incrTotalOppsInDB();
+          incrTotalOppsInDB();
+          incrTotalOppsInDB();
+        });
         it('Should return 401, if invalid opportunity', async () => {
           const opportunity = await opportunityFactory({}, false);
           delete opportunity.title;
@@ -642,7 +691,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=pending`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(6);
+            expect(response.body.offers.length).toBe(9);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
@@ -730,7 +779,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?isPublic[]=true`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(23);
+            expect(response.body.offers.length).toBe(26);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({

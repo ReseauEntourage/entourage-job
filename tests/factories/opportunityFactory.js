@@ -46,6 +46,11 @@ const incrTotalOppsInDB = () => {
  * @param {string} props.numberOfPositions
  * @param {string} props.beContacted
  * @param {string} props.createdAt
+ * @param {string} props.address
+ * @param {string} props.driversLicense
+ * @param {string} props.workingHours
+ * @param {string} props.salary
+ * @param {string} props.otherInfo
  */
 const generateOpportunity = async (props) => {
   const data = {
@@ -77,6 +82,11 @@ const generateOpportunity = async (props) => {
     message: faker.lorem.paragraphs(3),
     link: faker.lorem.words(2),
     externalOrigin: faker.lorem.words(2),
+    address: faker.address.city(),
+    driversLicense: faker.random.boolean(),
+    workingHours: faker.lorem.words(2),
+    salary: faker.lorem.words(2),
+    otherInfo: faker.lorem.words(2),
   };
   return {
     ...data,
