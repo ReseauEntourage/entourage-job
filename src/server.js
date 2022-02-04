@@ -1,10 +1,13 @@
 // eslint-disable-next-line no-unused-vars
-const tracer =
-  process.env.ENABLE_DATADOG_TRACER === 'true'
-    ? require('dd-trace').init({
-        version: process.env.HEROKU_RELEASE_VERSION,
-      })
-    : null;
+if (process.env.ENABLE_DATADOG_TRACER === 'true') {
+  const tracer = require('dd-trace').init({
+    version: process.env.HEROKU_RELEASE_VERSION,
+    debug: true,
+  });
+  tracer.use('pg', {
+    service: 'linkedout-back-postgres',
+  });
+}
 
 import RedisManager from 'src/utils/RedisManager';
 

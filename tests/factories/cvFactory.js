@@ -85,44 +85,72 @@ const cvFactory = async (props = {}, components = {}, insertInDB = true) => {
   if (insertInDB) {
     cvDB = await models.CV.create(cvFull);
 
-    // TODO manage creation of attached component in a cleaner way
     _.forEach(Object.keys(components), async (componentKey) => {
-      switch (componentKey) {
-        case 'locations':
-          const locations = await Promise.all(
-            components[componentKey].map((name) => {
-              return models.Location.findOrCreate({
-                where: { name },
-              }).then((model) => {
-                return model[0];
-              });
-            })
-          );
-          await cvDB.addLocation(locations);
-          break;
-        case 'businessLines':
-          const businessLines = await Promise.all(
-            components[componentKey].map((name) => {
-              return models.BusinessLine.findOrCreate({
-                where: { name },
-              }).then((model) => {
-                return model[0];
-              });
-            })
-          );
-          await cvDB.addBusinessLines(businessLines);
-          break;
-        default:
-          break;
+      const modelName =
+        componentKey.charAt(0).toUpperCase() + componentKey.substring(1);
+
+      if (
+        Object.keys(models[modelName.slice(0, -1)].rawAttributes).includes(
+          'CVId'
+        )
+      ) {
+        await Promise.all(
+          components[componentKey].map(async (component) => {
+            const instance = await models[modelName.slice(0, -1)].create({
+              CVId: cvDB.id,
+              ...component,
+            });
+
+            // TODO Make generic
+            const childrenComponentKey = 'skills';
+            const childrenModelName =
+              childrenComponentKey.charAt(0).toUpperCase() +
+              childrenComponentKey.substring(1);
+            if (
+              modelName === 'Experiences' &&
+              component[childrenComponentKey]
+            ) {
+              const childrenInstances = await Promise.all(
+                component[childrenComponentKey].map((component) => {
+                  return models[childrenModelName.slice(0, -1)]
+                    .findOrCreate({
+                      where: { name: component },
+                    })
+                    .then((model) => {
+                      return model[0];
+                    });
+                })
+              );
+              await instance[`add${childrenModelName}`](childrenInstances);
+            }
+          })
+        );
+      } else {
+        const instances = await Promise.all(
+          components[componentKey].map((component) => {
+            if (_.isString(component)) {
+              return models[modelName.slice(0, -1)]
+                .findOrCreate({
+                  where: { name: component },
+                })
+                .then((model) => {
+                  return model[0];
+                });
+            } else {
+              return models[modelName.slice(0, -1)].create(component);
+            }
+          })
+        );
+        await cvDB[`add${modelName}`](instances);
       }
     });
-
     await models.CV_Search.create({
       id: uuid(),
       CVId: cvDB.id,
       searchString: JSON.stringify({ ...cvFull, ...props }),
     });
   }
+
   return insertInDB ? cvDB.dataValues : cvFull;
 };
 

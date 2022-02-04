@@ -164,7 +164,6 @@ describe('Auth', () => {
             confirmPassword: 'newPassword',
           });
         expect(response.status).toBe(200);
-        console.log('RESPONSE', response.body);
         expect(response.body.id).toBe(loggedInCandidat.user.id);
       });
       it('Should return 400, if not matching passwords', async () => {
