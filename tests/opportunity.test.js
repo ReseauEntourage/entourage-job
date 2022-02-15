@@ -1071,9 +1071,6 @@ describe('Opportunity', () => {
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: true,
-                  userOpportunity: expect.objectContaining({
-                    recommended: false,
-                  }),
                 }),
                 expect.objectContaining({
                   userOpportunity: expect.objectContaining({

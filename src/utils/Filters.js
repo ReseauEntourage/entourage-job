@@ -26,18 +26,16 @@ const filterCandidateOffersByType = (offers, type) => {
     filteredList = filteredList.filter((offer) => {
       const isArchived =
         offer.userOpportunity && offer.userOpportunity.archived;
-      const isRecommended =
-        offer.userOpportunity && offer.userOpportunity.recommended;
 
       switch (type) {
         case OFFER_CANDIDATE_FILTERS_DATA[0].tag:
           return true;
         case OFFER_CANDIDATE_FILTERS_DATA[1].tag:
-          return (!offer.isPublic || isRecommended) && !isArchived;
+          return !offer.isPublic && !isArchived;
         case OFFER_CANDIDATE_FILTERS_DATA[2].tag:
           return offer.isPublic && !isArchived;
         case OFFER_CANDIDATE_FILTERS_DATA[3].tag:
-          return offer.userOpportunity && offer.userOpportunity.archived;
+          return isArchived;
         default:
           return true;
       }
