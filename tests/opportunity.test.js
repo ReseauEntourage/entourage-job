@@ -393,7 +393,7 @@ describe('Opportunity', () => {
         });
       });
       describe('Logged in users can create external opportunities - /external', () => {
-        it('Should return 200, if logged in as candidate and valid opportunity with authorized values', async () => {
+        it('Should return 200, and status be "Contacted", if logged in as candidate and valid opportunity with authorized values', async () => {
           const opportunity = await opportunityFactory({}, false);
 
           const candidateId = loggedInCandidat.user.id;
@@ -422,6 +422,8 @@ describe('Opportunity', () => {
             })
           );
           expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+          // status 0 = "Contacté"
+          expect(response.body.userOpportunity.status).toBe(0);
           incrTotalOppsInDB();
         });
         it('Should return 401, if logged in as candidate and valid opportunity with unauthorized values', async () => {
@@ -466,7 +468,7 @@ describe('Opportunity', () => {
           expect(response.status).toBe(401);
         });
 
-        it('Should return 200, if logged in as coach and valid opportunity with authorized values', async () => {
+        it('Should return 200, and status be "Contacted", if logged in as coach and valid opportunity with authorized values', async () => {
           const opportunity = await opportunityFactory({}, false);
 
           const candidateId = loggedInCandidat.user.id;
@@ -495,6 +497,8 @@ describe('Opportunity', () => {
             })
           );
           expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+          // status 0 = "Contacté"
+          expect(response.body.userOpportunity.status).toBe(0);
           incrTotalOppsInDB();
         });
         it("Should return 401, if logged in as coach and creates another candidate's opportunity", async () => {
@@ -520,7 +524,7 @@ describe('Opportunity', () => {
           expect(response.status).toBe(401);
         });
 
-        it('Should return 200, if logged in as admin and valid opportunity', async () => {
+        it('Should return 200, and status be "Contacted", if logged in as admin and valid opportunity', async () => {
           const opportunity = await opportunityFactory({}, false);
 
           const candidateId = loggedInCandidat.user.id;
@@ -551,6 +555,8 @@ describe('Opportunity', () => {
             })
           );
           expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+          // status 0 = "Contacté"
+          expect(response.body.userOpportunity.status).toBe(0);
           incrTotalOppsInDB();
         });
         it('Should return 401, if logged in as admin invalid opportunity', async () => {
