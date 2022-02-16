@@ -326,6 +326,7 @@ const createExternalOpportunity = async (data, candidatId) => {
   await Opportunity_User.create({
     OpportunityId: modelOpportunity.id,
     UserId: candidatId,
+    status: 0,
   });
 
   const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
