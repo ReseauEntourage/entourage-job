@@ -34,7 +34,6 @@ jobs:
       AWSS3_SECRET: ${{ secrets.AWSS3_SECRET }}
       AWSS3_FILE_DIRECTORY: ${{ secrets.AWSS3_FILE_DIRECTORY }}
       AWSS3_IMAGE_DIRECTORY: ${{ secrets.AWSS3_IMAGE_DIRECTORY }}
-      AWSS3_URL: ${{ secrets.AWSS3_URL }}
 
     steps:
     - uses: actions/checkout@v2
