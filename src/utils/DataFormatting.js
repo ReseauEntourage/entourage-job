@@ -29,8 +29,8 @@ const cleanCV = (model) => {
     });
   }
   if (tmpCV.businessLines) {
-    tmpCV.businessLines = tmpCV.businessLines.map((o) => {
-      return o.name;
+    tmpCV.businessLines = tmpCV.businessLines.map(({ name, order }) => {
+      return { name, order };
     });
   }
   if (tmpCV.locations) {
@@ -58,13 +58,7 @@ const cleanOpportunity = (model) => {
   if (!model) {
     return null;
   }
-  const tmpCV = model.toJSON();
-  if (tmpCV.businessLines) {
-    tmpCV.businessLines = tmpCV.businessLines.map((o) => {
-      return o.name;
-    });
-  }
-  return tmpCV;
+  return model.toJSON();
 };
 
 const controlText = (text) => {

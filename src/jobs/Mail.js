@@ -1,5 +1,4 @@
 import { getAllCandidates } from 'src/controllers/User';
-import { getAllFilters } from 'src/utils/Filters';
 import { sendMail } from 'src/controllers/Mail';
 
 import _ from 'lodash';
@@ -69,7 +68,9 @@ const sendRecapAboutOffers = async () => {
     for (let i = 0; i < adminZonesKeys.length; i += 1) {
       const zone = ADMIN_ZONES[adminZonesKeys[i]];
       const zoneFilters = _.map(
-        getAllFilters(DEPARTMENTS_FILTERS, zone),
+        DEPARTMENTS_FILTERS.filter((filter) => {
+          return !filter.zone || filter.zone === zone;
+        }),
         (zoneFilter) => {
           return zoneFilter.value;
         }

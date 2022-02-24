@@ -8,6 +8,11 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      order: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        defaultValue: -1,
+      },
     },
     {}
   );

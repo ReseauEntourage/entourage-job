@@ -112,13 +112,9 @@ const cvFactory = async (props = {}, components = {}, insertInDB = true) => {
             ) {
               const childrenInstances = await Promise.all(
                 component[childrenComponentKey].map((component) => {
-                  return models[childrenModelName.slice(0, -1)]
-                    .findOrCreate({
-                      where: { name: component },
-                    })
-                    .then((model) => {
-                      return model[0];
-                    });
+                  return models[childrenModelName.slice(0, -1)].create({
+                    name: component,
+                  });
                 })
               );
               await instance[`add${childrenModelName}`](childrenInstances);
@@ -129,13 +125,7 @@ const cvFactory = async (props = {}, components = {}, insertInDB = true) => {
         const instances = await Promise.all(
           components[componentKey].map((component) => {
             if (_.isString(component)) {
-              return models[modelName.slice(0, -1)]
-                .findOrCreate({
-                  where: { name: component },
-                })
-                .then((model) => {
-                  return model[0];
-                });
+              return models[modelName.slice(0, -1)].create({ name: component });
             } else {
               return models[modelName.slice(0, -1)].create(component);
             }

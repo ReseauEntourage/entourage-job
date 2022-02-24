@@ -280,25 +280,6 @@ const getFiltersObjectsFromQueryParams = (params, filtersConst) => {
   return filters;
 };
 
-const getAllFilters = (filters, zone) => {
-  const filtersToShow = filters.reduce((acc, curr) => {
-    const { children, ...restProps } = curr;
-    const accToReturn = [...acc, restProps];
-    if (children && children.length > 0) {
-      return [...accToReturn, ...getAllFilters(curr.children)];
-    }
-    return accToReturn;
-  }, []);
-
-  if (zone) {
-    return filtersToShow.filter((filter) => {
-      return !filter.zone || filter.zone === zone;
-    });
-  }
-
-  return filtersToShow;
-};
-
 export {
   filterCandidateOffersByType,
   filterAdminOffersByType,
@@ -309,5 +290,4 @@ export {
   filterMembersByAssociatedUser,
   getMemberOptions,
   getFiltersObjectsFromQueryParams,
-  getAllFilters,
 };
