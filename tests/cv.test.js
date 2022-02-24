@@ -490,7 +490,7 @@ describe('CV', () => {
             }
           );
           const response = await request(serverTest).get(
-            `${route}/cards/random/?businessLines[]=Bâtiment&businessLines[]=Informatique`
+            `${route}/cards/random/?businessLines[]=bat&businessLines[]=id`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(2);
@@ -571,7 +571,7 @@ describe('CV', () => {
             }
           );
           const response = await request(serverTest).get(
-            `${route}/cards/random/?businessLines[]=Associatif&businessLines[]=Informatique&employed[]=false&locations[]=Auvergne-Rhône-Alpes&locations[]=Hauts-de-France&locations[]=Île-de-France`
+            `${route}/cards/random/?businessLines[]=sa&businessLines[]=id&employed[]=false&locations[]=Auvergne-Rhône-Alpes&locations[]=Hauts-de-France&locations[]=Île-de-France`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(1);
@@ -652,7 +652,7 @@ describe('CV', () => {
             }
           );
           const response = await request(serverTest).get(
-            `${route}/cards/random/?businessLines[]=Électronique&employed[]=false&locations[]=Île-de-France`
+            `${route}/cards/random/?businessLines[]=tra&employed[]=false&locations[]=Île-de-France`
           );
           expect(response.status).toBe(200);
           expect(response.body.cvs.length).toBe(5);
