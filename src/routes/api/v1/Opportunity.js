@@ -99,7 +99,11 @@ router.post(
           return !authorizedExternalOpportunityKeys.includes(key);
         })
       ) {
-        OpportunityController.createExternalOpportunity(restParams, candidateId)
+        OpportunityController.createExternalOpportunity(
+          restParams,
+          candidateId,
+          isAdmin
+        )
           .then((opportunity) => {
             return res.status(200).json(opportunity);
           })

@@ -460,7 +460,7 @@ describe('CV', () => {
               firstName: newUser1.firstName,
             },
             {
-              businessLines: ['Informatique'],
+              businessLines: ['id'],
             }
           );
           const newUser2 = await userFactory({
@@ -473,7 +473,7 @@ describe('CV', () => {
               firstName: newUser2.firstName,
             },
             {
-              businessLines: ['Bâtiment'],
+              businessLines: ['bat'],
             }
           );
           const newUser3 = await userFactory({
@@ -486,7 +486,7 @@ describe('CV', () => {
               firstName: newUser3.firstName,
             },
             {
-              businessLines: ['Associatif'],
+              businessLines: ['sa'],
             }
           );
           const response = await request(serverTest).get(
@@ -528,7 +528,7 @@ describe('CV', () => {
               firstName: newUser1.firstName,
             },
             {
-              businessLines: ['Informatique'],
+              businessLines: ['id'],
               locations: ['Paris (75)'],
             }
           );
@@ -547,7 +547,7 @@ describe('CV', () => {
               firstName: newUser2.firstName,
             },
             {
-              businessLines: ['Bâtiment'],
+              businessLines: ['bat'],
               locations: ['Rhône (69)'],
             }
           );
@@ -566,7 +566,7 @@ describe('CV', () => {
               firstName: newUser3.firstName,
             },
             {
-              businessLines: ['Associatif'],
+              businessLines: ['sa'],
               locations: ['Nord (59)'],
             }
           );
@@ -609,7 +609,7 @@ describe('CV', () => {
               firstName: newUser1.firstName,
             },
             {
-              businessLines: ['Informatique'],
+              businessLines: ['id'],
               locations: ['Paris (75)'],
             }
           );
@@ -628,7 +628,7 @@ describe('CV', () => {
               firstName: newUser2.firstName,
             },
             {
-              businessLines: ['Bâtiment'],
+              businessLines: ['bat'],
               locations: ['Paris (75)'],
             }
           );
@@ -647,7 +647,7 @@ describe('CV', () => {
               firstName: newUser3.firstName,
             },
             {
-              businessLines: ['Associatif'],
+              businessLines: ['sa'],
               locations: ['Paris (75)'],
             }
           );
@@ -689,7 +689,7 @@ describe('CV', () => {
       });
     });
     describe('R - Read number of shares', () => {
-      it('Should return 2OO and the number of shares', async () => {
+      it('Should return 200 and the number of shares', async () => {
         const response = await request(serverTest).get(`${route}/shares`);
         expect(response.status).toBe(200);
         expect(response.body.total).toBeTruthy();

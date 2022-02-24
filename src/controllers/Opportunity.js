@@ -293,7 +293,7 @@ const updateTable = async (opportunity, candidates) => {
   });
 };
 
-const createExternalOpportunity = async (data, candidatId) => {
+const createExternalOpportunity = async (data, candidatId, isAdmin) => {
   const modelOpportunity = await Opportunity.create({
     ...data,
     isExternal: true,
@@ -335,25 +335,29 @@ const createExternalOpportunity = async (data, candidatId) => {
 
   const cleanedOpportunity = cleanOpportunity(finalOpportunity);
 
-  const adminMails = getAdminMailsFromDepartment(cleanedOpportunity.department);
-  await addToWorkQueue({
-    type: JOBS.JOB_TYPES.SEND_MAIL,
-    toEmail: adminMails.companies,
-    templateId: MAILJET_TEMPLATES.OFFER_EXTERNAL_RECEIVED,
-    variables: {
-      ..._.omitBy(
-        {
-          ...cleanedOpportunity,
-          contract: findConstantFromValue(
-            cleanedOpportunity.contract,
-            CONTRACTS
-          ).label,
-        },
-        _.isNil
-      ),
-      candidat: _.omitBy(cleanedOpportunity.userOpportunity[0].User, _.isNil),
-    },
-  });
+  if (!isAdmin) {
+    const adminMails = getAdminMailsFromDepartment(
+      cleanedOpportunity.department
+    );
+    await addToWorkQueue({
+      type: JOBS.JOB_TYPES.SEND_MAIL,
+      toEmail: adminMails.companies,
+      templateId: MAILJET_TEMPLATES.OFFER_EXTERNAL_RECEIVED,
+      variables: {
+        ..._.omitBy(
+          {
+            ...cleanedOpportunity,
+            contract: findConstantFromValue(
+              cleanedOpportunity.contract,
+              CONTRACTS
+            ).label,
+          },
+          _.isNil
+        ),
+        candidat: _.omitBy(cleanedOpportunity.userOpportunity[0].User, _.isNil),
+      },
+    });
+  }
 
   return {
     ...cleanedOpportunity,
