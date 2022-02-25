@@ -65,11 +65,11 @@ const generateCv = async (props = {}) => {
  * @param {string} props.status
  * @param {number} props.version
  * @param {Object} components The ids of cv components:
- * - {Array<string>} ambition
- * - {Array<string>} businesslines
- * - {Array<string>} constract
- * - {Array<string>} language
- * - {Array<string>} skill
+ * - {Array<string>} ambitions
+ * - {Array<string>} businessLines
+ * - {Array<string>} contracts
+ * - {Array<string>} languages
+ * - {Array<string>} skills
  * - {Array<string>} locations
  * @param {boolean} insertInDB @default true
  * @return {Promise<CV>}

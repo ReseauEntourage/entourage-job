@@ -4,6 +4,7 @@ import RedisManager from 'src/utils/RedisManager';
 
 import {
   BUSINESS_LINES,
+  CONTRACTS,
   CV_FILTERS_DATA,
   CV_STATUS,
   REDIS_KEYS,
@@ -25,6 +26,7 @@ import { PDFDocument } from 'pdf-lib';
 import moment from 'moment';
 import { invalidateCache } from 'src/controllers/Aws';
 import { findConstantFromValue } from 'src/utils/Finding';
+import { DEPARTMENTS_FILTERS } from '../constants/departements';
 
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
@@ -297,9 +299,7 @@ const createCV = async (data, userId) => {
       console.log(`createCV - Contrats`);
       const contracts = await Promise.all(
         cvData.contracts.map((name) => {
-          return models.Contract.create({
-            where: { name },
-          });
+          return models.Contract.create({ name });
         })
       );
       await modelCV.addContracts(contracts);
@@ -833,9 +833,17 @@ const createSearchString = async (userId) => {
         return findConstantFromValue(businessLine.name, BUSINESS_LINES).label;
       })
       .join(' '),
-    cv.contracts.join(' '),
+    cv.contracts
+      .map((contract) => {
+        return findConstantFromValue(contract, CONTRACTS).label;
+      })
+      .join(' '),
     cv.languages.join(' '),
-    cv.locations.join(' '),
+    cv.locations
+      .map((location) => {
+        return findConstantFromValue(location, DEPARTMENTS_FILTERS).label;
+      })
+      .join(' '),
     cv.passions.join(' '),
     cv.skills.join(' '),
     cv.transport,

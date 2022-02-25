@@ -33,7 +33,7 @@ const generatePreview = async (candidatId, uploadedImg, oldImg) => {
   const cv = await getCVbyUserId(candidatId);
   const user = await getUser(candidatId);
 
-  const isNewCareerPath = cv.businesslines?.every(({ order }) => {
+  const isNewCareerPath = cv.businessLines?.every(({ order }) => {
     return order > -1;
   });
 
@@ -47,7 +47,7 @@ const generatePreview = async (candidatId, uploadedImg, oldImg) => {
       cv: {
         ...cv,
         ambitions: isNewCareerPath
-          ? cv.businesslines?.map((businessLine) => {
+          ? cv.businessLines?.map((businessLine) => {
               return {
                 ...businessLine,
                 name: buildBusinessLineForSentence(
