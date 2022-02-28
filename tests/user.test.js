@@ -847,7 +847,10 @@ describe('User', () => {
               { prefix: 'dans', name: uniqIdToFind, order: 0 },
               { prefix: 'dans', name: uniqId2ToFind, order: 1 },
             ],
-            businessLines: [uniqIdToFind],
+            businessLines: [
+              { name: uniqIdToFind, order: 0 },
+              { name: uniqId2ToFind, order: 1 },
+            ],
             locations: [uniqIdToFind],
             experiences: [
               {
@@ -886,17 +889,17 @@ describe('User', () => {
         expect(ambitionsCount).toBe(2);
         expect(cvAmbitionsCount).toBe(0);
 
-        const businessLinesCount = await models.BusinessLine.count({
+        const businessLinesCount = await models.Ambition.count({
           where: {
-            name: uniqIdToFind,
+            [Op.or]: [{ name: uniqIdToFind }, { name: uniqId2ToFind }],
           },
         });
-        const cvBusinessLinesCount = await models.CV_BusinessLines.count({
+        const cvBusinessLinesCount = await models.CV_Ambition.count({
           where: {
             CVId: cvId,
           },
         });
-        expect(businessLinesCount).toBe(1);
+        expect(businessLinesCount).toBe(2);
         expect(cvBusinessLinesCount).toBe(0);
 
         const contractsCount = await models.Contract.count({

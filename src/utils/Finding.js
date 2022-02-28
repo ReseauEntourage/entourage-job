@@ -1,5 +1,5 @@
 import { ADMIN_ZONES, DEPARTMENTS } from 'src/constants/departements';
-import { CONTRACTS, OFFER_STATUS } from 'src/constants';
+import { OFFER_STATUS } from 'src/constants';
 
 const findOfferStatus = (status, isPublic, isRecommended) => {
   const currentStatus = OFFER_STATUS.find((oStatus) => {
@@ -31,10 +31,15 @@ const findOfferStatus = (status, isPublic, isRecommended) => {
   return { label: 'Non défini', color: 'muted' };
 };
 
-const findContractType = (type) => {
-  return CONTRACTS.find((contract) => {
-    return contract.value === type;
-  });
+const findConstantFromValue = (valToFind, constantsToFindFrom) => {
+  return (
+    constantsToFindFrom.find(({ value }) => {
+      return value === valToFind;
+    }) || {
+      label: valToFind,
+      value: valToFind,
+    }
+  );
 };
 
 const getZoneSuffix = (zone) => {
@@ -61,5 +66,5 @@ export {
   getAdminMailsFromDepartment,
   getZoneFromDepartment,
   getZoneSuffix,
-  findContractType,
+  findConstantFromValue,
 };
