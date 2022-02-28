@@ -1,6 +1,6 @@
 {
   "name": "linkedout-back",
-  "version": "1.17.2",
+  "version": "1.18.0",
   "description": "",
   "main": "index.js",
   "engines": {
@@ -31,6 +31,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-cloudfront": "^3.51.0",
     "@aws-sdk/client-s3": "^3.31.0",
     "@aws-sdk/s3-request-presigner": "^3.31.0",
     "@mailchimp/mailchimp_marketing": "^3.0.71",

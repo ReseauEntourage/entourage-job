@@ -334,6 +334,55 @@ describe('Opportunity', () => {
           );
           incrTotalOppsInDB();
         });
+        it('Should return 200, if valid opportunity and multiple locations', async () => {
+          const { address, department, ...opportunity } =
+            await opportunityFactory(
+              { isPublic: true, isValidated: false },
+              false
+            );
+
+          const locations = {
+            paris: { address: 'Rue de Paris', department: 'Paris dept' },
+            lyon: { address: 'Rue de Lyon', department: 'Lyon dept' },
+            lille: { address: 'Rue de Lille', department: 'Lille dept' },
+          };
+          const response = await request(serverTest)
+            .post(`${route}/`)
+            .send({
+              ...opportunity,
+              locations: [locations.paris, locations.lyon, locations.lille],
+            });
+          expect(response.status).toBe(200);
+          expect(response.body.length).toBe(3);
+          expect(response.body).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                ...opportunity,
+                address: locations.paris.address,
+                department: locations.paris.department,
+                createdAt: response.body[0].createdAt,
+                updatedAt: response.body[0].updatedAt,
+              }),
+              expect.objectContaining({
+                ...opportunity,
+                address: locations.lyon.address,
+                department: locations.lyon.department,
+                createdAt: response.body[1].createdAt,
+                updatedAt: response.body[1].updatedAt,
+              }),
+              expect.objectContaining({
+                ...opportunity,
+                address: locations.lille.address,
+                department: locations.lille.department,
+                createdAt: response.body[2].createdAt,
+                updatedAt: response.body[2].updatedAt,
+              }),
+            ])
+          );
+          incrTotalOppsInDB();
+          incrTotalOppsInDB();
+          incrTotalOppsInDB();
+        });
         it('Should return 401, if invalid opportunity', async () => {
           const opportunity = await opportunityFactory({}, false);
           delete opportunity.title;
@@ -344,7 +393,7 @@ describe('Opportunity', () => {
         });
       });
       describe('Logged in users can create external opportunities - /external', () => {
-        it('Should return 200, if logged in as candidate and valid opportunity with authorized values', async () => {
+        it('Should return 200, and status be "Contacted", if logged in as candidate and valid opportunity with authorized values', async () => {
           const opportunity = await opportunityFactory({}, false);
 
           const candidateId = loggedInCandidat.user.id;
@@ -373,6 +422,8 @@ describe('Opportunity', () => {
             })
           );
           expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+          // status 0 = "Contacté"
+          expect(response.body.userOpportunity.status).toBe(0);
           incrTotalOppsInDB();
         });
         it('Should return 401, if logged in as candidate and valid opportunity with unauthorized values', async () => {
@@ -417,7 +468,7 @@ describe('Opportunity', () => {
           expect(response.status).toBe(401);
         });
 
-        it('Should return 200, if logged in as coach and valid opportunity with authorized values', async () => {
+        it('Should return 200, and status be "Contacted", if logged in as coach and valid opportunity with authorized values', async () => {
           const opportunity = await opportunityFactory({}, false);
 
           const candidateId = loggedInCandidat.user.id;
@@ -446,6 +497,8 @@ describe('Opportunity', () => {
             })
           );
           expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+          // status 0 = "Contacté"
+          expect(response.body.userOpportunity.status).toBe(0);
           incrTotalOppsInDB();
         });
         it("Should return 401, if logged in as coach and creates another candidate's opportunity", async () => {
@@ -471,7 +524,7 @@ describe('Opportunity', () => {
           expect(response.status).toBe(401);
         });
 
-        it('Should return 200, if logged in as admin and valid opportunity', async () => {
+        it('Should return 200, and status be "Contacted", if logged in as admin and valid opportunity', async () => {
           const opportunity = await opportunityFactory({}, false);
 
           const candidateId = loggedInCandidat.user.id;
@@ -502,6 +555,8 @@ describe('Opportunity', () => {
             })
           );
           expect(response.body.userOpportunity.UserId).toMatch(candidateId);
+          // status 0 = "Contacté"
+          expect(response.body.userOpportunity.status).toBe(0);
           incrTotalOppsInDB();
         });
         it('Should return 401, if logged in as admin invalid opportunity', async () => {
@@ -642,7 +697,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=pending`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(6);
+            expect(response.body.offers.length).toBe(9);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
@@ -730,7 +785,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?isPublic[]=true`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(23);
+            expect(response.body.offers.length).toBe(26);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({
@@ -1022,9 +1077,6 @@ describe('Opportunity', () => {
               expect.arrayContaining([
                 expect.objectContaining({
                   isPublic: true,
-                  userOpportunity: expect.objectContaining({
-                    recommended: false,
-                  }),
                 }),
                 expect.objectContaining({
                   userOpportunity: expect.objectContaining({

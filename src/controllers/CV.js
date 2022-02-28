@@ -18,6 +18,7 @@ import fs from 'fs';
 import puppeteer from 'puppeteer-core';
 import { PDFDocument } from 'pdf-lib';
 import moment from 'moment';
+import { invalidateCache } from 'src/controllers/Aws';
 
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
@@ -842,6 +843,8 @@ const generatePdfFromCV = async (userId, token, paths) => {
   }
 
   forceGC();
+
+  await invalidateCache('/' + s3Key);
 
   return S3.getSignedUrl(s3Key);
 };

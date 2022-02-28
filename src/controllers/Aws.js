@@ -5,16 +5,50 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
+
+import {
+  CloudFrontClient,
+  CreateInvalidationCommand,
+} from '@aws-sdk/client-cloudfront';
+
 import { getSignedUrl as S3GetSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-// The name of the bucket that you have created
-const s3 = new S3Client({
+const clientConf = {
   region: 'eu-west-3',
   credentials: {
     accessKeyId: process.env.AWSS3_ID,
     secretAccessKey: process.env.AWSS3_SECRET,
   },
-});
+};
+
+// The name of the bucket that you have created
+const s3 = new S3Client(clientConf);
+const cloudfront = new CloudFrontClient(clientConf);
+
+const invalidateCache = (itemPath) => {
+  const invalidateObjectCommand = new CreateInvalidationCommand({
+    DistributionId: process.env.CDN_ID,
+    InvalidationBatch: {
+      CallerReference: Date.now().toString(),
+      Paths: {
+        Quantity: 1,
+        Items: [itemPath],
+      },
+    },
+  });
+
+  return new Promise((resolve, reject) => {
+    cloudfront
+      .send(invalidateObjectCommand)
+      .then(({ Invalidation: Id }) => {
+        console.log('============ AWS Invalidation ============', Id);
+        resolve(itemPath);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 
 const upload = (data, contentType, outputPath, isPrivate) => {
   const key = `${
@@ -112,4 +146,4 @@ const getSignedUrl = (key) => {
   });
 };
 
-export { upload, deleteFiles, getSignedUrl, getHead };
+export { upload, deleteFiles, getSignedUrl, getHead, invalidateCache };
