@@ -106,13 +106,7 @@ const INCLUDE_OPPORTUNITY_CANDIDATE = [
   },
 ];
 
-const INCLUDE_OPPORTUNITY_COMPLETE = [
-  {
-    model: BusinessLine,
-    as: 'businessLines',
-    attributes: ['name', 'order'],
-    through: { attributes: [] },
-  },
+const INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES = [
   {
     model: Opportunity_User,
     as: 'userOpportunity',
@@ -131,13 +125,17 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
   },
 ];
 
-const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
+const INCLUDE_OPPORTUNITY_COMPLETE = [
   {
     model: BusinessLine,
     as: 'businessLines',
     attributes: ['name', 'order'],
     through: { attributes: [] },
   },
+  ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
+];
+
+const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES = [
   {
     model: Opportunity_User,
     as: 'userOpportunity',
@@ -167,6 +165,16 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
       'recommended',
     ],
   },
+];
+
+const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
+  {
+    model: BusinessLine,
+    as: 'businessLines',
+    attributes: ['name', 'order'],
+    through: { attributes: [] },
+  },
+  ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
 ];
 
 const getOfferSearchOptions = (search) => {
@@ -211,11 +219,27 @@ const destructureOptionsAndParams = (params) => {
   const searchOptions = getOfferSearchOptions(search);
   const filterOptions = getOfferOptions(restFiltersObj);
 
+  const { businessLines: businessLinesOptions, ...restFilterOptions } =
+    filterOptions;
+
   return {
     typeParams,
     statusParams,
     searchOptions,
-    filterOptions,
+    businessLinesOptions: {
+      model: BusinessLine,
+      as: 'businessLines',
+      attributes: ['name', 'order'],
+      through: { attributes: [] },
+      ...(businessLinesOptions
+        ? {
+            where: {
+              name: businessLinesOptions,
+            },
+          }
+        : {}),
+    },
+    filterOptions: restFilterOptions,
   };
 };
 
@@ -376,8 +400,6 @@ const createOpportunity = async (data, isAdmin) => {
     isValidated: false,
   });
 
-  console.log('received CV data', data);
-
   if (data.businessLines) {
     console.log(`Etape 2 - BusinessLine`);
     const businessLines = await Promise.all(
@@ -512,12 +534,19 @@ const deleteOpportunity = (id) => {
 };
 
 const getOpportunities = async (params) => {
-  const { typeParams, statusParams, searchOptions, filterOptions } =
-    destructureOptionsAndParams(params);
+  const {
+    typeParams,
+    statusParams,
+    searchOptions,
+    businessLinesOptions,
+    filterOptions,
+  } = destructureOptionsAndParams(params);
 
   const options = {
-    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
-    paranoid: false,
+    include: [
+      businessLinesOptions,
+      ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
+    ],
   };
 
   if (typeParams && typeParams === OFFER_ADMIN_FILTERS_DATA[3].tag) {
@@ -571,7 +600,6 @@ const countPendingOpportunitiesCount = async (zone) => {
 const getLatestOpportunities = async () => {
   const options = {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
-    paranoid: false,
   };
 
   const lastWeek = moment().subtract(7, 'd');
@@ -609,7 +637,7 @@ const getPublicOpportunities = async () => {
 };
 
 const getPrivateUserOpportunities = async (userId, params) => {
-  const { statusParams, searchOptions, filterOptions } =
+  const { statusParams, searchOptions, businessLinesOptions, filterOptions } =
     destructureOptionsAndParams(params);
 
   console.log(`getOpportunities - Récupérer les opportunités`);
@@ -618,8 +646,15 @@ const getPrivateUserOpportunities = async (userId, params) => {
     attributes: ['OpportunityId'],
   });
 
+  const options = {
+    include: [
+      businessLinesOptions,
+      ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
+    ],
+  };
+
   const opportunities = await Opportunity.findAll({
-    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
+    ...options,
     where: {
       id: opportunityUsers.map((model) => {
         return model.OpportunityId;
@@ -651,17 +686,29 @@ const getPrivateUserOpportunities = async (userId, params) => {
 };
 
 const getAllUserOpportunities = async (userId, params = {}) => {
-  const { typeParams, statusParams, searchOptions, filterOptions } =
-    destructureOptionsAndParams(params);
+  const {
+    typeParams,
+    statusParams,
+    searchOptions,
+    businessLinesOptions,
+    filterOptions,
+  } = destructureOptionsAndParams(params);
 
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
     attributes: ['OpportunityId'],
   });
 
-  const opportunities = await Opportunity.findAll({
+  const options = {
     attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    include: [
+      businessLinesOptions,
+      ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
+    ],
+  };
+
+  const opportunities = await Opportunity.findAll({
+    ...options,
     where: {
       [Op.or]: [
         { isPublic: true, isValidated: true },

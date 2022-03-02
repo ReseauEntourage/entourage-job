@@ -3,6 +3,7 @@ import faker from 'faker';
 import { models } from 'src/db/models';
 import { DEPARTMENTS } from 'src/constants/departements';
 import moment from 'moment';
+import _ from 'lodash';
 const { Opportunity } = models;
 
 let totalOppsInDB = 0;
@@ -101,12 +102,32 @@ const generateOpportunity = async (props) => {
  * @returns opportunity inserted in DB (with id generated at insertion),
  * @opional if no DB insertion returns the generated data (no id).
  */
-const opportunityFactory = async (props = {}, insertInDB = true) => {
+const opportunityFactory = async (
+  props = {},
+  components = {},
+  insertInDB = true
+) => {
   let opportunityData = await generateOpportunity(props);
 
   if (insertInDB) {
-    const answer = await Opportunity.create(opportunityData);
-    opportunityData = answer.dataValues;
+    const oppDB = await Opportunity.create(opportunityData);
+    _.forEach(Object.keys(components), async (componentKey) => {
+      const modelName =
+        componentKey.charAt(0).toUpperCase() + componentKey.substring(1);
+
+      const instances = await Promise.all(
+        components[componentKey].map((component) => {
+          if (_.isString(component)) {
+            return models[modelName.slice(0, -1)].create({ name: component });
+          } else {
+            return models[modelName.slice(0, -1)].create(component);
+          }
+        })
+      );
+      await oppDB[`add${modelName}`](instances);
+    });
+
+    opportunityData = oppDB.dataValues;
     incrTotalOppsInDB();
   }
   return opportunityData;
