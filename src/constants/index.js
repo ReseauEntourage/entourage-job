@@ -114,7 +114,9 @@ const BUSINESS_LINES = [
     value: 'cad',
     prefix: 'le ',
   }, */
-];
+].sort(({ label: labelA }, { label: labelB }) => {
+  return labelA.localeCompare(labelB);
+});
 
 const CV_STATUS = {
   Published: {
@@ -191,7 +193,7 @@ const CV_FILTERS_DATA = [
   {
     key: 'businessLines',
     constants: BUSINESS_LINES,
-    title: 'Secteur',
+    title: 'Métiers',
     tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
 ];
@@ -217,6 +219,12 @@ const OPPORTUNITY_FILTERS_DATA = [
       return dept.zone !== ADMIN_ZONES.HZ;
     }),
     title: 'Département',
+  },
+  {
+    key: 'businessLines',
+    constants: BUSINESS_LINES,
+    title: 'Métiers',
+    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
 ];
 
