@@ -21,9 +21,8 @@ import { createLoggedInUser } from 'tests/helpers/user.helpers';
  * @returns a cv with desired associated entities,
  * @optional with associated user
  */
-const createCvWithAssociations = async (props = {}) => {
+const createCvWithAssociations = async (props = {}, components = {}) => {
   let fullCv = {};
-  const associationsId = {};
 
   if (props.userId != null) {
     const newUser = await createLoggedInUser();
@@ -34,7 +33,7 @@ const createCvWithAssociations = async (props = {}) => {
     ...fullCv,
     ...props,
   };
-  const cv = await cvFactory(fullCv, associationsId, true);
+  const cv = await cvFactory(fullCv, components, true);
 
   return {
     userId: fullCv.UserId,

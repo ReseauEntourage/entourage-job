@@ -224,7 +224,6 @@ const OPPORTUNITY_FILTERS_DATA = [
     key: 'businessLines',
     constants: BUSINESS_LINES,
     title: 'Métiers',
-    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
 ];
 
@@ -233,6 +232,12 @@ const MEMBER_FILTERS_DATA = [
     key: 'zone',
     constants: ADMIN_ZONES_FILTERS,
     title: 'Zone',
+  },
+  {
+    key: 'businessLines',
+    constants: BUSINESS_LINES,
+    title: 'Métiers',
+    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
   {
     key: 'associatedUser',

@@ -24,9 +24,11 @@ import {
   filterMembersByCVStatus,
   getMemberOptions,
   getFiltersObjectsFromQueryParams,
+  filterMembersByBusinessLines,
 } from 'src/utils/Filters';
 
-const { User, User_Candidat, CV, Opportunity_User, Revision } = models;
+const { User, User_Candidat, CV, Opportunity_User, Revision, BusinessLine } =
+  models;
 
 const ATTRIBUTES_USER_CANDIDAT = [
   'employed',
@@ -195,7 +197,8 @@ const getMembers = async (params) => {
     MEMBER_FILTERS_DATA
   );
 
-  const { cvStatus, associatedUser, ...restFilters } = filtersObj;
+  const { businessLines, cvStatus, associatedUser, ...restFilters } =
+    filtersObj;
   // The associatedUser options don't work that's why we take it out of the filters
   const filterOptions = getMemberOptions(restFilters);
 
@@ -278,6 +281,14 @@ const getMembers = async (params) => {
           model: CV,
           as: 'cvs',
           attributes: ['version', 'status', 'urlImg'],
+          include: [
+            {
+              model: BusinessLine,
+              as: 'businessLines',
+              attributes: ['name', 'order'],
+              through: { attributes: [] },
+            },
+          ],
         },
         {
           model: User,
@@ -325,28 +336,36 @@ const getMembers = async (params) => {
     return user;
   });
 
-  const filteredMembersByCVStatus =
-    role === USER_ROLES.CANDIDAT || role === 'All'
-      ? filterMembersByCVStatus(membersWithLastCV, cvStatus)
-      : membersWithLastCV;
+  let finalFilteredMembers = membersWithLastCV;
+
+  if (role === USER_ROLES.CANDIDAT || role === 'All') {
+    const filteredMembersByCVStatus = filterMembersByCVStatus(
+      membersWithLastCV,
+      cvStatus
+    );
+    finalFilteredMembers = filterMembersByBusinessLines(
+      filteredMembersByCVStatus,
+      businessLines
+    );
+  }
 
   if (hasFilterOptions && (offset || limit)) {
     if (offset && limit) {
       const intOffset = parseInt(offset, 10);
       const intLimit = parseInt(limit, 10);
-      return filteredMembersByCVStatus.slice(intOffset, intOffset + intLimit);
+      return finalFilteredMembers.slice(intOffset, intOffset + intLimit);
     }
     if (offset) {
       const intOffset = parseInt(offset, 10);
-      return filteredMembersByCVStatus.slice(intOffset);
+      return finalFilteredMembers.slice(intOffset);
     }
     if (limit) {
       const intLimit = parseInt(limit, 10);
 
-      return filteredMembersByCVStatus.slice(0, intLimit);
+      return finalFilteredMembers.slice(0, intLimit);
     }
   }
-  return filteredMembersByCVStatus;
+  return finalFilteredMembers;
 };
 
 const countSubmittedCVMembers = async (zone) => {
