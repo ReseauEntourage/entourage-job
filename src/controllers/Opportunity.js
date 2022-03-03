@@ -126,13 +126,13 @@ const INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES = [
 ];
 
 const INCLUDE_OPPORTUNITY_COMPLETE = [
+  ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
   {
     model: BusinessLine,
     as: 'businessLines',
     attributes: ['name', 'order'],
     through: { attributes: [] },
   },
-  ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
 ];
 
 const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES = [
@@ -168,13 +168,13 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES = [
 ];
 
 const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
+  ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
   {
     model: BusinessLine,
     as: 'businessLines',
     attributes: ['name', 'order'],
     through: { attributes: [] },
   },
-  ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
 ];
 
 const getOfferSearchOptions = (search) => {
@@ -544,8 +544,8 @@ const getOpportunities = async (params) => {
 
   const options = {
     include: [
-      businessLinesOptions,
       ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
+      businessLinesOptions,
     ],
   };
 
@@ -648,8 +648,8 @@ const getPrivateUserOpportunities = async (userId, params) => {
 
   const options = {
     include: [
-      businessLinesOptions,
       ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
+      businessLinesOptions,
     ],
   };
 
@@ -702,8 +702,8 @@ const getAllUserOpportunities = async (userId, params = {}) => {
   const options = {
     attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
     include: [
-      businessLinesOptions,
       ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
+      businessLinesOptions,
     ],
   };
 
@@ -767,10 +767,31 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
       : user.zone === dept.zone;
   });
 
+  const businessLinesFilters = BUSINESS_LINES.filter((businessLine) => {
+    return (
+      cv.businessLines &&
+      cv.businessLines.length > 0 &&
+      cv.businessLines
+        .map(({ name }) => {
+          return name;
+        })
+        .includes(businessLine.value)
+    );
+  });
+
+  const filters = {};
+  if (locationFilters.length > 0) {
+    filters.department = locationFilters;
+  }
+  if (businessLinesFilters.length > 0) {
+    filters.businessLines = businessLinesFilters;
+  }
+
   const filterOptions =
-    locationFilters.length > 0
-      ? getOfferOptions({ department: locationFilters })
-      : {};
+    Object.keys(filters).length > 0 ? getOfferOptions(filters) : {};
+
+  const { businessLines: businessLinesOptions, ...restFilterOptions } =
+    filterOptions;
 
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: candidatId },
@@ -778,7 +799,22 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
   });
 
   const opportunities = await Opportunity.findAll({
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    include: [
+      ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
+      {
+        model: BusinessLine,
+        as: 'businessLines',
+        attributes: ['name', 'order'],
+        through: { attributes: [] },
+        ...(businessLinesOptions
+          ? {
+              where: {
+                name: businessLinesOptions,
+              },
+            }
+          : {}),
+      },
+    ],
     where: {
       [Op.or]: [
         { isPublic: true, isValidated: true },
@@ -790,7 +826,7 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
           isValidated: true,
         },
       ],
-      ...filterOptions,
+      ...restFilterOptions,
     },
   });
 
