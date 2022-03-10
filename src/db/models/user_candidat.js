@@ -67,7 +67,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'candidatId',
       sourceKey: 'id',
       hooks: true,
-      onDelete: 'cascade',
+      onDelete: 'CASCADE',
     });
     UserCandidat.belongsTo(models.User, {
       as: 'coach',
