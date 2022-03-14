@@ -257,9 +257,11 @@ const getAirtableOpportunityFields = (opportunity, candidates) => {
     'Description entreprise': opportunity.companyDescription,
     'Compétences requises': opportunity.skills,
     'Pré-requis': opportunity.prerequisites,
-    "Secteur d'activité": opportunity.businessLines.map(({ name }) => {
-      return findConstantFromValue(name, BUSINESS_LINES).label;
-    }),
+    "Secteur d'activité": _.uniq(
+      opportunity.businessLines.map(({ name }) => {
+        return findConstantFromValue(name, BUSINESS_LINES).label;
+      })
+    ),
     Publique: opportunity.isPublic,
     Externe: opportunity.isExternal,
     'Lien externe': opportunity.link,
