@@ -32,7 +32,9 @@ const invalidateCache = (itemPaths) => {
       CallerReference: Date.now().toString(),
       Paths: {
         Quantity: itemPaths.length,
-        Items: itemPaths,
+        Items: itemPaths.map((itemPath) => {
+          return encodeURI(itemPath);
+        }),
       },
     },
   });
