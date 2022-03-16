@@ -211,7 +211,7 @@ router.get(
       const { department, type, ...restQuery } = req.query;
       OpportunityController.getAllUserOpportunities(req.params.id, req.query)
         .then((zoneOpportunities) => {
-          if (!department || type !== OFFER_CANDIDATE_FILTERS_DATA[1].tag) {
+          if (!department || type !== OFFER_CANDIDATE_FILTERS_DATA[0].tag) {
             res.status(200).json({
               offers: zoneOpportunities,
               otherOffers: [],

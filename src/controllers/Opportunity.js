@@ -551,7 +551,7 @@ const getOpportunities = async (params) => {
     ],
   };
 
-  if (typeParams && typeParams === OFFER_ADMIN_FILTERS_DATA[3].tag) {
+  if (typeParams && typeParams === OFFER_ADMIN_FILTERS_DATA[2].tag) {
     delete filterOptions.isPublic;
   }
 
@@ -748,7 +748,7 @@ const getAllUserOpportunities = async (userId, params = {}) => {
 
   const sortedOpportunities = sortOpportunities(
     finalOpportunities,
-    typeParams === OFFER_CANDIDATE_FILTERS_DATA[1].tag
+    typeParams === OFFER_CANDIDATE_FILTERS_DATA[0].tag
   );
 
   const filteredTypeOpportunities = filterCandidateOffersByType(

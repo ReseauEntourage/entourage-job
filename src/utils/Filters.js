@@ -29,12 +29,10 @@ const filterCandidateOffersByType = (offers, type) => {
 
       switch (type) {
         case OFFER_CANDIDATE_FILTERS_DATA[0].tag:
-          return true;
-        case OFFER_CANDIDATE_FILTERS_DATA[1].tag:
           return !offer.isPublic && !isArchived;
-        case OFFER_CANDIDATE_FILTERS_DATA[2].tag:
+        case OFFER_CANDIDATE_FILTERS_DATA[1].tag:
           return offer.isPublic && !isArchived;
-        case OFFER_CANDIDATE_FILTERS_DATA[3].tag:
+        case OFFER_CANDIDATE_FILTERS_DATA[2].tag:
           return isArchived;
         default:
           return true;
@@ -51,14 +49,12 @@ const filterAdminOffersByType = (offers, type) => {
     filteredList = filteredList.filter((offer) => {
       switch (type) {
         case OFFER_ADMIN_FILTERS_DATA[0].tag:
-          return true;
-        case OFFER_ADMIN_FILTERS_DATA[1].tag:
           return !offer.isValidated && !offer.isArchived && !offer.isExternal;
-        case OFFER_ADMIN_FILTERS_DATA[2].tag:
+        case OFFER_ADMIN_FILTERS_DATA[1].tag:
           return offer.isValidated && !offer.isArchived && !offer.isExternal;
-        case OFFER_ADMIN_FILTERS_DATA[3].tag:
+        case OFFER_ADMIN_FILTERS_DATA[2].tag:
           return offer.isExternal;
-        case OFFER_ADMIN_FILTERS_DATA[4].tag:
+        case OFFER_ADMIN_FILTERS_DATA[3].tag:
           return offer.isArchived;
         default:
           return true;
