@@ -399,7 +399,7 @@ const createOpportunity = async (data, isAdmin) => {
   console.log(`Etape 1 - Création de l'opportunité de base`);
   const modelOpportunity = await Opportunity.create({
     ...data,
-    isValidated: false,
+    isValidated: !!isAdmin,
   });
 
   if (data.businessLines) {
