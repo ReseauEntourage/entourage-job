@@ -152,16 +152,14 @@ const CV_STATUS = {
 };
 
 const OFFER_CANDIDATE_FILTERS_DATA = [
-  { tag: 'all', title: 'Toutes les offres' },
   { tag: 'private', title: 'Offres personnelles', active: true },
   { tag: 'public', title: 'Offres générales' },
   { tag: 'archived', title: 'Offres archivées' },
 ];
 
 const OFFER_ADMIN_FILTERS_DATA = [
-  { tag: 'all', title: 'Toutes les offres' },
-  { tag: 'pending', title: 'Offres à valider', active: true },
-  { tag: 'validated', title: 'Offres publiées' },
+  { tag: 'pending', title: 'Offres à valider' },
+  { tag: 'validated', title: 'Offres publiées', active: true },
   { tag: 'external', title: 'Offres externes' },
   { tag: 'archived', title: 'Offres archivées' },
 ];
