@@ -2,7 +2,13 @@ import { cleanCV, escapeColumnRaw, escapeQuery, forceGC } from 'src/utils';
 import * as S3 from 'src/controllers/Aws';
 import RedisManager from 'src/utils/RedisManager';
 
-import { CV_FILTERS_DATA, CV_STATUS, REDIS_KEYS } from 'src/constants';
+import {
+  BUSINESS_LINES,
+  CONTRACTS,
+  CV_FILTERS_DATA,
+  CV_STATUS,
+  REDIS_KEYS,
+} from 'src/constants';
 
 import { models, sequelize } from 'src/db/models';
 
@@ -19,6 +25,8 @@ import puppeteer from 'puppeteer-core';
 import { PDFDocument } from 'pdf-lib';
 import moment from 'moment';
 import { invalidateCache } from 'src/controllers/Aws';
+import { findConstantFromValue } from 'src/utils/Finding';
+import { DEPARTMENTS_FILTERS } from '../constants/departements';
 
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
@@ -105,7 +113,7 @@ const INCLUDES_COMPLETE_CV_WITHOUT_USER = [
     model: models.BusinessLine,
     as: 'businessLines',
     through: { attributes: [] },
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name', 'order'],
   },
   {
     model: models.Location,
@@ -261,15 +269,7 @@ const createCV = async (data, userId) => {
         // pour chaque competence
         cvData.skills.map((name) => {
           // on trouve ou créé la donné
-          return (
-            models.Skill.findOrCreate({
-              where: { name },
-            })
-              // on recupere de model retourné
-              .then((model) => {
-                return model[0];
-              })
-          );
+          return models.Skill.create({ name });
         })
       );
       // on ajoute toutes les competences
@@ -285,12 +285,7 @@ const createCV = async (data, userId) => {
         // pour chaque competence
         cvData.languages.map((name) => {
           // on trouve ou créé la donné
-          return models.Language.findOrCreate({
-            where: { name },
-            // on recupere de model retourné
-          }).then((model) => {
-            return model[0];
-          });
+          return models.Language.create({ name });
         })
       );
       // on ajoute toutes les competences
@@ -304,11 +299,7 @@ const createCV = async (data, userId) => {
       console.log(`createCV - Contrats`);
       const contracts = await Promise.all(
         cvData.contracts.map((name) => {
-          return models.Contract.findOrCreate({
-            where: { name },
-          }).then((model) => {
-            return model[0];
-          });
+          return models.Contract.create({ name });
         })
       );
       await modelCV.addContracts(contracts);
@@ -321,11 +312,7 @@ const createCV = async (data, userId) => {
       console.log(`createCV - Passions`);
       const passions = await Promise.all(
         cvData.passions.map((name) => {
-          return models.Passion.findOrCreate({
-            where: { name },
-          }).then((model) => {
-            return model[0];
-          });
+          return models.Passion.create({ name });
         })
       );
       await modelCV.addPassions(passions);
@@ -338,11 +325,7 @@ const createCV = async (data, userId) => {
       console.log(`createCV - Ambitions`);
       const ambitions = await Promise.all(
         cvData.ambitions.map(({ name, order = -1, prefix = 'dans' }) => {
-          return models.Ambition.findOrCreate({
-            where: { name, order, prefix },
-          }).then((model) => {
-            return model[0];
-          });
+          return models.Ambition.create({ name, order, prefix });
         })
       );
       await modelCV.addAmbitions(ambitions);
@@ -354,12 +337,8 @@ const createCV = async (data, userId) => {
     promises.push(async () => {
       console.log(`createCV - BusinessLines`);
       const businessLines = await Promise.all(
-        cvData.businessLines.map((name) => {
-          return models.BusinessLine.findOrCreate({
-            where: { name },
-          }).then((model) => {
-            return model[0];
-          });
+        cvData.businessLines.map(({ name, order }) => {
+          return models.BusinessLine.create({ name, order });
         })
       );
       await modelCV.addBusinessLines(businessLines);
@@ -372,11 +351,7 @@ const createCV = async (data, userId) => {
       console.log(`createCV - Locations`);
       const locations = await Promise.all(
         cvData.locations.map((name) => {
-          return models.Location.findOrCreate({
-            where: { name },
-          }).then((model) => {
-            return model[0];
-          });
+          return models.Location.create({ name });
         })
       );
       await modelCV.addLocations(locations);
@@ -399,11 +374,7 @@ const createCV = async (data, userId) => {
             console.log(`createCV - Experience Skills`);
             const skills = await Promise.all(
               experience.skills.map((name) => {
-                return models.Skill.findOrCreate({
-                  where: { name },
-                }).then((model) => {
-                  return model[0];
-                });
+                return models.Skill.create({ name });
               })
             );
             await modelExperience.addSkills(skills);
@@ -584,7 +555,7 @@ const getAndCacheAllCVs = async (dbQuery, cache, options = {}) => {
         model: models.BusinessLine,
         as: 'businessLines',
         through: { attributes: [] },
-        attributes: ['name'],
+        attributes: ['name', 'order'],
         where: restOptions.businessLines
           ? {
               name: restOptions.businessLines,
@@ -844,7 +815,7 @@ const generatePdfFromCV = async (userId, token, paths) => {
 
   forceGC();
 
-  await invalidateCache('/' + s3Key);
+  await invalidateCache(['/' + s3Key]);
 
   return S3.getSignedUrl(s3Key);
 };
@@ -857,10 +828,22 @@ const createSearchString = async (userId) => {
         return ambition.name;
       })
       .join(' '),
-    cv.businessLines.join(' '),
-    cv.contracts.join(' '),
+    cv.businessLines
+      .map((businessLine) => {
+        return findConstantFromValue(businessLine.name, BUSINESS_LINES).label;
+      })
+      .join(' '),
+    cv.contracts
+      .map((contract) => {
+        return findConstantFromValue(contract, CONTRACTS).label;
+      })
+      .join(' '),
     cv.languages.join(' '),
-    cv.locations.join(' '),
+    cv.locations
+      .map((location) => {
+        return findConstantFromValue(location, DEPARTMENTS_FILTERS).label;
+      })
+      .join(' '),
     cv.passions.join(' '),
     cv.skills.join(' '),
     cv.transport,

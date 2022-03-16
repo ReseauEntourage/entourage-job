@@ -1,4 +1,6 @@
 import {
+  BUSINESS_LINES,
+  CONTRACTS,
   EXTERNAL_OFFERS_ORIGINS,
   JOBS,
   MAILJET_TEMPLATES,
@@ -12,7 +14,7 @@ import { addToWorkQueue } from 'src/jobs';
 
 import { cleanOpportunity } from 'src/utils';
 import {
-  findContractType,
+  findConstantFromValue,
   findOfferStatus,
   getAdminMailsFromDepartment,
   getZoneFromDepartment,
@@ -104,13 +106,7 @@ const INCLUDE_OPPORTUNITY_CANDIDATE = [
   },
 ];
 
-const INCLUDE_OPPORTUNITY_COMPLETE = [
-  {
-    model: BusinessLine,
-    as: 'businessLines',
-    attributes: ['name'],
-    through: { attributes: [] },
-  },
+const INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES = [
   {
     model: Opportunity_User,
     as: 'userOpportunity',
@@ -129,30 +125,17 @@ const INCLUDE_OPPORTUNITY_COMPLETE = [
   },
 ];
 
-const INCLUDE_OPPORTUNITY_USER = [
-  {
-    model: Opportunity_User,
-    as: 'userOpportunity',
-    attributes: [
-      'id',
-      'UserId',
-      'status',
-      'seen',
-      'bookmarked',
-      'archived',
-      'note',
-      'recommended',
-    ],
-  },
-];
-
-const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
+const INCLUDE_OPPORTUNITY_COMPLETE = [
+  ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
   {
     model: BusinessLine,
     as: 'businessLines',
-    attributes: ['name'],
+    attributes: ['name', 'order'],
     through: { attributes: [] },
   },
+];
+
+const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES = [
   {
     model: Opportunity_User,
     as: 'userOpportunity',
@@ -181,6 +164,16 @@ const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
       'seen',
       'recommended',
     ],
+  },
+];
+
+const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
+  ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
+  {
+    model: BusinessLine,
+    as: 'businessLines',
+    attributes: ['name', 'order'],
+    through: { attributes: [] },
   },
 ];
 
@@ -226,19 +219,31 @@ const destructureOptionsAndParams = (params) => {
   const searchOptions = getOfferSearchOptions(search);
   const filterOptions = getOfferOptions(restFiltersObj);
 
+  const { businessLines: businessLinesOptions, ...restFilterOptions } =
+    filterOptions;
+
   return {
     typeParams,
     statusParams,
     searchOptions,
-    filterOptions,
+    businessLinesOptions: {
+      model: BusinessLine,
+      as: 'businessLines',
+      attributes: ['name', 'order'],
+      through: { attributes: [] },
+      ...(businessLinesOptions
+        ? {
+            where: {
+              name: businessLinesOptions,
+            },
+          }
+        : {}),
+    },
+    filterOptions: restFilterOptions,
   };
 };
 
-const getAirtableOpportunityFields = (
-  opportunity,
-  candidates,
-  businessLines
-) => {
+const getAirtableOpportunityFields = (opportunity, candidates) => {
   const commonFields = {
     OpportunityId: opportunity.id,
     Entreprise: opportunity.company,
@@ -252,7 +257,11 @@ const getAirtableOpportunityFields = (
     'Description entreprise': opportunity.companyDescription,
     'Compétences requises': opportunity.skills,
     'Pré-requis': opportunity.prerequisites,
-    "Secteur d'activité": businessLines,
+    "Secteur d'activité": _.uniq(
+      opportunity.businessLines.map(({ name }) => {
+        return findConstantFromValue(name, BUSINESS_LINES).label;
+      })
+    ),
     Publique: opportunity.isPublic,
     Externe: opportunity.isExternal,
     'Lien externe': opportunity.link,
@@ -264,7 +273,7 @@ const getAirtableOpportunityFields = (
     'Date de création': opportunity.createdAt,
     Département: opportunity.department,
     Adresse: opportunity.address,
-    Contrat: findContractType(opportunity.contract)?.label,
+    Contrat: findConstantFromValue(opportunity.contract, CONTRACTS).label,
     'Début de contrat': opportunity.startOfContract,
     'Fin de contrat': opportunity.endOfContract,
     'Temps partiel ?': opportunity.isPartTime,
@@ -301,11 +310,7 @@ const getAirtableOpportunityFields = (
 };
 
 const updateTable = async (opportunity, candidates) => {
-  const fields = getAirtableOpportunityFields(
-    opportunity,
-    candidates,
-    opportunity.businessLines
-  );
+  const fields = getAirtableOpportunityFields(opportunity, candidates);
 
   return addToWorkQueue({
     type: JOBS.JOB_TYPES.UPDATE_AIRTABLE,
@@ -314,7 +319,7 @@ const updateTable = async (opportunity, candidates) => {
   });
 };
 
-const createExternalOpportunity = async (data, candidatId) => {
+const createExternalOpportunity = async (data, candidatId, isAdmin) => {
   const modelOpportunity = await Opportunity.create({
     ...data,
     isExternal: true,
@@ -328,6 +333,15 @@ const createExternalOpportunity = async (data, candidatId) => {
     UserId: candidatId,
     status: 0,
   });
+
+  if (data.businessLines) {
+    const businessLines = await Promise.all(
+      data.businessLines.map(({ name, order = -1 }) => {
+        return BusinessLine.create({ name, order });
+      })
+    );
+    await modelOpportunity.addBusinessLines(businessLines);
+  }
 
   const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
     attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
@@ -347,22 +361,29 @@ const createExternalOpportunity = async (data, candidatId) => {
 
   const cleanedOpportunity = cleanOpportunity(finalOpportunity);
 
-  const adminMails = getAdminMailsFromDepartment(cleanedOpportunity.department);
-  await addToWorkQueue({
-    type: JOBS.JOB_TYPES.SEND_MAIL,
-    toEmail: adminMails.companies,
-    templateId: MAILJET_TEMPLATES.OFFER_EXTERNAL_RECEIVED,
-    variables: {
-      ..._.omitBy(
-        {
-          ...cleanedOpportunity,
-          contract: findContractType(cleanedOpportunity.contract)?.label,
-        },
-        _.isNil
-      ),
-      candidat: _.omitBy(cleanedOpportunity.userOpportunity[0].User, _.isNil),
-    },
-  });
+  if (!isAdmin) {
+    const adminMails = getAdminMailsFromDepartment(
+      cleanedOpportunity.department
+    );
+    await addToWorkQueue({
+      type: JOBS.JOB_TYPES.SEND_MAIL,
+      toEmail: adminMails.companies,
+      templateId: MAILJET_TEMPLATES.OFFER_EXTERNAL_RECEIVED,
+      variables: {
+        ..._.omitBy(
+          {
+            ...cleanedOpportunity,
+            contract: findConstantFromValue(
+              cleanedOpportunity.contract,
+              CONTRACTS
+            ).label,
+          },
+          _.isNil
+        ),
+        candidat: _.omitBy(cleanedOpportunity.userOpportunity[0].User, _.isNil),
+      },
+    });
+  }
 
   return {
     ...cleanedOpportunity,
@@ -384,12 +405,8 @@ const createOpportunity = async (data, isAdmin) => {
   if (data.businessLines) {
     console.log(`Etape 2 - BusinessLine`);
     const businessLines = await Promise.all(
-      data.businessLines.map((name) => {
-        return BusinessLine.findOrCreate({
-          where: { name },
-        }).then((model) => {
-          return model[0];
-        });
+      data.businessLines.map(({ name, order = -1 }) => {
+        return BusinessLine.create({ name, order });
       })
     );
     await modelOpportunity.addBusinessLines(businessLines);
@@ -424,16 +441,12 @@ const createOpportunity = async (data, isAdmin) => {
   console.log(`Etape finale - Reprendre l'opportunité complète à retourner`);
 
   const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
-    include: INCLUDE_OPPORTUNITY_USER,
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
   });
 
   const cleanedOpportunity = cleanOpportunity(modelOpportunity);
 
-  const fields = getAirtableOpportunityFields(
-    finalOpportunity,
-    candidates,
-    data.businessLines
-  );
+  const fields = getAirtableOpportunityFields(finalOpportunity, candidates);
 
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
@@ -451,7 +464,10 @@ const createOpportunity = async (data, isAdmin) => {
         ..._.omitBy(
           {
             ...cleanedOpportunity,
-            contract: findContractType(cleanedOpportunity.contract)?.label,
+            contract: findConstantFromValue(
+              cleanedOpportunity.contract,
+              CONTRACTS
+            ).label,
           },
           _.isNil
         ),
@@ -468,7 +484,11 @@ const createOpportunity = async (data, isAdmin) => {
         : '';
 
     const businessLinesString = data.businessLines
-      ? data.businessLines.join(', ')
+      ? data.businessLines
+          .map(({ name }) => {
+            return findConstantFromValue(name, BUSINESS_LINES).label;
+          })
+          .join(', ')
       : '';
 
     await addToWorkQueue({
@@ -479,7 +499,10 @@ const createOpportunity = async (data, isAdmin) => {
         ..._.omitBy(
           {
             ...cleanedOpportunity,
-            contract: findContractType(cleanedOpportunity.contract)?.label,
+            contract: findConstantFromValue(
+              cleanedOpportunity.contract,
+              CONTRACTS
+            ).label,
           },
           _.isNil
         ),
@@ -513,12 +536,19 @@ const deleteOpportunity = (id) => {
 };
 
 const getOpportunities = async (params) => {
-  const { typeParams, statusParams, searchOptions, filterOptions } =
-    destructureOptionsAndParams(params);
+  const {
+    typeParams,
+    statusParams,
+    searchOptions,
+    businessLinesOptions,
+    filterOptions,
+  } = destructureOptionsAndParams(params);
 
   const options = {
-    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
-    paranoid: false,
+    include: [
+      ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
+      businessLinesOptions,
+    ],
   };
 
   if (typeParams && typeParams === OFFER_ADMIN_FILTERS_DATA[3].tag) {
@@ -572,7 +602,6 @@ const countPendingOpportunitiesCount = async (zone) => {
 const getLatestOpportunities = async () => {
   const options = {
     include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
-    paranoid: false,
   };
 
   const lastWeek = moment().subtract(7, 'd');
@@ -610,7 +639,7 @@ const getPublicOpportunities = async () => {
 };
 
 const getPrivateUserOpportunities = async (userId, params) => {
-  const { statusParams, searchOptions, filterOptions } =
+  const { statusParams, searchOptions, businessLinesOptions, filterOptions } =
     destructureOptionsAndParams(params);
 
   console.log(`getOpportunities - Récupérer les opportunités`);
@@ -619,8 +648,15 @@ const getPrivateUserOpportunities = async (userId, params) => {
     attributes: ['OpportunityId'],
   });
 
+  const options = {
+    include: [
+      ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
+      businessLinesOptions,
+    ],
+  };
+
   const opportunities = await Opportunity.findAll({
-    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
+    ...options,
     where: {
       id: opportunityUsers.map((model) => {
         return model.OpportunityId;
@@ -652,17 +688,29 @@ const getPrivateUserOpportunities = async (userId, params) => {
 };
 
 const getAllUserOpportunities = async (userId, params = {}) => {
-  const { typeParams, statusParams, searchOptions, filterOptions } =
-    destructureOptionsAndParams(params);
+  const {
+    typeParams,
+    statusParams,
+    searchOptions,
+    businessLinesOptions,
+    filterOptions,
+  } = destructureOptionsAndParams(params);
 
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: userId },
     attributes: ['OpportunityId'],
   });
 
-  const opportunities = await Opportunity.findAll({
+  const options = {
     attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    include: [
+      ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
+      businessLinesOptions,
+    ],
+  };
+
+  const opportunities = await Opportunity.findAll({
+    ...options,
     where: {
       [Op.or]: [
         { isPublic: true, isValidated: true },
@@ -721,10 +769,31 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
       : user.zone === dept.zone;
   });
 
+  const businessLinesFilters = BUSINESS_LINES.filter((businessLine) => {
+    return (
+      cv.businessLines &&
+      cv.businessLines.length > 0 &&
+      cv.businessLines
+        .map(({ name }) => {
+          return name;
+        })
+        .includes(businessLine.value)
+    );
+  });
+
+  const filters = {};
+  if (locationFilters.length > 0) {
+    filters.department = locationFilters;
+  }
+  if (businessLinesFilters.length > 0) {
+    filters.businessLines = businessLinesFilters;
+  }
+
   const filterOptions =
-    locationFilters.length > 0
-      ? getOfferOptions({ department: locationFilters })
-      : {};
+    Object.keys(filters).length > 0 ? getOfferOptions(filters) : {};
+
+  const { businessLines: businessLinesOptions, ...restFilterOptions } =
+    filterOptions;
 
   const opportunityUsers = await Opportunity_User.findAll({
     where: { UserId: candidatId },
@@ -732,7 +801,22 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
   });
 
   const opportunities = await Opportunity.findAll({
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    include: [
+      ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
+      {
+        model: BusinessLine,
+        as: 'businessLines',
+        attributes: ['name', 'order'],
+        through: { attributes: [] },
+        ...(businessLinesOptions
+          ? {
+              where: {
+                name: businessLinesOptions,
+              },
+            }
+          : {}),
+      },
+    ],
     where: {
       [Op.or]: [
         { isPublic: true, isValidated: true },
@@ -744,7 +828,7 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
           isValidated: true,
         },
       ],
-      ...filterOptions,
+      ...restFilterOptions,
     },
   });
 
@@ -891,12 +975,8 @@ const updateOpportunity = async (opportunity) => {
 
   if (opportunity.businessLines) {
     const businessLines = await Promise.all(
-      opportunity.businessLines.map((name) => {
-        return BusinessLine.findOrCreate({
-          where: { name },
-        }).then((model) => {
-          return model[0];
-        });
+      opportunity.businessLines.map(({ name, order = -1 }) => {
+        return BusinessLine.create({ name, order });
       })
     );
     await modelOpportunity.addBusinessLines(businessLines);
@@ -1060,7 +1140,10 @@ const updateOpportunity = async (opportunity) => {
             offer: _.omitBy(
               {
                 ...finalOpportunity,
-                contract: findContractType(finalOpportunity.contract)?.label,
+                contract: findConstantFromValue(
+                  finalOpportunity.contract,
+                  CONTRACTS
+                ).label,
               },
               _.isNil
             ),
@@ -1112,14 +1195,19 @@ const updateOpportunity = async (opportunity) => {
       ..._.omitBy(
         {
           ...finalOpportunity,
-          contract: findContractType(finalOpportunity.contract)?.label,
+          contract: findConstantFromValue(finalOpportunity.contract, CONTRACTS)
+            .label,
         },
         _.isNil
       ),
       candidates: stringOfNames,
       isPublicString: finalOpportunity.isPublic.toString(),
       candidatesLength: finalOpportunity.userOpportunity.length,
-      businessLines: finalOpportunity.businessLines.join(', '),
+      businessLines: finalOpportunity.businessLines
+        .map(({ name }) => {
+          return findConstantFromValue(name, BUSINESS_LINES).label;
+        })
+        .join(', '),
     };
 
     await addToWorkQueue({
@@ -1156,6 +1244,25 @@ const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
     }).then((model) => {
       return model && model.length > 1 && model[1][0];
     });
+
+    if (opportunity.businessLines) {
+      const businessLines = await Promise.all(
+        opportunity.businessLines.map(({ name, order = -1 }) => {
+          return BusinessLine.create({ name, order });
+        })
+      );
+      await modelOpportunity.addBusinessLines(businessLines);
+      await Opportunity_BusinessLine.destroy({
+        where: {
+          OpportunityId: opportunity.id,
+          BusinessLineId: {
+            [Op.not]: businessLines.map((bl) => {
+              return bl.id;
+            }),
+          },
+        },
+      });
+    }
 
     const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
       attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,

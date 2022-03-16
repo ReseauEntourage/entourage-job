@@ -46,15 +46,16 @@ function generateJWT(user, expiration) {
 
   return jwt.sign(
     {
-      email: user.email,
       id: user.id,
+      email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      gender: user.gender,
       phone: user.phone,
       address: user.address,
       zone: user.zone,
-      gender: user.gender,
       role: user.role,
+      adminRole: user.adminRole,
       candidatId,
       coachId,
     },
@@ -97,7 +98,6 @@ const getTokenFromHeaders = (req) => {
   const {
     headers: { authorization },
   } = req;
-  // console.log('auth :', authorization);
 
   if (authorization && authorization.split(' ')[0] === 'Token') {
     return authorization.split(' ')[1];

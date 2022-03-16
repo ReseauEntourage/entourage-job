@@ -25,94 +25,98 @@ const OFFER_STATUS = [
 
 const BUSINESS_LINES = [
   {
-    label: 'Accueil / Administratif / Gestion / Comptabilité',
-    value: 'Accueil / Administratif / Gestion / Comptabilité',
+    label: 'Logistique et approvisionnement',
+    value: 'la',
+    prefix: ['la', "l'"],
   },
   {
-    label: 'Artisanat / Art',
-    value: 'Artisanat / Art',
-  },
-  {
-    label: 'Associatif',
-    value: 'Associatif',
+    label: 'Assistanat et administratif',
+    value: 'aa',
+    prefix: ["l'", "l'"],
   },
   {
     label: 'Bâtiment',
-    value: 'Bâtiment',
+    value: 'bat',
+    prefix: 'le',
   },
   {
-    label: 'Communication / Marketing / Information',
-    value: 'Communication / Marketing / Information',
+    label: 'Restauration et hôtellerie',
+    value: 'rh',
+    prefix: ['la', "l'"],
   },
   {
-    label: 'Électronique',
-    value: 'Électronique',
+    label: 'Commerce et distribution',
+    value: 'cd',
+    prefix: ['le', 'la'],
   },
   {
-    label: 'Entretien',
-    value: 'Entretien',
+    label: 'Aide et service à la personne',
+    value: 'asp',
+    prefix: ["l'", 'le'],
   },
   {
-    label: 'Espaces Verts / Agriculture / Maraîchage',
-    value: 'Espaces Verts / Agriculture / Maraîchage',
+    label: 'Propreté',
+    value: 'pr',
+    prefix: 'la',
   },
   {
-    label: 'Grande distribution',
-    value: 'Grande distribution',
+    label: 'Maintenance et industrie',
+    value: 'mi',
+    prefix: ['la', "l'"],
   },
   {
-    label: 'Hôtellerie / Tourisme',
-    value: 'Hôtellerie / Tourisme',
+    label: 'Artisanat (autre que bâtiment)',
+    value: 'art',
+    prefix: "l'",
   },
   {
-    label: 'Informatique',
-    value: 'Informatique',
+    label: 'Transport',
+    value: 'tra',
+    prefix: 'le',
   },
   {
-    label: 'Logistique / Préparation de commande / Magasinier',
-    value: 'Logistique / Préparation de commande / Magasinier',
-  },
-  {
-    label: 'Maintenance / Manutention',
-    value: 'Maintenance / Manutention',
-  },
-  {
-    label: 'Mécanique / Métallurgie',
-    value: 'Mécanique / Métallurgie',
-  },
-  {
-    label: 'Production',
-    value: 'Production',
-  },
-  {
-    label: 'Restauration',
-    value: 'Restauration',
-  },
-  {
-    label: 'Santé / Aide à la personne / Action sociale',
-    value: 'Santé / Aide à la personne / Action sociale',
+    label: 'Informatique et digital',
+    value: 'id',
+    prefix: ["l'", 'le'],
   },
   {
     label: 'Sécurité',
-    value: 'Sécurité',
+    value: 'sec',
+    prefix: 'la',
   },
   {
-    label: 'Services aux particuliers / Garde d’enfants',
-    value: 'Services aux particuliers / Garde d’enfants',
+    label: 'Communication et marketing',
+    value: 'cm',
+    prefix: ['la', 'le'],
   },
   {
-    label: 'Traitement des déchets / Eau',
-    value: 'Traitement des déchets / Eau',
+    label: 'Culture et art',
+    value: 'ca',
+    prefix: ['la', "l'"],
   },
   {
-    label: 'Transports / Livraisons',
-    value: 'Transports / Livraisons',
+    label: 'Agriculture et espaces verts',
+    value: 'aev',
+    prefix: ["l'", 'les'],
   },
   {
-    label: 'Vente (conseil client, caisse …)',
-    value: 'Vente (conseil client, caisse …)',
+    label: 'Social et associatif',
+    value: 'sa',
+    prefix: ['le', 'la'],
   },
-];
+  {
+    label: 'Direction financière, juridique et ressources humaines',
+    value: 'fjr',
+    prefix: ['la', 'les'],
+  },
+  /*  {
+    label: 'Cadre',
+    value: 'cad',
+    prefix: 'le ',
+  }, */
+].sort(({ label: labelA }, { label: labelB }) => {
+  return labelA.localeCompare(labelB);
+});
 
 const CV_STATUS = {
   Published: {
@@ -189,7 +193,7 @@ const CV_FILTERS_DATA = [
   {
     key: 'businessLines',
     constants: BUSINESS_LINES,
-    title: 'Secteur',
+    title: 'Métiers',
     tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
 ];
@@ -216,6 +220,11 @@ const OPPORTUNITY_FILTERS_DATA = [
     }),
     title: 'Département',
   },
+  {
+    key: 'businessLines',
+    constants: BUSINESS_LINES,
+    title: 'Métiers',
+  },
 ];
 
 const MEMBER_FILTERS_DATA = [
@@ -223,6 +232,12 @@ const MEMBER_FILTERS_DATA = [
     key: 'zone',
     constants: ADMIN_ZONES_FILTERS,
     title: 'Zone',
+  },
+  {
+    key: 'businessLines',
+    constants: BUSINESS_LINES,
+    title: 'Métiers',
+    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
   {
     key: 'associatedUser',

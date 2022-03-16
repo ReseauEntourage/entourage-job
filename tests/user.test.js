@@ -100,20 +100,35 @@ describe('User', () => {
       zone: ADMIN_ZONES.LYON,
     });
 
-    await createCvWithAssociations({
-      UserId: loggedInCandidat.user.id,
-      status: CV_STATUS.Published.value,
-    });
+    await createCvWithAssociations(
+      {
+        UserId: loggedInCandidat.user.id,
+        status: CV_STATUS.Published.value,
+      },
+      {
+        businessLines: ['id'],
+      }
+    );
 
-    await createCvWithAssociations({
-      UserId: otherLoggedInCandidat.user.id,
-      status: CV_STATUS.Pending.value,
-    });
+    await createCvWithAssociations(
+      {
+        UserId: otherLoggedInCandidat.user.id,
+        status: CV_STATUS.Pending.value,
+      },
+      {
+        businessLines: ['id', 'aa'],
+      }
+    );
 
-    await createCvWithAssociations({
-      UserId: thirdCandidat.user.id,
-      status: CV_STATUS.Published.value,
-    });
+    await createCvWithAssociations(
+      {
+        UserId: thirdCandidat.user.id,
+        status: CV_STATUS.Published.value,
+      },
+      {
+        businessLines: ['aa'],
+      }
+    );
 
     // userAndCvList = await createEntities(createCvWithAssociations, 6, {});
   });
@@ -520,6 +535,30 @@ describe('User', () => {
             ])
           );
         });
+        it('should return 200, and all the candidates that matches the business lines filters', async () => {
+          const response = await request(serverTest)
+            .get(
+              `${route}/members?limit=50&role=${USER_ROLES.CANDIDAT}&businessLines[]=id`
+            )
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.length).toBe(2);
+          expect(response.body).not.toEqual(
+            expect.not.arrayContaining([
+              expect.objectContaining({
+                candidat: expect.objectContaining({
+                  cvs: expect.arrayContaining([
+                    expect.objectContaining({
+                      businessLines: expect.arrayContaining([
+                        expect.objectContaining({ name: 'id' }),
+                      ]),
+                    }),
+                  ]),
+                }),
+              }),
+            ])
+          );
+        });
         it('should return 200, and all the candidates that matches the associatedUser filters', async () => {
           const response = await request(serverTest)
             .get(
@@ -557,7 +596,7 @@ describe('User', () => {
         it('should return 200, and all the candidates that matches the multiple filters (AND between different filters, OR inside each filters)', async () => {
           const response = await request(serverTest)
             .get(
-              `${route}/members?limit=50&role=${USER_ROLES.CANDIDAT}&zone[]=LYON&associatedUser[]=true&employed[]=false&hidden[]=false`
+              `${route}/members?limit=50&role=${USER_ROLES.CANDIDAT}&zone[]=LYON&associatedUser[]=true&employed[]=false&hidden[]=false&businessLines[]=id`
             )
             .set('authorization', `Token ${loggedInAdmin.token}`);
           expect(response.status).toBe(200);
@@ -604,6 +643,21 @@ describe('User', () => {
               expect.objectContaining({
                 candidat: expect.objectContaining({
                   coach: null,
+                }),
+              }),
+            ])
+          );
+          expect(response.body).not.toEqual(
+            expect.not.arrayContaining([
+              expect.objectContaining({
+                candidat: expect.objectContaining({
+                  cvs: expect.arrayContaining([
+                    expect.objectContaining({
+                      businessLines: expect.arrayContaining([
+                        expect.objectContaining({ name: 'id' }),
+                      ]),
+                    }),
+                  ]),
                 }),
               }),
             ])
@@ -847,7 +901,10 @@ describe('User', () => {
               { prefix: 'dans', name: uniqIdToFind, order: 0 },
               { prefix: 'dans', name: uniqId2ToFind, order: 1 },
             ],
-            businessLines: [uniqIdToFind],
+            businessLines: [
+              { name: uniqIdToFind, order: 0 },
+              { name: uniqId2ToFind, order: 1 },
+            ],
             locations: [uniqIdToFind],
             experiences: [
               {
@@ -886,17 +943,17 @@ describe('User', () => {
         expect(ambitionsCount).toBe(2);
         expect(cvAmbitionsCount).toBe(0);
 
-        const businessLinesCount = await models.BusinessLine.count({
+        const businessLinesCount = await models.Ambition.count({
           where: {
-            name: uniqIdToFind,
+            [Op.or]: [{ name: uniqIdToFind }, { name: uniqId2ToFind }],
           },
         });
-        const cvBusinessLinesCount = await models.CV_BusinessLines.count({
+        const cvBusinessLinesCount = await models.CV_Ambition.count({
           where: {
             CVId: cvId,
           },
         });
-        expect(businessLinesCount).toBe(1);
+        expect(businessLinesCount).toBe(2);
         expect(cvBusinessLinesCount).toBe(0);
 
         const contractsCount = await models.Contract.count({

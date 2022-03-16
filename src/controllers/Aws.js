@@ -25,14 +25,16 @@ const clientConf = {
 const s3 = new S3Client(clientConf);
 const cloudfront = new CloudFrontClient(clientConf);
 
-const invalidateCache = (itemPath) => {
+const invalidateCache = (itemPaths) => {
   const invalidateObjectCommand = new CreateInvalidationCommand({
     DistributionId: process.env.CDN_ID,
     InvalidationBatch: {
       CallerReference: Date.now().toString(),
       Paths: {
-        Quantity: 1,
-        Items: [itemPath],
+        Quantity: itemPaths.length,
+        Items: itemPaths.map((itemPath) => {
+          return encodeURI(itemPath);
+        }),
       },
     },
   });
@@ -42,7 +44,7 @@ const invalidateCache = (itemPath) => {
       .send(invalidateObjectCommand)
       .then(({ Invalidation: Id }) => {
         console.log('============ AWS Invalidation ============', Id);
-        resolve(itemPath);
+        resolve(Id);
       })
       .catch((err) => {
         reject(err);

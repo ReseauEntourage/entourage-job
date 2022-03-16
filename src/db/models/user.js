@@ -118,7 +118,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'candidatId',
       sourceKey: 'id',
       hooks: true,
-      onDelete: 'cascade',
+      onDelete: 'CASCADE',
     });
     // si coach regarder coach
     User.hasOne(models.User_Candidat, {

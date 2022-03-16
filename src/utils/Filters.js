@@ -176,15 +176,15 @@ const getMemberOptions = (filtersObj) => {
         for (let i = 0; i < keys.length; i += 1) {
           if (filtersObj[keys[i]].length > 0) {
             if (
-              keys[i] === MEMBER_FILTERS_DATA[2].key ||
-              keys[i] === MEMBER_FILTERS_DATA[3].key
+              keys[i] === MEMBER_FILTERS_DATA[3].key ||
+              keys[i] === MEMBER_FILTERS_DATA[4].key
             ) {
               whereOptions[keys[i]] = {
                 [Op.or]: filtersObj[keys[i]].map((currentFilter) => {
                   return currentFilter.value;
                 }),
               };
-            } else if (keys[i] === MEMBER_FILTERS_DATA[1].key) {
+            } else if (keys[i] === MEMBER_FILTERS_DATA[2].key) {
               // These options don't work
               whereOptions[keys[i]] = {
                 coach: filtersObj[keys[i]].map((currentFilter) => {
@@ -226,6 +226,32 @@ const filterMembersByCVStatus = (members, status) => {
       return status.some((currentFilter) => {
         if (member.candidat && member.candidat.cvs.length > 0) {
           return currentFilter.value === member.candidat.cvs[0].status;
+        }
+        return false;
+      });
+    });
+  }
+
+  return filteredList;
+};
+
+const filterMembersByBusinessLines = (members, businessLines) => {
+  let filteredList = members;
+
+  if (members && businessLines && businessLines.length > 0) {
+    filteredList = members.filter((member) => {
+      return businessLines.some((currentFilter) => {
+        if (member.candidat && member.candidat.cvs.length > 0) {
+          const cvBusinessLines = member.candidat.cvs[0].businessLines;
+          return (
+            cvBusinessLines &&
+            cvBusinessLines.length > 0 &&
+            cvBusinessLines
+              .map(({ name }) => {
+                return name;
+              })
+              .includes(currentFilter.value)
+          );
         }
         return false;
       });
@@ -280,25 +306,6 @@ const getFiltersObjectsFromQueryParams = (params, filtersConst) => {
   return filters;
 };
 
-const getAllFilters = (filters, zone) => {
-  const filtersToShow = filters.reduce((acc, curr) => {
-    const { children, ...restProps } = curr;
-    const accToReturn = [...acc, restProps];
-    if (children && children.length > 0) {
-      return [...accToReturn, ...getAllFilters(curr.children)];
-    }
-    return accToReturn;
-  }, []);
-
-  if (zone) {
-    return filtersToShow.filter((filter) => {
-      return !filter.zone || filter.zone === zone;
-    });
-  }
-
-  return filtersToShow;
-};
-
 export {
   filterCandidateOffersByType,
   filterAdminOffersByType,
@@ -307,7 +314,7 @@ export {
   getCVOptions,
   filterMembersByCVStatus,
   filterMembersByAssociatedUser,
+  filterMembersByBusinessLines,
   getMemberOptions,
   getFiltersObjectsFromQueryParams,
-  getAllFilters,
 };

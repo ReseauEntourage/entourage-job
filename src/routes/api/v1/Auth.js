@@ -51,11 +51,8 @@ router.post('/login', authLimiter, auth(), (req, res) => {
           .status(400)
           .send("L'adresse email ou le mot de passe est invalide");
       }
-      const userWithToken = user;
-      userWithToken.token = AuthController.generateJWT(user);
-
       return res.status(200).json({
-        user: AuthController.toAuthJSON(userWithToken),
+        user: AuthController.toAuthJSON(user),
       });
     })
     .catch((err) => {
