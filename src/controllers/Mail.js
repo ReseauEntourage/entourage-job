@@ -1,4 +1,6 @@
 import Mailjet from 'node-mailjet';
+import { MAILJET_TEMPLATES } from 'src/constants';
+import _ from 'lodash';
 
 const mailjet = Mailjet.connect(
   process.env.MAILJET_PUB,
@@ -39,6 +41,7 @@ const createMail = (params) => {
         : [{ Email: toEmail.bcc }];
     }
   }
+
   const content = templateId
     ? {
         Variables: {
@@ -46,6 +49,9 @@ const createMail = (params) => {
           ...variables,
         },
         TemplateID: templateId,
+        CustomCampaign: _.findKey(MAILJET_TEMPLATES, (id) => {
+          return id === templateId;
+        }),
         TemplateLanguage: true,
         TemplateErrorReporting: {
           Email: process.env.MAILJET_SUPPORT_EMAIL,
