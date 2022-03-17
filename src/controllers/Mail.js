@@ -49,9 +49,12 @@ const createMail = (params) => {
           ...variables,
         },
         TemplateID: templateId,
-        CustomCampaign: _.findKey(MAILJET_TEMPLATES, (id) => {
-          return id === templateId;
-        }),
+        CustomCampaign:
+          process.env.MAILJET_CAMPAIGNS_ACTIVATED === 'true'
+            ? _.findKey(MAILJET_TEMPLATES, (id) => {
+                return id === templateId;
+              })
+            : undefined,
         TemplateLanguage: true,
         TemplateErrorReporting: {
           Email: process.env.MAILJET_SUPPORT_EMAIL,
