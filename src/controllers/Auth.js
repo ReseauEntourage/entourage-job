@@ -1,6 +1,8 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import expressJwt from 'express-jwt';
+import { getRelatedUser } from 'src/utils/Finding';
+import { USER_ROLES } from 'src/constants';
 
 function encryptPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
@@ -34,15 +36,12 @@ function isTokenValid(token) {
 
 // param expiration est la date de fin en secondes
 function generateJWT(user, expiration) {
-  let candidatId = null;
-  if (user.coach && user.coach.candidat) {
-    candidatId = user.coach.candidat.id;
-  }
+  const relatedUser = getRelatedUser(user);
 
-  let coachId = null;
-  if (user.candidat && user.candidat.coach) {
-    coachId = user.candidat.coach.id;
-  }
+  let candidatId =
+    user.role === USER_ROLES.COACH && relatedUser ? relatedUser.id : null;
+  let coachId =
+    user.role === USER_ROLES.CANDIDAT && relatedUser ? relatedUser.id : null;
 
   return jwt.sign(
     {
@@ -67,15 +66,12 @@ function generateJWT(user, expiration) {
 }
 
 function toAuthJSON(user) {
-  let candidat = null;
-  if (user.coach && user.coach.candidat) {
-    candidat = user.coach.candidat;
-  }
+  const relatedUser = getRelatedUser(user);
 
-  let coach = null;
-  if (user.candidat && user.candidat.coach) {
-    coach = user.candidat.coach;
-  }
+  let candidat =
+    user.role === USER_ROLES.COACH && relatedUser ? relatedUser : null;
+  let coach =
+    user.role === USER_ROLES.CANDIDAT && relatedUser ? relatedUser : null;
 
   return {
     id: user.id,

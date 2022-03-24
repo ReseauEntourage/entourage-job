@@ -7,6 +7,8 @@ import {
   CONTRACTS,
   CV_FILTERS_DATA,
   CV_STATUS,
+  JOBS,
+  MAILJET_TEMPLATES,
   REDIS_KEYS,
 } from 'src/constants';
 
@@ -25,8 +27,10 @@ import puppeteer from 'puppeteer-core';
 import { PDFDocument } from 'pdf-lib';
 import moment from 'moment';
 import { invalidateCache } from 'src/controllers/Aws';
-import { findConstantFromValue } from 'src/utils/Finding';
-import { DEPARTMENTS_FILTERS } from '../constants/departements';
+import { findConstantFromValue, getRelatedUser } from 'src/utils/Finding';
+import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import { getUser } from 'src/controllers/User';
+import { addToWorkQueue } from 'src/jobs';
 
 const INCLUDE_ALL_USERS = {
   model: models.User_Candidat,
@@ -509,6 +513,12 @@ const getCVbyUserId = async (userId) => {
   return null;
 };
 
+const getAllUserCVsVersions = async (userId) => {
+  return sequelize.query(
+    `SELECT status, version FROM "CVs" WHERE "UserId"='${userId}'`
+  );
+};
+
 // TODO Delete if not used
 const getCVs = async () => {
   console.log(`getCVs - Récupérer les CVs`);
@@ -914,6 +924,88 @@ const checkCVHasBeenModified = async (candidatId, userId) => {
   };
 };
 
+const sendMailsAfterPublishing = async (candidatId) => {
+  try {
+    const user = await getUser(candidatId);
+    const toEmail = {
+      to: user.email,
+    };
+
+    const coach = getRelatedUser(user);
+    if (coach) {
+      toEmail.cc = coach.email;
+    }
+
+    await addToWorkQueue({
+      type: JOBS.JOB_TYPES.SEND_MAIL,
+      toEmail,
+      templateId: MAILJET_TEMPLATES.CV_PUBLISHED,
+      variables: {
+        ..._.omitBy(user.toJSON(), _.isNil),
+      },
+    });
+
+    await addToWorkQueue(
+      {
+        type: JOBS.JOB_TYPES.REMINDER_VIDEO,
+        candidatId: candidatId,
+      },
+      {
+        delay:
+          (process.env.VIDEO_REMINDER_DELAY
+            ? parseFloat(process.env.VIDEO_REMINDER_DELAY, 10)
+            : 21) *
+          3600000 *
+          24,
+      }
+    );
+    await addToWorkQueue(
+      {
+        type: JOBS.JOB_TYPES.REMINDER_VIDEO,
+        candidatId: user.id,
+      },
+      {
+        delay:
+          (process.env.VIDEO_REMINDER_DELAY
+            ? parseFloat(process.env.VIDEO_REMINDER_DELAY, 10)
+            : 21) *
+          3600000 *
+          24,
+      }
+    );
+    await addToWorkQueue(
+      {
+        type: JOBS.JOB_TYPES.REMINDER_ACTIONS,
+        candidatId: user.id,
+      },
+      {
+        delay:
+          (process.env.ACTIONS_REMINDER_DELAY
+            ? parseFloat(process.env.ACTIONS_REMINDER_DELAY, 10)
+            : 42) *
+          3600000 *
+          24,
+      }
+    );
+    await addToWorkQueue(
+      {
+        type: JOBS.JOB_TYPES.REMINDER_EXTERNAL_OFFERS,
+        candidatId: user.id,
+      },
+      {
+        delay:
+          (process.env.EXTERNAL_OFFERS_REMINDER_DELAY
+            ? parseFloat(process.env.EXTERNAL_OFFERS_REMINDER_DELAY, 10)
+            : 42) *
+          3600000 *
+          24,
+      }
+    );
+  } catch (err) {
+    console.err(err);
+  }
+};
+
 export {
   createCV,
   deleteCV,
@@ -929,4 +1021,6 @@ export {
   getPublishedCVQuery,
   checkCVHasBeenModified,
   setCVHasBeenRead,
+  getAllUserCVsVersions,
+  sendMailsAfterPublishing,
 };

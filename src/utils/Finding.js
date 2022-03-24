@@ -1,5 +1,5 @@
 import { ADMIN_ZONES, DEPARTMENTS } from 'src/constants/departements';
-import { OFFER_STATUS } from 'src/constants';
+import { OFFER_STATUS, USER_ROLES } from 'src/constants';
 
 const findOfferStatus = (status, isPublic, isRecommended) => {
   const currentStatus = OFFER_STATUS.find((oStatus) => {
@@ -61,10 +61,42 @@ const getAdminMailsFromDepartment = (dep) => {
   };
 };
 
+const getRelatedUser = (member) => {
+  if (member.candidat && member.candidat.coach) {
+    return member.candidat.coach;
+  }
+  if (member.coach && member.coach.candidat) {
+    return member.coach.candidat;
+  }
+  return null;
+};
+
+const getCandidateFromCoachOrCandidate = (member) => {
+  if (member.role === USER_ROLES.CANDIDAT) {
+    return member.candidat;
+  }
+
+  return member.coach;
+};
+
+const getCandidateIdFromCoachOrCandidate = (member) => {
+  if (member.role === USER_ROLES.CANDIDAT) {
+    return member.id;
+  }
+
+  if (member.coach && member.coach.candidat) {
+    return member.coach.candidat;
+  }
+  return null;
+};
+
 export {
   findOfferStatus,
   getAdminMailsFromDepartment,
   getZoneFromDepartment,
   getZoneSuffix,
   findConstantFromValue,
+  getCandidateFromCoachOrCandidate,
+  getCandidateIdFromCoachOrCandidate,
+  getRelatedUser,
 };

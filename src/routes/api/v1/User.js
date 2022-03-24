@@ -1,5 +1,4 @@
-import { addToWorkQueue } from 'src/jobs';
-import { JOBS, MAILJET_TEMPLATES, USER_ROLES } from 'src/constants';
+import { USER_ROLES } from 'src/constants';
 import * as AuthController from 'src/controllers/Auth';
 import { auth } from 'src/controllers/Auth';
 import * as UserController from 'src/controllers/User';
@@ -12,7 +11,6 @@ import {
   checkCandidatOrCoachAuthorization,
   checkUserAuthorization,
 } from 'src/utils';
-import _ from 'lodash';
 
 const router = express.Router();
 
@@ -21,39 +19,8 @@ const router = express.Router();
  * Description : Créé le User
  */
 router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
-  function fakePassword() {
-    return Math.random() // Generate random number, eg: 0.123456
-      .toString(36) // Convert  to base-36 : "0.4fzyo82mvyr"
-      .slice(-8); // Cut off last 8 characters : "yo82mvyr"
-  }
-
-  const userPassword = req.body.password || fakePassword();
-  const { hash, salt } = AuthController.encryptPassword(userPassword);
-
-  UserController.createUser({
-    ...req.body,
-    password: hash,
-    salt,
-  })
+  UserController.createUser(req.body, req.body.password)
     .then(async (user) => {
-      const {
-        password,
-        salt: unusedSalt,
-        revision,
-        hashReset,
-        saltReset,
-        ...restProps
-      } = user.toJSON();
-      await addToWorkQueue({
-        type: JOBS.JOB_TYPES.SEND_MAIL,
-        toEmail: req.body.email,
-        templateId: MAILJET_TEMPLATES.ACCOUNT_CREATED,
-        variables: {
-          ..._.omitBy(restProps, _.isNil),
-          password: userPassword,
-        },
-      });
-
       res.status(200).json(user);
     })
     .catch((err) => {

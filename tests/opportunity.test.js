@@ -397,6 +397,46 @@ describe('Opportunity', () => {
           );
           incrTotalOppsInDB();
         });
+        it('Should return 200, and createById if valid opportunity created by logged in admin or candidate', async () => {
+          const opportunity = await opportunityFactory(
+            { isPublic: true, isValidated: false },
+            {},
+            false
+          );
+          const response = await request(serverTest)
+            .post(`${route}/`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
+            .send(opportunity);
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              ...opportunity,
+              createdAt: response.body.createdAt,
+              updatedAt: response.body.updatedAt,
+              createdBy: loggedInAdmin.user.id,
+            })
+          );
+          incrTotalOppsInDB();
+        });
+        it('Should return 200, if valid opportunity', async () => {
+          const opportunity = await opportunityFactory(
+            { isPublic: true, isValidated: false },
+            {},
+            false
+          );
+          const response = await request(serverTest)
+            .post(`${route}/`)
+            .send(opportunity);
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              ...opportunity,
+              createdAt: response.body.createdAt,
+              updatedAt: response.body.updatedAt,
+            })
+          );
+          incrTotalOppsInDB();
+        });
         it('Should return 200, if valid opportunity and multiple locations', async () => {
           const { address, department, ...opportunity } =
             await opportunityFactory(
@@ -483,6 +523,7 @@ describe('Opportunity', () => {
               isValidated: true,
               createdAt: response.body.createdAt,
               updatedAt: response.body.updatedAt,
+              createdBy: loggedInCandidat.user.id,
             })
           );
           expect(response.body.userOpportunity.UserId).toMatch(candidateId);
@@ -761,7 +802,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?type=pending`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(9);
+            expect(response.body.offers.length).toBe(11);
             expect(response.body.offers).not.toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
@@ -849,7 +890,7 @@ describe('Opportunity', () => {
               .get(`${route}/admin?isPublic[]=true`)
               .set('authorization', `Token ${loggedInAdmin.token}`);
             expect(response.status).toBe(200);
-            expect(response.body.offers.length).toBe(28);
+            expect(response.body.offers.length).toBe(30);
             expect(response.body.offers).not.toEqual(
               expect.not.arrayContaining([
                 expect.objectContaining({

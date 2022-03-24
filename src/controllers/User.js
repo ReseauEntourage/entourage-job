@@ -1,6 +1,7 @@
 import {
   CV_STATUS,
   JOBS,
+  MAILJET_TEMPLATES,
   MEMBER_FILTERS_DATA,
   REDIS_KEYS,
   USER_ROLES,
@@ -26,6 +27,9 @@ import {
   getFiltersObjectsFromQueryParams,
   filterMembersByBusinessLines,
 } from 'src/utils/Filters';
+import _ from 'lodash';
+import * as AuthController from 'src/controllers/Auth';
+import { getRelatedUser } from 'src/utils/Finding';
 
 const { User, User_Candidat, CV, Opportunity_User, Revision, BusinessLine } =
   models;
@@ -85,7 +89,7 @@ const INCLUDE_USER_CANDIDAT = [
   },
 ];
 
-const userSearchQuery = (query) => {
+const userSearchQuery = (query = '') => {
   return [
     searchInColumnWhereOption('User.email', query),
     searchInColumnWhereOption('User.firstName', query),
@@ -112,36 +116,104 @@ const capitalizeName = (name) => {
   return capitalizedName;
 };
 
-const createUser = async (newUser) => {
+const sendMailsAfterCreate = async (candidatId) => {
+  try {
+    const finalCandidate = await getUser(candidatId);
+
+    const toEmail = { to: finalCandidate.email };
+
+    const coach = getRelatedUser(finalCandidate);
+    if (coach) {
+      toEmail.cc = coach.email;
+    }
+
+    await addToWorkQueue({
+      type: JOBS.JOB_TYPES.SEND_MAIL,
+      toEmail,
+      templateId: MAILJET_TEMPLATES.CV_PREPARE,
+      variables: {
+        ..._.omitBy(finalCandidate.toJSON(), _.isNil),
+      },
+    });
+    await addToWorkQueue(
+      {
+        type: JOBS.JOB_TYPES.REMINDER_CV_10,
+        candidatId,
+      },
+      {
+        delay:
+          (process.env.CV_REMINDER_DELAY
+            ? parseFloat(process.env.CV_REMINDER_DELAY, 10)
+            : 10) *
+          3600000 *
+          24,
+      }
+    );
+  } catch (err) {
+    console.err(err);
+  }
+};
+
+const createUser = async (newUser, userCreatedPassword) => {
+  function fakePassword() {
+    return Math.random() // Generate random number, eg: 0.123456
+      .toString(36) // Convert  to base-36 : "0.4fzyo82mvyr"
+      .slice(-8); // Cut off last 8 characters : "yo82mvyr"
+  }
+
+  const userPassword = userCreatedPassword || fakePassword();
+  const { hash, salt } = AuthController.encryptPassword(userPassword);
+
   const infoLog = 'createUser -';
   console.log(`${infoLog} Création du User`);
 
-  const userToCreate = { ...newUser };
+  const userToCreate = { ...newUser, password: hash, salt };
   userToCreate.role = newUser.role || USER_ROLES.CANDIDAT;
   userToCreate.firstName = capitalizeName(userToCreate.firstName);
   userToCreate.lastName = capitalizeName(userToCreate.lastName);
 
-  return User.create(userToCreate).then(async (res) => {
-    if (userToCreate.userToCoach && res.role === USER_ROLES.COACH) {
-      await User_Candidat.update(
-        { candidatId: userToCreate.userToCoach, coachId: res.id },
-        {
-          where: { candidatId: userToCreate.userToCoach },
-          individualHooks: true,
-        }
-      );
-    }
-    if (userToCreate.userToCoach && res.role === USER_ROLES.CANDIDAT) {
-      await User_Candidat.update(
-        { candidatId: res.id, coachId: userToCreate.userToCoach },
-        {
-          where: { candidatId: res.id },
-          individualHooks: true,
-        }
-      );
-    }
-    return res;
+  const createdUser = await User.create(userToCreate);
+
+  const {
+    password,
+    salt: unusedSalt,
+    revision,
+    hashReset,
+    saltReset,
+    ...restProps
+  } = createdUser.toJSON();
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.SEND_MAIL,
+    toEmail: newUser.email,
+    templateId: MAILJET_TEMPLATES.ACCOUNT_CREATED,
+    variables: {
+      ..._.omitBy(restProps, _.isNil),
+      password: userPassword,
+    },
   });
+
+  if (userToCreate.userToCoach && createdUser.role === USER_ROLES.COACH) {
+    await User_Candidat.update(
+      { candidatId: userToCreate.userToCoach, coachId: createdUser.id },
+      {
+        where: { candidatId: userToCreate.userToCoach },
+        individualHooks: true,
+      }
+    );
+  }
+  if (userToCreate.userToCoach && createdUser.role === USER_ROLES.CANDIDAT) {
+    await User_Candidat.update(
+      { candidatId: createdUser.id, coachId: userToCreate.userToCoach },
+      {
+        where: { candidatId: createdUser.id },
+        individualHooks: true,
+      }
+    );
+    await sendMailsAfterCreate(createdUser.id);
+  }
+
+  return createdUser;
 };
 
 // avec mot de passe
@@ -199,6 +271,8 @@ const getMembers = async (params) => {
 
   const { businessLines, cvStatus, associatedUser, ...restFilters } =
     filtersObj;
+
+  console.log(restFilters);
   // The associatedUser options don't work that's why we take it out of the filters
   const filterOptions = getMemberOptions(restFilters);
 
@@ -770,4 +844,5 @@ export {
   countSubmittedCVMembers,
   checkNoteHasBeenModified,
   setNoteHasBeenRead,
+  sendMailsAfterCreate,
 };

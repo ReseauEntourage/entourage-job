@@ -6,6 +6,10 @@ import {
   OFFER_ADMIN_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,
 } from 'src/constants';
+import {
+  getCandidateFromCoachOrCandidate,
+  getRelatedUser,
+} from 'src/utils/Finding';
 
 export const getUserOpportunityFromOffer = (offer, candidatId) => {
   let userOpportunity;
@@ -263,13 +267,12 @@ const filterMembersByAssociatedUser = (members, associatedUsers) => {
   if (members && associatedUsers && associatedUsers.length > 0) {
     filteredList = members.filter((member) => {
       return associatedUsers.some((currentFilter) => {
-        if (member.candidat) {
-          return !!member.candidat.coach === currentFilter.value;
+        const candidate = getCandidateFromCoachOrCandidate(member);
+        const relatedUser = getRelatedUser(member);
+        if (!candidate) {
+          return !currentFilter.value;
         }
-        if (member.coach) {
-          return !!member.coach.candidat === currentFilter.value;
-        }
-        return !currentFilter.value;
+        return !!relatedUser === currentFilter.value;
       });
     });
   }
