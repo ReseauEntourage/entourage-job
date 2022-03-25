@@ -540,7 +540,7 @@ const searchCandidates = async (query) => {
   return User.findAll(options);
 };
 
-const getAllCandidates = async () => {
+const getAllPublishedCandidates = async () => {
   const publishedCVs = await sequelize.query(
     getPublishedCVQuery({ [Op.or]: [false] }),
     {
@@ -840,7 +840,7 @@ export {
   setUserCandidat,
   getUserCandidatOpt,
   getUserCandidats,
-  getAllCandidates,
+  getAllPublishedCandidates,
   countSubmittedCVMembers,
   checkNoteHasBeenModified,
   setNoteHasBeenRead,

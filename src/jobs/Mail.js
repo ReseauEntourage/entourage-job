@@ -1,8 +1,7 @@
 import {
-  getAllCandidates,
+  getAllPublishedCandidates,
   getMembers,
   getUser,
-  searchCandidates,
   sendMailsAfterCreate,
 } from 'src/controllers/User';
 import { sendMail } from 'src/controllers/Mail';
@@ -153,7 +152,7 @@ const sendReminderAboutExternalOffers = async (candidatId) => {
 };
 
 const sendMailsToOldUsers = async () => {
-  const publishedCandidates = await searchCandidates();
+  const publishedCandidates = await getAllPublishedCandidates();
   const members = await getMembers({
     role: USER_ROLES.CANDIDAT,
     hidden: ['false'],
@@ -177,8 +176,8 @@ const sendRecapAboutOffers = async () => {
   try {
     const adminZonesKeys = Object.keys(ADMIN_ZONES);
     const opportunities = await getLatestOpportunities();
-    const candidates = await getAllCandidates();
-    const emails = [];
+    const publishedCandidates = await getAllPublishedCandidates();
+    let emails = [];
 
     for (let i = 0; i < adminZonesKeys.length; i += 1) {
       const zone = ADMIN_ZONES[adminZonesKeys[i]];
@@ -200,7 +199,7 @@ const sendRecapAboutOffers = async () => {
       });
 
       if (zoneRecentOpportunities.length > 0) {
-        const zoneCandidates = candidates.filter((candidate) => {
+        const zoneCandidates = publishedCandidates.filter((candidate) => {
           return (
             candidate.zone === zone ||
             (zone === ADMIN_ZONES.HZ && !candidate.zone)
@@ -222,19 +221,15 @@ const sendRecapAboutOffers = async () => {
         );
 
         if (recipients.length > 0) {
-          emails.push({
-            toEmail: {
-              to: [
-                process.env[`ADMIN_CANDIDATES_${getZoneSuffix(zone)}`],
-                process.env[`ADMIN_COMPANIES_${getZoneSuffix(zone)}`],
-              ],
-              bcc: recipients,
-            },
-            templateId: MAILJET_TEMPLATES.OFFERS_RECAP,
-            variables: {
-              zone: _.capitalize(zone),
-              offerList: zoneRecentOpportunities,
-            },
+          emails = recipients.map((recipient) => {
+            return {
+              toEmail: recipient,
+              templateId: MAILJET_TEMPLATES.OFFERS_RECAP,
+              variables: {
+                zone: _.capitalize(zone),
+                offerList: zoneRecentOpportunities,
+              },
+            };
           });
         }
       }
