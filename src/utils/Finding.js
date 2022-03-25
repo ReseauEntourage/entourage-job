@@ -60,32 +60,45 @@ const getAdminMailsFromDepartment = (dep) => {
     companies: process.env[`ADMIN_COMPANIES_${zone}`],
   };
 };
-
 const getRelatedUser = (member) => {
-  if (member.candidat && member.candidat.coach) {
-    return member.candidat.coach;
+  if (member) {
+    if (member.candidat && member.candidat.coach) {
+      return member.candidat.coach;
+    }
+    if (member.coach && member.coach.candidat) {
+      return member.coach.candidat;
+    }
   }
-  if (member.coach && member.coach.candidat) {
-    return member.coach.candidat;
-  }
+
   return null;
 };
 
 const getCandidateFromCoachOrCandidate = (member) => {
-  if (member.role === USER_ROLES.CANDIDAT) {
-    return member.candidat;
-  }
+  if (member) {
+    if (member.role === USER_ROLES.CANDIDAT) {
+      return member.candidat;
+    }
 
-  return member.coach;
+    if (member.role === USER_ROLES.COACH) {
+      return member.coach;
+    }
+  }
+  return null;
 };
 
 const getCandidateIdFromCoachOrCandidate = (member) => {
-  if (member.role === USER_ROLES.CANDIDAT) {
-    return member.id;
-  }
+  if (member) {
+    if (member.role === USER_ROLES.CANDIDAT) {
+      return member.id;
+    }
 
-  if (member.coach && member.coach.candidat) {
-    return member.coach.candidat;
+    if (
+      member.role === USER_ROLES.COACH &&
+      member.coach &&
+      member.coach.candidat
+    ) {
+      return member.coach.candidat;
+    }
   }
   return null;
 };
