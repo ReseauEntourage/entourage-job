@@ -140,6 +140,10 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         type: DataTypes.TEXT,
       },
+      createdBy: {
+        allowNull: true,
+        type: DataTypes.UUIDV4,
+      },
     },
     {}
   );

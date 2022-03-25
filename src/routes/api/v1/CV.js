@@ -16,6 +16,11 @@ import { CV_STATUS, JOBS, MAILJET_TEMPLATES, USER_ROLES } from 'src/constants';
 import { getZoneSuffix } from 'src/utils/Finding';
 import _ from 'lodash';
 
+import {
+  getAllUserCVsVersions,
+  sendMailsAfterPublishing,
+} from 'src/controllers/CV';
+
 const router = express.Router();
 
 const upload = multer({ dest: 'uploads/' });
@@ -117,6 +122,17 @@ router.post(
               type: JOBS.JOB_TYPES.CREATE_CV_SEARCH_STRING,
               candidatId: reqCV.UserId,
             });
+
+            const cvs = await getAllUserCVsVersions(reqCV.UserId);
+            if (cvs && cvs.length > 0) {
+              const hasPublishedAtLeastOnce = cvs.some(({ status }) => {
+                return status === CV_STATUS.Published;
+              });
+
+              if (!hasPublishedAtLeastOnce) {
+                await sendMailsAfterPublishing(reqCV.UserId);
+              }
+            }
           }
 
           let uploadedImg;

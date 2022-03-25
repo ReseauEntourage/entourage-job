@@ -3,6 +3,7 @@
 import { USER_ROLES } from 'src/constants';
 
 import uuid from 'uuid/v4';
+import { getCandidateIdFromCoachOrCandidate } from 'src/utils/Finding';
 
 export default (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -179,7 +180,8 @@ export default (sequelize, DataTypes) => {
                   },
                   {
                     where: {
-                      candidatId: previousData.coach.candidat.id,
+                      candidatId:
+                        getCandidateIdFromCoachOrCandidate(previousData),
                     },
                   }
                 );
