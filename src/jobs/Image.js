@@ -5,6 +5,7 @@ import { getUser } from 'src/controllers/User';
 import { getCVbyUserId } from 'src/controllers/CV';
 import { findConstantFromValue } from 'src/utils/Finding';
 import { BUSINESS_LINES } from 'src/constants';
+import _ from 'lodash';
 
 const addSpaceToPrefixIfNeeded = (prefix) => {
   if (!prefix) {
@@ -47,7 +48,9 @@ const generatePreview = async (candidatId, uploadedImg, oldImg) => {
       cv: {
         ...cv,
         ambitions: isNewCareerPath
-          ? cv.businessLines?.map((businessLine) => {
+          ? _.uniqWith(cv.businessLines, (a, b) => {
+              return a.name === b.name;
+            }).map((businessLine) => {
               return {
                 ...businessLine,
                 name: buildBusinessLineForSentence(
