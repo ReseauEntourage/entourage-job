@@ -193,24 +193,27 @@ const createUser = async (newUser, userCreatedPassword) => {
     },
   });
 
-  if (userToCreate.userToCoach && createdUser.role === USER_ROLES.COACH) {
-    await User_Candidat.update(
-      { candidatId: userToCreate.userToCoach, coachId: createdUser.id },
-      {
-        where: { candidatId: userToCreate.userToCoach },
-        individualHooks: true,
-      }
-    );
-  }
-  if (userToCreate.userToCoach && createdUser.role === USER_ROLES.CANDIDAT) {
-    await User_Candidat.update(
-      { candidatId: createdUser.id, coachId: userToCreate.userToCoach },
-      {
-        where: { candidatId: createdUser.id },
-        individualHooks: true,
-      }
-    );
-    await sendMailsAfterCreate(createdUser.id);
+  if (userToCreate.userToCoach) {
+    if (createdUser.role === USER_ROLES.COACH) {
+      await User_Candidat.update(
+        { candidatId: userToCreate.userToCoach, coachId: createdUser.id },
+        {
+          where: { candidatId: userToCreate.userToCoach },
+          individualHooks: true,
+        }
+      );
+      await sendMailsAfterCreate(userToCreate.userToCoach);
+    }
+    if (createdUser.role === USER_ROLES.CANDIDAT) {
+      await User_Candidat.update(
+        { candidatId: createdUser.id, coachId: userToCreate.userToCoach },
+        {
+          where: { candidatId: createdUser.id },
+          individualHooks: true,
+        }
+      );
+      await sendMailsAfterCreate(createdUser.id);
+    }
   }
 
   return createdUser;
@@ -578,6 +581,7 @@ const setUser = async (id, user) => {
 };
 
 const setUserCandidat = async (candidatId, candidat, userId) => {
+  const prevUserCandidat = await User_Candidat.findByPk(candidatId);
   const userCandidat = await User_Candidat.update(
     {
       ...candidat,
@@ -590,6 +594,11 @@ const setUserCandidat = async (candidatId, candidat, userId) => {
   ).then((model) => {
     return model && model.length > 1 && model[1][0];
   });
+
+  if (candidat.coachId && userCandidat.coachId !== prevUserCandidat.coachId) {
+    await sendMailsAfterCreate(userCandidat.candidatId);
+  }
+
   if (candidat.hidden) {
     await RedisManager.delAsync(REDIS_KEYS.CV_PREFIX + candidat.url);
   } else {
