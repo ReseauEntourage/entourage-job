@@ -116,7 +116,7 @@ const capitalizeName = (name) => {
   return capitalizedName;
 };
 
-const sendMailsAfterCreate = async (candidatId) => {
+const sendMailsAfterMatching = async (candidatId) => {
   try {
     const finalCandidate = await getUser(candidatId);
 
@@ -127,14 +127,24 @@ const sendMailsAfterCreate = async (candidatId) => {
       toEmail.cc = coach.email;
     }
 
-    await addToWorkQueue({
-      type: JOBS.JOB_TYPES.SEND_MAIL,
-      toEmail,
-      templateId: MAILJET_TEMPLATES.CV_PREPARE,
-      variables: {
-        ..._.omitBy(finalCandidate.toJSON(), _.isNil),
+    await addToWorkQueue(
+      {
+        type: JOBS.JOB_TYPES.SEND_MAIL,
+        toEmail,
+        templateId: MAILJET_TEMPLATES.CV_PREPARE,
+        variables: {
+          ..._.omitBy(finalCandidate.toJSON(), _.isNil),
+        },
       },
-    });
+      {
+        delay:
+          (process.env.CV_START_DELAY
+            ? parseFloat(process.env.CV_START_DELAY, 10)
+            : 2) *
+          3600000 *
+          24,
+      }
+    );
     await addToWorkQueue(
       {
         type: JOBS.JOB_TYPES.REMINDER_CV_10,
@@ -202,7 +212,7 @@ const createUser = async (newUser, userCreatedPassword) => {
           individualHooks: true,
         }
       );
-      await sendMailsAfterCreate(userToCreate.userToCoach);
+      await sendMailsAfterMatching(userToCreate.userToCoach);
     }
     if (createdUser.role === USER_ROLES.CANDIDAT) {
       await User_Candidat.update(
@@ -212,7 +222,7 @@ const createUser = async (newUser, userCreatedPassword) => {
           individualHooks: true,
         }
       );
-      await sendMailsAfterCreate(createdUser.id);
+      await sendMailsAfterMatching(createdUser.id);
     }
   }
 
@@ -596,7 +606,7 @@ const setUserCandidat = async (candidatId, candidat, userId) => {
   });
 
   if (candidat.coachId && userCandidat.coachId !== prevUserCandidat.coachId) {
-    await sendMailsAfterCreate(userCandidat.candidatId);
+    await sendMailsAfterMatching(userCandidat.candidatId);
   }
 
   if (candidat.hidden) {
@@ -853,5 +863,5 @@ export {
   countSubmittedCVMembers,
   checkNoteHasBeenModified,
   setNoteHasBeenRead,
-  sendMailsAfterCreate,
+  sendMailsAfterMatching,
 };

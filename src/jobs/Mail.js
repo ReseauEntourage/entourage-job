@@ -2,7 +2,7 @@ import {
   getAllPublishedCandidates,
   getMembers,
   getUser,
-  sendMailsAfterCreate,
+  sendMailsAfterMatching,
 } from 'src/controllers/User';
 import { sendMail } from 'src/controllers/Mail';
 
@@ -167,7 +167,7 @@ const sendMailsToOldUsers = async () => {
   });
   await Promise.all(
     filteredMembers.map(({ id }) => {
-      return sendMailsAfterCreate(id);
+      return sendMailsAfterMatching(id);
     })
   );
 };
