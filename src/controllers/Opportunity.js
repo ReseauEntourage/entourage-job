@@ -981,6 +981,53 @@ const updateOpportunityUser = async (opportunityUser) => {
   return modelOpportunityUser;
 };
 
+const sendJobOfferMails = (candidates, opportunity) => {
+  return Promise.all(
+    candidates.map(async (candidat) => {
+      const coach = candidat.User ? getRelatedUser(candidat.User) : null;
+
+      await addToWorkQueue({
+        type: JOBS.JOB_TYPES.SEND_MAIL,
+        toEmail: coach
+          ? { to: candidat.User.email, cc: coach.email }
+          : candidat.User.email,
+        templateId: opportunity.isPublic
+          ? MAILJET_TEMPLATES.OFFER_RECOMMENDED
+          : MAILJET_TEMPLATES.OFFER_RECEIVED,
+        variables: {
+          offer: _.omitBy(
+            {
+              ...opportunity,
+              contract: findConstantFromValue(opportunity.contract, CONTRACTS)
+                .label,
+            },
+            _.isNil
+          ),
+          candidat,
+        },
+      });
+
+      if (!opportunity.isPublic) {
+        await addToWorkQueue(
+          {
+            type: JOBS.JOB_TYPES.REMINDER_OFFER,
+            opportunityId: opportunity.id,
+            candidatId: candidat.User.id,
+          },
+          {
+            delay:
+              (process.env.OFFER_REMINDER_DELAY
+                ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
+                : 5) *
+              3600000 *
+              24,
+          }
+        );
+      }
+    })
+  );
+};
+
 const updateOpportunity = async (opportunity) => {
   const oldOpportunity = await getOpportunity(opportunity.id, true);
 
@@ -1137,57 +1184,8 @@ const updateOpportunity = async (opportunity) => {
     console.log('Failed to update table with modified offer.');
   }
 
-  const sendJobOfferMails = (candidates) => {
-    return Promise.all(
-      candidates.map(async (candidat) => {
-        const coach = candidat.User ? getRelatedUser(candidat.User) : null;
-
-        await addToWorkQueue({
-          type: JOBS.JOB_TYPES.SEND_MAIL,
-          toEmail: coach
-            ? { to: candidat.User.email, cc: coach.email }
-            : candidat.User.email,
-          templateId: finalOpportunity.isPublic
-            ? MAILJET_TEMPLATES.OFFER_RECOMMENDED
-            : MAILJET_TEMPLATES.OFFER_RECEIVED,
-          variables: {
-            offer: _.omitBy(
-              {
-                ...finalOpportunity,
-                contract: findConstantFromValue(
-                  finalOpportunity.contract,
-                  CONTRACTS
-                ).label,
-              },
-              _.isNil
-            ),
-            candidat,
-          },
-        });
-
-        if (!finalOpportunity.isPublic) {
-          await addToWorkQueue(
-            {
-              type: JOBS.JOB_TYPES.REMINDER_OFFER,
-              opportunityId: finalOpportunity.id,
-              candidatId: candidat.User.id,
-            },
-            {
-              delay:
-                (process.env.OFFER_REMINDER_DELAY
-                  ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
-                  : 5) *
-                3600000 *
-                24,
-            }
-          );
-        }
-      })
-    );
-  };
-
   if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) {
-    await sendJobOfferMails(candidatesToSendMailTo);
+    await sendJobOfferMails(candidatesToSendMailTo, finalOpportunity);
   }
 
   if (!oldOpportunity.isValidated && finalOpportunity.isValidated) {
@@ -1242,6 +1240,45 @@ const updateOpportunity = async (opportunity) => {
   }
 
   return finalOpportunity;
+};
+
+const updateBulkOpportunity = async (attributes, opportunitiesId = []) => {
+  const [nbUpdated, updatedOpportunities] = await Opportunity.update(
+    attributes,
+    {
+      where: { id: opportunitiesId },
+      returning: true,
+      individualHooks: true,
+    }
+  );
+
+  const completeUpdatedOpportunities = await Opportunity.findAll({
+    where: {
+      id: updatedOpportunities.map(({ id }) => {
+        return id;
+      }),
+    },
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
+  });
+
+  try {
+    await Promise.all(
+      completeUpdatedOpportunities.map((updatedOpportunity) => {
+        return updateTable(updatedOpportunity.toJSON());
+      })
+    );
+    console.log('Updated table with bulk modified offers.');
+  } catch (err) {
+    console.error(err);
+    console.log('Failed to update table with bulk modified offer.');
+  }
+
+  return {
+    nbUpdated,
+    updatedOffersIds: updatedOpportunities.map((opp) => {
+      return opp.id;
+    }),
+  };
 };
 
 const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
@@ -1316,6 +1353,7 @@ export {
   updateOpportunityUser,
   updateOpportunity,
   updateExternalOpportunity,
+  updateBulkOpportunity,
   addUserToOpportunity,
   refreshAirtableOpportunities,
   getLatestOpportunities,
