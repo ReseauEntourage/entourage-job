@@ -10,7 +10,7 @@
     "mainWorker": "NODE_ENV=production node -r dotenv/config --expose-gc build/mainWorker.js",
     "dev-mainWorker": "npx nodemon --exec babel-node -r dotenv/config --expose-gc src/mainWorker.js",
     "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"./build/jobs/Mail.js\").sendRecapAboutOffers()'",
-    "send-mails-old-users": "NODE_ENV=production node -r @babel/register -r dotenv/config -e 'require(\"./src/jobs/Mail.js\").sendMailsToOldUsers()'",
+    "send-mails-old-users": "NODE_ENV=production node -r dotenv/config -e 'require(\"./src/jobs/Mail.js\").sendMailsToOldUsers()'",
     "dev-send-recap": "NODE_ENV=development node -r @babel/register -r dotenv/config -e 'require(\"./src/jobs/Mail.js\").sendRecapAboutOffers()'",
     "dev-send-mails-old-users": "NODE_ENV=development node -r @babel/register -r dotenv/config -e 'require(\"./src/jobs/Mail.js\").sendMailsToOldUsers()'",
     "dev": "npx nodemon --exec babel-node -r dotenv/config src/app.js",
