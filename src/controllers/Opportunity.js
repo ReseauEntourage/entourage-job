@@ -1275,7 +1275,7 @@ const updateBulkOpportunity = async (attributes, opportunitiesId = []) => {
 
   return {
     nbUpdated,
-    updatedOffersIds: updatedOpportunities.map((opp) => {
+    updatedIds: updatedOpportunities.map((opp) => {
       return opp.id;
     }),
   };

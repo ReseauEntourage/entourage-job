@@ -1555,12 +1555,12 @@ describe('Opportunity', () => {
               attributes: {
                 isArchived: true,
               },
-              opportunitiesId: originalOpportunitiesIds,
+              ids: originalOpportunitiesIds,
             });
 
           expect(response.status).toBe(200);
 
-          const { nbUpdated, updatedOffersIds } = response.body;
+          const { nbUpdated, updatedIds } = response.body;
           const updatedOffers = await models.Opportunity.findAll({
             where: {
               id: originalOpportunitiesIds,
@@ -1569,7 +1569,7 @@ describe('Opportunity', () => {
 
           expect(nbUpdated).toBeLessThanOrEqual(originalOpportunities.length);
           expect(originalOpportunitiesIds).toEqual(
-            expect.arrayContaining(updatedOffersIds.sort())
+            expect.arrayContaining(updatedIds.sort())
           );
           expect(
             updatedOffers.map((opp) => {

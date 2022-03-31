@@ -369,10 +369,10 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
  * - 401
  */
 router.put('/bulk', auth([USER_ROLES.ADMIN]), (req, res) => {
-  const { attributes, opportunitiesId } = req.body;
-  OpportunityController.updateBulkOpportunity(attributes, opportunitiesId)
-    .then((updatedOffers) => {
-      res.status(200).json(updatedOffers);
+  const { attributes, ids } = req.body;
+  OpportunityController.updateBulkOpportunity(attributes, ids)
+    .then((updatedOpportunities) => {
+      res.status(200).json(updatedOpportunities);
     })
     .catch((err) => {
       logger(res).error(err);
