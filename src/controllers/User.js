@@ -285,7 +285,6 @@ const getMembers = async (params) => {
   const { businessLines, cvStatus, associatedUser, ...restFilters } =
     filtersObj;
 
-  console.log(restFilters);
   // The associatedUser options don't work that's why we take it out of the filters
   const filterOptions = getMemberOptions(restFilters);
 

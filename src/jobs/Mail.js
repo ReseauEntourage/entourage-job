@@ -157,6 +157,7 @@ const sendMailsToOldUsers = async () => {
     role: USER_ROLES.CANDIDAT,
     hidden: ['false'],
     employed: ['false'],
+    associatedUser: ['true'],
   });
   const filteredMembers = members.filter(({ id: memberId }) => {
     return !publishedCandidates
