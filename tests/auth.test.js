@@ -185,7 +185,6 @@ describe('Auth', () => {
             newPassword: 'newPassword',
             confirmPassword: 'newPassword',
           });
-        console.log(response.status);
         expect(response.status).toBe(403);
       });
       it('Should return 403 if invalid user token', async () => {
@@ -210,11 +209,9 @@ describe('Auth', () => {
       expect(response.body.user.id).toBe(loggedInCandidat.user.id);
     });
     it('Should return 401, if invalid token', async () => {
-      console.log(loggedInCandidat.user.id);
       const response = await request(serverTest)
         .get(`${route}/current`)
         .set('authorization', `Token ${invalidToken}`);
-      console.log(response.body.user);
       expect(response.status).toBe(401);
     });
   });

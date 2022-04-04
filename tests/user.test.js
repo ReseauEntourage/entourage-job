@@ -1056,7 +1056,6 @@ describe('User', () => {
         expect(response.status).toBe(401);
       });
       it("Should return 204 if try to get user's CV after deletion", async () => {
-        console.log(`${cvRoute}?userId=${otherLoggedInCandidat.user.id}`);
         const response = await request(serverTest)
           .get(`${cvRoute}?userId=${otherLoggedInCandidat.user.id}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
