@@ -247,12 +247,6 @@ describe('CV', () => {
       describe("Get a CV by candidat's url - /", () => {
         it("Should return 200 if valid candidat's url provided", async () => {
           const candidatUrl = await getCandidatUrl(candidatCV.id);
-          console.log({
-            cvUserId: cvCandidat.UserId,
-            cvStatus: cvCandidat.status,
-            userUrl: candidatUrl,
-            userId: candidatCV.id,
-          });
           const response = await request(serverTest)
             .get(`${route}/${candidatUrl}`)
             .set('authorization', `Token ${loggedInCandidat.token}`);
