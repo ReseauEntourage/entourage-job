@@ -59,12 +59,17 @@ router.post('/', auth(), (req, res) => {
       locationsToTransform.map(({ department, address }) => {
         return OpportunityController.createOpportunity(
           { ...restBody, department, address },
-          isAdmin
+          isAdmin,
+          req.payload?.id
         );
       })
     );
   } else {
-    promises = OpportunityController.createOpportunity(restBody, isAdmin);
+    promises = OpportunityController.createOpportunity(
+      restBody,
+      isAdmin,
+      req.payload?.id
+    );
   }
 
   return promises
@@ -102,7 +107,8 @@ router.post(
         OpportunityController.createExternalOpportunity(
           restParams,
           candidateId,
-          isAdmin
+          isAdmin,
+          req.payload?.id
         )
           .then((opportunity) => {
             return res.status(200).json(opportunity);
@@ -211,7 +217,7 @@ router.get(
       const { department, type, ...restQuery } = req.query;
       OpportunityController.getAllUserOpportunities(req.params.id, req.query)
         .then((zoneOpportunities) => {
-          if (!department || type !== OFFER_CANDIDATE_FILTERS_DATA[1].tag) {
+          if (!department || type !== OFFER_CANDIDATE_FILTERS_DATA[0].tag) {
             res.status(200).json({
               offers: zoneOpportunities,
               otherOffers: [],

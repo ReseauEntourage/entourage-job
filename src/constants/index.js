@@ -152,16 +152,14 @@ const CV_STATUS = {
 };
 
 const OFFER_CANDIDATE_FILTERS_DATA = [
-  { tag: 'all', title: 'Toutes les offres' },
   { tag: 'private', title: 'Offres personnelles', active: true },
   { tag: 'public', title: 'Offres générales' },
   { tag: 'archived', title: 'Offres archivées' },
 ];
 
 const OFFER_ADMIN_FILTERS_DATA = [
-  { tag: 'all', title: 'Toutes les offres' },
-  { tag: 'pending', title: 'Offres à valider', active: true },
-  { tag: 'validated', title: 'Offres publiées' },
+  { tag: 'pending', title: 'Offres à valider' },
+  { tag: 'validated', title: 'Offres publiées', active: true },
   { tag: 'external', title: 'Offres externes' },
   { tag: 'archived', title: 'Offres archivées' },
 ];
@@ -354,6 +352,10 @@ const JOBS = {
     INSERT_AIRTABLE: 'insert_airtable',
     UPDATE_AIRTABLE: 'update_airtable',
     REMINDER_OFFER: 'reminder_offer',
+    REMINDER_CV_10: 'reminder_cv_10',
+    REMINDER_VIDEO: 'reminder_video',
+    REMINDER_ACTIONS: 'reminder_actions',
+    REMINDER_EXTERNAL_OFFERS: 'reminder_external_offers',
   },
   QUEUES: {
     WORK: 'work',
@@ -376,7 +378,10 @@ const VALUES = { SHARES: 120000 + 64000 };
 
 const MAILJET_TEMPLATES = {
   ACCOUNT_CREATED: 3267718,
+  CV_PREPARE: 3782475,
+  CV_REMINDER_10: 3782934,
   CV_SUBMITTED: 3271289,
+  CV_PUBLISHED: 3784733,
   PASSWORD_RESET: 3271976,
   CONTACT_FORM: 3272334,
   STATUS_CHANGED: 3275058,
@@ -389,6 +394,9 @@ const MAILJET_TEMPLATES = {
   OFFER_VALIDATED_ADMIN: 3320744,
   OFFER_REMINDER: 3279365,
   OFFERS_RECAP: 3279701,
+  VIDEO_REMINDER: 3785221,
+  ACTIONS_REMINDER: 3785473,
+  EXTERNAL_OFFERS_REMINDER: 3785475,
 };
 
 const HEARD_ABOUT = [

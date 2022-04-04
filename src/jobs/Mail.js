@@ -1,26 +1,26 @@
-import { getAllCandidates } from 'src/controllers/User';
+import {
+  getAllPublishedCandidates,
+  getMembers,
+  getUser,
+  sendMailsAfterMatching,
+} from 'src/controllers/User';
 import { sendMail } from 'src/controllers/Mail';
 
 import _ from 'lodash';
 
 import { ADMIN_ZONES, DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import {
+  getExternalOpportunitiesCreatedByUserCount,
   getLatestOpportunities,
   getOpportunity,
 } from 'src/controllers/Opportunity';
-import { JOBS, MAILJET_TEMPLATES } from 'src/constants';
-import { getZoneSuffix } from 'src/utils/Finding';
+import { CV_STATUS, JOBS, MAILJET_TEMPLATES, USER_ROLES } from 'src/constants';
+import { getRelatedUser, getZoneSuffix } from 'src/utils/Finding';
 import { addToWorkQueue } from 'src/jobs';
+import { getAllUserCVsVersions } from 'src/controllers/CV';
 
-const sendMailBackground = async ({
-  toEmail,
-  subject,
-  text,
-  html,
-  variables,
-  templateId,
-}) => {
-  return sendMail({ toEmail, subject, text, html, variables, templateId });
+const sendMailBackground = async (params) => {
+  return sendMail(params);
 };
 
 const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {
@@ -41,8 +41,9 @@ const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {
         process.env[`ADMIN_COMPANIES_${getZoneSuffix(candidatData.zone)}`],
       ],
     };
-    if (candidatData.candidat && candidatData.candidat.coach) {
-      toEmail.cc = candidatData.candidat.coach.email;
+    const coach = getRelatedUser(candidatData);
+    if (coach) {
+      toEmail.cc = coach.email;
     }
 
     await sendMail({
@@ -58,12 +59,125 @@ const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {
   return false;
 };
 
+const sendReminderMailAboutCV = async (candidatId) => {
+  const user = await getUser(candidatId);
+  const cvs = await getAllUserCVsVersions(candidatId);
+  if (cvs && cvs.length > 0) {
+    const hasSubmittedAtLeastOnce = cvs.some(({ status }) => {
+      return status === CV_STATUS.Pending;
+    });
+
+    if (!hasSubmittedAtLeastOnce) {
+      const toEmail = {
+        to: user.email,
+      };
+      const coach = getRelatedUser(user);
+      if (coach) {
+        toEmail.cc = coach.email;
+      }
+
+      await sendMail({
+        toEmail,
+        templateId: MAILJET_TEMPLATES.CV_REMINDER_10,
+        variables: {
+          ..._.omitBy(user.toJSON(), _.isNil),
+        },
+      });
+      return toEmail;
+    }
+  }
+  return false;
+};
+
+const sendReminderIfEmployed = async (candidatId, templateId) => {
+  const user = await getUser(candidatId);
+  if (!user.candidat.employed) {
+    const toEmail = {
+      to: user.email,
+    };
+    const coach = getRelatedUser(user);
+    if (coach) {
+      toEmail.cc = coach.email;
+    }
+
+    await sendMail({
+      toEmail,
+      templateId: templateId,
+      variables: {
+        ..._.omitBy(user.toJSON(), _.isNil),
+      },
+    });
+    return toEmail;
+  }
+  return false;
+};
+
+const sendReminderAboutVideo = async (candidatId) => {
+  return sendReminderIfEmployed(candidatId, MAILJET_TEMPLATES.VIDEO_REMINDER);
+};
+
+const sendReminderAboutActions = async (candidatId) => {
+  return sendReminderIfEmployed(candidatId, MAILJET_TEMPLATES.ACTIONS_REMINDER);
+};
+
+const sendReminderAboutExternalOffers = async (candidatId) => {
+  const user = await getUser(candidatId);
+  if (!user.candidat.employed) {
+    const toEmail = {
+      to: user.email,
+    };
+
+    let opportunitiesCreatedByCandidateOrCoach =
+      await getExternalOpportunitiesCreatedByUserCount(candidatId);
+
+    const coach = getRelatedUser(user);
+    if (coach) {
+      toEmail.cc = coach.email;
+      opportunitiesCreatedByCandidateOrCoach +=
+        await getExternalOpportunitiesCreatedByUserCount(coach.id);
+    }
+
+    if (opportunitiesCreatedByCandidateOrCoach === 0) {
+      await sendMail({
+        toEmail,
+        templateId: MAILJET_TEMPLATES.EXTERNAL_OFFERS_REMINDER,
+        variables: {
+          ..._.omitBy(user.toJSON(), _.isNil),
+        },
+      });
+      return toEmail;
+    }
+  }
+  return false;
+};
+
+const sendMailsToOldUsers = async () => {
+  const publishedCandidates = await getAllPublishedCandidates();
+  const members = await getMembers({
+    role: USER_ROLES.CANDIDAT,
+    hidden: ['false'],
+    employed: ['false'],
+  });
+  const filteredMembers = members.filter(({ id: memberId }) => {
+    return !publishedCandidates
+      .map(({ id }) => {
+        return id;
+      })
+      .includes(memberId);
+  });
+  await Promise.all(
+    filteredMembers.map(({ id }) => {
+      return sendMailsAfterMatching(id);
+    })
+  );
+};
+
 const sendRecapAboutOffers = async () => {
   try {
     const adminZonesKeys = Object.keys(ADMIN_ZONES);
     const opportunities = await getLatestOpportunities();
-    const candidates = await getAllCandidates();
-    const emails = [];
+    const publishedCandidates = await getAllPublishedCandidates();
+    let emails = [];
 
     for (let i = 0; i < adminZonesKeys.length; i += 1) {
       const zone = ADMIN_ZONES[adminZonesKeys[i]];
@@ -85,7 +199,7 @@ const sendRecapAboutOffers = async () => {
       });
 
       if (zoneRecentOpportunities.length > 0) {
-        const zoneCandidates = candidates.filter((candidate) => {
+        const zoneCandidates = publishedCandidates.filter((candidate) => {
           return (
             candidate.zone === zone ||
             (zone === ADMIN_ZONES.HZ && !candidate.zone)
@@ -96,8 +210,10 @@ const sendRecapAboutOffers = async () => {
           zoneCandidates,
           (acc, curr) => {
             const coachEmail = [];
-            if (curr.candidat && curr.candidat.coach) {
-              coachEmail.push(curr.candidat.coach.email);
+
+            const coach = getRelatedUser(curr);
+            if (coach) {
+              coachEmail.push(coach.email);
             }
             return [...acc, curr.email, ...coachEmail];
           },
@@ -105,27 +221,25 @@ const sendRecapAboutOffers = async () => {
         );
 
         if (recipients.length > 0) {
-          emails.push({
-            toEmail: recipients,
-            templateId: MAILJET_TEMPLATES.OFFERS_RECAP,
-            variables: {
-              zone: _.capitalize(zone),
-              offerList: zoneRecentOpportunities,
-            },
+          emails = recipients.map((recipient) => {
+            return {
+              toEmail: recipient,
+              templateId: MAILJET_TEMPLATES.OFFERS_RECAP,
+              variables: {
+                zone: _.capitalize(zone),
+                offerList: zoneRecentOpportunities,
+              },
+            };
           });
         }
       }
     }
 
     if (emails.length > 0) {
-      await Promise.all(
-        emails.map((email) => {
-          return addToWorkQueue({
-            type: JOBS.JOB_TYPES.SEND_MAIL,
-            ...email,
-          });
-        })
-      );
+      await addToWorkQueue({
+        type: JOBS.JOB_TYPES.SEND_MAIL,
+        mails: emails,
+      });
     }
     return emails;
   } catch (err) {
@@ -134,4 +248,13 @@ const sendRecapAboutOffers = async () => {
   }
 };
 
-export { sendMailBackground, sendReminderMailAboutOffer, sendRecapAboutOffers };
+export {
+  sendMailBackground,
+  sendReminderMailAboutOffer,
+  sendReminderMailAboutCV,
+  sendRecapAboutOffers,
+  sendReminderAboutVideo,
+  sendReminderAboutActions,
+  sendReminderAboutExternalOffers,
+  sendMailsToOldUsers,
+};

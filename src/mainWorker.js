@@ -4,7 +4,14 @@ import throng from 'throng';
 
 import { attachListeners, maxJobsPerWorker, pusher, workers } from 'src/jobs';
 import { JOBS, SOCKETS } from 'src/constants';
-import { sendMailBackground, sendReminderMailAboutOffer } from 'src/jobs/Mail';
+import {
+  sendMailBackground,
+  sendReminderAboutActions,
+  sendReminderAboutExternalOffers,
+  sendReminderAboutVideo,
+  sendReminderMailAboutCV,
+  sendReminderMailAboutOffer,
+} from 'src/jobs/Mail';
 import {
   cacheAllCVs,
   cacheCV,
@@ -13,6 +20,7 @@ import {
 } from 'src/jobs/CV';
 import { insertAirtable, updateOpportunityAirtable } from 'src/jobs/Airtable';
 import { generatePreview } from 'src/jobs/Image';
+import _ from 'lodash';
 
 const start = () => {
   const workQueue = getMainWorkQueue();
@@ -20,9 +28,11 @@ const start = () => {
   attachListeners(workQueue);
 
   workQueue.process(maxJobsPerWorker, async (job) => {
-    const { data } = job;
+    const {
+      data: { type, ...data },
+    } = job;
 
-    switch (data.type) {
+    switch (type) {
       case JOBS.JOB_TYPES.GENERATE_CV_PDF:
         await generatePDF(data.candidatId, data.token, data.paths);
         await pusher.trigger(
@@ -53,10 +63,20 @@ const start = () => {
         return `CV search string created for User ${data.candidatId}`;
 
       case JOBS.JOB_TYPES.SEND_MAIL:
-        await sendMailBackground(data);
-        return `Mail sent to '${JSON.stringify(data.toEmail)}' with template '${
-          data.templateId
-        }'`;
+        let mails = [data];
+        if (data.mails && Array.isArray(data.mails)) {
+          mails = data.mails;
+        }
+        await sendMailBackground(mails);
+        return `Mail sent to '${JSON.stringify(
+          mails.map(({ toEmail }) => {
+            return toEmail;
+          })
+        )}' with template '${_.uniq(
+          mails.map(({ templateId }) => {
+            return templateId;
+          })
+        )}'`;
 
       case JOBS.JOB_TYPES.INSERT_AIRTABLE:
         await insertAirtable(data.tableName, data.fields);
@@ -67,15 +87,48 @@ const start = () => {
         return `Airtable : update in '${data.tableName}'`;
 
       case JOBS.JOB_TYPES.REMINDER_OFFER:
-        const sentTo = await sendReminderMailAboutOffer(
+        const sentToReminderOffer = await sendReminderMailAboutOffer(
           data.opportunityId,
           data.candidatId
         );
-        return sentTo
+        return sentToReminderOffer
           ? `Reminder about opportunity '${data.opportunityId}' sent to '${
               data.candidatId
-            }' (${JSON.stringify(sentTo)})`
+            }' (${JSON.stringify(sentToReminderOffer)})`
           : `No reminder about opportunity '${data.opportunityId}' sent to '${data.candidatId}'`;
+      case JOBS.JOB_TYPES.REMINDER_CV_10:
+        const sentToReminderCV = await sendReminderMailAboutCV(data.candidatId);
+        return sentToReminderCV
+          ? `Reminder about CV sent to '${data.candidatId}' (${JSON.stringify(
+              sentToReminderCV
+            )})`
+          : `No reminder about CV sent to '${data.candidatId}'`;
+      case JOBS.JOB_TYPES.REMINDER_VIDEO:
+        const sentToReminderVideo = await sendReminderAboutVideo(
+          data.candidatId
+        );
+        return sentToReminderVideo
+          ? `Reminder about video sent to '${
+              data.candidatId
+            }' (${JSON.stringify(sentToReminderVideo)})`
+          : `No reminder about CV sent to '${data.candidatId}'`;
+      case JOBS.JOB_TYPES.REMINDER_ACTIONS:
+        const sentToReminderActions = await sendReminderAboutActions(
+          data.candidatId
+        );
+        return sentToReminderActions
+          ? `Reminder about actions sent to '${
+              data.candidatId
+            }' (${JSON.stringify(sentToReminderActions)})`
+          : `No reminder about CV sent to '${data.candidatId}'`;
+      case JOBS.JOB_TYPES.REMINDER_EXTERNAL_OFFERS:
+        const sentToReminderExternalOffers =
+          await sendReminderAboutExternalOffers(data.candidatId);
+        return sentToReminderExternalOffers
+          ? `Reminder about external offers sent to '${
+              data.candidatId
+            }' (${JSON.stringify(sentToReminderExternalOffers)})`
+          : `No reminder about CV sent to '${data.candidatId}'`;
       case JOBS.JOB_TYPES.GENERATE_CV_PREVIEW:
         const previewUrl = await generatePreview(
           data.candidatId,
@@ -92,7 +145,7 @@ const start = () => {
         return `Preview generated for User ${data.candidatId} : ${previewUrl}`;
 
       default:
-        return `No process method for this job ${job.id} of type ${job.data.type}`;
+        return `No process method for this job ${job.id} of type ${type}`;
     }
   });
 };

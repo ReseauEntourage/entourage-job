@@ -17,6 +17,7 @@ import {
   findConstantFromValue,
   findOfferStatus,
   getAdminMailsFromDepartment,
+  getRelatedUser,
   getZoneFromDepartment,
 } from 'src/utils/Finding';
 
@@ -83,6 +84,7 @@ const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
   'workingHours',
   'salary',
   'otherInfo',
+  'createdBy',
 ];
 
 const INCLUDE_OPPORTUNITY_CANDIDATE = [
@@ -319,13 +321,19 @@ const updateTable = async (opportunity, candidates) => {
   });
 };
 
-const createExternalOpportunity = async (data, candidatId, isAdmin) => {
+const createExternalOpportunity = async (
+  data,
+  candidatId,
+  isAdmin,
+  createdById
+) => {
   const modelOpportunity = await Opportunity.create({
     ...data,
     isExternal: true,
     isPublic: false,
     isArchived: false,
     isValidated: true,
+    createdBy: createdById,
   });
 
   await Opportunity_User.create({
@@ -393,13 +401,14 @@ const createExternalOpportunity = async (data, candidatId, isAdmin) => {
   };
 };
 
-const createOpportunity = async (data, isAdmin) => {
+const createOpportunity = async (data, isAdmin, createdById) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
   console.log(`Etape 1 - Création de l'opportunité de base`);
   const modelOpportunity = await Opportunity.create({
     ...data,
-    isValidated: false,
+    isValidated: !!isAdmin,
+    createdBy: createdById,
   });
 
   if (data.businessLines) {
@@ -551,7 +560,7 @@ const getOpportunities = async (params) => {
     ],
   };
 
-  if (typeParams && typeParams === OFFER_ADMIN_FILTERS_DATA[3].tag) {
+  if (typeParams && typeParams === OFFER_ADMIN_FILTERS_DATA[2].tag) {
     delete filterOptions.isPublic;
   }
 
@@ -748,7 +757,7 @@ const getAllUserOpportunities = async (userId, params = {}) => {
 
   const sortedOpportunities = sortOpportunities(
     finalOpportunities,
-    typeParams === OFFER_CANDIDATE_FILTERS_DATA[1].tag
+    typeParams === OFFER_CANDIDATE_FILTERS_DATA[0].tag
   );
 
   const filteredTypeOpportunities = filterCandidateOffersByType(
@@ -769,7 +778,7 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
       : user.zone === dept.zone;
   });
 
-  const businessLinesFilters = BUSINESS_LINES.filter((businessLine) => {
+  /*  const businessLinesFilters = BUSINESS_LINES.filter((businessLine) => {
     return (
       cv.businessLines &&
       cv.businessLines.length > 0 &&
@@ -779,15 +788,15 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
         })
         .includes(businessLine.value)
     );
-  });
+  });*/
 
   const filters = {};
   if (locationFilters.length > 0) {
     filters.department = locationFilters;
   }
-  if (businessLinesFilters.length > 0) {
+  /* if (businessLinesFilters.length > 0) {
     filters.businessLines = businessLinesFilters;
-  }
+  }*/
 
   const filterOptions =
     Object.keys(filters).length > 0 ? getOfferOptions(filters) : {};
@@ -852,6 +861,16 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
   return {
     unseenOpportunities: filteredOpportunities.length,
   };
+};
+
+const getExternalOpportunitiesCreatedByUserCount = async (userId) => {
+  const { count } = await Opportunity.findAndCountAll({
+    where: {
+      createdBy: userId,
+      isExternal: true,
+    },
+  });
+  return count;
 };
 
 const getOpportunity = async (opportunityId, isAdmin, candidateId) => {
@@ -1121,12 +1140,7 @@ const updateOpportunity = async (opportunity) => {
   const sendJobOfferMails = (candidates) => {
     return Promise.all(
       candidates.map(async (candidat) => {
-        const coach =
-          candidat.User &&
-          candidat.User.candidat &&
-          candidat.User.candidat.coach
-            ? candidat.User.candidat.coach
-            : null;
+        const coach = candidat.User ? getRelatedUser(candidat.User) : null;
 
         await addToWorkQueue({
           type: JOBS.JOB_TYPES.SEND_MAIL,
@@ -1307,4 +1321,5 @@ export {
   getLatestOpportunities,
   getUnseenUserOpportunitiesCount,
   countPendingOpportunitiesCount,
+  getExternalOpportunitiesCreatedByUserCount,
 };
