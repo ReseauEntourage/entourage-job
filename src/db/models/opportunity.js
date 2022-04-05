@@ -29,7 +29,7 @@ export default (sequelize, DataTypes) => {
         defaultValue: false,
       },
       link: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true,
       },
       externalOrigin: {

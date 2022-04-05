@@ -426,7 +426,7 @@ const createOpportunity = async (data, isAdmin, createdById) => {
     console.log(
       `Etape 4 - Détermine le(s) User(s) à qui l'opportunité s'adresse`
     );
-    candidates = await Promise.all(
+    await Promise.all(
       data.candidatesId.map((candidatId) => {
         return Opportunity_User.create({
           OpportunityId: modelOpportunity.id,
@@ -449,9 +449,7 @@ const createOpportunity = async (data, isAdmin, createdById) => {
 
   console.log(`Etape finale - Reprendre l'opportunité complète à retourner`);
 
-  const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
-  });
+  const finalOpportunity = await getOpportunity(modelOpportunity.id, true);
 
   const cleanedOpportunity = cleanOpportunity(modelOpportunity);
 
@@ -519,6 +517,8 @@ const createOpportunity = async (data, isAdmin, createdById) => {
         businessLines: businessLinesString,
       },
     });
+  } else {
+    await sendJobOfferMails(candidates, finalOpportunity);
   }
 
   try {
