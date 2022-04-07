@@ -344,6 +344,7 @@ describe('User', () => {
               adminRole: candidat.adminRole,
               address: candidat.address,
               deletedAt: candidat.deletedAt,
+              createdAt: candidat.createdAt,
               email: candidat.email,
               gender: candidat.gender,
               lastConnection: candidat.lastConnection.toISOString(),
