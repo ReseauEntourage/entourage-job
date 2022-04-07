@@ -18,6 +18,7 @@ import { CV_STATUS, JOBS, MAILJET_TEMPLATES, USER_ROLES } from 'src/constants';
 import { getRelatedUser, getZoneSuffix } from 'src/utils/Finding';
 import { addToWorkQueue } from 'src/jobs';
 import { getAllUserCVsVersions } from 'src/controllers/CV';
+import moment from 'moment';
 
 const sendMailBackground = async (params) => {
   return sendMail(params);
@@ -60,32 +61,36 @@ const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {
 };
 
 const sendReminderMailAboutCV = async (candidatId) => {
+  const firstOfMarch2022 = '2022-03-01';
   const user = await getUser(candidatId);
-  const cvs = await getAllUserCVsVersions(candidatId);
-  if (cvs && cvs.length > 0) {
-    const hasSubmittedAtLeastOnce = cvs.some(({ status }) => {
-      return status === CV_STATUS.Pending;
-    });
-
-    if (!hasSubmittedAtLeastOnce) {
-      const toEmail = {
-        to: user.email,
-      };
-      const coach = getRelatedUser(user);
-      if (coach) {
-        toEmail.cc = coach.email;
-      }
-
-      await sendMail({
-        toEmail,
-        templateId: MAILJET_TEMPLATES.CV_REMINDER_10,
-        variables: {
-          ..._.omitBy(user.toJSON(), _.isNil),
-        },
+  if (moment(user.createdAt).isAfter(moment(firstOfMarch2022, 'YYYY-MM-DD'))) {
+    const cvs = await getAllUserCVsVersions(candidatId);
+    if (cvs && cvs.length > 0) {
+      const hasSubmittedAtLeastOnce = cvs.some(({ status }) => {
+        return status === CV_STATUS.Pending;
       });
-      return toEmail;
+
+      if (!hasSubmittedAtLeastOnce) {
+        const toEmail = {
+          to: user.email,
+        };
+        const coach = getRelatedUser(user);
+        if (coach) {
+          toEmail.cc = coach.email;
+        }
+
+        await sendMail({
+          toEmail,
+          templateId: MAILJET_TEMPLATES.CV_REMINDER_10,
+          variables: {
+            ..._.omitBy(user.toJSON(), _.isNil),
+          },
+        });
+        return toEmail;
+      }
     }
   }
+
   return false;
 };
 

@@ -56,6 +56,7 @@ const ATTRIBUTES_USER = [
   'gender',
   'lastConnection',
   'deletedAt',
+  'createdAt',
 ];
 
 const ATTRIBUTES_USER_PUBLIC = ['id', 'firstName', 'lastName', 'role'];
