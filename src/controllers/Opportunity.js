@@ -42,6 +42,9 @@ import { sortOpportunities } from 'src/utils/Sorting';
 
 import { sendToMailchimp } from 'src/controllers/Mailchimp';
 
+import { BitlyClient } from 'bitly';
+const bitly = new BitlyClient(process.env.BITLY_TOKEN);
+
 const offerTable = process.env.AIRTABLE_OFFERS;
 const {
   BusinessLine,
@@ -90,7 +93,15 @@ const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
 const INCLUDE_OPPORTUNITY_CANDIDATE = [
   {
     model: User,
-    attributes: ['id', 'email', 'firstName', 'lastName', 'gender', 'zone'],
+    attributes: [
+      'id',
+      'email',
+      'firstName',
+      'lastName',
+      'gender',
+      'zone',
+      'phone',
+    ],
     include: [
       {
         model: User_Candidat,
@@ -1006,6 +1017,20 @@ const sendJobOfferMails = (candidates, opportunity) => {
           candidat,
         },
       });
+
+      try {
+        const offerUrl = `${process.env.FRONT_URL}/backoffice/candidat/offres/${opportunity.id}`;
+        const shortenedOfferUrl = await bitly.shorten(
+          offerUrl.replace('localhost', '127.0.0.1')
+        );
+        await addToWorkQueue({
+          type: JOBS.JOB_TYPES.SEND_SMS,
+          toPhone: candidat.User.phone,
+          text: `Bonjour,\nUn recruteur vous a adressé une offre sur LinkedOut. Consultez-la ici et traitez-la avec votre Coach: ${shortenedOfferUrl.link}`,
+        });
+      } catch (err) {
+        console.error(err);
+      }
 
       if (!opportunity.isPublic) {
         await addToWorkQueue(

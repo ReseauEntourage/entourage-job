@@ -21,6 +21,7 @@ import {
 import { insertAirtable, updateOpportunityAirtable } from 'src/jobs/Airtable';
 import { generatePreview } from 'src/jobs/Image';
 import _ from 'lodash';
+import { sendSMSBackground } from './jobs/SMS';
 
 const start = () => {
   const workQueue = getMainWorkQueue();
@@ -75,6 +76,18 @@ const start = () => {
         )}' with template '${_.uniq(
           mails.map(({ templateId }) => {
             return templateId;
+          })
+        )}'`;
+
+      case JOBS.JOB_TYPES.SEND_SMS:
+        let phones = [data];
+        if (data.phones && Array.isArray(data.phones)) {
+          phones = data.phones;
+        }
+        await sendSMSBackground(phones);
+        return `SMS sent to '${JSON.stringify(
+          phones.map(({ toPhone }) => {
+            return toPhone;
           })
         )}'`;
 

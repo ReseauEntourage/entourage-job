@@ -2,15 +2,24 @@ import Mailjet from 'node-mailjet';
 import { MAILJET_TEMPLATES } from 'src/constants';
 import _ from 'lodash';
 
-const mailjet = Mailjet.connect(
+const mailjetMail = Mailjet.connect(
   process.env.MAILJET_PUB,
   process.env.MAILJET_SEC
 );
 
-const send = mailjet.post('send', { version: 'v3.1' });
+const mailjetSMS = Mailjet.connect(process.env.MAILJET_SMS_TOKEN);
 
-const createMail = (params) => {
-  const { toEmail, subject, text, html, variables = {}, templateId } = params;
+const sendMailjetMail = mailjetMail.post('send', { version: 'v3.1' });
+const sendMailjetSMS = mailjetSMS.post('sms-send', { version: 'v4' });
+
+const createMail = ({
+  toEmail,
+  subject,
+  text,
+  html,
+  variables = {},
+  templateId,
+}) => {
   const recipients = {};
   if (typeof toEmail === 'string') {
     recipients.To = [{ Email: toEmail }];
@@ -91,7 +100,7 @@ const sendMail = (params) => {
   }
 
   return new Promise((res, rej) => {
-    send
+    sendMailjetMail
       .request(mailjetParams)
       .then((result) => {
         res(result);
@@ -102,4 +111,50 @@ const sendMail = (params) => {
   });
 };
 
-export { sendMail };
+const createSMS = ({ toPhone, text }) => {
+  if (typeof toPhone === 'string') {
+    return [
+      {
+        From: process.env.MAILJET_FROM_NAME,
+        Text: text,
+        To: toPhone,
+      },
+    ];
+  } else if (Array.isArray(toPhone)) {
+    return toPhone.map((phone) => {
+      return {
+        From: process.env.MAILJET_FROM_NAME,
+        Text: text,
+        To: phone,
+      };
+    });
+  }
+};
+
+const sendSMS = (params) => {
+  console.log(params);
+  let smsToSend = [];
+  if (Array.isArray(params)) {
+    smsToSend = params.reduce((acc, curr) => {
+      return [...acc, ...createSMS(curr)];
+    }, []);
+  } else {
+    smsToSend = createSMS(params);
+  }
+
+  return new Promise((res, rej) => {
+    Promise.all(
+      smsToSend.map((smsParams) => {
+        return sendMailjetSMS.request(smsParams);
+      })
+    )
+      .then((result) => {
+        res(result);
+      })
+      .catch((err) => {
+        rej(err);
+      });
+  });
+};
+
+export { sendMail, sendSMS };

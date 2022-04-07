@@ -4,7 +4,7 @@ import {
   getUser,
   sendMailsAfterMatching,
 } from 'src/controllers/User';
-import { sendMail } from 'src/controllers/Mail';
+import { sendMail } from 'src/controllers/Mailjet';
 
 import _ from 'lodash';
 
