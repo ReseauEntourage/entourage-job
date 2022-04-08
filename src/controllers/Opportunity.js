@@ -43,6 +43,7 @@ import { sortOpportunities } from 'src/utils/Sorting';
 import { sendToMailchimp } from 'src/controllers/Mailchimp';
 
 import { BitlyClient } from 'bitly';
+import { getFormattedPhone, isValidPhone } from 'src/utils/PhoneFormatting';
 const bitly = new BitlyClient(process.env.BITLY_TOKEN);
 
 const offerTable = process.env.AIRTABLE_OFFERS;
@@ -418,6 +419,9 @@ const createOpportunity = async (data, isAdmin, createdById) => {
   console.log(`Etape 1 - Création de l'opportunité de base`);
   const modelOpportunity = await Opportunity.create({
     ...data,
+    recruiterPhone: data.recruiterPhone
+      ? getFormattedPhone(data.recruiterPhone)
+      : undefined,
     isValidated: !!isAdmin,
     createdBy: createdById,
   });
@@ -1023,11 +1027,14 @@ const sendJobOfferMails = (candidates, opportunity) => {
         const shortenedOfferUrl = await bitly.shorten(
           offerUrl.replace('localhost', '127.0.0.1')
         );
-        await addToWorkQueue({
-          type: JOBS.JOB_TYPES.SEND_SMS,
-          toPhone: candidat.User.phone,
-          text: `Bonjour,\nUn recruteur vous a adressé une offre sur LinkedOut. Consultez-la ici et traitez-la avec votre Coach: ${shortenedOfferUrl.link}`,
-        });
+        const candidatPhone = candidat?.User?.phone;
+        if (candidatPhone && isValidPhone(candidatPhone)) {
+          await addToWorkQueue({
+            type: JOBS.JOB_TYPES.SEND_SMS,
+            toPhone: getFormattedPhone(candidatPhone),
+            text: `Bonjour,\nUn recruteur vous a adressé une offre sur LinkedOut. Consultez-la ici et traitez-la avec votre Coach: ${shortenedOfferUrl.link}`,
+          });
+        }
       } catch (err) {
         console.error(err);
       }
@@ -1056,11 +1063,19 @@ const sendJobOfferMails = (candidates, opportunity) => {
 const updateOpportunity = async (opportunity) => {
   const oldOpportunity = await getOpportunity(opportunity.id, true);
 
-  const modelOpportunity = await Opportunity.update(opportunity, {
-    where: { id: opportunity.id },
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
-    individualHooks: true,
-  }).then((model) => {
+  const modelOpportunity = await Opportunity.update(
+    {
+      ...opportunity,
+      recruiterPhone: opportunity.recruiterPhone
+        ? getFormattedPhone(opportunity.recruiterPhone)
+        : undefined,
+    },
+    {
+      where: { id: opportunity.id },
+      include: INCLUDE_OPPORTUNITY_COMPLETE,
+      individualHooks: true,
+    }
+  ).then((model) => {
     return model && model.length > 1 && model[1][0];
   });
 

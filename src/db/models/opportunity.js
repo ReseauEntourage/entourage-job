@@ -1,4 +1,5 @@
 import uuid from 'uuid/v4';
+import { getFormattedPhone } from 'src/utils/PhoneFormatting';
 
 export default (sequelize, DataTypes) => {
   const Opportunity = sequelize.define(
@@ -151,6 +152,9 @@ export default (sequelize, DataTypes) => {
   Opportunity.beforeCreate((opportunity) => {
     const opportunityToCreate = opportunity;
     opportunityToCreate.id = uuid();
+    opportunityToCreate.recruiterPhone = getFormattedPhone(
+      opportunityToCreate.recruiterPhone
+    );
     return opportunityToCreate;
   });
 

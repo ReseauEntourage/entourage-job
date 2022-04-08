@@ -4,6 +4,8 @@ import { USER_ROLES } from 'src/constants';
 
 import uuid from 'uuid/v4';
 import { getCandidateIdFromCoachOrCandidate } from 'src/utils/Finding';
+import { getFormattedPhone } from 'src/utils/PhoneFormatting';
+import { capitalizeNameAndTrim } from 'src/utils/DataFormatting';
 
 export default (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -132,8 +134,9 @@ export default (sequelize, DataTypes) => {
       const user = u;
       user.id = uuid();
       user.email = user.email.toLowerCase();
-      user.firstName = user.firstName.trim().replace(/\s\s+/g, ' ');
-      user.lastName = user.lastName.trim().replace(/\s\s+/g, ' ');
+      user.firstName = capitalizeNameAndTrim(user.firstName);
+      user.lastName = capitalizeNameAndTrim(user.lastName);
+      user.phone = getFormattedPhone(user.phone);
       return user;
     });
 

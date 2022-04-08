@@ -65,4 +65,23 @@ const controlText = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 };
 
-export { cleanCV, cleanOpportunity, controlText };
+const capitalizeNameAndTrim = (name) => {
+  let capitalizedName = name
+    .toLowerCase()
+    .split(' ')
+    .map((s) => {
+      return s.charAt(0).toUpperCase() + s.substring(1);
+    })
+    .join(' ');
+
+  capitalizedName = capitalizedName
+    .split('-')
+    .map((s) => {
+      return s.charAt(0).toUpperCase() + s.substring(1);
+    })
+    .join('-');
+
+  return capitalizedName.trim().replace(/\s\s+/g, ' ');
+};
+
+export { cleanCV, cleanOpportunity, controlText, capitalizeNameAndTrim };

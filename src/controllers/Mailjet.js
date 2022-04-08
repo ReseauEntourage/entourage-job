@@ -132,7 +132,6 @@ const createSMS = ({ toPhone, text }) => {
 };
 
 const sendSMS = (params) => {
-  console.log(params);
   let smsToSend = [];
   if (Array.isArray(params)) {
     smsToSend = params.reduce((acc, curr) => {
