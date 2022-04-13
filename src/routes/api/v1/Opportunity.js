@@ -360,6 +360,27 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
 });
 
 /**
+ * Route: PUT /api/<VERSION>/opportunity/bulk
+ * Description: Admins can update an opportunity
+ * Body:
+ * - <Opportunity> : object containint ID and fields to update
+ * Responses:
+ * - 200 + updated opportunity
+ * - 401
+ */
+router.put('/bulk', auth([USER_ROLES.ADMIN]), (req, res) => {
+  const { attributes, ids } = req.body;
+  OpportunityController.updateBulkOpportunity(attributes, ids)
+    .then((updatedOpportunities) => {
+      res.status(200).json(updatedOpportunities);
+    })
+    .catch((err) => {
+      logger(res).error(err);
+      res.status(401).send(`Une erreur est survenue`);
+    });
+});
+
+/**
  * Route: PUT /api/<VERSION>/opportunity/external
  * Description: Admins and users can update an external opportunity
  * Body:

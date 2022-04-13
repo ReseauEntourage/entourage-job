@@ -948,21 +948,7 @@ const sendMailsAfterPublishing = async (candidatId) => {
     await addToWorkQueue(
       {
         type: JOBS.JOB_TYPES.REMINDER_VIDEO,
-        candidatId: candidatId,
-      },
-      {
-        delay:
-          (process.env.VIDEO_REMINDER_DELAY
-            ? parseFloat(process.env.VIDEO_REMINDER_DELAY, 10)
-            : 21) *
-          3600000 *
-          24,
-      }
-    );
-    await addToWorkQueue(
-      {
-        type: JOBS.JOB_TYPES.REMINDER_VIDEO,
-        candidatId: user.id,
+        candidatId,
       },
       {
         delay:
@@ -976,7 +962,7 @@ const sendMailsAfterPublishing = async (candidatId) => {
     await addToWorkQueue(
       {
         type: JOBS.JOB_TYPES.REMINDER_ACTIONS,
-        candidatId: user.id,
+        candidatId,
       },
       {
         delay:
@@ -990,7 +976,7 @@ const sendMailsAfterPublishing = async (candidatId) => {
     await addToWorkQueue(
       {
         type: JOBS.JOB_TYPES.REMINDER_EXTERNAL_OFFERS,
-        candidatId: user.id,
+        candidatId,
       },
       {
         delay:

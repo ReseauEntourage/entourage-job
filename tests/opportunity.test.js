@@ -18,6 +18,7 @@ import {
   startTestServer,
   stopTestServer,
 } from 'tests/helpers';
+import { models } from 'src/db/models';
 
 describe('Opportunity', () => {
   let serverTest;
@@ -1527,6 +1528,60 @@ describe('Opportunity', () => {
             .send(update);
           expect(response.status).toBe(200);
           expect(response.body.title).toBe('updated title');
+        });
+        it('Should return 200, and updated opportunities ids, if admin bulk updates some opportunities', async () => {
+          const originalOpportunities = await createEntities(
+            opportunityFactory,
+            5,
+            {
+              isValidated: true,
+              isPublic: true,
+              isArchived: false,
+              department: 'Rhône (69)',
+            },
+            { businessLines: ['id', 'aa'] },
+            true
+          );
+          const originalOpportunitiesIds = originalOpportunities.map(
+            ({ id }) => {
+              return id;
+            }
+          );
+
+          const response = await request(serverTest)
+            .put(`${route}/bulk`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
+            .send({
+              attributes: {
+                isArchived: true,
+              },
+              ids: originalOpportunitiesIds,
+            });
+
+          expect(response.status).toBe(200);
+
+          const { nbUpdated, updatedIds } = response.body;
+          const updatedOffers = await models.Opportunity.findAll({
+            where: {
+              id: originalOpportunitiesIds,
+            },
+          });
+
+          expect(nbUpdated).toBeLessThanOrEqual(originalOpportunities.length);
+          expect(originalOpportunitiesIds).toEqual(
+            expect.arrayContaining(updatedIds.sort())
+          );
+          expect(
+            updatedOffers.map((opp) => {
+              return opp.toJSON();
+            })
+          ).toEqual(
+            expect.not.arrayContaining([
+              expect.objectContaining({
+                isArchived: false,
+              }),
+            ])
+          );
         });
         it('Should return 200, if admin adds a user to a public opportunity', async () => {
           const update = {
