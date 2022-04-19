@@ -4,6 +4,7 @@ import { models } from 'src/db/models';
 import { DEPARTMENTS } from 'src/constants/departements';
 import moment from 'moment';
 import _ from 'lodash';
+import phone from 'phone';
 const { Opportunity } = models;
 
 let totalOppsInDB = 0;
@@ -65,7 +66,8 @@ const generateOpportunity = async (props) => {
     recruiterName: faker.name.findName(),
     recruiterFirstName: faker.name.findName(),
     recruiterMail: faker.internet.email(),
-    recruiterPhone: faker.phone.phoneNumber(),
+    recruiterPhone: phone(faker.phone.phoneNumber(), { country: 'USA' })
+      .phoneNumber,
     recruiterPosition: faker.lorem.words(2),
     department: DEPARTMENTS[0].name,
     date: moment().toISOString(),

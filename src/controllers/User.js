@@ -30,8 +30,8 @@ import {
 import _ from 'lodash';
 import * as AuthController from 'src/controllers/Auth';
 import { getRelatedUser } from 'src/utils/Finding';
-import { getFormattedPhone } from 'src/utils/PhoneFormatting';
-import { capitalizeNameAndTrim } from '../utils/DataFormatting';
+import { capitalizeNameAndTrim } from 'src/utils/DataFormatting';
+import { isValidPhone } from 'src/utils/PhoneFormatting';
 
 const { User, User_Candidat, CV, Opportunity_User, Revision, BusinessLine } =
   models;
@@ -149,6 +149,10 @@ const sendMailsAfterMatching = async (candidatId) => {
 };
 
 const createUser = async (newUser, userCreatedPassword) => {
+  if (newUser.phone && !isValidPhone(newUser.phone)) {
+    throw new Error('Invalid phone');
+  }
+
   function fakePassword() {
     return Math.random() // Generate random number, eg: 0.123456
       .toString(36) // Convert  to base-36 : "0.4fzyo82mvyr"
@@ -162,10 +166,10 @@ const createUser = async (newUser, userCreatedPassword) => {
   console.log(`${infoLog} Création du User`);
 
   const userToCreate = { ...newUser, password: hash, salt };
+
   userToCreate.role = newUser.role || USER_ROLES.CANDIDAT;
   userToCreate.firstName = capitalizeNameAndTrim(userToCreate.firstName);
   userToCreate.lastName = capitalizeNameAndTrim(userToCreate.lastName);
-  userToCreate.phone = getFormattedPhone(userToCreate.phone);
 
   const createdUser = await User.create(userToCreate);
 
@@ -562,13 +566,13 @@ const getAllPublishedCandidates = async () => {
 };
 
 const setUser = async (id, user) => {
+  if (user.phone && !isValidPhone(user.phone)) {
+    throw new Error('Invalid phone');
+  }
   const userAttributes = {
     ...user,
-    phone: user.phone ? getFormattedPhone(user.phone) : undefined,
-    firstName: user.firstName
-      ? capitalizeNameAndTrim(user.firstName)
-      : undefined,
-    lastName: user.lastName ? capitalizeNameAndTrim(user.firstName) : undefined,
+    firstName: capitalizeNameAndTrim(user.firstName),
+    lastName: capitalizeNameAndTrim(user.lastName),
   };
 
   const [updateCount] = await User.update(userAttributes, {

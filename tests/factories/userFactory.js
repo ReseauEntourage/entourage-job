@@ -6,6 +6,7 @@ import faker from 'faker';
 
 import { models } from 'src/db/models';
 import { ADMIN_ZONES } from 'src/constants/departements';
+import phone from 'phone';
 
 const { User, User_Candidat } = models;
 
@@ -29,7 +30,9 @@ const generateUser = async (props = {}) => {
     password: hash,
     gender: props.gender || faker.random.arrayElement([0, 1]),
     salt,
-    phone: props.phone || faker.phone.phoneNumber(),
+    phone:
+      props.phone ||
+      phone(faker.phone.phoneNumber(), { country: 'USA' }).phoneNumber,
     address: props.address || faker.address.streetAddress(),
     lastConnection: props.lastConnection || `${faker.date.past()}`,
     zone: props.zone || ADMIN_ZONES.PARIS,

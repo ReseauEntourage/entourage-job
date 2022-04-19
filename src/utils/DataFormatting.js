@@ -66,6 +66,11 @@ const controlText = (text) => {
 };
 
 const capitalizeNameAndTrim = (name) => {
+  if (!name) {
+    // we need to keep its value if its '', null or undefined
+    return name;
+  }
+
   let capitalizedName = name
     .toLowerCase()
     .split(' ')

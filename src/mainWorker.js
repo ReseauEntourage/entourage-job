@@ -9,9 +9,10 @@ import {
   sendReminderAboutActions,
   sendReminderAboutExternalOffers,
   sendReminderAboutVideo,
-  sendReminderMailAboutCV,
-  sendReminderMailAboutOffer,
-} from 'src/jobs/Mail';
+  sendReminderAboutCV,
+  sendReminderAboutOffer,
+  sendSMSBackground,
+} from 'src/jobs/Messaging';
 import {
   cacheAllCVs,
   cacheCV,
@@ -21,7 +22,6 @@ import {
 import { insertAirtable, updateOpportunityAirtable } from 'src/jobs/Airtable';
 import { generatePreview } from 'src/jobs/Image';
 import _ from 'lodash';
-import { sendSMSBackground } from './jobs/SMS';
 
 const start = () => {
   const workQueue = getMainWorkQueue();
@@ -100,7 +100,7 @@ const start = () => {
         return `Airtable : update in '${data.tableName}'`;
 
       case JOBS.JOB_TYPES.REMINDER_OFFER:
-        const sentToReminderOffer = await sendReminderMailAboutOffer(
+        const sentToReminderOffer = await sendReminderAboutOffer(
           data.opportunityId,
           data.candidatId
         );
@@ -110,7 +110,7 @@ const start = () => {
             }' (${JSON.stringify(sentToReminderOffer)})`
           : `No reminder about opportunity '${data.opportunityId}' sent to '${data.candidatId}'`;
       case JOBS.JOB_TYPES.REMINDER_CV_10:
-        const sentToReminderCV = await sendReminderMailAboutCV(data.candidatId);
+        const sentToReminderCV = await sendReminderAboutCV(data.candidatId);
         return sentToReminderCV
           ? `Reminder about CV sent to '${data.candidatId}' (${JSON.stringify(
               sentToReminderCV

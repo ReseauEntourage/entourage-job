@@ -2,6 +2,13 @@ import Mailjet from 'node-mailjet';
 import { MAILJET_TEMPLATES } from 'src/constants';
 import _ from 'lodash';
 
+import Vonage from '@vonage/server-sdk';
+
+const vonage = new Vonage({
+  apiKey: process.env.VONAGE_API_KEY,
+  apiSecret: process.env.VONAGE_API_SECRET,
+});
+
 const mailjetMail = Mailjet.connect(
   process.env.MAILJET_PUB,
   process.env.MAILJET_SEC
@@ -11,6 +18,9 @@ const mailjetSMS = Mailjet.connect(process.env.MAILJET_SMS_TOKEN);
 
 const sendMailjetMail = mailjetMail.post('send', { version: 'v3.1' });
 const sendMailjetSMS = mailjetSMS.post('sms-send', { version: 'v4' });
+
+const useSMS = process.env.USE_SMS === 'true';
+const useMailjet = process.env.USE_MAILJET_SMS === 'true';
 
 const createMail = ({
   toEmail,
@@ -113,22 +123,51 @@ const sendMail = (params) => {
 
 const createSMS = ({ toPhone, text }) => {
   if (typeof toPhone === 'string') {
-    return [
-      {
-        From: process.env.MAILJET_FROM_NAME,
-        Text: text,
-        To: toPhone,
-      },
-    ];
+    return useMailjet
+      ? [
+          {
+            From: process.env.MAILJET_FROM_NAME,
+            Text: text,
+            To: toPhone,
+          },
+        ]
+      : [{ toPhone, text }];
   } else if (Array.isArray(toPhone)) {
     return toPhone.map((phone) => {
-      return {
-        From: process.env.MAILJET_FROM_NAME,
-        Text: text,
-        To: phone,
-      };
+      return useMailjet
+        ? {
+            From: process.env.MAILJET_FROM_NAME,
+            Text: text,
+            To: phone,
+          }
+        : { toPhone: phone, text };
     });
   }
+};
+
+const sendSMSWithVonage = ({ toPhone, text }) => {
+  return new Promise((res, rej) => {
+    vonage.message.sendSms(
+      process.env.MAILJET_FROM_NAME,
+      toPhone,
+      text,
+      (err, responseData) => {
+        if (err) {
+          rej(err);
+        } else {
+          if (responseData.messages[0]['status'] === '0') {
+            res(responseData.messages[0]);
+          } else {
+            rej(responseData.messages[0]['error-text']);
+          }
+        }
+      }
+    );
+  });
+};
+
+const sendSMSWithMailjet = (smsParams) => {
+  return sendMailjetSMS.request(smsParams);
 };
 
 const sendSMS = (params) => {
@@ -144,7 +183,12 @@ const sendSMS = (params) => {
   return new Promise((res, rej) => {
     Promise.all(
       smsToSend.map((smsParams) => {
-        return sendMailjetSMS.request(smsParams);
+        if (useSMS) {
+          return useMailjet
+            ? sendSMSWithMailjet(smsParams)
+            : sendSMSWithVonage(smsParams);
+        }
+        return Promise.resolve();
       })
     )
       .then((result) => {

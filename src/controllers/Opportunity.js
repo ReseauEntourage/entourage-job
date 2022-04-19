@@ -42,9 +42,8 @@ import { sortOpportunities } from 'src/utils/Sorting';
 
 import { sendToMailchimp } from 'src/controllers/Mailchimp';
 
-import { BitlyClient } from 'bitly';
-import { getFormattedPhone, isValidPhone } from 'src/utils/PhoneFormatting';
-const bitly = new BitlyClient(process.env.BITLY_TOKEN);
+import { isValidPhone } from 'src/utils/PhoneFormatting';
+import { getShortenedOfferURL } from 'src/utils/Mutating';
 
 const offerTable = process.env.AIRTABLE_OFFERS;
 const {
@@ -417,11 +416,11 @@ const createOpportunity = async (data, isAdmin, createdById) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
   console.log(`Etape 1 - Création de l'opportunité de base`);
+  if (data.recruiterPhone && !isValidPhone(data.recruiterPhone)) {
+    throw new Error('Invalid phone');
+  }
   const modelOpportunity = await Opportunity.create({
     ...data,
-    recruiterPhone: data.recruiterPhone
-      ? getFormattedPhone(data.recruiterPhone)
-      : undefined,
     isValidated: !!isAdmin,
     createdBy: createdById,
   });
@@ -1023,16 +1022,14 @@ const sendJobOfferMails = (candidates, opportunity) => {
       });
 
       try {
-        const offerUrl = `${process.env.FRONT_URL}/backoffice/candidat/offres/${opportunity.id}`;
-        const shortenedOfferUrl = await bitly.shorten(
-          offerUrl.replace('localhost', '127.0.0.1')
-        );
         const candidatPhone = candidat?.User?.phone;
         if (candidatPhone && isValidPhone(candidatPhone)) {
           await addToWorkQueue({
             type: JOBS.JOB_TYPES.SEND_SMS,
-            toPhone: getFormattedPhone(candidatPhone),
-            text: `Bonjour,\nUn recruteur vous a adressé une offre sur LinkedOut. Consultez-la ici et traitez-la avec votre Coach: ${shortenedOfferUrl.link}`,
+            toPhone: candidatPhone,
+            text: `Bonjour,\nUn recruteur t'a adressé une offre sur LinkedOut. Consulte-la ici et traite-la avec ton Coach: ${await getShortenedOfferURL(
+              opportunity.id
+            )}`,
           });
         }
       } catch (err) {
@@ -1063,19 +1060,14 @@ const sendJobOfferMails = (candidates, opportunity) => {
 const updateOpportunity = async (opportunity) => {
   const oldOpportunity = await getOpportunity(opportunity.id, true);
 
-  const modelOpportunity = await Opportunity.update(
-    {
-      ...opportunity,
-      recruiterPhone: opportunity.recruiterPhone
-        ? getFormattedPhone(opportunity.recruiterPhone)
-        : undefined,
-    },
-    {
-      where: { id: opportunity.id },
-      include: INCLUDE_OPPORTUNITY_COMPLETE,
-      individualHooks: true,
-    }
-  ).then((model) => {
+  if (opportunity.recruiterPhone && !isValidPhone(opportunity.recruiterPhone)) {
+    throw new Error('Invalid phone');
+  }
+  const modelOpportunity = await Opportunity.update(opportunity, {
+    where: { id: opportunity.id },
+    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    individualHooks: true,
+  }).then((model) => {
     return model && model.length > 1 && model[1][0];
   });
 

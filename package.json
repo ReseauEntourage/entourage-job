@@ -39,6 +39,7 @@
     "@mailchimp/mailchimp_marketing": "^3.0.71",
     "@sentry/node": "^5.27.3",
     "@sentry/tracing": "^5.27.3",
+    "@vonage/server-sdk": "^2.10.11",
     "airtable": "^0.11.1",
     "bitly": "^7.1.2",
     "bull": "^3.19.1",
