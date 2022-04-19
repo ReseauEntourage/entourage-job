@@ -55,7 +55,7 @@ router.post('/newsletter', auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 

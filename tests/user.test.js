@@ -168,10 +168,10 @@ describe('User', () => {
           .send(candidat);
         expect(response.status).toBe(200);
       });
-      it('Should return 401 when user data contain wrong data types', async () => {
+      it('Should return 401 when user data has invalid phone', async () => {
         const wrongData = {
           ...(await userFactory({}, {}, false)),
-          firstName: 123,
+          phone: '1234',
         };
         const response = await request(serverTest)
           .post(`${route}`)
@@ -696,10 +696,21 @@ describe('User', () => {
             .set('authorization', `Token ${loggedInCandidat.token}`)
             .send({
               phone: updates.phone,
-              address: updates.phone,
+              address: updates.address,
             });
           expect(response.status).toBe(200);
           expect(response.body.phone).toEqual(updates.phone);
+        });
+        it('Should return 401 when a candiate update himself with invalid phone', async () => {
+          const updates = await userFactory({}, {}, false);
+          const response = await request(serverTest)
+            .put(`${route}/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({
+              phone: '1234',
+              address: updates.address,
+            });
+          expect(response.status).toBe(401);
         });
         it('Should return 200 and updated user when coach update himself', async () => {
           const updates = await userFactory({}, {}, false);
@@ -711,6 +722,15 @@ describe('User', () => {
             });
           expect(response.status).toBe(200);
           expect(response.body.phone).toEqual(updates.phone);
+        });
+        it('Should return 401 when coach update himself with invalid phone', async () => {
+          const response = await request(serverTest)
+            .put(`${route}/${loggedInCoach.user.id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`)
+            .send({
+              phone: '1234',
+            });
+          expect(response.status).toBe(401);
         });
         it('Should return 401 when a not admin user updates his first name', async () => {
           const updates = await userFactory({}, {}, false);
@@ -742,6 +762,15 @@ describe('User', () => {
             });
           expect(response.status).toBe(200);
           expect(response.body.phone).toEqual(updates.phone);
+        });
+        it('Should return 401 when an admin update a user with invalid phone', async () => {
+          const response = await request(serverTest)
+            .put(`${route}/${otherLoggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`)
+            .send({
+              phone: '1234',
+            });
+          expect(response.status).toBe(401);
         });
         it('Should return 200 and updated user when an admin update a user role', async () => {
           const response = await request(serverTest)

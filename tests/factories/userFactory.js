@@ -6,6 +6,7 @@ import faker from 'faker';
 
 import { models } from 'src/db/models';
 import { ADMIN_ZONES } from 'src/constants/departements';
+import { phone } from 'phone';
 
 const { User, User_Candidat } = models;
 
@@ -20,6 +21,8 @@ const generateUser = async (props = {}) => {
     props.password ? props.password : faker.internet.password()
   );
 
+  const fakePhoneNumber = faker.phone.phoneNumber('+336 ## ## ## ##');
+
   return {
     id: faker.random.uuid(),
     email: props.email || faker.internet.email().toLowerCase(),
@@ -29,7 +32,8 @@ const generateUser = async (props = {}) => {
     password: hash,
     gender: props.gender || faker.random.arrayElement([0, 1]),
     salt,
-    phone: props.phone || faker.phone.phoneNumber(),
+    phone:
+      props.phone || phone(fakePhoneNumber, { country: 'FRA' }).phoneNumber,
     address: props.address || faker.address.streetAddress(),
     lastConnection: props.lastConnection || `${faker.date.past()}`,
     zone: props.zone || ADMIN_ZONES.PARIS,

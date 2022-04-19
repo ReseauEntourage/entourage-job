@@ -349,6 +349,7 @@ const JOBS = {
     CACHE_CV: 'cache_cv',
     CACHE_ALL_CVS: 'cache_all_cvs',
     SEND_MAIL: 'send_mail',
+    SEND_SMS: 'send_sms',
     INSERT_AIRTABLE: 'insert_airtable',
     UPDATE_AIRTABLE: 'update_airtable',
     REMINDER_OFFER: 'reminder_offer',

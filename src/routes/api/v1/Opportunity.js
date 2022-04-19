@@ -33,7 +33,7 @@ router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send(`Une erreur est survenue`);
+        res.status(401).send(err);
       });
   });
 });
@@ -78,7 +78,7 @@ router.post('/', auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send(`Une erreur est survenue`);
+      res.status(401).send(err);
     });
 });
 
@@ -115,7 +115,7 @@ router.post(
           })
           .catch((err) => {
             logger(res).error(err);
-            res.status(401).send(`Une erreur est survenue`);
+            res.status(401).send(err);
           });
       } else {
         res.status(401).send({ message: 'Unauthorized' });
@@ -145,7 +145,7 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -165,7 +165,7 @@ router.get('/admin/count', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -193,7 +193,7 @@ router.get(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send('Une erreur est survenue');
+          res.status(401).send(err);
         });
     });
   }
@@ -242,7 +242,7 @@ router.get(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send('Une erreur est survenue');
+          res.status(401).send(err);
         });
     });
   }
@@ -269,7 +269,7 @@ router.get(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send('Une erreur est survenue');
+          res.status(401).send(err);
         });
     });
   }
@@ -333,7 +333,7 @@ router.post(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send(`Une erreur est survenue`);
+          res.status(401).send(err);
         });
     });
   }
@@ -355,7 +355,7 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send(`Une erreur est survenue`);
+      res.status(401).send(err);
     });
 });
 
@@ -376,7 +376,7 @@ router.put('/bulk', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send(`Une erreur est survenue`);
+      res.status(401).send(err);
     });
 });
 
@@ -417,7 +417,7 @@ router.put(
           })
           .catch((err) => {
             logger(res).error(err);
-            res.status(401).send(`Une erreur est survenue`);
+            res.status(401).send(err);
           });
       } else {
         res.status(401).send({ message: 'Unauthorized' });
@@ -450,7 +450,7 @@ router.put(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send(`Une erreur est survenue`);
+          res.status(401).send(err);
         });
     });
   }
@@ -473,7 +473,7 @@ router.put(
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send('Une erreur est survenue');
+        res.status(401).send(err);
       });
   });
 */
