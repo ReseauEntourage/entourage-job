@@ -28,7 +28,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       if (err.name === 'SequelizeUniqueConstraintError') {
         res.status(409).send('Adresse email déjà existante');
       } else {
-        res.status(401).send('Une erreur est survenue');
+        res.status(401).send(err);
       }
     });
 });
@@ -49,7 +49,7 @@ router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send('Une erreur est survenue');
+        res.status(401).send(err);
       });
   });
 */
@@ -70,7 +70,7 @@ router.get('/members', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -85,7 +85,7 @@ router.get('/members/count', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -101,7 +101,7 @@ router.get('/search/candidates', auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -117,7 +117,7 @@ router.get('/search', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -140,7 +140,7 @@ router.get(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send('Une erreur est survenue');
+          res.status(401).send(err);
         });
     } else {
       res.status(401).send({
@@ -164,7 +164,7 @@ router.get(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send('Une erreur est survenue');
+          res.status(401).send(err);
         });
     }
     else {
@@ -196,7 +196,7 @@ router.get(
           }
         })
         .catch((err) => {
-          logger(res).error(`Aucun User trouvé`);
+          logger(res).error(err);
           res.status(404).send(err);
         });
     });
@@ -235,7 +235,7 @@ router.put(
             })
             .catch((err) => {
               logger(res).error(err);
-              res.status(401).send(`Une erreur est survenue`);
+              res.status(401).send(err);
             });
         } else {
           res.status(401).send('Mot de passe invalide');
@@ -264,7 +264,7 @@ router.put(
         .catch((err) => {
           logger(res).log('User_Candidat - Erreur mise à jour :');
           logger(res).error(err);
-          res.status(400).send('Une erreur est survenue');
+          res.status(400).send(err);
         });
     });
   }
@@ -290,7 +290,7 @@ router.get(
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send('Une erreur est survenue');
+        res.status(401).send(err);
       });
   }
 );
@@ -310,7 +310,7 @@ router.put(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(400).send('Une erreur est survenue');
+          res.status(400).send(err);
         });
     });
   }
@@ -344,7 +344,7 @@ router.put(
             }
           })
           .catch((err) => {
-            logger(res).error(`Une erreur est survenue`);
+            logger(res).error(err);
             res.status(401).send(err);
           });
       } else {
@@ -372,7 +372,7 @@ router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 

@@ -7,7 +7,7 @@ import {
 
 import request from 'supertest';
 import faker from 'faker';
-import phone from 'phone';
+import { phone } from 'phone';
 
 describe('Mail', () => {
   const route = '/api/v1/mail';
@@ -17,10 +17,12 @@ describe('Mail', () => {
   beforeAll(async () => {
     serverTest = await startTestServer();
     await recreateTestDB();
+    const fakePhoneNumber = faker.phone.phoneNumber('+336 ## ## ## ##');
+
     data = {
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      phone: phone(faker.phone.phoneNumber(), { country: 'USA' }).phoneNumber,
+      phone: phone(fakePhoneNumber, { country: 'FRA' }).phoneNumber,
       email: faker.internet.email(),
       structure: faker.company.companyName(2),
       message: faker.lorem.paragraphs(3, '\n'),

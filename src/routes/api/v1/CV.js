@@ -198,9 +198,9 @@ router.post(
         }
 
         return res.status(200).json(cv);
-      } catch (e) {
-        logger(res).error(e);
-        return res.status(401).send(`Une erreur est survenue`);
+      } catch (err) {
+        logger(res).error(err);
+        return res.status(401).send(err);
       }
     });
   }
@@ -217,7 +217,7 @@ router.post('/count', auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -232,7 +232,7 @@ router.get('/shares', auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -254,7 +254,7 @@ router.get('/', auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -278,7 +278,7 @@ router.get(
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send('Une erreur est survenue');
+        res.status(401).send(err);
       });
   }
 );
@@ -303,7 +303,7 @@ router.put(
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send('Une erreur est survenue');
+        res.status(401).send(err);
       });
   }
 );
@@ -359,7 +359,7 @@ router.get('/cards/random', auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -380,7 +380,7 @@ router.get('/:url', auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -418,7 +418,7 @@ router.get(
         res.status(200).send({ pdfUrl });
       } catch (err) {
         logger(res).error(err);
-        res.status(401).send('Une erreur est survenue');
+        res.status(401).send(err);
       }
     });
   }
@@ -438,7 +438,7 @@ router.get(
         res.status(200).json(cv);
       })
       .catch((err) => {
-        logger(res).error(`Une erreur est survenue`);
+        logger(res).error(err);
         res.status(400).send(err);
       });
     });
@@ -451,7 +451,7 @@ router.get(
       .then((data) => res.status(200).json(data))
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send('Une erreur est survenue');
+        res.status(401).send(err);
       });
   });
 */
@@ -471,7 +471,7 @@ router.get(
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send('Une erreur est survenue');
+        res.status(401).send(err);
       });
   });
 */

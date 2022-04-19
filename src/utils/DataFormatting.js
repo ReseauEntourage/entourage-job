@@ -72,6 +72,7 @@ const capitalizeNameAndTrim = (name) => {
   }
 
   let capitalizedName = name
+    .toString()
     .toLowerCase()
     .split(' ')
     .map((s) => {

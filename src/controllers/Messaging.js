@@ -151,6 +151,9 @@ const sendSMSWithVonage = ({ toPhone, text }) => {
       process.env.MAILJET_FROM_NAME,
       toPhone,
       text,
+      {
+        type: 'unicode',
+      },
       (err, responseData) => {
         if (err) {
           rej(err);
