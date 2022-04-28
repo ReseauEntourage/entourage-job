@@ -259,6 +259,8 @@ const createCV = async (data, userId) => {
     ...data,
     version: maxVersions[0].maxVersion + 1,
     lastModifiedBy: userId,
+    createdAt: undefined,
+    updatedAt: undefined,
   };
 
   const modelCV = await models.CV.create(cvData); // TODO VERIFIER LES ENTREES

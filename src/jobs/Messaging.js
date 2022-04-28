@@ -67,8 +67,11 @@ const sendReminderAboutOffer = async (opportunityId, candidatId) => {
       if (candidatPhone && isValidPhone(candidatPhone)) {
         await sendSMS({
           toPhone: candidatPhone,
-          text: `Bonjour,\nIl y a 5 jours tu as reçu une offre qui t'a été directement envoyé par un recruteur. Consulte-la ici et traite-la avec ton coach: ${await getShortenedOfferURL(
-            opportunity.id
+          text: `Bonjour,\nIl y a 5 jours vous avez reçu une offre qui vous a personnellement été envoyée par un recruteur. Consultez-la ici et traitez-la avec votre coach: ${await getShortenedOfferURL(
+            opportunity.id,
+            _.findKey(MAILJET_TEMPLATES, (id) => {
+              return id === MAILJET_TEMPLATES.OFFER_REMINDER;
+            })
           )}`,
         });
       }

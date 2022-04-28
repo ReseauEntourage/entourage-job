@@ -355,8 +355,11 @@ const sendJobOfferMessages = (candidates, opportunity) => {
           await addToWorkQueue({
             type: JOBS.JOB_TYPES.SEND_SMS,
             toPhone: candidatPhone,
-            text: `Bonjour,\nUn recruteur t'a adressé une offre sur LinkedOut. Consulte-la ici et traite-la avec ton Coach: ${await getShortenedOfferURL(
-              opportunity.id
+            text: `Bonjour,\nUn recruteur vous a personnellement adressé une offre sur LinkedOut. Consultez-la ici et traitez-la avec votre coach: ${await getShortenedOfferURL(
+              opportunity.id,
+              _.findKey(MAILJET_TEMPLATES, (id) => {
+                return id === MAILJET_TEMPLATES.OFFER_RECEIVED;
+              })
             )}`,
           });
         }
