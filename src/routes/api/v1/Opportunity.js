@@ -46,7 +46,7 @@ router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
  * -  401
  */
 router.post('/', auth(), (req, res) => {
-  const { isAdmin, locations, ...restBody } = req.body;
+  const { isAdmin, locations, disableMail, ...restBody } = req.body;
 
   let promises;
 
@@ -68,7 +68,8 @@ router.post('/', auth(), (req, res) => {
     promises = OpportunityController.createOpportunity(
       restBody,
       isAdmin,
-      req.payload?.id
+      req.payload?.id,
+      disableMail
     );
   }
 

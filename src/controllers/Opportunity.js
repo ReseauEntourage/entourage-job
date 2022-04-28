@@ -145,7 +145,7 @@ const createExternalOpportunity = async (
   };
 };
 
-const createOpportunity = async (data, isAdmin, createdById) => {
+const createOpportunity = async (data, isAdmin, createdById, disableMail) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
   console.log(`Etape 1 - Création de l'opportunité de base`);
@@ -264,7 +264,7 @@ const createOpportunity = async (data, isAdmin, createdById) => {
         businessLines: businessLinesString,
       },
     });
-  } else {
+  } else if (!disableMail) {
     await sendJobOfferMessages(candidates, finalOpportunity);
   }
 
