@@ -145,7 +145,12 @@ const createExternalOpportunity = async (
   };
 };
 
-const createOpportunity = async (data, isAdmin, createdById) => {
+const createOpportunity = async (
+  data,
+  isAdmin,
+  createdById,
+  shouldSendNotifications = true
+) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
   console.log(`Etape 1 - Création de l'opportunité de base`);
@@ -264,7 +269,7 @@ const createOpportunity = async (data, isAdmin, createdById) => {
         businessLines: businessLinesString,
       },
     });
-  } else {
+  } else if (shouldSendNotifications) {
     await sendJobOfferMessages(candidates, finalOpportunity);
   }
 
@@ -705,7 +710,10 @@ const updateOpportunityUser = async (opportunityUser) => {
   return modelOpportunityUser;
 };
 
-const updateOpportunity = async (opportunity) => {
+const updateOpportunity = async (
+  opportunity,
+  shouldSendNotifications = true
+) => {
   const oldOpportunity = await getOpportunity(opportunity.id, true);
 
   if (opportunity.recruiterPhone && !isValidPhone(opportunity.recruiterPhone)) {
@@ -864,7 +872,11 @@ const updateOpportunity = async (opportunity) => {
     console.log('Failed to update table with modified offer.');
   }
 
-  if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) {
+  if (
+    candidatesToSendMailTo &&
+    candidatesToSendMailTo.length > 0 &&
+    shouldSendNotifications
+  ) {
     await sendJobOfferMessages(candidatesToSendMailTo, finalOpportunity);
   }
 
