@@ -30,6 +30,8 @@ import {
 import _ from 'lodash';
 import * as AuthController from 'src/controllers/Auth';
 import { getRelatedUser } from 'src/utils/Finding';
+import { capitalizeNameAndTrim } from 'src/utils/DataFormatting';
+import { isValidPhone } from 'src/utils/PhoneFormatting';
 
 const { User, User_Candidat, CV, Opportunity_User, Revision, BusinessLine } =
   models;
@@ -98,25 +100,6 @@ const userSearchQuery = (query = '') => {
   ];
 };
 
-const capitalizeName = (name) => {
-  let capitalizedName = name
-    .toLowerCase()
-    .split(' ')
-    .map((s) => {
-      return s.charAt(0).toUpperCase() + s.substring(1);
-    })
-    .join(' ');
-
-  capitalizedName = capitalizedName
-    .split('-')
-    .map((s) => {
-      return s.charAt(0).toUpperCase() + s.substring(1);
-    })
-    .join('-');
-
-  return capitalizedName;
-};
-
 const sendMailsAfterMatching = async (candidatId) => {
   try {
     const finalCandidate = await getUser(candidatId);
@@ -166,6 +149,10 @@ const sendMailsAfterMatching = async (candidatId) => {
 };
 
 const createUser = async (newUser, userCreatedPassword) => {
+  if (newUser.phone && !isValidPhone(newUser.phone)) {
+    throw new Error('Invalid phone');
+  }
+
   function fakePassword() {
     return Math.random() // Generate random number, eg: 0.123456
       .toString(36) // Convert  to base-36 : "0.4fzyo82mvyr"
@@ -179,9 +166,10 @@ const createUser = async (newUser, userCreatedPassword) => {
   console.log(`${infoLog} Création du User`);
 
   const userToCreate = { ...newUser, password: hash, salt };
+
   userToCreate.role = newUser.role || USER_ROLES.CANDIDAT;
-  userToCreate.firstName = capitalizeName(userToCreate.firstName);
-  userToCreate.lastName = capitalizeName(userToCreate.lastName);
+  userToCreate.firstName = capitalizeNameAndTrim(userToCreate.firstName);
+  userToCreate.lastName = capitalizeNameAndTrim(userToCreate.lastName);
 
   const createdUser = await User.create(userToCreate);
 
@@ -578,7 +566,16 @@ const getAllPublishedCandidates = async () => {
 };
 
 const setUser = async (id, user) => {
-  const [updateCount] = await User.update(user, {
+  if (user.phone && !isValidPhone(user.phone)) {
+    throw new Error('Invalid phone');
+  }
+  const userAttributes = {
+    ...user,
+    firstName: capitalizeNameAndTrim(user.firstName),
+    lastName: capitalizeNameAndTrim(user.lastName),
+  };
+
+  const [updateCount] = await User.update(userAttributes, {
     where: { id },
     individualHooks: true,
   });

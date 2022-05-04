@@ -22,7 +22,6 @@ describe('CV', () => {
   let loggedInCandidat;
   let loggedInCoach;
   let candidatCV;
-  let cvCandidat;
   let path;
 
   beforeAll(async () => {
@@ -44,7 +43,7 @@ describe('CV', () => {
       role: USER_ROLES.CANDIDAT,
       password: 'candidatCV',
     });
-    cvCandidat = await cvFactory({
+    await cvFactory({
       status: CV_STATUS.Published.value,
       UserId: candidatCV.id,
     });

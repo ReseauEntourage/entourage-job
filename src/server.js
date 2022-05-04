@@ -26,6 +26,7 @@ import * as Tracing from '@sentry/tracing';
 import express from 'express';
 import enforce from 'express-sslify';
 import cors from 'cors';
+import helmet from 'helmet';
 import { jwtMiddleware } from 'src/controllers/Auth';
 
 const PORT = process.env.PORT || 3001;
@@ -62,6 +63,7 @@ export const prepareServer = () => {
       origin: process.env.FRONT_URL,
     })
   );
+  app.use(helmet());
 
   app.set('trust proxy', 1);
 

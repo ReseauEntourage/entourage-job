@@ -57,7 +57,7 @@ router.post('/login', authLimiter, auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      return res.status(401).send(`Une erreur est survenue`);
+      return res.status(401).send(err);
     });
 });
 
@@ -134,7 +134,7 @@ router.post('/forgot', authLimiter, auth(), async (req, res /* , next */) => {
     return res.status(404).send(`Utilisateur inexistant`);
   } catch (err) {
     logger(res).error(err);
-    return res.status(401).send(`Une erreur est survenue`);
+    return res.status(401).send(err);
   }
 });
 
@@ -182,7 +182,7 @@ router.get(
       return res.status(200).send('Lien valide');
     } catch (err) {
       logger(res).log(err);
-      return res.status(401).send(`Une erreur est survenue`);
+      return res.status(401).send(err);
     }
   }
 );
@@ -267,7 +267,7 @@ router.post(
       return res.status(401).send(`Une erreur inconnue est survenue`);
     } catch (err) {
       logger(res).error(err);
-      return res.status(401).send(`Une erreur est survenue`);
+      return res.status(401).send(err);
     }
   }
 );
@@ -295,7 +295,7 @@ router.get(
       })
       .catch((err) => {
         logger(res).error(err);
-        return res.status(401).send(`Une erreur est survenue`);
+        return res.status(401).send(err);
       });
   }
 );

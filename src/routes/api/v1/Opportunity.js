@@ -33,7 +33,7 @@ router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send(`Une erreur est survenue`);
+        res.status(401).send(err);
       });
   });
 });
@@ -46,7 +46,7 @@ router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
  * -  401
  */
 router.post('/', auth(), (req, res) => {
-  const { isAdmin, locations, ...restBody } = req.body;
+  const { isAdmin, locations, shouldSendNotifications, ...restBody } = req.body;
 
   let promises;
 
@@ -60,7 +60,8 @@ router.post('/', auth(), (req, res) => {
         return OpportunityController.createOpportunity(
           { ...restBody, department, address },
           isAdmin,
-          req.payload?.id
+          req.payload?.id,
+          shouldSendNotifications
         );
       })
     );
@@ -68,7 +69,8 @@ router.post('/', auth(), (req, res) => {
     promises = OpportunityController.createOpportunity(
       restBody,
       isAdmin,
-      req.payload?.id
+      req.payload?.id,
+      shouldSendNotifications
     );
   }
 
@@ -78,7 +80,7 @@ router.post('/', auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send(`Une erreur est survenue`);
+      res.status(401).send(err);
     });
 });
 
@@ -115,7 +117,7 @@ router.post(
           })
           .catch((err) => {
             logger(res).error(err);
-            res.status(401).send(`Une erreur est survenue`);
+            res.status(401).send(err);
           });
       } else {
         res.status(401).send({ message: 'Unauthorized' });
@@ -145,7 +147,7 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -165,7 +167,7 @@ router.get('/admin/count', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send('Une erreur est survenue');
+      res.status(401).send(err);
     });
 });
 
@@ -193,7 +195,7 @@ router.get(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send('Une erreur est survenue');
+          res.status(401).send(err);
         });
     });
   }
@@ -242,7 +244,7 @@ router.get(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send('Une erreur est survenue');
+          res.status(401).send(err);
         });
     });
   }
@@ -269,7 +271,7 @@ router.get(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send('Une erreur est survenue');
+          res.status(401).send(err);
         });
     });
   }
@@ -333,7 +335,7 @@ router.post(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send(`Une erreur est survenue`);
+          res.status(401).send(err);
         });
     });
   }
@@ -349,13 +351,17 @@ router.post(
  * - 401
  */
 router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
-  OpportunityController.updateOpportunity(req.body)
+  const { shouldSendNotifications, ...restOpportunity } = req.body;
+  OpportunityController.updateOpportunity(
+    restOpportunity,
+    shouldSendNotifications
+  )
     .then((opp) => {
       res.status(200).json(opp);
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send(`Une erreur est survenue`);
+      res.status(401).send(err);
     });
 });
 
@@ -376,7 +382,7 @@ router.put('/bulk', auth([USER_ROLES.ADMIN]), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send(`Une erreur est survenue`);
+      res.status(401).send(err);
     });
 });
 
@@ -417,7 +423,7 @@ router.put(
           })
           .catch((err) => {
             logger(res).error(err);
-            res.status(401).send(`Une erreur est survenue`);
+            res.status(401).send(err);
           });
       } else {
         res.status(401).send({ message: 'Unauthorized' });
@@ -450,7 +456,7 @@ router.put(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send(`Une erreur est survenue`);
+          res.status(401).send(err);
         });
     });
   }
@@ -473,7 +479,7 @@ router.put(
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send('Une erreur est survenue');
+        res.status(401).send(err);
       });
   });
 */

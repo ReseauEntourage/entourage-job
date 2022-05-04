@@ -1,13 +1,11 @@
 import {
   BUSINESS_LINES,
   CONTRACTS,
-  EXTERNAL_OFFERS_ORIGINS,
   JOBS,
   MAILJET_TEMPLATES,
   NEWSLETTER_TAGS,
   OFFER_ADMIN_FILTERS_DATA,
   OFFER_CANDIDATE_FILTERS_DATA,
-  OPPORTUNITY_FILTERS_DATA,
 } from 'src/constants';
 
 import { addToWorkQueue } from 'src/jobs';
@@ -15,9 +13,7 @@ import { addToWorkQueue } from 'src/jobs';
 import { cleanOpportunity } from 'src/utils';
 import {
   findConstantFromValue,
-  findOfferStatus,
   getAdminMailsFromDepartment,
-  getRelatedUser,
   getZoneFromDepartment,
 } from 'src/utils/Finding';
 
@@ -28,12 +24,10 @@ import {
   filterAdminOffersByType,
   filterCandidateOffersByType,
   filterOffersByStatus,
-  getFiltersObjectsFromQueryParams,
   getOfferOptions,
 } from 'src/utils/Filters';
 
 import { models, sequelize } from 'src/db/models';
-import { searchInColumnWhereOption } from 'src/utils/DatabaseQueries';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import _ from 'lodash';
 import { getUser } from 'src/controllers/User';
@@ -42,283 +36,33 @@ import { sortOpportunities } from 'src/utils/Sorting';
 
 import { sendToMailchimp } from 'src/controllers/Mailchimp';
 
-const offerTable = process.env.AIRTABLE_OFFERS;
+import { isValidPhone } from 'src/utils/PhoneFormatting';
+import {
+  destructureOptionsAndParams,
+  getAirtableOpportunityFields,
+  opportunityAttributes,
+  sendJobOfferMessages,
+  updateOpportunityAirtable,
+  updateTable,
+} from 'src/helpers/Opportunity';
+
 const {
   BusinessLine,
   Opportunity_User,
   Opportunity_BusinessLine,
   Opportunity,
-  User_Candidat,
-  User,
 } = models;
 
-const ATTRIBUTES_OPPORTUNITY_CANDIDATES = [
-  'id',
-  'updatedAt',
-  'createdAt',
-  'title',
-  'company',
-  'description',
-  'companyDescription',
-  'numberOfPositions',
-  'prerequisites',
-  'skills',
-  'contract',
-  'endOfContract',
-  'startOfContract',
-  'isPartTime',
-  'recruiterName',
-  'recruiterFirstName',
-  'recruiterPosition',
-  'isPublic',
-  'isValidated',
-  'isExternal',
-  'link',
-  'externalOrigin',
-  'recruiterMail',
-  'date',
-  'department',
-  'message',
-  'address',
-  'driversLicense',
-  'workingHours',
-  'salary',
-  'otherInfo',
-  'createdBy',
-];
-
-const INCLUDE_OPPORTUNITY_CANDIDATE = [
-  {
-    model: User,
-    attributes: ['id', 'email', 'firstName', 'lastName', 'gender', 'zone'],
-    include: [
-      {
-        model: User_Candidat,
-        as: 'candidat',
-        attributes: ['employed', 'hidden', 'note', 'url'],
-        include: [
-          {
-            model: User,
-            as: 'coach',
-            attributes: ['id', 'email', 'firstName', 'lastName', 'zone'],
-          },
-        ],
-      },
-    ],
-  },
-];
-
-const INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES = [
-  {
-    model: Opportunity_User,
-    as: 'userOpportunity',
-    attributes: [
-      'id',
-      'UserId',
-      'status',
-      'seen',
-      'bookmarked',
-      'archived',
-      'note',
-      'updatedAt',
-      'recommended',
-    ],
-    include: INCLUDE_OPPORTUNITY_CANDIDATE,
-  },
-];
-
-const INCLUDE_OPPORTUNITY_COMPLETE = [
-  ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
-  {
-    model: BusinessLine,
-    as: 'businessLines',
-    attributes: ['name', 'order'],
-    through: { attributes: [] },
-  },
-];
-
-const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES = [
-  {
-    model: Opportunity_User,
-    as: 'userOpportunity',
-    include: [
-      {
-        model: User,
-        attributes: [
-          'id',
-          'email',
-          'firstName',
-          'lastName',
-          'gender',
-          'email',
-          'zone',
-        ],
-        paranoid: false,
-      },
-    ],
-    attributes: [
-      'id',
-      'UserId',
-      'status',
-      'bookmarked',
-      'archived',
-      'note',
-      'seen',
-      'recommended',
-    ],
-  },
-];
-
-const INCLUDE_OPPORTUNITY_COMPLETE_ADMIN = [
-  ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
-  {
-    model: BusinessLine,
-    as: 'businessLines',
-    attributes: ['name', 'order'],
-    through: { attributes: [] },
-  },
-];
-
-const getOfferSearchOptions = (search) => {
-  if (search) {
-    return {
-      [Op.or]: [
-        searchInColumnWhereOption('Opportunity.title', search),
-        searchInColumnWhereOption('Opportunity.company', search),
-        searchInColumnWhereOption('Opportunity.recruiterName', search),
-        searchInColumnWhereOption('Opportunity.recruiterFirstName', search),
-        searchInColumnWhereOption('Opportunity.recruiterMail', search),
-        searchInColumnWhereOption('Opportunity.recruiterPosition', search),
-        searchInColumnWhereOption('Opportunity.recruiterPhone', search),
-        searchInColumnWhereOption('Opportunity.description', search),
-        searchInColumnWhereOption('Opportunity.companyDescription', search),
-        searchInColumnWhereOption('Opportunity.skills', search),
-        searchInColumnWhereOption('Opportunity.prerequisites', search),
-        searchInColumnWhereOption('Opportunity.department', search),
-        searchInColumnWhereOption('Opportunity.contract', search),
-        searchInColumnWhereOption('Opportunity.message', search),
-        searchInColumnWhereOption('Opportunity.address', search),
-        searchInColumnWhereOption('Opportunity.department', search),
-        searchInColumnWhereOption('Opportunity.workingHours', search),
-        searchInColumnWhereOption('Opportunity.salary', search),
-        searchInColumnWhereOption('Opportunity.otherInfo', search),
-      ],
-    };
-  }
-  return {};
-};
-
-const destructureOptionsAndParams = (params) => {
-  const { search, type: typeParams, ...restParams } = params;
-
-  const filtersObj = getFiltersObjectsFromQueryParams(
-    restParams,
-    OPPORTUNITY_FILTERS_DATA
-  );
-
-  const { status: statusParams, ...restFiltersObj } = filtersObj;
-
-  const searchOptions = getOfferSearchOptions(search);
-  const filterOptions = getOfferOptions(restFiltersObj);
-
-  const { businessLines: businessLinesOptions, ...restFilterOptions } =
-    filterOptions;
-
-  return {
-    typeParams,
-    statusParams,
-    searchOptions,
-    businessLinesOptions: {
-      model: BusinessLine,
-      as: 'businessLines',
-      attributes: ['name', 'order'],
-      through: { attributes: [] },
-      ...(businessLinesOptions
-        ? {
-            where: {
-              name: businessLinesOptions,
-            },
-          }
-        : {}),
-    },
-    filterOptions: restFilterOptions,
-  };
-};
-
-const getAirtableOpportunityFields = (opportunity, candidates) => {
-  const commonFields = {
-    OpportunityId: opportunity.id,
-    Entreprise: opportunity.company,
-    Titre: opportunity.title,
-    Nom: opportunity.recruiterName,
-    Prénom: opportunity.recruiterFirstName,
-    Mail: opportunity.recruiterMail,
-    Téléphone: opportunity.recruiterPhone,
-    Fonction: opportunity.recruiterPosition,
-    'Description poste': opportunity.description,
-    'Description entreprise': opportunity.companyDescription,
-    'Compétences requises': opportunity.skills,
-    'Pré-requis': opportunity.prerequisites,
-    "Secteur d'activité": _.uniq(
-      opportunity.businessLines.map(({ name }) => {
-        return findConstantFromValue(name, BUSINESS_LINES).label;
-      })
-    ),
-    Publique: opportunity.isPublic,
-    Externe: opportunity.isExternal,
-    'Lien externe': opportunity.link,
-    'Origine externe': EXTERNAL_OFFERS_ORIGINS.find((origin) => {
-      return opportunity.externalOrigin === origin.value;
-    })?.label,
-    Validé: opportunity.isValidated,
-    Archivé: opportunity.isArchived,
-    'Date de création': opportunity.createdAt,
-    Département: opportunity.department,
-    Adresse: opportunity.address,
-    Contrat: findConstantFromValue(opportunity.contract, CONTRACTS).label,
-    'Début de contrat': opportunity.startOfContract,
-    'Fin de contrat': opportunity.endOfContract,
-    'Temps partiel ?': opportunity.isPartTime,
-    'Nombre de postes': opportunity.numberOfPositions,
-    'Souhaite être recontacté': opportunity.beContacted,
-    'Message personnalisé': opportunity.message,
-    'Permis de conduire': opportunity.driversLicense,
-    'Jours et horaires': opportunity.workingHours,
-    Salaire: opportunity.salary,
-    'Autres précisions': opportunity.otherInfo,
-  };
-
-  return candidates && candidates.length > 0
-    ? [
-        ...candidates.map((candidate) => {
-          const offerStatus = findOfferStatus(
-            candidate.status,
-            opportunity.isPublic,
-            candidate.recommended
-          );
-
-          return {
-            ...commonFields,
-            OpportunityUserId: candidate.id,
-            Candidat: `${candidate.User.firstName} ${candidate.User.lastName}`,
-            Statut: offerStatus.label,
-            Commentaire: candidate.note,
-            'Recommandée ?': candidate.recommended,
-          };
-        }),
-        commonFields,
-      ]
-    : commonFields;
-};
-
-const updateTable = async (opportunity, candidates) => {
-  const fields = getAirtableOpportunityFields(opportunity, candidates);
-
-  return addToWorkQueue({
-    type: JOBS.JOB_TYPES.UPDATE_AIRTABLE,
-    tableName: offerTable,
-    fields,
+const refreshAirtableOpportunities = async () => {
+  const opportunities = await Opportunity.findAll({
+    attributes: ['id'],
   });
+
+  await Promise.all(
+    opportunities.map((opportunity) => {
+      return updateOpportunityAirtable(opportunity.id);
+    })
+  );
 };
 
 const createExternalOpportunity = async (
@@ -352,8 +96,8 @@ const createExternalOpportunity = async (
   }
 
   const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
-    attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    attributes: opportunityAttributes.ATTRIBUTES_OPPORTUNITY_CANDIDATES,
+    include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
   });
 
   const fields = getAirtableOpportunityFields(
@@ -363,7 +107,7 @@ const createExternalOpportunity = async (
 
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
-    tableName: offerTable,
+    tableName: process.env.AIRTABLE_OFFERS,
     fields,
   });
 
@@ -401,10 +145,18 @@ const createExternalOpportunity = async (
   };
 };
 
-const createOpportunity = async (data, isAdmin, createdById) => {
+const createOpportunity = async (
+  data,
+  isAdmin,
+  createdById,
+  shouldSendNotifications = true
+) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
   console.log(`Etape 1 - Création de l'opportunité de base`);
+  if (data.recruiterPhone && !isValidPhone(data.recruiterPhone)) {
+    throw new Error('Invalid phone');
+  }
   const modelOpportunity = await Opportunity.create({
     ...data,
     isValidated: !!isAdmin,
@@ -443,7 +195,7 @@ const createOpportunity = async (data, isAdmin, createdById) => {
         UserId: data.candidatesId,
         OpportunityId: modelOpportunity.id,
       },
-      include: INCLUDE_OPPORTUNITY_CANDIDATE,
+      include: opportunityAttributes.INCLUDE_OPPORTUNITY_CANDIDATE,
     });
   }
 
@@ -457,7 +209,7 @@ const createOpportunity = async (data, isAdmin, createdById) => {
 
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
-    tableName: offerTable,
+    tableName: process.env.AIRTABLE_OFFERS,
     fields,
   });
 
@@ -517,8 +269,8 @@ const createOpportunity = async (data, isAdmin, createdById) => {
         businessLines: businessLinesString,
       },
     });
-  } else {
-    await sendJobOfferMails(candidates, finalOpportunity);
+  } else if (shouldSendNotifications) {
+    await sendJobOfferMessages(candidates, finalOpportunity);
   }
 
   try {
@@ -555,7 +307,7 @@ const getOpportunities = async (params) => {
 
   const options = {
     include: [
-      ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
+      ...opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
       businessLinesOptions,
     ],
   };
@@ -610,7 +362,7 @@ const countPendingOpportunitiesCount = async (zone) => {
 
 const getLatestOpportunities = async () => {
   const options = {
-    include: INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
+    include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE_ADMIN,
   };
 
   const lastWeek = moment().subtract(7, 'd');
@@ -633,7 +385,7 @@ const getLatestOpportunities = async () => {
 
 const getPublicOpportunities = async () => {
   const opportunities = await Opportunity.findAll({
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
     where: {
       isPublic: true,
       isValidated: true,
@@ -659,7 +411,7 @@ const getPrivateUserOpportunities = async (userId, params) => {
 
   const options = {
     include: [
-      ...INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
+      ...opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE_ADMIN_WITHOUT_BUSINESS_LINES,
       businessLinesOptions,
     ],
   };
@@ -711,9 +463,9 @@ const getAllUserOpportunities = async (userId, params = {}) => {
   });
 
   const options = {
-    attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
+    attributes: opportunityAttributes.ATTRIBUTES_OPPORTUNITY_CANDIDATES,
     include: [
-      ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
+      ...opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
       businessLinesOptions,
     ],
   };
@@ -811,7 +563,7 @@ const getUnseenUserOpportunitiesCount = async (candidatId) => {
 
   const opportunities = await Opportunity.findAll({
     include: [
-      ...INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
+      ...opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE_WITHOUT_BUSINESS_LINES,
       {
         model: BusinessLine,
         as: 'businessLines',
@@ -876,7 +628,7 @@ const getExternalOpportunitiesCreatedByUserCount = async (userId) => {
 const getOpportunity = async (opportunityId, isAdmin, candidateId) => {
   if (isAdmin) {
     const model = await Opportunity.findByPk(opportunityId, {
-      include: INCLUDE_OPPORTUNITY_COMPLETE,
+      include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
     });
 
     return cleanOpportunity(model);
@@ -886,29 +638,6 @@ const getOpportunity = async (opportunityId, isAdmin, candidateId) => {
   return userOpportunities.find((opportunity) => {
     return opportunity.id === opportunityId;
   });
-};
-
-const updateOpportunityAirtable = async (opportunityId) => {
-  const finalOpportunity = await getOpportunity(opportunityId, true);
-
-  try {
-    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
-  } catch (err) {
-    console.error(err);
-    console.log('Failed to update table with modified offer.');
-  }
-};
-
-const refreshAirtableOpportunities = async () => {
-  const opportunities = await Opportunity.findAll({
-    attributes: ['id'],
-  });
-
-  await Promise.all(
-    opportunities.map((opportunity) => {
-      return updateOpportunityAirtable(opportunity.id);
-    })
-  );
 };
 
 const addUserToOpportunity = async (opportunityId, userId, seen) => {
@@ -981,59 +710,18 @@ const updateOpportunityUser = async (opportunityUser) => {
   return modelOpportunityUser;
 };
 
-const sendJobOfferMails = (candidates, opportunity) => {
-  return Promise.all(
-    candidates.map(async (candidat) => {
-      const coach = candidat.User ? getRelatedUser(candidat.User) : null;
-
-      await addToWorkQueue({
-        type: JOBS.JOB_TYPES.SEND_MAIL,
-        toEmail: coach
-          ? { to: candidat.User.email, cc: coach.email }
-          : candidat.User.email,
-        templateId: opportunity.isPublic
-          ? MAILJET_TEMPLATES.OFFER_RECOMMENDED
-          : MAILJET_TEMPLATES.OFFER_RECEIVED,
-        variables: {
-          offer: _.omitBy(
-            {
-              ...opportunity,
-              contract: findConstantFromValue(opportunity.contract, CONTRACTS)
-                .label,
-            },
-            _.isNil
-          ),
-          candidat,
-        },
-      });
-
-      if (!opportunity.isPublic) {
-        await addToWorkQueue(
-          {
-            type: JOBS.JOB_TYPES.REMINDER_OFFER,
-            opportunityId: opportunity.id,
-            candidatId: candidat.User.id,
-          },
-          {
-            delay:
-              (process.env.OFFER_REMINDER_DELAY
-                ? parseFloat(process.env.OFFER_REMINDER_DELAY, 10)
-                : 5) *
-              3600000 *
-              24,
-          }
-        );
-      }
-    })
-  );
-};
-
-const updateOpportunity = async (opportunity) => {
+const updateOpportunity = async (
+  opportunity,
+  shouldSendNotifications = true
+) => {
   const oldOpportunity = await getOpportunity(opportunity.id, true);
 
+  if (opportunity.recruiterPhone && !isValidPhone(opportunity.recruiterPhone)) {
+    throw new Error('Invalid phone');
+  }
   const modelOpportunity = await Opportunity.update(opportunity, {
     where: { id: opportunity.id },
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
     individualHooks: true,
   }).then((model) => {
     return model && model.length > 1 && model[1][0];
@@ -1184,8 +872,12 @@ const updateOpportunity = async (opportunity) => {
     console.log('Failed to update table with modified offer.');
   }
 
-  if (candidatesToSendMailTo && candidatesToSendMailTo.length > 0) {
-    await sendJobOfferMails(candidatesToSendMailTo, finalOpportunity);
+  if (
+    candidatesToSendMailTo &&
+    candidatesToSendMailTo.length > 0 &&
+    shouldSendNotifications
+  ) {
+    await sendJobOfferMessages(candidatesToSendMailTo, finalOpportunity);
   }
 
   if (!oldOpportunity.isValidated && finalOpportunity.isValidated) {
@@ -1258,7 +950,7 @@ const updateBulkOpportunity = async (attributes, opportunitiesId = []) => {
         return id;
       }),
     },
-    include: INCLUDE_OPPORTUNITY_COMPLETE,
+    include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
   });
 
   try {
@@ -1316,8 +1008,8 @@ const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
     }
 
     const finalOpportunity = await Opportunity.findByPk(modelOpportunity.id, {
-      attributes: ATTRIBUTES_OPPORTUNITY_CANDIDATES,
-      include: INCLUDE_OPPORTUNITY_COMPLETE,
+      attributes: opportunityAttributes.ATTRIBUTES_OPPORTUNITY_CANDIDATES,
+      include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
     });
 
     try {
@@ -1355,9 +1047,9 @@ export {
   updateExternalOpportunity,
   updateBulkOpportunity,
   addUserToOpportunity,
-  refreshAirtableOpportunities,
   getLatestOpportunities,
   getUnseenUserOpportunitiesCount,
   countPendingOpportunitiesCount,
   getExternalOpportunitiesCreatedByUserCount,
+  refreshAirtableOpportunities,
 };

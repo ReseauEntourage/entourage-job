@@ -4,7 +4,7 @@ import {
   getUser,
   sendMailsAfterMatching,
 } from 'src/controllers/User';
-import { sendMail } from 'src/controllers/Mail';
+import { sendMail, sendSMS } from 'src/controllers/Messaging';
 
 import _ from 'lodash';
 
@@ -19,12 +19,18 @@ import { getRelatedUser, getZoneSuffix } from 'src/utils/Finding';
 import { addToWorkQueue } from 'src/jobs';
 import { getAllUserCVsVersions } from 'src/controllers/CV';
 import moment from 'moment';
+import { isValidPhone } from 'src/utils/PhoneFormatting';
+import { getShortenedOfferURL } from 'src/utils/Mutating';
 
 const sendMailBackground = async (params) => {
   return sendMail(params);
 };
 
-const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {
+const sendSMSBackground = async (params) => {
+  return sendSMS(params);
+};
+
+const sendReminderAboutOffer = async (opportunityId, candidatId) => {
   const opportunity = await getOpportunity(opportunityId, false, candidatId);
   if (
     opportunity &&
@@ -55,12 +61,29 @@ const sendReminderMailAboutOffer = async (opportunityId, candidatId) => {
         candidat: _.omitBy(candidatData, _.isNil),
       },
     });
+
+    try {
+      const candidatPhone = candidatData?.phone;
+      if (candidatPhone && isValidPhone(candidatPhone)) {
+        await sendSMS({
+          toPhone: candidatPhone,
+          text: `Bonjour,\nIl y a 5 jours vous avez reçu une offre qui vous a personnellement été envoyée par un recruteur. Consultez-la ici et traitez-la avec votre coach: ${await getShortenedOfferURL(
+            opportunity.id,
+            _.findKey(MAILJET_TEMPLATES, (id) => {
+              return id === MAILJET_TEMPLATES.OFFER_REMINDER;
+            })
+          )}`,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
     return toEmail;
   }
   return false;
 };
 
-const sendReminderMailAboutCV = async (candidatId) => {
+const sendReminderAboutCV = async (candidatId) => {
   const firstOfMarch2022 = '2022-03-01';
   const user = await getUser(candidatId);
   if (moment(user.createdAt).isAfter(moment(firstOfMarch2022, 'YYYY-MM-DD'))) {
@@ -256,8 +279,9 @@ const sendRecapAboutOffers = async () => {
 
 export {
   sendMailBackground,
-  sendReminderMailAboutOffer,
-  sendReminderMailAboutCV,
+  sendSMSBackground,
+  sendReminderAboutOffer,
+  sendReminderAboutCV,
   sendRecapAboutOffers,
   sendReminderAboutVideo,
   sendReminderAboutActions,

@@ -1,39 +1,15 @@
-const mutateFormSchema = (schema, fields, id) => {
-  const newSchema = {
-    id: id ? schema.id + id : schema.id,
-    fields: [...schema.fields],
-    rules: [...schema.rules],
-  };
+import { BitlyClient } from 'bitly';
 
-  fields.map(({ fieldId, props }) => {
-    const indexToUpdate = newSchema.fields.findIndex((field) => {
-      return field.id === fieldId;
-    });
+const bitly = new BitlyClient(process.env.BITLY_TOKEN);
 
-    const fieldToUpdate = {
-      ...newSchema.fields[indexToUpdate],
-    };
-
-    for (let i = 0; i < props.length; i += 1) {
-      if (props[i].option) {
-        const optionIndexToUpdate = fieldToUpdate.options.findIndex(
-          (option) => {
-            return option.value === props[i].option;
-          }
-        );
-        fieldToUpdate.options[optionIndexToUpdate][props[i].propName] =
-          props[i].value;
-      } else {
-        fieldToUpdate[props[i].propName] = props[i].value;
-      }
-    }
-
-    newSchema.fields[indexToUpdate] = fieldToUpdate;
-
-    return fieldToUpdate;
-  });
-
-  return newSchema;
+const getShortenedOfferURL = async (opportunityId, campaign) => {
+  const offerUrl = `${process.env.FRONT_URL}/backoffice/candidat/offres/${opportunityId}`;
+  const { link } = await bitly.shorten(
+    `${offerUrl.replace('localhost', '127.0.0.1')}${
+      campaign ? `?utm_source=SMS&utm_medium=SMS&utm_campaign=${campaign}` : ''
+    }`
+  );
+  return link;
 };
 
-export { mutateFormSchema };
+export { getShortenedOfferURL };
