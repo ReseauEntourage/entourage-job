@@ -4,7 +4,12 @@
 import { JOBS, MAILJET_TEMPLATES, OFFER_STATUS } from 'src/constants';
 import { addToWorkQueue } from 'src/jobs';
 import _ from 'lodash';
-import { findOfferStatus, getZoneSuffix } from 'src/utils/Finding';
+import {
+  findOfferStatus,
+  getZoneFromDepartment,
+  getZoneSuffix,
+} from 'src/utils/Finding';
+import { getMailjetVariablesForPrivateOrPublicOffer } from '../../helpers/Opportunity';
 
 // Duplicated because of bug during tests where the models are not found
 
@@ -33,18 +38,31 @@ const ATTRIBUTES_USER = [
 ];
 
 const sendMailStatusUpdate = async (candidat, offer, status) => {
+  const mailVariables = {
+    candidat: _.omitBy(candidat.toJSON(), _.isNil),
+    offer: getMailjetVariablesForPrivateOrPublicOffer(offer, false),
+    zone: getZoneFromDepartment(offer.department),
+    status: findOfferStatus(status).label,
+  };
+
   const adminMail =
     process.env[`ADMIN_CANDIDATES_${getZoneSuffix(candidat.zone)}`];
+
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.SEND_MAIL,
     toEmail: adminMail,
     templateId: MAILJET_TEMPLATES.STATUS_CHANGED,
-    variables: {
-      candidat: _.omitBy(candidat.toJSON(), _.isNil),
-      offer: _.omitBy(offer.toJSON(), _.isNil),
-      status: findOfferStatus(status).label,
-    },
+    variables: mailVariables,
   });
+
+  if (status === OFFER_STATUS[4].value) {
+    await addToWorkQueue({
+      type: JOBS.JOB_TYPES.SEND_MAIL,
+      toEmail: offer.contactMail || offer.recruiterMail,
+      templateId: MAILJET_TEMPLATES.OFFER_REFUSED,
+      variables: mailVariables,
+    });
+  }
 };
 
 export default (sequelize, DataTypes) => {

@@ -1,6 +1,4 @@
 import {
-  BUSINESS_LINES,
-  CONTRACTS,
   JOBS,
   MAILJET_TEMPLATES,
   NEWSLETTER_TAGS,
@@ -12,7 +10,6 @@ import { addToWorkQueue } from 'src/jobs';
 
 import { cleanOpportunity } from 'src/utils';
 import {
-  findConstantFromValue,
   getAdminMailsFromDepartment,
   getZoneFromDepartment,
 } from 'src/utils/Finding';
@@ -40,8 +37,11 @@ import { isValidPhone } from 'src/utils/PhoneFormatting';
 import {
   destructureOptionsAndParams,
   getAirtableOpportunityFields,
+  getMailjetVariablesForPrivateOrPublicOffer,
   opportunityAttributes,
-  sendJobOfferMessages,
+  sendCandidateOfferMessages,
+  sendOnCreatedOfferMessages,
+  sendOnValidatedOfferMessages,
   updateOpportunityAirtable,
   updateTable,
 } from 'src/helpers/Opportunity';
@@ -122,15 +122,9 @@ const createExternalOpportunity = async (
       toEmail: adminMails.companies,
       templateId: MAILJET_TEMPLATES.OFFER_EXTERNAL_RECEIVED,
       variables: {
-        ..._.omitBy(
-          {
-            ...cleanedOpportunity,
-            contract: findConstantFromValue(
-              cleanedOpportunity.contract,
-              CONTRACTS
-            ).label,
-          },
-          _.isNil
+        offer: getMailjetVariablesForPrivateOrPublicOffer(
+          cleanedOpportunity,
+          false
         ),
         candidat: _.omitBy(cleanedOpportunity.userOpportunity[0].User, _.isNil),
       },
@@ -203,8 +197,6 @@ const createOpportunity = async (
 
   const finalOpportunity = await getOpportunity(modelOpportunity.id, true);
 
-  const cleanedOpportunity = cleanOpportunity(modelOpportunity);
-
   const fields = getAirtableOpportunityFields(finalOpportunity, candidates);
 
   await addToWorkQueue({
@@ -214,68 +206,17 @@ const createOpportunity = async (
   });
 
   if (!isAdmin) {
-    const adminMails = getAdminMailsFromDepartment(finalOpportunity.department);
-    await addToWorkQueue({
-      type: JOBS.JOB_TYPES.SEND_MAIL,
-      toEmail: adminMails.companies,
-      templateId: MAILJET_TEMPLATES.OFFER_TO_VALIDATE,
-      variables: {
-        ..._.omitBy(
-          {
-            ...cleanedOpportunity,
-            contract: findConstantFromValue(
-              cleanedOpportunity.contract,
-              CONTRACTS
-            ).label,
-          },
-          _.isNil
-        ),
-      },
-    });
-
-    const candidatesString =
-      !finalOpportunity.isPublic && candidates && candidates.length > 0
-        ? candidates
-            .map((candidate) => {
-              return `${candidate.User.firstName} ${candidate.User.lastName}`;
-            })
-            .join(',')
-        : '';
-
-    const businessLinesString = data.businessLines
-      ? data.businessLines
-          .map(({ name }) => {
-            return findConstantFromValue(name, BUSINESS_LINES).label;
-          })
-          .join(', ')
-      : '';
-
-    await addToWorkQueue({
-      type: JOBS.JOB_TYPES.SEND_MAIL,
-      toEmail: finalOpportunity.recruiterMail,
-      templateId: MAILJET_TEMPLATES.OFFER_SENT,
-      variables: {
-        ..._.omitBy(
-          {
-            ...cleanedOpportunity,
-            contract: findConstantFromValue(
-              cleanedOpportunity.contract,
-              CONTRACTS
-            ).label,
-          },
-          _.isNil
-        ),
-        candidates: candidatesString,
-        businessLines: businessLinesString,
-      },
-    });
-  } else if (shouldSendNotifications) {
-    await sendJobOfferMessages(candidates, finalOpportunity);
+    await sendOnCreatedOfferMessages(candidates, finalOpportunity);
+  } else {
+    await sendOnValidatedOfferMessages(finalOpportunity);
+    if (shouldSendNotifications) {
+      await sendCandidateOfferMessages(candidates, finalOpportunity);
+    }
   }
 
   try {
     await sendToMailchimp(
-      finalOpportunity.recruiterMail,
+      finalOpportunity.contactMail || finalOpportunity.recruiterMail,
       getZoneFromDepartment(finalOpportunity.department),
       NEWSLETTER_TAGS.ENTREPRISE
     );
@@ -284,19 +225,10 @@ const createOpportunity = async (
     console.log('Error while sending to Mailchimp');
   }
 
-  return cleanedOpportunity;
+  return cleanOpportunity(modelOpportunity);
 };
 
-const deleteOpportunity = (id) => {
-  console.log(
-    `deleteOpportunity - Suppression d'une opportunité à partir de son id`
-  );
-  return Opportunity.destroy({
-    where: { id },
-  });
-};
-
-const getOpportunities = async (params) => {
+const getAdminOpportunities = async (params) => {
   const {
     typeParams,
     statusParams,
@@ -383,22 +315,6 @@ const getLatestOpportunities = async () => {
   });
 };
 
-const getPublicOpportunities = async () => {
-  const opportunities = await Opportunity.findAll({
-    include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
-    where: {
-      isPublic: true,
-      isValidated: true,
-    },
-  });
-
-  return {
-    offers: opportunities.map((model) => {
-      return cleanOpportunity(model);
-    }),
-  };
-};
-
 const getPrivateUserOpportunities = async (userId, params) => {
   const { statusParams, searchOptions, businessLinesOptions, filterOptions } =
     destructureOptionsAndParams(params);
@@ -474,13 +390,14 @@ const getAllUserOpportunities = async (userId, params = {}) => {
     ...options,
     where: {
       [Op.or]: [
-        { isPublic: true, isValidated: true },
+        { isPublic: true, isValidated: true, isArchived: false },
         {
           id: opportunityUsers.map((model) => {
             return model.OpportunityId;
           }),
           isPublic: false,
           isValidated: true,
+          isArchived: false,
         },
       ],
       ...searchOptions,
@@ -877,58 +794,11 @@ const updateOpportunity = async (
     candidatesToSendMailTo.length > 0 &&
     shouldSendNotifications
   ) {
-    await sendJobOfferMessages(candidatesToSendMailTo, finalOpportunity);
+    await sendCandidateOfferMessages(candidatesToSendMailTo, finalOpportunity);
   }
 
   if (!oldOpportunity.isValidated && finalOpportunity.isValidated) {
-    const listOfNames = finalOpportunity.userOpportunity.map((candidate) => {
-      return candidate.User.firstName;
-    });
-
-    let stringOfNames = '';
-    if (listOfNames.length === 0) {
-      stringOfNames = 'Le candidat';
-    } else {
-      stringOfNames =
-        listOfNames.length > 1
-          ? `${listOfNames.slice(0, -1).join(', ')} et ${listOfNames.slice(-1)}`
-          : listOfNames[0];
-    }
-
-    const mailjetVariables = {
-      ..._.omitBy(
-        {
-          ...finalOpportunity,
-          contract: findConstantFromValue(finalOpportunity.contract, CONTRACTS)
-            .label,
-        },
-        _.isNil
-      ),
-      candidates: stringOfNames,
-      isPublicString: finalOpportunity.isPublic.toString(),
-      candidatesLength: finalOpportunity.userOpportunity.length,
-      businessLines: finalOpportunity.businessLines
-        .map(({ name }) => {
-          return findConstantFromValue(name, BUSINESS_LINES).label;
-        })
-        .join(', '),
-    };
-
-    await addToWorkQueue({
-      type: JOBS.JOB_TYPES.SEND_MAIL,
-      toEmail: finalOpportunity.recruiterMail,
-      templateId: MAILJET_TEMPLATES.OFFER_VALIDATED,
-      variables: mailjetVariables,
-    });
-
-    const adminMails = getAdminMailsFromDepartment(finalOpportunity.department);
-
-    await addToWorkQueue({
-      type: JOBS.JOB_TYPES.SEND_MAIL,
-      toEmail: adminMails.candidates,
-      templateId: MAILJET_TEMPLATES.OFFER_VALIDATED_ADMIN,
-      variables: mailjetVariables,
-    });
+    await sendOnValidatedOfferMessages(finalOpportunity);
   }
 
   return finalOpportunity;
@@ -1036,10 +906,8 @@ const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
 export {
   createOpportunity,
   createExternalOpportunity,
-  deleteOpportunity,
   getOpportunity,
-  getOpportunities,
-  getPublicOpportunities,
+  getAdminOpportunities,
   getPrivateUserOpportunities,
   getAllUserOpportunities,
   updateOpportunityUser,
