@@ -18,13 +18,13 @@ import {
   findOfferStatus,
   getAdminMailsFromDepartment,
   getRelatedUser,
-  getZoneFromDepartment,
 } from 'src/utils/Finding';
 import { addToWorkQueue } from 'src/jobs';
 import { getOpportunity } from 'src/controllers/Opportunity';
 import { isValidPhone } from 'src/utils/PhoneFormatting';
 import { getShortenedOfferURL } from 'src/utils/Mutating';
 import { models } from 'src/db/models';
+import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
 
 const { BusinessLine, User, User_Candidat, Opportunity_User } = models;
 
@@ -441,50 +441,6 @@ const sendOnCreatedOfferMessages = async (candidates, opportunity) => {
   });
 };
 
-const getMailjetVariablesForPrivateOrPublicOffer = async (
-  opportunity,
-  getCandidates = true
-) => {
-  const commonMailjetVariables = {
-    ..._.omitBy(
-      {
-        ...opportunity,
-        zone: getZoneFromDepartment(opportunity.department),
-        contract: findConstantFromValue(opportunity.contract, CONTRACTS).label,
-      },
-      _.isNil
-    ),
-    businessLines: opportunity.businessLines
-      .map(({ name }) => {
-        return findConstantFromValue(name, BUSINESS_LINES).label;
-      })
-      .join(', '),
-  };
-
-  if (!opportunity.isPublic && getCandidates) {
-    const listOfNames = opportunity.userOpportunity.map((candidate) => {
-      return candidate.User.firstName;
-    });
-
-    let stringOfNames = '';
-    if (listOfNames.length === 0) {
-      stringOfNames = 'Le candidat';
-    } else {
-      stringOfNames =
-        listOfNames.length > 1
-          ? `${listOfNames.slice(0, -1).join(', ')} et ${listOfNames.slice(-1)}`
-          : listOfNames[0];
-    }
-
-    return {
-      ...commonMailjetVariables,
-      candidates: stringOfNames,
-      candidatesLength: opportunity.userOpportunity.length,
-    };
-  }
-  return commonMailjetVariables;
-};
-
 export {
   getOfferOptions,
   getOfferSearchOptions,
@@ -495,6 +451,5 @@ export {
   sendCandidateOfferMessages,
   sendOnValidatedOfferMessages,
   sendOnCreatedOfferMessages,
-  getMailjetVariablesForPrivateOrPublicOffer,
   opportunityAttributes,
 };

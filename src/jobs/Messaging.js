@@ -25,7 +25,7 @@ import { getAllUserCVsVersions } from 'src/controllers/CV';
 import moment from 'moment';
 import { isValidPhone } from 'src/utils/PhoneFormatting';
 import { getShortenedOfferURL } from 'src/utils/Mutating';
-import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/helpers/Opportunity';
+import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
 
 const sendMailBackground = async (params) => {
   return sendMail(params);

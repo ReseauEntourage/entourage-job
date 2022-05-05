@@ -4,15 +4,10 @@
 import { JOBS, MAILJET_TEMPLATES, OFFER_STATUS } from 'src/constants';
 import { addToWorkQueue } from 'src/jobs';
 import _ from 'lodash';
-import {
-  findOfferStatus,
-  getZoneFromDepartment,
-  getZoneSuffix,
-} from 'src/utils/Finding';
-import { getMailjetVariablesForPrivateOrPublicOffer } from '../../helpers/Opportunity';
+import { getZoneSuffix } from 'src/utils/Finding';
+import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
 
 // Duplicated because of bug during tests where the models are not found
-
 const ATTRIBUTES_USER_CANDIDAT = [
   'employed',
   'hidden',
@@ -40,9 +35,10 @@ const ATTRIBUTES_USER = [
 const sendMailStatusUpdate = async (candidat, offer, status) => {
   const mailVariables = {
     candidat: _.omitBy(candidat.toJSON(), _.isNil),
-    offer: getMailjetVariablesForPrivateOrPublicOffer(offer, false),
-    zone: getZoneFromDepartment(offer.department),
-    status: findOfferStatus(status).label,
+    offer: getMailjetVariablesForPrivateOrPublicOffer(
+      { ...offer.toJSON(), status },
+      false
+    ),
   };
 
   const adminMail =
@@ -55,7 +51,7 @@ const sendMailStatusUpdate = async (candidat, offer, status) => {
     variables: mailVariables,
   });
 
-  if (status === OFFER_STATUS[4].value) {
+  if (status === OFFER_STATUS[4].value && !offer.isPublic) {
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: offer.contactMail || offer.recruiterMail,

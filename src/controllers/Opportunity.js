@@ -37,7 +37,6 @@ import { isValidPhone } from 'src/utils/PhoneFormatting';
 import {
   destructureOptionsAndParams,
   getAirtableOpportunityFields,
-  getMailjetVariablesForPrivateOrPublicOffer,
   opportunityAttributes,
   sendCandidateOfferMessages,
   sendOnCreatedOfferMessages,
@@ -45,6 +44,7 @@ import {
   updateOpportunityAirtable,
   updateTable,
 } from 'src/helpers/Opportunity';
+import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
 
 const {
   BusinessLine,
