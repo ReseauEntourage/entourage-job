@@ -122,7 +122,7 @@ const sendNoResponseOffer = async (opportunityId) => {
   return false;
 };
 
-const sendReminderAboutCV = async (candidatId) => {
+const sendReminderAboutCV = async (candidatId, is20Days) => {
   const firstOfMarch2022 = '2022-03-01';
   const user = await getUser(candidatId);
   if (moment(user.createdAt).isAfter(moment(firstOfMarch2022, 'YYYY-MM-DD'))) {
@@ -143,7 +143,9 @@ const sendReminderAboutCV = async (candidatId) => {
 
         await sendMail({
           toEmail,
-          templateId: MAILJET_TEMPLATES.CV_REMINDER_10,
+          templateId: is20Days
+            ? MAILJET_TEMPLATES.CV_REMINDER_20
+            : MAILJET_TEMPLATES.CV_REMINDER_10,
           variables: {
             ..._.omitBy(user.toJSON(), _.isNil),
           },
@@ -177,6 +179,13 @@ const sendReminderIfEmployed = async (candidatId, templateId) => {
     return toEmail;
   }
   return false;
+};
+
+const sendReminderAboutInterviewTraining = async (candidatId) => {
+  return sendReminderIfEmployed(
+    candidatId,
+    MAILJET_TEMPLATES.INTERVIEW_TRAINING_REMINDER
+  );
 };
 
 const sendReminderAboutVideo = async (candidatId) => {
@@ -323,6 +332,7 @@ export {
   sendReminderAboutCV,
   sendNoResponseOffer,
   sendRecapAboutOffers,
+  sendReminderAboutInterviewTraining,
   sendReminderAboutVideo,
   sendReminderAboutActions,
   sendReminderAboutExternalOffers,
