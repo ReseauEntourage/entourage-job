@@ -16,6 +16,7 @@ import _ from 'lodash';
 import {
   findConstantFromValue,
   findOfferStatus,
+  getAdminMailsFromDepartment,
   getRelatedUser,
 } from 'src/utils/Finding';
 import { addToWorkQueue } from 'src/jobs';
@@ -23,6 +24,7 @@ import { getOpportunity } from 'src/controllers/Opportunity';
 import { isValidPhone } from 'src/utils/PhoneFormatting';
 import { getShortenedOfferURL } from 'src/utils/Mutating';
 import { models } from 'src/db/models';
+import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
 
 const { BusinessLine, User, User_Candidat, Opportunity_User } = models;
 
@@ -244,6 +246,7 @@ const getAirtableOpportunityFields = (opportunity, candidates) => {
     Nom: opportunity.recruiterName,
     Prénom: opportunity.recruiterFirstName,
     Mail: opportunity.recruiterMail,
+    'Contact mail': opportunity.contactMail,
     Téléphone: opportunity.recruiterPhone,
     Fonction: opportunity.recruiterPosition,
     'Description poste': opportunity.description,
@@ -323,7 +326,7 @@ const updateOpportunityAirtable = async (opportunityId) => {
   }
 };
 
-const sendJobOfferMessages = (candidates, opportunity) => {
+const sendCandidateOfferMessages = (candidates, opportunity) => {
   return Promise.all(
     candidates.map(async (candidat) => {
       const coach = candidat.User ? getRelatedUser(candidat.User) : null;
@@ -337,14 +340,7 @@ const sendJobOfferMessages = (candidates, opportunity) => {
           ? MAILJET_TEMPLATES.OFFER_RECOMMENDED
           : MAILJET_TEMPLATES.OFFER_RECEIVED,
         variables: {
-          offer: _.omitBy(
-            {
-              ...opportunity,
-              contract: findConstantFromValue(opportunity.contract, CONTRACTS)
-                .label,
-            },
-            _.isNil
-          ),
+          offer: getMailjetVariablesForPrivateOrPublicOffer(opportunity, false),
           candidat,
         },
       });
@@ -388,6 +384,63 @@ const sendJobOfferMessages = (candidates, opportunity) => {
   );
 };
 
+const sendOnValidatedOfferMessages = async (opportunity) => {
+  const variables = getMailjetVariablesForPrivateOrPublicOffer(opportunity);
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.SEND_MAIL,
+    toEmail: opportunity.contactMail || opportunity.recruiterMail,
+    templateId: opportunity.isPublic
+      ? MAILJET_TEMPLATES.OFFER_VALIDATED_PUBLIC
+      : MAILJET_TEMPLATES.OFFER_VALIDATED_PRIVATE,
+    variables,
+  });
+
+  const adminMails = getAdminMailsFromDepartment(opportunity.department);
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.SEND_MAIL,
+    toEmail: adminMails.candidates,
+    templateId: MAILJET_TEMPLATES.OFFER_VALIDATED_ADMIN,
+    variables,
+  });
+
+  await addToWorkQueue(
+    {
+      type: JOBS.JOB_TYPES.NO_RESPONSE_OFFER,
+      opportunityId: opportunity.id,
+    },
+    {
+      delay:
+        (process.env.OFFER_NO_RESPONSE_DELAY
+          ? parseFloat(process.env.OFFER_NO_RESPONSE_DELAY, 15)
+          : 5) *
+        3600000 *
+        24,
+    }
+  );
+};
+
+const sendOnCreatedOfferMessages = async (candidates, opportunity) => {
+  const adminMails = getAdminMailsFromDepartment(opportunity.department);
+
+  const variables = getMailjetVariablesForPrivateOrPublicOffer(opportunity);
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.SEND_MAIL,
+    toEmail: adminMails.companies,
+    templateId: MAILJET_TEMPLATES.OFFER_TO_VALIDATE,
+    variables,
+  });
+
+  await addToWorkQueue({
+    type: JOBS.JOB_TYPES.SEND_MAIL,
+    toEmail: opportunity.recruiterMail,
+    templateId: MAILJET_TEMPLATES.OFFER_SENT,
+    variables,
+  });
+};
+
 export {
   getOfferOptions,
   getOfferSearchOptions,
@@ -395,6 +448,8 @@ export {
   getAirtableOpportunityFields,
   updateTable,
   updateOpportunityAirtable,
-  sendJobOfferMessages,
+  sendCandidateOfferMessages,
+  sendOnValidatedOfferMessages,
+  sendOnCreatedOfferMessages,
   opportunityAttributes,
 };

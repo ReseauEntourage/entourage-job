@@ -15,12 +15,17 @@ import {
   getOpportunity,
 } from 'src/controllers/Opportunity';
 import { CV_STATUS, JOBS, MAILJET_TEMPLATES, USER_ROLES } from 'src/constants';
-import { getRelatedUser, getZoneSuffix } from 'src/utils/Finding';
+import {
+  getRelatedUser,
+  getZoneFromDepartment,
+  getZoneSuffix,
+} from 'src/utils/Finding';
 import { addToWorkQueue } from 'src/jobs';
 import { getAllUserCVsVersions } from 'src/controllers/CV';
 import moment from 'moment';
 import { isValidPhone } from 'src/utils/PhoneFormatting';
 import { getShortenedOfferURL } from 'src/utils/Mutating';
+import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
 
 const sendMailBackground = async (params) => {
   return sendMail(params);
@@ -80,6 +85,40 @@ const sendReminderAboutOffer = async (opportunityId, candidatId) => {
     }
     return toEmail;
   }
+  return false;
+};
+
+const sendNoResponseOffer = async (opportunityId) => {
+  const opportunity = await getOpportunity(opportunityId, true);
+  if (opportunity) {
+    const allStatus = opportunity.userOpportunity.map(({ status }) => {
+      return status;
+    });
+
+    if (
+      allStatus.every((status) => {
+        return status < 0;
+      })
+    ) {
+      const toEmail = {
+        to: opportunity.contactMail || opportunity.recruiterMail,
+        bcc: process.env[
+          `ADMIN_COMPANIES_${getZoneFromDepartment(opportunity.department)}`
+        ],
+      };
+
+      await sendMail({
+        toEmail,
+        templateId: opportunity.isPublic
+          ? MAILJET_TEMPLATES.OFFER_PUBLIC_NO_RESPONSE
+          : MAILJET_TEMPLATES.OFFER_PRIVATE_NO_RESPONSE,
+        variables: getMailjetVariablesForPrivateOrPublicOffer(opportunity),
+      });
+
+      return toEmail;
+    }
+  }
+
   return false;
 };
 
@@ -282,6 +321,7 @@ export {
   sendSMSBackground,
   sendReminderAboutOffer,
   sendReminderAboutCV,
+  sendNoResponseOffer,
   sendRecapAboutOffers,
   sendReminderAboutVideo,
   sendReminderAboutActions,

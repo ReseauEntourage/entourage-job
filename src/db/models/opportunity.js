@@ -52,6 +52,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      contactMail: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       recruiterPosition: {
         type: DataTypes.STRING,
         allowNull: true,

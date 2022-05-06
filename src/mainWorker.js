@@ -12,6 +12,7 @@ import {
   sendReminderAboutCV,
   sendReminderAboutOffer,
   sendSMSBackground,
+  sendNoResponseOffer,
 } from 'src/jobs/Messaging';
 import {
   cacheAllCVs,
@@ -109,6 +110,16 @@ const start = () => {
               data.candidatId
             }' (${JSON.stringify(sentToReminderOffer)})`
           : `No reminder about opportunity '${data.opportunityId}' sent to '${data.candidatId}'`;
+
+      case JOBS.JOB_TYPES.NO_RESPONSE_OFFER:
+        const sentToNoResponseOffer = await sendNoResponseOffer(
+          data.opportunityId
+        );
+        return sentToNoResponseOffer
+          ? `Mail sent to recruiter because no response on opportunity '${
+              data.opportunityId
+            }' (${JSON.stringify(sentToNoResponseOffer)})`
+          : `No mail sent to recruiter because no response on opportunity '${data.opportunityId}'`;
       case JOBS.JOB_TYPES.REMINDER_CV_10:
         const sentToReminderCV = await sendReminderAboutCV(data.candidatId);
         return sentToReminderCV
