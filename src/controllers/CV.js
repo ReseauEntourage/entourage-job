@@ -949,6 +949,20 @@ const sendMailsAfterPublishing = async (candidatId) => {
 
     await addToWorkQueue(
       {
+        type: JOBS.JOB_TYPES.REMINDER_INTERVIEW_TRAINING,
+        candidatId,
+      },
+      {
+        delay:
+          (process.env.VIDEO_REMINDER_DELAY
+            ? parseFloat(process.env.VIDEO_REMINDER_DELAY, 10)
+            : 7) *
+          3600000 *
+          24,
+      }
+    );
+    await addToWorkQueue(
+      {
         type: JOBS.JOB_TYPES.REMINDER_VIDEO,
         candidatId,
       },
@@ -984,7 +998,7 @@ const sendMailsAfterPublishing = async (candidatId) => {
         delay:
           (process.env.EXTERNAL_OFFERS_REMINDER_DELAY
             ? parseFloat(process.env.EXTERNAL_OFFERS_REMINDER_DELAY, 10)
-            : 42) *
+            : 60) *
           3600000 *
           24,
       }

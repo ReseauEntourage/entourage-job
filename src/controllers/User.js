@@ -136,9 +136,23 @@ const sendMailsAfterMatching = async (candidatId) => {
       },
       {
         delay:
-          (process.env.CV_REMINDER_DELAY
-            ? parseFloat(process.env.CV_REMINDER_DELAY, 10)
+          (process.env.CV_10_REMINDER_DELAY
+            ? parseFloat(process.env.CV_10_REMINDER_DELAY, 10)
             : 10) *
+          3600000 *
+          24,
+      }
+    );
+    await addToWorkQueue(
+      {
+        type: JOBS.JOB_TYPES.REMINDER_CV_20,
+        candidatId,
+      },
+      {
+        delay:
+          (process.env.CV_20_REMINDER_DELAY
+            ? parseFloat(process.env.CV_20_REMINDER_DELAY, 10)
+            : 20) *
           3600000 *
           24,
       }
