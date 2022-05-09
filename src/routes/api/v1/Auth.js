@@ -1,5 +1,5 @@
 import * as AuthController from 'src/controllers/Auth';
-import { auth, isTokenValid } from 'src/controllers/Auth';
+import { auth, generateRandomPasswordInJWT } from 'src/controllers/Auth';
 import * as UserController from 'src/controllers/User';
 import { JOBS, MAILJET_TEMPLATES, REDIS_KEYS, USER_ROLES } from 'src/constants';
 import RateLimiter from 'src/utils/RateLimiter';
@@ -8,11 +8,22 @@ import { addToWorkQueue } from 'src/jobs';
 import { logger } from 'src/utils/Logger';
 
 import express from 'express';
-import _ from 'lodash';
+import { passwordStrength } from 'check-password-strength';
 
 const router = express.Router();
 
 const authLimiter = RateLimiter.createLimiter(REDIS_KEYS.RL_AUTH, 10);
+
+const isValidResetToken = (hashReset, saltReset, token) => {
+  const decodedToken = AuthController.decodeJWT(token);
+
+  return (
+    hashReset &&
+    saltReset &&
+    decodedToken &&
+    AuthController.validatePassword(decodedToken.password, hashReset, saltReset)
+  );
+};
 
 /**
  * Utilisation d'un "custom callback" pour mieux gérer l'echec d'authentification
@@ -97,26 +108,21 @@ router.post('/forgot', authLimiter, auth(), async (req, res /* , next */) => {
     logger(res).log(
       `Demande de réinitialisation du mot de passe : user.id = ${user.id}`
     );
-
-    const token = AuthController.generateJWT(user, '1d');
-    const { hash, salt } = AuthController.encryptPassword(token);
+    const {
+      hash: hashReset,
+      salt: saltReset,
+      jwtToken,
+    } = generateRandomPasswordInJWT();
 
     const updatedUser = await UserController.setUser(user.id, {
-      hashReset: hash,
-      saltReset: salt,
+      hashReset,
+      saltReset,
     });
 
     if (updatedUser) {
       logger(res).log('sending email');
 
-      const {
-        password,
-        salt: unusedSalt,
-        revision,
-        hashReset,
-        saltReset,
-        ...restProps
-      } = updatedUser.toJSON();
+      const { id, firstName, role, zone } = updatedUser.toJSON();
 
       // Envoi du mail
       await addToWorkQueue({
@@ -124,8 +130,11 @@ router.post('/forgot', authLimiter, auth(), async (req, res /* , next */) => {
         toEmail: user.email,
         templateId: MAILJET_TEMPLATES.PASSWORD_RESET,
         variables: {
-          ..._.omitBy(restProps, _.isNil),
-          token,
+          id,
+          firstName,
+          role,
+          zone,
+          token: jwtToken,
         },
       });
 
@@ -166,19 +175,15 @@ router.get(
         });
       }
 
-      if (
-        !AuthController.validatePassword(
-          token,
-          user.hashReset,
-          user.saltReset
-        ) ||
-        !isTokenValid(token)
-      ) {
+      const { hashReset, saltReset } = user;
+
+      if (!isValidResetToken(hashReset, saltReset, token)) {
         logger(res).error(` ${infoLog} Token invalide`);
         return res.status(403).send({
           error: 'Lien non valide',
         });
       }
+
       return res.status(200).send('Lien valide');
     } catch (err) {
       logger(res).log(err);
@@ -214,19 +219,10 @@ router.post(
         });
       }
 
-      if (
-        !(
-          user.hashReset &&
-          user.saltReset &&
-          AuthController.validatePassword(
-            token,
-            user.hashReset,
-            user.saltReset
-          ) &&
-          isTokenValid(token)
-        )
-      ) {
-        logger(res).error(`${infoLog} Token invalide`);
+      const { hashReset, saltReset } = user;
+
+      if (!isValidResetToken(hashReset, saltReset, token)) {
+        logger(res).error(` ${infoLog} Token invalide`);
         return res.status(403).send({
           error: 'Lien non valide',
         });
@@ -244,6 +240,15 @@ router.post(
       }
 
       logger(res).log(`${infoLog} Les 2 mots de passe sont valides`);
+
+      if (passwordStrength(newPassword).id < 2) {
+        logger(res).error(
+          `${infoLog} La sécurité du mot de passe est trop faible`
+        );
+        return res.status(400).send({
+          error: `La sécurité du mot de passe est trop faible`,
+        });
+      }
       logger(res).log(`${infoLog} Chiffrement du nouveau mot de passe`);
 
       const { hash, salt } = AuthController.encryptPassword(newPassword);
