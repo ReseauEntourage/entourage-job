@@ -11,6 +11,7 @@ import {
   checkCandidatOrCoachAuthorization,
   checkUserAuthorization,
 } from 'src/utils';
+import { passwordStrength } from 'check-password-strength';
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ const router = express.Router();
  * Description : Créé le User
  */
 router.post('/', auth([USER_ROLES.ADMIN]), (req, res) => {
-  UserController.createUser(req.body, req.body.password)
+  UserController.createUser(req.body)
     .then(async (user) => {
       res.status(200).json(user);
     })
@@ -211,35 +212,36 @@ router.put(
   '/change-pwd',
   auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
   (req, res) => {
+    const { oldPassword, newPassword } = req.body;
     UserController.getUserByEmail(req.payload.email)
       .then(({ salt: oldSalt, password }) => {
         const validated = AuthController.validatePassword(
-          req.body.oldPassword,
+          oldPassword,
           password,
           oldSalt
         );
-        if (validated) {
-          const { hash, salt } = AuthController.encryptPassword(
-            req.body.newPassword
-          );
-          UserController.setUser(req.payload.id, {
-            password: hash,
-            salt,
-          })
-            .then((user) => {
-              if (!user) {
-                res.status(401).send(`Utilisateur inexistant`);
-              }
-              logger(res).log(`User modifié`);
-              res.status(200).json(user);
-            })
-            .catch((err) => {
-              logger(res).error(err);
-              res.status(401).send(err);
-            });
-        } else {
-          res.status(401).send('Mot de passe invalide');
+        if (!validated) {
+          return res.status(401).send('Mot de passe invalide');
         }
+        if (passwordStrength(newPassword).id < 2) {
+          return res.status(401).send('Sécurité du mot de passe trop faible');
+        }
+        const { hash, salt } = AuthController.encryptPassword(newPassword);
+        UserController.setUser(req.payload.id, {
+          password: hash,
+          salt,
+        })
+          .then((user) => {
+            if (!user) {
+              res.status(401).send(`Utilisateur inexistant`);
+            }
+            logger(res).log(`User modifié`);
+            res.status(200).json(user);
+          })
+          .catch((err) => {
+            logger(res).error(err);
+            res.status(401).send(err);
+          });
       })
       .catch(() => {
         res.status(401).send('Utilisateur inaccessible');

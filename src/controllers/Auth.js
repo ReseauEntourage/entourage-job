@@ -4,6 +4,25 @@ import expressJwt from 'express-jwt';
 import { getRelatedUser } from 'src/utils/Finding';
 import { USER_ROLES } from 'src/constants';
 
+function generateRandomPasswordInJWT() {
+  const randomToken = crypto.randomBytes(128).toString('hex');
+  const { salt, hash } = encryptPassword(randomToken);
+
+  return {
+    salt,
+    hash,
+    jwtToken: jwt.sign(
+      {
+        password: randomToken,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '1d',
+      }
+    ),
+  };
+}
+
 function encryptPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
   const hash = crypto
@@ -24,10 +43,9 @@ function validatePassword(password, hash, salt) {
   return passwordHash === hash;
 }
 
-function isTokenValid(token) {
+function decodeJWT(token) {
   try {
-    jwt.verify(token, process.env.JWT_SECRET);
-    return true;
+    return jwt.verify(token, process.env.JWT_SECRET);
   } catch (err) {
     console.log('Token invalid : ', err);
     return false;
@@ -129,8 +147,9 @@ export {
   auth,
   encryptPassword,
   generateJWT,
-  isTokenValid,
+  decodeJWT,
   toAuthJSON,
   validatePassword,
   getTokenFromHeaders,
+  generateRandomPasswordInJWT,
 };
