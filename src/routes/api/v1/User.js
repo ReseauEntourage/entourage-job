@@ -221,10 +221,10 @@ router.put(
           oldSalt
         );
         if (!validated) {
-          res.status(401).send('Mot de passe invalide');
+          return res.status(401).send('Mot de passe invalide');
         }
         if (passwordStrength(newPassword).id < 2) {
-          res.status(401).send('Sécurité du mot de passe trop faible');
+          return res.status(401).send('Sécurité du mot de passe trop faible');
         }
         const { hash, salt } = AuthController.encryptPassword(newPassword);
         UserController.setUser(req.payload.id, {

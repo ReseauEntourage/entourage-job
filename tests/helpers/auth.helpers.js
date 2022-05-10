@@ -13,8 +13,7 @@ import * as UserController from 'src/controllers/User';
  */
 const getResetLinkAndUser = async (user) => {
   let updatedUser = null;
-  const token = AuthController.generateJWT(user, '1 day');
-  const { hash, salt } = AuthController.encryptPassword(token);
+  const { hash, salt, jwtToken } = AuthController.generateRandomPasswordInJWT();
 
   try {
     updatedUser = await UserController.setUser(user.id, {
@@ -30,8 +29,8 @@ const getResetLinkAndUser = async (user) => {
   }
   return {
     updatedUser: updatedUser.dataValues,
-    token,
-    link: `reset/${user.id}/${token}`,
+    token: jwtToken,
+    link: `reset/${user.id}/${jwtToken}`,
   };
 };
 

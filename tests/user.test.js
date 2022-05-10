@@ -32,20 +32,23 @@ describe('User', () => {
   beforeAll(async () => {
     serverTest = await startTestServer();
     await recreateTestDB();
+    const adminPassword = 'Admin123!';
     const admin = await userFactory({
       role: USER_ROLES.ADMIN,
-      password: 'admin',
+      password: adminPassword,
       zone: ADMIN_ZONES.LILLE,
     });
+    const coachPassword = 'Coach123!';
     const coach = await userFactory({
       role: USER_ROLES.COACH,
-      password: 'coach',
+      password: coachPassword,
       zone: ADMIN_ZONES.LYON,
     });
+    const candidatPassword = 'Candidat123!';
     const candidat = await userFactory(
       {
         role: USER_ROLES.CANDIDAT,
-        password: 'candidat',
+        password: candidatPassword,
         zone: ADMIN_ZONES.LYON,
       },
       {
@@ -53,9 +56,9 @@ describe('User', () => {
         employed: false,
       }
     );
-    admin.password = 'admin';
-    coach.password = 'coach';
-    candidat.password = 'candidat';
+    candidat.password = candidatPassword;
+    coach.password = coachPassword;
+    admin.password = adminPassword;
     await associateCoachAndCandidat(coach, candidat);
     loggedInAdmin = await createLoggedInUser(admin, {}, false);
     loggedInCoach = await createLoggedInUser(coach, {}, false);
@@ -63,7 +66,7 @@ describe('User', () => {
     otherLoggedInCandidat = await createLoggedInUser(
       {
         role: USER_ROLES.CANDIDAT,
-        password: 'otherCandidate',
+        password: 'OtherCandidate123!',
         zone: ADMIN_ZONES.LILLE,
       },
       {
@@ -73,7 +76,7 @@ describe('User', () => {
     );
     otherLoggedInCoach = await createLoggedInUser({
       role: USER_ROLES.COACH,
-      password: 'otherCoach',
+      password: 'OtherCoach123!',
       zone: ADMIN_ZONES.LILLE,
     });
 
@@ -86,7 +89,7 @@ describe('User', () => {
     const thirdCandidat = await createLoggedInUser(
       {
         role: USER_ROLES.CANDIDAT,
-        password: 'thirdCandidate',
+        password: 'ThirdCandidate123!',
         zone: ADMIN_ZONES.LYON,
       },
       {
@@ -96,7 +99,7 @@ describe('User', () => {
     );
     await createLoggedInUser({
       role: USER_ROLES.COACH,
-      password: 'thirdCoach',
+      password: 'ThirdCoach123!',
       zone: ADMIN_ZONES.LYON,
     });
 
@@ -784,14 +787,25 @@ describe('User', () => {
         });
       });
       describe('Update password - /change-pwd', () => {
-        it('Should return 401 if invalid password', async () => {
+        it('Should return 401 if old password is invalid', async () => {
           const response = await request(serverTest)
             .put(`${route}/change-pwd`)
             .set('authorization', `Token ${loggedInCandidat.token}`)
             .send({
               email: loggedInCandidat.user.email,
-              oldPassword: 'falsePassword',
-              newPassword: 'CANDIDAT',
+              oldPassword: 'falsePassword123!',
+              newPassword: 'Candidat123?',
+            });
+          expect(response.status).toBe(401);
+        });
+        it("Should return 400 if new password doesn't contain uppercase and lowercase letters, numbers & special characters password", async () => {
+          const response = await request(serverTest)
+            .put(`${route}/change-pwd`)
+            .set('authorization', `Token ${loggedInCandidat.token}`)
+            .send({
+              email: loggedInCandidat.user.email,
+              oldPassword: 'Candidat123!',
+              newPassword: 'candidat123?',
             });
           expect(response.status).toBe(401);
         });
@@ -801,8 +815,8 @@ describe('User', () => {
             .set('authorization', `Token ${loggedInCandidat.token}`)
             .send({
               email: loggedInCandidat.user.email,
-              oldPassword: 'candidat',
-              newPassword: 'CANDIDAT',
+              oldPassword: 'Candidat123!',
+              newPassword: 'Candidat123?',
             });
           expect(response.status).toBe(200);
         });

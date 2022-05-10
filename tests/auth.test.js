@@ -160,8 +160,8 @@ describe('Auth', () => {
         const response = await request(serverTest)
           .post(`${route}/${reset.link}`)
           .send({
-            newPassword: 'newPassword',
-            confirmPassword: 'newPassword',
+            newPassword: 'newPassword123!',
+            confirmPassword: 'newPassword123!',
           });
         expect(response.status).toBe(200);
         expect(response.body.id).toBe(loggedInCandidat.user.id);
@@ -171,8 +171,19 @@ describe('Auth', () => {
         const response = await request(serverTest)
           .post(`${route}/${reset.link}`)
           .send({
+            newPassword: 'newPassword123!',
+            confirmPassword: 'Password123!',
+          });
+
+        expect(response.status).toBe(400);
+      });
+      it("Should return 400, if password doesn't contain uppercase and lowercase letters, numbers & special characters password", async () => {
+        const reset = await getResetLinkAndUser(loggedInCandidat.user);
+        const response = await request(serverTest)
+          .post(`${route}/${reset.link}`)
+          .send({
             newPassword: 'newPassword',
-            confirmPassword: 'Password',
+            confirmPassword: 'newPassword',
           });
 
         expect(response.status).toBe(400);
@@ -182,8 +193,8 @@ describe('Auth', () => {
         const response = await request(serverTest)
           .post(`${route}/reset/${unknownUser.id}/${reset.token}`)
           .send({
-            newPassword: 'newPassword',
-            confirmPassword: 'newPassword',
+            newPassword: 'newPassword123!',
+            confirmPassword: 'newPassword123!',
           });
         expect(response.status).toBe(403);
       });
@@ -192,8 +203,8 @@ describe('Auth', () => {
         const response = await request(serverTest)
           .post(`${route}/reset/${reset.updatedUser.id}/${invalidToken}`)
           .send({
-            newPassword: 'newPassword',
-            confirmPassword: 'newPassword',
+            newPassword: 'newPassword123!',
+            confirmPassword: 'newPassword123!',
           });
         expect(response.status).toBe(403);
       });
