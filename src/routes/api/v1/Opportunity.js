@@ -46,7 +46,8 @@ router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
  * -  401
  */
 router.post('/', auth(), (req, res) => {
-  const { isAdmin, locations, shouldSendNotifications, ...restBody } = req.body;
+  const { isAdmin, locations, shouldSendNotifications, isCopy, ...restBody } =
+    req.body;
 
   let promises;
 
@@ -61,7 +62,8 @@ router.post('/', auth(), (req, res) => {
           { ...restBody, department, address },
           isAdmin,
           req.payload?.id,
-          shouldSendNotifications
+          shouldSendNotifications,
+          isCopy
         );
       })
     );
@@ -70,7 +72,8 @@ router.post('/', auth(), (req, res) => {
       restBody,
       isAdmin,
       req.payload?.id,
-      shouldSendNotifications
+      shouldSendNotifications,
+      isCopy
     );
   }
 
