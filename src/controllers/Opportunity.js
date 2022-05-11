@@ -149,12 +149,13 @@ const createOpportunity = async (
   data,
   isAdmin,
   createdById,
-  shouldSendNotifications = true
+  shouldSendNotifications = true,
+  isCopy = false
 ) => {
   console.log(`createOpportunity - Création de l'opportunité`);
 
   console.log(`Etape 1 - Création de l'opportunité de base`);
-  if (data.recruiterPhone && !isValidPhone(data.recruiterPhone)) {
+  if (!isCopy && data.recruiterPhone && !isValidPhone(data.recruiterPhone)) {
     throw new Error('Invalid phone');
   }
   const modelOpportunity = await Opportunity.create({
@@ -715,8 +716,15 @@ const updateOpportunity = async (
   shouldSendNotifications = true
 ) => {
   const oldOpportunity = await getOpportunity(opportunity.id, true);
+  const shouldVerifyPhoneForRetroCompatibility =
+    oldOpportunity.isValidated === opportunity.isValidated &&
+    oldOpportunity.isArchived === opportunity.isArchived;
 
-  if (opportunity.recruiterPhone && !isValidPhone(opportunity.recruiterPhone)) {
+  if (
+    shouldVerifyPhoneForRetroCompatibility &&
+    opportunity.recruiterPhone &&
+    !isValidPhone(opportunity.recruiterPhone)
+  ) {
     throw new Error('Invalid phone');
   }
   const modelOpportunity = await Opportunity.update(opportunity, {
