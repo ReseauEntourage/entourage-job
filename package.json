@@ -1,6 +1,6 @@
 {
   "name": "linkedout-back",
-  "version": "1.22.1",
+  "version": "1.23.0",
   "description": "",
   "main": "index.js",
   "engines": {
@@ -9,10 +9,10 @@
   "scripts": {
     "mainWorker": "NODE_ENV=production node -r dotenv/config --expose-gc build/mainWorker.js",
     "dev-mainWorker": "npx nodemon --exec babel-node -r dotenv/config --expose-gc src/mainWorker.js",
-    "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"./build/jobs/Mail.js\").sendRecapAboutOffers()'",
-    "send-mails-old-users": "NODE_ENV=production node -r dotenv/config -e 'require(\"./build/jobs/Mail.js\").sendMailsToOldUsers()'",
-    "dev-send-recap": "NODE_ENV=development node -r @babel/register -r dotenv/config -e 'require(\"./src/jobs/Mail.js\").sendRecapAboutOffers()'",
-    "dev-send-mails-old-users": "NODE_ENV=development node -r @babel/register -r dotenv/config -e 'require(\"./src/jobs/Mail.js\").sendMailsToOldUsers()'",
+    "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"./build/jobs/Messaging.js\").sendRecapAboutOffers()'",
+    "send-mails-old-users": "NODE_ENV=production node -r dotenv/config -e 'require(\"./build/jobs/Messaging.js\").sendMailsToOldUsers()'",
+    "dev-send-recap": "NODE_ENV=development node -r @babel/register -r dotenv/config -e 'require(\"./src/jobs/Messaging.js\").sendRecapAboutOffers()'",
+    "dev-send-mails-old-users": "NODE_ENV=development node -r @babel/register -r dotenv/config -e 'require(\"./src/jobs/Messaging.js\").sendMailsToOldUsers()'",
     "dev": "npx nodemon --exec babel-node -r dotenv/config src/app.js",
     "start": "NODE_ENV=production node -r dotenv/config build/app.js",
     "test": "NODE_ENV=test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
@@ -43,6 +43,7 @@
     "airtable": "^0.11.1",
     "bitly": "^7.1.2",
     "bull": "^3.19.1",
+    "check-password-strength": "^2.0.5",
     "core-js": "^3.21.0",
     "cors": "^2.8.5",
     "dd-trace": "^2.0.0",
@@ -51,6 +52,7 @@
     "express-jwt": "^6.1.0",
     "express-rate-limit": "^5.1.3",
     "express-sslify": "^1.2.0",
+    "generate-password": "^1.7.0",
     "google-maps-react": "^2.0.6",
     "helmet": "^5.0.2",
     "ioredis": "^4.19.4",

@@ -141,7 +141,7 @@ router.post(
  * - 401
  */
 router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
-  OpportunityController.getOpportunities(req.query)
+  OpportunityController.getAdminOpportunities(req.query)
     .then((listeOpportunities) => {
       logger(res).log(
         `Opportunités récupérés (Total : ${listeOpportunities.length})`

@@ -32,6 +32,8 @@ import * as AuthController from 'src/controllers/Auth';
 import { getRelatedUser } from 'src/utils/Finding';
 import { capitalizeNameAndTrim } from 'src/utils/DataFormatting';
 import { isValidPhone } from 'src/utils/PhoneFormatting';
+import { generateRandomPasswordInJWT } from 'src/controllers/Auth';
+import { fakePassword } from '../utils/Password';
 
 const { User, User_Candidat, CV, Opportunity_User, Revision, BusinessLine } =
   models;
@@ -136,9 +138,23 @@ const sendMailsAfterMatching = async (candidatId) => {
       },
       {
         delay:
-          (process.env.CV_REMINDER_DELAY
-            ? parseFloat(process.env.CV_REMINDER_DELAY, 10)
+          (process.env.CV_10_REMINDER_DELAY
+            ? parseFloat(process.env.CV_10_REMINDER_DELAY, 10)
             : 10) *
+          3600000 *
+          24,
+      }
+    );
+    await addToWorkQueue(
+      {
+        type: JOBS.JOB_TYPES.REMINDER_CV_20,
+        candidatId,
+      },
+      {
+        delay:
+          (process.env.CV_20_REMINDER_DELAY
+            ? parseFloat(process.env.CV_20_REMINDER_DELAY, 10)
+            : 20) *
           3600000 *
           24,
       }
@@ -148,24 +164,30 @@ const sendMailsAfterMatching = async (candidatId) => {
   }
 };
 
-const createUser = async (newUser, userCreatedPassword) => {
+const createUser = async (newUser) => {
   if (newUser.phone && !isValidPhone(newUser.phone)) {
     throw new Error('Invalid phone');
   }
 
-  function fakePassword() {
-    return Math.random() // Generate random number, eg: 0.123456
-      .toString(36) // Convert  to base-36 : "0.4fzyo82mvyr"
-      .slice(-8); // Cut off last 8 characters : "yo82mvyr"
-  }
+  const userRandomPassword = fakePassword();
+  const { hash, salt } = AuthController.encryptPassword(userRandomPassword);
 
-  const userPassword = userCreatedPassword || fakePassword();
-  const { hash, salt } = AuthController.encryptPassword(userPassword);
+  const {
+    hash: hashReset,
+    salt: saltReset,
+    jwtToken,
+  } = generateRandomPasswordInJWT();
 
   const infoLog = 'createUser -';
   console.log(`${infoLog} Création du User`);
 
-  const userToCreate = { ...newUser, password: hash, salt };
+  const userToCreate = {
+    ...newUser,
+    password: hash,
+    salt,
+    hashReset,
+    saltReset,
+  };
 
   userToCreate.role = newUser.role || USER_ROLES.CANDIDAT;
   userToCreate.firstName = capitalizeNameAndTrim(userToCreate.firstName);
@@ -173,22 +195,18 @@ const createUser = async (newUser, userCreatedPassword) => {
 
   const createdUser = await User.create(userToCreate);
 
-  const {
-    password,
-    salt: unusedSalt,
-    revision,
-    hashReset,
-    saltReset,
-    ...restProps
-  } = createdUser.toJSON();
+  const { id, firstName, role, zone } = createdUser.toJSON();
 
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.SEND_MAIL,
     toEmail: newUser.email,
     templateId: MAILJET_TEMPLATES.ACCOUNT_CREATED,
     variables: {
-      ..._.omitBy(restProps, _.isNil),
-      password: userPassword,
+      id,
+      firstName,
+      role,
+      zone,
+      token: jwtToken,
     },
   });
 
