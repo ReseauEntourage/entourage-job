@@ -56,8 +56,16 @@ const getZoneFromDepartment = (dep) => {
 const getAdminMailsFromDepartment = (dep) => {
   const zone = getZoneFromDepartment(dep);
   return {
-    candidates: process.env[`ADMIN_CANDIDATES_${zone}`],
-    companies: process.env[`ADMIN_COMPANIES_${zone}`],
+    candidatesAdminMail: process.env[`ADMIN_CANDIDATES_${zone}`],
+    companiesAdminMail: process.env[`ADMIN_COMPANIES_${zone}`],
+  };
+};
+
+const getAdminMailsFromZone = (zone) => {
+  const zoneSuffix = getZoneSuffix(zone);
+  return {
+    candidatesAdminMail: process.env[`ADMIN_CANDIDATES_${zoneSuffix}`],
+    companiesAdminMail: process.env[`ADMIN_COMPANIES_${zoneSuffix}}`],
   };
 };
 const getRelatedUser = (member) => {
@@ -106,6 +114,7 @@ const getCandidateIdFromCoachOrCandidate = (member) => {
 export {
   findOfferStatus,
   getAdminMailsFromDepartment,
+  getAdminMailsFromZone,
   getZoneFromDepartment,
   getZoneSuffix,
   findConstantFromValue,

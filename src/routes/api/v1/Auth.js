@@ -9,6 +9,7 @@ import { logger } from 'src/utils/Logger';
 
 import express from 'express';
 import { passwordStrength } from 'check-password-strength';
+import { getAdminMailsFromZone } from 'src/utils/Finding';
 
 const router = express.Router();
 
@@ -124,11 +125,14 @@ router.post('/forgot', authLimiter, auth(), async (req, res /* , next */) => {
 
       const { id, firstName, role, zone } = updatedUser.toJSON();
 
+      const { candidatesAdminMail } = getAdminMailsFromZone(zone);
+
       // Envoi du mail
       await addToWorkQueue({
         type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail: user.email,
         templateId: MAILJET_TEMPLATES.PASSWORD_RESET,
+        replyTo: candidatesAdminMail,
         variables: {
           id,
           firstName,

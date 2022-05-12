@@ -4,7 +4,10 @@
 import { JOBS, MAILJET_TEMPLATES, OFFER_STATUS } from 'src/constants';
 import { addToWorkQueue } from 'src/jobs';
 import _ from 'lodash';
-import { getZoneSuffix } from 'src/utils/Finding';
+import {
+  getAdminMailsFromDepartment,
+  getAdminMailsFromZone,
+} from 'src/utils/Finding';
 import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
 
 // Duplicated because of bug during tests where the models are not found
@@ -41,20 +44,24 @@ const sendMailStatusUpdate = async (candidat, offer, status) => {
     ),
   };
 
-  const adminMail =
-    process.env[`ADMIN_CANDIDATES_${getZoneSuffix(candidat.zone)}`];
+  const { candidatesAdminMail } = getAdminMailsFromZone(candidat.zone);
 
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.SEND_MAIL,
-    toEmail: adminMail,
+    toEmail: candidatesAdminMail,
     templateId: MAILJET_TEMPLATES.STATUS_CHANGED,
     variables: mailVariables,
   });
 
   if (status === OFFER_STATUS[4].value && !offer.isPublic) {
+    const { companiesAdminMail } = getAdminMailsFromDepartment(
+      offer.department
+    );
+
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail: offer.contactMail || offer.recruiterMail,
+      replyTo: companiesAdminMail,
       templateId: MAILJET_TEMPLATES.OFFER_REFUSED,
       variables: mailVariables,
     });
