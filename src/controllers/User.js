@@ -29,11 +29,11 @@ import {
 } from 'src/utils/Filters';
 import _ from 'lodash';
 import * as AuthController from 'src/controllers/Auth';
-import { getRelatedUser } from 'src/utils/Finding';
+import { getAdminMailsFromZone, getRelatedUser } from 'src/utils/Finding';
 import { capitalizeNameAndTrim } from 'src/utils/DataFormatting';
 import { isValidPhone } from 'src/utils/PhoneFormatting';
 import { generateRandomPasswordInJWT } from 'src/controllers/Auth';
-import { fakePassword } from '../utils/Password';
+import { fakePassword } from 'src/utils/Password';
 
 const { User, User_Candidat, CV, Opportunity_User, Revision, BusinessLine } =
   models;
@@ -113,11 +113,14 @@ const sendMailsAfterMatching = async (candidatId) => {
       toEmail.cc = coach.email;
     }
 
+    const { candidatesAdminMail } = getAdminMailsFromZone(finalCandidate.zone);
+
     await addToWorkQueue(
       {
         type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail,
         templateId: MAILJET_TEMPLATES.CV_PREPARE,
+        replyTo: candidatesAdminMail,
         variables: {
           ..._.omitBy(finalCandidate.toJSON(), _.isNil),
         },
@@ -197,9 +200,12 @@ const createUser = async (newUser) => {
 
   const { id, firstName, role, zone } = createdUser.toJSON();
 
+  const { candidatesAdminMail } = getAdminMailsFromZone(zone);
+
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.SEND_MAIL,
     toEmail: newUser.email,
+    replyTo: candidatesAdminMail,
     templateId: MAILJET_TEMPLATES.ACCOUNT_CREATED,
     variables: {
       id,

@@ -114,12 +114,12 @@ const createExternalOpportunity = async (
   const cleanedOpportunity = cleanOpportunity(finalOpportunity);
 
   if (!isAdmin) {
-    const adminMails = getAdminMailsFromDepartment(
+    const { companiesAdminMail } = getAdminMailsFromDepartment(
       cleanedOpportunity.department
     );
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
-      toEmail: adminMails.companies,
+      toEmail: companiesAdminMail,
       templateId: MAILJET_TEMPLATES.OFFER_EXTERNAL_RECEIVED,
       variables: {
         offer: getMailjetVariablesForPrivateOrPublicOffer(

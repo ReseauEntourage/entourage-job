@@ -13,7 +13,7 @@ import sharp from 'sharp';
 import express from 'express';
 
 import { CV_STATUS, JOBS, MAILJET_TEMPLATES, USER_ROLES } from 'src/constants';
-import { getZoneSuffix } from 'src/utils/Finding';
+import { getAdminMailsFromZone } from 'src/utils/Finding';
 import _ from 'lodash';
 
 import {
@@ -92,15 +92,16 @@ router.post(
           req.payload.role === USER_ROLES.COACH &&
           reqCV.status === CV_STATUS.Pending.value
         ) {
-          const adminMail =
-            process.env[`ADMIN_CANDIDATES_${getZoneSuffix(req.payload.zone)}`];
+          const { candidatesAdminMail } = getAdminMailsFromZone(
+            req.payload.zone
+          );
 
           const { token, exp, iat, ...restUserProps } = req.payload;
 
           // notification de l'admin
           await addToWorkQueue({
             type: JOBS.JOB_TYPES.SEND_MAIL,
-            toEmail: adminMail,
+            toEmail: candidatesAdminMail,
             templateId: MAILJET_TEMPLATES.CV_SUBMITTED,
             variables: {
               coach: _.omitBy(restUserProps, _.isNil),
