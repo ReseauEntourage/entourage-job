@@ -83,7 +83,7 @@ const createExternalOpportunity = async (
   await Opportunity_User.create({
     OpportunityId: modelOpportunity.id,
     UserId: candidatId,
-    status: 0,
+    status: data.status && data.status > -1 ? data.status : 0,
   });
 
   if (data.businessLines) {

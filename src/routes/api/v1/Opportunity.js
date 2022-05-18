@@ -9,6 +9,7 @@ import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 
 const authorizedExternalOpportunityKeys = [
   'id',
+  'status',
   'title',
   'company',
   'contract',
