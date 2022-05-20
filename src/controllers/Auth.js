@@ -4,7 +4,7 @@ import expressJwt from 'express-jwt';
 import { getRelatedUser } from 'src/utils/Finding';
 import { USER_ROLES } from 'src/constants';
 
-function generateRandomPasswordInJWT() {
+function generateRandomPasswordInJWT(expiration) {
   const randomToken = crypto.randomBytes(128).toString('hex');
   const { salt, hash } = encryptPassword(randomToken);
 
@@ -17,7 +17,7 @@ function generateRandomPasswordInJWT() {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: '1d',
+        expiresIn: expiration || '1d',
       }
     ),
   };
@@ -78,7 +78,7 @@ function generateJWT(user, expiration) {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: expiration || '60 days',
+      expiresIn: expiration || '60d',
     }
   );
 }

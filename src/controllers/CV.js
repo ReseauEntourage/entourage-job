@@ -605,6 +605,16 @@ const getAndCacheAllCVs = async (dbQuery, cache, options = {}) => {
   return cleanedCVList;
 };
 
+const countAllPublishedCVs = async () => {
+  const cvs = await sequelize.query(getPublishedCVQuery({ [Op.or]: [false] }), {
+    type: QueryTypes.SELECT,
+  });
+
+  return {
+    nbPublishedCVs: cvs.length,
+  };
+};
+
 const getRandomShortCVs = async (nb, query, params) => {
   const escapedQuery = escapeQuery(query);
 
@@ -1032,4 +1042,5 @@ export {
   setCVHasBeenRead,
   getAllUserCVsVersions,
   sendMailsAfterPublishing,
+  countAllPublishedCVs,
 };

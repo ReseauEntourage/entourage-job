@@ -238,6 +238,21 @@ router.get('/shares', auth(), (req, res) => {
 });
 
 /**
+ * Route : get /api/<VERSION>/cv/published
+ * Description : récupère total de candidat en recherche
+ */
+router.get('/published', auth(), (req, res) => {
+  CVController.countAllPublishedCVs()
+    .then(({ nbPublishedCVs }) => {
+      res.status(200).json({ nbPublishedCVs });
+    })
+    .catch((err) => {
+      logger(res).error(err);
+      res.status(401).send(err);
+    });
+});
+
+/**
  * Route : GET /api/<VERSION>/cv
  * Description :  Récupère le CV lié au userId passé en query
  */
