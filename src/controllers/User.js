@@ -176,7 +176,7 @@ const createUser = async (newUser) => {
     hash: hashReset,
     salt: saltReset,
     jwtToken,
-  } = generateRandomPasswordInJWT();
+  } = generateRandomPasswordInJWT('30d');
 
   const infoLog = 'createUser -';
   console.log(`${infoLog} Création du User`);
