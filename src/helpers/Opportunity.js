@@ -413,8 +413,8 @@ const sendOnValidatedOfferMessages = async (opportunity) => {
     {
       delay:
         (process.env.OFFER_NO_RESPONSE_DELAY
-          ? parseFloat(process.env.OFFER_NO_RESPONSE_DELAY, 15)
-          : 5) *
+          ? parseFloat(process.env.OFFER_NO_RESPONSE_DELAY, 10)
+          : 15) *
         3600000 *
         24,
     }
