@@ -15,6 +15,7 @@ import routeAuth from 'src/routes/api/v1/Auth';
 import routeUser from 'src/routes/api/v1/User';
 import routeMail from 'src/routes/api/v1/Mail';
 import routeOpportunity from 'src/routes/api/v1/Opportunity';
+import routeSalesforce from 'src/routes/api/v1/Salesforce';
 
 import RateLimiter from 'src/utils/RateLimiter';
 import { loggerMiddleware } from 'src/utils/Logger';
@@ -100,6 +101,8 @@ export const prepareServer = () => {
   // app.use('/api/v1/message', apiLimiter, routeMessage);
   app.use('/api/v1/opportunity', apiLimiter, routeOpportunity);
   app.use('/api/v1/user', apiLimiter, routeUser);
+
+  app.use('/api/v1/salesforce', apiLimiter, routeSalesforce);
 
   app.use(Sentry.Handlers.errorHandler());
 

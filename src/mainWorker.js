@@ -21,7 +21,10 @@ import {
   createCVSearchString,
   generatePDF,
 } from 'src/jobs/CV';
-import { insertAirtable, updateOpportunityAirtable } from 'src/jobs/Airtable';
+import {
+  insertAirtableBackground,
+  updateOpportunityAirtableBackground,
+} from 'src/jobs/Airtable';
 import { generatePreview } from 'src/jobs/Image';
 import _ from 'lodash';
 
@@ -100,12 +103,12 @@ const start = () => {
       }
 
       case JOBS.JOB_TYPES.INSERT_AIRTABLE: {
-        await insertAirtable(data.tableName, data.fields);
+        await insertAirtableBackground(data.tableName, data.fields);
         return `Airtable : insertion in '${data.tableName}'`;
       }
 
       case JOBS.JOB_TYPES.UPDATE_AIRTABLE: {
-        await updateOpportunityAirtable(data.tableName, data.fields);
+        await updateOpportunityAirtableBackground(data.tableName, data.fields);
         return `Airtable : update in '${data.tableName}'`;
       }
 
