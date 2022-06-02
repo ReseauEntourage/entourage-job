@@ -262,9 +262,10 @@ const getAirtableOpportunityFields = (opportunity, candidates) => {
     Publique: opportunity.isPublic,
     Externe: opportunity.isExternal,
     'Lien externe': opportunity.link,
-    'Origine externe': EXTERNAL_OFFERS_ORIGINS.find((origin) => {
-      return opportunity.externalOrigin === origin.value;
-    })?.label,
+    'Origine externe': findConstantFromValue(
+      opportunity.externalOrigin,
+      EXTERNAL_OFFERS_ORIGINS
+    ).label,
     Validé: opportunity.isValidated,
     Archivé: opportunity.isArchived,
     'Date de création': opportunity.createdAt,

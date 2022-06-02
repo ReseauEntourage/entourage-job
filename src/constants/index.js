@@ -325,10 +325,12 @@ const CONTRACTS = [
 const EXTERNAL_OFFERS_ORIGINS = [
   {
     label: 'Mon réseau',
+    salesforceLabel: 'Réseau du candidat',
     value: 'network',
   },
   {
     label: 'Recherches Internet',
+    salesforceLabel: 'Recherche Internet',
     value: 'internet',
   },
 ];

@@ -1,6 +1,7 @@
 import * as SalesforceController from 'src/controllers/Salesforce';
 import express from 'express';
 import { auth } from 'src/controllers/Auth';
+import { createOffer } from 'src/controllers/Salesforce';
 
 const router = express.Router();
 /*
@@ -19,8 +20,8 @@ router.post('/login', auth(), (req, res) => {
 router.get('/companies', auth(), (req, res) => {
   const { search } = req.query;
   SalesforceController.searchCompanyByName(search)
-    .then((results) => {
-      return res.status(200).json(results);
+    .then((result) => {
+      return res.status(200).json(result);
     })
     .catch((err) => {
       console.log(err);
@@ -29,10 +30,44 @@ router.get('/companies', auth(), (req, res) => {
 });
 
 router.post('/companies', auth(), (req, res) => {
-  const { name, businessLine, address, department } = req.body;
-  SalesforceController.createCompany(name, businessLine, address, department)
-    .then((results) => {
-      return res.status(200).json(results);
+  SalesforceController.createCompany(req.body)
+    .then((result) => {
+      return res.status(200).json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
+});
+
+router.get('/offers/:id', auth(), (req, res) => {
+  const { id } = req.params;
+  SalesforceController.findOfferById(id)
+    .then((result) => {
+      return res.status(200).json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
+});
+
+router.post('/offers', auth(), (req, res) => {
+  SalesforceController.createOffer(req.body)
+    .then((result) => {
+      return res.status(200).json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
+});
+
+router.get('/contacts/:email', auth(), (req, res) => {
+  const { email } = req.params;
+  SalesforceController.findContactByEmail(email)
+    .then((result) => {
+      return res.status(200).json(result);
     })
     .catch((err) => {
       console.log(err);
@@ -41,31 +76,9 @@ router.post('/companies', auth(), (req, res) => {
 });
 
 router.post('/contacts', auth(), (req, res) => {
-  const { firstName, lastName, mail, phone, position, department, companyId } =
-    req.body;
-  SalesforceController.createContact(
-    firstName,
-    lastName,
-    mail,
-    phone,
-    position,
-    department,
-    companyId
-  )
-    .then((results) => {
-      return res.status(200).json(results);
-    })
-    .catch((err) => {
-      console.log(err);
-      return err;
-    });
-});
-
-router.get('/users', auth(), (req, res) => {
-  const { email } = req.query;
-  SalesforceController.searchUserByEmail(email)
-    .then((results) => {
-      return res.status(200).json(results);
+  SalesforceController.createContact(req.body)
+    .then((result) => {
+      return res.status(200).json(result);
     })
     .catch((err) => {
       console.log(err);
