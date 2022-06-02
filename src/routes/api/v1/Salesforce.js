@@ -1,7 +1,6 @@
 import * as SalesforceController from 'src/controllers/Salesforce';
 import express from 'express';
 import { auth } from 'src/controllers/Auth';
-import { createOffer } from 'src/controllers/Salesforce';
 
 const router = express.Router();
 /*
@@ -63,9 +62,32 @@ router.post('/offers', auth(), (req, res) => {
     });
 });
 
+router.post('/process', auth(), (req, res) => {
+  SalesforceController.createProcess(req.body)
+    .then((result) => {
+      return res.status(200).json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
+});
+
+router.get('/process/:email/:offerId', auth(), (req, res) => {
+  const { email, offerId } = req.params;
+  SalesforceController.findProcessByCandidateEmailAndOfferId(email, offerId)
+    .then((result) => {
+      return res.status(200).json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
+});
+
 router.get('/contacts/:email', auth(), (req, res) => {
   const { email } = req.params;
-  SalesforceController.findContactByEmail(email)
+  SalesforceController.findCandidateByEmail(email)
     .then((result) => {
       return res.status(200).json(result);
     })

@@ -1,6 +1,10 @@
 import jsforce from 'jsforce';
-import { findConstantFromValue, getZoneFromDepartment } from '../utils/Finding';
-import { ADMIN_ZONES } from '../constants/departements';
+import {
+  findConstantFromValue,
+  findOfferStatus,
+  getZoneFromDepartment,
+} from 'src/utils/Finding';
+import { ADMIN_ZONES } from 'src/constants/departements';
 import _ from 'lodash';
 import {
   BUSINESS_LINES,
@@ -10,9 +14,17 @@ import {
 
 let salesforce;
 
+const OBJECT_NAMES = {
+  COMPANY: 'Account',
+  PROCESS: 'Processus_d_offres__c',
+  OFFER: 'Offre_d_emploi__c',
+  CONTACT: 'Contact',
+  BINOME: 'Binome__c',
+};
+
 const RECORD_TYPE_IDS = {
   COACH: '0127Q000000Ub9wQAC',
-  CANDIDAT: '0127Q000000UbNVQA0',
+  CANDIDATE: '0127Q000000UbNVQA0',
   COMPANY: '0127Q000000Uhq0QAC',
 };
 
@@ -96,7 +108,7 @@ export async function createCompany({
 
   //TODO Antenne generic
 
-  return createRecord('Account', {
+  return createRecord(OBJECT_NAMES.COMPANY, {
     Name: name,
     Industry: businessLine,
     BillingStreet: parsedAddress.street,
@@ -116,7 +128,7 @@ export async function createContact({
   department,
   companyId,
 }) {
-  return createRecord('Contact', {
+  return createRecord(OBJECT_NAMES.CONTACT, {
     LastName: lastName,
     FirstName: firstName,
     Email: mail,
@@ -139,6 +151,7 @@ export async function createOffer({
   isPartTime,
   isPublic,
   isExternal,
+  link,
   department,
   address,
   workingHours,
@@ -171,7 +184,7 @@ export async function createOffer({
     )
   );
 
-  return createRecord('Offre_d_emploi__c', {
+  return createRecord(OBJECT_NAMES.OFFER, {
     ID__c: id,
     Name: company + ' - ' + title,
     Titre__c: title,
@@ -187,6 +200,7 @@ export async function createOffer({
     Temps_partiel__c: isPartTime,
     Offre_publique__c: isPublic,
     Offre_externe__c: isExternal,
+    Lien_externe__c: link,
     Lien_Offre_Backoffice__c:
       process.env.FRONT_URL + '/backoffice/admin/offres/' + id,
     Departement__c: department,
@@ -211,18 +225,69 @@ export async function createOffer({
   });
 }
 
+export async function createProcess({
+  firstName,
+  lastName,
+  company,
+  isPublic,
+  status,
+  seen,
+  bookmarked,
+  archived,
+  recommended,
+  note,
+  binomeId,
+  offerId,
+}) {
+  return createRecord(OBJECT_NAMES.PROCESS, {
+    Name: firstName + ' ' + lastName + ' - ' + company,
+    Statut__c: findOfferStatus(status, isPublic, recommended).label,
+    Vue__c: seen,
+    Favoris__c: bookmarked,
+    Archiv_e__c: archived,
+    Recommandee__c: recommended,
+    Commentaire__c: note,
+    Binome__c: binomeId,
+    Offre_d_emploi__c: offerId,
+  });
+}
+
 export async function searchCompanyByName(search) {
   const salesforceInstance = await getInstance();
   const { searchRecords } = await salesforceInstance.search(
-    `FIND {${search}} IN NAME FIELDS RETURNING Account(Id)`
+    `FIND {${search}} IN NAME FIELDS RETURNING ${OBJECT_NAMES.COMPANY}(Id)`
   );
   return searchRecords[0]?.Id;
 }
 
-export async function findContactByEmail(email) {
+export async function findProcessByCandidateEmailAndOfferId(email, offerId) {
+  const binomeSfId = await findBinomeByCandidateEmail(email);
+  const offerSfId = await findOfferById(offerId);
+
   const salesforceInstance = await getInstance();
   const { records } = await salesforceInstance.query(
-    `SELECT Id FROM Contact WHERE Email='${email}' AND RecordTypeId='${RECORD_TYPE_IDS.CANDIDAT}'`
+    `SELECT Id FROM ${OBJECT_NAMES.PROCESS} WHERE Binome__c='${binomeSfId}' AND Offre_d_emploi__c='${offerSfId}'`
+  );
+  return records[0]?.Id;
+}
+
+export async function findBinomeByCandidateEmail(email) {
+  const candidateSfId = await findCandidateByEmail(email);
+  return findBinomeByCandidateSfId(candidateSfId);
+}
+
+export async function findCandidateByEmail(email) {
+  const salesforceInstance = await getInstance();
+  const { records } = await salesforceInstance.query(
+    `SELECT Id FROM ${OBJECT_NAMES.CONTACT} WHERE Email='${email}' AND RecordTypeId='${RECORD_TYPE_IDS.CANDIDATE}'`
+  );
+  return records[0]?.Id;
+}
+
+export async function findBinomeByCandidateSfId(id) {
+  const salesforceInstance = await getInstance();
+  const { records } = await salesforceInstance.query(
+    `SELECT Id FROM ${OBJECT_NAMES.BINOME} WHERE Candidat_LinkedOut__c='${id}'`
   );
   return records[0]?.Id;
 }
@@ -230,7 +295,7 @@ export async function findContactByEmail(email) {
 export async function findOfferById(id) {
   const salesforceInstance = await getInstance();
   const { records } = await salesforceInstance.query(
-    `SELECT Id FROM Offre_d_emploi__c WHERE ID__c='${id}'`
+    `SELECT Id FROM ${OBJECT_NAMES.OFFER} WHERE ID__c='${id}'`
   );
   return records[0]?.Id;
 }
