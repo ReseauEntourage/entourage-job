@@ -14,6 +14,7 @@ import {
 
 let salesforce;
 
+// TODO MANAGE MULTIPLE ADDRESSES
 const OBJECT_NAMES = {
   COMPANY: 'Account',
   PROCESS: 'Processus_d_offres__c',
@@ -32,33 +33,59 @@ const ERROR_CODES = {
   DUPLICATES_DETECTED: 'DUPLICATES_DETECTED',
 };
 
-function parseAddress(address) {
-  const parsedPostalCode = address.match(/\d{5}/gi);
+function formatBusinessLines(businessLines) {
+  return _.uniq(
+    businessLines.map(({ name }) => {
+      return findConstantFromValue(name, BUSINESS_LINES).label;
+    })
+  )
+    .toString()
+    .replace(',', ';');
+}
 
-  if (parsedPostalCode && parsedPostalCode.length > 0) {
-    const postalCode = parsedPostalCode[0];
-    const parsedAddress = address.split(postalCode);
-    return {
-      street: parsedAddress[0]?.replace(',', '').trim(),
-      city: parsedAddress[1]?.replace(',', '').trim(),
-      postalCode: parsedPostalCode[0],
-    };
-  } else {
-    const number = address.match(/\d*,/gi);
-    const parsedStreet = address
-      .replace(number[0], number[0].replace(',', ''))
-      .split(',');
-    return {
-      street: parsedStreet[0]?.replace(',', '').trim(),
-      city: parsedStreet[1]?.replace(',', '').trim(),
-    };
+function formatDepartment(department) {
+  return _.capitalize(ADMIN_ZONES[getZoneFromDepartment(department)]);
+}
+
+function parseAddress(address) {
+  if (address) {
+    const parsedPostalCode = address.match(/\d{5}/gi);
+
+    if (parsedPostalCode && parsedPostalCode.length > 0) {
+      const postalCode = parsedPostalCode[0];
+      const parsedAddress = address.split(postalCode);
+      return {
+        street: parsedAddress[0]?.replace(',', '').trim(),
+        city: parsedAddress[1]?.replace(',', '').trim(),
+        postalCode: parsedPostalCode[0],
+      };
+    } else {
+      const number = address.match(/\d*,/gi);
+
+      if (number) {
+        const parsedStreet = address
+          .replace(number[0], number[0].replace(',', ''))
+          .split(',');
+
+        return {
+          street: parsedStreet[0]?.replace(',', '').trim(),
+          city: parsedStreet[1]?.replace(',', '').trim(),
+        };
+      }
+      return { street: address.replace(',', '').trim() };
+    }
   }
+  return {
+    street: '',
+    city: '',
+    postalCode: '',
+  };
 }
 
 async function loginToSalesforce(salesforceInstance) {
   await salesforceInstance.login(
     process.env.SALESFORCE_USERNAME,
-    process.env.SALESFORCE_PASSWORD
+    process.env.SALESFORCE_PASSWORD + process.env.SALESFORCE_SECURITY_TOKEN
   );
 }
 
@@ -87,8 +114,13 @@ async function createRecord(name, params) {
   const salesforceInstance = await getInstance();
 
   try {
-    const createdRecord = await salesforceInstance.sobject(name).create(params);
-    return createdRecord.id;
+    const result = await salesforceInstance.sobject(name).create(params);
+    if (Array.isArray(result)) {
+      return result.map(({ id }) => {
+        return id;
+      });
+    }
+    return result.id;
   } catch (err) {
     if (err.errorCode === ERROR_CODES.DUPLICATES_DETECTED) {
       return err.duplicateResut.matchResults[0].matchRecords[0].record.Id;
@@ -98,31 +130,49 @@ async function createRecord(name, params) {
   }
 }
 
-export async function createCompany({
-  name,
-  businessLine,
-  address,
-  department,
-}) {
-  const parsedAddress = parseAddress(address);
+async function upsertRecord(name, params, extIdField, findIdFunction) {
+  const salesforceInstance = await getInstance();
 
-  //TODO Antenne generic
+  try {
+    const result = await salesforceInstance
+      .sobject(name)
+      .upsert(params, extIdField);
+
+    if (Array.isArray(result)) {
+      return Promise.all(
+        result.map(async ({ id }, index) => {
+          return id || (await findIdFunction(params[index][extIdField]));
+        })
+      );
+    }
+    return result.id || (await findIdFunction(params[extIdField]));
+  } catch (err) {
+    if (err.errorCode === ERROR_CODES.DUPLICATES_DETECTED) {
+      return err.duplicateResut.matchResults[0].matchRecords[0].record.Id;
+    }
+    console.error(err);
+    return err;
+  }
+}
+
+async function createCompany({ name, businessLines, address, department }) {
+  const parsedAddress = parseAddress(address);
 
   return createRecord(OBJECT_NAMES.COMPANY, {
     Name: name,
-    Industry: businessLine,
+    Industry: formatBusinessLines(businessLines),
     BillingStreet: parsedAddress.street,
     BillingCity: parsedAddress.city,
     BillingPostalCode: parsedAddress.postalCode,
     Reseaux__c: 'LinkedOut',
-    Antenne__c: _.capitalize(ADMIN_ZONES[getZoneFromDepartment(department)]),
+    Antenne__c: formatDepartment(department),
   });
 }
 
 export async function createContact({
   firstName,
   lastName,
-  mail,
+  email,
   phone,
   position,
   department,
@@ -131,18 +181,18 @@ export async function createContact({
   return createRecord(OBJECT_NAMES.CONTACT, {
     LastName: lastName,
     FirstName: firstName,
-    Email: mail,
+    Email: email,
     Phone: phone,
     Title: position,
     AccountId: companyId,
     Type_de_contact__c: 'Entreprise',
     Reseaux__c: 'LinkedOut',
     RecordTypeId: RECORD_TYPE_IDS.COMPANY,
-    Antenne__c: _.capitalize(ADMIN_ZONES[getZoneFromDepartment(department)]),
+    Antenne__c: formatDepartment(department),
   });
 }
 
-export async function createOffer({
+function mapSalesforceOfferFields({
   id,
   company,
   title,
@@ -170,32 +220,17 @@ export async function createOffer({
   companyId,
   contactId,
 }) {
-  // TODO search for contactMail to associate real contact
   const externalOriginConstant = findConstantFromValue(
     externalOrigin,
     EXTERNAL_OFFERS_ORIGINS
   );
 
-  console.log(
-    _.uniq(
-      businessLines.map(({ name }) => {
-        return findConstantFromValue(name, BUSINESS_LINES).label;
-      })
-    )
-  );
-
-  return createRecord(OBJECT_NAMES.OFFER, {
+  return {
     ID__c: id,
     Name: company + ' - ' + title,
     Titre__c: title,
     Entreprise_Recruteuse__c: companyId,
-    Secteur_d_activite_de_l_offre__c: _.uniq(
-      businessLines.map(({ name }) => {
-        return findConstantFromValue(name, BUSINESS_LINES).label;
-      })
-    )
-      .toString()
-      .replace(',', ';'),
+    Secteur_d_activite_de_l_offre__c: formatBusinessLines(businessLines),
     Type_de_contrat__c: findConstantFromValue(contract, CONTRACTS).label,
     Temps_partiel__c: isPartTime,
     Offre_publique__c: isPublic,
@@ -222,10 +257,24 @@ export async function createOffer({
     Prenom_Nom_du_recruteur__c: contactId,
     Contact_cr_existant__c: true,
     Antenne__c: _.capitalize(ADMIN_ZONES[getZoneFromDepartment(department)]),
-  });
+  };
 }
 
-export async function createProcess({
+async function createOrUpdateOffer(params) {
+  let records;
+  if (Array.isArray(params)) {
+    records = params.map((singleParams) => {
+      return mapSalesforceOfferFields(singleParams);
+    });
+  } else {
+    records = mapSalesforceOfferFields(params);
+  }
+
+  return upsertRecord(OBJECT_NAMES.OFFER, records, 'ID__c', findOfferById);
+}
+
+function mapSalesforceProcessFields({
+  id,
   firstName,
   lastName,
   company,
@@ -239,7 +288,8 @@ export async function createProcess({
   binomeId,
   offerId,
 }) {
-  return createRecord(OBJECT_NAMES.PROCESS, {
+  return {
+    ID__c: id,
     Name: firstName + ' ' + lastName + ' - ' + company,
     Statut__c: findOfferStatus(status, isPublic, recommended).label,
     Vue__c: seen,
@@ -249,10 +299,22 @@ export async function createProcess({
     Commentaire__c: note,
     Binome__c: binomeId,
     Offre_d_emploi__c: offerId,
-  });
+  };
 }
 
-export async function searchCompanyByName(search) {
+async function createOrUpdateProcess(params) {
+  let records;
+  if (Array.isArray(params)) {
+    records = params.map((singleParams) => {
+      return mapSalesforceProcessFields(singleParams);
+    });
+  } else {
+    records = mapSalesforceProcessFields(params);
+  }
+  return upsertRecord(OBJECT_NAMES.PROCESS, records, 'ID__c', findProcessById);
+}
+
+async function searchCompanyByName(search) {
   const salesforceInstance = await getInstance();
   const { searchRecords } = await salesforceInstance.search(
     `FIND {${search}} IN NAME FIELDS RETURNING ${OBJECT_NAMES.COMPANY}(Id)`
@@ -260,7 +322,8 @@ export async function searchCompanyByName(search) {
   return searchRecords[0]?.Id;
 }
 
-export async function findProcessByCandidateEmailAndOfferId(email, offerId) {
+/*
+async function findProcessByCandidateEmailAndOfferId(email, offerId) {
   const binomeSfId = await findBinomeByCandidateEmail(email);
   const offerSfId = await findOfferById(offerId);
 
@@ -270,21 +333,25 @@ export async function findProcessByCandidateEmailAndOfferId(email, offerId) {
   );
   return records[0]?.Id;
 }
+*/
 
-export async function findBinomeByCandidateEmail(email) {
-  const candidateSfId = await findCandidateByEmail(email);
+async function findBinomeByCandidateEmail(email) {
+  const candidateSfId = await findContactByEmail(
+    email,
+    RECORD_TYPE_IDS.CANDIDATE
+  );
   return findBinomeByCandidateSfId(candidateSfId);
 }
 
-export async function findCandidateByEmail(email) {
+async function findContactByEmail(email, recordType) {
   const salesforceInstance = await getInstance();
   const { records } = await salesforceInstance.query(
-    `SELECT Id FROM ${OBJECT_NAMES.CONTACT} WHERE Email='${email}' AND RecordTypeId='${RECORD_TYPE_IDS.CANDIDATE}'`
+    `SELECT Id FROM ${OBJECT_NAMES.CONTACT} WHERE Email='${email}' AND RecordTypeId='${recordType}'`
   );
   return records[0]?.Id;
 }
 
-export async function findBinomeByCandidateSfId(id) {
+async function findBinomeByCandidateSfId(id) {
   const salesforceInstance = await getInstance();
   const { records } = await salesforceInstance.query(
     `SELECT Id FROM ${OBJECT_NAMES.BINOME} WHERE Candidat_LinkedOut__c='${id}'`
@@ -292,10 +359,125 @@ export async function findBinomeByCandidateSfId(id) {
   return records[0]?.Id;
 }
 
-export async function findOfferById(id) {
+async function findOfferById(id) {
   const salesforceInstance = await getInstance();
   const { records } = await salesforceInstance.query(
     `SELECT Id FROM ${OBJECT_NAMES.OFFER} WHERE ID__c='${id}'`
   );
   return records[0]?.Id;
+}
+
+async function findProcessById(id) {
+  const salesforceInstance = await getInstance();
+  const { records } = await salesforceInstance.query(
+    `SELECT Id FROM ${OBJECT_NAMES.PROCESS} WHERE ID__c='${id}'`
+  );
+  return records[0]?.Id;
+}
+
+async function getProcessToCreate(process, offerSfId) {
+  const { candidateEmail, offerId, ...restProcess } = process;
+  const binomeSfId = await findBinomeByCandidateEmail(candidateEmail);
+
+  return {
+    ...restProcess,
+    binomeId: binomeSfId,
+    offerId: offerSfId || (await findOfferById(offerId)),
+  };
+}
+
+async function createOrUpdateSalesforceOpportunityUser(
+  opportunityUser,
+  offerSfId
+) {
+  let processToCreate;
+  if (Array.isArray(opportunityUser)) {
+    processToCreate = await Promise.all(
+      opportunityUser.map(async (singleProcess) => {
+        return getProcessToCreate(singleProcess, offerSfId);
+      })
+    );
+  } else {
+    processToCreate = await getProcessToCreate(opportunityUser);
+  }
+
+  return createOrUpdateProcess(processToCreate);
+}
+
+export async function createOrUpdateSalesforceOpportunity(
+  opportunity,
+  opportunityUser
+) {
+  const {
+    recruiterMail,
+    contactMail,
+    recruiterFirstName,
+    recruiterName,
+    department,
+    recruiterPhone,
+    recruiterPosition,
+    company,
+    businessLines,
+    address,
+  } = opportunity;
+
+  let companySfId = await searchCompanyByName(company);
+  if (!companySfId) {
+    companySfId = await createCompany({
+      name: company,
+      businessLines,
+      address,
+      department,
+    });
+  }
+
+  let contactSfId;
+  if (recruiterMail || contactMail) {
+    contactSfId = await findContactByEmail(
+      contactMail || recruiterMail,
+      RECORD_TYPE_IDS.COMPANY
+    );
+    if (!contactSfId) {
+      contactSfId = await createContact(
+        contactMail
+          ? {
+              lastName: 'Inconnu',
+              email: contactMail,
+              department,
+              companyId: companySfId,
+            }
+          : {
+              firstName: recruiterFirstName,
+              lastName: recruiterName,
+              email: recruiterMail,
+              phone: recruiterPhone,
+              position: recruiterPosition,
+              department,
+              companyId: companySfId,
+            }
+      );
+    }
+  }
+
+  let offerSfId = await createOrUpdateOffer({
+    ...opportunity,
+    companyId: companySfId,
+    contactId: contactSfId,
+  });
+
+  await createOrUpdateSalesforceOpportunityUser(opportunityUser, offerSfId);
+}
+
+export function getProcessFromOpportunityUser(opportunityUser, company) {
+  return opportunityUser.map(
+    ({ UserId, User: { email, firstName, lastName }, ...restProps }) => {
+      return {
+        candidateEmail: email,
+        firstName,
+        lastName,
+        company,
+        ...restProps,
+      };
+    }
+  );
 }

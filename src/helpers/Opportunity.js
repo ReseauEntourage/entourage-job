@@ -26,6 +26,10 @@ import { isValidPhone } from 'src/utils/PhoneFormatting';
 import { getShortenedOfferURL } from 'src/utils/Mutating';
 import { models } from 'src/db/models';
 import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
+import {
+  createOrUpdateSalesforceOpportunity,
+  getProcessFromOpportunityUser,
+} from 'src/controllers/Salesforce';
 
 const { BusinessLine, User, User_Candidat, Opportunity_User } = models;
 
@@ -307,7 +311,20 @@ const getAirtableOpportunityFields = (opportunity, candidates) => {
     : commonFields;
 };
 
-const updateTable = async (opportunity, candidates) => {
+const updateSalesforceRecords = async (opportunity, candidates) => {
+  console.log('UPDATE');
+  const updatedRecord = await createOrUpdateSalesforceOpportunity(
+    opportunity,
+    getProcessFromOpportunityUser(candidates, opportunity.company)
+  );
+
+  /* const updatedProcess = await createOrUpdateSalesforceOpportunityUser(
+    getProcessFromOpportunityUser(candidates, opportunity.company)
+  );
+*/
+  console.log(updatedRecord);
+  //console.log(updatedProcess);
+
   const fields = getAirtableOpportunityFields(opportunity, candidates);
 
   return addToWorkQueue({
@@ -317,11 +334,14 @@ const updateTable = async (opportunity, candidates) => {
   });
 };
 
-const updateOpportunityAirtable = async (opportunityId) => {
+const updateOpportunitySalesforce = async (opportunityId) => {
   const finalOpportunity = await getOpportunity(opportunityId, true);
 
   try {
-    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
+    await updateSalesforceRecords(
+      finalOpportunity,
+      finalOpportunity.userOpportunity
+    );
   } catch (err) {
     console.error(err);
     console.log('Failed to update table with modified offer.');
@@ -456,8 +476,8 @@ export {
   getOfferSearchOptions,
   destructureOptionsAndParams,
   getAirtableOpportunityFields,
-  updateTable,
-  updateOpportunityAirtable,
+  updateSalesforceRecords,
+  updateOpportunitySalesforce,
   sendCandidateOfferMessages,
   sendOnValidatedOfferMessages,
   sendOnCreatedOfferMessages,

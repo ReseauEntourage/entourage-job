@@ -333,6 +333,11 @@ const EXTERNAL_OFFERS_ORIGINS = [
     salesforceLabel: 'Recherche Internet',
     value: 'internet',
   },
+  {
+    label: 'Mon conseiller emploi (Pôle Emploi, mission locale...)',
+    salesforceLabel: 'Avec Pôle Emploi',
+    value: 'counselor',
+  },
 ];
 
 const REDIS_KEYS = {

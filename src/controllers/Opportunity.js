@@ -41,10 +41,14 @@ import {
   sendCandidateOfferMessages,
   sendOnCreatedOfferMessages,
   sendOnValidatedOfferMessages,
-  updateOpportunityAirtable,
-  updateTable,
+  updateOpportunitySalesforce,
+  updateSalesforceRecords,
 } from 'src/helpers/Opportunity';
 import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
+import {
+  createOrUpdateSalesforceOpportunity,
+  getProcessFromOpportunityUser,
+} from './Salesforce';
 
 const {
   BusinessLine,
@@ -60,7 +64,7 @@ const refreshAirtableOpportunities = async () => {
 
   await Promise.all(
     opportunities.map((opportunity) => {
-      return updateOpportunityAirtable(opportunity.id);
+      return updateOpportunitySalesforce(opportunity.id);
     })
   );
 };
@@ -99,6 +103,14 @@ const createExternalOpportunity = async (
     attributes: opportunityAttributes.ATTRIBUTES_OPPORTUNITY_CANDIDATES,
     include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
   });
+
+  const { userOpportunity: sfProcess, ...sfOpportunity } =
+    finalOpportunity.toJSON();
+
+  await createOrUpdateSalesforceOpportunity(
+    sfOpportunity,
+    getProcessFromOpportunityUser(sfProcess, sfOpportunity.company)
+  );
 
   const fields = getAirtableOpportunityFields(
     finalOpportunity,
@@ -197,6 +209,13 @@ const createOpportunity = async (
   console.log(`Etape finale - Reprendre l'opportunité complète à retourner`);
 
   const finalOpportunity = await getOpportunity(modelOpportunity.id, true);
+
+  const createdRecord = await createOrUpdateSalesforceOpportunity(
+    finalOpportunity,
+    getProcessFromOpportunityUser(candidates, finalOpportunity.company)
+  );
+
+  console.log(createdRecord);
 
   const fields = getAirtableOpportunityFields(finalOpportunity, candidates);
 
@@ -600,7 +619,7 @@ const addUserToOpportunity = async (opportunityId, userId, seen) => {
     });
   }
 
-  await updateOpportunityAirtable(opportunityId);
+  await updateOpportunitySalesforce(opportunityId);
   return modelOpportunityUser;
 };
 
@@ -623,7 +642,7 @@ const updateOpportunityUser = async (opportunityUser) => {
     return model && model.length > 1 && model[1][0];
   });
 
-  await updateOpportunityAirtable(modelOpportunityUser.OpportunityId);
+  await updateOpportunitySalesforce(modelOpportunityUser.OpportunityId);
 
   return modelOpportunityUser;
 };
@@ -790,7 +809,10 @@ const updateOpportunity = async (
   }
 
   try {
-    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
+    await updateSalesforceRecords(
+      finalOpportunity,
+      finalOpportunity.userOpportunity
+    );
     console.log('Updated table with modified offer.');
   } catch (err) {
     console.error(err);
@@ -834,7 +856,7 @@ const updateBulkOpportunity = async (attributes, opportunitiesId = []) => {
   try {
     await Promise.all(
       completeUpdatedOpportunities.map((updatedOpportunity) => {
-        return updateTable(updatedOpportunity.toJSON());
+        return updateSalesforceRecords(updatedOpportunity.toJSON());
       })
     );
     console.log('Updated table with bulk modified offers.');
@@ -890,8 +912,11 @@ const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
       include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
     });
 
+    const { userOpportunity: sfProcess, ...sfOpportunity } =
+      finalOpportunity.toJSON();
+
     try {
-      await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
+      await updateSalesforceRecords(sfOpportunity, sfProcess);
       console.log('Updated table with modified offer.');
     } catch (err) {
       console.error(err);
