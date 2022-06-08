@@ -53,7 +53,11 @@ const sendMailStatusUpdate = async (candidat, offer, status) => {
     variables: mailVariables,
   });
 
-  if (status === OFFER_STATUS[4].value && !offer.isPublic) {
+  if (
+    status === OFFER_STATUS[4].value &&
+    !offer.isPublic &&
+    !offer.isExternal
+  ) {
     const { companiesAdminMail } = getAdminMailsFromDepartment(
       offer.department
     );
