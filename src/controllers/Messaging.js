@@ -24,6 +24,7 @@ const useMailjet = process.env.USE_MAILJET_SMS === 'true';
 
 const createMail = ({
   toEmail,
+  replyTo,
   subject,
   text,
   html,
@@ -90,6 +91,11 @@ const createMail = ({
       Name: process.env.MAILJET_FROM_NAME,
     },
     Subject: subject,
+    Headers: replyTo
+      ? {
+          'Reply-To': replyTo,
+        }
+      : undefined,
     ...recipients,
     ...content,
   };
@@ -151,9 +157,6 @@ const sendSMSWithVonage = ({ toPhone, text }) => {
       process.env.MAILJET_FROM_NAME,
       toPhone,
       text,
-      {
-        type: 'unicode',
-      },
       (err, responseData) => {
         if (err) {
           rej(err);

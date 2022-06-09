@@ -27,7 +27,11 @@ import puppeteer from 'puppeteer-core';
 import { PDFDocument } from 'pdf-lib';
 import moment from 'moment';
 import { invalidateCache } from 'src/controllers/Aws';
-import { findConstantFromValue, getRelatedUser } from 'src/utils/Finding';
+import {
+  findConstantFromValue,
+  getAdminMailsFromZone,
+  getRelatedUser,
+} from 'src/utils/Finding';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import { getUser } from 'src/controllers/User';
 import { addToWorkQueue } from 'src/jobs';
@@ -601,6 +605,16 @@ const getAndCacheAllCVs = async (dbQuery, cache, options = {}) => {
   return cleanedCVList;
 };
 
+const countAllPublishedCVs = async () => {
+  const cvs = await sequelize.query(getPublishedCVQuery({ [Op.or]: [false] }), {
+    type: QueryTypes.SELECT,
+  });
+
+  return {
+    nbPublishedCVs: cvs.length,
+  };
+};
+
 const getRandomShortCVs = async (nb, query, params) => {
   const escapedQuery = escapeQuery(query);
 
@@ -938,10 +952,13 @@ const sendMailsAfterPublishing = async (candidatId) => {
       toEmail.cc = coach.email;
     }
 
+    const { candidatesAdminMail } = getAdminMailsFromZone(user.zone);
+
     await addToWorkQueue({
       type: JOBS.JOB_TYPES.SEND_MAIL,
       toEmail,
       templateId: MAILJET_TEMPLATES.CV_PUBLISHED,
+      replyTo: candidatesAdminMail,
       variables: {
         ..._.omitBy(user.toJSON(), _.isNil),
       },
@@ -1025,4 +1042,5 @@ export {
   setCVHasBeenRead,
   getAllUserCVsVersions,
   sendMailsAfterPublishing,
+  countAllPublishedCVs,
 };

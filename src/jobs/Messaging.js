@@ -16,9 +16,9 @@ import {
 } from 'src/controllers/Opportunity';
 import { CV_STATUS, JOBS, MAILJET_TEMPLATES, USER_ROLES } from 'src/constants';
 import {
+  getAdminMailsFromZone,
   getRelatedUser,
   getZoneFromDepartment,
-  getZoneSuffix,
 } from 'src/utils/Finding';
 import { addToWorkQueue } from 'src/jobs';
 import { getAllUserCVsVersions } from 'src/controllers/CV';
@@ -46,12 +46,13 @@ const sendReminderAboutOffer = async (opportunityId, candidatId) => {
   ) {
     const candidatData = opportunity.userOpportunity.User;
 
+    const { candidatesAdminMail, companiesAdminMail } = getAdminMailsFromZone(
+      candidatData.zone
+    );
+
     const toEmail = {
       to: candidatData.email,
-      bcc: [
-        process.env[`ADMIN_CANDIDATES_${getZoneSuffix(candidatData.zone)}`],
-        process.env[`ADMIN_COMPANIES_${getZoneSuffix(candidatData.zone)}`],
-      ],
+      bcc: [candidatesAdminMail, companiesAdminMail],
     };
     const coach = getRelatedUser(candidatData);
     if (coach) {
@@ -61,6 +62,7 @@ const sendReminderAboutOffer = async (opportunityId, candidatId) => {
     await sendMail({
       toEmail,
       templateId: MAILJET_TEMPLATES.OFFER_REMINDER,
+      replyTo: candidatesAdminMail,
       variables: {
         offer: _.omitBy(opportunity, _.isNil),
         candidat: _.omitBy(candidatData, _.isNil),
@@ -72,7 +74,7 @@ const sendReminderAboutOffer = async (opportunityId, candidatId) => {
       if (candidatPhone && isValidPhone(candidatPhone)) {
         await sendSMS({
           toPhone: candidatPhone,
-          text: `Bonjour,\nIl y a 5 jours vous avez reçu une offre qui vous a personnellement été envoyée par un recruteur. Consultez-la ici et traitez-la avec votre coach: ${await getShortenedOfferURL(
+          text: `Bonjour,\nIl y a 5 jours un recruteur vous a personnellement adressé une offre. Consultez-la ici et traitez-la avec votre coach: ${await getShortenedOfferURL(
             opportunity.id,
             _.findKey(MAILJET_TEMPLATES, (id) => {
               return id === MAILJET_TEMPLATES.OFFER_REMINDER;
@@ -112,6 +114,10 @@ const sendNoResponseOffer = async (opportunityId) => {
         templateId: opportunity.isPublic
           ? MAILJET_TEMPLATES.OFFER_PUBLIC_NO_RESPONSE
           : MAILJET_TEMPLATES.OFFER_PRIVATE_NO_RESPONSE,
+        replyTo:
+          process.env[
+            `ADMIN_COMPANIES_${getZoneFromDepartment(opportunity.department)}`
+          ],
         variables: getMailjetVariablesForPrivateOrPublicOffer(opportunity),
       });
 
@@ -140,12 +146,14 @@ const sendReminderAboutCV = async (candidatId, is20Days) => {
         if (coach) {
           toEmail.cc = coach.email;
         }
+        const { candidatesAdminMail } = getAdminMailsFromZone(user.zonee);
 
         await sendMail({
           toEmail,
           templateId: is20Days
             ? MAILJET_TEMPLATES.CV_REMINDER_20
             : MAILJET_TEMPLATES.CV_REMINDER_10,
+          replyTo: candidatesAdminMail,
           variables: {
             ..._.omitBy(user.toJSON(), _.isNil),
           },
@@ -168,10 +176,12 @@ const sendReminderIfEmployed = async (candidatId, templateId) => {
     if (coach) {
       toEmail.cc = coach.email;
     }
+    const { candidatesAdminMail } = getAdminMailsFromZone(user.zone);
 
     await sendMail({
       toEmail,
       templateId: templateId,
+      replyTo: candidatesAdminMail,
       variables: {
         ..._.omitBy(user.toJSON(), _.isNil),
       },
@@ -212,11 +222,13 @@ const sendReminderAboutExternalOffers = async (candidatId) => {
       opportunitiesCreatedByCandidateOrCoach +=
         await getExternalOpportunitiesCreatedByUserCount(coach.id);
     }
+    const { candidatesAdminMail } = getAdminMailsFromZone(user.zone);
 
     if (opportunitiesCreatedByCandidateOrCoach === 0) {
       await sendMail({
         toEmail,
         templateId: MAILJET_TEMPLATES.EXTERNAL_OFFERS_REMINDER,
+        replyTo: candidatesAdminMail,
         variables: {
           ..._.omitBy(user.toJSON(), _.isNil),
         },
@@ -297,11 +309,14 @@ const sendRecapAboutOffers = async () => {
           []
         );
 
+        const { candidatesAdminMail } = getAdminMailsFromZone(zone);
+
         if (recipients.length > 0) {
           emails = recipients.map((recipient) => {
             return {
               toEmail: recipient,
               templateId: MAILJET_TEMPLATES.OFFERS_RECAP,
+              replyTo: candidatesAdminMail,
               variables: {
                 zone: _.capitalize(zone),
                 offerList: zoneRecentOpportunities,

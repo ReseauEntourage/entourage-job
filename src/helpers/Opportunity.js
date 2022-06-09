@@ -17,6 +17,7 @@ import {
   findConstantFromValue,
   findOfferStatus,
   getAdminMailsFromDepartment,
+  getAdminMailsFromZone,
   getRelatedUser,
 } from 'src/utils/Finding';
 import { addToWorkQueue } from 'src/jobs';
@@ -331,6 +332,8 @@ const sendCandidateOfferMessages = (candidates, opportunity) => {
     candidates.map(async (candidat) => {
       const coach = candidat.User ? getRelatedUser(candidat.User) : null;
 
+      const { candidatesAdminMail } = getAdminMailsFromZone(candidat.User.zone);
+
       await addToWorkQueue({
         type: JOBS.JOB_TYPES.SEND_MAIL,
         toEmail: coach
@@ -339,6 +342,7 @@ const sendCandidateOfferMessages = (candidates, opportunity) => {
         templateId: opportunity.isPublic
           ? MAILJET_TEMPLATES.OFFER_RECOMMENDED
           : MAILJET_TEMPLATES.OFFER_RECEIVED,
+        replyTo: candidatesAdminMail,
         variables: {
           offer: getMailjetVariablesForPrivateOrPublicOffer(opportunity, false),
           candidat,
@@ -385,22 +389,24 @@ const sendCandidateOfferMessages = (candidates, opportunity) => {
 };
 
 const sendOnValidatedOfferMessages = async (opportunity) => {
+  const { companiesAdminMail, candidatesAdminMail } =
+    getAdminMailsFromDepartment(opportunity.department);
+
   const variables = getMailjetVariablesForPrivateOrPublicOffer(opportunity);
 
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.SEND_MAIL,
     toEmail: opportunity.contactMail || opportunity.recruiterMail,
+    replyTo: companiesAdminMail,
     templateId: opportunity.isPublic
       ? MAILJET_TEMPLATES.OFFER_VALIDATED_PUBLIC
       : MAILJET_TEMPLATES.OFFER_VALIDATED_PRIVATE,
     variables,
   });
 
-  const adminMails = getAdminMailsFromDepartment(opportunity.department);
-
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.SEND_MAIL,
-    toEmail: adminMails.candidates,
+    toEmail: candidatesAdminMail,
     templateId: MAILJET_TEMPLATES.OFFER_VALIDATED_ADMIN,
     variables,
   });
@@ -422,13 +428,15 @@ const sendOnValidatedOfferMessages = async (opportunity) => {
 };
 
 const sendOnCreatedOfferMessages = async (candidates, opportunity) => {
-  const adminMails = getAdminMailsFromDepartment(opportunity.department);
+  const { companiesAdminMail } = getAdminMailsFromDepartment(
+    opportunity.department
+  );
 
   const variables = getMailjetVariablesForPrivateOrPublicOffer(opportunity);
 
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.SEND_MAIL,
-    toEmail: adminMails.companies,
+    toEmail: companiesAdminMail,
     templateId: MAILJET_TEMPLATES.OFFER_TO_VALIDATE,
     variables,
   });
@@ -436,6 +444,7 @@ const sendOnCreatedOfferMessages = async (candidates, opportunity) => {
   await addToWorkQueue({
     type: JOBS.JOB_TYPES.SEND_MAIL,
     toEmail: opportunity.recruiterMail,
+    replyTo: companiesAdminMail,
     templateId: MAILJET_TEMPLATES.OFFER_SENT,
     variables,
   });
