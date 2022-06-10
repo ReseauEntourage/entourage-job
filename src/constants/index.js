@@ -65,7 +65,7 @@ const BUSINESS_LINES = [
     prefix: ['la', "l'"],
   },
   {
-    label: 'Artisanat (autre que bâtiment)',
+    label: 'Artisanat',
     value: 'art',
     prefix: "l'",
   },
