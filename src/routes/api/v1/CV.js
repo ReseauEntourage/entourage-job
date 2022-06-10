@@ -34,7 +34,11 @@ const getPDFPaths = (userId, queryFileName) => {
     ? `${queryFileName}_${userId.substring(0, 8)}`
     : userId;
 
-  return [`${userId}-page1.pdf`, `${userId}-page2.pdf`, `${fileName}.pdf`];
+  return [
+    `${userId}-page1.pdf`,
+    `${userId}-page2.pdf`,
+    `${fileName.replace("'", '')}.pdf`,
+  ];
 };
 
 /**
