@@ -14,7 +14,6 @@ import {
 
 let salesforce;
 
-// TODO MANAGE MULTIPLE ADDRESSES
 const OBJECT_NAMES = {
   COMPANY: 'Account',
   PROCESS: 'Processus_d_offres__c',
@@ -44,6 +43,9 @@ function formatBusinessLines(businessLines) {
 }
 
 function formatDepartment(department) {
+  if (!department) {
+    return 'National';
+  }
   return _.capitalize(ADMIN_ZONES[getZoneFromDepartment(department)]);
 }
 
@@ -126,7 +128,7 @@ async function createRecord(name, params) {
       return err.duplicateResut.matchResults[0].matchRecords[0].record.Id;
     }
     console.error(err);
-    return err;
+    throw err;
   }
 }
 
@@ -151,21 +153,28 @@ async function upsertRecord(name, params, extIdField, findIdFunction) {
       return err.duplicateResut.matchResults[0].matchRecords[0].record.Id;
     }
     console.error(err);
-    return err;
+    throw err;
   }
 }
 
-async function createCompany({ name, businessLines, address, department }) {
+async function createCompany({
+  name,
+  businessLines,
+  address,
+  department,
+  mainCompanySfId,
+}) {
   const parsedAddress = parseAddress(address);
 
   return createRecord(OBJECT_NAMES.COMPANY, {
-    Name: name,
+    Name: mainCompanySfId ? `${name} - ${address} - ${department}` : name,
     Industry: formatBusinessLines(businessLines),
     BillingStreet: parsedAddress.street,
     BillingCity: parsedAddress.city,
     BillingPostalCode: parsedAddress.postalCode,
     Reseaux__c: 'LinkedOut',
     Antenne__c: formatDepartment(department),
+    ParentId: mainCompanySfId,
   });
 }
 
@@ -176,7 +185,7 @@ export async function createContact({
   phone,
   position,
   department,
-  companyId,
+  companySfId,
 }) {
   return createRecord(OBJECT_NAMES.CONTACT, {
     LastName: lastName,
@@ -184,7 +193,7 @@ export async function createContact({
     Email: email,
     Phone: phone,
     Title: position,
-    AccountId: companyId,
+    AccountId: companySfId,
     Type_de_contact__c: 'Entreprise',
     Reseaux__c: 'LinkedOut',
     RecordTypeId: RECORD_TYPE_IDS.COMPANY,
@@ -202,10 +211,12 @@ function mapSalesforceOfferFields({
   isPublic,
   isExternal,
   link,
+  isArchived,
   department,
   address,
   workingHours,
   salary,
+  message,
   companyDescription,
   description,
   otherInfo,
@@ -217,8 +228,8 @@ function mapSalesforceOfferFields({
   recruiterPhone,
   recruiterPosition,
   contactMail,
-  companyId,
-  contactId,
+  companySfId,
+  contactSfId,
 }) {
   const externalOriginConstant = findConstantFromValue(
     externalOrigin,
@@ -229,12 +240,13 @@ function mapSalesforceOfferFields({
     ID__c: id,
     Name: company + ' - ' + title,
     Titre__c: title,
-    Entreprise_Recruteuse__c: companyId,
+    Entreprise_Recruteuse__c: companySfId,
     Secteur_d_activite_de_l_offre__c: formatBusinessLines(businessLines),
     Type_de_contrat__c: findConstantFromValue(contract, CONTRACTS).label,
     Temps_partiel__c: isPartTime,
     Offre_publique__c: isPublic,
     Offre_externe__c: isExternal,
+    Offre_archiv_e__c: isArchived,
     Lien_externe__c: link,
     Lien_Offre_Backoffice__c:
       process.env.FRONT_URL + '/backoffice/admin/offres/' + id,
@@ -242,6 +254,7 @@ function mapSalesforceOfferFields({
     Adresse_de_l_offre__c: address,
     Jours_et_horaires_de_travail__c: workingHours,
     Salaire_et_complement__c: salary,
+    Message_au_candidat__c: message,
     Presentation_de_l_entreprise__c: companyDescription,
     Descriptif_des_missions_proposees__c: description,
     Autre_precision_sur_votre_besoin__c: otherInfo,
@@ -254,7 +267,7 @@ function mapSalesforceOfferFields({
     Telephone_du_recruteur__c: recruiterPhone,
     Fonction_du_recruteur__c: recruiterPosition,
     Mail_de_contact__c: contactMail,
-    Prenom_Nom_du_recruteur__c: contactId,
+    Prenom_Nom_du_recruteur__c: contactSfId,
     Contact_cr_existant__c: true,
     Antenne__c: _.capitalize(ADMIN_ZONES[getZoneFromDepartment(department)]),
   };
@@ -322,19 +335,6 @@ async function searchCompanyByName(search) {
   return searchRecords[0]?.Id;
 }
 
-/*
-async function findProcessByCandidateEmailAndOfferId(email, offerId) {
-  const binomeSfId = await findBinomeByCandidateEmail(email);
-  const offerSfId = await findOfferById(offerId);
-
-  const salesforceInstance = await getInstance();
-  const { records } = await salesforceInstance.query(
-    `SELECT Id FROM ${OBJECT_NAMES.PROCESS} WHERE Binome__c='${binomeSfId}' AND Offre_d_emploi__c='${offerSfId}'`
-  );
-  return records[0]?.Id;
-}
-*/
-
 async function findBinomeByCandidateEmail(email) {
   const candidateSfId = await findContactByEmail(
     email,
@@ -365,6 +365,17 @@ async function findOfferById(id) {
     `SELECT Id FROM ${OBJECT_NAMES.OFFER} WHERE ID__c='${id}'`
   );
   return records[0]?.Id;
+}
+
+async function findOfferRelationsById(id) {
+  const salesforceInstance = await getInstance();
+  const { records } = await salesforceInstance.query(
+    `SELECT Id, Entreprise_Recruteuse__c, Prenom_Nom_du_recruteur__c FROM ${OBJECT_NAMES.OFFER} WHERE ID__c='${id}'`
+  );
+  return {
+    companySfId: records[0]?.Entreprise_Recruteuse__c,
+    contactSfId: records[0]?.Prenom_Nom_du_recruteur__c,
+  };
 }
 
 async function findProcessById(id) {
@@ -398,15 +409,16 @@ async function createOrUpdateSalesforceOpportunityUser(
       })
     );
   } else {
-    processToCreate = await getProcessToCreate(opportunityUser);
+    processToCreate = await getProcessToCreate(opportunityUser, offerSfId);
   }
 
   return createOrUpdateProcess(processToCreate);
 }
 
-export async function createOrUpdateSalesforceOpportunity(
+async function createCompanyAndContactFromOpportunity(
   opportunity,
-  opportunityUser
+  mainCompanySfId,
+  mainContactSfId
 ) {
   const {
     recruiterMail,
@@ -421,22 +433,41 @@ export async function createOrUpdateSalesforceOpportunity(
     address,
   } = opportunity;
 
-  let companySfId = await searchCompanyByName(company);
-  if (!companySfId) {
+  let { companySfId, contactSfId } = await findOfferRelationsById(
+    opportunity.id
+  );
+
+  if (mainCompanySfId) {
     companySfId = await createCompany({
       name: company,
       businessLines,
       address,
       department,
+      mainCompanySfId,
     });
+  } else {
+    if (!companySfId) {
+      companySfId = await searchCompanyByName(company);
+    }
+    if (!companySfId) {
+      companySfId = await createCompany({
+        name: company,
+        businessLines,
+        address,
+        department,
+      });
+    }
   }
 
-  let contactSfId;
-  if (recruiterMail || contactMail) {
-    contactSfId = await findContactByEmail(
-      contactMail || recruiterMail,
-      RECORD_TYPE_IDS.COMPANY
-    );
+  if (mainContactSfId) {
+    contactSfId = mainContactSfId;
+  } else {
+    if (!contactSfId && (contactMail || recruiterMail)) {
+      contactSfId = await findContactByEmail(
+        contactMail || recruiterMail,
+        RECORD_TYPE_IDS.COMPANY
+      );
+    }
     if (!contactSfId) {
       contactSfId = await createContact(
         contactMail
@@ -444,7 +475,7 @@ export async function createOrUpdateSalesforceOpportunity(
               lastName: 'Inconnu',
               email: contactMail,
               department,
-              companyId: companySfId,
+              companySfId: mainCompanySfId || companySfId,
             }
           : {
               firstName: recruiterFirstName,
@@ -453,31 +484,84 @@ export async function createOrUpdateSalesforceOpportunity(
               phone: recruiterPhone,
               position: recruiterPosition,
               department,
-              companyId: companySfId,
+              companySfId: mainCompanySfId || companySfId,
             }
       );
     }
   }
 
-  let offerSfId = await createOrUpdateOffer({
-    ...opportunity,
-    companyId: companySfId,
-    contactId: contactSfId,
-  });
-
-  await createOrUpdateSalesforceOpportunityUser(opportunityUser, offerSfId);
+  return { contactSfId, companySfId };
 }
 
-export function getProcessFromOpportunityUser(opportunityUser, company) {
-  return opportunityUser.map(
-    ({ UserId, User: { email, firstName, lastName }, ...restProps }) => {
-      return {
-        candidateEmail: email,
-        firstName,
-        lastName,
+export async function createOrUpdateSalesforceOpportunity(
+  opportunityAndOpportunityUser,
+  isSameOpportunity
+) {
+  if (Array.isArray(opportunityAndOpportunityUser)) {
+    let opportunityUsersToCreate = [];
+    let mainCompanySfId;
+    let mainContactSfId;
+    if (isSameOpportunity) {
+      const {
+        recruiterFirstName,
+        recruiterName,
+        recruiterMail,
+        recruiterPhone,
+        recruiterPosition,
         company,
-        ...restProps,
-      };
+        businessLines,
+      } = opportunityAndOpportunityUser[0].opportunity;
+      ({ companySfId: mainCompanySfId, contactSfId: mainContactSfId } =
+        await createCompanyAndContactFromOpportunity({
+          recruiterFirstName,
+          recruiterName,
+          recruiterMail,
+          recruiterPhone,
+          recruiterPosition,
+          company,
+          businessLines,
+        }));
     }
-  );
+    const opportunitiesToCreate = await Promise.all(
+      opportunityAndOpportunityUser.map(
+        async ({ opportunity, opportunityUser }) => {
+          const { contactSfId, companySfId } =
+            await createCompanyAndContactFromOpportunity(
+              opportunity,
+              mainCompanySfId,
+              mainContactSfId
+            );
+
+          opportunityUsersToCreate = [
+            ...opportunityUsersToCreate,
+            ...(Array.isArray(opportunityUser)
+              ? opportunityUser
+              : [opportunityUser]),
+          ];
+
+          return {
+            ...opportunity,
+            contactSfId,
+            companySfId,
+          };
+        }
+      )
+    );
+
+    await createOrUpdateOffer(opportunitiesToCreate);
+
+    await createOrUpdateSalesforceOpportunityUser(opportunityUsersToCreate);
+  } else {
+    const { opportunity, opportunityUser } = opportunityAndOpportunityUser;
+    const { contactSfId, companySfId } =
+      await createCompanyAndContactFromOpportunity(opportunity);
+
+    let offerSfId = await createOrUpdateOffer({
+      ...opportunity,
+      contactSfId,
+      companySfId,
+    });
+
+    await createOrUpdateSalesforceOpportunityUser(opportunityUser, offerSfId);
+  }
 }

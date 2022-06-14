@@ -27,6 +27,7 @@ import {
 } from 'src/jobs/Airtable';
 import { generatePreview } from 'src/jobs/Image';
 import _ from 'lodash';
+import { updateOrCreateSalesforceOpportunityBackground } from 'src/jobs/Salesforce';
 
 const start = () => {
   const workQueue = getMainWorkQueue();
@@ -110,6 +111,14 @@ const start = () => {
       case JOBS.JOB_TYPES.UPDATE_AIRTABLE: {
         await updateOpportunityAirtableBackground(data.tableName, data.fields);
         return `Airtable : update in '${data.tableName}'`;
+      }
+
+      case JOBS.JOB_TYPES.CREATE_OR_UPDATE_SALESFORCE_OPPORTUNITY: {
+        await updateOrCreateSalesforceOpportunityBackground(
+          data.opportunityId,
+          data.isSameOpportunity
+        );
+        return `Salesforce : created or updated offer '${data.opportunityId}'`;
       }
 
       case JOBS.JOB_TYPES.REMINDER_OFFER: {

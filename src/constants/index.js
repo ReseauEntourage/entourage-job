@@ -359,6 +359,8 @@ const JOBS = {
     SEND_SMS: 'send_sms',
     INSERT_AIRTABLE: 'insert_airtable',
     UPDATE_AIRTABLE: 'update_airtable',
+    CREATE_OR_UPDATE_SALESFORCE_OPPORTUNITY:
+      'create_or_update_salesforce_opportunity',
     REMINDER_OFFER: 'reminder_offer',
     REMINDER_CV_10: 'reminder_cv_10',
     REMINDER_CV_20: 'reminder_cv_20',
