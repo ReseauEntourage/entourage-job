@@ -1,5 +1,5 @@
 import { getOpportunity } from 'src/controllers/Opportunity';
-import { createOrUpdateSalesforceOpportunity } from 'src/controllers/Salesforce';
+import { createOrUpdateSalesforceOffer } from 'src/controllers/Salesforce';
 
 const getProcessFromOpportunityUser = (opportunityUser, company) => {
   return opportunityUser.map(
@@ -22,11 +22,8 @@ const getOfferFromOpportunityId = async (opportunityId) => {
   );
 
   return {
-    opportunity,
-    opportunityUser: getProcessFromOpportunityUser(
-      candidates,
-      opportunity.company
-    ),
+    offer: opportunity,
+    process: getProcessFromOpportunityUser(candidates, opportunity.company),
   };
 };
 
@@ -35,19 +32,15 @@ const updateOrCreateSalesforceOpportunityBackground = async (
   isSameOpportunity
 ) => {
   if (Array.isArray(opportunityId)) {
-    const opportunitiesToCreate = await Promise.all(
+    const offersToCreate = await Promise.all(
       opportunityId.map(async (singleOpportunityId) => {
         return getOfferFromOpportunityId(singleOpportunityId);
       })
     );
-
-    return createOrUpdateSalesforceOpportunity(
-      opportunitiesToCreate,
-      isSameOpportunity
-    );
+    return createOrUpdateSalesforceOffer(offersToCreate, isSameOpportunity);
   } else {
-    const opportunityToCreate = await getOfferFromOpportunityId(opportunityId);
-    return createOrUpdateSalesforceOpportunity(opportunityToCreate);
+    const offerToCreate = await getOfferFromOpportunityId(opportunityId);
+    return createOrUpdateSalesforceOffer(offerToCreate);
   }
 };
 

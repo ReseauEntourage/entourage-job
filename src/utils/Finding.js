@@ -65,9 +65,10 @@ const getAdminMailsFromZone = (zone) => {
   const zoneSuffix = getZoneSuffix(zone);
   return {
     candidatesAdminMail: process.env[`ADMIN_CANDIDATES_${zoneSuffix}`],
-    companiesAdminMail: process.env[`ADMIN_COMPANIES_${zoneSuffix}}`],
+    companiesAdminMail: process.env[`ADMIN_COMPANIES_${zoneSuffix}`],
   };
 };
+
 const getRelatedUser = (member) => {
   if (member) {
     if (member.candidat && member.candidat.coach) {

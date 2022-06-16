@@ -1,6 +1,7 @@
 import Pusher from 'pusher';
 
 import { getMainWorkQueue } from 'src/utils/WorkQueue';
+import * as Sentry from '@sentry/node';
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -56,6 +57,7 @@ const attachListeners = (queue) => {
 
   queue.on('failed', (job, err) => {
     // TODO send error to socket to stop loading if preview or PDF
+    Sentry.captureException(err);
     console.error(
       `Job ${job.id} of type ${job.data.type} failed with error : "${err}"`
     );
@@ -74,6 +76,7 @@ const attachListeners = (queue) => {
   });
 
   queue.on('error', (error) => {
+    Sentry.captureException(error);
     console.error(`An error occured on the work queue : "${error}"`);
   });
 };

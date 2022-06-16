@@ -114,11 +114,14 @@ const start = () => {
       }
 
       case JOBS.JOB_TYPES.CREATE_OR_UPDATE_SALESFORCE_OPPORTUNITY: {
-        await updateOrCreateSalesforceOpportunityBackground(
-          data.opportunityId,
-          data.isSameOpportunity
-        );
-        return `Salesforce : created or updated offer '${data.opportunityId}'`;
+        if (process.env.ENABLE_SF === 'true') {
+          await updateOrCreateSalesforceOpportunityBackground(
+            data.opportunityId,
+            data.isSameOpportunity
+          );
+          return `Salesforce : created or updated offer '${data.opportunityId}'`;
+        }
+        return `Salesforce job ignored : creation or update of offer '${data.opportunityId}'`;
       }
 
       case JOBS.JOB_TYPES.REMINDER_OFFER: {

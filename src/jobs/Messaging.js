@@ -54,6 +54,7 @@ const sendReminderAboutOffer = async (opportunityId, candidatId) => {
       to: candidatData.email,
       bcc: [candidatesAdminMail, companiesAdminMail],
     };
+
     const coach = getRelatedUser(candidatData);
     if (coach) {
       toEmail.cc = coach.email;
