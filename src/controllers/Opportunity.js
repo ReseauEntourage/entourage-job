@@ -36,13 +36,10 @@ import { sendToMailchimp } from 'src/controllers/Mailchimp';
 import { isValidPhone } from 'src/utils/PhoneFormatting';
 import {
   destructureOptionsAndParams,
-  getAirtableOpportunityFields,
   opportunityAttributes,
   sendCandidateOfferMessages,
   sendOnCreatedOfferMessages,
   sendOnValidatedOfferMessages,
-  updateOpportunityAirtable,
-  updateTable,
 } from 'src/helpers/Opportunity';
 import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
 
@@ -52,18 +49,6 @@ const {
   Opportunity_BusinessLine,
   Opportunity,
 } = models;
-
-const refreshAirtableOpportunities = async () => {
-  const opportunities = await Opportunity.findAll({
-    attributes: ['id'],
-  });
-
-  await Promise.all(
-    opportunities.map((opportunity) => {
-      return updateOpportunityAirtable(opportunity.id);
-    })
-  );
-};
 
 const createExternalOpportunity = async (
   data,
@@ -100,17 +85,6 @@ const createExternalOpportunity = async (
     include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
   });
 
-  const fields = getAirtableOpportunityFields(
-    finalOpportunity,
-    finalOpportunity.userOpportunity
-  );
-
-  await addToWorkQueue({
-    type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
-    tableName: process.env.AIRTABLE_OFFERS,
-    fields,
-  });
-
   const cleanedOpportunity = cleanOpportunity(finalOpportunity);
 
   if (!isAdmin) {
@@ -133,8 +107,8 @@ const createExternalOpportunity = async (
 
   return {
     ...cleanedOpportunity,
-    userOpportunity: cleanedOpportunity.userOpportunity.find((uo) => {
-      return uo.UserId === candidatId;
+    userOpportunity: cleanedOpportunity.userOpportunity.find((userOpp) => {
+      return userOpp.UserId === candidatId;
     }),
   };
 };
@@ -197,14 +171,6 @@ const createOpportunity = async (
   console.log(`Etape finale - Reprendre l'opportunité complète à retourner`);
 
   const finalOpportunity = await getOpportunity(modelOpportunity.id, true);
-
-  const fields = getAirtableOpportunityFields(finalOpportunity, candidates);
-
-  await addToWorkQueue({
-    type: JOBS.JOB_TYPES.INSERT_AIRTABLE,
-    tableName: process.env.AIRTABLE_OFFERS,
-    fields,
-  });
 
   if (!isAdmin) {
     await sendOnCreatedOfferMessages(candidates, finalOpportunity);
@@ -600,12 +566,11 @@ const addUserToOpportunity = async (opportunityId, userId, seen) => {
     });
   }
 
-  await updateOpportunityAirtable(opportunityId);
   return modelOpportunityUser;
 };
 
 const updateOpportunityUser = async (opportunityUser) => {
-  const modelOpportunityUser = await Opportunity_User.update(opportunityUser, {
+  return Opportunity_User.update(opportunityUser, {
     where: { id: opportunityUser.id },
     individualHooks: true,
     attributes: [
@@ -622,10 +587,6 @@ const updateOpportunityUser = async (opportunityUser) => {
   }).then((model) => {
     return model && model.length > 1 && model[1][0];
   });
-
-  await updateOpportunityAirtable(modelOpportunityUser.OpportunityId);
-
-  return modelOpportunityUser;
 };
 
 const updateOpportunity = async (
@@ -789,14 +750,6 @@ const updateOpportunity = async (
     }
   }
 
-  try {
-    await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
-    console.log('Updated table with modified offer.');
-  } catch (err) {
-    console.error(err);
-    console.log('Failed to update table with modified offer.');
-  }
-
   if (
     candidatesToSendMailTo &&
     candidatesToSendMailTo.length > 0 &&
@@ -822,7 +775,7 @@ const updateBulkOpportunity = async (attributes, opportunitiesId = []) => {
     }
   );
 
-  const completeUpdatedOpportunities = await Opportunity.findAll({
+  await Opportunity.findAll({
     where: {
       id: updatedOpportunities.map(({ id }) => {
         return id;
@@ -830,18 +783,6 @@ const updateBulkOpportunity = async (attributes, opportunitiesId = []) => {
     },
     include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
   });
-
-  try {
-    await Promise.all(
-      completeUpdatedOpportunities.map((updatedOpportunity) => {
-        return updateTable(updatedOpportunity.toJSON());
-      })
-    );
-    console.log('Updated table with bulk modified offers.');
-  } catch (err) {
-    console.error(err);
-    console.log('Failed to update table with bulk modified offer.');
-  }
 
   return {
     nbUpdated,
@@ -890,14 +831,6 @@ const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
       include: opportunityAttributes.INCLUDE_OPPORTUNITY_COMPLETE,
     });
 
-    try {
-      await updateTable(finalOpportunity, finalOpportunity.userOpportunity);
-      console.log('Updated table with modified offer.');
-    } catch (err) {
-      console.error(err);
-      console.log('Failed to update table with modified offer.');
-    }
-
     const cleanedOpportunity = cleanOpportunity(finalOpportunity);
 
     return {
@@ -927,5 +860,4 @@ export {
   getUnseenUserOpportunitiesCount,
   countPendingOpportunitiesCount,
   getExternalOpportunitiesCreatedByUserCount,
-  refreshAirtableOpportunities,
 };

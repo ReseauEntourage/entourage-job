@@ -101,6 +101,8 @@ export const prepareServer = () => {
   app.use('/api/v1/opportunity', apiLimiter, routeOpportunity);
   app.use('/api/v1/user', apiLimiter, routeUser);
 
+  /*  app.use('/api/v1/salesforce', apiLimiter, routeSalesforce);*/
+
   app.use(Sentry.Handlers.errorHandler());
 
   app.use((err, req, res, next) => {
