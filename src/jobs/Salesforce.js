@@ -1,10 +1,26 @@
 import { getOpportunity } from 'src/controllers/Opportunity';
 import { createOrUpdateSalesforceOffer } from 'src/controllers/Salesforce';
+import { models } from 'src/db/models';
 
-const getProcessFromOpportunityUser = (opportunityUser, company) => {
+const { Opportunity } = models;
+
+const refreshSalesforceData = async () => {
+  const opportunities = await Opportunity.findAll({
+    attributes: ['id'],
+  });
+
+  await Promise.all(
+    opportunities.map((opportunity) => {
+      return updateOrCreateSalesforceOpportunityBackground(opportunity.id);
+    })
+  );
+};
+
+const getProcessFromOpportunityUser = (opportunityUser, id, company) => {
   return opportunityUser.map(
     ({ UserId, User: { email, firstName, lastName }, ...restProps }) => {
       return {
+        offerId: id,
         candidateEmail: email,
         firstName,
         lastName,
@@ -16,14 +32,18 @@ const getProcessFromOpportunityUser = (opportunityUser, company) => {
 };
 
 const getOfferFromOpportunityId = async (opportunityId) => {
-  const { userOpportunity: candidates, ...opportunity } = await getOpportunity(
+  const { userOpportunity, ...opportunity } = await getOpportunity(
     opportunityId,
     true
   );
 
   return {
     offer: opportunity,
-    process: getProcessFromOpportunityUser(candidates, opportunity.company),
+    process: getProcessFromOpportunityUser(
+      userOpportunity,
+      opportunity.id,
+      opportunity.company
+    ),
   };
 };
 
@@ -44,4 +64,4 @@ const updateOrCreateSalesforceOpportunityBackground = async (
   }
 };
 
-export { updateOrCreateSalesforceOpportunityBackground };
+export { updateOrCreateSalesforceOpportunityBackground, refreshSalesforceData };

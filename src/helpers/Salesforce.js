@@ -88,6 +88,7 @@ function mapSalesforceOfferFields({
   isPublic,
   isExternal,
   link,
+  isValidated,
   isArchived,
   department,
   address,
@@ -124,6 +125,7 @@ function mapSalesforceOfferFields({
     Offre_publique__c: isPublic,
     Offre_externe__c: isExternal,
     Offre_archiv_e__c: isArchived,
+    Offre_valid_e__c: isValidated,
     Lien_externe__c: link,
     Lien_Offre_Backoffice__c:
       process.env.FRONT_URL + '/backoffice/admin/offres/' + id,

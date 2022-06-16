@@ -18,6 +18,7 @@ async function findOrCreateCompany({
   address,
   department,
   businessLines,
+  mainCompanySfId,
 }) {
   let companySfId = await searchCompanyByName(
     formatCompanyName(name, address, department)
@@ -32,6 +33,7 @@ async function findOrCreateCompany({
       businessLines,
       address,
       department,
+      mainCompanySfId,
     });
   }
   return companySfId;
@@ -98,20 +100,13 @@ async function findOrCreateCompanyAndContactFromOffer(
 
   let { companySfId, contactSfId } = await findOfferRelationsById(offer.id);
 
-  if (mainCompanySfId) {
-    companySfId = await createCompany({
-      name: company,
-      businessLines,
-      address,
-      department,
-      mainCompanySfId,
-    });
-  } else if (!companySfId) {
+  if (!companySfId) {
     companySfId = await findOrCreateCompany({
       name: company,
       businessLines,
       address,
       department,
+      mainCompanySfId,
     });
   }
 
@@ -146,18 +141,17 @@ async function getProcessToCreate(process, offerSfId) {
 }
 
 async function createOrUpdateSalesforceProcess(process, offerSfId) {
-  let processToCreate;
   if (Array.isArray(process)) {
-    processToCreate = await Promise.all(
+    const processToCreate = await Promise.all(
       process.map(async (singleProcess) => {
         return getProcessToCreate(singleProcess, offerSfId);
       })
     );
+    return createOrUpdateProcess(processToCreate);
   } else {
-    processToCreate = await getProcessToCreate(process, offerSfId);
+    let processToCreate = await getProcessToCreate(process, offerSfId);
+    return createOrUpdateProcess(processToCreate);
   }
-
-  return createOrUpdateProcess(processToCreate);
 }
 
 export async function createOrUpdateSalesforceOffer(
