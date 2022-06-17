@@ -135,8 +135,9 @@ async function getProcessToCreate(process, offerSfId) {
   const binomeSfId = await findBinomeByCandidateEmail(candidateEmail);
   return {
     ...restProcess,
-    binomeId: binomeSfId,
-    offerId: offerSfId || (await findOfferById(offerId)),
+    binomeSfId,
+    offerSfId: offerSfId || (await findOfferById(offerId)),
+    offerId,
   };
 }
 

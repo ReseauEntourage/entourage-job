@@ -16,11 +16,13 @@ const refreshSalesforceData = async () => {
   );
 };
 
-const getProcessFromOpportunityUser = (opportunityUser, id, company) => {
+const getProcessFromOpportunityUser = (opportunityUser, id, title, company) => {
   return opportunityUser.map(
     ({ UserId, User: { email, firstName, lastName }, ...restProps }) => {
       return {
         offerId: id,
+        offerTitle: title,
+        candidateId: UserId,
         candidateEmail: email,
         firstName,
         lastName,
@@ -42,6 +44,7 @@ const getOfferFromOpportunityId = async (opportunityId) => {
     process: getProcessFromOpportunityUser(
       userOpportunity,
       opportunity.id,
+      opportunity.title,
       opportunity.company
     ),
   };

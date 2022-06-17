@@ -116,7 +116,7 @@ function mapSalesforceOfferFields({
 
   return {
     ID__c: id,
-    Name: company + ' - ' + title,
+    Name: `${title} - ${formatCompanyName(company, address, department)}`,
     Titre__c: title,
     Entreprise_Recruteuse__c: companySfId,
     Secteur_d_activite_de_l_offre__c: formatBusinessLines(businessLines),
@@ -164,20 +164,25 @@ function mapSalesforceProcessFields({
   archived,
   recommended,
   note,
-  binomeId,
+  candidateId,
   offerId,
+  offerTitle,
+  binomeSfId,
+  offerSfId,
 }) {
+  console.log(candidateId, offerTitle, offerId);
   return {
     ID__c: id,
-    Name: firstName + ' ' + lastName + ' - ' + company,
+    Name: `${firstName} ${lastName} - ${offerTitle} - ${company}`,
     Statut__c: findOfferStatus(status, isPublic, recommended).label,
     Vue__c: seen,
     Favoris__c: bookmarked,
     Archiv_e__c: archived,
     Recommandee__c: recommended,
     Commentaire__c: note,
-    Binome__c: binomeId,
-    Offre_d_emploi__c: offerId,
+    Binome__c: binomeSfId,
+    Offre_d_emploi__c: offerSfId,
+    Lien_Offre_Backoffice__c: `${process.env.FRONT_URL}/backoffice/admin/membres/${candidateId}/offres/${offerId}`,
   };
 }
 
