@@ -46,11 +46,11 @@ const getZoneSuffix = (zone) => {
   return zone && zone !== ADMIN_ZONES.HZ ? zone : 'HZ';
 };
 
-const getZoneFromDepartment = (dep) => {
-  const zone = DEPARTMENTS.find((depObj) => {
-    return depObj.name === dep;
+const getZoneFromDepartment = (dept) => {
+  const department = DEPARTMENTS.find((deptObj) => {
+    return deptObj.name === dept;
   });
-  return getZoneSuffix(zone ? zone.zone : null);
+  return getZoneSuffix(department ? department.zone : null);
 };
 
 const getAdminMailsFromDepartment = (dep) => {

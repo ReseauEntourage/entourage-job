@@ -36,6 +36,7 @@ import { sendToMailchimp } from 'src/controllers/Mailchimp';
 import { isValidPhone } from 'src/utils/PhoneFormatting';
 import {
   destructureOptionsAndParams,
+  findCandidatesToRecommendTo,
   opportunityAttributes,
   sendCandidateOfferMessages,
   sendOnCreatedOfferMessages,
@@ -143,12 +144,23 @@ const createOpportunity = async (
   }
 
   let candidates = [];
-  if (data.candidatesId && data.candidatesId.length > 0) {
+
+  const candidatesToRecommendTo = data.isPublic
+    ? await findCandidatesToRecommendTo(data.department, data.businessLines)
+    : [];
+
+  if (data.candidatesId?.length > 0 || candidatesToRecommendTo?.length > 0) {
     console.log(
       `Etape 4 - Détermine le(s) User(s) à qui l'opportunité s'adresse`
     );
+
+    const uniqueCandidatesId = _.uniq([
+      ...(data.candidatesId || []),
+      ...(candidatesToRecommendTo || []),
+    ]);
+
     await Promise.all(
-      data.candidatesId.map((candidatId) => {
+      uniqueCandidatesId.map((candidatId) => {
         return Opportunity_User.create({
           OpportunityId: modelOpportunity.id,
           UserId: candidatId, // to rename in userId,
@@ -632,11 +644,23 @@ const updateOpportunity = async (
     });
   }
 
+  const candidatesToRecommendTo = opportunity.isPublic
+    ? await findCandidatesToRecommendTo(
+        opportunity.department,
+        opportunity.businessLines
+      )
+    : [];
+
+  const uniqueCandidatesIds = _.uniq([
+    ...(opportunity.candidatesId || []),
+    ...(candidatesToRecommendTo || []),
+  ]);
+
   const t = await sequelize.transaction();
   try {
-    if (opportunity.candidatesId) {
+    if (uniqueCandidatesIds?.length > 0) {
       const opportunitiesUser = await Promise.all(
-        opportunity.candidatesId.map((candidatId) => {
+        uniqueCandidatesIds.map((candidatId) => {
           return Opportunity_User.findOrCreate({
             where: {
               OpportunityId: modelOpportunity.id,
@@ -700,25 +724,15 @@ const updateOpportunity = async (
     throw error;
   }
 
-  let newCandidatesIdsToSendMailTo;
-
   // Check case where the opportunity has become private and has candidates, to see if there are any new candidates to send mail to
-  const newCandidates =
-    opportunity.candidatesId &&
-    opportunity.candidatesId.length > 0 &&
-    opportunity.candidatesId.filter((candidateId) => {
-      return !oldOpportunity.userOpportunity.some((oldUserOpp) => {
-        return candidateId === oldUserOpp.User.id;
-      });
-    });
-
-  if (
-    newCandidates &&
-    newCandidates.length > 0 &&
-    modelOpportunity.isValidated
-  ) {
-    newCandidatesIdsToSendMailTo = newCandidates;
-  }
+  const newCandidatesIdsToSendMailTo =
+    modelOpportunity.isValidated && uniqueCandidatesIds
+      ? uniqueCandidatesIds.filter((candidateId) => {
+          return !oldOpportunity.userOpportunity.some((oldUserOpp) => {
+            return candidateId === oldUserOpp.User.id;
+          });
+        })
+      : null;
 
   const finalOpportunity = await getOpportunity(opportunity.id, true);
 

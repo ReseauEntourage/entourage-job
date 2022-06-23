@@ -14,12 +14,14 @@ import {
   getAdminMailsFromDepartment,
   getAdminMailsFromZone,
   getRelatedUser,
+  getZoneFromDepartment,
 } from 'src/utils/Finding';
 import { addToWorkQueue } from 'src/jobs';
 import { isValidPhone } from 'src/utils/PhoneFormatting';
 import { getShortenedOfferURL } from 'src/utils/Mutating';
 import { models } from 'src/db/models';
 import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
+import { getAllPublishedCandidates } from 'src/controllers/User';
 
 const { BusinessLine, User, User_Candidat, Opportunity_User } = models;
 
@@ -356,6 +358,31 @@ const sendOnCreatedOfferMessages = async (candidates, opportunity) => {
   });
 };
 
+const findCandidatesToRecommendTo = async (department, businessLines) => {
+  if (department && businessLines?.length > 0) {
+    const autoRecommendationsZone = process.env.AUTO_RECOMMENDATIONS_ZONE;
+    if (
+      !autoRecommendationsZone ||
+      autoRecommendationsZone === getZoneFromDepartment(department)
+    ) {
+      try {
+        const publishedCandidates = await getAllPublishedCandidates(
+          department,
+          businessLines
+        );
+
+        return publishedCandidates.map(({ id }) => {
+          return id;
+        });
+      } catch (err) {
+        console.error(err);
+        return err;
+      }
+    }
+  }
+  return [];
+};
+
 export {
   getOfferOptions,
   getOfferSearchOptions,
@@ -363,5 +390,6 @@ export {
   sendCandidateOfferMessages,
   sendOnValidatedOfferMessages,
   sendOnCreatedOfferMessages,
+  findCandidatesToRecommendTo,
   opportunityAttributes,
 };
