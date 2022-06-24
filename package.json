@@ -9,11 +9,7 @@
   "scripts": {
     "mainWorker": "NODE_ENV=production node -r dotenv/config --expose-gc build/mainWorker.js",
     "dev-mainWorker": "npx nodemon --exec babel-node -r dotenv/config --expose-gc src/mainWorker.js",
-    "send-recap": "NODE_ENV=production node -r dotenv/config -e 'require(\"./build/jobs/Messaging.js\").sendRecapAboutOffers()'",
-    "send-mails-old-users": "NODE_ENV=production node -r dotenv/config -e 'require(\"./build/jobs/Messaging.js\").sendMailsToOldUsers()'",
     "refresh-salesforce-data": "NODE_ENV=production node -r dotenv/config -e 'require(\"./build/jobs/Salesforce.js\").refreshSalesforceData()'",
-    "dev-send-recap": "NODE_ENV=development node -r @babel/register -r dotenv/config -e 'require(\"./src/jobs/Messaging.js\").sendRecapAboutOffers()'",
-    "dev-send-mails-old-users": "NODE_ENV=development node -r @babel/register -r dotenv/config -e 'require(\"./src/jobs/Messaging.js\").sendMailsToOldUsers()'",
     "dev-refresh-salesforce-data": "NODE_ENV=development node -r @babel/register -r dotenv/config -e 'require(\"./src/jobs/Salesforce.js\").refreshSalesforceData()'",
     "dev": "npx nodemon --exec babel-node -r dotenv/config src/app.js",
     "start": "NODE_ENV=production node -r dotenv/config build/app.js",

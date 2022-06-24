@@ -170,7 +170,6 @@ function mapSalesforceProcessFields({
   binomeSfId,
   offerSfId,
 }) {
-  console.log(candidateId, offerTitle, offerId);
   return {
     ID__c: id,
     Name: `${firstName} ${lastName} - ${offerTitle} - ${company}`,

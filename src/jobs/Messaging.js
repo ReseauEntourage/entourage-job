@@ -1,26 +1,18 @@
-import {
-  getAllPublishedCandidates,
-  getMembers,
-  getUser,
-  sendMailsAfterMatching,
-} from 'src/controllers/User';
+import { getUser } from 'src/controllers/User';
 import { sendMail, sendSMS } from 'src/controllers/Messaging';
 
 import _ from 'lodash';
 
-import { ADMIN_ZONES, DEPARTMENTS_FILTERS } from 'src/constants/departements';
 import {
   getExternalOpportunitiesCreatedByUserCount,
-  getLatestOpportunities,
   getOpportunity,
 } from 'src/controllers/Opportunity';
-import { CV_STATUS, JOBS, MAILJET_TEMPLATES, USER_ROLES } from 'src/constants';
+import { CV_STATUS, MAILJET_TEMPLATES } from 'src/constants';
 import {
   getAdminMailsFromZone,
   getRelatedUser,
   getZoneFromDepartment,
 } from 'src/utils/Finding';
-import { addToWorkQueue } from 'src/jobs';
 import { getAllUserCVsVersions } from 'src/controllers/CV';
 import moment from 'moment';
 import { isValidPhone } from 'src/utils/PhoneFormatting';
@@ -240,117 +232,14 @@ const sendReminderAboutExternalOffers = async (candidatId) => {
   return false;
 };
 
-const sendMailsToOldUsers = async () => {
-  const publishedCandidates = await getAllPublishedCandidates();
-  const members = await getMembers({
-    role: USER_ROLES.CANDIDAT,
-    hidden: ['false'],
-    employed: ['false'],
-    associatedUser: ['true'],
-  });
-  const filteredMembers = members.filter(({ id: memberId }) => {
-    return !publishedCandidates
-      .map(({ id }) => {
-        return id;
-      })
-      .includes(memberId);
-  });
-  await Promise.all(
-    filteredMembers.map(({ id }) => {
-      return sendMailsAfterMatching(id);
-    })
-  );
-};
-
-const sendRecapAboutOffers = async () => {
-  try {
-    const adminZonesKeys = Object.keys(ADMIN_ZONES);
-    const opportunities = await getLatestOpportunities();
-    const publishedCandidates = await getAllPublishedCandidates();
-    let emails = [];
-
-    for (let i = 0; i < adminZonesKeys.length; i += 1) {
-      const zone = ADMIN_ZONES[adminZonesKeys[i]];
-      const zoneFilters = _.map(
-        DEPARTMENTS_FILTERS.filter((filter) => {
-          return !filter.zone || filter.zone === zone;
-        }),
-        (zoneFilter) => {
-          return zoneFilter.value;
-        }
-      );
-      const zoneRecentOpportunities = opportunities.filter((opportunity) => {
-        return (
-          zoneFilters.some((zoneFilter) => {
-            return zoneFilter === opportunity.department;
-          }) ||
-          (zone === ADMIN_ZONES.HZ && !opportunity.department)
-        );
-      });
-
-      if (zoneRecentOpportunities.length > 0) {
-        const zoneCandidates = publishedCandidates.filter((candidate) => {
-          return (
-            candidate.zone === zone ||
-            (zone === ADMIN_ZONES.HZ && !candidate.zone)
-          );
-        });
-
-        const recipients = _.reduce(
-          zoneCandidates,
-          (acc, curr) => {
-            const coachEmail = [];
-
-            const coach = getRelatedUser(curr);
-            if (coach) {
-              coachEmail.push(coach.email);
-            }
-            return [...acc, curr.email, ...coachEmail];
-          },
-          []
-        );
-
-        const { candidatesAdminMail } = getAdminMailsFromZone(zone);
-
-        if (recipients.length > 0) {
-          emails = recipients.map((recipient) => {
-            return {
-              toEmail: recipient,
-              templateId: MAILJET_TEMPLATES.OFFERS_RECAP,
-              replyTo: candidatesAdminMail,
-              variables: {
-                zone: _.capitalize(zone),
-                offerList: zoneRecentOpportunities,
-              },
-            };
-          });
-        }
-      }
-    }
-
-    if (emails.length > 0) {
-      await addToWorkQueue({
-        type: JOBS.JOB_TYPES.SEND_MAIL,
-        mails: emails,
-      });
-    }
-    return emails;
-  } catch (err) {
-    console.error(err);
-    return err;
-  }
-};
-
 export {
   sendMailBackground,
   sendSMSBackground,
   sendReminderAboutOffer,
   sendReminderAboutCV,
   sendNoResponseOffer,
-  sendRecapAboutOffers,
   sendReminderAboutInterviewTraining,
   sendReminderAboutVideo,
   sendReminderAboutActions,
   sendReminderAboutExternalOffers,
-  sendMailsToOldUsers,
 };

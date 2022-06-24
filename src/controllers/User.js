@@ -565,9 +565,17 @@ const searchCandidates = async (query) => {
   return User.findAll(options);
 };
 
-const getAllPublishedCandidates = async () => {
+const getAllPublishedCandidates = async (department, businessLines) => {
   const publishedCVs = await sequelize.query(
-    getPublishedCVQuery({ [Op.or]: [false] }),
+    getPublishedCVQuery(
+      { [Op.or]: [false] },
+      { [Op.or]: [department] },
+      {
+        [Op.or]: businessLines.map(({ name }) => {
+          return name;
+        }),
+      }
+    ),
     {
       type: QueryTypes.SELECT,
     }
@@ -586,6 +594,7 @@ const getAllPublishedCandidates = async () => {
     },
     include: INCLUDE_USER_CANDIDAT,
   };
+
   return User.findAll(options);
 };
 
