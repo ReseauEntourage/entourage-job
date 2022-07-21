@@ -173,7 +173,7 @@ const createOpportunity = async (
 
     candidates = await Opportunity_User.findAll({
       where: {
-        UserId: data.candidatesId,
+        UserId: uniqueCandidatesId,
         OpportunityId: modelOpportunity.id,
       },
       include: opportunityAttributes.INCLUDE_OPPORTUNITY_CANDIDATE,
@@ -664,7 +664,7 @@ const updateOpportunity = async (
           return Opportunity_User.findOrCreate({
             where: {
               OpportunityId: modelOpportunity.id,
-              UserId: candidatId, // to rename in userId
+              UserId: candidatId,
             },
             transaction: t,
           }).then((model) => {
