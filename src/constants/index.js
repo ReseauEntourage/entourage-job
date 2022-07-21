@@ -316,6 +316,16 @@ const CONTRACTS = [
     end: true,
   },
   {
+    label: 'Formation certifiante',
+    value: 'form',
+    end: true,
+  },
+  {
+    label: "Période d'immersion (PMSMP)",
+    value: 'pmsmp',
+    end: true,
+  },
+  {
     label: 'Autre',
     value: 'other',
     end: true,
