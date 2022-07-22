@@ -66,7 +66,7 @@ Il vous faut installer l'interface PostgreSQL **`psql`** pour votre OS.
 
 ## 5# Initialisation de la BDD de test
 
-- `docker run --name entourage-db-test -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 54300:5432 entourage`
+- `docker run --name entourage-db-test -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 54300:5432 postgres`
 
 - Vous avez besoin des données du fichier **`.env.test`** pour les tests en local, et de renseigner le champs DATABASE_URL (`ex: postgresql://entourage:entourage@localhost:54300/entourage`) avec votre adresse.
 

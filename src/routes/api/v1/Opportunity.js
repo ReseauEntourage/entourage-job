@@ -37,8 +37,14 @@ const router = express.Router();
  * -  401
  */
 router.post('/', auth(), (req, res) => {
+  const isLoggedAsAdmin = req.payload?.role === USER_ROLES.ADMIN;
+
   const { isAdmin, locations, shouldSendNotifications, isCopy, ...restBody } =
     req.body;
+
+  if (isAdmin && !isLoggedAsAdmin) {
+    return res.status(401).send({ message: 'Unauthorized' });
+  }
 
   let promises;
 
@@ -93,7 +99,7 @@ router.post('/', auth(), (req, res) => {
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send(err);
+      return res.status(401).send(err);
     });
 });
 
@@ -157,11 +163,11 @@ router.get('/admin', auth([USER_ROLES.ADMIN]), (req, res) => {
       logger(res).log(
         `Opportunités récupérés (Total : ${listeOpportunities.length})`
       );
-      res.status(200).json(listeOpportunities);
+      return res.status(200).json(listeOpportunities);
     })
     .catch((err) => {
       logger(res).error(err);
-      res.status(401).send(err);
+      return res.status(401).send(err);
     });
 });
 
@@ -205,11 +211,11 @@ router.get(
         req.query
       )
         .then((listeOpportunities) => {
-          res.status(200).json(listeOpportunities);
+          return res.status(200).json(listeOpportunities);
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send(err);
+          return res.status(401).send(err);
         });
     });
   }
@@ -234,7 +240,7 @@ router.get(
       OpportunityController.getAllUserOpportunities(req.params.id, req.query)
         .then((zoneOpportunities) => {
           if (!department || type !== OFFER_CANDIDATE_FILTERS_DATA[0].tag) {
-            res.status(200).json({
+            return res.status(200).json({
               offers: zoneOpportunities,
               otherOffers: [],
             });
@@ -249,7 +255,7 @@ router.get(
               type,
               ...restQuery,
             }).then((otherOpportunities) => {
-              res.status(200).json({
+              return res.status(200).json({
                 offers: zoneOpportunities,
                 otherOffers: otherOpportunities,
               });
@@ -258,7 +264,7 @@ router.get(
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send(err);
+          return res.status(401).send(err);
         });
     });
   }
@@ -281,11 +287,11 @@ router.get(
     checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
       OpportunityController.getUnseenUserOpportunitiesCount(req.params.id)
         .then((opportunitiesCount) => {
-          res.status(200).json(opportunitiesCount);
+          return res.status(200).json(opportunitiesCount);
         })
         .catch((err) => {
           logger(res).error(err);
-          res.status(401).send(err);
+          return res.status(401).send(err);
         });
     });
   }
@@ -309,15 +315,15 @@ router.get(
       .then((opportunity) => {
         if (opportunity && Object.keys(opportunity).length > 0) {
           logger(res).log(`Opportunité trouvé`);
-          res.status(200).json(opportunity);
+          return res.status(200).json(opportunity);
         } else {
           logger(res).log(`Aucune Opportunité trouvé`);
-          res.status(204).send(null);
+          return res.status(204).send(null);
         }
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send(err);
+        return res.status(401).send(err);
       });
   }
 );
@@ -494,11 +500,11 @@ router.put(
   router.delete('/:id', auth([USER_ROLES.ADMIN]), (req, res) => {
     OpportunityController.deleteOpportunity(req.params.id)
       .then((result) => {
-        res.status(200).json(result);
+        return res.status(200).json(result);
       })
       .catch((err) => {
         logger(res).error(err);
-        res.status(401).send(err);
+        return res.status(401).send(err);
       });
   });
 */
