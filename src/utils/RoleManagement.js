@@ -8,7 +8,7 @@ const checkUserAuthorization = (req, res, userId, next) => {
   ) {
     next();
   } else {
-    res.status(401).send({ message: 'Unauthorized' });
+    return res.status(401).send({ message: 'Unauthorized' });
   }
 };
 
@@ -21,7 +21,7 @@ const checkCandidatOrCoachAuthorization = (req, res, userId, next) => {
   ) {
     next();
   } else {
-    res.status(401).send({ message: 'Unauthorized' });
+    return res.status(401).send({ message: 'Unauthorized' });
   }
 };
 
