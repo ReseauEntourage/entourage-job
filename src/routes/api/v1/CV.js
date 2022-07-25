@@ -260,23 +260,29 @@ router.get('/published', auth(), (req, res) => {
  * Route : GET /api/<VERSION>/cv
  * Description :  Récupère le CV lié au userId passé en query
  */
-router.get('/', auth(), (req, res) => {
-  const { userId } = req.query;
-  CVController.getCVbyUserId(userId)
-    .then((cv) => {
-      if (cv && !isEmpty(cv)) {
-        logger(res).log(`CV trouvé`);
-        res.status(200).json(cv);
-      } else {
-        logger(res).log(`Aucun CV trouvé`);
-        res.status(204).send(null);
-      }
-    })
-    .catch((err) => {
-      logger(res).error(err);
-      res.status(401).send(err);
+router.get(
+  '/',
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  (req, res) => {
+    const { userId } = req.query;
+    checkCandidatOrCoachAuthorization(req, res, userId, () => {
+      CVController.getCVbyUserId(userId)
+        .then((cv) => {
+          if (cv && !isEmpty(cv)) {
+            logger(res).log(`CV trouvé`);
+            res.status(200).json(cv);
+          } else {
+            logger(res).log(`Aucun CV trouvé`);
+            res.status(204).send(null);
+          }
+        })
+        .catch((err) => {
+          logger(res).error(err);
+          res.status(401).send(err);
+        });
     });
-});
+  }
+);
 
 /**
  * Route : GET /api/<VERSION>/cv/checkUpdate
@@ -292,14 +298,16 @@ router.get(
     } else if (req.payload.candidatId) {
       candidatId = req.payload.candidatId;
     }
-    CVController.checkCVHasBeenModified(candidatId, req.payload.id)
-      .then((cvHasBeenModified) => {
-        res.status(200).json(cvHasBeenModified);
-      })
-      .catch((err) => {
-        logger(res).error(err);
-        res.status(401).send(err);
-      });
+    checkCandidatOrCoachAuthorization(req, res, candidatId, () => {
+      CVController.checkCVHasBeenModified(candidatId, req.payload.id)
+        .then((cvHasBeenModified) => {
+          res.status(200).json(cvHasBeenModified);
+        })
+        .catch((err) => {
+          logger(res).error(err);
+          res.status(401).send(err);
+        });
+    });
   }
 );
 
@@ -317,14 +325,16 @@ router.put(
     } else if (req.payload.candidatId) {
       candidatId = req.payload.candidatId;
     }
-    CVController.setCVHasBeenRead(candidatId, req.payload.id)
-      .then((cv) => {
-        res.status(200).json(cv);
-      })
-      .catch((err) => {
-        logger(res).error(err);
-        res.status(401).send(err);
-      });
+    checkCandidatOrCoachAuthorization(req, res, candidatId, () => {
+      CVController.setCVHasBeenRead(candidatId, req.payload.id)
+        .then((cv) => {
+          res.status(200).json(cv);
+        })
+        .catch((err) => {
+          logger(res).error(err);
+          res.status(401).send(err);
+        });
+    });
   }
 );
 
@@ -403,6 +413,34 @@ router.get('/:url', auth(), (req, res) => {
       res.status(401).send(err);
     });
 });
+
+/**
+ * Route : GET /api/<VERSION>/cv/maxVersion/<ID>
+ * Description : Récupère le CV associé à l'<URL> fournit
+ */
+router.get(
+  '/lastVersion/:candidateId',
+  auth([USER_ROLES.COACH, USER_ROLES.CANDIDAT, USER_ROLES.ADMIN]),
+  (req, res) => {
+    const { candidateId } = req.params;
+    checkCandidatOrCoachAuthorization(req, res, candidateId, () => {
+      CVController.getMaxCvVersion(candidateId)
+        .then((lastCvVersion) => {
+          if (lastCvVersion) {
+            logger(res).log(`CV trouvé`);
+            res.status(200).json({ lastCvVersion });
+          } else {
+            logger(res).log(`Aucun CV trouvé`);
+            res.status(204).send(null);
+          }
+        })
+        .catch((err) => {
+          logger(res).error(err);
+          res.status(401).send(err);
+        });
+    });
+  }
+);
 
 /**
  * Route : GET /api/<VERSION>/cv/pdf/<URL>

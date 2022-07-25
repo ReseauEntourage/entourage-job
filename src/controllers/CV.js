@@ -300,6 +300,18 @@ const queryConditionCV = (attribute, value, allowHidden) => {
   on cvs."UserId" = groupUsers."candidatId"`;
 };
 
+const getMaxCvVersion = async (userId) => {
+  const maxVersions = await models.CV.findAll({
+    attributes: [[fn('MAX', col('version')), 'maxVersion']],
+    raw: true,
+    where: {
+      UserId: userId,
+    },
+  });
+
+  return maxVersions[0].maxVersion;
+};
+
 const createCV = async (data, userId) => {
   console.log(`createCV - Création du CV`);
   if (data.userId) {
@@ -307,17 +319,11 @@ const createCV = async (data, userId) => {
     delete data.userId;
   }
 
-  const maxVersions = await models.CV.findAll({
-    attributes: [[fn('MAX', col('version')), 'maxVersion']],
-    raw: true,
-    where: {
-      UserId: data.UserId,
-    },
-  });
+  const maxVersion = await getMaxCvVersion(data.UserId);
 
   const cvData = {
     ...data,
-    version: maxVersions[0].maxVersion + 1,
+    version: maxVersion + 1,
     lastModifiedBy: userId,
     createdAt: undefined,
     updatedAt: undefined,
@@ -1089,6 +1095,7 @@ export {
   getCVs,
   getRandomShortCVs,
   setCV,
+  getMaxCvVersion,
   createSearchString,
   generatePdfFromCV,
   getAndCacheCV,

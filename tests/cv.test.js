@@ -21,7 +21,8 @@ describe('CV', () => {
   let loggedInAdmin;
   let loggedInCandidat;
   let loggedInCoach;
-  let candidatCV;
+  let loggedInOtherCandidat;
+  let loggedInOtherCoach;
   let path;
 
   beforeAll(async () => {
@@ -39,22 +40,36 @@ describe('CV', () => {
       role: USER_ROLES.CANDIDAT,
       password: 'candidat',
     });
-    candidatCV = await userFactory({
+    const otherCandidat = await userFactory({
       role: USER_ROLES.CANDIDAT,
-      password: 'candidatCV',
+      password: 'otherCandidat',
+    });
+    const otherCoach = await userFactory({
+      role: USER_ROLES.COACH,
+      password: 'otherCoach',
     });
     await cvFactory({
       status: CV_STATUS.Published.value,
-      UserId: candidatCV.id,
+      UserId: candidat.id,
+    });
+    await cvFactory({
+      status: CV_STATUS.Published.value,
+      UserId: otherCandidat.id,
     });
     admin.password = 'admin';
     coach.password = 'coach';
     candidat.password = 'candidat';
+    otherCoach.password = 'otherCoach';
+    otherCandidat.password = 'otherCandidat';
+
     await associateCoachAndCandidat(coach, candidat);
+    await associateCoachAndCandidat(otherCoach, otherCandidat);
     loggedInAdmin = await createLoggedInUser(admin, {}, false);
     loggedInCoach = await createLoggedInUser(coach, {}, false);
     loggedInCandidat = await createLoggedInUser(candidat, {}, false);
 
+    loggedInOtherCoach = await createLoggedInUser(otherCoach, {}, false);
+    loggedInOtherCandidat = await createLoggedInUser(otherCandidat, {}, false);
     path = getTestImagePath();
   });
 
@@ -218,40 +233,145 @@ describe('CV', () => {
       });
     });
     describe('R - Read 1 CV', () => {
-      describe(' Get a CV by user id - /?userId', () => {
-        it('Should return 200 if valid user id provided', async () => {
-          const response = await request(serverTest).get(
-            `${route}/?userId=${loggedInCandidat.user.id}`
-          );
-          expect(response.body.UserId).toBe(loggedInCandidat.user.id);
+      describe('Get a CV by user id - /?userId', () => {
+        it('Should return 200 if valid user id provided and logged in as candidate', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/?userId=${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
           expect(response.status).toBe(200);
+          expect(response.body.UserId).toBe(loggedInCandidat.user.id);
         });
-        it("Should return 204 if valid user id provided and candidat doesn't have a CV", async () => {
+        it('Should return 200 if valid user id provided and logged in as coach', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/?userId=${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.UserId).toBe(loggedInCandidat.user.id);
+        });
+        it('Should return 200 if valid user id provided and logged in as admin', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/?userId=${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.UserId).toBe(loggedInCandidat.user.id);
+        });
+        it("Should return 204 if valid user id provided and logged in as candidate and candidate doesn't have a CV", async () => {
           const candidatNoCv = await createLoggedInUser({
             role: USER_ROLES.CANDIDAT,
             password: 'candidatNoCv',
           });
-          const response = await request(serverTest).get(
-            `${route}/?userId=${candidatNoCv.user.id}`
-          );
+          const response = await request(serverTest)
+            .get(`${route}/?userId=${candidatNoCv.user.id}`)
+            .set('authorization', `Token ${candidatNoCv.token}`);
           expect(response.status).toBe(204);
         });
-        it.skip('Should return 401 if invalid user id provided', async () => {
+        it("Should return 204 if valid user id provided and logged in as coach and candidate doesn't have a CV", async () => {
+          const candidatNoCv = await userFactory({
+            role: USER_ROLES.CANDIDAT,
+            password: 'candidatNoCv',
+          });
+          const coachNoCv = await userFactory({
+            role: USER_ROLES.COACH,
+            password: 'coachNoCv',
+          });
+
+          await associateCoachAndCandidat(
+            { email: coachNoCv.email, password: 'coachNoCv' },
+            { email: candidatNoCv.email, password: 'candidatNoCv' }
+          );
+
+          const loggedCandidatNoCv = await createLoggedInUser(
+            { email: candidatNoCv.email, password: 'candidatNoCv' },
+            {},
+            false
+          );
+          const loggedCoachNoCv = await createLoggedInUser(
+            { email: coachNoCv.email, password: 'coachNoCv' },
+            {},
+            false
+          );
+
+          const response = await request(serverTest)
+            .get(`${route}/?userId=${loggedCandidatNoCv.user.id}`)
+            .set('authorization', `Token ${loggedCoachNoCv.token}`);
+          expect(response.status).toBe(204);
+        });
+        it("Should return 204 if valid user id provided and logged in as admin and candidate doesn't have a CV", async () => {
+          const candidatNoCv = await createLoggedInUser({
+            role: USER_ROLES.CANDIDAT,
+            password: 'candidatNoCv',
+          });
+          const response = await request(serverTest)
+            .get(`${route}/?userId=${candidatNoCv.user.id}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(204);
+        });
+        it('Should return 401 if invalid user id provided', async () => {
           const response = await request(serverTest).get(
             `${route}/?userId=123-fakeuserid`
           );
           expect(response.status).toBe(401);
         });
+        it('Should return 401 if valid user id provided and not logged in', async () => {
+          const response = await request(serverTest).get(
+            `${route}/?userId=${loggedInCandidat.user.id}`
+          );
+          expect(response.status).toBe(401);
+        });
+        it('Should return 401 if valid user id provided and logged in as other candidate', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/?userId=${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInOtherCandidat.token}`);
+          expect(response.status).toBe(401);
+        });
+        it('Should return 401 if valid user id provided and logged in as other coach', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/?userId=${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInOtherCoach.token}`);
+          expect(response.status).toBe(401);
+        });
+        it('Should return 200 and last CV version if valid user id provided and logged in as candidate', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/lastVersion/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCandidat.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.lastCvVersion).toBe(6);
+        });
+        it('Should return 200 and last CV version if valid user id provided and logged in as coach', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/lastVersion/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInCoach.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.lastCvVersion).toBe(6);
+        });
+        it('Should return 200 and last CV version if valid user id provided and logged in as admin', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/lastVersion/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInAdmin.token}`);
+          expect(response.status).toBe(200);
+          expect(response.body.lastCvVersion).toBe(6);
+        });
+        it('Should return 401 and last CV version if valid user id provided and logged in as other candidate', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/lastVersion/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInOtherCandidat.token}`);
+          expect(response.status).toBe(401);
+        });
+        it('Should return 401 and last CV version if valid user id provided and logged in as other coach', async () => {
+          const response = await request(serverTest)
+            .get(`${route}/lastVersion/${loggedInCandidat.user.id}`)
+            .set('authorization', `Token ${loggedInOtherCoach.token}`);
+          expect(response.status).toBe(401);
+        });
       });
       describe("Get a CV by candidat's url - /", () => {
         it("Should return 200 if valid candidat's url provided", async () => {
-          const candidatUrl = await getCandidatUrl(candidatCV.id);
-          const response = await request(serverTest)
-            .get(`${route}/${candidatUrl}`)
-            .set('authorization', `Token ${loggedInCandidat.token}`);
+          const candidatUrl = await getCandidatUrl(loggedInCandidat.user.id);
+          const response = await request(serverTest).get(
+            `${route}/${candidatUrl}`
+          );
           expect(response.status).toBe(200);
-          expect(response.body.cv.UserId).toBe(candidatCV.id);
-          expect(response.body.exists).toBe(true);
+          expect(response.body.cv.UserId).toBe(loggedInCandidat.user.id);
         });
         it('Should return 200 if valid url provided and candidat has hidden CV', async () => {
           const candidatNoCv = await createLoggedInUser({
@@ -264,7 +384,6 @@ describe('CV', () => {
           );
           expect(response.status).toBe(200);
           expect(response.body.cv).toBe(undefined);
-          expect(response.body.exists).toBe(true);
         });
         it.skip("Should return 401 if candidat's url is invalid", async () => {
           const response = await request(serverTest).get(
@@ -276,7 +395,7 @@ describe('CV', () => {
     });
     describe('R - Read List of CVs', () => {
       describe('Get a list n random cv matching a search - /cards/random/?nb=&search=', () => {
-        it('Should return 200, and 1 cv', async () => {
+        it('Should return 200, and 2 cv', async () => {
           const response = await request(serverTest).get(
             `${route}/cards/random/?nb=2`
           );
