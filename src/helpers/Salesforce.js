@@ -124,7 +124,7 @@ function mapSalesforceOfferFields({
     Temps_partiel__c: isPartTime,
     Offre_publique__c: isPublic,
     Offre_externe__c: isExternal,
-    Offre_archiv_e__c: isArchived,
+    Offre_archivee__c: isArchived,
     Offre_valid_e__c: isValidated,
     Lien_externe__c: link,
     Lien_Offre_Backoffice__c:
@@ -147,7 +147,7 @@ function mapSalesforceOfferFields({
     Fonction_du_recruteur__c: recruiterPosition,
     Mail_de_contact__c: contactMail,
     Prenom_Nom_du_recruteur__c: contactSfId,
-    Contact_cr_existant__c: true,
+    Contact_cree_existant__c: true,
     Antenne__c: _.capitalize(ADMIN_ZONES[getZoneFromDepartment(department)]),
   };
 }
@@ -163,25 +163,20 @@ function mapSalesforceProcessFields({
   bookmarked,
   archived,
   recommended,
-  note,
-  candidateId,
-  offerId,
   offerTitle,
   binomeSfId,
   offerSfId,
 }) {
   return {
-    ID__c: id,
+    ID_Externe__c: id,
     Name: `${firstName} ${lastName} - ${offerTitle} - ${company}`,
     Statut__c: findOfferStatus(status, isPublic, recommended).label,
     Vue__c: seen,
     Favoris__c: bookmarked,
-    Archiv_e__c: archived,
+    Archivee__c: archived,
     Recommandee__c: recommended,
-    Commentaire__c: note,
     Binome__c: binomeSfId,
     Offre_d_emploi__c: offerSfId,
-    Lien_Offre_Backoffice__c: `${process.env.FRONT_URL}/backoffice/admin/membres/${candidateId}/offres/${offerId}`,
   };
 }
 
@@ -194,7 +189,12 @@ export async function createOrUpdateProcess(params) {
   } else {
     records = mapSalesforceProcessFields(params);
   }
-  return upsertRecord(OBJECT_NAMES.PROCESS, records, 'ID__c', findProcessById);
+  return upsertRecord(
+    OBJECT_NAMES.PROCESS,
+    records,
+    'ID_Externe__c',
+    findProcessById
+  );
 }
 
 export async function createOrUpdateOffer(params) {
@@ -234,7 +234,7 @@ export async function findBinomeByCandidateEmail(email) {
 export async function findContactByEmail(email, recordType) {
   const salesforceInstance = await getSalesforceInstance();
   const { records } = await salesforceInstance.query(
-    `SELECT Id FROM ${OBJECT_NAMES.CONTACT} WHERE (Email_Id__c='${email}' OR Email='${email}') AND RecordTypeId='${recordType}' LIMIT 1`
+    `SELECT Id FROM ${OBJECT_NAMES.CONTACT} WHERE (Adresse_email_unique__c='${email}' OR Email='${email}') AND RecordTypeId='${recordType}' LIMIT 1`
   );
   return records[0]?.Id;
 }
@@ -269,7 +269,7 @@ export async function findOfferRelationsById(id) {
 export async function findProcessById(id) {
   const salesforceInstance = await getSalesforceInstance();
   const { records } = await salesforceInstance.query(
-    `SELECT Id FROM ${OBJECT_NAMES.PROCESS} WHERE ID__c='${id}' LIMIT 1`
+    `SELECT Id FROM ${OBJECT_NAMES.PROCESS} WHERE ID_Externe__c='${id}' LIMIT 1`
   );
   return records[0]?.Id;
 }

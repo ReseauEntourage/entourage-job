@@ -20,9 +20,7 @@ const getProcessFromOpportunityUser = (opportunityUser, id, title, company) => {
   return opportunityUser.map(
     ({ UserId, User: { email, firstName, lastName }, ...restProps }) => {
       return {
-        offerId: id,
         offerTitle: title,
-        candidateId: UserId,
         candidateEmail: email,
         firstName,
         lastName,

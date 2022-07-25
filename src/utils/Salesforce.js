@@ -106,7 +106,11 @@ export async function createRecord(name, params) {
   try {
     const result = await salesforceInstance.sobject(name).create(params);
     if (Array.isArray(result)) {
-      return result.map(({ id }) => {
+      return result.map(({ id, success, errors }) => {
+        if (!success) {
+          console.error(errors);
+          return null;
+        }
         return id;
       });
     }
@@ -130,7 +134,11 @@ export async function upsertRecord(name, params, extIdField, findIdFunction) {
 
     if (Array.isArray(result)) {
       return Promise.all(
-        result.map(async ({ id }, index) => {
+        result.map(async ({ id, success, errors }, index) => {
+          if (!success) {
+            console.error(errors);
+            return null;
+          }
           return id || (await findIdFunction(params[index][extIdField]));
         })
       );
