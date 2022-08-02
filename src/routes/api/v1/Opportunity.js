@@ -6,6 +6,10 @@ import { logger } from 'src/utils/Logger';
 
 import express from 'express';
 import { DEPARTMENTS_FILTERS } from 'src/constants/departements';
+import {
+  createExternalDBOpportunity,
+  updateExternalDBOpportunity,
+} from 'src/helpers/ExternalDatabase';
 
 const authorizedExternalOpportunityKeys = [
   'id',
@@ -24,20 +28,6 @@ const authorizedExternalOpportunityKeys = [
 ];
 
 const router = express.Router();
-
-// Temp route to update the opportunities on Airtable
-router.post('/update-airtable', auth([USER_ROLES.ADMIN]), (req, res) => {
-  checkCandidatOrCoachAuthorization(req, res, req.body.userId, () => {
-    OpportunityController.refreshAirtableOpportunities()
-      .then(() => {
-        return res.status(200);
-      })
-      .catch((err) => {
-        logger(res).error(err);
-        return res.status(401).send(err);
-      });
-  });
-});
 
 /**
  * Route : POST /api/<VERSION>/opportunity
@@ -59,12 +49,9 @@ router.post('/', auth(), (req, res) => {
   let promises;
 
   // location object { department, address }
-  if (locations) {
-    const locationsToTransform = !Array.isArray(locations)
-      ? [locations]
-      : locations;
+  if (locations && Array.isArray(locations) && locations.length > 1) {
     promises = Promise.all(
-      locationsToTransform.map(({ department, address }) => {
+      locations.map(({ department, address }) => {
         return OpportunityController.createOpportunity(
           { ...restBody, department, address },
           isAdmin,
@@ -75,8 +62,19 @@ router.post('/', auth(), (req, res) => {
       })
     );
   } else {
+    let opportunityToCreate = restBody;
+    if (locations) {
+      const locationsToTransform = Array.isArray(locations)
+        ? locations[0]
+        : locations;
+      opportunityToCreate = {
+        ...opportunityToCreate,
+        ...locationsToTransform,
+      };
+    }
+
     promises = OpportunityController.createOpportunity(
-      restBody,
+      opportunityToCreate,
       isAdmin,
       req.payload?.id,
       shouldSendNotifications,
@@ -85,8 +83,19 @@ router.post('/', auth(), (req, res) => {
   }
 
   return promises
-    .then((opportunities) => {
-      return res.status(200).json(opportunities);
+    .then(async (opportunity) => {
+      if (Array.isArray(opportunity)) {
+        await createExternalDBOpportunity(
+          opportunity.map(({ id }) => {
+            return id;
+          }),
+          true
+        );
+      } else {
+        await createExternalDBOpportunity(opportunity.id);
+      }
+
+      return res.status(200).json(opportunity);
     })
     .catch((err) => {
       logger(res).error(err);
@@ -122,7 +131,8 @@ router.post(
           isAdmin,
           req.payload?.id
         )
-          .then((opportunity) => {
+          .then(async (opportunity) => {
+            await createExternalDBOpportunity(opportunity.id);
             return res.status(200).json(opportunity);
           })
           .catch((err) => {
@@ -340,8 +350,9 @@ router.post(
         req.body.userId,
         req.body.seen
       )
-        .then((opportunity) => {
-          return res.status(200).json(opportunity);
+        .then(async (opportunityUser) => {
+          await updateExternalDBOpportunity(opportunityUser.OpportunityId);
+          return res.status(200).json(opportunityUser);
         })
         .catch((err) => {
           logger(res).error(err);
@@ -366,8 +377,9 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
     restOpportunity,
     shouldSendNotifications
   )
-    .then((opp) => {
-      return res.status(200).json(opp);
+    .then(async (opportunity) => {
+      await updateExternalDBOpportunity(opportunity.id);
+      return res.status(200).json(opportunity);
     })
     .catch((err) => {
       logger(res).error(err);
@@ -387,7 +399,8 @@ router.put('/', auth([USER_ROLES.ADMIN]), (req, res) => {
 router.put('/bulk', auth([USER_ROLES.ADMIN]), (req, res) => {
   const { attributes, ids } = req.body;
   OpportunityController.updateBulkOpportunity(attributes, ids)
-    .then((updatedOpportunities) => {
+    .then(async (updatedOpportunities) => {
+      await updateExternalDBOpportunity(updatedOpportunities.updatedIds);
       return res.status(200).json(updatedOpportunities);
     })
     .catch((err) => {
@@ -424,9 +437,10 @@ router.put(
           candidateId,
           isAdmin
         )
-          .then((opp) => {
-            if (opp) {
-              return res.status(200).json(opp);
+          .then(async (opportunity) => {
+            if (opportunity) {
+              await updateExternalDBOpportunity(opportunity.id);
+              return res.status(200).json(opportunity);
             } else {
               return res.status(401).send({ message: 'Unauthorized' });
             }
@@ -461,8 +475,9 @@ router.put(
   (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.body.UserId, () => {
       OpportunityController.updateOpportunityUser(req.body)
-        .then((oppUs) => {
-          return res.status(200).json(oppUs);
+        .then(async (opportunityUser) => {
+          await updateExternalDBOpportunity(opportunityUser.OpportunityId);
+          return res.status(200).json(opportunityUser);
         })
         .catch((err) => {
           logger(res).error(err);

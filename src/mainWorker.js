@@ -21,9 +21,13 @@ import {
   createCVSearchString,
   generatePDF,
 } from 'src/jobs/CV';
-import { insertAirtable, updateOpportunityAirtable } from 'src/jobs/Airtable';
+import {
+  insertAirtableBackground,
+  updateOpportunityAirtableBackground,
+} from 'src/jobs/Airtable';
 import { generatePreview } from 'src/jobs/Image';
 import _ from 'lodash';
+import { updateOrCreateSalesforceOpportunityBackground } from 'src/jobs/Salesforce';
 
 const start = () => {
   const workQueue = getMainWorkQueue();
@@ -100,13 +104,24 @@ const start = () => {
       }
 
       case JOBS.JOB_TYPES.INSERT_AIRTABLE: {
-        await insertAirtable(data.tableName, data.fields);
+        await insertAirtableBackground(data.tableName, data.fields);
         return `Airtable : insertion in '${data.tableName}'`;
       }
 
       case JOBS.JOB_TYPES.UPDATE_AIRTABLE: {
-        await updateOpportunityAirtable(data.tableName, data.fields);
+        await updateOpportunityAirtableBackground(data.tableName, data.fields);
         return `Airtable : update in '${data.tableName}'`;
+      }
+
+      case JOBS.JOB_TYPES.CREATE_OR_UPDATE_SALESFORCE_OPPORTUNITY: {
+        if (process.env.ENABLE_SF === 'true') {
+          await updateOrCreateSalesforceOpportunityBackground(
+            data.opportunityId,
+            data.isSameOpportunity
+          );
+          return `Salesforce : created or updated offer '${data.opportunityId}'`;
+        }
+        return `Salesforce job ignored : creation or update of offer '${data.opportunityId}'`;
       }
 
       case JOBS.JOB_TYPES.REMINDER_OFFER: {

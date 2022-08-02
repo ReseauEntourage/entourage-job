@@ -1,5 +1,3 @@
-import TAGS from 'src/constants/tags';
-
 import {
   ADMIN_ZONES,
   ADMIN_ZONES_FILTERS,
@@ -102,7 +100,7 @@ const BUSINESS_LINES = [
   {
     label: 'Social et associatif',
     value: 'sa',
-    prefix: ['le', 'la'],
+    prefix: ['le', "l'"],
   },
   {
     label: 'Direction financière, juridique et ressources humaines',
@@ -185,14 +183,12 @@ const CV_FILTERS_DATA = [
       'desc'
     ),
     title: 'Où ?',
-    tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
     icon: 'location',
   },
   {
     key: 'businessLines',
     constants: BUSINESS_LINES,
     title: 'Métiers',
-    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
 ];
 
@@ -235,7 +231,6 @@ const MEMBER_FILTERS_DATA = [
     key: 'businessLines',
     constants: BUSINESS_LINES,
     title: 'Métiers',
-    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
   {
     key: 'associatedUser',
@@ -316,6 +311,16 @@ const CONTRACTS = [
     end: true,
   },
   {
+    label: 'Formation certifiante',
+    value: 'form',
+    end: true,
+  },
+  {
+    label: "Période d'immersion (PMSMP)",
+    value: 'pmsmp',
+    end: true,
+  },
+  {
     label: 'Autre',
     value: 'other',
     end: true,
@@ -325,11 +330,18 @@ const CONTRACTS = [
 const EXTERNAL_OFFERS_ORIGINS = [
   {
     label: 'Mon réseau',
+    salesforceLabel: 'Réseau du candidat',
     value: 'network',
   },
   {
     label: 'Recherches Internet',
+    salesforceLabel: 'Recherche Internet',
     value: 'internet',
+  },
+  {
+    label: 'Mon conseiller emploi (Pôle Emploi, mission locale...)',
+    salesforceLabel: 'Avec Pôle Emploi',
+    value: 'counselor',
   },
 ];
 
@@ -352,6 +364,8 @@ const JOBS = {
     SEND_SMS: 'send_sms',
     INSERT_AIRTABLE: 'insert_airtable',
     UPDATE_AIRTABLE: 'update_airtable',
+    CREATE_OR_UPDATE_SALESFORCE_OPPORTUNITY:
+      'create_or_update_salesforce_opportunity',
     REMINDER_OFFER: 'reminder_offer',
     REMINDER_CV_10: 'reminder_cv_10',
     REMINDER_CV_20: 'reminder_cv_20',

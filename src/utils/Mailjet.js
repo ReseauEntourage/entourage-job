@@ -3,8 +3,8 @@ import {
   findConstantFromValue,
   findOfferStatus,
   getZoneFromDepartment,
-} from './Finding';
-import { BUSINESS_LINES, CONTRACTS } from '../constants';
+} from 'src/utils/Finding';
+import { BUSINESS_LINES, CONTRACTS } from 'src/constants';
 
 const getMailjetVariablesForPrivateOrPublicOffer = (
   opportunity,

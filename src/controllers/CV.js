@@ -165,40 +165,96 @@ const INCLUDES_COMPLETE_CV_WITH_ALL_USER_PRIVATE = [
   INCLUDE_ALL_USERS_PRIVATE,
 ];
 
-const getPublishedCVQuery = (employed) => {
+const getPublishedCVQuery = (employed, locations, businessLines) => {
+  const hasLocations = locations && locations[Op.or];
+  const hasBusinessLines = businessLines && businessLines[Op.or];
   return `
     /* CV par recherche */
 
-    with groupCVs as (	select
-      /* pour chaque user, dernier CV publiés */
+    with groupCVs as (
+      select
+        /* pour chaque user, dernier CV publiés */
         "UserId", MAX(version) as version, "employed"
       from
         "User_Candidats",
         "CVs"
+        ${
+          hasLocations
+            ? `
+              ,
+              "CV_Locations",
+              "Locations"
+            `
+            : ''
+        }
+        ${
+          hasBusinessLines
+            ? `
+              ,
+              "CV_BusinessLines",
+              "BusinessLines"
+            `
+            : ''
+        }
       where
         "CVs".status = '${CV_STATUS.Published.value}'
         and "CVs"."deletedAt" IS NULL
         and "User_Candidats"."candidatId" = "CVs"."UserId"
         and "User_Candidats".hidden = false
-       ${
-         employed && employed[Op.or]
-           ? `and (${employed[Op.or]
-               .map((value, index) => {
-                 return `${
-                   index > 0 ? 'or ' : ''
-                 }"User_Candidats".employed = ${value}`;
-               })
-               .join(' ')})`
-           : ''
-       }
+        ${
+          employed && employed[Op.or]
+            ? `and (${employed[Op.or]
+                .map((value, index) => {
+                  return `${
+                    index > 0 ? 'or ' : ''
+                  }"User_Candidats".employed = ${value}`;
+                })
+                .join(' ')})`
+            : ''
+        }
+        ${
+          hasLocations
+            ? `and "CV_Locations"."CVId" = "CVs".id and "CV_Locations"."LocationId" = "Locations".id`
+            : ''
+        }
+        ${
+          hasBusinessLines
+            ? `and "CV_BusinessLines"."CVId" = "CVs".id and "CV_BusinessLines"."BusinessLineId" = "BusinessLines".id`
+            : ''
+        }
+        ${
+          hasLocations
+            ? `and (${locations[Op.or]
+                .map((value, index) => {
+                  return `${
+                    index > 0 ? 'or ' : ''
+                  }"Locations".name = '${value}'`;
+                })
+                .join(' ')})`
+            : ''
+        }
+        ${
+          hasBusinessLines
+            ? `and (${businessLines[Op.or]
+                .map((value, index) => {
+                  return `${
+                    index > 0 ? 'or ' : ''
+                  }"BusinessLines".name = '${value}'`;
+                })
+                .join(' ')})`
+            : ''
+        }
       group by
         "UserId", "employed")
+
     select
       cvs.id, cvs."UserId", groupCVs."employed"
     from
       "CVs" cvs
     inner join groupCVs on
-      cvs."UserId" = groupCVs."UserId" and cvs.version = groupCVs.version`;
+      cvs."UserId" = groupCVs."UserId"
+      and cvs.version = groupCVs.version
+    `;
 };
 
 const dividedCompleteCVQuery = async (query, privateUser) => {
@@ -244,6 +300,18 @@ const queryConditionCV = (attribute, value, allowHidden) => {
   on cvs."UserId" = groupUsers."candidatId"`;
 };
 
+const getMaxCvVersion = async (userId) => {
+  const maxVersions = await models.CV.findAll({
+    attributes: [[fn('MAX', col('version')), 'maxVersion']],
+    raw: true,
+    where: {
+      UserId: userId,
+    },
+  });
+
+  return maxVersions[0].maxVersion;
+};
+
 const createCV = async (data, userId) => {
   console.log(`createCV - Création du CV`);
   if (data.userId) {
@@ -251,17 +319,11 @@ const createCV = async (data, userId) => {
     delete data.userId;
   }
 
-  const maxVersions = await models.CV.findAll({
-    attributes: [[fn('MAX', col('version')), 'maxVersion']],
-    raw: true,
-    where: {
-      UserId: data.UserId,
-    },
-  });
+  const maxVersion = await getMaxCvVersion(data.UserId);
 
   const cvData = {
     ...data,
-    version: maxVersions[0].maxVersion + 1,
+    version: maxVersion + 1,
     lastModifiedBy: userId,
     createdAt: undefined,
     updatedAt: undefined,
@@ -1033,6 +1095,7 @@ export {
   getCVs,
   getRandomShortCVs,
   setCV,
+  getMaxCvVersion,
   createSearchString,
   generatePdfFromCV,
   getAndCacheCV,
