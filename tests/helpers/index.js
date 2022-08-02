@@ -17,7 +17,6 @@ import { createLoggedInUser, getTokenAndId } from 'tests/helpers/user.helpers';
 
 import {
   associateCoachAndCandidat,
-  getCandidatAndCoach,
   getCandidatUrl,
 } from 'tests/helpers/user_candidat.helpers';
 
@@ -37,7 +36,6 @@ export {
   createLoggedInUser,
   getTokenAndId,
   associateCoachAndCandidat,
-  getCandidatAndCoach,
   getCandidatUrl,
   associateOpportunityUser,
   associateManyOpportunitiesUser,

@@ -583,7 +583,10 @@ const getCVbyUserId = async (userId) => {
 
 const getAllUserCVsVersions = async (userId) => {
   return sequelize.query(
-    `SELECT status, version FROM "CVs" WHERE "UserId"='${userId}'`
+    `SELECT status, version FROM "CVs" WHERE "UserId"='${userId}'`,
+    {
+      type: QueryTypes.SELECT,
+    }
   );
 };
 
