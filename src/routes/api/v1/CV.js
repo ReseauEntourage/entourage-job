@@ -129,14 +129,13 @@ router.post(
             });
 
             const cvs = await getAllUserCVsVersions(reqCV.UserId);
-            if (cvs && cvs.length > 0) {
-              const hasPublishedAtLeastOnce = cvs.some(({ status }) => {
-                return status === CV_STATUS.Published;
-              });
+            const hasPublishedAtLeastOnce =
+              cvs?.filter(({ status }) => {
+                return status === CV_STATUS.Published.value;
+              }).length > 1;
 
-              if (!hasPublishedAtLeastOnce) {
-                await sendMailsAfterPublishing(reqCV.UserId);
-              }
+            if (!hasPublishedAtLeastOnce) {
+              await sendMailsAfterPublishing(reqCV.UserId);
             }
           }
 

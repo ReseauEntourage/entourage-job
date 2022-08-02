@@ -527,7 +527,7 @@ const countSubmittedCVMembers = async (zone) => {
   };
 };
 
-const searchUsers = (query, role) => {
+const searchUsers = async (query, role) => {
   const options = {
     attributes: ATTRIBUTES_USER,
     where: {
