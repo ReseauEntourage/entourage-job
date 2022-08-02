@@ -126,40 +126,38 @@ const sendReminderAboutCV = async (candidatId, is20Days) => {
   const user = await getUser(candidatId);
   if (moment(user.createdAt).isAfter(moment(firstOfMarch2022, 'YYYY-MM-DD'))) {
     const cvs = await getAllUserCVsVersions(candidatId);
-    if (cvs && cvs.length > 0) {
-      const hasSubmittedAtLeastOnce = cvs.some(({ status }) => {
-        return status === CV_STATUS.Pending;
-      });
+    const hasSubmittedAtLeastOnce = cvs?.some(({ status }) => {
+      return status === CV_STATUS.Pending.value;
+    });
 
-      if (!hasSubmittedAtLeastOnce) {
-        const toEmail = {
-          to: user.email,
-        };
-        const coach = getRelatedUser(user);
-        if (coach) {
-          toEmail.cc = coach.email;
-        }
-        const { candidatesAdminMail } = getAdminMailsFromZone(user.zonee);
-
-        await sendMail({
-          toEmail,
-          templateId: is20Days
-            ? MAILJET_TEMPLATES.CV_REMINDER_20
-            : MAILJET_TEMPLATES.CV_REMINDER_10,
-          replyTo: candidatesAdminMail,
-          variables: {
-            ..._.omitBy(user.toJSON(), _.isNil),
-          },
-        });
-        return toEmail;
+    if (!hasSubmittedAtLeastOnce) {
+      const toEmail = {
+        to: user.email,
+      };
+      const coach = getRelatedUser(user);
+      if (coach) {
+        toEmail.cc = coach.email;
       }
+      const { candidatesAdminMail } = getAdminMailsFromZone(user.zonee);
+
+      await sendMail({
+        toEmail,
+        templateId: is20Days
+          ? MAILJET_TEMPLATES.CV_REMINDER_20
+          : MAILJET_TEMPLATES.CV_REMINDER_10,
+        replyTo: candidatesAdminMail,
+        variables: {
+          ..._.omitBy(user.toJSON(), _.isNil),
+        },
+      });
+      return toEmail;
     }
   }
 
   return false;
 };
 
-const sendReminderIfEmployed = async (candidatId, templateId) => {
+const sendReminderIfNotEmployed = async (candidatId, templateId) => {
   const user = await getUser(candidatId);
   if (!user.candidat.employed) {
     const toEmail = {
@@ -185,18 +183,24 @@ const sendReminderIfEmployed = async (candidatId, templateId) => {
 };
 
 const sendReminderAboutInterviewTraining = async (candidatId) => {
-  return sendReminderIfEmployed(
+  return sendReminderIfNotEmployed(
     candidatId,
     MAILJET_TEMPLATES.INTERVIEW_TRAINING_REMINDER
   );
 };
 
 const sendReminderAboutVideo = async (candidatId) => {
-  return sendReminderIfEmployed(candidatId, MAILJET_TEMPLATES.VIDEO_REMINDER);
+  return sendReminderIfNotEmployed(
+    candidatId,
+    MAILJET_TEMPLATES.VIDEO_REMINDER
+  );
 };
 
 const sendReminderAboutActions = async (candidatId) => {
-  return sendReminderIfEmployed(candidatId, MAILJET_TEMPLATES.ACTIONS_REMINDER);
+  return sendReminderIfNotEmployed(
+    candidatId,
+    MAILJET_TEMPLATES.ACTIONS_REMINDER
+  );
 };
 
 const sendReminderAboutExternalOffers = async (candidatId) => {

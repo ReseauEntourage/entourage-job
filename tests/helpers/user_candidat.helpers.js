@@ -31,14 +31,6 @@ const associateCoachAndCandidat = async (coach, candidat, isLogged = false) => {
   );
 };
 
-const getCandidatAndCoach = async (id) => {
-  return User_Candidat.findOne({
-    where: {
-      candidatId: id,
-    },
-  });
-};
-
 /**
  * Get a candidat url from the table user_candidat
  *
@@ -54,4 +46,4 @@ const getCandidatUrl = async (id) => {
   return url;
 };
 
-export { associateCoachAndCandidat, getCandidatAndCoach, getCandidatUrl };
+export { associateCoachAndCandidat, getCandidatUrl };
