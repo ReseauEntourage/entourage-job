@@ -1,5 +1,3 @@
-import TAGS from 'src/constants/tags';
-
 import {
   ADMIN_ZONES,
   ADMIN_ZONES_FILTERS,
@@ -102,7 +100,7 @@ const BUSINESS_LINES = [
   {
     label: 'Social et associatif',
     value: 'sa',
-    prefix: ['le', 'la'],
+    prefix: ['le', "l'"],
   },
   {
     label: 'Direction financière, juridique et ressources humaines',
@@ -185,14 +183,12 @@ const CV_FILTERS_DATA = [
       'desc'
     ),
     title: 'Où ?',
-    tag: TAGS.PAGE_GALERIE_FILTRE_GEOGRAPHIQUE_CLIC,
     icon: 'location',
   },
   {
     key: 'businessLines',
     constants: BUSINESS_LINES,
     title: 'Métiers',
-    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
 ];
 
@@ -235,7 +231,6 @@ const MEMBER_FILTERS_DATA = [
     key: 'businessLines',
     constants: BUSINESS_LINES,
     title: 'Métiers',
-    tag: TAGS.PAGE_GALERIE_FILTRE_SECTEURS_CLIC,
   },
   {
     key: 'associatedUser',
