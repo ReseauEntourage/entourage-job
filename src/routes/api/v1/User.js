@@ -303,7 +303,7 @@ router.get(
  */
 router.put(
   '/candidat/read/:id',
-  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH, USER_ROLES.ADMIN]),
+  auth([USER_ROLES.CANDIDAT, USER_ROLES.COACH]),
   (req, res) => {
     checkCandidatOrCoachAuthorization(req, res, req.params.id, () => {
       UserController.setNoteHasBeenRead(req.params.id, req.payload.id)
