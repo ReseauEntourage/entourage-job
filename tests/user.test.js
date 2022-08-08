@@ -996,7 +996,7 @@ describe('User', () => {
             [Op.or]: [{ name: uniqIdToFind }, { name: uniqId2ToFind }],
           },
         });
-        const cvBusinessLinesCount = await models.CV_BusinessLine.count({
+        const cvBusinessLinesCount = await models.CV_BusinessLines.count({
           where: {
             CVId: cvId,
           },
