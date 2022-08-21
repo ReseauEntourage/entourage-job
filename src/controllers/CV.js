@@ -912,13 +912,12 @@ const generatePdfFromCV = async (userId, token, paths) => {
 };
 
 const createSearchString = async (userId) => {
+  const limitLength = 4028;
+
   const cv = await getCVbyUserId(userId);
-  const searchString = [
-    cv.ambitions
-      .map((ambition) => {
-        return ambition.name;
-      })
-      .join(' '),
+  let searchString = [
+    cv.user.candidat.firstName,
+    cv.user.candidat.lastName,
     cv.businessLines
       .map((businessLine) => {
         return findConstantFromValue(businessLine.name, BUSINESS_LINES).label;
@@ -929,20 +928,16 @@ const createSearchString = async (userId) => {
         return findConstantFromValue(contract, CONTRACTS).label;
       })
       .join(' '),
-    cv.languages.join(' '),
+    cv.ambitions
+      .map((ambition) => {
+        return ambition.name;
+      })
+      .join(' '),
     cv.locations
       .map((location) => {
         return findConstantFromValue(location, DEPARTMENTS_FILTERS).label;
       })
       .join(' '),
-    cv.passions.join(' '),
-    cv.skills.join(' '),
-    cv.transport,
-    cv.story,
-    cv.availability,
-    cv.catchphrase,
-    cv.user.candidat.firstName,
-    cv.user.candidat.lastName,
     cv.experiences
       .map((exp) => {
         return [exp.description, exp.skills.join(' ')].join(' ');
@@ -953,9 +948,21 @@ const createSearchString = async (userId) => {
         return [reviews.text, reviews.status, reviews.name].join(' ');
       })
       .join(' '),
+    cv.skills.join(' '),
+    cv.languages.join(' '),
+    cv.availability,
+    cv.transport,
+    cv.passions.join(' '),
+    cv.story,
+    cv.catchphrase,
   ]
     .join(' ')
-    .replace(/\s\s+/g, ' ');
+    .replace(/\s\s+/g, ' ')
+    .trim();
+
+  if (searchString.length > limitLength) {
+    searchString = searchString.substring(0, limitLength - 1);
+  }
 
   await models.CV_Search.create({
     CVId: cv.id,
