@@ -293,6 +293,8 @@ describe('User', () => {
             });
 
           expect(response.status).toBe(200);
+          expect(response.body.coach.id).toBe(loggedInCoach.user.id);
+          expect(response.body.candidat.id).toBe(loggedInCandidat.user.id);
         });
         it('Should return 200 and users, coach searching for himself', async () => {
           const response = await request(serverTest)
@@ -303,6 +305,8 @@ describe('User', () => {
             });
 
           expect(response.status).toBe(200);
+          expect(response.body.coach.id).toBe(loggedInCoach.user.id);
+          expect(response.body.candidat.id).toBe(loggedInCandidat.user.id);
         });
         it('Should return 401 if a not admin user search fro others than himself.', async () => {
           const response = await request(serverTest)
@@ -916,7 +920,7 @@ describe('User', () => {
     describe('D - Delete 1 User', () => {
       it('Should return 401 if not logged in admin', async () => {
         const response = await request(serverTest)
-          .delete(`${route}/${otherLoggedInCandidat.user.id}`)
+          .delete(`${route}/${loggedInCandidat.user.id}`)
           .set('authorization', `Token ${loggedInCoach.token}`);
         expect(response.status).toBe(401);
       });
@@ -926,8 +930,8 @@ describe('User', () => {
 
         const { id: cvId } = await cvFactory(
           {
-            UserId: otherLoggedInCandidat.user.id,
-            urlImg: `images/${otherLoggedInCandidat.user.id}.Published.jpg`,
+            UserId: loggedInCandidat.user.id,
+            urlImg: `images/${loggedInCandidat.user.id}.Published.jpg`,
             intro: null,
             story: 'test',
             location: 'Paris',
@@ -969,7 +973,7 @@ describe('User', () => {
         );
 
         const response = await request(serverTest)
-          .delete(`${route}/${otherLoggedInCandidat.user.id}`)
+          .delete(`${route}/${loggedInCandidat.user.id}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
 
         expect(response.status).toBe(200);
@@ -987,12 +991,12 @@ describe('User', () => {
         expect(ambitionsCount).toBe(2);
         expect(cvAmbitionsCount).toBe(0);
 
-        const businessLinesCount = await models.Ambition.count({
+        const businessLinesCount = await models.BusinessLine.count({
           where: {
             [Op.or]: [{ name: uniqIdToFind }, { name: uniqId2ToFind }],
           },
         });
-        const cvBusinessLinesCount = await models.CV_Ambition.count({
+        const cvBusinessLinesCount = await models.CV_BusinessLines.count({
           where: {
             CVId: cvId,
           },
@@ -1095,13 +1099,13 @@ describe('User', () => {
       });
       it('Should return 401 if try to get user after deletion', async () => {
         const response = await request(serverTest)
-          .get(`${route}/${otherLoggedInCandidat.user.id}`)
+          .get(`${route}/${loggedInCandidat.user.id}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
         expect(response.status).toBe(401);
       });
       it("Should return 204 if try to get user's CV after deletion", async () => {
         const response = await request(serverTest)
-          .get(`${cvRoute}?userId=${otherLoggedInCandidat.user.id}`)
+          .get(`${cvRoute}?userId=${loggedInCandidat.user.id}`)
           .set('authorization', `Token ${loggedInAdmin.token}`);
         expect(response.status).toBe(204);
       });
