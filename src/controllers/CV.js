@@ -961,7 +961,7 @@ const createSearchString = async (userId) => {
     .trim();
 
   if (searchString.length > limitLength) {
-    searchString = searchString.substring(0, limitLength - 1);
+    searchString = searchString.substring(0, limitLength);
   }
 
   await models.CV_Search.create({
