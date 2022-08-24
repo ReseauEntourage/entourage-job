@@ -63,13 +63,27 @@ docker run --name entourage-db -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=e
 
 Vous avez besoin des données du fichier `.env` et de renseigner le champs *DATABASE_URL* (*ex:* `postgresql://entourage:entourage@localhost:5432/entourage`) avec l'adresse de l'instance __*Docker*__.
 
+Pour créer la BDD :
 ```
-npx sequelize db:create
+npm run db-create
 ```
 
+Pour lancer les migrations :
+
 ```
-npx sequelize db:migrate
+npm run db-migrate
 ```
+
+Pour remplir la base de données avec un utilisateur administrateur permettant la création par la suite d'autres utilisateurs :
+
+```
+npm run db-seed
+```
+
+Les identifiants de l'administrateur crée sont :
+> Adresse mail : **admin@linkedout.fr**
+> 
+> Mot de passe : **Admin123!**
 
 ### Lancer le projet en mode développement
 
@@ -177,10 +191,10 @@ VONAGE_API_SECRET=
 docker run --name entourage-db-test -e POSTGRES_PASSWORD=entourage -e POSTGRES_USER=entourage -d -p 54300:5432 postgres
 ```
 
-Vous avez besoin des données du fichier **`.env.test`** pour les tests en local, et de renseigner le champs *DATABASE_URL* (`ex: postgresql://entourage:entourage@localhost:54300/entourage-db-test`) avec l'adresse de l'instance __*Docker*__
+Vous avez besoin des données du fichier `.env.test` pour les tests en local, et de renseigner le champs *DATABASE_URL* (`ex: postgresql://entourage:entourage@localhost:54300/entourage-db-test`) avec l'adresse de l'instance __*Docker*__
 
 ```
-NODE_ENV=dev-test npx sequelize db:migrate
+NODE_ENV=dev-test npm run db-migrate
 ```
 
 ### Lancer les tests

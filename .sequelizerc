@@ -11,5 +11,6 @@ const backendPath = __dirname + (dev ? '/src/db' : '/build/db')
 module.exports = {
   'config': path.resolve(backendPath + '/config', 'database.js'),
   'models-path': path.resolve(backendPath, 'models'),
-  'migrations-path': path.resolve(backendPath, 'migrations')
+  'migrations-path': path.resolve(backendPath, 'migrations'),
+  'seeders-path': path.resolve(backendPath, 'seeders')
 }

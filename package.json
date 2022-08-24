@@ -1,6 +1,6 @@
 {
   "name": "linkedout-back",
-  "version": "1.25.4",
+  "version": "1.25.5",
   "description": "",
   "main": "index.js",
   "engines": {
@@ -20,6 +20,7 @@
     "build": "babel src -d build",
     "db-create": "npx sequelize db:create",
     "db-migrate": "npx sequelize db:migrate",
+    "db-seed": "npx sequelize db:seed:all",
     "heroku-cleanup": "rm -rf src",
     "prepare": "husky install"
   },
