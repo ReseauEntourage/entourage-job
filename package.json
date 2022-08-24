@@ -20,6 +20,7 @@
     "build": "babel src -d build",
     "db-create": "npx sequelize db:create",
     "db-migrate": "npx sequelize db:migrate",
+    "db-seed": "npx sequelize db:seed:all",
     "heroku-cleanup": "rm -rf src",
     "prepare": "husky install"
   },
