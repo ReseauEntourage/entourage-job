@@ -1,6 +1,13 @@
 export default {
   up: (queryInterface) => {
-    return queryInterface.removeColumn('RevisionChanges', 'RevisionId');
+    return queryInterface
+      .describeTable('RevisionChanges')
+      .then((tableDefinition) => {
+        if (tableDefinition.RevisionId) {
+          return queryInterface.removeColumn('RevisionChanges', 'RevisionId');
+        }
+        return Promise.resolve();
+      });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.addColumn('RevisionChanges', 'RevisionId', {
