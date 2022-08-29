@@ -15,7 +15,9 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: linkedout
+          POSTGRES_USER: linkedout
+          POSTGRES_DB: linkedout
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -41,6 +43,5 @@ jobs:
       with:
         node-version: '14.x'
     - run: npm install
-    - run: npm run db-create
     - run: npm run db-migrate
     - run: npm test

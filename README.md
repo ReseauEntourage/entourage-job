@@ -57,13 +57,16 @@ npm install
 
 ### Initialisation de la BDD
 
+En utilisant __*Docker*__ :
+
 ```
 docker run --name linkedout-db -e POSTGRES_PASSWORD=linkedout -e POSTGRES_USER=linkedout -e POSTGRES_DB=linkedout -d -p 5432:5432 postgres
 ```
 
-Vous avez besoin des données du fichier `.env` et de renseigner le champs *DATABASE_URL* (*ex:* `postgresql://linkedout:linkedout@localhost:5432/linkedout`) avec l'adresse de l'instance __*Docker*__.
+Vous avez besoin des données du fichier `.env` et de renseigner le champ *DATABASE_URL* (*ex:* `postgresql://linkedout:linkedout@localhost:5432/linkedout`) avec l'adresse de l'instance __*Docker*__.
 
-Pour créer la BDD :
+
+Sans __*Docker*__, après avoir renseigné le champ *DATABASE_URL* avec l'adresse de l'instance locale de __*Postgres*__ :
 ```
 npm run db-create
 ```
@@ -191,7 +194,7 @@ VONAGE_API_SECRET=
 docker run --name linkedout-db-test -e POSTGRES_PASSWORD=linkedout -e POSTGRES_USER=linkedout -e POSTGRES_DB=linkedout -d -p 54300:5432 postgres
 ```
 
-Vous avez besoin des données du fichier `.env.test` pour les tests en local, et de renseigner le champs *DATABASE_URL* (*ex:* `postgresql://linkedout:linkedout@localhost:54300/linkedout`) avec l'adresse de l'instance __*Docker*__
+Vous avez besoin des données du fichier `.env.test` pour les tests en local, et de renseigner le champ *DATABASE_URL* (*ex:* `postgresql://linkedout:linkedout@localhost:54300/linkedout`) avec l'adresse de l'instance __*Docker*__
 
 ```
 NODE_ENV=dev-test npm run db-migrate
