@@ -5,19 +5,26 @@ import Queue from 'bull';
 const dev = process.env.NODE_ENV !== 'production';
 
 const getRedisOptions = () => {
-  const redisURI = new URL(process.env.REDIS_TLS_URL || process.env.REDIS_URL);
-  return {
-    port: Number(redisURI.port),
-    host: redisURI.hostname,
-    password: redisURI.password,
-    db: 0,
-    tls: {
-      rejectUnauthorized: false,
-      requestCert: true,
-      agent: false,
-    },
-    enableOfflineQueue: false,
-  };
+  const redisUrl = process.env.REDIS_TLS_URL || process.env.REDIS_URL;
+
+  if (redisUrl) {
+    const redisURI = new URL(redisUrl);
+
+    return {
+      port: Number(redisURI.port),
+      host: redisURI.hostname,
+      username: redisURI.username,
+      password: redisURI.password,
+      db: 0,
+      tls: {
+        rejectUnauthorized: false,
+        requestCert: true,
+        agent: false,
+      },
+      enableOfflineQueue: false,
+    };
+  }
+  return {};
 };
 
 const getMainWorkQueue = () => {

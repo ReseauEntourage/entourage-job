@@ -103,6 +103,10 @@ npm start
 ### Lancement du worker
 
 #### Mode développement
+Pour pouvoir utiliser le worker en local il faut lancer une instance de __*Redis*__ en local : https://redis.io/docs/getting-started
+
+Il faut également enlever les variables d'environnement _REDIS_URL_ et _REDIS_TLS_URL_ afin que les modules **_Redis_** et **_Bull_** utilisent leur configuration par défaut pour se connecter à _**Redis**_ en local (`127.0.0.1:6379`)
+
 ```
 npm run dev-mainWorker
 ```
