@@ -48,9 +48,11 @@ const RedisManager = {
 
       connectionName: name,
 
-      tls: {
-        rejectUnauthorized: false,
-      },
+      tls: process.env.DEBUG_JOBS
+        ? undefined
+        : {
+            rejectUnauthorized: false,
+          },
     };
     const redisUrl = process.env.REDIS_TLS_URL || process.env.REDIS_URL;
     let client;
