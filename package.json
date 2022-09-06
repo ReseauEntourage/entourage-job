@@ -25,6 +25,9 @@
     "heroku-cleanup": "rm -rf src",
     "prepare": "husky install"
   },
+  "lint-staged": {
+    "*.{js,jsx}": "npm run lint:fix"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ReseauEntourage/entourage-job.git"
@@ -97,6 +100,7 @@
     "faker": "^4.1.0",
     "husky": "^7.0.4",
     "jest": "^26.4.1",
+    "lint-staged": "^13.0.3",
     "nodemon": "^2.0.15",
     "prettier": "^2.1.2",
     "supertest": "^4.0.2"
