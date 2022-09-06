@@ -22,6 +22,7 @@ import { getShortenedOfferURL } from 'src/utils/Mutating';
 import { models } from 'src/db/models';
 import { getMailjetVariablesForPrivateOrPublicOffer } from 'src/utils/Mailjet';
 import { getAllPublishedCandidates } from 'src/controllers/User';
+import { getRelevantOpportunities } from 'src/controllers/Opportunity';
 
 const { BusinessLine, User, User_Candidat, Opportunity_User } = models;
 
@@ -383,6 +384,26 @@ const findCandidatesToRecommendTo = async (department, businessLines) => {
   return [];
 };
 
+const findRelevantOpportunities = async (departments, zone, businessLines) => {
+  if (departments?.length > 0 && businessLines?.length > 0) {
+    const autoRecommendationsZone = process.env.AUTO_RECOMMENDATIONS_ZONE;
+    if (!autoRecommendationsZone || autoRecommendationsZone === zone) {
+      try {
+        // get the offers
+        const relevantOffers = await getRelevantOpportunities(
+          departments,
+          businessLines
+        );
+        return relevantOffers;
+      } catch (err) {
+        console.log(err);
+        return err;
+      }
+    }
+  }
+  return [];
+};
+
 export {
   getOfferOptions,
   getOfferSearchOptions,
@@ -392,4 +413,5 @@ export {
   sendOnCreatedOfferMessages,
   findCandidatesToRecommendTo,
   opportunityAttributes,
+  findRelevantOpportunities,
 };

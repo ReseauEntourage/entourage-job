@@ -374,6 +374,7 @@ const JOBS = {
     REMINDER_ACTIONS: 'reminder_actions',
     REMINDER_EXTERNAL_OFFERS: 'reminder_external_offers',
     NO_RESPONSE_OFFER: 'no_response_offer',
+    SEND_OFFERS_EMAIL_AFTER_CV_PUBLISH: 'send_offers_email_after_cv_publish',
   },
   QUEUES: {
     WORK: 'work',
