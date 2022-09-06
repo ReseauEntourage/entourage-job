@@ -16,11 +16,13 @@ const getRedisOptions = () => {
       username: redisURI.username,
       password: redisURI.password,
       db: 0,
-      tls: {
-        rejectUnauthorized: false,
-        requestCert: true,
-        agent: false,
-      },
+      tls: process.env.DEBUG_JOBS
+        ? undefined
+        : {
+            rejectUnauthorized: false,
+            requestCert: true,
+            agent: false,
+          },
       enableOfflineQueue: false,
     };
   }
