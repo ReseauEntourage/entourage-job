@@ -74,7 +74,7 @@ Pour lancer les migrations :
 npm run db-migrate
 ```
 
-APour remplir la base de données avec un utilisateur administrateur permettant la création par la suite d'autres utilisateurs :
+Pour remplir la base de données avec un utilisateur administrateur permettant la création par la suite d'autres utilisateurs :
 
 ```
 npm run db-seed
