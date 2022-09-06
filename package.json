@@ -16,6 +16,7 @@
     "test": "NODE_ENV=test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
     "dev-test": "NODE_ENV=dev-test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
     "lint": "npx eslint src --ext js,jsx,ts,tsx --max-warnings=0",
+    "lint:fix": "npx eslint src --ext js,jsx,ts,tsx --max-warnings=0 --fix",
     "format": "prettier --write './**/*.{js,jsx,md,json}' --config .prettierrc.json",
     "build": "babel src -d build",
     "db-create": "npx sequelize db:create",
@@ -23,6 +24,9 @@
     "db-seed": "npx sequelize db:seed:all",
     "heroku-cleanup": "rm -rf src",
     "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": "npm run lint:fix"
   },
   "repository": {
     "type": "git",
@@ -96,6 +100,7 @@
     "faker": "^4.1.0",
     "husky": "^7.0.4",
     "jest": "^26.4.1",
+    "lint-staged": "^13.0.3",
     "nodemon": "^2.0.15",
     "prettier": "^2.1.2",
     "supertest": "^4.0.2"

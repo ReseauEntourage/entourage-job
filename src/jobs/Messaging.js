@@ -7,6 +7,7 @@ import {
   getExternalOpportunitiesCreatedByUserCount,
   getOpportunity,
 } from 'src/controllers/Opportunity';
+import { findRelevantOpportunities } from 'src/helpers/Opportunity';
 import { CV_STATUS, MAILJET_TEMPLATES } from 'src/constants';
 import {
   getAdminMailsFromZone,
@@ -236,6 +237,46 @@ const sendReminderAboutExternalOffers = async (candidatId) => {
   return false;
 };
 
+const sendRelevantOpportunities = async (
+  candidatId,
+  departments,
+  businessLines
+) => {
+  const user = await getUser(candidatId);
+  const opportunities = await findRelevantOpportunities(
+    departments,
+    user.zone,
+    businessLines
+  );
+  const toEmail = {
+    to: user.email,
+  };
+  if (getRelatedUser(user)) {
+    toEmail.cc = getRelatedUser(user).email;
+  }
+  const { candidatesAdminMail } = getAdminMailsFromZone(user.zone);
+  if (opportunities.length > 0) {
+    sendMail(
+      opportunities.map((opportunity) => {
+        return {
+          toEmail,
+          templateId: MAILJET_TEMPLATES.OFFER_RECOMMENDED,
+          replyTo: candidatesAdminMail,
+          variables: {
+            offer: getMailjetVariablesForPrivateOrPublicOffer(
+              opportunity,
+              false
+            ),
+            candidat: user,
+          },
+        };
+      })
+    );
+    return toEmail;
+  }
+  return false;
+};
+
 export {
   sendMailBackground,
   sendSMSBackground,
@@ -246,4 +287,5 @@ export {
   sendReminderAboutVideo,
   sendReminderAboutActions,
   sendReminderAboutExternalOffers,
+  sendRelevantOpportunities,
 };

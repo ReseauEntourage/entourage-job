@@ -136,6 +136,22 @@ router.post(
 
             if (!hasPublishedAtLeastOnce) {
               await sendMailsAfterPublishing(reqCV.UserId);
+              await addToWorkQueue(
+                {
+                  type: JOBS.JOB_TYPES.SEND_OFFERS_EMAIL_AFTER_CV_PUBLISH,
+                  candidatId: reqCV.UserId,
+                  departments: reqCV.locations,
+                  businessLines: reqCV.businessLines,
+                },
+                {
+                  delay: process.env.SEND_OFFERS_EMAIL_AFTER_CV_PUBLISH_DELAY
+                    ? parseFloat(
+                        process.env.SEND_OFFERS_EMAIL_AFTER_CV_PUBLISH_DELAY,
+                        10
+                      )
+                    : 1 * 3600000 * 24,
+                }
+              );
             }
           }
 
