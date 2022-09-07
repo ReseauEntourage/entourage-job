@@ -246,7 +246,8 @@ const sendRelevantOpportunities = async (
   const opportunities = await findRelevantOpportunities(
     departments,
     user.zone,
-    businessLines
+    businessLines,
+    candidatId
   );
   const toEmail = {
     to: user.email,
