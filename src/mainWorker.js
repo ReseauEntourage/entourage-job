@@ -14,6 +14,7 @@ import {
   sendSMSBackground,
   sendNoResponseOffer,
   sendReminderAboutInterviewTraining,
+  sendRelevantOpportunities,
 } from 'src/jobs/Messaging';
 import {
   cacheAllCVs,
@@ -222,6 +223,19 @@ const start = () => {
           }
         );
         return `Preview generated for User ${data.candidatId} : ${previewUrl}`;
+      }
+
+      case JOBS.JOB_TYPES.SEND_OFFERS_EMAIL_AFTER_CV_PUBLISH: {
+        const sentRelevantOpportunities = await sendRelevantOpportunities(
+          data.candidatId,
+          data.departments,
+          data.businessLines
+        );
+        return sentRelevantOpportunities
+          ? ` Offers sent to ${data.candidatId}: (${JSON.stringify(
+              sentRelevantOpportunities
+            )})`
+          : `No offer sent to ${data.candidatId}`;
       }
 
       default: {
