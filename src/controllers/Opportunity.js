@@ -858,7 +858,11 @@ const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
   return null;
 };
 
-const getRelevantOpportunities = async (departments, businessLines) => {
+const getRelevantOpportunities = async (
+  departments,
+  businessLines,
+  candidatId
+) => {
   const lastMonth = moment().subtract(30, 'd');
 
   const businessLinesNames = businessLines.map((bl) => {
@@ -890,6 +894,12 @@ const getRelevantOpportunities = async (departments, businessLines) => {
   });
 
   return opportunities.map((model) => {
+    // add to table opportunity_user
+    Opportunity_User.create({
+      OpportunityId: model.id,
+      UserId: candidatId,
+      recommended: true,
+    });
     return cleanOpportunity(model);
   });
 };

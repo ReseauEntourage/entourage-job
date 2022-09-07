@@ -384,7 +384,12 @@ const findCandidatesToRecommendTo = async (department, businessLines) => {
   return [];
 };
 
-const findRelevantOpportunities = async (departments, zone, businessLines) => {
+const findRelevantOpportunities = async (
+  departments,
+  zone,
+  businessLines,
+  candidatId
+) => {
   if (departments?.length > 0 && businessLines?.length > 0) {
     const autoRecommendationsZone = process.env.AUTO_RECOMMENDATIONS_ZONE;
     if (!autoRecommendationsZone || autoRecommendationsZone === zone) {
@@ -392,7 +397,8 @@ const findRelevantOpportunities = async (departments, zone, businessLines) => {
         // get the offers
         const relevantOffers = await getRelevantOpportunities(
           departments,
-          businessLines
+          businessLines,
+          candidatId
         );
         return relevantOffers;
       } catch (err) {
