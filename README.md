@@ -14,8 +14,8 @@
 
 ## Architecture
 
-- `.github`: configuration de la CI avec __*Github Actions*__
-- `.husky` : scripts de hook de commit avec __*Husky*__
+- `.github`: configuration de la CI avec **_Github Actions_**
+- `.husky` : scripts de hook de commit avec **_Husky_**
 - `/public` : stockage des ressources non dynamique accessible publiquement
 - `/src`
   - `/constants` : fichiers de constantes
@@ -31,17 +31,16 @@
   - `app.js`: point d'entrée de lancement du serveur
   - `mainWorker.js`: point d'entrée de lancement du worker
   - `server.js`: gestion du serveur
-- `.babelrc` : configuration pour __*Babel*__
+- `.babelrc` : configuration pour **_Babel_**
 - `.editorconfig` : configuration par défaut de la syntaxe du code de l'éditeur
 - `.env` : à ajouter pour gérer les variables d'environnements ([cf. exemple](#fichier-env-minimal))
-- `.eslintignore` : configuration pour __*ESLint*__
-- `.eslintrc.json` : configuration pour __*ESLint*__
-- `.prettierignore` : configuration pour __*Prettier*__
-- `.prettierrc.json` : configuration pour __*Prettier*__
+- `.eslintignore` : configuration pour **_ESLint_**
+- `.eslintrc.json` : configuration pour **_ESLint_**
+- `.prettierignore` : configuration pour **_Prettier_**
+- `.prettierrc.json` : configuration pour **_Prettier_**
 - `.sequelizerc` : configuration pour **Sequelize**
 - `.slugignore` : dossiers ou fichiers à exclure du package finale pendant la compilation
-- `Procfile` : configuration des process __*Heroku*__ à lancer après déploiement
-
+- `Procfile` : configuration des process **_Heroku_** à lancer après déploiement
 
 ## Configuration
 
@@ -49,21 +48,22 @@
 
 Pour lancer le projet vous avez besoin de **Docker** ainsi que de **NodeJs**.
 
-### Installation des modules
+### Installation des modules sans Docker
 
 ```
 npm install
 ```
 
+### Initialisation des modules avec Docker
+
+```
+docker-compose up --build
+```
+
 ### Initialisation de la BDD
 
-```
-docker run --name linkedout-db -e POSTGRES_PASSWORD=linkedout -e POSTGRES_USER=linkedout -e POSTGRES_DB=linkedout -d -p 5432:5432 postgres
-```
+#### Sans Docker
 
-Vous avez besoin des données du fichier `.env` et de renseigner le champs *DATABASE_URL* (*ex:* `postgresql://linkedout:linkedout@localhost:5432/linkedout`) avec l'adresse de l'instance __*Docker*__.
-
-Pour créer la BDD :
 ```
 npm run db-create
 ```
@@ -74,46 +74,92 @@ Pour lancer les migrations :
 npm run db-migrate
 ```
 
-Pour remplir la base de données avec un utilisateur administrateur permettant la création par la suite d'autres utilisateurs :
+APour remplir la base de données avec un utilisateur administrateur permettant la création par la suite d'autres utilisateurs :
 
 ```
 npm run db-seed
 ```
 
+#### Avec Docker
+
+La même chose que sans Docker, mais vous devez précéder les commandes par la suivante, et ne pas lancer la commande de création de DB:
+
+```
+docker exec -it api bash
+```
+
+### Une fois la DB initialisée
+
 Les identifiants de l'administrateur crée sont :
+
 > Adresse mail : **admin@linkedout.fr**
-> 
+>
 > Mot de passe : **Admin123!**
 
+### Remplir la DB avec un dump
+
+#### Sans Docker
+
+```
+psql -d linkedout -p 5432 -U linkedout -W
+```
+
+Entrez le mdp de la BD (dans le docker-compose: "linkedout"), puis exécutez la commande SQL.
+
+#### Avec Docker
+
+Même chose que sans Docker, mais précédez par la commande suivante pour entrer dans le container de la DB:
+
+```
+docker exec -it db sh
+```
+
 ### Lancer le projet en mode développement
+
+#### Sans docker
 
 ```
 npm run dev
 ```
 
+#### Avec docker
+
+```
+docker-compose up
+```
+
 ### Lancer le projet en mode production
+
 ```
 npm run build
 npm start
 ```
 
-### Lancement du worker
+### Lancement du worker (si vous n'utilisez pas Docker)
 
 #### Mode développement
+
+Pour pouvoir utiliser le worker en local il faut lancer une instance de **_Redis_** en local : https://redis.io/docs/getting-started
+
+Il faut également enlever les variables d'environnement _REDIS_URL_ et _REDIS_TLS_URL_ afin que les modules **_Redis_** et **_Bull_** utilisent leur configuration par défaut pour se connecter à _**Redis**_ en local (`127.0.0.1:6379`)
+
 ```
 npm run dev-mainWorker
 ```
 
 #### Mode production
+
 ```
 npm run mainWorker
 ```
 
 ### Prettier + Linter
+
 ```
 npm run lint
 npm run format
 ```
+
 Ces deux commandes sont lancées par les hooks de commit.
 
 ### Fichier `.env` minimal
@@ -191,7 +237,7 @@ VONAGE_API_SECRET=
 docker run --name linkedout-db-test -e POSTGRES_PASSWORD=linkedout -e POSTGRES_USER=linkedout -e POSTGRES_DB=linkedout -d -p 54300:5432 postgres
 ```
 
-Vous avez besoin des données du fichier `.env.test` pour les tests en local, et de renseigner le champs *DATABASE_URL* (*ex:* `postgresql://linkedout:linkedout@localhost:54300/linkedout`) avec l'adresse de l'instance __*Docker*__
+Vous avez besoin des données du fichier `.env.test` pour les tests en local, et de renseigner le champ _DATABASE_URL_ (_ex:_ `postgresql://linkedout:linkedout@localhost:54300/linkedout`) avec l'adresse de l'instance **_Docker_**
 
 ```
 NODE_ENV=dev-test npm run db-migrate
@@ -204,13 +250,13 @@ NODE_ENV=dev-test npm run db-migrate
 
 ## Déploiement
 
-Le déploiement se fait automatiquement grâce à __*Github Actions*__ et __*Heroku*__.
+Le déploiement se fait automatiquement grâce à **_Github Actions_** et **_Heroku_**.
 
 Si un commit est poussé sur `develop`, l'application sera déployé sur la pre-production : **[https://entourage-job-preprod.herokuapp.com](https://entourage-job-preprod.herokuapp.com)**
 
-Si un commit est poussé sur `master`,  l'application sera déployé sur la production : **[https://api.linkedout.fr](https://api.linkedout.fr)**
+Si un commit est poussé sur `master`, l'application sera déployé sur la production : **[https://api.linkedout.fr](https://api.linkedout.fr)**
 
-Les tests sont effectués sur __*Github Actions*__ avant de déployer le projet sur __*Heroku*__.
+Les tests sont effectués sur **_Github Actions_** avant de déployer le projet sur **_Heroku_**.
 
 ## Stack technique
 

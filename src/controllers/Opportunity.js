@@ -858,6 +858,52 @@ const updateExternalOpportunity = async (opportunity, candidatId, isAdmin) => {
   return null;
 };
 
+const getRelevantOpportunities = async (
+  departments,
+  businessLines,
+  candidatId
+) => {
+  const lastMonth = moment().subtract(30, 'd');
+
+  const businessLinesNames = businessLines.map((bl) => {
+    return bl.name;
+  });
+
+  const opportunities = await Opportunity.findAll({
+    where: {
+      isPublic: true,
+      isValidated: true,
+      department: {
+        [Op.in]: departments,
+      },
+      createdAt: {
+        [Op.gt]: lastMonth.toDate(),
+      },
+    },
+    include: [
+      {
+        model: BusinessLine,
+        as: 'businessLines',
+        where: {
+          name: {
+            [Op.in]: businessLinesNames,
+          },
+        },
+      },
+    ],
+  });
+
+  return opportunities.map((model) => {
+    // add to table opportunity_user
+    Opportunity_User.create({
+      OpportunityId: model.id,
+      UserId: candidatId,
+      recommended: true,
+    });
+    return cleanOpportunity(model);
+  });
+};
+
 export {
   createOpportunity,
   createExternalOpportunity,
@@ -874,4 +920,5 @@ export {
   getUnseenUserOpportunitiesCount,
   countPendingOpportunitiesCount,
   getExternalOpportunitiesCreatedByUserCount,
+  getRelevantOpportunities,
 };

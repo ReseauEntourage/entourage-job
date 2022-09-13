@@ -1,6 +1,6 @@
 {
   "name": "linkedout-back",
-  "version": "1.25.6",
+  "version": "1.26.0",
   "description": "",
   "main": "index.js",
   "engines": {
@@ -16,6 +16,7 @@
     "test": "NODE_ENV=test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
     "dev-test": "NODE_ENV=dev-test npx jest --config=jest.config.js --runInBand --collectCoverage --forceExit --detectOpenHandles",
     "lint": "npx eslint src --ext js,jsx,ts,tsx --max-warnings=0",
+    "lint:fix": "npx eslint src --ext js,jsx,ts,tsx --max-warnings=0 --fix",
     "format": "prettier --write './**/*.{js,jsx,md,json}' --config .prettierrc.json",
     "build": "babel src -d build",
     "db-create": "npx sequelize db:create",
