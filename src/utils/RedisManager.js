@@ -52,6 +52,8 @@ const RedisManager = {
         ? undefined
         : {
             rejectUnauthorized: false,
+            requestCert: true,
+            agent: false,
           },
     };
     const redisUrl = process.env.REDIS_TLS_URL || process.env.REDIS_URL;

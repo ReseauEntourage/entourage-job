@@ -6,7 +6,7 @@ import RateLimiter from 'src/utils/RateLimiter';
 
 import { addToWorkQueue } from 'src/jobs';
 import { logger } from 'src/utils/Logger';
-
+import _ from 'lodash';
 import express from 'express';
 import { passwordStrength } from 'check-password-strength';
 import { getAdminMailsFromZone } from 'src/utils/Finding';
@@ -133,13 +133,16 @@ router.post('/forgot', authLimiter, auth(), async (req, res /* , next */) => {
         toEmail: user.email,
         templateId: MAILJET_TEMPLATES.PASSWORD_RESET,
         replyTo: candidatesAdminMail,
-        variables: {
-          id,
-          firstName,
-          role,
-          zone,
-          token: jwtToken,
-        },
+        variables: _.omitBy(
+          {
+            id,
+            firstName,
+            role,
+            zone,
+            token: jwtToken,
+          },
+          _.isNil
+        ),
       });
 
       return res.status(200).send('Demande envoyée');
