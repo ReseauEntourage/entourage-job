@@ -893,15 +893,17 @@ const getRelevantOpportunities = async (
     ],
   });
 
-  return opportunities.map((model) => {
-    // add to table opportunity_user
-    Opportunity_User.create({
-      OpportunityId: model.id,
-      UserId: candidatId,
-      recommended: true,
-    });
-    return cleanOpportunity(model);
-  });
+  return Promise.all(
+    opportunities.map(async (model) => {
+      // add to table opportunity_user
+      const opportunityUser = await Opportunity_User.findOrCreate({
+        OpportunityId: model.id,
+        UserId: candidatId,
+      });
+      await opportunityUser.update({ recommended: true });
+      return cleanOpportunity(model);
+    })
+  );
 };
 
 export {

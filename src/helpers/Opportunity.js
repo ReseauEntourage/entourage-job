@@ -395,12 +395,7 @@ const findRelevantOpportunities = async (
     if (!autoRecommendationsZone || autoRecommendationsZone === zone) {
       try {
         // get the offers
-        const relevantOffers = await getRelevantOpportunities(
-          departments,
-          businessLines,
-          candidatId
-        );
-        return relevantOffers;
+        return getRelevantOpportunities(departments, businessLines, candidatId);
       } catch (err) {
         console.log(err);
         return err;

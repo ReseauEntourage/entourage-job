@@ -257,7 +257,7 @@ const sendRelevantOpportunities = async (
   }
   const { candidatesAdminMail } = getAdminMailsFromZone(user.zone);
   if (opportunities.length > 0) {
-    sendMail(
+    await sendMail(
       opportunities.map((opportunity) => {
         return {
           toEmail,
